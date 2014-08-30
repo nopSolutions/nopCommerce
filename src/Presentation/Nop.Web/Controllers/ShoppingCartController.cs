@@ -726,13 +726,14 @@ namespace Nop.Web.Controllers
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
-                            sci.ShoppingCartType,
-                            sci.Product,
-                            sci.StoreId,
-                            sci.AttributesXml,
-                            sci.CustomerEnteredPrice,
-                            sci.Quantity, false);
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
+                    _workContext.CurrentCustomer,
+                    sci.ShoppingCartType,
+                    sci.Product,
+                    sci.StoreId,
+                    sci.AttributesXml,
+                    sci.CustomerEnteredPrice,
+                    sci.Quantity, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 

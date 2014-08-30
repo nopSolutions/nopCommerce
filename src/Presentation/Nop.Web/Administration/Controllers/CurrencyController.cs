@@ -313,6 +313,15 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                //ensure we have at least one published language
+                var allCurrencies = _currencyService.GetAllCurrencies();
+                if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id &&
+                    !model.Published)
+                {
+                    ErrorNotification("At least one published currency is required.");
+                    return RedirectToAction("Edit", new { id = currency.Id });
+                }
+
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
@@ -364,6 +373,14 @@ namespace Nop.Admin.Controllers
 
                 if (currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId)
                     throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
+
+                //ensure we have at least one published currency
+                var allCurrencies = _currencyService.GetAllCurrencies();
+                if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id)
+                {
+                    ErrorNotification("At least one published currency is required.");
+                    return RedirectToAction("Edit", new { id = currency.Id });
+                }
 
                 _currencyService.DeleteCurrency(currency);
 
