@@ -205,7 +205,7 @@
     <Compile Include="Validators\ValidatorExtensions .cs" />
     <Compile Include="Validators\CreditCardPropertyValidator.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />
-    <Compile Include="Web\AdminMenuPlugin.cs" />
+    <Compile Include="Web\IAdminMenuPlugin.cs" />
     <Compile Include="WebWorkContext.cs" />
   </ItemGroup>
   <ItemGroup>
