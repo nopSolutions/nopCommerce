@@ -1883,7 +1883,7 @@ namespace Nop.Web.Controllers
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
                 var discount = _discountService.GetDiscountByCouponCode(discountcouponcode);
-                bool isDiscountValid = discount != null && 
+                bool isDiscountValid = discount != null &&
                     discount.RequiresCouponCode &&
                     _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer, discountcouponcode);
                 if (isDiscountValid)
@@ -1891,14 +1891,19 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.DiscountCouponCode, discountcouponcode);
                     model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
+                    model.DiscountBox.IsApplied = true;
                 }
                 else
                 {
                     model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                    model.DiscountBox.IsApplied = false;
                 }
             }
             else
+            {
                 model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                model.DiscountBox.IsApplied = false;
+            }
 
             PrepareShoppingCartModel(model, cart);
             return View(model);
