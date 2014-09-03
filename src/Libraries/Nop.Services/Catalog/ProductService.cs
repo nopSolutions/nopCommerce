@@ -1056,6 +1056,8 @@ namespace Nop.Services.Catalog
                          orderby p.MinStockQuantity
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
+                         //ignore grouped products
+                         p.ProductTypeId != (int)ProductType.GroupedProduct &&
                          p.MinStockQuantity >= p.StockQuantity &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
