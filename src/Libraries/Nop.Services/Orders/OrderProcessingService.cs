@@ -1094,16 +1094,15 @@ namespace Nop.Services.Orders
                             {
                                 //prices
                                 decimal taxRate = decimal.Zero;
+                                Discount scDiscount = null;
+                                decimal discountAmount = decimal.Zero;
                                 decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
-                                decimal scSubTotal = _priceCalculationService.GetSubTotal(sc);
+                                decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscount);
                                 decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, customer, out taxRate);
                                 decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, false, customer, out taxRate);
                                 decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, true, customer, out taxRate);
                                 decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.Product, scSubTotal, false, customer, out taxRate);
 
-                                //discounts
-                                Discount scDiscount = null;
-                                decimal discountAmount = _priceCalculationService.GetDiscountAmount(sc, out scDiscount);
                                 decimal discountAmountInclTax = _taxService.GetProductPrice(sc.Product, discountAmount, true, customer, out taxRate);
                                 decimal discountAmountExclTax = _taxService.GetProductPrice(sc.Product, discountAmount, false, customer, out taxRate);
                                 if (scDiscount != null && !appliedDiscounts.ContainsDiscount(scDiscount))
