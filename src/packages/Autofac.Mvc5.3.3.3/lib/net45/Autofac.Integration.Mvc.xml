@@ -70,6 +70,27 @@
             Gets the application container that was provided to the constructor.
             </summary>
         </member>
+        <member name="T:Autofac.Integration.Mvc.AutofacDependencyResolverResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolverResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolverResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.Mvc.AutofacDependencyResolverResources.AutofacDependencyResolverNotFound">
+            <summary>
+              Looks up a localized string similar to The dependency resolver is not of type &apos;{0}&apos; and does not appear to be wrapped using DynamicProxy from the Castle Project. This issue could be the result of a change in the DynamicProxy implementation or the use of a different proxy library to wrap the dependency resolver..
+            </summary>
+        </member>
         <member name="T:Autofac.Integration.Mvc.AutofacFilterProvider">
             <summary>
             Defines a filter provider for filter attributes that performs property injection.
