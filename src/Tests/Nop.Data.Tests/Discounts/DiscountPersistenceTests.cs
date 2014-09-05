@@ -26,6 +26,7 @@ namespace Nop.Data.Tests.Discounts
                                    CouponCode = "SecretCode",
                                    DiscountLimitation = DiscountLimitationType.Unlimited,
                                    LimitationTimes = 3,
+                                   MaximumDiscountedQuantity = 4,
                                };
 
             var fromDb = SaveAndLoadEntity(discount);
@@ -41,6 +42,7 @@ namespace Nop.Data.Tests.Discounts
             fromDb.CouponCode.ShouldEqual("SecretCode");
             fromDb.DiscountLimitation.ShouldEqual(DiscountLimitationType.Unlimited);
             fromDb.LimitationTimes.ShouldEqual(3);
+            fromDb.MaximumDiscountedQuantity.ShouldEqual(4);
         }
 
         [Test]

@@ -58,6 +58,10 @@ namespace Nop.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.LimitationTimes")]
         public int LimitationTimes { get; set; }
 
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity")]
+        [UIHint("Int32Nullable")]
+        public int? MaximumDiscountedQuantity { get; set; }
+
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToCategories")]
         public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }

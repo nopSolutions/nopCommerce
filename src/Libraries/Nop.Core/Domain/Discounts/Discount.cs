@@ -67,7 +67,13 @@ namespace Nop.Core.Domain.Discounts
         /// Gets or sets the discount limitation times (used when Limitation is set to "N Times Only" or "N Times Per Customer")
         /// </summary>
         public int LimitationTimes { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the maximum product quantity which could be discounted
+        /// Used with "Assigned to products" or "Assigned to categories" type
+        /// </summary>
+        public int? MaximumDiscountedQuantity { get; set; }
+
         /// <summary>
         /// Gets or sets the discount type
         /// </summary>

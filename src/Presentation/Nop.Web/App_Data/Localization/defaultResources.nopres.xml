@@ -8835,6 +8835,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes.Times">
     <Value>times</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity">
+    <Value>Maximum discounted quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity.Hint">
+    <Value>Maximum product quantity which could be discounted. For example, you can have two products (the same) in the cart but only one of them will be discounted. It can be used for scenarios like "buy 2 get 1 free". Leave empty if any quantity could be discounted.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>

@@ -68,6 +68,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices.Hint">
     <Value>Check to cache product prices. It can significantly improve performance. But you not should enable it if you use some complex discounts, discount requirement rules, or coupon codes.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity">
+    <Value>Maximum discounted quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity.Hint">
+    <Value>Maximum product quantity which could be discounted. For example, you can have two products (the same) in the cart but only one of them will be discounted. It can be used for scenarios like "buy 2 get 1 free". Leave empty if any quantity could be discounted.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -201,5 +207,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Affiliate]'
 BEGIN
 	ALTER TABLE [Affiliate]
 	ADD [AdminComment] nvarchar(MAX) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='MaximumDiscountedQuantity')
+BEGIN
+	ALTER TABLE [Discount]
+	ADD [MaximumDiscountedQuantity] int NULL
 END
 GO

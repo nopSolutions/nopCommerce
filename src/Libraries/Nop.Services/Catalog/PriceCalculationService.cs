@@ -514,14 +514,43 @@ namespace Nop.Services.Catalog
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
+            decimal subTotal = 0;
+
             //unit price
             var unitPrice = GetUnitPrice(shoppingCartItem, includeDiscounts,
                 out discountAmount, out appliedDiscount);
 
-            //here we calculate discount for all items (total)
-            discountAmount = discountAmount*shoppingCartItem.Quantity;
+            //discount
+            if (appliedDiscount != null)
+            {
+                if (appliedDiscount.MaximumDiscountedQuantity.HasValue &&
+                    shoppingCartItem.Quantity > appliedDiscount.MaximumDiscountedQuantity.Value)
+                {
+                    //we cannot apply discount for all shopping cart items
+                    var discountedQuantity = appliedDiscount.MaximumDiscountedQuantity.Value;
+                    var discountedSubTotal = unitPrice * discountedQuantity;
+                    discountAmount = discountAmount * discountedQuantity;
+                    
+                    var notDiscountedQuantity = shoppingCartItem.Quantity - appliedDiscount.MaximumDiscountedQuantity.Value;
+                    var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
+                    var notDiscountedSubTotal = notDiscountedUnitPrice*notDiscountedQuantity;
 
-            return unitPrice*shoppingCartItem.Quantity;
+                    subTotal = discountedSubTotal + notDiscountedSubTotal;
+                }
+                else
+                {
+                    //discount is applied to all items (quantity)
+                    //calculate discount amount for all items
+                    discountAmount = discountAmount * shoppingCartItem.Quantity;
+
+                    subTotal = unitPrice * shoppingCartItem.Quantity;
+                }
+            }
+            else
+            {
+                subTotal = unitPrice * shoppingCartItem.Quantity;
+            }
+            return subTotal;
         }
         
 

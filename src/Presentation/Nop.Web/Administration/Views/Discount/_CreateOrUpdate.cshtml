@@ -91,14 +91,17 @@
                 if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
                     $('#pnlAppliedToCategories').show();
                     $('#pnlAppliedToProducts').hide();
+                    $('#pnlMaximumDiscountedQuantity').show();
                 }
                 else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
                     $('#pnlAppliedToCategories').hide();
                     $('#pnlAppliedToProducts').show();
+                    $('#pnlMaximumDiscountedQuantity').show();
                 }
                 else {
                     $('#pnlAppliedToCategories').hide();
                     $('#pnlAppliedToProducts').hide();
+                    $('#pnlMaximumDiscountedQuantity').hide();
                 }
             }
 
@@ -282,6 +285,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.LimitationTimes)
                 @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
+            </td>
+        </tr>
+        <tr id="pnlMaximumDiscountedQuantity">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumDiscountedQuantity):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumDiscountedQuantity)
+                @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
             </td>
         </tr>
     </table>
