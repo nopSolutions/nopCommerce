@@ -2,47 +2,44 @@
 // Contributor(s): mb 10/20/2010. 
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Nop.Plugin.Shipping.UPS.Domain
 {
     /// <summary>
     /// Class for UPS services
     /// </summary>
-    public class UPSServices
+    public static class UPSServices
     {
+        #region Fields
+
         /// <summary>
         /// UPS Service names
         /// </summary>
-        private string[] _services = {
-                                        "UPS Next Day Air",
-                                        "UPS 2nd Day Air",
-                                        "UPS Ground",
-                                        "UPS Worldwide Express",
-                                        "UPS Worldwide Expedited",
-                                        "UPS Standard",
-                                        "UPS 3 Day Select",
-                                        "UPS Next Day Air Saver",
-                                        "UPS Next Day Air Early A.M.",
-                                        "UPS Worldwide Express Plus",
-                                        "UPS 2nd Day Air A.M.",
-                                        "UPS Saver", 
-                                        "UPS Today Standard",
-                                        "UPS Today Dedicated Courrier",
-                                        "UPS Today Express",
-                                        "UPS Today Express Saver"
-                                        };
-
-        #region Properties
-
-        /// <summary>
-        /// UPS services string names
-        /// </summary>
-        public string[] Services
+        private static readonly Dictionary<string, string> _services = new Dictionary<string, string>()
         {
-            get { return _services; }
-        }
+            {"UPS Next Day Air", "01"},
+            {"UPS 2nd Day Air", "02"},
+            {"UPS Ground", "03"},
+            {"UPS Worldwide Express", "07"},
+            {"UPS Worldwide Expedited", "08"},
+            {"UPS Standard", "11"},
+            {"UPS 3 Day Select", "12"},
+            {"UPS Next Day Air Saver", "13"},
+            {"UPS Next Day Air Early A.M.", "14"},
+            {"UPS Worldwide Express Plus", "54"},
+            {"UPS 2nd Day Air A.M.", "59"},
+            {"UPS Saver", "65"},
+            {"UPS Today Standard", "82"}, //82-86, for Polish Domestic Shipments
+            {"UPS Today Dedicated Courier", "83"},
+            {"UPS Today Express", "85"},
+            {"UPS Today Express Saver", "86"}
+        };
 
         #endregion
-
+    
         #region Utilities
 
         /// <summary>
@@ -52,63 +49,32 @@ namespace Nop.Plugin.Shipping.UPS.Domain
         /// <returns>service id or empty string if not found</returns>
         public static string GetServiceId(string service)
         {
-            string serviceId = string.Empty;
-            switch (service)
-            {
-                case "UPS Next Day Air":
-                    serviceId = "01";
-                    break;
-                case "UPS 2nd Day Air":
-                    serviceId = "02";
-                    break;
-                case "UPS Ground":
-                    serviceId = "03";
-                    break;
-                case "UPS Worldwide Express":
-                    serviceId = "07";
-                    break;
-                case "UPS Worldwide Expedited":
-                    serviceId = "08";
-                    break;
-                case "UPS Standard":
-                    serviceId = "11";
-                    break;
-                case "UPS 3 Day Select":
-                    serviceId = "12";
-                    break;
-                case "UPS Next Day Air Saver":
-                    serviceId = "13";
-                    break;
-                case "UPS Next Day Air Early A.M.":
-                    serviceId = "14";
-                    break;
-                case "UPS Worldwide Express Plus":
-                    serviceId = "54";
-                    break;
-                case "UPS 2nd Day Air A.M.":
-                    serviceId = "59";
-                    break;
-                case "UPS Saver":
-                    serviceId = "65";
-                    break;
-                case "UPS Today Standard": //82-86, for Polish Domestic Shipments
-                    serviceId = "82";
-                    break;
-                case "UPS Today Dedicated Courier":
-                    serviceId = "83";
-                    break;
-                case "UPS Today Express":
-                    serviceId = "85";
-                    break;
-                case "UPS Today Express Saver":
-                    serviceId = "86";
-                    break;
-                default:
-                    break;
-            }
+            var serviceId = "";
+            if (String.IsNullOrEmpty(service))
+                return serviceId;
+
+            if (_services.ContainsKey(service))
+                serviceId = _services[service];
+
             return serviceId;
         }
 
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// UPS services string names
+        /// </summary>
+        public static string[] Services
+        {
+            get
+            {
+                return _services.Keys.Select(x => x).ToArray();
+            }
+        }
+
+        #endregion
+
     }
 }

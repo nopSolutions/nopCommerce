@@ -70,14 +70,13 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
                 });
             }
 
-            var services = new UPSServices();
             // Load Domestic service names
             string carrierServicesOfferedDomestic = _upsSettings.CarrierServicesOffered;
-            foreach (string service in services.Services)
+            foreach (string service in UPSServices.Services)
                 model.AvailableCarrierServices.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in services.Services)
+                foreach (string service in UPSServices.Services)
                 {
                     string serviceId = UPSServices.GetServiceId(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))

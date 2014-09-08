@@ -36,14 +36,13 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
 
 
-            var services = new USPSServices();
             // Load Domestic service names
             string carrierServicesOfferedDomestic = _uspsSettings.CarrierServicesOfferedDomestic;
-            foreach (string service in services.DomesticServices)
+            foreach (string service in USPSServices.DomesticServices)
                 model.AvailableCarrierServicesDomestic.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedDomestic))
-                foreach (string service in services.DomesticServices)
+                foreach (string service in USPSServices.DomesticServices)
                 {
                     string serviceId = USPSServices.GetServiceIdDomestic(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedDomestic))
@@ -56,11 +55,11 @@ namespace Nop.Plugin.Shipping.USPS.Controllers
 
             // Load Internation service names
             string carrierServicesOfferedInternational = _uspsSettings.CarrierServicesOfferedInternational;
-            foreach (string service in services.InternationalServices)
+            foreach (string service in USPSServices.InternationalServices)
                 model.AvailableCarrierServicesInternational.Add(service);
 
             if (!String.IsNullOrEmpty(carrierServicesOfferedInternational))
-                foreach (string service in services.InternationalServices)
+                foreach (string service in USPSServices.InternationalServices)
                 {
                     string serviceId = USPSServices.GetServiceIdInternational(service);
                     if (!String.IsNullOrEmpty(serviceId) && !String.IsNullOrEmpty(carrierServicesOfferedInternational))

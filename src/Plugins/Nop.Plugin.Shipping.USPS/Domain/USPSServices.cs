@@ -2,55 +2,61 @@
 // Contributor(s): RJH 08/07/2009, mb 10/20/2010. 
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Nop.Plugin.Shipping.USPS.Domain
 {
     /// <summary>
     /// Class for USPS V3 XML rate class -holds services offered by USPS
     /// </summary>
-    public class USPSServices
+    public static class USPSServices
     {
         #region Fields
 
         /// <summary>
         /// USPS Domestic Services
         /// </summary>
-        private readonly string[] _domesticServices = {
-                                                "NONE (disable all domestic services)",
-                                                "First-Class",
-                                                "Priority Mail Express Sunday/Holiday Guarantee",
-                                                "Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee",
-                                                "Priority Mail Express Hold For Pickup",
-                                                "Priority Mail Express Flat Rate Envelope Hold For Pickup",
-                                                "Priority Mail Express",
-                                                "Priority Mail Express Flat Rate Envelope",
-                                                "Priority Mail",
-                                                "Priority Mail Flat Rate Envelope",
-                                                "Priority Mail Small Flat Rate Box",
-                                                "Priority Mail Medium Flat Rate Box",
-                                                "Priority Mail Large Flat Rate Box",
-                                                "Standard Post",
-                                                "Bound Printed Matter",
-                                                "Media Mail Parcel",
-                                                "Library Mail Parcel"
-                                                };
+        private static readonly Dictionary<string, string> _domesticServices = new Dictionary<string, string>()
+        {
+            {"NONE (disable all domestic services)", "NONE"},
+            {"First-Class", "0"},
+            {"Priority Mail Express Sunday/Holiday Guarantee", "23"},
+            {"Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee", "25"},
+            {"Priority Mail Express Hold For Pickup", "2"},
+            {"Priority Mail Express Flat Rate Envelope Hold For Pickup", "27"},
+            {"Priority Mail Express", "3"},
+            {"Priority Mail Express Flat Rate Envelope", "13"},
+            {"Priority Mail", "1"},
+            {"Priority Mail Flat Rate Envelope", "16"},
+            {"Priority Mail Small Flat Rate Box", "28"},
+            {"Priority Mail Medium Flat Rate Box", "17"},
+            {"Priority Mail Large Flat Rate Box", "22"},
+            {"Standard Post", "4"},
+            {"Bound Printed Matter", "5"},
+            {"Media Mail Parcel", "6"},
+            {"Library Mail Parcel", "7"}
+        };
 
         /// <summary>
         /// USPS International services
         /// </summary>
-        private readonly string[] _internationalServices = {    
-                                                    "NONE (disable all international services)",                                
-                                                    "Global Express Guaranteed (GXG)",
-                                                    "USPS GXG Envelopes",
-                                                    "Priority Mail Express International Flat Rate Envelope",
-                                                    "Priority Mail International",
-                                                    "Priority Mail International Large Flat Rate Box",
-                                                    "Priority Mail International Medium Flat Rate Box",
-                                                    "Priority Mail International Small Flat Rate Box",
-                                                    "First-Class Mail International Large Envelope",
-                                                    "Priority Mail Express International",
-                                                    "Priority Mail International Flat Rate Envelope",
-                                                    "First-Class Package International Service"
-                                                    };
+        private static readonly Dictionary<string, string> _internationalServices = new Dictionary<string, string>()
+        {
+            {"NONE (disable all international services)", "NONE"},
+            {"Global Express Guaranteed (GXG)", "4"},
+            {"USPS GXG Envelopes", "12"},
+            {"Priority Mail Express International Flat Rate Envelope", "10"},
+            {"Priority Mail International", "2"},
+            {"Priority Mail International Large Flat Rate Box", "11"},
+            {"Priority Mail International Medium Flat Rate Box", "9"},
+            {"Priority Mail International Small Flat Rate Box", "16"},
+            {"First-Class Mail International Large Envelope", "14"},
+            {"Priority Mail Express International", "1"},
+            {"Priority Mail International Flat Rate Envelope", "8"},
+            {"First-Class Package International Service", "15"}
+        };
 
         #endregion
 
@@ -63,63 +69,13 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <returns>service id or empty string if not found</returns>
         public static string GetServiceIdDomestic(string service)
         {
-            string serviceId = string.Empty;
-            switch (service)
-            {
-                case "NONE (disable all domestic services)":
-                    serviceId = "NONE";
-                    break;
-                case "First-Class":
-                    serviceId = "0";
-                    break;
-                case "Priority Mail Express Sunday/Holiday Guarantee":
-                    serviceId = "23";
-                    break;
-                case "Priority Mail Express Flat-Rate Envelope Sunday/Holiday Guarantee":
-                    serviceId = "25";
-                    break;
-                case "Priority Mail Express Hold For Pickup":
-                    serviceId = "2";
-                    break;
-                case "Priority Mail Express Flat Rate Envelope Hold For Pickup":
-                    serviceId = "27";
-                    break;
-                case "Priority Mail Express":
-                    serviceId = "3";
-                    break;
-                case "Priority Mail Express Flat Rate Envelope":
-                    serviceId = "13";
-                    break;
-                case "Priority Mail":
-                    serviceId = "1";
-                    break;
-                case "Priority Mail Flat Rate Envelope":
-                    serviceId = "16";
-                    break;
-                case "Priority Mail Small Flat Rate Box":
-                    serviceId = "28";
-                    break;
-                case "Priority Mail Medium Flat Rate Box":
-                    serviceId = "17";
-                    break;
-                case "Priority Mail Large Flat Rate Box":
-                    serviceId = "22";
-                    break;
-                case "Standard Post":
-                    serviceId = "4";
-                    break;
-                case "Bound Printed Matter":
-                    serviceId = "5";
-                    break;
-                case "Media Mail Parcel":
-                    serviceId = "6";
-                    break;
-                case "Library Mail Parcel":
-                    serviceId = "7";
-                    break;
-                default:
-                    break;
-            }
+            var serviceId = "";
+            if (String.IsNullOrEmpty(service))
+                return serviceId;
+
+            if (_domesticServices.ContainsKey(service))
+                serviceId = _domesticServices[service];
+
             return serviceId;
         }
 
@@ -130,48 +86,13 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <returns>service id or emtpy string</returns>
         public static string GetServiceIdInternational(string service)
         {
-            string serviceId = string.Empty;
-            switch (service)
-            {
-                case "NONE (disable all international services)":
-                    serviceId = "NONE";
-                    break;
-                case "Global Express Guaranteed (GXG)":
-                    serviceId = "4";
-                    break;
-                case "USPS GXG Envelopes":
-                    serviceId = "12";
-                    break;
-                case "Priority Mail Express International Flat Rate Envelope":
-                    serviceId = "10";
-                    break;
-                case "Priority Mail International":
-                    serviceId = "2";
-                    break;
-                case "Priority Mail International Large Flat Rate Box":
-                    serviceId = "11";
-                    break;
-                case "Priority Mail International Medium Flat Rate Box":
-                    serviceId = "9";
-                    break;
-                case "Priority Mail International Small Flat Rate Box":
-                    serviceId = "16";
-                    break;
-                case "First-Class Mail International Large Envelope":
-                    serviceId = "14";
-                    break;
-                case "Priority Mail Express International":
-                    serviceId = "1";
-                    break;
-                case "Priority Mail International Flat Rate Envelope":
-                    serviceId = "8";
-                    break;
-                case "First-Class Package International Service":
-                    serviceId = "15";
-                    break;
-                default:
-                    break;
-            }
+            var serviceId = "";
+            if (String.IsNullOrEmpty(service))
+                return serviceId;
+
+            if (_internationalServices.ContainsKey(service))
+                serviceId = _internationalServices[service];
+
             return serviceId;
         }
 
@@ -182,20 +103,25 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <summary>
         /// USPS Domestic services string names
         /// </summary>
-        public string[] DomesticServices
+        public static string[] DomesticServices
         {
-            get { return _domesticServices; }
+            get
+            {
+                return _domesticServices.Keys.Select(x => x).ToArray();
+            }
         }
 
         /// <summary>
         /// USPS International services string names
         /// </summary>
-        public string[] InternationalServices
+        public static string[] InternationalServices
         {
-            get { return _internationalServices; }
+            get
+            {
+                return _internationalServices.Keys.Select(x => x).ToArray();
+            }
         }
 
         #endregion
-
     }
 }
