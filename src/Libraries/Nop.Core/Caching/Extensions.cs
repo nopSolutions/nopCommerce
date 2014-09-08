@@ -8,6 +8,11 @@ namespace Nop.Core.Caching
     public static class CacheExtensions
     {
         /// <summary>
+        /// Variable (lock) to support thread-safe
+        /// </summary>
+        private static object _syncObject = new object();
+
+        /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -31,16 +36,19 @@ namespace Nop.Core.Caching
         /// <returns>Cached item</returns>
         public static T Get<T>(this ICacheManager cacheManager, string key, int cacheTime, Func<T> acquire) 
         {
-            if (cacheManager.IsSet(key))
+            lock (_syncObject)
             {
-                return cacheManager.Get<T>(key);
-            }
-            else
-            {
-                var result = acquire();
-                if (cacheTime > 0)
-                    cacheManager.Set(key, result, cacheTime);
-                return result;
+                if (cacheManager.IsSet(key))
+                {
+                    return cacheManager.Get<T>(key);
+                }
+                else
+                {
+                    var result = acquire();
+                    if (cacheTime > 0)
+                        cacheManager.Set(key, result, cacheTime);
+                    return result;
+                }
             }
         }
     }
