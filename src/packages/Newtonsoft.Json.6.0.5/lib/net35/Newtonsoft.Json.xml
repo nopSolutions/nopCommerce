@@ -1250,38 +1250,6 @@
             	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="T:Newtonsoft.Json.Converters.DiscriminatedUnionConverter">
-            <summary>
-            Converts a F# discriminated union type to and from JSON.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.DiscriminatedUnionConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <summary>
-            Writes the JSON representation of the object.
-            </summary>
-            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter"/> to write to.</param>
-            <param name="value">The value.</param>
-            <param name="serializer">The calling serializer.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.DiscriminatedUnionConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <summary>
-            Reads the JSON representation of the object.
-            </summary>
-            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> to read from.</param>
-            <param name="objectType">Type of the object.</param>
-            <param name="existingValue">The existing value of object being read.</param>
-            <param name="serializer">The calling serializer.</param>
-            <returns>The object value.</returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.DiscriminatedUnionConverter.CanConvert(System.Type)">
-            <summary>
-            Determines whether this instance can convert the specified object type.
-            </summary>
-            <param name="objectType">Type of the object.</param>
-            <returns>
-            	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-            </returns>
-        </member>
         <member name="T:Newtonsoft.Json.Converters.EntityKeyMemberConverter">
             <summary>
             Converts an Entity Framework EntityKey to and from JSON.
@@ -1313,46 +1281,6 @@
             <returns>
             	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
             </returns>
-        </member>
-        <member name="T:Newtonsoft.Json.Converters.ExpandoObjectConverter">
-            <summary>
-            Converts an ExpandoObject to and from JSON.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.ExpandoObjectConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <summary>
-            Writes the JSON representation of the object.
-            </summary>
-            <param name="writer">The <see cref="T:Newtonsoft.Json.JsonWriter"/> to write to.</param>
-            <param name="value">The value.</param>
-            <param name="serializer">The calling serializer.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.ExpandoObjectConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
-            <summary>
-            Reads the JSON representation of the object.
-            </summary>
-            <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> to read from.</param>
-            <param name="objectType">Type of the object.</param>
-            <param name="existingValue">The existing value of object being read.</param>
-            <param name="serializer">The calling serializer.</param>
-            <returns>The object value.</returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Converters.ExpandoObjectConverter.CanConvert(System.Type)">
-            <summary>
-            Determines whether this instance can convert the specified object type.
-            </summary>
-            <param name="objectType">Type of the object.</param>
-            <returns>
-            	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
-            </returns>
-        </member>
-        <member name="P:Newtonsoft.Json.Converters.ExpandoObjectConverter.CanWrite">
-            <summary>
-            Gets a value indicating whether this <see cref="T:Newtonsoft.Json.JsonConverter"/> can write JSON.
-            </summary>
-            <value>
-            	<c>true</c> if this <see cref="T:Newtonsoft.Json.JsonConverter"/> can write JSON; otherwise, <c>false</c>.
-            </value>
         </member>
         <member name="T:Newtonsoft.Json.Converters.KeyValuePairConverter">
             <summary>
@@ -1546,6 +1474,67 @@
             	<c>true</c> if this instance can convert the specified object type; otherwise, <c>false</c>.
             </returns>
         </member>
+        <member name="T:Newtonsoft.Json.DateFormatHandling">
+            <summary>
+            Specifies how dates are formatted when writing JSON text.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateFormatHandling.IsoDateFormat">
+            <summary>
+            Dates are written in the ISO 8601 format, e.g. "2012-03-21T05:40Z".
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateFormatHandling.MicrosoftDateFormat">
+            <summary>
+            Dates are written in the Microsoft JSON format, e.g. "\/Date(1198908717056)\/".
+            </summary>
+        </member>
+        <member name="T:Newtonsoft.Json.DateParseHandling">
+            <summary>
+            Specifies how date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed when reading JSON text.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateParseHandling.None">
+            <summary>
+            Date formatted strings are not parsed to a date type and are read as strings.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateParseHandling.DateTime">
+            <summary>
+            Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to <see cref="F:Newtonsoft.Json.DateParseHandling.DateTime"/>.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateParseHandling.DateTimeOffset">
+            <summary>
+            Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to <see cref="F:Newtonsoft.Json.DateParseHandling.DateTimeOffset"/>.
+            </summary>
+        </member>
+        <member name="T:Newtonsoft.Json.DateTimeZoneHandling">
+            <summary>
+            Specifies how to treat the time value when converting between string and <see cref="T:System.DateTime"/>.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Local">
+            <summary>
+            Treat as local time. If the <see cref="T:System.DateTime"/> object represents a Coordinated Universal Time (UTC), it is converted to the local time.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Utc">
+            <summary>
+            Treat as a UTC. If the <see cref="T:System.DateTime"/> object represents a local time, it is converted to a UTC.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Unspecified">
+            <summary>
+            Treat as a local time if a <see cref="T:System.DateTime"/> is being converted to a string.
+            If a string is being converted to <see cref="T:System.DateTime"/>, convert to a local time if a time zone is specified.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.RoundtripKind">
+            <summary>
+            Time zone information should be preserved when converting.
+            </summary>
+        </member>
         <member name="T:Newtonsoft.Json.FloatFormatHandling">
             <summary>
             Specifies float format handling options when writing special floating point numbers, e.g. <see cref="F:System.Double.NaN"/>,
@@ -1581,6 +1570,26 @@
         <member name="F:Newtonsoft.Json.FloatParseHandling.Decimal">
             <summary>
             Floating point numbers are parsed to <see cref="F:Newtonsoft.Json.FloatParseHandling.Decimal"/>.
+            </summary>
+        </member>
+        <member name="T:Newtonsoft.Json.Formatting">
+            <summary>
+            Specifies formatting options for the <see cref="T:Newtonsoft.Json.JsonTextWriter"/>.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.Formatting.None">
+            <summary>
+            No special formatting is applied. This is the default.
+            </summary>
+        </member>
+        <member name="F:Newtonsoft.Json.Formatting.Indented">
+            <summary>
+            Causes child objects to be indented according to the <see cref="P:Newtonsoft.Json.JsonTextWriter.Indentation"/> and <see cref="P:Newtonsoft.Json.JsonTextWriter.IndentChar"/> settings.
+            </summary>
+        </member>
+        <member name="T:Newtonsoft.Json.JsonConstructorAttribute">
+            <summary>
+            Instructs the <see cref="T:Newtonsoft.Json.JsonSerializer"/> to use the specified constructor when deserializing that object.
             </summary>
         </member>
         <member name="T:Newtonsoft.Json.JsonDictionaryAttribute">
@@ -1701,87 +1710,6 @@
             <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
             <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         </member>
-        <member name="T:Newtonsoft.Json.DateFormatHandling">
-            <summary>
-            Specifies how dates are formatted when writing JSON text.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateFormatHandling.IsoDateFormat">
-            <summary>
-            Dates are written in the ISO 8601 format, e.g. "2012-03-21T05:40Z".
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateFormatHandling.MicrosoftDateFormat">
-            <summary>
-            Dates are written in the Microsoft JSON format, e.g. "\/Date(1198908717056)\/".
-            </summary>
-        </member>
-        <member name="T:Newtonsoft.Json.DateParseHandling">
-            <summary>
-            Specifies how date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed when reading JSON text.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateParseHandling.None">
-            <summary>
-            Date formatted strings are not parsed to a date type and are read as strings.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateParseHandling.DateTime">
-            <summary>
-            Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to <see cref="F:Newtonsoft.Json.DateParseHandling.DateTime"/>.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateParseHandling.DateTimeOffset">
-            <summary>
-            Date formatted strings, e.g. "\/Date(1198908717056)\/" and "2012-03-21T05:40Z", are parsed to <see cref="F:Newtonsoft.Json.DateParseHandling.DateTimeOffset"/>.
-            </summary>
-        </member>
-        <member name="T:Newtonsoft.Json.DateTimeZoneHandling">
-            <summary>
-            Specifies how to treat the time value when converting between string and <see cref="T:System.DateTime"/>.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Local">
-            <summary>
-            Treat as local time. If the <see cref="T:System.DateTime"/> object represents a Coordinated Universal Time (UTC), it is converted to the local time.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Utc">
-            <summary>
-            Treat as a UTC. If the <see cref="T:System.DateTime"/> object represents a local time, it is converted to a UTC.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.Unspecified">
-            <summary>
-            Treat as a local time if a <see cref="T:System.DateTime"/> is being converted to a string.
-            If a string is being converted to <see cref="T:System.DateTime"/>, convert to a local time if a time zone is specified.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.DateTimeZoneHandling.RoundtripKind">
-            <summary>
-            Time zone information should be preserved when converting.
-            </summary>
-        </member>
-        <member name="T:Newtonsoft.Json.Formatting">
-            <summary>
-            Specifies formatting options for the <see cref="T:Newtonsoft.Json.JsonTextWriter"/>.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.Formatting.None">
-            <summary>
-            No special formatting is applied. This is the default.
-            </summary>
-        </member>
-        <member name="F:Newtonsoft.Json.Formatting.Indented">
-            <summary>
-            Causes child objects to be indented according to the <see cref="P:Newtonsoft.Json.JsonTextWriter.Indentation"/> and <see cref="P:Newtonsoft.Json.JsonTextWriter.IndentChar"/> settings.
-            </summary>
-        </member>
-        <member name="T:Newtonsoft.Json.JsonConstructorAttribute">
-            <summary>
-            Instructs the <see cref="T:Newtonsoft.Json.JsonSerializer"/> to use the specified constructor when deserializing that object.
-            </summary>
-        </member>
         <member name="T:Newtonsoft.Json.JsonExtensionDataAttribute">
             <summary>
             Instructs the <see cref="T:Newtonsoft.Json.JsonSerializer"/> to deserialize properties with no matching class member into the specified collection
@@ -1808,6 +1736,95 @@
             <value>
             	<c>true</c> to read extension data when deserializing the object; otherwise, <c>false</c>. The default is <c>true</c>.
             </value>
+        </member>
+        <member name="T:Newtonsoft.Json.Linq.JPropertyDescriptor">
+            <summary>
+            Represents a view of a <see cref="T:Newtonsoft.Json.Linq.JProperty"/>.
+            </summary>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Newtonsoft.Json.Linq.JPropertyDescriptor"/> class.
+            </summary>
+            <param name="name">The name.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.CanResetValue(System.Object)">
+            <summary>
+            When overridden in a derived class, returns whether resetting an object changes its value.
+            </summary>
+            <returns>
+            true if resetting the component changes its value; otherwise, false.
+            </returns>
+            <param name="component">The component to test for reset capability. 
+                            </param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.GetValue(System.Object)">
+            <summary>
+            When overridden in a derived class, gets the current value of the property on a component.
+            </summary>
+            <returns>
+            The value of a property for a given component.
+            </returns>
+            <param name="component">The component with the property for which to retrieve the value. 
+                            </param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.ResetValue(System.Object)">
+            <summary>
+            When overridden in a derived class, resets the value for this property of the component to the default value.
+            </summary>
+            <param name="component">The component with the property value that is to be reset to the default value. 
+                            </param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.SetValue(System.Object,System.Object)">
+            <summary>
+            When overridden in a derived class, sets the value of the component to a different value.
+            </summary>
+            <param name="component">The component with the property value that is to be set. 
+                            </param><param name="value">The new value. 
+                            </param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.ShouldSerializeValue(System.Object)">
+            <summary>
+            When overridden in a derived class, determines a value indicating whether the value of this property needs to be persisted.
+            </summary>
+            <returns>
+            true if the property should be persisted; otherwise, false.
+            </returns>
+            <param name="component">The component with the property to be examined for persistence. 
+                            </param>
+        </member>
+        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.ComponentType">
+            <summary>
+            When overridden in a derived class, gets the type of the component this property is bound to.
+            </summary>
+            <returns>
+            A <see cref="T:System.Type"/> that represents the type of component this property is bound to. When the <see cref="M:System.ComponentModel.PropertyDescriptor.GetValue(System.Object)"/> or <see cref="M:System.ComponentModel.PropertyDescriptor.SetValue(System.Object,System.Object)"/> methods are invoked, the object specified might be an instance of this type.
+            </returns>
+        </member>
+        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.IsReadOnly">
+            <summary>
+            When overridden in a derived class, gets a value indicating whether this property is read-only.
+            </summary>
+            <returns>
+            true if the property is read-only; otherwise, false.
+            </returns>
+        </member>
+        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.PropertyType">
+            <summary>
+            When overridden in a derived class, gets the type of the property.
+            </summary>
+            <returns>
+            A <see cref="T:System.Type"/> that represents the type of the property.
+            </returns>
+        </member>
+        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.NameHashCode">
+            <summary>
+            Gets the hash code for the name of the member.
+            </summary>
+            <value></value>
+            <returns>
+            The hash code for the name of the member.
+            </returns>
         </member>
         <member name="T:Newtonsoft.Json.Linq.JsonMergeSettings">
             <summary>
@@ -1900,50 +1917,6 @@
             <value>
             The <see cref="T:System.Diagnostics.TraceLevel"/> that will be used to filter the trace messages passed to the writer.
             </value>
-        </member>
-        <member name="T:Newtonsoft.Json.Serialization.ExpressionValueProvider">
-            <summary>
-            Get and set values for a <see cref="T:System.Reflection.MemberInfo"/> using dynamic methods.
-            </summary>
-        </member>
-        <member name="T:Newtonsoft.Json.Serialization.IValueProvider">
-            <summary>
-            Provides methods to get and set values.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.IValueProvider.SetValue(System.Object,System.Object)">
-            <summary>
-            Sets the value.
-            </summary>
-            <param name="target">The target to set the value on.</param>
-            <param name="value">The value to set on the target.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.IValueProvider.GetValue(System.Object)">
-            <summary>
-            Gets the value.
-            </summary>
-            <param name="target">The target to get the value from.</param>
-            <returns>The value.</returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.ExpressionValueProvider.#ctor(System.Reflection.MemberInfo)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.ExpressionValueProvider"/> class.
-            </summary>
-            <param name="memberInfo">The member info.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.ExpressionValueProvider.SetValue(System.Object,System.Object)">
-            <summary>
-            Sets the value.
-            </summary>
-            <param name="target">The target to set the value on.</param>
-            <param name="value">The value to set on the target.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.ExpressionValueProvider.GetValue(System.Object)">
-            <summary>
-            Gets the value.
-            </summary>
-            <param name="target">The target to get the value from.</param>
-            <returns>The value.</returns>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.JsonContainerContract">
             <summary>
@@ -2918,24 +2891,6 @@
             <param name="errorWhenNoMatch">A flag to indicate whether an error should be thrown if no tokens are found when evaluating part of the expression.</param>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the selected elements.</returns>
         </member>
-        <member name="M:Newtonsoft.Json.Linq.JToken.GetMetaObject(System.Linq.Expressions.Expression)">
-            <summary>
-            Returns the <see cref="T:System.Dynamic.DynamicMetaObject"/> responsible for binding operations performed on this object.
-            </summary>
-            <param name="parameter">The expression tree representation of the runtime value.</param>
-            <returns>
-            The <see cref="T:System.Dynamic.DynamicMetaObject"/> to bind this object.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JToken.System#Dynamic#IDynamicMetaObjectProvider#GetMetaObject(System.Linq.Expressions.Expression)">
-            <summary>
-            Returns the <see cref="T:System.Dynamic.DynamicMetaObject"/> responsible for binding operations performed on this object.
-            </summary>
-            <param name="parameter">The expression tree representation of the runtime value.</param>
-            <returns>
-            The <see cref="T:System.Dynamic.DynamicMetaObject"/> to bind this object.
-            </returns>
-        </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.DeepClone">
             <summary>
             Creates a new instance of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>. All child tokens are recursively cloned.
@@ -3197,15 +3152,6 @@
             A <see cref="T:System.String"/> that represents this instance.
             </returns>
         </member>
-        <member name="M:Newtonsoft.Json.Linq.JValue.GetMetaObject(System.Linq.Expressions.Expression)">
-            <summary>
-            Returns the <see cref="T:System.Dynamic.DynamicMetaObject"/> responsible for binding operations performed on this object.
-            </summary>
-            <param name="parameter">The expression tree representation of the runtime value.</param>
-            <returns>
-            The <see cref="T:System.Dynamic.DynamicMetaObject"/> to bind this object.
-            </returns>
-        </member>
         <member name="M:Newtonsoft.Json.Linq.JValue.CompareTo(Newtonsoft.Json.Linq.JValue)">
             <summary>
             Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
@@ -3285,29 +3231,6 @@
             The property must be defined in JSON and cannot be a null value.
             </summary>
         </member>
-        <member name="T:Newtonsoft.Json.Serialization.JsonDynamicContract">
-            <summary>
-            Contract details for a <see cref="T:System.Type"/> used by the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.JsonDynamicContract.#ctor(System.Type)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.JsonDynamicContract"/> class.
-            </summary>
-            <param name="underlyingType">The underlying type for the contract.</param>
-        </member>
-        <member name="P:Newtonsoft.Json.Serialization.JsonDynamicContract.Properties">
-            <summary>
-            Gets the object's properties.
-            </summary>
-            <value>The object's properties.</value>
-        </member>
-        <member name="P:Newtonsoft.Json.Serialization.JsonDynamicContract.PropertyNameResolver">
-            <summary>
-            Gets or sets the property name resolver.
-            </summary>
-            <value>The property name resolver.</value>
-        </member>
         <member name="T:Newtonsoft.Json.Serialization.JsonISerializableContract">
             <summary>
             Contract details for a <see cref="T:System.Type"/> used by the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
@@ -3352,6 +3275,25 @@
             Get and set values for a <see cref="T:System.Reflection.MemberInfo"/> using dynamic methods.
             </summary>
         </member>
+        <member name="T:Newtonsoft.Json.Serialization.IValueProvider">
+            <summary>
+            Provides methods to get and set values.
+            </summary>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.IValueProvider.SetValue(System.Object,System.Object)">
+            <summary>
+            Sets the value.
+            </summary>
+            <param name="target">The target to set the value on.</param>
+            <param name="value">The value to set on the target.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.IValueProvider.GetValue(System.Object)">
+            <summary>
+            Gets the value.
+            </summary>
+            <param name="target">The target to get the value from.</param>
+            <returns>The value.</returns>
+        </member>
         <member name="M:Newtonsoft.Json.Serialization.DynamicValueProvider.#ctor(System.Reflection.MemberInfo)">
             <summary>
             Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.DynamicValueProvider"/> class.
@@ -3395,95 +3337,6 @@
             Gets the error context.
             </summary>
             <value>The error context.</value>
-        </member>
-        <member name="T:Newtonsoft.Json.Linq.JPropertyDescriptor">
-            <summary>
-            Represents a view of a <see cref="T:Newtonsoft.Json.Linq.JProperty"/>.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Newtonsoft.Json.Linq.JPropertyDescriptor"/> class.
-            </summary>
-            <param name="name">The name.</param>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.CanResetValue(System.Object)">
-            <summary>
-            When overridden in a derived class, returns whether resetting an object changes its value.
-            </summary>
-            <returns>
-            true if resetting the component changes its value; otherwise, false.
-            </returns>
-            <param name="component">The component to test for reset capability. 
-                            </param>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.GetValue(System.Object)">
-            <summary>
-            When overridden in a derived class, gets the current value of the property on a component.
-            </summary>
-            <returns>
-            The value of a property for a given component.
-            </returns>
-            <param name="component">The component with the property for which to retrieve the value. 
-                            </param>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.ResetValue(System.Object)">
-            <summary>
-            When overridden in a derived class, resets the value for this property of the component to the default value.
-            </summary>
-            <param name="component">The component with the property value that is to be reset to the default value. 
-                            </param>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.SetValue(System.Object,System.Object)">
-            <summary>
-            When overridden in a derived class, sets the value of the component to a different value.
-            </summary>
-            <param name="component">The component with the property value that is to be set. 
-                            </param><param name="value">The new value. 
-                            </param>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JPropertyDescriptor.ShouldSerializeValue(System.Object)">
-            <summary>
-            When overridden in a derived class, determines a value indicating whether the value of this property needs to be persisted.
-            </summary>
-            <returns>
-            true if the property should be persisted; otherwise, false.
-            </returns>
-            <param name="component">The component with the property to be examined for persistence. 
-                            </param>
-        </member>
-        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.ComponentType">
-            <summary>
-            When overridden in a derived class, gets the type of the component this property is bound to.
-            </summary>
-            <returns>
-            A <see cref="T:System.Type"/> that represents the type of component this property is bound to. When the <see cref="M:System.ComponentModel.PropertyDescriptor.GetValue(System.Object)"/> or <see cref="M:System.ComponentModel.PropertyDescriptor.SetValue(System.Object,System.Object)"/> methods are invoked, the object specified might be an instance of this type.
-            </returns>
-        </member>
-        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.IsReadOnly">
-            <summary>
-            When overridden in a derived class, gets a value indicating whether this property is read-only.
-            </summary>
-            <returns>
-            true if the property is read-only; otherwise, false.
-            </returns>
-        </member>
-        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.PropertyType">
-            <summary>
-            When overridden in a derived class, gets the type of the property.
-            </summary>
-            <returns>
-            A <see cref="T:System.Type"/> that represents the type of the property.
-            </returns>
-        </member>
-        <member name="P:Newtonsoft.Json.Linq.JPropertyDescriptor.NameHashCode">
-            <summary>
-            Gets the hash code for the name of the member.
-            </summary>
-            <value></value>
-            <returns>
-            The hash code for the name of the member.
-            </returns>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.IReferenceResolver">
             <summary>
@@ -4989,40 +4842,6 @@
             A JSON string representation of the object.
             </returns>
         </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.SerializeObjectAsync(System.Object)">
-            <summary>
-            Asynchronously serializes the specified object to a JSON string.
-            Serialization will happen on a new thread.
-            </summary>
-            <param name="value">The object to serialize.</param>
-            <returns>
-            A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.SerializeObjectAsync(System.Object,Newtonsoft.Json.Formatting)">
-            <summary>
-            Asynchronously serializes the specified object to a JSON string using formatting.
-            Serialization will happen on a new thread.
-            </summary>
-            <param name="value">The object to serialize.</param>
-            <param name="formatting">Indicates how the output is formatted.</param>
-            <returns>
-            A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.SerializeObjectAsync(System.Object,Newtonsoft.Json.Formatting,Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Asynchronously serializes the specified object to a JSON string using formatting and a collection of <see cref="T:Newtonsoft.Json.JsonConverter"/>.
-            Serialization will happen on a new thread.
-            </summary>
-            <param name="value">The object to serialize.</param>
-            <param name="formatting">Indicates how the output is formatted.</param>
-            <param name="settings">The <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> used to serialize the object.
-            If this is null, default serialization settings will be used.</param>
-            <returns>
-            A task that represents the asynchronous serialize operation. The value of the <c>TResult</c> parameter contains a JSON string representation of the object.
-            </returns>
-        </member>
         <member name="M:Newtonsoft.Json.JsonConvert.DeserializeObject(System.String)">
             <summary>
             Deserializes the JSON to a .NET object.
@@ -5129,57 +4948,6 @@
             </param>
             <returns>The deserialized object from the JSON string.</returns>
         </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.DeserializeObjectAsync``1(System.String)">
-            <summary>
-            Asynchronously deserializes the JSON to the specified .NET type.
-            Deserialization will happen on a new thread.
-            </summary>
-            <typeparam name="T">The type of the object to deserialize to.</typeparam>
-            <param name="value">The JSON to deserialize.</param>
-            <returns>
-            A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.DeserializeObjectAsync``1(System.String,Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Asynchronously deserializes the JSON to the specified .NET type using <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/>.
-            Deserialization will happen on a new thread.
-            </summary>
-            <typeparam name="T">The type of the object to deserialize to.</typeparam>
-            <param name="value">The JSON to deserialize.</param>
-            <param name="settings">
-            The <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> used to deserialize the object.
-            If this is null, default serialization settings will be used.
-            </param>
-            <returns>
-            A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.DeserializeObjectAsync(System.String)">
-            <summary>
-            Asynchronously deserializes the JSON to the specified .NET type.
-            Deserialization will happen on a new thread.
-            </summary>
-            <param name="value">The JSON to deserialize.</param>
-            <returns>
-            A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.DeserializeObjectAsync(System.String,System.Type,Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Asynchronously deserializes the JSON to the specified .NET type using <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/>.
-            Deserialization will happen on a new thread.
-            </summary>
-            <param name="value">The JSON to deserialize.</param>
-            <param name="type">The type of the object to deserialize to.</param>
-            <param name="settings">
-            The <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> used to deserialize the object.
-            If this is null, default serialization settings will be used.
-            </param>
-            <returns>
-            A task that represents the asynchronous deserialize operation. The value of the <c>TResult</c> parameter contains the deserialized object from the JSON string.
-            </returns>
-        </member>
         <member name="M:Newtonsoft.Json.JsonConvert.PopulateObject(System.String,System.Object)">
             <summary>
             Populates the object with values from the JSON string.
@@ -5197,20 +4965,6 @@
             The <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> used to deserialize the object.
             If this is null, default serialization settings will be used.
             </param>
-        </member>
-        <member name="M:Newtonsoft.Json.JsonConvert.PopulateObjectAsync(System.String,System.Object,Newtonsoft.Json.JsonSerializerSettings)">
-            <summary>
-            Asynchronously populates the object with values from the JSON string using <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/>.
-            </summary>
-            <param name="value">The JSON to populate values from.</param>
-            <param name="target">The target object to populate values onto.</param>
-            <param name="settings">
-            The <see cref="T:Newtonsoft.Json.JsonSerializerSettings"/> used to deserialize the object.
-            If this is null, default serialization settings will be used.
-            </param>
-            <returns>
-            A task that represents the asynchronous populate operation.
-            </returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonConvert.SerializeXmlNode(System.Xml.XmlNode)">
             <summary>
@@ -5786,12 +5540,6 @@
             </summary>
             <param name="e">The <see cref="T:System.ComponentModel.ListChangedEventArgs"/> instance containing the event data.</param>
         </member>
-        <member name="M:Newtonsoft.Json.Linq.JContainer.OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
-            <summary>
-            Raises the <see cref="E:Newtonsoft.Json.Linq.JContainer.CollectionChanged"/> event.
-            </summary>
-            <param name="e">The <see cref="T:System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
-        </member>
         <member name="M:Newtonsoft.Json.Linq.JContainer.Children">
             <summary>
             Returns a collection of the child tokens of this token, in document order.
@@ -5865,11 +5613,6 @@
         <member name="E:Newtonsoft.Json.Linq.JContainer.AddingNew">
             <summary>
             Occurs before an item is added to the collection.
-            </summary>
-        </member>
-        <member name="E:Newtonsoft.Json.Linq.JContainer.CollectionChanged">
-            <summary>
-            Occurs when the items list of the collection has changed, or the collection is reset.
             </summary>
         </member>
         <member name="P:Newtonsoft.Json.Linq.JContainer.ChildrenTokens">
@@ -6290,15 +6033,6 @@
             <param name="pd">A <see cref="T:System.ComponentModel.PropertyDescriptor"/> that represents the property whose owner is to be found.</param>
             <returns>
             An <see cref="T:System.Object"/> that represents the owner of the specified property.
-            </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Linq.JObject.GetMetaObject(System.Linq.Expressions.Expression)">
-            <summary>
-            Returns the <see cref="T:System.Dynamic.DynamicMetaObject"/> responsible for binding operations performed on this object.
-            </summary>
-            <param name="parameter">The expression tree representation of the runtime value.</param>
-            <returns>
-            The <see cref="T:System.Dynamic.DynamicMetaObject"/> to bind this object.
             </returns>
         </member>
         <member name="P:Newtonsoft.Json.Linq.JObject.ChildrenTokens">
@@ -7224,13 +6958,6 @@
             <param name="objectType">Type of the object.</param>
             <returns>A <see cref="T:Newtonsoft.Json.Serialization.JsonISerializableContract"/> for the given type.</returns>
         </member>
-        <member name="M:Newtonsoft.Json.Serialization.DefaultContractResolver.CreateDynamicContract(System.Type)">
-            <summary>
-            Creates a <see cref="T:Newtonsoft.Json.Serialization.JsonDynamicContract"/> for the given type.
-            </summary>
-            <param name="objectType">Type of the object.</param>
-            <returns>A <see cref="T:Newtonsoft.Json.Serialization.JsonDynamicContract"/> for the given type.</returns>
-        </member>
         <member name="M:Newtonsoft.Json.Serialization.DefaultContractResolver.CreateStringContract(System.Type)">
             <summary>
             Creates a <see cref="T:Newtonsoft.Json.Serialization.JsonStringContract"/> for the given type.
@@ -7347,14 +7074,6 @@
             <returns>
             The type of the object the formatter creates a new instance of.
             </returns>
-        </member>
-        <member name="M:Newtonsoft.Json.Serialization.DefaultSerializationBinder.BindToName(System.Type,System.String@,System.String@)">
-            <summary>
-            When overridden in a derived class, controls the binding of a serialized object to a type.
-            </summary>
-            <param name="serializedType">The type of the object the formatter creates a new instance of.</param>
-            <param name="assemblyName">Specifies the <see cref="T:System.Reflection.Assembly"/> name of the serialized object. </param>
-            <param name="typeName">Specifies the <see cref="T:System.Type"/> name of the serialized object. </param>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.ErrorContext">
             <summary>
@@ -8157,7 +7876,7 @@
         </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonObjectContract.OverrideCreator">
             <summary>
-            Gets or sets the function used to create the object. When set this function will override <see cref="P:DefaultCreator"/>.
+            Gets or sets the function used to create the object. When set this function will override <see cref="P:Newtonsoft.Json.Serialization.JsonContract.DefaultCreator"/>.
             This function is called with a collection of arguments which are defined by the <see cref="P:Newtonsoft.Json.Serialization.JsonObjectContract.CreatorParameters"/> collection.
             </summary>
             <value>The function used to create the object.</value>
@@ -8211,32 +7930,6 @@
         <member name="T:Newtonsoft.Json.Serialization.OnErrorAttribute">
             <summary>
             When applied to a method, specifies that the method is called when an error occurs serializing an object.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.DynamicProxyMetaObject`1.CallMethodWithResult(System.String,System.Dynamic.DynamicMetaObjectBinder,System.Linq.Expressions.Expression[],Newtonsoft.Json.Utilities.DynamicProxyMetaObject{`0}.Fallback,Newtonsoft.Json.Utilities.DynamicProxyMetaObject{`0}.Fallback)">
-            <summary>
-            Helper method for generating a MetaObject which calls a
-            specific method on Dynamic that returns a result
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.DynamicProxyMetaObject`1.CallMethodReturnLast(System.String,System.Dynamic.DynamicMetaObjectBinder,System.Linq.Expressions.Expression[],Newtonsoft.Json.Utilities.DynamicProxyMetaObject{`0}.Fallback)">
-            <summary>
-            Helper method for generating a MetaObject which calls a
-            specific method on Dynamic, but uses one of the arguments for
-            the result.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.DynamicProxyMetaObject`1.CallMethodNoResult(System.String,System.Dynamic.DynamicMetaObjectBinder,System.Linq.Expressions.Expression[],Newtonsoft.Json.Utilities.DynamicProxyMetaObject{`0}.Fallback)">
-            <summary>
-            Helper method for generating a MetaObject which calls a
-            specific method on Dynamic, but uses one of the arguments for
-            the result.
-            </summary>
-        </member>
-        <member name="M:Newtonsoft.Json.Utilities.DynamicProxyMetaObject`1.GetRestrictions">
-            <summary>
-            Returns a Restrictions object which includes our current restrictions merged
-            with a restriction limiting our type
             </summary>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.ObjectConstructor`1">
