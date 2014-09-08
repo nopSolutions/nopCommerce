@@ -9,10 +9,12 @@ namespace Nop.Plugin.Shipping.USPS.Domain
     /// </summary>
     public class USPSServices
     {
+        #region Fields
+
         /// <summary>
-        /// V3 USPS Domestic Services
+        /// USPS Domestic Services
         /// </summary>
-        private string[] _domesticServices = {
+        private readonly string[] _domesticServices = {
                                                 "NONE (disable all domestic services)",
                                                 "First-Class",
                                                 "Priority Mail Express Sunday/Holiday Guarantee",
@@ -28,18 +30,16 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                                                 "Priority Mail Large Flat Rate Box",
                                                 "Standard Post",
                                                 "Bound Printed Matter",
-                                                "Media Mail",
-                                                "Library Mail"
+                                                "Media Mail Parcel",
+                                                "Library Mail Parcel"
                                                 };
 
         /// <summary>
-        /// V3 USPS International services
+        /// USPS International services
         /// </summary>
-        private string[] _internationalServices = {    
+        private readonly string[] _internationalServices = {    
                                                     "NONE (disable all international services)",                                
                                                     "Global Express Guaranteed (GXG)",
-                                                    "Global Express Guaranteed Non-Document Rectangular",
-                                                    "Global Express Guaranteed Non-Document Non-Rectangular",
                                                     "USPS GXG Envelopes",
                                                     "Priority Mail Express International Flat Rate Envelope",
                                                     "Priority Mail International",
@@ -51,24 +51,6 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                                                     "Priority Mail International Flat Rate Envelope",
                                                     "First-Class Package International Service"
                                                     };
-
-        #region Properties
-
-        /// <summary>
-        /// USPS Domestic services string names
-        /// </summary>
-        public string[] DomesticServices
-        {
-            get { return _domesticServices; }
-        }
-
-        /// <summary>
-        /// USPS International services string names
-        /// </summary>
-        public string[] InternationalServices
-        {
-            get { return _internationalServices; }
-        }
 
         #endregion
 
@@ -129,10 +111,10 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                 case "Bound Printed Matter":
                     serviceId = "5";
                     break;
-                case "Media Mail":
+                case "Media Mail Parcel":
                     serviceId = "6";
                     break;
-                case "Library Mail":
+                case "Library Mail Parcel":
                     serviceId = "7";
                     break;
                 default:
@@ -156,12 +138,6 @@ namespace Nop.Plugin.Shipping.USPS.Domain
                     break;
                 case "Global Express Guaranteed (GXG)":
                     serviceId = "4";
-                    break;
-                case "Global Express Guaranteed Non-Document Rectangular":
-                    serviceId = "6";
-                    break;
-                case "Global Express Guaranteed Non-Document Non-Rectangular":
-                    serviceId = "7";
                     break;
                 case "USPS GXG Envelopes":
                     serviceId = "12";
@@ -200,5 +176,26 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         }
 
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// USPS Domestic services string names
+        /// </summary>
+        public string[] DomesticServices
+        {
+            get { return _domesticServices; }
+        }
+
+        /// <summary>
+        /// USPS International services string names
+        /// </summary>
+        public string[] InternationalServices
+        {
+            get { return _internationalServices; }
+        }
+
+        #endregion
+
     }
 }
