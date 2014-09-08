@@ -7914,6 +7914,12 @@
   <LocaleResource Name="Admin.Orders.Fields.CustomerIP.Hint">
     <Value>Customer IP address from where order has been placed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomValues">
+    <Value>Custom values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomValues.Hint">
+    <Value>Custom values from the payment method.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Edit.ExclTax">
     <Value>excl tax:</Value>
   </LocaleResource>

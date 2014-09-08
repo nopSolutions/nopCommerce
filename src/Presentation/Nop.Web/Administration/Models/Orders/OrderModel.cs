@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Orders
     {
         public OrderModel()
         {
+            CustomValues = new Dictionary<string, object>();
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderItemModel>();
@@ -42,6 +43,9 @@ namespace Nop.Admin.Models.Orders
         public string CustomerFullName { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CustomerIP")]
         public string CustomerIp { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.Fields.CustomValues")]
+        public Dictionary<string, object> CustomValues { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
         public int? AffiliateId { get; set; }

@@ -250,6 +250,8 @@ namespace Nop.Admin.Controllers
             model.AffiliateId = order.AffiliateId;
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            //custom values
+            model.CustomValues = order.DeserializeCustomValues();
             
             #region Order totals
 

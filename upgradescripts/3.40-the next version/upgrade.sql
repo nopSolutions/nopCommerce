@@ -74,6 +74,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity.Hint">
     <Value>Maximum product quantity which could be discounted. For example, you can have two products (the same) in the cart but only one of them will be discounted. It can be used for scenarios like "buy 2 get 1 free". Leave empty if any quantity could be discounted.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomValues">
+    <Value>Custom values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CustomValues.Hint">
+    <Value>Custom values from the payment method.</Value>
+  </LocaleResource>
 </Language>
 '
 
