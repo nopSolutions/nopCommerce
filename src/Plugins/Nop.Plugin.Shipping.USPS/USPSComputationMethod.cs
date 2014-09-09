@@ -471,12 +471,19 @@ namespace Nop.Plugin.Shipping.USPS
 
         private USPSPackageSize GetPackageSize(int length, int height, int width)
         {
-            int girth = height + height + width + width;
-            int total = girth + length;
-            if (total <= 84)
-                return USPSPackageSize.Regular;
-            //else
-            return USPSPackageSize.Large;
+            //REGULAR: Package dimensions are 12’’ or less;
+            //LARGE: Any package dimension is larger than 12’’.
+            if (length > 12 || height > 12 || length > width)
+                return USPSPackageSize.Large;
+            
+            return USPSPackageSize.Regular;
+
+
+            //int girth = height + height + width + width;
+            //int total = girth + length;
+            //if (total <= 84)
+            //    return USPSPackageSize.Regular;
+            //return USPSPackageSize.Large;
         }
 
         private List<ShippingOption> ParseResponse(string response, bool isDomestic, ref string error)
