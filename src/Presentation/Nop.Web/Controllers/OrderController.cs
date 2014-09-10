@@ -159,7 +159,8 @@ namespace Nop.Web.Controllers
             model.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
             model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);
 
-            //purchase order number (we have to find a better to inject this information because it's related to a certain plugin)
+            //purchase order number
+            //TODO: we have to find a better way to inject this information because it's related to a certain plugin
             if (paymentMethod != null && paymentMethod.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
             {
                 model.DisplayPurchaseOrderNumber = true;
