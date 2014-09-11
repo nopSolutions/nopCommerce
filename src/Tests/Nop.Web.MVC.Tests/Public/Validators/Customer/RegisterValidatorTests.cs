@@ -1,8 +1,10 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Directory;
 using Nop.Web.Models.Customer;
 using Nop.Web.Validators.Customer;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 {
@@ -10,13 +12,15 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
     public class RegisterValidatorTests : BaseValidatorTests
     {
         private RegisterValidator _validator;
+        private IStateProvinceService _stateProvinceService;
         private CustomerSettings _customerSettings;
         
         [SetUp]
         public new void Setup()
         {
             _customerSettings = new CustomerSettings();
-            _validator = new RegisterValidator(_localizationService, _customerSettings);
+            _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
+            _validator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings);
         }
         
         [Test]
@@ -147,7 +151,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_validate_password_is_length()
         {
             _customerSettings.PasswordMinLength = 5;
-            _validator = new RegisterValidator(_localizationService, _customerSettings);
+            _validator = new RegisterValidator(_localizationService, _stateProvinceService, _customerSettings);
 
             var model = new RegisterModel();
             model.Password = "1234";

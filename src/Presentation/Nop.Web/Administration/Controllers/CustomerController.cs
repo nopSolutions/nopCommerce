@@ -573,12 +573,23 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+
                         foreach (var s in states)
+                        {
                             model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                        }
                     }
                     else
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
+                        model.AvailableStates.Add(new SelectListItem()
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
+                            Value = "0"
+                        });
+                    }
                 }
             }
 
@@ -765,11 +776,23 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+
                         foreach (var s in states)
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                        {
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
+                        }
                     }
                     else
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+
+                        model.AvailableStates.Add(new SelectListItem()
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
+                            Value = "0"
+                        });
+                    }
 
                 }
             }
@@ -863,12 +886,23 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+
                         foreach (var s in states)
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                        {
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
+                        }
                     }
                     else
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
+                        model.AvailableStates.Add(new SelectListItem()
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
+                            Value = "0"
+                        });
+                    }
                 }
             }
 
@@ -1123,11 +1157,23 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+
                         foreach (var s in states)
+                        {
                             model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                        }
                     }
                     else
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+
+                        model.AvailableStates.Add(new SelectListItem()
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
+                            Value = "0"
+                        });
+                    }
 
                 }
             }

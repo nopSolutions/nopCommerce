@@ -186,11 +186,19 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Country' is enabled
         /// </summary>
         public bool CountryEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'Country' is required
+        /// </summary>
+        public bool CountryRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'State / province' is enabled
         /// </summary>
         public bool StateProvinceEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether 'State / province' is required
+        /// </summary>
+        public bool StateProvinceRequired { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Phone number' is enabled

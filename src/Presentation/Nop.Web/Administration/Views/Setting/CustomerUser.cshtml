@@ -266,6 +266,7 @@
     $(document).ready(function () {
 
         $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
+        $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
         $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleCustomerRequiredFormField);
         $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleCustomerRequiredFormField);
@@ -277,16 +278,31 @@
 
 
         toggleCustomerCountryFormField();
+        toggleCustomerStateProvinceFormField();
         toggleCustomerRequiredFormField();
         toggleNewsletterEnabledField();
     });
 
     function toggleCustomerCountryFormField() {
         if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
+            $('#pnlCustomerCountryRequired').show();
             $('#pnlCustomerStateProvinceEnabled').show();
+            toggleCustomerStateProvinceFormField();
         }
         else {
+            $('#pnlCustomerCountryRequired').hide();
             $('#pnlCustomerStateProvinceEnabled').hide();
+            toggleCustomerStateProvinceFormField();
+        }
+    }
+
+        function toggleCustomerStateProvinceFormField() {
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked') &&
+                $('#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)').is(':checked')) {
+            $('#pnlCustomerStateProvinceRequired').show();
+        }
+        else {
+            $('#pnlCustomerStateProvinceRequired').hide();
         }
     }
 
@@ -474,6 +490,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.CountryEnabled)
             </td>
         </tr>
+        <tr id="pnlCustomerCountryRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CountryRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CountryRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CountryRequired)
+            </td>
+        </tr>
         <tr id="pnlCustomerStateProvinceEnabled">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.StateProvinceEnabled):
@@ -481,6 +506,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.StateProvinceEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.StateProvinceEnabled)
+            </td>
+        </tr>
+        <tr id="pnlCustomerStateProvinceRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StateProvinceRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StateProvinceRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StateProvinceRequired)
             </td>
         </tr>
         <tr>

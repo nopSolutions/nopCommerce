@@ -24,7 +24,7 @@
                  cache: false,
                  type: "GET",
                  url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                 data: { "countryId": selectedItem, "addSelectStateItem": "true" },
                     success: function (data) {
                         ddlStates.html('');
                         $.each(data, function (id, option) {
@@ -226,6 +226,11 @@
                         <div class="inputs">
                             @Html.LabelFor(model => model.CountryId, new { }, ":")
                             @Html.DropDownList("CountryId", Model.AvailableCountries)
+                            @if (Model.CountryRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                            @Html.ValidationMessageFor(model => model.CountryId)
                         </div>
                     }
                     @if (Model.CountryEnabled && Model.StateProvinceEnabled)
@@ -233,6 +238,11 @@
                         <div class="inputs">
                             @Html.LabelFor(model => model.StateProvinceId, new { }, ":")
                             @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                            @if (Model.StateProvinceRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
+                            @Html.ValidationMessageFor(model => model.StateProvinceId)
                             <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                         </div>
                     }

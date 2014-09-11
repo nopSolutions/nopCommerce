@@ -14,7 +14,7 @@
                     cache: false,
                     type: "GET",
                     url: "@(Url.RouteUrl("GetStatesByCountryId"))",
-                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    data: { "countryId": selectedItem, "addSelectStateItem": "false" },
                     success: function (data) {
                         ddlStates.html('');
                         $.each(data, function (id, option) {

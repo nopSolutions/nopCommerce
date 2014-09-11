@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Nop.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
@@ -8,9 +10,36 @@ namespace Nop.Admin.Validators.Customers
 {
     public class CustomerValidator : BaseNopValidator<CustomerModel>
     {
-        public CustomerValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
+        public CustomerValidator(ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService,
+            CustomerSettings customerSettings)
         {
             //form fields
+            if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
+            {
+                RuleFor(x => x.CountryId)
+                    .NotEqual(0)
+                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
+            }
+            if (customerSettings.CountryEnabled &&
+                customerSettings.StateProvinceEnabled &&
+                customerSettings.StateProvinceRequired)
+            {
+                Custom(x =>
+                {
+                    //does selected country have states?
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
+                    if (hasStates)
+                    {
+                        //if yes, then ensure that a state is selected
+                        if (x.StateProvinceId == 0)
+                        {
+                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required"));
+                        }
+                    }
+                    return null;
+                });
+            }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required"));
             if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled) 

@@ -280,7 +280,7 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             //deleted
-            if (product.Deleted )
+            if (product.Deleted)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductDeleted"));
                 return warnings;

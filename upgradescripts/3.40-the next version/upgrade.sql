@@ -92,6 +92,30 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.ShipSeparately.Warning">
     <Value>Warning: </Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryRequired">
+    <Value>''Country'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryRequired.Hint">
+    <Value>Check if ''Country'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceRequired">
+    <Value>''State/province'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceRequired.Hint">
+    <Value>Check if ''State/province'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Address.SelectState">
+    <Value>Select state</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StateProvince.Required">
+    <Value>State / province is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.SelectState">
+    <Value>Select state</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -251,4 +275,20 @@ WHERE [ShipSeparately] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [ShipSeparately] bit NOT NULL
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.countryrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.countryrequired', N'false', 0)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.stateprovincerequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.stateprovincerequired', N'false', 0)
+END
 GO

@@ -475,7 +475,7 @@ namespace Nop.Admin.Controllers
 
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetStatesByCountryId(string countryId,
-            bool? addEmptyStateIfRequired, bool? addAsterisk)
+            bool? addSelectStateItem, bool? addAsterisk)
         {
             //permission validation is not required here
 
@@ -488,10 +488,43 @@ namespace Nop.Admin.Controllers
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, true).ToList() : new List<StateProvince>();
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
-            if (addEmptyStateIfRequired.HasValue && addEmptyStateIfRequired.Value && result.Count == 0)
-                result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
             if (addAsterisk.HasValue && addAsterisk.Value)
+            {
+                //asterisk
                 result.Insert(0, new { id = 0, name = "*" });
+            }
+            else
+            {
+                if (country == null)
+                {
+                    //country is not selected ("choose country" item)
+                    if (addSelectStateItem.HasValue && addSelectStateItem.Value)
+                    {
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                    }
+                    else
+                    {
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                    }
+                }
+                else
+                {
+                    //some country is selected
+                    if (result.Count == 0)
+                    {
+                        //country does not have states
+                        result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.OtherNonUS") });
+                    }
+                    else
+                    {
+                        //country has some states
+                        if (addSelectStateItem.HasValue && addSelectStateItem.Value)
+                        {
+                            result.Insert(0, new { id = 0, name = _localizationService.GetResource("Admin.Address.SelectState") });
+                        }
+                    }
+                }
+            }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 

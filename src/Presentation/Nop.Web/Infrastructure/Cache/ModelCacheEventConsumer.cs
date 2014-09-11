@@ -527,7 +527,7 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : country ID
-        /// {0} : addEmptyStateIfRequired value
+        /// {0} : "empty" or "select" item
         /// {0} : language ID
         /// </remarks>
         public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";

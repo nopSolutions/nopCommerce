@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
@@ -8,7 +10,9 @@ namespace Nop.Web.Validators.Customer
 {
     public class CustomerInfoValidator : BaseNopValidator<CustomerInfoModel>
     {
-        public CustomerInfoValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
+        public CustomerInfoValidator(ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService, 
+            CustomerSettings customerSettings)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
             RuleFor(x => x.Email).EmailAddress().WithMessage(localizationService.GetResource("Common.WrongEmail"));
@@ -21,6 +25,31 @@ namespace Nop.Web.Validators.Customer
             }
 
             //form fields
+            if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
+            {
+                RuleFor(x => x.CountryId)
+                    .NotEqual(0)
+                    .WithMessage(localizationService.GetResource("Account.Fields.Country.Required"));
+            }
+            if (customerSettings.CountryEnabled && 
+                customerSettings.StateProvinceEnabled &&
+                customerSettings.StateProvinceRequired)
+            {
+                Custom(x =>
+                {
+                    //does selected country have states?
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(x.CountryId).Count > 0;
+                    if (hasStates)
+                    {
+                        //if yes, then ensure that a state is selected
+                        if (x.StateProvinceId == 0)
+                        {
+                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Account.Fields.StateProvince.Required"));
+                        }
+                    }
+                    return null;
+                });
+            }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));

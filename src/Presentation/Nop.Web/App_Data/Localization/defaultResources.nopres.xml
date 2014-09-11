@@ -258,6 +258,9 @@
   <LocaleResource Name="Account.Fields.Country">
     <Value>Country</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.DateOfBirth">
     <Value>Date of birth</Value>
   </LocaleResource>
@@ -320,6 +323,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.StateProvince">
     <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StateProvince.Required">
+    <Value>State / province is required</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.StreetAddress">
     <Value>Street address</Value>
@@ -801,6 +807,9 @@
   <LocaleResource Name="Address.SelectCountry">
     <Value>Select country</Value>
   </LocaleResource>
+  <LocaleResource Name="Address.SelectState">
+    <Value>Select state</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin">
     <Value>Admin</Value>
   </LocaleResource>
@@ -926,6 +935,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Address.SelectCountry">
     <Value>Select country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.SelectState">
+    <Value>Select state</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Affiliates">
     <Value>Affiliates</Value>
@@ -4443,6 +4455,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryEnabled.Hint">
     <Value>Set if 'Country' is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryRequired">
+    <Value>'Country' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryRequired.Hint">
+    <Value>Check if 'Country' is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CustomerFormFields">
     <Value>Customer form fields</Value>
   </LocaleResource>
@@ -4577,6 +4595,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceEnabled.Hint">
     <Value>Set if 'State/province' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceRequired">
+    <Value>'State/province' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceRequired.Hint">
+    <Value>Check if 'State/province' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage">
     <Value>Store last visited page</Value>
