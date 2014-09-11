@@ -115,12 +115,12 @@ namespace Nop.Services.Tests.Catalog
                 CurrencyCode = "USD",
                 DisplayLocale = "en-US",
             };
-            var rub_currency = new Currency()
+            var gbp_currency = new Currency()
             {
                 Id = 2,
-                Name = "Russian Ruble",
-                CurrencyCode = "RUB",
-                DisplayLocale = "ru-RU",
+                Name = "great british pound",
+                CurrencyCode = "GBP",
+                DisplayLocale = "en-GB",
             };
             var language = new Language()
             {
@@ -129,7 +129,7 @@ namespace Nop.Services.Tests.Catalog
                 LanguageCulture = "en-US"
             };
             _priceFormatter.FormatPrice(1234.5M, false, usd_currency, language, false, false).ShouldEqual("$1,234.50");
-            _priceFormatter.FormatPrice(1234.5M, false, rub_currency, language, false, false).ShouldEqual("1 234,50р.");
+            _priceFormatter.FormatPrice(1234.5M, false, gbp_currency, language, false, false).ShouldEqual("£1,234.50");
         }
 
         [Test]

@@ -395,8 +395,9 @@ namespace Nop.Services.Tests.Orders
                 out discountAmount, out appliedDiscount,
                 out subTotalWithoutDiscount, out subTotalWithDiscount, out taxRates);
 
-            //TODO strange. Why does the commented test fail? discountAmount.ShouldEqual(3.3);
+            //The comparison test failed before, because of a very tiny number difference.
             //discountAmount.ShouldEqual(3.3);
+            (System.Math.Round(discountAmount, 10) == 3.3M).ShouldBeTrue();
             appliedDiscount.ShouldNotBeNull();
             appliedDiscount.Name.ShouldEqual("Discount 1");
             subTotalWithoutDiscount.ShouldEqual(98.329);
