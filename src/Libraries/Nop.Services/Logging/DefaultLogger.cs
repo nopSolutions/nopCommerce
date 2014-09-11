@@ -114,8 +114,8 @@ namespace Nop.Services.Logging
 
 
                 //do all databases support "Truncate command"?
-                //TODO: do not hard-code the table name
-                _dbContext.ExecuteSqlCommand("TRUNCATE TABLE [Log]");
+                string logTableName = _dbContext.GetTableName<Log>();
+                _dbContext.ExecuteSqlCommand(String.Format("TRUNCATE TABLE [{0}]", logTableName));
             }
             else
             {
