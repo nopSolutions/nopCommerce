@@ -165,6 +165,7 @@
         function toggleShipping() {
             if ($('#@Html.FieldIdFor(model => model.IsShipEnabled)').is(':checked')) {
                 $('#pnlFreeShipping').show();
+                $('#pnlShipSeparately').show();
                 $('#pnlAdditionalShippingCharge').show();
                 $('#pnlWeight').show();
                 $('#pnlLength').show();
@@ -175,6 +176,7 @@
             }
             else {
                 $('#pnlFreeShipping').hide();
+                $('#pnlShipSeparately').hide();
                 $('#pnlAdditionalShippingCharge').hide();
                 $('#pnlWeight').hide();
                 $('#pnlLength').hide();
@@ -839,6 +841,15 @@
         <td class="adminData">
             @Html.EditorFor(model => model.IsFreeShipping)
             @Html.ValidationMessageFor(model => model.IsFreeShipping)
+        </td>
+    </tr>
+    <tr id="pnlShipSeparately">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ShipSeparately):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ShipSeparately)
+            @Html.ValidationMessageFor(model => model.ShipSeparately)
         </td>
     </tr>
     <tr id="pnlAdditionalShippingCharge">

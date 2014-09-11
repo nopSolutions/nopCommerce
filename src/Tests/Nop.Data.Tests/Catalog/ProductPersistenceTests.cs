@@ -56,6 +56,7 @@ namespace Nop.Data.Tests.Catalog
                 RecurringTotalCycles = 9,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
+                ShipSeparately = true,
                 AdditionalShippingCharge = 10.1M,
                 DeliveryDateId = 5,
                 WarehouseId = 6,
@@ -149,6 +150,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.RecurringTotalCycles.ShouldEqual(9);
             fromDb.IsShipEnabled.ShouldEqual(true);
             fromDb.IsFreeShipping.ShouldEqual(true);
+            fromDb.ShipSeparately.ShouldEqual(true);
             fromDb.AdditionalShippingCharge.ShouldEqual(10.1M);
             fromDb.DeliveryDateId.ShouldEqual(5);
             fromDb.WarehouseId.ShouldEqual(6);

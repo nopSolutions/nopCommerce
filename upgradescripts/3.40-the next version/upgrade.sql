@@ -80,6 +80,18 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.CustomValues.Hint">
     <Value>Custom values from the payment method.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
+    <Value>Ship separately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
+    <Value>Check to mark a product as being able to be shipped by itself in a single box (separate shipment). This way shipping rates are calculated separately for this product regardless of what other products are also in the cart. Please note that if you have several quantities of this product in the cart, then all of them will be packed and shipped in a single box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ShipSeparately">
+    <Value>this product should be shipped separately!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ShipSeparately.Warning">
+    <Value>Warning: </Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -222,4 +234,21 @@ BEGIN
 	ALTER TABLE [Discount]
 	ADD [MaximumDiscountedQuantity] int NULL
 END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='ShipSeparately')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [ShipSeparately] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [ShipSeparately] = 0
+WHERE [ShipSeparately] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [ShipSeparately] bit NOT NULL
 GO

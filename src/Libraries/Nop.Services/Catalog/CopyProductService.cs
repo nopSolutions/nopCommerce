@@ -169,6 +169,7 @@ namespace Nop.Services.Catalog
                 RecurringTotalCycles = product.RecurringTotalCycles,
                 IsShipEnabled = product.IsShipEnabled,
                 IsFreeShipping = product.IsFreeShipping,
+                ShipSeparately = product.ShipSeparately,
                 AdditionalShippingCharge = product.AdditionalShippingCharge,
                 DeliveryDateId = product.DeliveryDateId,
                 WarehouseId = product.WarehouseId,

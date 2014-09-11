@@ -83,6 +83,12 @@
                                             <br />
                                             @Html.Raw(item.AttributeInfo)
                                         }
+                                        @if (item.ShipSeparately)
+                                        {
+                                            <br />
+                                            <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
+                                            @T("Admin.Orders.Shipments.Products.ShipSeparately")
+                                        }
                                     </div>
                                 </td>
                                 <td style="width: 10%;">

@@ -2322,6 +2322,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.SeName.Hint">
     <Value>Set a search engine friendly page name e.g. 'the-best-product' to make your page URL 'http://www.yourStore.com/the-best-product'. Leave empty to generate it automatically based on the name of the product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately">
+    <Value>Ship separately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShipSeparately.Hint">
+    <Value>Check to mark a product as being able to be shipped by itself in a single box (separate shipment). This way shipping rates are calculated separately for this product regardless of what other products are also in the cart. Please note that if you have several quantities of this product in the cart, then all of them will be packed and shipped in a single box.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription">
     <Value>Short description</Value>
   </LocaleResource>
@@ -8591,6 +8597,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToShip">
     <Value>Qty to ship</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ShipSeparately">
+    <Value>this product should be shipped separately!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ShipSeparately.Warning">
+    <Value>Warning: </Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.SKU">
     <Value>SKU</Value>

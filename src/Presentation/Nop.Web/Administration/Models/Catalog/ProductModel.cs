@@ -182,6 +182,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsFreeShipping")]
         public bool IsFreeShipping { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShipSeparately")]
+        public bool ShipSeparately { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdditionalShippingCharge")]
         public decimal AdditionalShippingCharge { get; set; }
 

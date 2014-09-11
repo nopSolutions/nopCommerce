@@ -631,7 +631,6 @@ namespace Nop.Services.Shipping
             return height;
         }
 
-
         /// <summary>
         /// Create shipment packages (requests) from shopping cart
         /// </summary>
@@ -642,33 +641,41 @@ namespace Nop.Services.Shipping
             Address shippingAddress)
         {
             //if we always ship from the default shipping origin, then there's only one request
-            //if we ship from warehouses, then there could be several requests
+            //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
+            //then there could be several requests
 
 
             //key - warehouse identifier (0 - default shipping origin)
             //value - request
             var requests = new Dictionary<int, GetShippingOptionRequest>();
 
+            //a list of requests with products which should be shipped separately
+            var separateRequests = new List<GetShippingOptionRequest>();
+
             foreach (var sci in cart)
             {
                 if (!sci.IsShipEnabled)
                     continue;
 
+                //warehouses
                 Warehouse warehouse = null;
                 if (_shippingSettings.UseWarehouseLocation)
                 {
+                    //ensure warehouse exists
                     warehouse = GetWarehouseById(sci.Product.WarehouseId);
                 }
-                GetShippingOptionRequest request = null;
-                if (requests.ContainsKey(warehouse != null ? warehouse.Id : 0))
+                int warehosueId = warehouse != null ? warehouse.Id : 0;
+
+
+                if (requests.ContainsKey(warehosueId) && !sci.Product.ShipSeparately)
                 {
-                    request = requests[warehouse != null ? warehouse.Id : 0];
-                    //add item
-                    request.Items.Add(sci);
+                    //add item to existing request
+                     requests[warehosueId].Items.Add(sci);
                 }
                 else
                 {
-                    request = new GetShippingOptionRequest();
+                    //create a new request
+                    var request = new GetShippingOptionRequest();
                     //add item
                     request.Items.Add(sci);
                     //customer
@@ -696,12 +703,22 @@ namespace Nop.Services.Shipping
                         request.AddressFrom = originAddress.Address1;
                     }
 
-                    requests.Add(warehouse != null ? warehouse.Id : 0, request);
+                    if (sci.Product.ShipSeparately)
+                    {
+                        //ship separately
+                        separateRequests.Add(request);
+                    }
+                    else
+                    {
+                        //usual request
+                        requests.Add(warehosueId, request);
+                    }
                 }
-
             }
 
-            return requests.Values.ToList();
+            var result = requests.Values.ToList();
+            result.AddRange(separateRequests);
+            return result;
         }
 
         /// <summary>

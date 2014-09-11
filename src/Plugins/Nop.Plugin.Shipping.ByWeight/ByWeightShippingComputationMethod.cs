@@ -116,7 +116,7 @@ namespace Nop.Plugin.Shipping.ByWeight
             decimal subTotal = decimal.Zero;
             foreach (var shoppingCartItem in getShippingOptionRequest.Items)
             {
-                if (shoppingCartItem.IsFreeShipping || !shoppingCartItem.IsShipEnabled)
+                if (shoppingCartItem.IsFreeShipping)
                     continue;
                 subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem);
             }

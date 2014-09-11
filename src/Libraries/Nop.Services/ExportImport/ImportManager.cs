@@ -153,6 +153,7 @@ namespace Nop.Services.ExportImport
                     "RecurringTotalCycles",
                     "IsShipEnabled",
                     "IsFreeShipping",
+                    "ShipSeparately",
                     "AdditionalShippingCharge",
                     "DeliveryDateId",
                     "WarehouseId",
@@ -249,6 +250,7 @@ namespace Nop.Services.ExportImport
                     int recurringTotalCycles = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
                     bool isShipEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
                     bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
+                    bool shipSeparately = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
                     decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
                     int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
                     int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
@@ -350,6 +352,7 @@ namespace Nop.Services.ExportImport
                     product.RecurringTotalCycles = recurringTotalCycles;
                     product.IsShipEnabled = isShipEnabled;
                     product.IsFreeShipping = isFreeShipping;
+                    product.ShipSeparately = shipSeparately;
                     product.AdditionalShippingCharge = additionalShippingCharge;
                     product.DeliveryDateId = deliveryDateId;
                     product.WarehouseId = warehouseId;

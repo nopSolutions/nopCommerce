@@ -248,6 +248,11 @@ namespace Nop.Core.Domain.Catalog
         public bool IsFreeShipping { get; set; }
 
         /// <summary>
+        /// Gets or sets a value this product should be shipped separately (each item)
+        /// </summary>
+        public bool ShipSeparately { get; set; }
+
+        /// <summary>
         /// Gets or sets the additional shipping charge
         /// </summary>
         public decimal AdditionalShippingCharge { get; set; }
