@@ -237,7 +237,7 @@ namespace Nop.Services.Common
                         if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
                             return false;
 
-                        var state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
+                        var state = states.FirstOrDefault(x => x.Id == address.StateProvinceId.Value);
                         if (state == null)
                             return false;
                     }
