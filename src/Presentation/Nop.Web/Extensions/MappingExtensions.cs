@@ -152,6 +152,8 @@ namespace Nop.Web.Extensions
                         .ToList();
                     if (states.Count > 0)
                     {
+                        model.AvailableStates.Add(new SelectListItem() { Text = localizationService.GetResource("Address.SelectState"), Value = "0" });
+
                         foreach (var s in states)
                         {
                             model.AvailableStates.Add(new SelectListItem()
@@ -164,9 +166,10 @@ namespace Nop.Web.Extensions
                     }
                     else
                     {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
                         model.AvailableStates.Add(new SelectListItem()
                         {
-                            Text = localizationService.GetResource("Address.OtherNonUS"),
+                            Text = localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = "0"
                         });
                     }

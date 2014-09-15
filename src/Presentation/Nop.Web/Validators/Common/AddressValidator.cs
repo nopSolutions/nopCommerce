@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using Nop.Core.Domain.Common;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Common;
@@ -8,7 +10,9 @@ namespace Nop.Web.Validators.Common
 {
     public class AddressValidator : BaseNopValidator<AddressModel>
     {
-        public AddressValidator(ILocalizationService localizationService, AddressSettings addressSettings)
+        public AddressValidator(ILocalizationService localizationService,
+            IStateProvinceService stateProvinceService,
+            AddressSettings addressSettings)
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty()
@@ -31,7 +35,25 @@ namespace Nop.Web.Validators.Common
                     .NotEqual(0)
                     .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
             }
+            if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
+            {
+                Custom(x =>
+                {
+                    //does selected country has states?
+                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
+                    var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Count > 0;
 
+                    if (hasStates)
+                    {
+                        //if yes, then ensure that state is selected
+                        if (!x.StateProvinceId.HasValue || x.StateProvinceId.Value == 0)
+                        {
+                            return new ValidationFailure("StateProvinceId", localizationService.GetResource("Address.Fields.StateProvince.Required"));
+                        }
+                    }
+                    return null;
+                });
+            }
             if (addressSettings.CompanyRequired && addressSettings.CompanyEnabled)
             {
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));
