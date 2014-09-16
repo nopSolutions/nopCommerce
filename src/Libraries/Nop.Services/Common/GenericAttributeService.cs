@@ -160,6 +160,9 @@ namespace Nop.Services.Common
             if (entity == null)
                 throw new ArgumentNullException("entity");
 
+            if (key == null)
+                throw new ArgumentNullException("key");
+
             string keyGroup = entity.GetUnproxiedEntityType().Name;
 
             var props = GetAttributesForEntity(entity.Id, keyGroup)
