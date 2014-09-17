@@ -12,7 +12,8 @@ namespace Nop.Web.Models.Catalog
         }
 
         public string TagName { get; set; }
-
+        public string TagSeName { get; set; }
+        
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
 
         public IList<ProductOverviewModel> Products { get; set; }
