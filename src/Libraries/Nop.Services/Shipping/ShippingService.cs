@@ -664,13 +664,13 @@ namespace Nop.Services.Shipping
                     //ensure warehouse exists
                     warehouse = GetWarehouseById(sci.Product.WarehouseId);
                 }
-                int warehosueId = warehouse != null ? warehouse.Id : 0;
+                int warehouseId = warehouse != null ? warehouse.Id : 0;
 
 
-                if (requests.ContainsKey(warehosueId) && !sci.Product.ShipSeparately)
+                if (requests.ContainsKey(warehouseId) && !sci.Product.ShipSeparately)
                 {
                     //add item to existing request
-                     requests[warehosueId].Items.Add(sci);
+                    requests[warehouseId].Items.Add(sci);
                 }
                 else
                 {
@@ -711,7 +711,7 @@ namespace Nop.Services.Shipping
                     else
                     {
                         //usual request
-                        requests.Add(warehosueId, request);
+                        requests.Add(warehouseId, request);
                     }
                 }
             }
