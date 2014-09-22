@@ -172,10 +172,11 @@ namespace Nop.Services.Catalog
                 ShipSeparately = product.ShipSeparately,
                 AdditionalShippingCharge = product.AdditionalShippingCharge,
                 DeliveryDateId = product.DeliveryDateId,
-                WarehouseId = product.WarehouseId,
                 IsTaxExempt = product.IsTaxExempt,
                 TaxCategoryId = product.TaxCategoryId,
                 ManageInventoryMethod = product.ManageInventoryMethod,
+                UseMultipleWarehouses = product.UseMultipleWarehouses,
+                WarehouseId = product.WarehouseId,
                 StockQuantity = product.StockQuantity,
                 DisplayStockAvailability = product.DisplayStockAvailability,
                 DisplayStockQuantity = product.DisplayStockQuantity,
@@ -284,6 +285,20 @@ namespace Nop.Services.Catalog
                     originalNewPictureIdentifiers.Add(picture.Id, pictureCopy.Id);
                 }
             }
+
+            // product <-> warehouses mappings
+            foreach (var pwi in product.ProductWarehouseInventory)
+            {
+                var pwiCopy = new ProductWarehouseInventory()
+                {
+                    ProductId = productCopy.Id,
+                    WarehouseId = pwi.WarehouseId,
+                    StockQuantity = pwi.StockQuantity,
+                };
+
+                productCopy.ProductWarehouseInventory.Add(pwiCopy);
+            }
+            _productService.UpdateProduct(productCopy);
 
             // product <-> categories mappings
             foreach (var productCategory in product.ProductCategories)

@@ -271,10 +271,11 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("ShipSeparately", null, product.ShipSeparately.ToString());
                 xmlWriter.WriteElementString("AdditionalShippingCharge", null, product.AdditionalShippingCharge.ToString());
                 xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId.ToString());
-                xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId.ToString());
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
+                xmlWriter.WriteElementString("UseMultipleWarehouses", null, product.UseMultipleWarehouses.ToString());
+                xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId.ToString());
                 xmlWriter.WriteElementString("StockQuantity", null, product.StockQuantity.ToString());
                 xmlWriter.WriteElementString("DisplayStockAvailability", null, product.DisplayStockAvailability.ToString());
                 xmlWriter.WriteElementString("DisplayStockQuantity", null, product.DisplayStockQuantity.ToString());
@@ -536,10 +537,11 @@ namespace Nop.Services.ExportImport
                     "ShipSeparately",
                     "AdditionalShippingCharge",
                     "DeliveryDateId",
-                    "WarehouseId",
                     "IsTaxExempt",
                     "TaxCategoryId",
                     "ManageInventoryMethodId",
+                    "UseMultipleWarehouses",
+                    "WarehouseId",
                     "StockQuantity",
                     "DisplayStockAvailability",
                     "DisplayStockQuantity",
@@ -713,9 +715,6 @@ namespace Nop.Services.ExportImport
 
                     worksheet.Cells[row, col].Value = p.DeliveryDateId;
                     col++;
-
-                    worksheet.Cells[row, col].Value = p.WarehouseId;
-                    col++;
                     
                     worksheet.Cells[row, col].Value = p.IsTaxExempt;
                     col++;
@@ -724,6 +723,12 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.ManageInventoryMethodId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.UseMultipleWarehouses;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.WarehouseId;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.StockQuantity;

@@ -196,23 +196,30 @@ namespace Nop.Services.Catalog
         /// <param name="sku">SKU</param>
         /// <returns>Product</returns>
         Product GetProductBySku(string sku);
-        
+
         /// <summary>
-        /// Adjusts inventory
+        /// Adjust inventory
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="decrease">A value indicating whether to increase or descrease product stock quantity</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="onlyMultipleWarehouses">Pass "true" to ensure that a product is 
+        /// with inventory management per warehouse ("UseMultipleWarehouses" property). 
+        /// Stocks of such products are adjusted manually when creating or deleting shipments (not when placing orders). 
+        /// Pass "false" to ensure that a product is with simple inventory management
+        /// </param>
+        /// <param name="warehouseId">Warehouse identifier. 
+        /// This parameter is used only when "onlyMultipleWarehouses" parameter is "true</param>
         void AdjustInventory(Product product, bool decrease,
-            int quantity, string attributesXml);
+            int quantity, string attributesXml = "",
+            bool onlyMultipleWarehouses = false, int warehouseId = 0);
 
         /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateHasTierPricesProperty(Product product);
-
 
         /// <summary>
         /// Update HasDiscountsApplied property (used for performance optimization)
@@ -396,6 +403,16 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         void DeleteProductReview(ProductReview productReview);
+
+        #endregion
+
+        #region Product warehouse inventory
+
+        /// <summary>
+        /// Deletes a ProductWarehouseInventory
+        /// </summary>
+        /// <param name="pwi">ProductWarehouseInventory</param>
+        void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi);
 
         #endregion
     }

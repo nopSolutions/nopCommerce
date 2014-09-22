@@ -23,6 +23,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductVariantAttributeCombination> _productVariantAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
         private ICollection<Discount> _appliedDiscounts;
+        private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
 
 
         /// <summary>
@@ -263,11 +264,6 @@ namespace Nop.Core.Domain.Catalog
         public int DeliveryDateId { get; set; }
 
         /// <summary>
-        /// Gets or sets a warehouse identifier
-        /// </summary>
-        public int WarehouseId { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the product is marked as tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }
@@ -281,6 +277,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating how to manage inventory
         /// </summary>
         public int ManageInventoryMethodId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether multiple warehouses are used for this product
+        /// </summary>
+        public bool UseMultipleWarehouses { get; set; }
+        /// <summary>
+        /// Gets or sets a warehouse identifier
+        /// </summary>
+        public int WarehouseId { get; set; }
 
         /// <summary>
         /// Gets or sets the stock quantity
@@ -690,6 +695,15 @@ namespace Nop.Core.Domain.Catalog
         {
             get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
             protected set { _appliedDiscounts = value; }
+        }
+        
+        /// <summary>
+        /// Gets or sets the collection of "ProductWarehouseInventory" records. We use it only when "UseMultipleWarehouses" is set to "true" and ManageInventoryMethod" to "ManageStock"
+        /// </summary>
+        public virtual ICollection<ProductWarehouseInventory> ProductWarehouseInventory
+        {
+            get { return _productWarehouseInventory ?? (_productWarehouseInventory = new List<ProductWarehouseInventory>()); }
+            protected set { _productWarehouseInventory = value; }
         }
     }
 }

@@ -156,10 +156,11 @@ namespace Nop.Services.ExportImport
                     "ShipSeparately",
                     "AdditionalShippingCharge",
                     "DeliveryDateId",
-                    "WarehouseId",
                     "IsTaxExempt",
                     "TaxCategoryId",
                     "ManageInventoryMethodId",
+                    "UseMultipleWarehouses",
+                    "WarehouseId",
                     "StockQuantity",
                     "DisplayStockAvailability",
                     "DisplayStockQuantity",
@@ -253,10 +254,11 @@ namespace Nop.Services.ExportImport
                     bool shipSeparately = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
                     decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
                     int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
-                    int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
                     bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
                     int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
                     int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
+                    bool useMultipleWarehouses = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UseMultipleWarehouses")].Value);
+                    int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
                     int stockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "StockQuantity")].Value);
                     bool displayStockAvailability = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockAvailability")].Value);
                     bool displayStockQuantity = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockQuantity")].Value);
@@ -355,10 +357,11 @@ namespace Nop.Services.ExportImport
                     product.ShipSeparately = shipSeparately;
                     product.AdditionalShippingCharge = additionalShippingCharge;
                     product.DeliveryDateId = deliveryDateId;
-                    product.WarehouseId = warehouseId;
                     product.IsTaxExempt = isTaxExempt;
                     product.TaxCategoryId = taxCategoryId;
                     product.ManageInventoryMethodId = manageInventoryMethodId;
+                    product.UseMultipleWarehouses = useMultipleWarehouses;
+                    product.WarehouseId = warehouseId;
                     product.StockQuantity = stockQuantity;
                     product.DisplayStockAvailability = displayStockAvailability;
                     product.DisplayStockQuantity = displayStockQuantity;

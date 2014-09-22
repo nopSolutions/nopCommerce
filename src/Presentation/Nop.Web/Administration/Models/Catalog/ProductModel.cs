@@ -28,6 +28,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableWarehouses = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
+            ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ID")]
@@ -192,10 +193,6 @@ namespace Nop.Admin.Models.Catalog
         public int DeliveryDateId { get; set; }
         public IList<SelectListItem> AvailableDeliveryDates { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
-        public int WarehouseId { get; set; }
-        public IList<SelectListItem> AvailableWarehouses { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsTaxExempt")]
         public bool IsTaxExempt { get; set; }
 
@@ -205,6 +202,13 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ManageInventoryMethod")]
         public int ManageInventoryMethodId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.UseMultipleWarehouses")]
+        public bool UseMultipleWarehouses { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.Warehouse")]
+        public int WarehouseId { get; set; }
+        public IList<SelectListItem> AvailableWarehouses { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
@@ -375,6 +379,9 @@ namespace Nop.Admin.Models.Catalog
         public AddProductSpecificationAttributeModel AddSpecificationAttributeModel { get; set; }
 
 
+        //multiple warehouses
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory")]
+        public IList<ProductWarehouseInventoryModel> ProductWarehouseInventoryModels { get; set; }
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }
@@ -618,6 +625,21 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.TierPrices.Fields.Price")]
             public decimal Price { get; set; }
         }
+
+        public partial class ProductWarehouseInventoryModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
+            public int WarehouseId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")]
+            public string WarehouseName { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")]
+            public bool WarehouseUsed { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")]
+            public int StockQuantity { get; set; }
+        }
+        
 
         public partial class ProductVariantAttributeModel : BaseNopEntityModel
         {

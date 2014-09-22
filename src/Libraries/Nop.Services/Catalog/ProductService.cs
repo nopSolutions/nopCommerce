@@ -51,6 +51,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<ProductReview> _productReviewRepository;
+        private readonly IRepository<ProductWarehouseInventory> _productWarehouseInventoryRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -85,6 +86,7 @@ namespace Nop.Services.Catalog
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productReviewRepository">Product review repository</param>
+        /// <param name="productWarehouseInventoryRepository">Product warehouse inventory repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="languageService">Language service</param>
@@ -110,6 +112,7 @@ namespace Nop.Services.Catalog
             IRepository<StoreMapping> storeMappingRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IRepository<ProductReview>  productReviewRepository,
+            IRepository<ProductWarehouseInventory> productWarehouseInventoryRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -136,6 +139,7 @@ namespace Nop.Services.Catalog
             this._storeMappingRepository = storeMappingRepository;
             this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             this._productReviewRepository = productReviewRepository;
+            this._productWarehouseInventoryRepository = productWarehouseInventoryRepository;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._languageService = languageService;
@@ -856,7 +860,19 @@ namespace Nop.Services.Catalog
                 //warehouse filtering
                 if (warehouseId > 0)
                 {
-                    query = query.Where(p => p.WarehouseId == warehouseId);
+                    var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
+                    query = query.Where(p =>
+                        //"Use multiple warehouses" enabled
+                        //we search in each warehouse
+                        (p.ManageInventoryMethodId == manageStockInventoryMethodId &&
+                         p.UseMultipleWarehouses &&
+                         p.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
+                        ||
+                        //"Use multiple warehouses" disabled
+                        //we use standard "warehouse" property
+                        ((p.ManageInventoryMethodId != manageStockInventoryMethodId ||
+                          !p.UseMultipleWarehouses) &&
+                          p.WarehouseId == warehouseId));
                 }
 
                 //related products filtering
@@ -1058,7 +1074,7 @@ namespace Nop.Services.Catalog
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
                          //ignore grouped products
                          p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                         p.MinStockQuantity >= p.StockQuantity &&
+                         p.MinStockQuantity >= (p.UseMultipleWarehouses ? p.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity) : p.StockQuantity) &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
             products = query1.ToList();
@@ -1096,88 +1112,137 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
-        /// Adjusts inventory
+        /// Adjust inventory
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="decrease">A value indicating whether to increase or descrease product stock quantity</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="onlyMultipleWarehouses">Pass "true" to ensure that a product is 
+        /// with inventory management per warehouse ("UseMultipleWarehouses" property). 
+        /// Stocks of such products are adjusted manually when creating or deleting shipments (not when placing orders). 
+        /// Pass "false" to ensure that a product is with simple inventory management
+        /// </param>
+        /// <param name="warehouseId">Warehouse identifier. 
+        /// This parameter is used only when "onlyMultipleWarehouses" parameter is "true</param>
         public virtual void AdjustInventory(Product product, bool decrease,
-            int quantity, string attributesXml)
+            int quantity, string attributesXml = "",
+            bool onlyMultipleWarehouses = false, int warehouseId = 0)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var prevStockQuantity = product.StockQuantity;
+            var useMultipleWarehouses = product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                                        product.UseMultipleWarehouses;
+            
+            if (onlyMultipleWarehouses && !useMultipleWarehouses)
+                return;
+            if (!onlyMultipleWarehouses && useMultipleWarehouses)
+                return;
 
-            switch (product.ManageInventoryMethod)
+            //var prevStockQuantity = product.GetTotalStockQuantity();
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
-                case ManageInventoryMethod.DontManageStock:
+                //update stock quantity
+                var currentStockQuantity = 0;
+                if (useMultipleWarehouses)
+                {
+                    //use multiple warehouses
+                    //simple inventory management
+                    var pwi = product.ProductWarehouseInventory
+                        .FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (pwi != null)
                     {
-                        //do nothing
+                        currentStockQuantity = pwi.StockQuantity;
                     }
-                    break;
-                case ManageInventoryMethod.ManageStock:
+                    else
                     {
-                        int newStockQuantity = 0;
-                        if (decrease)
-                            newStockQuantity = product.StockQuantity - quantity;
-                        else
-                            newStockQuantity = product.StockQuantity + quantity;
+                        //actually it's not possible
+                        //should we throw an exception here?
+                    }
+                }
+                else
+                {
+                    //do not use multiple warehouses
+                    //simple inventory management
+                    currentStockQuantity = product.StockQuantity;
+                }
+                
+                int newStockQuantity = 0;
+                if (decrease)
+                    newStockQuantity = currentStockQuantity - quantity;
+                else
+                    newStockQuantity = currentStockQuantity + quantity;
 
-                        bool newPublished = product.Published;
-                        bool newDisableBuyButton = product.DisableBuyButton;
-                        bool newDisableWishlistButton = product.DisableWishlistButton;
-
-                        //check if minimum quantity is reached
-                        if (decrease)
-                        {
-                            if (product.MinStockQuantity >= newStockQuantity)
-                            {
-                                switch (product.LowStockActivity)
-                                {
-                                    case LowStockActivity.DisableBuyButton:
-                                        newDisableBuyButton = true;
-                                        newDisableWishlistButton = true;
-                                        break;
-                                    case LowStockActivity.Unpublish:
-                                        newPublished = false;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-
-                        product.StockQuantity = newStockQuantity;
-                        product.DisableBuyButton = newDisableBuyButton;
-                        product.DisableWishlistButton = newDisableWishlistButton;
-                        product.Published = newPublished;
+                if (useMultipleWarehouses)
+                {
+                    //use multiple warehouses
+                    //simple inventory management
+                    var pwi = product.ProductWarehouseInventory
+                        .FirstOrDefault(x => x.WarehouseId == warehouseId);
+                    if (pwi != null)
+                    {
+                        pwi.StockQuantity = newStockQuantity;
                         UpdateProduct(product);
-
-                        //send email notification
-                        if (decrease && product.NotifyAdminForQuantityBelow > newStockQuantity)
-                            _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
                     }
-                    break;
-                case ManageInventoryMethod.ManageStockByAttributes:
+                    else
                     {
-                        var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
-                        if (combination != null)
-                        {
-                            int newStockQuantity = 0;
-                            if (decrease)
-                                newStockQuantity = combination.StockQuantity - quantity;
-                            else
-                                newStockQuantity = combination.StockQuantity + quantity;
+                        //actually it's not possible
+                        //should we throw an exception here?
+                    }
+                }
+                else
+                {
+                    //do not use multiple warehouses
+                    //simple inventory management
+                    product.StockQuantity = newStockQuantity;
+                    UpdateProduct(product);
+                }
 
-                            combination.StockQuantity = newStockQuantity;
-                            _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+                //check if minimum quantity is reached
+                if (decrease)
+                {
+                    if (product.MinStockQuantity >= product.GetTotalStockQuantity())
+                    {
+                        switch (product.LowStockActivity)
+                        {
+                            case LowStockActivity.DisableBuyButton:
+                                product.DisableBuyButton = true;
+                                product.DisableWishlistButton = true;
+                                UpdateProduct(product);
+                                break;
+                            case LowStockActivity.Unpublish:
+                                product.Published = false;
+                                UpdateProduct(product);
+                                break;
+                            default:
+                                break;
                         }
                     }
-                    break;
-                default:
-                    break;
+                }
+
+                //send email notification
+                if (decrease && product.NotifyAdminForQuantityBelow > product.GetTotalStockQuantity())
+                {
+                    _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
+                }
+            }
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+                if (combination != null)
+                {
+                    int newStockQuantity = 0;
+                    if (decrease)
+                        newStockQuantity = combination.StockQuantity - quantity;
+                    else
+                        newStockQuantity = combination.StockQuantity + quantity;
+
+                    combination.StockQuantity = newStockQuantity;
+                    _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+                }
             }
 
 
@@ -1192,16 +1257,17 @@ namespace Nop.Services.Catalog
                     if (associatedProduct != null)
                     {
                         var totalQty = quantity*pvaValue.Quantity;
-                        AdjustInventory(associatedProduct, decrease, totalQty, "");
+                        AdjustInventory(associatedProduct, decrease, totalQty, "", onlyMultipleWarehouses, warehouseId);
                     }
                 }
             }
 
             //TODO send back in stock notifications?
+            //also do not forget to uncomment some code above ("prevStockQuantity")
             //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
             //    product.BackorderMode == BackorderMode.NoBackorders &&
             //    product.AllowBackInStockSubscriptions &&
-            //    product.StockQuantity > 0 &&
+            //    product.GetTotalStockQuantity() > 0 &&
             //    prevStockQuantity <= 0 &&
             //    product.Published &&
             //    !product.Deleted)
@@ -1649,6 +1715,24 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productReview");
 
             _productReviewRepository.Delete(productReview);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+        }
+
+        #endregion
+
+        #region Product warehouse inventory
+
+        /// <summary>
+        /// Deletes a ProductWarehouseInventory
+        /// </summary>
+        /// <param name="pwi">ProductWarehouseInventory</param>
+        public virtual void DeleteProductWarehouseInventory(ProductWarehouseInventory pwi)
+        {
+            if (pwi == null)
+                throw new ArgumentNullException("pwi");
+
+            _productWarehouseInventoryRepository.Delete(pwi);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
         }

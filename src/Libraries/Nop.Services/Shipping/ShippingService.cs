@@ -632,6 +632,20 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Get the nearest warehouse for the specified address
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
+        /// <returns></returns>
+        public virtual Warehouse GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null)
+        {
+            warehouses = warehouses ?? GetAllWarehouses();
+            //TODO put a logic to choose a warehouse here
+            //for example, first compare countries, then states, city, etc
+            return warehouses.FirstOrDefault();
+        }
+
+        /// <summary>
         /// Create shipment packages (requests) from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>
@@ -661,11 +675,27 @@ namespace Nop.Services.Shipping
                 Warehouse warehouse = null;
                 if (_shippingSettings.UseWarehouseLocation)
                 {
-                    //ensure warehouse exists
-                    warehouse = GetWarehouseById(sci.Product.WarehouseId);
+                    if (sci.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                        sci.Product.UseMultipleWarehouses)
+                    {
+                        var allWarehouses = new List<Warehouse>();
+                        //multiple warehouses supported
+                        foreach (var pwi in sci.Product.ProductWarehouseInventory)
+                        {
+                            //TODO validate stock quantity when backorder is not allowed?
+                            var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);
+                            if (tmpWarehouse != null)
+                                allWarehouses.Add(tmpWarehouse);
+                        }
+                        warehouse = GetNearestWarehouse(shippingAddress, allWarehouses);
+                    }
+                    else
+                    {
+                        //multiple warehouses are not supported
+                        warehouse = GetWarehouseById(sci.Product.WarehouseId);
+                    }
                 }
                 int warehouseId = warehouse != null ? warehouse.Id : 0;
-
 
                 if (requests.ContainsKey(warehouseId) && !sci.Product.ShipSeparately)
                 {

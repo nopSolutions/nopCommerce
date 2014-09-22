@@ -71,6 +71,7 @@
     <Compile Include="Initializers\SqlCeInitializer.cs" />
     <Compile Include="Initializers\CreateTablesIfNotExist.cs" />
     <Compile Include="EfDataProviderManager.cs" />
+    <Compile Include="Mapping\Catalog\ProductWarehouseInventoryMap.cs" />
     <Compile Include="Mapping\Catalog\BackInStockSubscriptionMap.cs" />
     <Compile Include="Mapping\Catalog\ManufacturerTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\CategoryTemplateMap.cs" />

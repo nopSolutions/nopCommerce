@@ -374,9 +374,9 @@ namespace Nop.Services.Orders
                         {
                             if ((BackorderMode)product.BackorderMode == BackorderMode.NoBackorders)
                             {
-                                if (product.StockQuantity < quantity)
+                                int maximumQuantityCanBeAdded = product.GetTotalStockQuantity();
+                                if (maximumQuantityCanBeAdded < quantity)
                                 {
-                                    int maximumQuantityCanBeAdded = product.StockQuantity;
                                     if (maximumQuantityCanBeAdded <= 0)
                                         warnings.Add(_localizationService.GetResource("ShoppingCart.OutOfStock"));
                                     else

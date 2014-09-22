@@ -194,9 +194,22 @@ namespace Nop.Services.Orders
             }
             if (warehouseId > 0)
             {
+                var manageStockInventoryMethodId = (int)ManageInventoryMethod.ManageStock;
                 query = query
                     .Where(o => o.OrderItems
-                    .Any(orderItem => orderItem.Product.WarehouseId == warehouseId));
+                    .Any(orderItem =>
+                        //"Use multiple warehouses" enabled
+                        //we search in each warehouse
+                        (orderItem.Product.ManageInventoryMethodId == manageStockInventoryMethodId && 
+                        orderItem.Product.UseMultipleWarehouses &&
+                        orderItem.Product.ProductWarehouseInventory.Any(pwi => pwi.WarehouseId == warehouseId))
+                        ||
+                        //"Use multiple warehouses" disabled
+                        //we use standard "warehouse" property
+                        ((orderItem.Product.ManageInventoryMethodId != manageStockInventoryMethodId ||
+                        !orderItem.Product.UseMultipleWarehouses) &&
+                        orderItem.Product.WarehouseId == warehouseId))
+                        );
             }
             if (affiliateId > 0)
                 query = query.Where(o => o.AffiliateId == affiliateId);

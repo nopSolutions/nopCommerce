@@ -29,5 +29,64 @@ namespace Nop.Services.Tests.Catalog
             result[2].ShouldEqual(4);
             result[3].ShouldEqual(10);
         }
+
+        [Test]
+        public void Can_calculate_total_quantity_when_we_do_not_use_multiple_warehouses()
+        {
+            var product = new Product()
+            {
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                UseMultipleWarehouses = false,
+                StockQuantity = 6,
+            };
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 1,
+                StockQuantity = 7,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 2,
+                StockQuantity = 8,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 3,
+                StockQuantity = -2,
+            });
+
+
+            var result = product.GetTotalStockQuantity();
+            result.ShouldEqual(6);
+        }
+
+        [Test]
+        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses()
+        {
+            var product = new Product()
+            {
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                UseMultipleWarehouses = true,
+                StockQuantity = 6,
+            };
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 1,
+                StockQuantity = 7,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 2,
+                StockQuantity = 8,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 3,
+                StockQuantity = -2,
+            });
+
+            var result = product.GetTotalStockQuantity();
+            result.ShouldEqual(13);
+        }
     }
 }

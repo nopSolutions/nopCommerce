@@ -1168,7 +1168,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(sc.Product, true, sc.Quantity, sc.AttributesXml);
+                                _productService.AdjustInventory(sc.Product, true, sc.Quantity, sc.AttributesXml, false);
                             }
 
                             //clear shopping cart
@@ -1235,7 +1235,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(orderItem.Product, true, orderItem.Quantity, orderItem.AttributesXml);
+                                _productService.AdjustInventory(orderItem.Product, true, orderItem.Quantity, orderItem.AttributesXml, false);
                             }
                         }
 
@@ -1489,7 +1489,7 @@ namespace Nop.Services.Orders
 
             //check whether the order wasn't cancelled before
             // if it already was cancelled, then there's no need to make the following adjustments
-            //(such as reward poitns, inventory, recurring payments)
+            //(such as reward points, inventory, recurring payments)
             //they already was done when cancelling the order
             if (order.OrderStatus != OrderStatus.Cancelled)
             {
@@ -1506,7 +1506,9 @@ namespace Nop.Services.Orders
 
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
-                    _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml);
+                {
+                    _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml, false);
+                }
             }
 
             //add a note
@@ -1882,7 +1884,7 @@ namespace Nop.Services.Orders
 
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
-                _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml);
+                _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml, false);
 
             _eventPublisher.PublishOrderCancelled(order);
 

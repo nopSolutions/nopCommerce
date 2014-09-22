@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Management;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
@@ -660,7 +661,7 @@ namespace Nop.Admin.Controllers
                     var qtyOrdered = orderItem.Quantity;
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
-                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                    var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
                     var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                     {
                         Id = shipmentItem.Id,
@@ -669,7 +670,7 @@ namespace Nop.Admin.Controllers
                         ProductName = orderItem.Product.Name,
                         Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                         AttributeInfo = orderItem.AttributeDescription,
-                        Warehouse = warehouse != null ? warehouse.Name : null,
+                        ShippedFromWarehouse = warehouse != null ? warehouse.Name : null,
                         ShipSeparately = orderItem.Product.ShipSeparately,
                         ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
                         ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
@@ -2502,8 +2503,6 @@ namespace Nop.Admin.Controllers
                 if (maxQtyToAdd <= 0)
                     continue;
 
-                var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
-
                 var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
                 {
                     OrderItemId = orderItem.Id,
@@ -2511,7 +2510,6 @@ namespace Nop.Admin.Controllers
                     ProductName = orderItem.Product.Name,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
                     AttributeInfo = orderItem.AttributeDescription,
-                    Warehouse = warehouse != null ? warehouse.Name : null,
                     ShipSeparately = orderItem.Product.ShipSeparately,
                     ItemWeight = orderItem.ItemWeight.HasValue ? string.Format("{0:F2} [{1}]", orderItem.ItemWeight, baseWeightIn) : "",
                     ItemDimensions = string.Format("{0:F2} x {1:F2} x {2:F2} [{3}]", orderItem.Product.Length, orderItem.Product.Width, orderItem.Product.Height, baseDimensionIn),
@@ -2521,6 +2519,41 @@ namespace Nop.Admin.Controllers
                     QuantityToAdd = maxQtyToAdd,
                 };
 
+                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    orderItem.Product.UseMultipleWarehouses)
+                {
+                    //multiple warehouses supported
+                    shipmentItemModel.AllowToChooseWarehouse = true;
+                    foreach (var pwi in orderItem.Product.ProductWarehouseInventory
+                        .OrderBy(w => w.WarehouseId).ToList())
+                    {
+                        var warehouse = pwi.Warehouse;
+                        if (warehouse != null)
+                        {
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo()
+                            {
+                                WarehouseId = warehouse.Id,
+                                WarehouseName = warehouse.Name,
+                                StockQuantity = pwi.StockQuantity
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    //multiple warehouses are not supported
+                    var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
+                    if (warehouse != null)
+                    {
+                        shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo()
+                        {
+                            WarehouseId = warehouse.Id,
+                            WarehouseName = warehouse.Name,
+                            StockQuantity = orderItem.Product.StockQuantity
+                        });
+                    }
+                }
+                    
                 model.Items.Add(shipmentItemModel);
             }
 
@@ -2571,6 +2604,32 @@ namespace Nop.Admin.Controllers
                         break;
                     }
 
+                int warehouseId = 0;
+                if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    orderItem.Product.UseMultipleWarehouses)
+                {
+                    //multiple warehouses supported
+                    //warehouse is chosen by a store owner
+                    foreach (string formKey in form.AllKeys)
+                        if (formKey.Equals(string.Format("warehouse_{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            int.TryParse(form[formKey], out warehouseId);
+                            break;
+                        }
+                }
+                else
+                {
+                    //multiple warehouses are not supported
+                    warehouseId = orderItem.Product.WarehouseId;
+                }
+
+                foreach (string formKey in form.AllKeys)
+                    if (formKey.Equals(string.Format("qtyToAdd{0}", orderItem.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int.TryParse(form[formKey], out qtyToAdd);
+                        break;
+                    }
+
                 //validate quantity
                 if (qtyToAdd <= 0)
                     continue;
@@ -2606,6 +2665,7 @@ namespace Nop.Admin.Controllers
                 {
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
+                    WarehouseId = warehouseId
                 };
                 shipment.ShipmentItems.Add(shipmentItem);
             }
@@ -2615,6 +2675,13 @@ namespace Nop.Admin.Controllers
             {
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
+
+                //adjust inventory for products with "Multiple warehouses" supported
+                foreach (var si in shipment.ShipmentItems)
+                {
+                    var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
+                    _productService.AdjustInventory(orderItem.Product, true, si.Quantity, orderItem.AttributesXml, true, si.WarehouseId);
+                }
 
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
@@ -2660,6 +2727,13 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
+
+            //adjust inventory for products with "Multiple warehouses" supported
+            foreach (var si in shipment.ShipmentItems)
+            {
+                var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
+                _productService.AdjustInventory(orderItem.Product, false, si.Quantity, orderItem.AttributesXml, true, si.WarehouseId);
+            }
 
             var orderId = shipment.OrderId;
             _shipmentService.DeleteShipment(shipment);

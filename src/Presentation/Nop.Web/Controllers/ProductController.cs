@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.StockQuantity <= 0)
+                product.GetTotalStockQuantity() <= 0)
             {
                 //out of stock
                 model.DisplayBackInStockSubscription = true;
@@ -1172,7 +1172,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.StockQuantity <= 0)
+                product.GetTotalStockQuantity() <= 0)
             {
                 //out of stock
                 model.SubscriptionAllowed = true;
@@ -1195,7 +1195,7 @@ namespace Nop.Web.Controllers
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                 product.BackorderMode == BackorderMode.NoBackorders &&
                 product.AllowBackInStockSubscriptions &&
-                product.StockQuantity <= 0)
+                product.GetTotalStockQuantity() <= 0)
             {
                 //out of stock
                 var subscription = _backInStockSubscriptionService

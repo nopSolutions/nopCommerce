@@ -2214,6 +2214,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.MinStockQuantity.Hint">
     <Value>If you have enabled 'Manage Stock' you can perform a number of different actions when the current stock quantity falls below (reaches) your minimum stock quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses">
+    <Value>Use multiple warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.UseMultipleWarehouses.Hint">
+    <Value>Check if you want to support shipping and inventory management from multiple warehouses.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Name">
     <Value>Product name</Value>
   </LocaleResource>
@@ -2774,6 +2780,27 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add attributes for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory">
+    <Value>Warehouses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
+    <Value>Please note that in this case inventory is adjusted when a shipment is created or deleted by a store owner. In other cases inventory is adjusted when order is placed/cancelled/deleted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity">
+    <Value>Stock quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined">
+    <Value>No warehouses defined</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed">
+    <Value>Use</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Hint">
+    <Value>Manage inventory per warehouse.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.PurchasedWithOrders">
     <Value>Purchased with orders</Value>
@@ -8633,6 +8660,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse">
     <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.ChooseQty">
+    <Value>{0} ({1} qty in stock)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.NotAvailabe">
+    <Value>No warehouses available. You cannot ship this product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.ShipmentStatusEvents">
     <Value>Shipment status events</Value>

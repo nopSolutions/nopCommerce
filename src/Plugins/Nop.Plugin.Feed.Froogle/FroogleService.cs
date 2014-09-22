@@ -304,8 +304,8 @@ namespace Nop.Plugin.Feed.Froogle
                         //availability [availability] - Availability status of the item
                         string availability = "in stock"; //in stock by default
                         if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
-                            && product.StockQuantity <= 0
-                            && product.BackorderMode == BackorderMode.NoBackorders)
+                            && product.BackorderMode == BackorderMode.NoBackorders
+                            && product.GetTotalStockQuantity() <= 0)
                         {
                             availability = "out of stock";
                         }

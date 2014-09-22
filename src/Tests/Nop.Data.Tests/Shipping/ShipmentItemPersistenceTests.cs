@@ -20,6 +20,7 @@ namespace Nop.Data.Tests.Shipping
                 Shipment = GetTestShipment(),
                 OrderItemId = 2,
                 Quantity = 3, 
+                WarehouseId = 4,
             };
 
             var fromDb = SaveAndLoadEntity(shipmentItem);
@@ -27,6 +28,7 @@ namespace Nop.Data.Tests.Shipping
             fromDb.Shipment.ShouldNotBeNull();
             fromDb.OrderItemId.ShouldEqual(2);
             fromDb.Quantity.ShouldEqual(3);
+            fromDb.WarehouseId.ShouldEqual(4);
         }
 
         protected Shipment GetTestShipment()

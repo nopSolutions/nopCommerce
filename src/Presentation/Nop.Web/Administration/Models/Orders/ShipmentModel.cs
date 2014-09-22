@@ -43,13 +43,17 @@ namespace Nop.Admin.Models.Orders
 
         public partial class ShipmentItemModel : BaseNopEntityModel
         {
+            public ShipmentItemModel()
+            {
+                AvailableWarehouses = new List<WarehouseInfo>();
+            }
+
             public int OrderItemId { get; set; }
             public int ProductId { get; set; }
             [NopResourceDisplayName("Admin.Orders.Shipments.Products.ProductName")]
             public string ProductName { get; set; }
             public string Sku { get; set; }
             public string AttributeInfo { get; set; }
-            public string Warehouse { get; set; }
             public bool ShipSeparately { get; set; }
 
             //weight of one item (product)
@@ -63,6 +67,20 @@ namespace Nop.Admin.Models.Orders
             [NopResourceDisplayName("Admin.Orders.Shipments.Products.QtyShipped")]
             public int QuantityInThisShipment { get; set; }
             public int QuantityInAllShipments { get; set; }
+
+            public string ShippedFromWarehouse { get; set; }
+            public bool AllowToChooseWarehouse { get; set; }
+            //used before a shipment is created
+            public List<WarehouseInfo> AvailableWarehouses { get; set; }
+
+            #region Nested Classes
+            public class WarehouseInfo : BaseNopModel
+            {
+                public int WarehouseId { get; set; }
+                public string WarehouseName { get; set; }
+                public int StockQuantity { get; set; }
+            }
+            #endregion
         }
 
         public partial class ShipmentStatusEventModel : BaseNopModel

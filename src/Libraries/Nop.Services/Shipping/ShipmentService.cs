@@ -110,12 +110,8 @@ namespace Nop.Services.Shipping
             }
             if (warehouseId > 0)
             {
-                var queryWarehousOrderItems = from orderItem in _orderItemRepository.Table
-                                            where orderItem.Product.WarehouseId == warehouseId
-                                            select orderItem.Id;
-
                 query = from s in query
-                        where queryWarehousOrderItems.Intersect(s.ShipmentItems.Select(si => si.OrderItemId)).Any()
+                        where s.ShipmentItems.Any(si => si.WarehouseId == warehouseId)
                         select s;
             }
             query = query.OrderByDescending(s => s.CreatedOnUtc);

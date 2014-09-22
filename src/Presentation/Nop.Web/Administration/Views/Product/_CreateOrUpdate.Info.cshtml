@@ -27,6 +27,7 @@
         $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
         $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
         $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
+        $("#@Html.FieldIdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
         
@@ -172,7 +173,6 @@
                 $('#pnlWidth').show();
                 $('#pnlHeight').show();
                 $('#pnlDeliveryDate').show();
-                $('#pnlWarehouse').show();
             }
             else {
                 $('#pnlFreeShipping').hide();
@@ -183,7 +183,6 @@
                 $('#pnlWidth').hide();
                 $('#pnlHeight').hide();
                 $('#pnlDeliveryDate').hide();
-                $('#pnlWarehouse').hide();
             }
         }
 
@@ -212,6 +211,9 @@
         function toggleManageStock() {
             var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
             if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.DontManageStock).ToString())) {
+                $('#pnlUseMultipleWarehouses').hide();
+                $('#pnlWarehouse').show();
+                $('#pnlMultipleWarehouses').hide();
                 $('#pnlStockQuantity').hide();
                 $('#pnlDisplayStockAvailability').hide();
                 $('#pnlDisplayStockQuantity').hide();
@@ -221,42 +223,57 @@
                 $('#pnlAllowBackInStockSubscriptions').hide();            
                 $('#pnlBackorders').hide();
                 $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-        } else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
-            $('#pnlStockQuantity').show();
-            $('#pnlDisplayStockAvailability').show();
+            } else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
+                $('#pnlUseMultipleWarehouses').show();
 
-            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-                $('#pnlDisplayStockQuantity').show();
-            } 
+                if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+                    $('#pnlWarehouse').hide();
+                    $('#pnlMultipleWarehouses').show();
+                    $('#pnlStockQuantity').hide();
+                }
+                else {
+                    $('#pnlWarehouse').show();
+                    $('#pnlMultipleWarehouses').hide();
+                    $('#pnlStockQuantity').show();
+                }
+
+                $('#pnlDisplayStockAvailability').show();
+
+                if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                    $('#pnlDisplayStockQuantity').show();
+                } 
+                else {
+                    $('#pnlDisplayStockQuantity').hide();
+                }
+
+                $('#pnlMinStockQuantity').show();
+                $('#pnlLowStockActivity').show();
+                $('#pnlNotifyForQuantityBelow').show();
+                $('#pnlBackorders').show();
+                var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+                if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
+                    //no backorders
+                    $('#pnlAllowBackInStockSubscriptions').show();
+                } else {
+                    //backorders are enabled
+                    $('#pnlAllowBackInStockSubscriptions').hide();
+                }
+                $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+            }
             else {
+                $('#pnlUseMultipleWarehouses').hide();
+                $('#pnlWarehouse').show();
+                $('#pnlMultipleWarehouses').hide();
+                $('#pnlStockQuantity').hide();
+                $('#pnlDisplayStockAvailability').hide();
                 $('#pnlDisplayStockQuantity').hide();
-            }
-
-            $('#pnlMinStockQuantity').show();
-            $('#pnlLowStockActivity').show();
-            $('#pnlNotifyForQuantityBelow').show();
-            $('#pnlBackorders').show();
-            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-            if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
-                //no backorders
-                $('#pnlAllowBackInStockSubscriptions').show();
-            } else {
-                //backorders are enabled
+                $('#pnlMinStockQuantity').hide();
+                $('#pnlLowStockActivity').hide();
+                $('#pnlNotifyForQuantityBelow').hide();
                 $('#pnlAllowBackInStockSubscriptions').hide();
+                $('#pnlBackorders').hide();
+                $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
             }
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-        }
-        else {
-            $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
-            $('#pnlMinStockQuantity').hide();
-            $('#pnlLowStockActivity').hide();
-            $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowBackInStockSubscriptions').hide();
-            $('#pnlBackorders').hide();
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
-        }
         }
         
     @{
@@ -906,15 +923,6 @@
             @Html.ValidationMessageFor(model => model.DeliveryDateId)
         </td>
     </tr>
-    <tr id="pnlWarehouse">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.WarehouseId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
-            @Html.ValidationMessageFor(model => model.WarehouseId)
-        </td>
-    </tr>
 </table>
 <table class="adminContent" id="group-tax">
     <tr class="adminSeparator">
@@ -954,6 +962,88 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.ManageInventoryMethodId, ((ManageInventoryMethod)Model.ManageInventoryMethodId).ToSelectList())
             @Html.ValidationMessageFor(model => model.ManageInventoryMethodId)
+        </td>
+    </tr>
+    <tr id="pnlUseMultipleWarehouses">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.UseMultipleWarehouses):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.UseMultipleWarehouses)
+            @Html.ValidationMessageFor(model => model.UseMultipleWarehouses)
+        </td>
+    </tr>
+    <tr id="pnlWarehouse">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.WarehouseId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+            @Html.ValidationMessageFor(model => model.WarehouseId)
+        </td>
+    </tr>
+    <tr id="pnlMultipleWarehouses">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ProductWarehouseInventoryModels):
+        </td>
+        <td class="adminData">
+            @if (Model.ProductWarehouseInventoryModels.Count > 0)
+            {
+                <table class="tablestyle" border="1" cellspacing="0" style="width: 400px; border-collapse: collapse;">
+                    <thead>
+                        <tr class="headerstyle">
+                            <th>
+                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.WarehouseUsed")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ProductWarehouseInventoryModels)
+                        {
+                            <tr>
+                                <td style="width: 60%;">
+                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                        @item.WarehouseName
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
+                                            toggleWarehouseUsed_@(item.WarehouseId)();
+                                        });
+                                        function toggleWarehouseUsed_@(item.WarehouseId)() {
+                                            if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
+                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
+                                            }
+                                            else {
+                                                $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
+                                            }
+                                        }
+                                    </script>
+                                </td>
+                                <td align="center" style="width: 30%;">
+                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width:80px;" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <p>
+                    <em>@T("Admin.Catalog.Products.ProductWarehouseInventory.Description")</em>
+                </p>
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.Warehouse.NotDefined")
+            }
         </td>
     </tr>
     <tr id="pnlStockQuantity">

@@ -443,8 +443,18 @@ BEGIN
 	--filter by warehouse
 	IF @WarehouseId > 0
 	BEGIN
+		--we should also ensure that 'ManageInventoryMethodId' is set to 'ManageStock' (1)
+		--but we skip it in order to prevent hard-coded values (e.g. 1) and for better performance
 		SET @sql = @sql + '
-		AND p.WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max))
+		AND  
+			(
+				(p.UseMultipleWarehouses = 0 AND
+					p.WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ')
+				OR
+				(p.UseMultipleWarehouses > 0 AND
+					EXISTS (SELECT 1 FROM ProductWarehouseInventory [pwi]
+					WHERE [pwi].WarehouseId = ' + CAST(@WarehouseId AS nvarchar(max)) + ' AND [pwi].ProductId = p.Id))
+			)'
 	END
 	
 	--filter by parent grouped product identifer

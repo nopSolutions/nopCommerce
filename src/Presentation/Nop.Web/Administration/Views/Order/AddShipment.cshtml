@@ -75,7 +75,7 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td style="width: 50%;">
+                                <td style="width: 30%;">
                                     <div style="padding-left: 10px; padding-right: 10px;">
                                         <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
@@ -96,9 +96,40 @@
                                         @item.Sku
                                     </div>
                                 </td>
-                                <td style="width: 10%;">
+                                <td style="width: 15%;">
                                     <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.Warehouse
+                                        @if (item.AllowToChooseWarehouse)
+                                        {
+                                            if (item.AvailableWarehouses.Count > 0)
+                                            {
+                                                <select name="warehouse_@(item.OrderItemId)">
+                                                    @for (int i = 0; i < item.AvailableWarehouses.Count; i++)
+                                                    {
+                                                        var warehouse = item.AvailableWarehouses[i];
+                                                        <option value="@warehouse.WarehouseId">
+                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity)
+                                                        </option>
+                                                    }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <div>@T("Admin.Orders.Shipments.Products.Warehouse.NotAvailabe")</div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //display warehouses
+                                            for (int i = 0; i < item.AvailableWarehouses.Count; i++)
+                                            {
+                                                var warehouse = item.AvailableWarehouses[i];
+                                                @warehouse.WarehouseName
+                                                if (i != item.AvailableWarehouses.Count - 1)
+                                                {
+                                                    <br />
+                                                }
+                                            }
+                                        }
                                     </div>
                                 </td>
                                 <td align="center" style="width: 10%;">

@@ -68,6 +68,7 @@
     <Compile Include="Catalog\CategoryTemplatePersistenceTests.cs" />
     <Compile Include="Catalog\BackInStockSubscriptionPersistenceTests.cs" />
     <Compile Include="Catalog\ManufacturerTemplatePersistenceTests.cs" />
+    <Compile Include="Catalog\ProductWarehouseInventoryPersistenceTests.cs" />
     <Compile Include="Catalog\ProductTemplatePersistenceTests.cs" />
     <Compile Include="Common\SearchTermPeristenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Customers\CustomerAttributePersistenceTests.cs" />
     <Compile Include="Customers\CustomerAttributeValuePersistenceTests.cs" />
     <Compile Include="Shipping\DeliveryDatePersistenceTests.cs" />
+    <Compile Include="Shipping\WarehousePersistenceTests.cs" />
     <Compile Include="Vendors\VendorPersistenceTests.cs" />
     <Compile Include="Stores\StoreMappingPersistenceTests.cs" />
     <Compile Include="Stores\StorePersistenceTests.cs" />

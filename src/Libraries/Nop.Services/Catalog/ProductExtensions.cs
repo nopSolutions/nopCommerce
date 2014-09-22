@@ -66,12 +66,12 @@ namespace Nop.Services.Catalog
                 {
                     case BackorderMode.NoBackorders:
                         {
-                            if (product.StockQuantity > 0)
+                            if (product.GetTotalStockQuantity() > 0)
                             {
                                 if (product.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.StockQuantity);
+                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
                                 }
                                 else
                                 {
@@ -88,12 +88,12 @@ namespace Nop.Services.Catalog
                         break;
                     case BackorderMode.AllowQtyBelow0:
                         {
-                            if (product.StockQuantity > 0)
+                            if (product.GetTotalStockQuantity() > 0)
                             {
                                 if (product.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.StockQuantity);
+                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
                                 }
                                 else
                                 {
@@ -110,12 +110,12 @@ namespace Nop.Services.Catalog
                         break;
                     case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
                         {
-                            if (product.StockQuantity > 0)
+                            if (product.GetTotalStockQuantity() > 0)
                             {
                                 if (product.DisplayStockQuantity)
                                 {
                                     //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.StockQuantity);
+                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
                                 }
                                 else
                                 {
@@ -181,6 +181,33 @@ namespace Nop.Services.Catalog
             }
 
             return result.ToArray();
+        }
+
+        /// <summary>
+        /// Get total quantity
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Result</returns>
+        public static int GetTotalStockQuantity(this Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+            {
+                //should we thorow an exception?
+                //throw new Exception("We can calculate total stock quantity when 'Manage inventory' property is set to 'Track inventory'");
+                return 0;
+            }
+
+            if (product.UseMultipleWarehouses)
+            {
+                return product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+            }
+            else
+            {
+                return product.StockQuantity;
+            }
         }
 
 

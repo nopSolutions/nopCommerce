@@ -183,6 +183,14 @@ namespace Nop.Services.Shipping
         decimal GetTotalHeight(IList<ShoppingCartItem> cart);
 
         /// <summary>
+        /// Get the nearest warehouse for the specified address
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <param name="warehouses">List of warehouses, if null all warehouses are used.</param>
+        /// <returns></returns>
+        Warehouse GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null);
+
+        /// <summary>
         /// Create shipment packages (requests) from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>

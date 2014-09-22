@@ -532,12 +532,12 @@ namespace Nop.Admin.Controllers
             }
 
             //warehouses
+            var warehouses = _shippingService.GetAllWarehouses();
             model.AvailableWarehouses.Add(new SelectListItem()
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"),
                 Value = "0"
             });
-            var warehouses = _shippingService.GetAllWarehouses();
             foreach (var warehouse in warehouses)
             {
                 model.AvailableWarehouses.Add(new SelectListItem()
@@ -545,6 +545,26 @@ namespace Nop.Admin.Controllers
                     Text = warehouse.Name,
                     Value = warehouse.Id.ToString()
                 });
+            }
+
+            //multiple warehouses
+            foreach (var warehouse in warehouses)
+            {
+                var pwiModel = new ProductModel.ProductWarehouseInventoryModel()
+                {
+                    WarehouseId = warehouse.Id,
+                    WarehouseName = warehouse.Name
+                };
+                if (product != null)
+                {
+                    var pwi = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                    if (pwi != null)
+                    {
+                        pwiModel.WarehouseUsed = true;
+                        pwiModel.StockQuantity = pwi.StockQuantity;
+                    }
+                }
+                model.ProductWarehouseInventoryModels.Add(pwiModel);
             }
 
             //product tags
@@ -624,6 +644,74 @@ namespace Nop.Admin.Controllers
                 categoriesIds.AddRange(GetChildCategoryIds(category.Id));
             }
             return categoriesIds;
+        }
+
+        [NonAction]
+        protected virtual void SaveProductWarehouseInventory(Product product, ProductModel model)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (model.ManageInventoryMethodId != (int)ManageInventoryMethod.ManageStock)
+                return;
+
+            if (!model.UseMultipleWarehouses)
+                return;
+
+            var warehouses = _shippingService.GetAllWarehouses();
+
+            foreach (var warehouse in warehouses)
+            {
+                //parse quantity
+                int qty = 0; 
+                foreach (string formKey in this.Request.Form.AllKeys)
+                    if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int.TryParse(this.Request.Form[formKey], out qty);
+                        break;
+                    }
+                //parse "used" field
+                bool used = false;
+                foreach (string formKey in this.Request.Form.AllKeys)
+                    if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int tmp = 0;
+                        int.TryParse(this.Request.Form[formKey], out tmp);
+                        used = tmp == warehouse.Id;
+                        break;
+                    }
+
+                var existingPwI = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == warehouse.Id);
+                if (existingPwI != null)
+                {
+                    if (used)
+                    {
+                        //update existing record
+                        existingPwI.StockQuantity = qty;
+                        _productService.UpdateProduct(product);
+                    }
+                    else
+                    {
+                        //delete. no need to store record for qty 0
+                        _productService.DeleteProductWarehouseInventory(existingPwI);
+                    }
+                }
+                else
+                {
+                    if (used)
+                    {
+                        //no need to insert a record for qty 0
+                        existingPwI = new ProductWarehouseInventory()
+                        {
+                            WarehouseId = warehouse.Id,
+                            ProductId = product.Id,
+                            StockQuantity = qty
+                        };
+                        product.ProductWarehouseInventory.Add(existingPwI);
+                        _productService.UpdateProduct(product);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -796,6 +884,8 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(product, model);
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                //warehouses
+                SaveProductWarehouseInventory(product, model);
                 //discounts
                 var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
                 foreach (var discount in allDiscounts)
@@ -880,7 +970,7 @@ namespace Nop.Admin.Controllers
                 {
                     model.ShowOnHomePage = product.ShowOnHomePage;
                 }
-                var prevStockQuantity = product.StockQuantity;
+                var prevStockQuantity = product.GetTotalStockQuantity();
 
                 //product
                 product = model.ToEntity(product);
@@ -893,6 +983,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                //warehouses
+                SaveProductWarehouseInventory(product, model);
                 //ACL (customer roles)
                 SaveProductAcl(product, model);
                 //Stores
@@ -922,7 +1014,7 @@ namespace Nop.Admin.Controllers
                 if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     product.BackorderMode == BackorderMode.NoBackorders &&
                     product.AllowBackInStockSubscriptions &&
-                    product.StockQuantity > 0 &&
+                    product.GetTotalStockQuantity() > 0 &&
                     prevStockQuantity <= 0 &&
                     product.Published &&
                     !product.Deleted)
@@ -2524,7 +2616,7 @@ namespace Nop.Admin.Controllers
                     Id = product.Id,
                     Name = product.Name,
                     ManageInventoryMethod = product.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
-                    StockQuantity = product.StockQuantity,
+                    StockQuantity = product.GetTotalStockQuantity(),
                     Published = product.Published
                 };
                 models.Add(lowStockModel);
