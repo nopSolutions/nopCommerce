@@ -96,18 +96,17 @@
                                         @item.Sku
                                     </div>
                                 </td>
-                                <td style="width: 15%;">
+                                <td  align="center" style="width: 20%;">
                                     <div style="padding-left: 10px; padding-right: 10px;">
                                         @if (item.AllowToChooseWarehouse)
                                         {
                                             if (item.AvailableWarehouses.Count > 0)
                                             {
                                                 <select name="warehouse_@(item.OrderItemId)">
-                                                    @for (int i = 0; i < item.AvailableWarehouses.Count; i++)
+                                                    @foreach (var warehouse in item.AvailableWarehouses)
                                                     {
-                                                        var warehouse = item.AvailableWarehouses[i];
                                                         <option value="@warehouse.WarehouseId">
-                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity)
+                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity)
                                                         </option>
                                                     }
                                                 </select>
@@ -138,10 +137,10 @@
                                 <td align="center" style="width: 10%;">
                                     @item.ItemDimensions
                                 </td>
-                                <td align="center" style="width: 10%;">
+                                <td align="center" style="width: 5%;">
                                     @item.QuantityOrdered
                                 </td>
-                                <td align="center" style="width: 10%;">
+                                <td align="center" style="width: 5%;">
                                     @item.QuantityInAllShipments
                                 </td>
                                 <td align="center" style="width: 20%;">

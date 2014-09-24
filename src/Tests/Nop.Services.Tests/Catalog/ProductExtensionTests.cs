@@ -56,12 +56,12 @@ namespace Nop.Services.Tests.Catalog
             });
 
 
-            var result = product.GetTotalStockQuantity();
+            var result = product.GetTotalStockQuantity(true);
             result.ShouldEqual(6);
         }
 
         [Test]
-        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses()
+        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_reserved()
         {
             var product = new Product()
             {
@@ -73,11 +73,13 @@ namespace Nop.Services.Tests.Catalog
             {
                 WarehouseId = 1,
                 StockQuantity = 7,
+                ReservedQuantity = 4,
             });
             product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
             {
                 WarehouseId = 2,
                 StockQuantity = 8,
+                ReservedQuantity = 1,
             });
             product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
             {
@@ -85,8 +87,70 @@ namespace Nop.Services.Tests.Catalog
                 StockQuantity = -2,
             });
 
-            var result = product.GetTotalStockQuantity();
+            var result = product.GetTotalStockQuantity(true);
+            result.ShouldEqual(8);
+        }
+
+        [Test]
+        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_without_reserved()
+        {
+            var product = new Product()
+            {
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                UseMultipleWarehouses = true,
+                StockQuantity = 6,
+            };
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 1,
+                StockQuantity = 7,
+                ReservedQuantity = 4,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 2,
+                StockQuantity = 8,
+                ReservedQuantity = 1,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 3,
+                StockQuantity = -2,
+            });
+
+            var result = product.GetTotalStockQuantity(false);
             result.ShouldEqual(13);
+        }
+
+        [Test]
+        public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_warehouse_specified()
+        {
+            var product = new Product()
+            {
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                UseMultipleWarehouses = true,
+                StockQuantity = 6,
+            };
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 1,
+                StockQuantity = 7,
+                ReservedQuantity = 4,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 2,
+                StockQuantity = 8,
+                ReservedQuantity = 1,
+            });
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            {
+                WarehouseId = 3,
+                StockQuantity = -2,
+            });
+
+            var result = product.GetTotalStockQuantity(true, 1);
+            result.ShouldEqual(3);
         }
     }
 }

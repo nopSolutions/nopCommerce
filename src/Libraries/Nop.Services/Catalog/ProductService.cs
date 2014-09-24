@@ -10,6 +10,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
 using Nop.Services.Events;
@@ -1074,7 +1075,10 @@ namespace Nop.Services.Catalog
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
                          //ignore grouped products
                          p.ProductTypeId != (int)ProductType.GroupedProduct &&
-                         p.MinStockQuantity >= (p.UseMultipleWarehouses ? p.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity) : p.StockQuantity) &&
+                         p.MinStockQuantity >= (
+                            p.UseMultipleWarehouses ?
+                            p.ProductWarehouseInventory.Sum(pwi => pwi.StockQuantity - pwi.ReservedQuantity) : 
+                            p.StockQuantity) &&
                          (vendorId == 0 || p.VendorId == vendorId)
                          select p;
             products = query1.ToList();
@@ -1112,171 +1116,6 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
-        /// Adjust inventory
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="decrease">A value indicating whether to increase or descrease product stock quantity</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="onlyMultipleWarehouses">Pass "true" to ensure that a product is 
-        /// with inventory management per warehouse ("UseMultipleWarehouses" property). 
-        /// Stocks of such products are adjusted manually when creating or deleting shipments (not when placing orders). 
-        /// Pass "false" to ensure that a product is with simple inventory management
-        /// </param>
-        /// <param name="warehouseId">Warehouse identifier. 
-        /// This parameter is used only when "onlyMultipleWarehouses" parameter is "true</param>
-        public virtual void AdjustInventory(Product product, bool decrease,
-            int quantity, string attributesXml = "",
-            bool onlyMultipleWarehouses = false, int warehouseId = 0)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            var useMultipleWarehouses = product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                                        product.UseMultipleWarehouses;
-            
-            if (onlyMultipleWarehouses && !useMultipleWarehouses)
-                return;
-            if (!onlyMultipleWarehouses && useMultipleWarehouses)
-                return;
-
-            //var prevStockQuantity = product.GetTotalStockQuantity();
-
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
-            {
-                //update stock quantity
-                var currentStockQuantity = 0;
-                if (useMultipleWarehouses)
-                {
-                    //use multiple warehouses
-                    //simple inventory management
-                    var pwi = product.ProductWarehouseInventory
-                        .FirstOrDefault(x => x.WarehouseId == warehouseId);
-                    if (pwi != null)
-                    {
-                        currentStockQuantity = pwi.StockQuantity;
-                    }
-                    else
-                    {
-                        //actually it's not possible
-                        //should we throw an exception here?
-                    }
-                }
-                else
-                {
-                    //do not use multiple warehouses
-                    //simple inventory management
-                    currentStockQuantity = product.StockQuantity;
-                }
-                
-                int newStockQuantity = 0;
-                if (decrease)
-                    newStockQuantity = currentStockQuantity - quantity;
-                else
-                    newStockQuantity = currentStockQuantity + quantity;
-
-                if (useMultipleWarehouses)
-                {
-                    //use multiple warehouses
-                    //simple inventory management
-                    var pwi = product.ProductWarehouseInventory
-                        .FirstOrDefault(x => x.WarehouseId == warehouseId);
-                    if (pwi != null)
-                    {
-                        pwi.StockQuantity = newStockQuantity;
-                        UpdateProduct(product);
-                    }
-                    else
-                    {
-                        //actually it's not possible
-                        //should we throw an exception here?
-                    }
-                }
-                else
-                {
-                    //do not use multiple warehouses
-                    //simple inventory management
-                    product.StockQuantity = newStockQuantity;
-                    UpdateProduct(product);
-                }
-
-                //check if minimum quantity is reached
-                if (decrease)
-                {
-                    if (product.MinStockQuantity >= product.GetTotalStockQuantity())
-                    {
-                        switch (product.LowStockActivity)
-                        {
-                            case LowStockActivity.DisableBuyButton:
-                                product.DisableBuyButton = true;
-                                product.DisableWishlistButton = true;
-                                UpdateProduct(product);
-                                break;
-                            case LowStockActivity.Unpublish:
-                                product.Published = false;
-                                UpdateProduct(product);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-
-                //send email notification
-                if (decrease && product.NotifyAdminForQuantityBelow > product.GetTotalStockQuantity())
-                {
-                    _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
-                }
-            }
-
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
-            {
-                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
-                if (combination != null)
-                {
-                    int newStockQuantity = 0;
-                    if (decrease)
-                        newStockQuantity = combination.StockQuantity - quantity;
-                    else
-                        newStockQuantity = combination.StockQuantity + quantity;
-
-                    combination.StockQuantity = newStockQuantity;
-                    _productAttributeService.UpdateProductVariantAttributeCombination(combination);
-                }
-            }
-
-
-            //bundled products
-            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-            foreach (var pvaValue in pvaValues)
-            {
-                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                {
-                    //associated product (bundle)
-                    var associatedProduct = GetProductById(pvaValue.AssociatedProductId);
-                    if (associatedProduct != null)
-                    {
-                        var totalQty = quantity*pvaValue.Quantity;
-                        AdjustInventory(associatedProduct, decrease, totalQty, "", onlyMultipleWarehouses, warehouseId);
-                    }
-                }
-            }
-
-            //TODO send back in stock notifications?
-            //also do not forget to uncomment some code above ("prevStockQuantity")
-            //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-            //    product.BackorderMode == BackorderMode.NoBackorders &&
-            //    product.AllowBackInStockSubscriptions &&
-            //    product.GetTotalStockQuantity() > 0 &&
-            //    prevStockQuantity <= 0 &&
-            //    product.Published &&
-            //    !product.Deleted)
-            //{
-            //    //_backInStockSubscriptionService.SendNotificationsToSubscribers(product);
-            //}
-        }
-        
-        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
@@ -1300,6 +1139,267 @@ namespace Nop.Services.Catalog
 
             product.HasDiscountsApplied = product.AppliedDiscounts.Count > 0;
             UpdateProduct(product);
+        }
+
+        #endregion
+
+        #region Inventory management methods
+
+        /// <summary>
+        /// Adjust inventory
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantityToChange">Quantity to increase to descrease</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "")
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            //var prevStockQuantity = product.GetTotalStockQuantity();
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+            {
+                //update stock quantity
+                if (product.UseMultipleWarehouses)
+                {
+                    //use multiple warehouses
+                    if (quantityToChange < 0)
+                        ReserveInventory(product, quantityToChange);
+                    else
+                        UnblockReservedInventory(product, quantityToChange);
+                }
+                else
+                {
+                    //do not use multiple warehouses
+                    //simple inventory management
+                    product.StockQuantity += quantityToChange;
+                    UpdateProduct(product);
+                }
+
+                //check if minimum quantity is reached
+                if (quantityToChange < 0 && product.MinStockQuantity >= product.GetTotalStockQuantity())
+                {
+                    switch (product.LowStockActivity)
+                    {
+                        case LowStockActivity.DisableBuyButton:
+                            product.DisableBuyButton = true;
+                            product.DisableWishlistButton = true;
+                            UpdateProduct(product);
+                            break;
+                        case LowStockActivity.Unpublish:
+                            product.Published = false;
+                            UpdateProduct(product);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                //send email notification
+                if (quantityToChange < 0 && product.NotifyAdminForQuantityBelow > product.GetTotalStockQuantity())
+                {
+                    _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
+                }
+            }
+
+            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            {
+                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+                if (combination != null)
+                {
+                    combination.StockQuantity += quantityToChange;
+                    _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+                }
+            }
+
+
+            //bundled products
+            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var pvaValue in pvaValues)
+            {
+                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                {
+                    //associated product (bundle)
+                    var associatedProduct = GetProductById(pvaValue.AssociatedProductId);
+                    if (associatedProduct != null)
+                    {
+                        AdjustInventory(associatedProduct, quantityToChange * pvaValue.Quantity);
+                    }
+                }
+            }
+
+            //TODO send back in stock notifications?
+            //also do not forget to uncomment some code above ("prevStockQuantity")
+            //if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+            //    product.BackorderMode == BackorderMode.NoBackorders &&
+            //    product.AllowBackInStockSubscriptions &&
+            //    product.GetTotalStockQuantity() > 0 &&
+            //    prevStockQuantity <= 0 &&
+            //    product.Published &&
+            //    !product.Deleted)
+            //{
+            //    //_backInStockSubscriptionService.SendNotificationsToSubscribers(product);
+            //}
+        }
+
+        /// <summary>
+        /// Reserve the given quantity in the warehouses.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity, must be negative</param>
+        public virtual void ReserveInventory(Product product, int quantity)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (quantity >= 0)
+                throw new ArgumentException("Value must be negative.", "quantity");
+
+            var qty = -quantity;
+
+            var productInventory = product.ProductWarehouseInventory
+                .OrderByDescending(pwi => pwi.StockQuantity - pwi.ReservedQuantity)
+                .ToList();
+
+            if (productInventory.Count <= 0)
+                return;
+
+            Action pass = () =>
+            {
+                foreach (var item in productInventory)
+                {
+                    var selectQty = Math.Min(item.StockQuantity - item.ReservedQuantity, qty);
+                    item.ReservedQuantity += selectQty;
+                    qty -= selectQty;
+
+                    if (qty <= 0)
+                        break;
+                }
+            };
+
+            // 1st pass: Applying reserved
+            pass();
+
+            if (qty > 0)
+            {
+                // 2rd pass: Booking negative stock!
+                var pwi = productInventory[0];
+                pwi.ReservedQuantity += qty;
+            }
+
+            this.UpdateProduct(product);
+        }
+
+        /// <summary>
+        /// Unblocks the given quantity reserved items in the warehouses
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity, must be positive</param>
+        public virtual void UnblockReservedInventory(Product product, int quantity)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (quantity < 0)
+                throw new ArgumentException("Value must be positive.", "quantity");
+
+            var productInventory = product.ProductWarehouseInventory
+                .OrderByDescending(pwi => pwi.ReservedQuantity)
+                .ThenByDescending(pwi => pwi.StockQuantity)
+                .ToList();
+
+            if (productInventory.Count <= 0)
+                return;
+
+            var qty = quantity;
+
+            foreach (var item in productInventory)
+            {
+                var selectQty = Math.Min(item.ReservedQuantity, qty);
+                item.ReservedQuantity -= selectQty;
+                qty -= selectQty;
+
+                if (qty <= 0)
+                    break;
+            }
+
+            if (qty > 0)
+            {
+                var pwi = productInventory[0];
+                pwi.StockQuantity += qty;
+            }
+
+            UpdateProduct(product);
+        }
+
+        /// <summary>
+        /// Book the reserved quantity
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="quantity">Quantity, must be negative</param>
+        public virtual void BookReservedInventory(Product product, int warehouseId, int quantity)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (quantity >= 0)
+                throw new ArgumentException("Value must be negative.", "quantity");
+
+            //only products with "use multiple warehouses" are handled this way
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return;
+            if (!product.UseMultipleWarehouses)
+                return;
+
+            var pwi = product.ProductWarehouseInventory.FirstOrDefault(pi => pi.WarehouseId == warehouseId);
+            if (pwi == null)
+                return;
+
+            pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
+            pwi.StockQuantity += quantity;
+            
+            UpdateProduct(product);
+        }
+
+        /// <summary>
+        /// Reverse booked inventory (if acceptable)
+        /// </summary>
+        /// <param name="product">product</param>
+        /// <param name="shipmentItem">Shipment item</param>
+        /// <returns>Quantity reversed</returns>
+        public virtual int ReverseBookedInventory(Product product, ShipmentItem shipmentItem)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (shipmentItem == null)
+                throw new ArgumentNullException("shipmentItem");
+            
+            //only products with "use multiple warehouses" are handled this way
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return 0;
+            if (!product.UseMultipleWarehouses)
+                return 0;
+
+            var pwi = product.ProductWarehouseInventory.FirstOrDefault(x => x.WarehouseId == shipmentItem.WarehouseId);
+            if (pwi == null)
+                return 0;
+
+            var shipment = shipmentItem.Shipment;
+
+            //not shipped yet? hence "BookReservedInventory" method was not invoked
+            if (!shipment.ShippedDateUtc.HasValue)
+                return 0;
+
+            var qty = shipmentItem.Quantity;
+
+            pwi.StockQuantity += qty;
+            pwi.ReservedQuantity += qty;
+            UpdateProduct(product);
+
+            return qty;
         }
 
         #endregion

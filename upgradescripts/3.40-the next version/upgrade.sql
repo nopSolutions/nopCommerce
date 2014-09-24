@@ -144,16 +144,19 @@ set @resources='
     <Value>No warehouses available. You cannot ship this product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.ChooseQty">
-    <Value>{0} ({1} qty in stock)</Value>
+    <Value>{0} ({1} qty in stock, {2} qty reserved)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
-    <Value>Please note that in this case inventory is adjusted when a shipment is created or deleted by a store owner. In other cases inventory is adjusted when order is placed/cancelled/deleted.</Value>
+    <Value>Please note that "Stock reserved" is adjusted when an order is placed. And "Stock quantity" is adjusted when a shipment is shipped.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment">
     <Value>Admin comment</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment.Hint">
     <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity">
+    <Value>Stock reserved</Value>
   </LocaleResource>
 </Language>
 '
@@ -1045,4 +1048,20 @@ BEGIN
 	ALTER TABLE [Warehouse]
 	ADD [AdminComment] nvarchar(MAX) NULL
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductWarehouseInventory]') and NAME='ReservedQuantity')
+BEGIN
+	ALTER TABLE [ProductWarehouseInventory]
+	ADD [ReservedQuantity] int NULL
+END
+GO
+
+UPDATE [ProductWarehouseInventory]
+SET [ReservedQuantity] = 0
+WHERE [ReservedQuantity] IS NULL
+GO
+
+ALTER TABLE [ProductWarehouseInventory] ALTER COLUMN [ReservedQuantity] int NOT NULL
 GO

@@ -30,6 +30,7 @@ namespace Nop.Data.Tests.Catalog
                     AddressId = 1,
                 },
                 StockQuantity = 3,
+                ReservedQuantity = 4,
             };
 
             var fromDb = SaveAndLoadEntity(pwi);
@@ -39,6 +40,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Warehouse.ShouldNotBeNull();
             fromDb.Warehouse.Name.ShouldEqual("Name 2");
             fromDb.StockQuantity.ShouldEqual(3);
+            fromDb.ReservedQuantity.ShouldEqual(4);
         }
     }
 }

@@ -150,22 +150,40 @@ namespace Nop.Services.Catalog
         /// Get total quantity
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="useReservedQuantity">
+        /// A value indicating whether we should consider "Reserved Quantity" property 
+        /// when "multiple warehouses" are used
+        /// </param>
+        /// <param name="warehouseId">
+        /// Warehouse identifier. Used to limit result to certain warehouse.
+        /// Used only with "multiple warehouses" enabled.
+        /// </param>
         /// <returns>Result</returns>
-        public static int GetTotalStockQuantity(this Product product)
+        public static int GetTotalStockQuantity(this Product product, 
+            bool useReservedQuantity = true, int warehouseId = 0)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
             {
-                //should we thorow an exception?
-                //throw new Exception("We can calculate total stock quantity when 'Manage inventory' property is set to 'Track inventory'");
+                //We can calculate total stock quantity when 'Manage inventory' property is set to 'Track inventory'
                 return 0;
             }
 
             if (product.UseMultipleWarehouses)
             {
-                return product.ProductWarehouseInventory.Sum(x => x.StockQuantity);
+                var pwi = product.ProductWarehouseInventory;
+                if (warehouseId > 0)
+                {
+                    pwi = pwi.Where(x => x.WarehouseId == warehouseId).ToList();
+                }
+                var result = pwi.Sum(x => x.StockQuantity);
+                if (useReservedQuantity)
+                {
+                    result = result - pwi.Sum(x => x.ReservedQuantity);
+                }
+                return result;
             }
             else
             {

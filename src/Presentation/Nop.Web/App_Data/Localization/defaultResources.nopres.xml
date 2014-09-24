@@ -2785,7 +2785,10 @@
     <Value>Warehouses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
-    <Value>Please note that in this case inventory is adjusted when a shipment is created or deleted by a store owner. In other cases inventory is adjusted when order is placed/cancelled/deleted.</Value>
+    <Value>Please note that "Stock reserved" is adjusted when an order is placed. And "Stock quantity" is adjusted when a shipment is shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity">
+    <Value>Stock reserved</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity">
     <Value>Stock quantity</Value>
@@ -8668,7 +8671,7 @@
     <Value>Warehouse</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.ChooseQty">
-    <Value>{0} ({1} qty in stock)</Value>
+    <Value>{0} ({1} qty in stock, {2} qty reserved)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.NotAvailabe">
     <Value>No warehouses available. You cannot ship this product.</Value>

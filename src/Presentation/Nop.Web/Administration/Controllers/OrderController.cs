@@ -2534,7 +2534,8 @@ namespace Nop.Admin.Controllers
                             {
                                 WarehouseId = warehouse.Id,
                                 WarehouseName = warehouse.Name,
-                                StockQuantity = pwi.StockQuantity
+                                StockQuantity = pwi.StockQuantity,
+                                ReservedQuantity = pwi.ReservedQuantity
                             });
                         }
                     }
@@ -2676,13 +2677,6 @@ namespace Nop.Admin.Controllers
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
 
-                //adjust inventory for products with "Multiple warehouses" supported
-                foreach (var si in shipment.ShipmentItems)
-                {
-                    var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
-                    _productService.AdjustInventory(orderItem.Product, true, si.Quantity, orderItem.AttributesXml, true, si.WarehouseId);
-                }
-
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                            ? RedirectToAction("ShipmentDetails", new {id = shipment.Id})
@@ -2728,11 +2722,13 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToShipment(shipment))
                 return RedirectToAction("List");
 
-            //adjust inventory for products with "Multiple warehouses" supported
-            foreach (var si in shipment.ShipmentItems)
+            foreach (var shipmentItem in shipment.ShipmentItems)
             {
-                var orderItem = _orderService.GetOrderItemById(si.OrderItemId);
-                _productService.AdjustInventory(orderItem.Product, false, si.Quantity, orderItem.AttributesXml, true, si.WarehouseId);
+                var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                if (orderItem == null)
+                    continue;
+
+                _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
             }
 
             var orderId = shipment.OrderId;

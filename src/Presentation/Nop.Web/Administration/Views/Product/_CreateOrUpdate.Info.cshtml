@@ -989,7 +989,7 @@
         <td class="adminData">
             @if (Model.ProductWarehouseInventoryModels.Count > 0)
             {
-                <table class="tablestyle" border="1" cellspacing="0" style="width: 400px; border-collapse: collapse;">
+                <table class="tablestyle" border="1" cellspacing="0" style="width: 500px; border-collapse: collapse;">
                     <thead>
                         <tr class="headerstyle">
                             <th>
@@ -1001,18 +1001,21 @@
                             <th align="center">
                                 @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.StockQuantity")
                             </th>
+                            <th align="center">
+                                @T("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model.ProductWarehouseInventoryModels)
                         {
                             <tr>
-                                <td style="width: 60%;">
+                                <td style="width: 40%;">
                                     <div style="padding-left: 10px; padding-right: 10px;">
                                         @item.WarehouseName
                                     </div>
                                 </td>
-                                <td align="center" style="width: 10%;">
+                                <td align="center" style="width: 15%;">
                                     <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
                                     <script type="text/javascript">
                                         $(document).ready(function () {
@@ -1022,15 +1025,20 @@
                                         function toggleWarehouseUsed_@(item.WarehouseId)() {
                                             if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
                                                 $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
+                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
                                             }
                                             else {
                                                 $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
+                                                $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
                                             }
                                         }
                                     </script>
                                 </td>
-                                <td align="center" style="width: 30%;">
-                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width:80px;" />
+                                <td align="center" style="width: 25%;">
+                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width:70px;" />
+                                </td>
+                                <td align="center" style="width: 25%;">
+                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width:70px;" />
                                 </td>
                             </tr>
                         }

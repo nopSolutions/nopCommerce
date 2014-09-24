@@ -23,6 +23,11 @@ namespace Nop.Core.Domain.Catalog
         public int StockQuantity { get; set; }
 
         /// <summary>
+        /// Gets or sets the reserved quantity
+        /// </summary>
+        public int ReservedQuantity { get; set; }
+
+        /// <summary>
         /// Gets the product
         /// </summary>
         public virtual Product Product { get; set; }

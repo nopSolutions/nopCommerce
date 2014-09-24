@@ -294,6 +294,7 @@ namespace Nop.Services.Catalog
                     ProductId = productCopy.Id,
                     WarehouseId = pwi.WarehouseId,
                     StockQuantity = pwi.StockQuantity,
+                    ReservedQuantity = 0,
                 };
 
                 productCopy.ProductWarehouseInventory.Add(pwiCopy);

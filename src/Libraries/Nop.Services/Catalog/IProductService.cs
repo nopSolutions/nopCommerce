@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Catalog
 {
@@ -198,24 +199,6 @@ namespace Nop.Services.Catalog
         Product GetProductBySku(string sku);
 
         /// <summary>
-        /// Adjust inventory
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="decrease">A value indicating whether to increase or descrease product stock quantity</param>
-        /// <param name="quantity">Quantity</param>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="onlyMultipleWarehouses">Pass "true" to ensure that a product is 
-        /// with inventory management per warehouse ("UseMultipleWarehouses" property). 
-        /// Stocks of such products are adjusted manually when creating or deleting shipments (not when placing orders). 
-        /// Pass "false" to ensure that a product is with simple inventory management
-        /// </param>
-        /// <param name="warehouseId">Warehouse identifier. 
-        /// This parameter is used only when "onlyMultipleWarehouses" parameter is "true</param>
-        void AdjustInventory(Product product, bool decrease,
-            int quantity, string attributesXml = "",
-            bool onlyMultipleWarehouses = false, int warehouseId = 0);
-
-        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
@@ -226,6 +209,48 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateHasDiscountsApplied(Product product);
+
+        #endregion
+
+        #region Inventory management methods
+
+        /// <summary>
+        /// Adjust inventory
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantityToChange">Quantity to increase to descrease</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        void AdjustInventory(Product product, int quantityToChange, string attributesXml = "");
+
+        /// <summary>
+        /// Reserve the given quantity in the warehouses.
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity, must be negative</param>
+        void ReserveInventory(Product product, int quantity);
+
+        /// <summary>
+        /// Unblocks the given quantity reserved items in the warehouses
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="quantity">Quantity, must be positive</param>
+        void UnblockReservedInventory(Product product, int quantity);
+
+        /// <summary>
+        /// Book the reserved quantity
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="quantity">Quantity, must be negative</param>
+        void BookReservedInventory(Product product, int warehouseId, int quantity);
+
+        /// <summary>
+        /// Reverse booked inventory (if acceptable)
+        /// </summary>
+        /// <param name="product">product</param>
+        /// <param name="shipmentItem">Shipment item</param>
+        /// <returns>Quantity reversed</returns>
+        int ReverseBookedInventory(Product product, ShipmentItem shipmentItem);
 
         #endregion
 

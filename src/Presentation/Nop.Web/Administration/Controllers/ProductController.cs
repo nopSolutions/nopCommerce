@@ -562,6 +562,7 @@ namespace Nop.Admin.Controllers
                     {
                         pwiModel.WarehouseUsed = true;
                         pwiModel.StockQuantity = pwi.StockQuantity;
+                        pwiModel.ReservedQuantity = pwi.ReservedQuantity;
                     }
                 }
                 model.ProductWarehouseInventoryModels.Add(pwiModel);
@@ -662,12 +663,20 @@ namespace Nop.Admin.Controllers
 
             foreach (var warehouse in warehouses)
             {
-                //parse quantity
-                int qty = 0; 
+                //parse stock quantity
+                int stockQuantity = 0; 
                 foreach (string formKey in this.Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_qty_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(this.Request.Form[formKey], out qty);
+                        int.TryParse(this.Request.Form[formKey], out stockQuantity);
+                        break;
+                    }
+                //parse reserved quantity
+                int reservedQuantity = 0;
+                foreach (string formKey in this.Request.Form.AllKeys)
+                    if (formKey.Equals(string.Format("warehouse_reserved_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        int.TryParse(this.Request.Form[formKey], out reservedQuantity);
                         break;
                     }
                 //parse "used" field
@@ -687,7 +696,8 @@ namespace Nop.Admin.Controllers
                     if (used)
                     {
                         //update existing record
-                        existingPwI.StockQuantity = qty;
+                        existingPwI.StockQuantity = stockQuantity;
+                        existingPwI.ReservedQuantity = reservedQuantity;
                         _productService.UpdateProduct(product);
                     }
                     else
@@ -705,7 +715,8 @@ namespace Nop.Admin.Controllers
                         {
                             WarehouseId = warehouse.Id,
                             ProductId = product.Id,
-                            StockQuantity = qty
+                            StockQuantity = stockQuantity,
+                            ReservedQuantity = reservedQuantity
                         };
                         product.ProductWarehouseInventory.Add(existingPwI);
                         _productService.UpdateProduct(product);

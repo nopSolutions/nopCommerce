@@ -1168,7 +1168,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(sc.Product, true, sc.Quantity, sc.AttributesXml, false);
+                                _productService.AdjustInventory(sc.Product, -sc.Quantity, sc.AttributesXml);
                             }
 
                             //clear shopping cart
@@ -1235,7 +1235,7 @@ namespace Nop.Services.Orders
                                 }
 
                                 //inventory
-                                _productService.AdjustInventory(orderItem.Product, true, orderItem.Quantity, orderItem.AttributesXml, false);
+                                _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
                             }
                         }
 
@@ -1488,7 +1488,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             //check whether the order wasn't cancelled before
-            // if it already was cancelled, then there's no need to make the following adjustments
+            //if it already was cancelled, then there's no need to make the following adjustments
             //(such as reward points, inventory, recurring payments)
             //they already was done when cancelling the order
             if (order.OrderStatus != OrderStatus.Cancelled)
@@ -1504,11 +1504,25 @@ namespace Nop.Services.Orders
                     var errors = CancelRecurringPayment(rp);
                 }
 
+                //Adjust inventory for already shipped shipments
+                //only products with "use mutliple warehouses"
+                foreach (var shipment in order.Shipments)
+                {
+                    foreach (var shipmentItem in shipment.ShipmentItems)
+                    {
+                        var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                        if (orderItem == null)
+                            continue;
+
+                        _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                    }
+                }
                 //Adjust inventory
                 foreach (var orderItem in order.OrderItems)
                 {
-                    _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml, false);
+                    _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
                 }
+
             }
 
             //add a note
@@ -1733,6 +1747,13 @@ namespace Nop.Services.Orders
             shipment.ShippedDateUtc = DateTime.UtcNow;
             _shipmentService.UpdateShipment(shipment);
 
+            //process products with "Multiple warehouse" support enabled
+            foreach (var item in shipment.ShipmentItems)
+            {
+                var orderItem = _orderService.GetOrderItemById(item.OrderItemId);
+                _productService.BookReservedInventory(orderItem.Product, item.WarehouseId, -item.Quantity);
+            }
+
             //check whether we have more items to ship
             if (order.HasItemsToAddToShipment() || order.HasItemsToShip())
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
@@ -1882,9 +1903,24 @@ namespace Nop.Services.Orders
                 var errors = CancelRecurringPayment(rp);
             }
 
+            //Adjust inventory for already shipped shipments
+            //only products with "use mutliple warehouses"
+            foreach (var shipment in order.Shipments)
+            {
+                foreach (var shipmentItem in shipment.ShipmentItems)
+                {
+                    var orderItem = _orderService.GetOrderItemById(shipmentItem.OrderItemId);
+                    if (orderItem == null)
+                        continue;
+
+                    _productService.ReverseBookedInventory(orderItem.Product, shipmentItem);
+                }
+            }
             //Adjust inventory
             foreach (var orderItem in order.OrderItems)
-                _productService.AdjustInventory(orderItem.Product, false, orderItem.Quantity, orderItem.AttributesXml, false);
+            {
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+            }
 
             _eventPublisher.PublishOrderCancelled(order);
 
