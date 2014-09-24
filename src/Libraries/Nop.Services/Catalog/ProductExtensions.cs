@@ -59,76 +59,39 @@ namespace Nop.Services.Catalog
 
             string stockMessage = string.Empty;
 
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock
-                && product.DisplayStockAvailability)
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return stockMessage;
+
+            if(!product.DisplayStockAvailability)
+                return stockMessage;
+
+            var stockQuantity = product.GetTotalStockQuantity();
+            if (stockQuantity > 0)
             {
+                if (product.DisplayStockQuantity)
+                {
+                    //display "in stock" with stock quantity
+                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity);
+                }
+                else
+                {
+                    //display "in stock" without stock quantity
+                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
+                }
+            }
+            else
+            {
+                //out of stock
                 switch (product.BackorderMode)
                 {
                     case BackorderMode.NoBackorders:
-                        {
-                            if (product.GetTotalStockQuantity() > 0)
-                            {
-                                if (product.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                                }
-                            }
-                            else
-                            {
-                                //display "out of stock"
-                                stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
-                            }
-                        }
+                        stockMessage = localizationService.GetResource("Products.Availability.OutOfStock");
                         break;
                     case BackorderMode.AllowQtyBelow0:
-                        {
-                            if (product.GetTotalStockQuantity() > 0)
-                            {
-                                if (product.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                                }
-                            }
-                            else
-                            {
-                                //display "in stock" without stock quantity
-                                stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                            }
-                        }
+                        stockMessage = localizationService.GetResource("Products.Availability.InStock");
                         break;
                     case BackorderMode.AllowQtyBelow0AndNotifyCustomer:
-                        {
-                            if (product.GetTotalStockQuantity() > 0)
-                            {
-                                if (product.DisplayStockQuantity)
-                                {
-                                    //display "in stock" with stock quantity
-                                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), product.GetTotalStockQuantity());
-                                }
-                                else
-                                {
-                                    //display "in stock" without stock quantity
-                                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                                }
-                            }
-                            else
-                            {
-                                //display "backorder" without stock quantity
-                                stockMessage = localizationService.GetResource("Products.Availability.Backordering");
-                            }
-                        }
+                        stockMessage = localizationService.GetResource("Products.Availability.Backordering");
                         break;
                     default:
                         break;
