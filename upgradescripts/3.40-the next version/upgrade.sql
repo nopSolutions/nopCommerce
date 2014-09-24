@@ -149,6 +149,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
     <Value>Please note that in this case inventory is adjusted when a shipment is created or deleted by a store owner. In other cases inventory is adjusted when order is placed/cancelled/deleted.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1029,5 +1035,14 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Warehouse]') and NAME='AdminComment')
+BEGIN
+	ALTER TABLE [Warehouse]
+	ADD [AdminComment] nvarchar(MAX) NULL
 END
 GO

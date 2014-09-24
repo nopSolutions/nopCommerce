@@ -5973,6 +5973,12 @@
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment">
+    <Value>Admin comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment.Hint">
+    <Value>Admin comment. For internal use.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Updated">
     <Value>The warehouse has been updated successfully.</Value>
   </LocaleResource>

@@ -12,6 +12,15 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AdminComment):
+        </td>
+        <td class="adminData">
+            @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
+            @Html.ValidationMessageFor(model => model.AdminComment)
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             @Html.EditorFor(x => x.Address, "Address")
         </td>

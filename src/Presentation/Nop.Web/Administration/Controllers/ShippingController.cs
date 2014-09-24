@@ -521,6 +521,7 @@ namespace Nop.Admin.Controllers
                 var warehouse = new Warehouse()
                 {
                     Name = model.Name,
+                    AdminComment = model.AdminComment,
                     AddressId = address.Id
                 };
 
@@ -562,7 +563,8 @@ namespace Nop.Admin.Controllers
             var model = new WarehouseModel()
             {
                 Id = warehouse.Id,
-                Name = warehouse.Name
+                Name = warehouse.Name,
+                AdminComment = warehouse.AdminComment
             };
             
             if (address != null)
@@ -618,6 +620,7 @@ namespace Nop.Admin.Controllers
 
 
                 warehouse.Name = model.Name;
+                warehouse.AdminComment = model.AdminComment;
                 warehouse.AddressId = address.Id;
 
                 _shippingService.UpdateWarehouse(warehouse);

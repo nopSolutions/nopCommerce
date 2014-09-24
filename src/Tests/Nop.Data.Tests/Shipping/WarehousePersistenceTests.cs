@@ -15,12 +15,14 @@ namespace Nop.Data.Tests.Shipping
             var warehouse = new Warehouse()
                                {
                                    Name = "Name 1",
+                                   AdminComment = "AdminComment 1",
                                    AddressId = 1,
                                };
 
             var fromDb = SaveAndLoadEntity(warehouse);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
+            fromDb.AdminComment.ShouldEqual("AdminComment 1");
             fromDb.AddressId.ShouldEqual(1);
         }
     }
