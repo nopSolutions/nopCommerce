@@ -503,6 +503,7 @@ namespace Nop.Admin.Controllers
             model.Address.StreetAddressEnabled = true;
             model.Address.ZipPostalCodeEnabled = true;
             model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
             return View(model);
         }
 
@@ -587,6 +588,7 @@ namespace Nop.Admin.Controllers
             model.Address.StreetAddressEnabled = true;
             model.Address.ZipPostalCodeEnabled = true;
             model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
             return View(model);
         }
 
