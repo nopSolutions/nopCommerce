@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
@@ -90,5 +91,18 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentItem">Shipment item</param>
         void UpdateShipmentItem(ShipmentItem shipmentItem);
+
+
+
+        /// <summary>
+        /// Get quantity in shipments. For example, get planned quantity to be shipped
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="ignoreShipped">Ignore already shipped shipments</param>
+        /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
+        /// <returns>Quantity</returns>
+        int GetQuantityInShipments(Product product, int warehouseId,
+            bool ignoreShipped, bool ignoreDelivered);
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Events;
@@ -247,6 +248,57 @@ namespace Nop.Services.Shipping
             //event notification
             _eventPublisher.EntityUpdated(shipmentItem);
         }
+
+
+
+
+        /// <summary>
+        /// Get quantity in shipments. For example, get planned quantity to be shipped
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="warehouseId">Warehouse identifier</param>
+        /// <param name="ignoreShipped">Ignore already shipped shipments</param>
+        /// <param name="ignoreDelivered">Ignore already delivered shipments</param>
+        /// <returns>Quantity</returns>
+        public virtual int GetQuantityInShipments(Product product, int warehouseId,
+            bool ignoreShipped, bool ignoreDelivered)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            //only products with "use multiple warehouses" are handled this way
+            if (product.ManageInventoryMethod != ManageInventoryMethod.ManageStock)
+                return 0;
+            if (!product.UseMultipleWarehouses)
+                return 0;
+
+            const int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
+
+
+            var query = _siRepository.Table;
+            query = query.Where(si => !si.Shipment.Order.Deleted);
+            query = query.Where(si => si.Shipment.Order.OrderStatusId != cancelledOrderStatusId);
+            if (warehouseId > 0)
+                query = query.Where(si => si.WarehouseId == warehouseId);
+            if (ignoreShipped)
+                query = query.Where(si => !si.Shipment.ShippedDateUtc.HasValue);
+            if (ignoreDelivered)
+                query = query.Where(si => !si.Shipment.DeliveryDateUtc.HasValue);
+
+            var queryProductOrderItems = from orderItem in _orderItemRepository.Table
+                                         where orderItem.ProductId == product.Id
+                                         select orderItem.Id;
+            query = from si in query
+                    where queryProductOrderItems.Any(orderItemId => orderItemId == si.OrderItemId)
+                    select si;
+
+            //some null validation
+            var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));
+            //UNDONE process associated products (AttributesXml)
+            return result;
+        }
+
+
         #endregion
     }
 }
