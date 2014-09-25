@@ -299,7 +299,7 @@ namespace Nop.Web.Controllers
 
             #region Breadcrumb
 
-            //do not prepare this model for the associated products. any it's not used
+            //do not prepare this model for the associated products. anyway it's not used
             if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
             {
                 var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
