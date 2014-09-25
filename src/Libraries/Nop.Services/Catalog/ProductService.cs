@@ -1359,8 +1359,9 @@ namespace Nop.Services.Catalog
 
             pwi.ReservedQuantity = Math.Max(pwi.ReservedQuantity + quantity, 0);
             pwi.StockQuantity += quantity;
-            
             UpdateProduct(product);
+
+            //TODO add support for bundled products (AttributesXml)
         }
 
         /// <summary>
@@ -1398,6 +1399,8 @@ namespace Nop.Services.Catalog
             pwi.StockQuantity += qty;
             pwi.ReservedQuantity += qty;
             UpdateProduct(product);
+
+            //TODO add support for bundled products (AttributesXml)
 
             return qty;
         }
