@@ -641,6 +641,9 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity")]
             public int ReservedQuantity { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity")]
+            public int PlannedQuantity { get; set; }
         }
         
 

@@ -67,6 +67,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IVendorService _vendorService;
         private readonly IShippingService _shippingService;
+        private readonly IShipmentService _shipmentService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -111,6 +112,7 @@ namespace Nop.Admin.Controllers
             IStoreMappingService storeMappingService,
              IVendorService vendorService,
             IShippingService shippingService,
+            IShipmentService shipmentService,
             ICurrencyService currencyService, 
             CurrencySettings currencySettings,
             IMeasureService measureService,
@@ -151,6 +153,7 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._vendorService = vendorService;
             this._shippingService = shippingService;
+            this._shipmentService = shipmentService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -563,6 +566,7 @@ namespace Nop.Admin.Controllers
                         pwiModel.WarehouseUsed = true;
                         pwiModel.StockQuantity = pwi.StockQuantity;
                         pwiModel.ReservedQuantity = pwi.ReservedQuantity;
+                        pwiModel.PlannedQuantity = _shipmentService.GetQuantityInShipments(product, pwi.WarehouseId, true, true);
                     }
                 }
                 model.ProductWarehouseInventoryModels.Add(pwiModel);

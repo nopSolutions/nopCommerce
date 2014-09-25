@@ -147,7 +147,16 @@ set @resources='
     <Value>{0} ({1} qty in stock, {2} qty reserved)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
-    <Value>Please note that "Stock reserved" (ordered but not shipped yet) is adjusted when an order is placed. And "Stock quantity" is adjusted when a shipment is shipped.</Value>
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description1">
+    <Value>"Stock quantity" is total quantity. It''s reduced when a shipment is shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description2">
+    <Value>"Reserved qty" is product quantity that is ordered but not shipped yet.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description3">
+    <Value>"Planned qty" is product quantity that is ordered and already added to a shipment but not shipped yet.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment">
     <Value>Admin comment</Value>
@@ -156,7 +165,10 @@ set @resources='
     <Value>Admin comment. For internal use.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.ReservedQuantity">
-    <Value>Stock reserved</Value>
+    <Value>Reserved qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity">
+    <Value>Planned qty</Value>
   </LocaleResource>
 </Language>
 '
