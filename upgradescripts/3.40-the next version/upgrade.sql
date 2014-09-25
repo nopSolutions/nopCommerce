@@ -1065,3 +1065,11 @@ GO
 
 ALTER TABLE [ProductWarehouseInventory] ALTER COLUMN [ReservedQuantity] int NOT NULL
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.loadallsidecategorymenusubcategories')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.loadallsidecategorymenusubcategories', N'false', 0)
+END
+GO
