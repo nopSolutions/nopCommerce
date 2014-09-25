@@ -2718,6 +2718,13 @@ namespace Nop.Admin.Controllers
                     Published = x.Published
                 };
 
+                if (x.ManageInventoryMethod == ManageInventoryMethod.ManageStock && x.UseMultipleWarehouses)
+                {
+                    //multi-warehouse supported
+                    //TODO localize
+                    productModel.ManageInventoryMethod += " (multi-warehouse)";
+                }
+
                 return productModel;
             });
             gridModel.Total = products.TotalCount;
