@@ -147,7 +147,7 @@ set @resources='
     <Value>{0} ({1} qty in stock, {2} qty reserved)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Description">
-    <Value>Please note that "Stock reserved" is adjusted when an order is placed. And "Stock quantity" is adjusted when a shipment is shipped.</Value>
+    <Value>Please note that "Stock reserved" (ordered but not shipped yet) is adjusted when an order is placed. And "Stock quantity" is adjusted when a shipment is shipped.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Shipping.Warehouses.Fields.AdminComment">
     <Value>Admin comment</Value>

@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Catalog
         public int StockQuantity { get; set; }
 
         /// <summary>
-        /// Gets or sets the reserved quantity
+        /// Gets or sets the reserved quantity (ordered but not shipped yet)
         /// </summary>
         public int ReservedQuantity { get; set; }
 
