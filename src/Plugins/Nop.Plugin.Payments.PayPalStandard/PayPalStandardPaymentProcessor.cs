@@ -72,6 +72,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             return _paypalStandardPaymentSettings.UseSandbox ? "https://www.sandbox.paypal.com/us/cgi-bin/webscr" :
                 "https://www.paypal.com/us/cgi-bin/webscr";
         }
+
         /// <summary>
         /// Gets PDT details
         /// </summary>
@@ -84,6 +85,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
+            //now PayPal requires user-agent. otherwise, we can get 403 error
+            req.UserAgent = HttpContext.Current.Request.UserAgent;
 
             string formContent = string.Format("cmd=_notify-synch&at={0}&tx={1}", _paypalStandardPaymentSettings.PdtToken, tx);
             req.ContentLength = formContent.Length;
@@ -127,6 +130,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
+            //now PayPal requires user-agent. otherwise, we can get 403 error
+            req.UserAgent = HttpContext.Current.Request.UserAgent;
 
             string formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
@@ -154,6 +159,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
             return success;
         }
+
         #endregion
 
         #region Methods

@@ -289,6 +289,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";
             req.ContentType = "application/x-www-form-urlencoded";
+            //now PayPal requires user-agent. otherwise, we can get 403 error
+            req.UserAgent = HttpContext.Current.Request.UserAgent;
 
             string formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
