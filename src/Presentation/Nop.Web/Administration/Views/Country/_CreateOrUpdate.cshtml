@@ -249,8 +249,8 @@
                 </tr>
                 <tr>
                     <td width="100%">
-                        <input type="submit" id="btnAddNewState" name="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 250, true); return false;" class="k-button" />
-                        <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                        <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 250, true); return false;" class="k-button" />
+                        <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {

@@ -100,8 +100,8 @@
         </tr>
         <tr>
             <td width="100%">
-                <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
-                <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
+                <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#btnRefreshRelatedProducts').click(function () {

@@ -204,8 +204,8 @@
                 </tr>
                 <tr>
                     <td width="100%">
-                        <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Customers.CustomerAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 350, true); return false;" class="k-button" />
-                        <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                        <input type="submit" id="btnAddNewValue" value="@T("Admin.Customers.CustomerAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CustomerAttribute", new { customerAttributeId = Model.Id, btnId = "btnRefresh", formId = "customerattribute-form" }))', 800, 350, true); return false;" class="k-button" />
+                        <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {

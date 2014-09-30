@@ -124,8 +124,8 @@
     </tr>
     <tr>
         <td width="100%">
-            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 500, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+            <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId = "productvariantattribute-form" }))', 800, 500, true); return false;" class="k-button" />
+            <input type="submit" id="btnRefresh" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {

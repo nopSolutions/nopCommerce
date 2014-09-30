@@ -83,7 +83,7 @@
             @Html.ValidationMessageFor(model => model.PurchasedWithProductId)
             <input type="submit" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Choose") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToCustomerRolePopup", "CustomerRole", new { productIdInput = Html.FieldIdFor(model => model.PurchasedWithProductId), productNameInput = "purchased-with-product-name", btnId = "btnRefreshPurchasedWithProduct" }))', 800, 800, true); return false;" class="k-button" />
             <input type="submit" id="purchased-with-product-name-remove" value=@T("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct.Remove") class="k-button" />
-            <input type="submit" id="btnRefreshPurchasedWithProduct" name="btnRefreshPurchasedWithProduct" style="display: none" />
+            <input type="submit" id="btnRefreshPurchasedWithProduct" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#purchased-with-product-name-remove').click(function () {
