@@ -31,7 +31,7 @@ namespace Nop.Services.Directory
 
         #region Utilities
 
-        protected virtual OmniResponse GetInformation(string ipAddress)
+        protected virtual CountryResponse GetInformation(string ipAddress)
         {
             if (String.IsNullOrEmpty(ipAddress))
                 return null;
@@ -40,7 +40,7 @@ namespace Nop.Services.Directory
             {
                 var databasePath = _webHelper.MapPath("~/App_Data/GeoLite2-Country.mmdb");
                 var reader = new DatabaseReader(databasePath);
-                var omni = reader.Omni(ipAddress);
+                var omni = reader.Country(ipAddress);
                 return omni;
                 //more info: http://maxmind.github.io/GeoIP2-dotnet/
                 //more info: https://github.com/maxmind/GeoIP2-dotnet

@@ -15,13 +15,6 @@
             and <see cref="T:MaxMind.GeoIP2.WebServiceClient"/>.
             </summary>
         </member>
-        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.Omni(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/></returns>
-        </member>
         <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.Country(System.String)">
             <summary>
             Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse"/> for the specified ip address.
@@ -35,13 +28,6 @@
             </summary>
             <param name="ipAddress">The ip address.</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse"/></returns>
-        </member>
-        <member name="M:MaxMind.GeoIP2.IGeoIP2Provider.CityIspOrg(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/></returns>
         </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.#ctor(System.String,MaxMind.Db.FileAccessMode)">
             <summary>
@@ -71,13 +57,6 @@
             <param name="stream">A stream of the MaxMind DB file.</param>
             <param name="locales">List of locale codes to use in name property from most preferred to least preferred.</param>
         </member>
-        <member name="M:MaxMind.GeoIP2.DatabaseReader.Omni(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/></returns>
-        </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.Country(System.String)">
             <summary>
             Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse"/> for the specified ip address.
@@ -91,13 +70,6 @@
             </summary>
             <param name="ipAddress">The ip address.</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse"/></returns>
-        </member>
-        <member name="M:MaxMind.GeoIP2.DatabaseReader.CityIspOrg(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/></returns>
         </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.ConnectionType(System.String)">
             <summary>
@@ -123,6 +95,11 @@
         <member name="M:MaxMind.GeoIP2.DatabaseReader.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.DatabaseReader.Metadata">
+            <summary>
+            The metadata for the open MaxMind DB file.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Exceptions.AddressNotFoundException">
@@ -789,28 +766,6 @@
             returns an empty <see cref="T:MaxMind.GeoIP2.Model.Subdivision"/> object.
             </summary>
         </member>
-        <member name="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse">
-            <summary>
-            This class provides a model for the data returned by the GeoIP2 Precision: City
-            end point.
-            
-            The only difference between the City and Insights response classes is
-            which fields in each record may be populated.
-            
-            <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
-                 Services</a>
-            </summary>
-        </member>
-        <member name="M:MaxMind.GeoIP2.Responses.CityIspOrgResponse.#ctor">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="M:MaxMind.GeoIP2.Responses.CityIspOrgResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
         <member name="T:MaxMind.GeoIP2.Responses.CityResponse">
             <summary>
             This class provides a model for the data returned by GeoIP2 Precision: City and GeoIP2 City.
@@ -968,28 +923,6 @@
             Constructor
             </summary>
         </member>
-        <member name="T:MaxMind.GeoIP2.Responses.OmniResponse">
-            <summary>
-            This class provides a model for the data returned by the GeoIP2 Precision: 
-            Insights web service end point.
-            
-            The only difference between the City and Insights response classes is
-            which fields in each record may be populated.
-            
-            <a href="http://dev.maxmind.com/geoip/geoip2/web-services">GeoIP2 Web
-                 Services</a>
-            </summary>
-        </member>
-        <member name="M:MaxMind.GeoIP2.Responses.OmniResponse.#ctor">
-            <summary>
-            Constructor
-            </summary>
-        </member>
-        <member name="M:MaxMind.GeoIP2.Responses.OmniResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
-            <summary>
-            Constructor
-            </summary>
-        </member>
         <member name="T:MaxMind.GeoIP2.WebServiceClient">
              <summary>
              <para>
@@ -1081,21 +1014,6 @@
             <param name="restClient">The RestClient to use</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.InsightsResponse"/></returns>
         </member>
-        <member name="M:MaxMind.GeoIP2.WebServiceClient.Omni(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/></returns>
-        </member>
-        <member name="M:MaxMind.GeoIP2.WebServiceClient.Omni(System.String,RestSharp.IRestClient)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <param name="restClient">The RestClient to use</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.OmniResponse"/></returns>
-        </member>
         <member name="M:MaxMind.GeoIP2.WebServiceClient.Country(System.String)">
             <summary>
             Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse"/> for the specified ip address.
@@ -1125,21 +1043,6 @@
             <param name="ipAddress">The ip address.</param>
             <param name="restClient">The RestClient to use</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse"/></returns>
-        </member>
-        <member name="M:MaxMind.GeoIP2.WebServiceClient.CityIspOrg(System.String)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/></returns>
-        </member>
-        <member name="M:MaxMind.GeoIP2.WebServiceClient.CityIspOrg(System.String,RestSharp.IRestClient)">
-            <summary>
-            Returns an <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/> for the specified ip address.
-            </summary>
-            <param name="ipAddress">The ip address.</param>
-            <param name="restClient">The RestClient to use</param>
-            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityIspOrgResponse"/></returns>
         </member>
     </members>
 </doc>

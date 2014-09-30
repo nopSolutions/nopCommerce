@@ -264,7 +264,7 @@
         </member>
         <member name="P:MaxMind.Db.Reader.Metadata">
             <summary>
-            Gets the metadata.
+            The metadata for the open database.
             </summary>
             <value>
             The metadata.
@@ -273,6 +273,41 @@
         <member name="T:MaxMind.Db.Metadata">
             <summary>
             Data about the database file itself
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.BinaryFormatMajorVersion">
+            <summary>
+            The major version number for the MaxMind DB binary format used by the database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.BinaryFormatMinorVersion">
+            <summary>
+            The minor version number for the MaxMind DB binary format used by the database.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.BuildDate">
+            <summary>
+            The date-time of the database build.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.DatabaseType">
+            <summary>
+            The MaxMind DB database type.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.Description">
+            <summary>
+            A map from locale codes to the database description in that language.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.IPVersion">
+            <summary>
+            The IP version that the database supports. This will be 4 or 6.
+            </summary>
+        </member>
+        <member name="P:MaxMind.Db.Metadata.Languages">
+            <summary>
+            A list of locale codes for languages that the database supports.
             </summary>
         </member>
     </members>
