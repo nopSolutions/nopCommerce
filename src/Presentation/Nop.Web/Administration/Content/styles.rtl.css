@@ -143,6 +143,7 @@ table.order-edit td{padding:1px 5px;border:medium none;}
 /*AJAX loading*/
 #ajaxBusy{display:none;right:0;position:fixed;top:0;width:100%;z-index:100000;}
 #ajaxBusy span{background:url(images/ajax-loading.gif) no-repeat;width:40px;height:40px;float:left;margin:9px 0 0px 9px;}
+.please-wait{background:url('images/ajax_loader_small.gif') no-repeat;padding-left:20px;}
 /* KendoUI overrides */
 body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .form-actions{overflow:hidden;padding-top:1em;}
@@ -153,3 +154,4 @@ body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .customer-info-tab ul.option-list{padding:0px;margin:0px;}
 .customer-info-tab ul.option-list li{list-style:none;}
 .field-validation-error{color:red;}
+.required-product-names{display:block;margin-top:5px;}

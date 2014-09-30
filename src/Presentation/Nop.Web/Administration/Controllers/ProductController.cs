@@ -1140,6 +1140,34 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult LoadProductFriendlyNames(string productIds)
+        {
+            var result = "";
+            if (!String.IsNullOrWhiteSpace(productIds))
+            {
+                var ids = new List<int>();
+                string[] rangeArray = productIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string str1 in rangeArray)
+                {
+                    int tmp1 = 0;
+                    if (int.TryParse(str1.Trim(), out tmp1))
+                        ids.Add(tmp1);
+                }
+
+                var products = _productService.GetProductsByIds(ids.ToArray());
+                for (int i = 0; i <= products.Count - 1; i++)
+                {
+                    result += products[i].Name;
+                    if (i != products.Count - 1)
+                        result += ", ";
+                }
+            }
+
+            return Json(new { Text = result });
+        }
+        
         #endregion
         
         #region Product categories
