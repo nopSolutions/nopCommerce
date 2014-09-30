@@ -11775,7 +11775,7 @@
             @return the simple file name
         </member>
         <member name="M:iTextSharp.text.pdf.TrueTypeFont.FillTables">
-            Reads the tables 'head', 'hhea', 'OS/2' and 'post' filling several variables.
+            Reads the tables 'head', 'hhea', 'OS/2', 'post' and 'maxp' filling several variables.
             @throws DocumentException the font is invalid
             @throws IOException the font file could not be read
         </member>
@@ -17553,17 +17553,6 @@
         <member name="M:iTextSharp.text.pdf.PdfContentByte.NewlineText">
             Moves to the start of the next line.
         </member>
-        <member name="M:iTextSharp.text.pdf.PdfContentByte.EscapeString(System.Byte[])">
-             Escapes a <CODE>byte</CODE> array according to the PDF conventions.
-            
-             @param b the <CODE>byte</CODE> array to escape
-             @return an escaped <CODE>byte</CODE> array
-        </member>
-        <member name="M:iTextSharp.text.pdf.PdfContentByte.EscapeString(System.Byte[],iTextSharp.text.pdf.ByteBuffer)">
-             Escapes a <CODE>byte</CODE> array according to the PDF conventions.
-            
-             @param b the <CODE>byte</CODE> array to escape
-        </member>
         <member name="M:iTextSharp.text.pdf.PdfContentByte.AddOutline(iTextSharp.text.pdf.PdfOutline,System.String)">
              Adds a named outline to the document.
             
@@ -18236,6 +18225,27 @@
              Returns the PDF representation of this <CODE>PdfArray</CODE>.
             
              @return        an array of <CODE>byte</CODE>s
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfArray.GetPdfObject(System.Int32)">
+             Returns the <CODE>PdfObject</CODE> with the specified index.
+            
+             A possible indirect references is not resolved, so the returned
+             <CODE>PdfObject</CODE> may be either a direct object or an indirect
+             reference, depending on how the object is stored in the
+             <CODE>PdfArray</CODE>.
+            
+             @param idx The index of the <CODE>PdfObject</CODE> to be returned
+             @return A <CODE>PdfObject</CODE>
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfArray.Set(System.Int32,iTextSharp.text.pdf.PdfObject)">
+             Overwrites a specified location of the array, returning the previous
+             value
+            
+             @param idx The index of the element to be overwritten
+             @param obj new value for the specified index
+             @throws IndexOutOfBoundsException if the specified position doesn't exist
+             @return the previous value
+             @since 2.1.5
         </member>
         <member name="M:iTextSharp.text.pdf.PdfArray.Remove(System.Int32)">
             Remove the element at the specified position from the array.
@@ -19319,8 +19329,10 @@
         </member>
         <!-- Некорректный комментарий в формате XML для члена "M:iTextSharp.text.pdf.PdfDocument.WriteLineToContent(iTextSharp.text.pdf.PdfLine,iTextSharp.text.pdf.PdfContentByte,iTextSharp.text.pdf.PdfContentByte,System.Object[],System.Single)" проигнорирован -->
         <member name="M:iTextSharp.text.pdf.PdfDocument.AddSpacing(System.Single,System.Single,iTextSharp.text.Font)">
+            Calls addSpacing(float, float, Font, boolean (false)).
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfDocument.AddSpacing(System.Single,System.Single,iTextSharp.text.Font,System.Boolean)">
             Adds extra space.
-            This method should probably be rewritten.
         </member>
         <member name="F:iTextSharp.text.pdf.PdfDocument.info">
             some meta information about the Document. 
@@ -19677,7 +19689,7 @@
         </member>
         <member name="M:iTextSharp.text.pdf.PdfEncryption.ComputeOwnerKey(System.Byte[],System.Byte[])">
         </member>
-        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupGlobalEncryptionKey(System.Byte[],System.Byte[],System.Byte[],System.Int32)">
+        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupGlobalEncryptionKey(System.Byte[],System.Byte[],System.Byte[],System.Int64)">
             
              ownerKey, documentID must be setuped
         </member>
@@ -19685,9 +19697,9 @@
             
              mkey must be setuped
         </member>
-        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByUserPad(System.Byte[],System.Byte[],System.Byte[],System.Int32)">
+        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByUserPad(System.Byte[],System.Byte[],System.Byte[],System.Int64)">
         </member>
-        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByOwnerPassword(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Int32)">
+        <member name="M:iTextSharp.text.pdf.PdfEncryption.SetupByOwnerPassword(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.Int64)">
         </member>
         <member name="T:iTextSharp.text.pdf.PdfEncryptor">
             This class takes any PDF and returns exactly the same but
@@ -21705,6 +21717,10 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.IF">
             A name 
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.IM">
+            A name
+            @since 5.5.3
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.IMAGE">
             A name 
@@ -25337,6 +25353,11 @@
             @param flat <CODE>true</CODE> to flatten the FreeText annotations, <CODE>false</CODE>
             (the default) to keep the FreeText annotations as active content.
         </member>
+        <member name="P:iTextSharp.text.pdf.PdfStamper.AnnotationFlattening">
+             Flatten annotations with an appearance stream on close().
+            
+             @param flat boolean to indicate whether iText should flatten annotations or not.
+        </member>
         <member name="P:iTextSharp.text.pdf.PdfStamper.Outlines">
             Sets the bookmarks. The list structure is defined in
             {@link SimpleBookmark}.
@@ -25468,6 +25489,12 @@
             with the names/titles of the layers as keys.
             @return   a Map with all the PdfLayers in the document (and the name/title of the layer as key)
             @since    2.1.2
+        </member>
+        <member name="P:iTextSharp.text.pdf.PdfStamperImp.FlatAnnotations">
+             If true, annotations with an appearance stream will be flattened.
+            
+             @since 5.5.3
+             @param flatAnnotations boolean
         </member>
         <member name="P:iTextSharp.text.pdf.PdfStamperImp.ViewerPreferences">
             Sets the viewer preferences.
@@ -26713,6 +26740,17 @@
         <member name="M:iTextSharp.text.pdf.crypto.StandardDecryption.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32)">
             Creates a new instance of StandardDecryption 
         </member>
+        <member name="M:iTextSharp.text.pdf.StringUtils.EscapeString(System.Byte[])">
+             Escapes a <CODE>byte</CODE> array according to the PDF conventions.
+            
+             @param b the <CODE>byte</CODE> array to escape
+             @return an escaped <CODE>byte</CODE> array
+        </member>
+        <member name="M:iTextSharp.text.pdf.StringUtils.EscapeString(System.Byte[],iTextSharp.text.pdf.ByteBuffer)">
+             Escapes a <CODE>byte</CODE> array according to the PDF conventions.
+            
+             @param b the <CODE>byte</CODE> array to escape
+        </member>
         <member name="T:iTextSharp.text.pdf.TextField">
             Supports text, combo and list fields generating the correct appearances.
             All the option in the Acrobat GUI are supported in an easy to use API.
@@ -26729,6 +26767,9 @@
         </member>
         <member name="F:iTextSharp.text.pdf.TextField.choiceSelections">
             Holds value of property choiceSelection. 
+        </member>
+        <member name="F:iTextSharp.text.pdf.TextField.visibleTopChoice">
+            Represents the /TI value 
         </member>
         <member name="M:iTextSharp.text.pdf.TextField.#ctor(iTextSharp.text.pdf.PdfWriter,iTextSharp.text.Rectangle,System.String)">
             Creates a new <CODE>TextField</CODE>.
@@ -26805,6 +26846,14 @@
         <member name="P:iTextSharp.text.pdf.TextField.ChoiceSelection">
             Sets the zero based index of the selected item.
             @param choiceSelection the zero based index of the selected item
+        </member>
+        <member name="P:iTextSharp.text.pdf.TextField.VisibleTopChoice">
+             Sets the top visible choice for lists;
+            
+             @since 5.5.3
+             @param visibleTopChoice index of the first visible item (zero-based array)
+            Returns the index of the top visible choice of a list. Default is -1.
+            @return the index of the top visible choice
         </member>
         <member name="P:iTextSharp.text.pdf.TextField.SubstitutionFonts">
             Sets a list of substitution fonts. The list is composed of <CODE>BaseFont</CODE> and can also be <CODE>null</CODE>. The fonts in this list will be used if the original
@@ -50172,6 +50221,9 @@
             Changing the version makes it extremely difficult to debug an application.
             Also, the nature of open source software is that you honor the copyright of the original creators of the software.
         </member>
+        <member name="F:iTextSharp.text.Version.version">
+            The iText version instance. 
+        </member>
         <member name="F:iTextSharp.text.Version.iText">
             This String contains the name of the product.
             iText is a registered trademark by iText Group NV.
@@ -50181,17 +50233,14 @@
             This String contains the version number of this iText release.
             For debugging purposes, we request you NOT to change this constant.
         </member>
-        <member name="F:iTextSharp.text.Version.key">
-            The license key.
-        </member>
         <member name="F:iTextSharp.text.Version.iTextVersion">
             This String contains the iText version as shown in the producer line.
             iText is a product developed by iText Group NV.
             iText Group requests that you retain the iText producer line
             in every PDF that is created or manipulated using iText.
         </member>
-        <member name="F:iTextSharp.text.Version.version">
-            The iText version instance. 
+        <member name="F:iTextSharp.text.Version.key">
+            The license key.
         </member>
         <member name="M:iTextSharp.text.Version.GetInstance">
             Gets an instance of the iText version that is currently used.
