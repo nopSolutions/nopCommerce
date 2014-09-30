@@ -1139,6 +1139,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = copyModel.Id });
             }
         }
+        
+        #endregion
+
+        #region Required products
 
         [HttpPost]
         [ValidateInput(false)]
@@ -1166,6 +1170,99 @@ namespace Nop.Admin.Controllers
             }
 
             return Json(new { Text = result });
+        }
+
+        public ActionResult RequiredProductAddPopup(int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var model = new ProductModel.AddRequiredProductModel();
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult RequiredProductAddPopupList(DataSourceRequest command, ProductModel.AddRequiredProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int>() { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
+            var gridModel = new DataSourceResult();
+            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Total = products.TotalCount;
+
+            return Json(gridModel);
+        }
+
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult RequiredProductAddPopup(string btnId, string productIdsInput,
+            ProductModel.AddRequiredProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var requiredProduct = _productService.GetProductById(model.RequiredProductId);
+            if (requiredProduct == null)
+                return Content("Cannot load a product");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && requiredProduct.VendorId != _workContext.CurrentVendor.Id)
+                return Content("This is not your product");
+
+            //a vendor should have access only to his products
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            ViewBag.RefreshPage = true;
+            ViewBag.productIdsInput = productIdsInput;
+            ViewBag.btnId = btnId;
+            ViewBag.productId = requiredProduct.Id;
+            return View(model);
         }
         
         #endregion

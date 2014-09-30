@@ -2319,6 +2319,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds">
     <Value>Required product IDs</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.AddNew">
+    <Value>Add required product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.Choose">
+    <Value>Choose</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.Hint">
     <Value>Specify comma separated list of required product IDs. NOTE: Ensure that there are no circular references (for example, A requires B, and B requires A).</Value>
   </LocaleResource>

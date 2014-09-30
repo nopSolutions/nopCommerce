@@ -170,6 +170,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductWarehouseInventory.Fields.PlannedQuantity">
     <Value>Planned qty</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.AddNew">
+    <Value>Add required product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.Choose">
+    <Value>Choose</Value>
+  </LocaleResource>
 </Language>
 '
 
