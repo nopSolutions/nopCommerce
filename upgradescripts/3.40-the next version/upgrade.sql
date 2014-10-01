@@ -176,6 +176,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds.Choose">
     <Value>Choose</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products.AddNew">
+    <Value>Add product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products.Choose">
+    <Value>Choose</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew">
+    <Value>Add product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose">
+    <Value>Choose</Value>
+  </LocaleResource>
 </Language>
 '
 

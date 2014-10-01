@@ -1156,11 +1156,15 @@ namespace Nop.Admin.Controllers
             if (!String.IsNullOrWhiteSpace(productIds))
             {
                 var ids = new List<int>();
-                string[] rangeArray = productIds.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                var rangeArray = productIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Trim())
+                    .ToList();
+
                 foreach (string str1 in rangeArray)
                 {
                     int tmp1 = 0;
-                    if (int.TryParse(str1.Trim(), out tmp1))
+                    if (int.TryParse(str1, out tmp1))
                         ids.Add(tmp1);
                 }
 

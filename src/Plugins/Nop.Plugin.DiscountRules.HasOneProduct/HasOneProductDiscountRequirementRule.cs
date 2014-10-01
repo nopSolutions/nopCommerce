@@ -163,6 +163,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products", "Restricted products");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint", "The comma-separated list of product identifiers (e.g. 77, 123, 156). You can find a product ID on its details page. You can also specify the comma-separated list of product identifiers with quantities ({Product ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product identifiers with quantity range ({Product ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew", "Add product");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose", "Choose");
             base.Install();
         }
 
@@ -171,6 +173,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             //locales
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products");
             this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Hint");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose");
             base.Uninstall();
         }
     }
