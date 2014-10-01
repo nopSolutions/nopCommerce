@@ -1172,7 +1172,8 @@ namespace Nop.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public ActionResult RequiredProductAddPopup(int productId)
+        public ActionResult RequiredProductAddPopup(int productId,
+            string btnId, string productIdsInput)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -1205,6 +1206,10 @@ namespace Nop.Admin.Controllers
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+
+            ViewBag.productIdsInput = productIdsInput;
+            ViewBag.btnId = btnId;
 
             return View(model);
         }
@@ -1239,32 +1244,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
-
-        [HttpPost]
-        [FormValueRequired("save")]
-        public ActionResult RequiredProductAddPopup(string btnId, string productIdsInput,
-            ProductModel.AddRequiredProductModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            var requiredProduct = _productService.GetProductById(model.RequiredProductId);
-            if (requiredProduct == null)
-                return Content("Cannot load a product");
-
-            //a vendor should have access only to his products
-            if (_workContext.CurrentVendor != null && requiredProduct.VendorId != _workContext.CurrentVendor.Id)
-                return Content("This is not your product");
-
-            //a vendor should have access only to his products
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            ViewBag.RefreshPage = true;
-            ViewBag.productIdsInput = productIdsInput;
-            ViewBag.btnId = btnId;
-            ViewBag.productId = requiredProduct.Id;
-            return View(model);
-        }
-        
         #endregion
         
         #region Product categories

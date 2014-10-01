@@ -421,9 +421,6 @@ namespace Nop.Admin.Models.Catalog
 
             //vendor
             public bool IsLoggedInAsVendor { get; set; }
-
-
-            public int RequiredProductId { get; set; }
         }
 
         public partial class AddProductSpecificationAttributeModel : BaseNopModel

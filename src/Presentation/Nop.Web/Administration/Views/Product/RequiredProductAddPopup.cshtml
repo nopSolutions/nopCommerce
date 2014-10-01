@@ -16,26 +16,7 @@
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
             @T("Admin.Catalog.Products.Fields.RequiredProductIds.Choose")
         </div>
-    </div>    
-    
-    if (ViewBag.RefreshPage == true)
-    {
-    <script type="text/javascript">
-    try {
-        var currentValue = window.opener.document.getElementById('@(ViewBag.productIdsInput)').value;
-        if (currentValue) {
-            //add comma
-            window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += ', ';
-        }
-        window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += '@(ViewBag.productId)';
-        window.opener.document.getElementById('@(ViewBag.btnId)').click();
-    }
-    catch (e){}
-    window.close();
-</script>
-    }
-
-    @Html.HiddenFor(model => model.RequiredProductId)
+    </div>
     <table width="100%">
         <tr>
             <td class="adminTitle">
@@ -156,11 +137,6 @@
                 </script>
             </td>
         </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" id="save" name="save" class="k-button" value="@T("Admin.Common.Save")" style="display: none" />
-            </td>
-        </tr>
     </table>
     
     <script type="text/javascript">
@@ -192,8 +168,17 @@
         }
         
         function selectRequiredProduct(productid) {
-            $("#@Html.FieldIdFor(model => model.RequiredProductId)").val(productid);
-            $('#save').click();
+            try {
+                var currentValue = window.opener.document.getElementById('@(ViewBag.productIdsInput)').value;
+                if (currentValue) {
+                    //add comma
+                    window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += ', ';
+                }
+                window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += productid;
+                window.opener.document.getElementById('@(ViewBag.btnId)').click();
+            }
+            catch (e){}
+            window.close();
         }
     </script>
 }
