@@ -1149,6 +1149,10 @@ namespace Nop.Admin.Controllers
         public ActionResult LoadProductFriendlyNames(string productIds)
         {
             var result = "";
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return Json(new { Text = result });
+
             if (!String.IsNullOrWhiteSpace(productIds))
             {
                 var ids = new List<int>();
@@ -1172,8 +1176,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Text = result });
         }
 
-        public ActionResult RequiredProductAddPopup(int productId,
-            string btnId, string productIdsInput)
+        public ActionResult RequiredProductAddPopup(string btnId, string productIdsInput)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();

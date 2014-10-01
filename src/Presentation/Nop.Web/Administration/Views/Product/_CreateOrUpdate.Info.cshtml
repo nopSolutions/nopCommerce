@@ -699,7 +699,7 @@
             @Html.EditorFor(model => model.RequiredProductIds)
             @Html.ValidationMessageFor(model => model.RequiredProductIds)
             <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
+            <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="k-button" />
             <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {
