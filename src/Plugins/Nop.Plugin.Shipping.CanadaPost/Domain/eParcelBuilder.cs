@@ -6,10 +6,10 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
     public class eParcelBuilder
     {
         #region Fields
-        private Destination m_destination;
-        private List<Item> m_items;
-        private Profile m_profile;
-        private CanadaPostLanguageEnum m_language;
+        private readonly Destination _destination;
+        private readonly List<Item> _items;
+        private readonly Profile _profile;
+        private readonly CanadaPostLanguageEnum _language;
         #endregion
         
         #region Ctor
@@ -22,14 +22,15 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
         /// <param name="language">The language.</param>
         public eParcelBuilder(Profile profile, Destination destination, List<Item> items, CanadaPostLanguageEnum language)
         {
-            this.m_destination = destination;
-            this.m_items = items;
-            this.m_language = language;
-            this.m_profile = profile;
+            this._destination = destination;
+            this._items = items;
+            this._language = language;
+            this._profile = profile;
         }
         #endregion
 
         #region Methods
+
         public string GetMessage(bool includeComments)
         {
             var msg = new StringBuilder();
@@ -44,14 +45,14 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
                 msg.AppendLine("<!--********************************-->");
             }
             // set the language
-            if (m_language == CanadaPostLanguageEnum.French)
+            if (_language == CanadaPostLanguageEnum.French)
                 msg.AppendLine("<language>fr</language>");
             else
                 msg.AppendLine("<language>en</language>");
             // opening TAG for rates request info
             msg.AppendLine("<ratesAndServicesRequest>");
             // adding information related to the profile of the merchant
-            msg.Append(m_profile.ToXml(includeComments));
+            msg.Append(_profile.ToXml(includeComments));
             // if we want to include the comments in the xml
             if (includeComments == true)
             {
@@ -67,7 +68,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
                 msg.AppendLine("<!--**********************************-->");
             }
             msg.AppendLine("<lineItems>");
-            foreach (Item item in m_items)
+            foreach (Item item in _items)
             {
                 // build the item information
                 msg.AppendLine(item.ToXml(includeComments));
@@ -75,13 +76,14 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
             msg.AppendLine("</lineItems>");
 
             // build the destination information
-            msg.Append(m_destination.ToXml(includeComments));
+            msg.Append(_destination.ToXml(includeComments));
             // closing TAG for rates request info            
             msg.AppendLine("</ratesAndServicesRequest>");
             msg.AppendLine("</eparcel>");
 
             return msg.ToString();
         }
+
         #endregion
     }
 }

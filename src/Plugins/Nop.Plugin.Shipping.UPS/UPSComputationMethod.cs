@@ -53,7 +53,7 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly ILogger _logger;
         private readonly ILocalizationService _localizationService;
 
-        private StringBuilder _traceMessages;
+        private readonly StringBuilder _traceMessages;
 
         #endregion
 

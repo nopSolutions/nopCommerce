@@ -10,16 +10,16 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
     public class RequestResult
     {
         #region Fields
-        private List<DeliveryRate> m_rates;
-        private List<BoxDetail> m_boxes;
+        private readonly List<DeliveryRate> _rates;
+        private readonly List<BoxDetail> _boxes;
         #endregion
 
         #region Constructor
 
         public RequestResult()
         {
-            this.m_rates = new List<DeliveryRate>();
-            this.m_boxes = new List<BoxDetail>();
+            this._rates = new List<DeliveryRate>();
+            this._boxes = new List<BoxDetail>();
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
         {
             get
             {
-                return m_rates;
+                return _rates;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
         {
             get
             {
-                return m_boxes;
+                return _boxes;
             }
         }
 

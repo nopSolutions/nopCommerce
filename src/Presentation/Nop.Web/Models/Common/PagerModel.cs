@@ -22,7 +22,7 @@ namespace Nop.Web.Models.Common
 
         #region Fields
 
-        private ILocalizationService _localizationService;
+        private readonly ILocalizationService _localizationService;
         private int individualPagesDisplayedCount;
         private int pageIndex = -2;
         private int pageSize;

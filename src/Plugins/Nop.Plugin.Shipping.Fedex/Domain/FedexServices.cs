@@ -12,7 +12,7 @@ namespace Nop.Plugin.Shipping.Fedex.Domain
         /// <summary>
         /// FedEx Service names
         /// </summary>
-        private string[] _services = {
+        private readonly string[] _services = {
                                         "FedEx Europe First International Priority",
                                         "FedEx 1Day Freight",
                                         "FedEx 2Day",

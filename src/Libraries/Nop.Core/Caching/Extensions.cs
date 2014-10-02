@@ -10,7 +10,7 @@ namespace Nop.Core.Caching
         /// <summary>
         /// Variable (lock) to support thread-safe
         /// </summary>
-        private static object _syncObject = new object();
+        private static readonly object _syncObject = new object();
 
         /// <summary>
         /// Get a cached item. If it's not in the cache yet, then load and cache it

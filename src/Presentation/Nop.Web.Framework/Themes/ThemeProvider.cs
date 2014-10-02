@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Themes
 		#region Fields
 
         private readonly IList<ThemeConfiguration> _themeConfigurations = new List<ThemeConfiguration>();
-        private string basePath = string.Empty;
+        private readonly string _basePath = string.Empty;
 
 		#endregion
 
@@ -21,7 +21,7 @@ namespace Nop.Web.Framework.Themes
 
         public ThemeProvider(NopConfig nopConfig, IWebHelper webHelper)
         {
-            basePath = webHelper.MapPath(nopConfig.ThemeBasePath);
+            _basePath = webHelper.MapPath(nopConfig.ThemeBasePath);
             LoadConfigurations();
         }
 
@@ -52,7 +52,7 @@ namespace Nop.Web.Framework.Themes
         private void LoadConfigurations()
         {
             //TODO:Use IFileStorage?
-            foreach (string themeName in Directory.GetDirectories(basePath))
+            foreach (string themeName in Directory.GetDirectories(_basePath))
             {
                 var configuration = CreateThemeConfiguration(themeName);
                 if(configuration != null)

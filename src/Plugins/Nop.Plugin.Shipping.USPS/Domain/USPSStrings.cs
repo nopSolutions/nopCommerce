@@ -13,7 +13,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// String array field instance.
         /// </summary>
         /// Comment out the services not needed. 
-        string[] _elements = {      // "Priority Express", 
+        private readonly string[] _elements = {      // "Priority Express", 
                                     // "Priority Express SH",
                                     // "Priority Express Commercial",
                                     // "Priority Express SH Commercial",

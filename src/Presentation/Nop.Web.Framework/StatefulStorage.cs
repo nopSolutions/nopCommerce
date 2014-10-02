@@ -67,19 +67,19 @@ namespace Nop.Web.Framework
 
     public abstract class DictionaryStatefulStorage : IStatefulStorage
     {
-        Func<string, object> getter;
-        Action<string, object> setter;
+        private readonly Func<string, object> _getter;
+        private readonly Action<string, object> _setter;
 
         protected DictionaryStatefulStorage(Func<IDictionary> dictionaryAccessor)
         {
-            getter = (key) => dictionaryAccessor()[key];
-            setter = (key, value) => dictionaryAccessor()[key] = value;
+            _getter = (key) => dictionaryAccessor()[key];
+            _setter = (key, value) => dictionaryAccessor()[key] = value;
         }
 
         protected DictionaryStatefulStorage(Func<string, object> getter, Action<string, object> setter)
         {
-            this.getter = getter;
-            this.setter = setter;
+            this._getter = getter;
+            this._setter = setter;
         }
 
         protected static string FullNameOf(Type type, string name)
@@ -93,18 +93,18 @@ namespace Nop.Web.Framework
 
         public TValue Get<TValue>(string name)
         {
-            return (TValue)getter(FullNameOf(typeof(TValue), name));
+            return (TValue)_getter(FullNameOf(typeof(TValue), name));
         }
 
         public TValue GetOrAdd<TValue>(string name, Func<TValue> valueFactory)
         {
             string fullName = FullNameOf(typeof(TValue), name);
-            TValue result = (TValue)getter(fullName);
+            TValue result = (TValue)_getter(fullName);
 
             if (Equals(result, default(TValue)))
             {
                 result = valueFactory();
-                setter(fullName, result);
+                _setter(fullName, result);
             }
 
             return result;
