@@ -125,13 +125,13 @@ namespace Nop.Plugin.Shipping.Fedex
             Debug.WriteLine(String.Format("SubTotal (Primary Currency) : {0} ({1})", subTotalBase, primaryStoreCurrency.CurrencyCode));
             Debug.WriteLine(String.Format("SubTotal (Shipment Currency): {0} ({1})", subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode));
 
-            SetShipmentDetails(request, getShippingOptionRequest, subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
-            SetPayment(request, getShippingOptionRequest);
+            SetShipmentDetails(request, subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
+            SetPayment(request);
 
             switch (_fedexSettings.PackingType)
             {
                 case PackingType.PackByOneItemPerPackage:
-                    SetIndividualPackageLineItemsOneItemPerPackage(request, getShippingOptionRequest, subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
+                    SetIndividualPackageLineItemsOneItemPerPackage(request, getShippingOptionRequest,  requestedShipmentCurrency.CurrencyCode);
                     break;
                 case PackingType.PackByVolume:
                     SetIndividualPackageLineItemsCubicRootDimensions(request, getShippingOptionRequest, subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
@@ -144,7 +144,7 @@ namespace Nop.Plugin.Shipping.Fedex
             return request;
         }
 
-        private void SetShipmentDetails(RateRequest request, GetShippingOptionRequest getShippingOptionRequest, decimal orderSubTotal, string currencyCode)
+        private void SetShipmentDetails(RateRequest request, decimal orderSubTotal, string currencyCode)
         {
             //set drop off type
             switch (_fedexSettings.DropoffType)
@@ -189,7 +189,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.PackageDetailSpecified = true;
         }
 
-        private void SetPayment(RateRequest request, GetShippingOptionRequest getShippingOptionRequest)
+        private void SetPayment(RateRequest request)
         {
             request.RequestedShipment.ShippingChargesPayment = new Payment(); // Payment Information
             request.RequestedShipment.ShippingChargesPayment.PaymentType = PaymentType.SENDER; // Payment options are RECIPIENT, SENDER, THIRD_PARTY
@@ -342,7 +342,7 @@ namespace Nop.Plugin.Shipping.Fedex
             }
         }
 
-        private void SetIndividualPackageLineItemsOneItemPerPackage(RateRequest request, GetShippingOptionRequest getShippingOptionRequest, decimal orderSubTotal, string currencyCode)
+        private void SetIndividualPackageLineItemsOneItemPerPackage(RateRequest request, GetShippingOptionRequest getShippingOptionRequest, string currencyCode)
         {
             // Rate request setup - each Shopping Cart Item is a separate package
 

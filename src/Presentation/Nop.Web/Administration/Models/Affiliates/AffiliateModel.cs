@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Web.Mvc;
-using FluentValidation.Attributes;
 using Nop.Admin.Models.Common;
-using Nop.Admin.Validators.Affiliates;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Affiliates
 {
-    [Validator(typeof(AffiliateValidator))]
     public partial class AffiliateModel : BaseNopEntityModel
     {
         public AffiliateModel()

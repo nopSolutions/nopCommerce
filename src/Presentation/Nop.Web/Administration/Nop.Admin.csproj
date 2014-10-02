@@ -336,7 +336,6 @@
     <Compile Include="Validators\Messages\NewsLetterSubscriptionValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValidator.cs" />
-    <Compile Include="Validators\Affiliates\AffiliateValidator.cs" />
     <Compile Include="Validators\Messages\CampaignValidator.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
     <Compile Include="Validators\Plugins\PluginValidator.cs" />
@@ -352,8 +351,6 @@
     <Compile Include="Validators\Directory\StateProvinceValidator.cs" />
     <Compile Include="Validators\Directory\CountryValidator.cs" />
     <Compile Include="Validators\Catalog\ProductReviewValidator.cs" />
-    <Compile Include="Validators\Orders\ReturnRequestValidator.cs" />
-    <Compile Include="Validators\Orders\RecurringPaymentValidator.cs" />
     <Compile Include="Validators\Discounts\DiscountValidator.cs" />
     <Compile Include="Validators\Catalog\ProductVariantAttributeValueModelValidator.cs" />
     <Compile Include="Validators\Catalog\SpecificationAttributeOptionValidator.cs" />

@@ -110,7 +110,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             parameters.AddClaim(claims);
         }
 
-        private AuthorizeState RequestAuthentication(string returnUrl)
+        private AuthorizeState RequestAuthentication()
         {
             var authUrl = GenerateServiceLoginUrl().AbsoluteUri;
             return new AuthorizeState("", OpenAuthenticationStatus.RequiresRedirect) { Result = new RedirectResult(authUrl) };
@@ -203,7 +203,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             if (verifyResponse.Value)
                 return VerifyAuthentication(returnUrl);
             
-            return RequestAuthentication(returnUrl);
+            return RequestAuthentication();
         }
 
         #endregion

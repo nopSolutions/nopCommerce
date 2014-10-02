@@ -1,12 +1,9 @@
 ﻿using System;
-using FluentValidation.Attributes;
-using Nop.Admin.Validators.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    [Validator(typeof(RecurringPaymentValidator))]
     public partial class RecurringPaymentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
