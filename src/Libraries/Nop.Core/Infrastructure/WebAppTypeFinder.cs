@@ -16,7 +16,7 @@ namespace Nop.Core.Infrastructure
         #region Fields
 
         private bool _ensureBinFolderAssembliesLoaded = true;
-        private bool _binFolderAssembliesLoaded = false;
+        private bool _binFolderAssembliesLoaded;
 
         #endregion
 
@@ -55,11 +55,9 @@ namespace Nop.Core.Infrastructure
                 //hosted
                 return HttpRuntime.BinDirectory;
             }
-            else
-            {
-                //not hosted. For example, run either in unit tests
-                return AppDomain.CurrentDomain.BaseDirectory;
-            }
+
+            //not hosted. For example, run either in unit tests
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
 
         public override IList<Assembly> GetAssemblies()

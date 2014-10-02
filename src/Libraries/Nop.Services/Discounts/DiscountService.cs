@@ -115,11 +115,9 @@ namespace Nop.Services.Discounts
                             var totalDuh = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
                             return totalDuh < discount.LimitationTimes;
                         }
-                        else
-                        {
-                            //guest
-                            return true;
-                        }
+
+                        //guest
+                        return true;
                     }
                 default:
                     break;

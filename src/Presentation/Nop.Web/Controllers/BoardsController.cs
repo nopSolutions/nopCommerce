@@ -1062,10 +1062,7 @@ namespace Nop.Web.Controllers
                 {
                     return RedirectToRoute("ForumSlug", new { id = forumId, slug = forumSlug });
                 }
-                else
-                {
-                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
-                }
+                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
             }
 
             return RedirectToRoute("Boards");
@@ -1548,7 +1545,7 @@ namespace Nop.Web.Controllers
 
             try
             {
-                if (String.IsNullOrWhiteSpace(searchterms) == false)
+                if (!String.IsNullOrWhiteSpace(searchterms))
                 {
                     searchterms = searchterms.Trim();
                     model.SearchTerms = searchterms;
@@ -1588,10 +1585,7 @@ namespace Nop.Web.Controllers
                     
                     return View(model);
                 }
-                else
-                {
-                    model.SearchResultsVisible = false;
-                }
+                model.SearchResultsVisible = false;
             }
             catch (Exception ex)
             {

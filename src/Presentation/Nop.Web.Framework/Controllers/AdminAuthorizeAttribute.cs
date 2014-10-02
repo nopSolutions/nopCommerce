@@ -10,7 +10,7 @@ namespace Nop.Web.Framework.Controllers
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited=true, AllowMultiple=true)]
     public class AdminAuthorizeAttribute : FilterAttribute, IAuthorizationFilter
     {
-        private readonly bool _dontValidate = false;
+        private readonly bool _dontValidate;
 
 
         public AdminAuthorizeAttribute()

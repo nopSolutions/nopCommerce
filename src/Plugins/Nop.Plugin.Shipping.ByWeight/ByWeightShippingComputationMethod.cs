@@ -57,8 +57,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             {
                 if (_shippingByWeightSettings.LimitMethodsToCreated)
                     return null;
-                else
-                    return decimal.Zero;
+                
+                return decimal.Zero;
             }
 
             //additional fixed cost

@@ -846,9 +846,11 @@ namespace Nop.Services.Orders
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
             if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
             {
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
-                paymentMethodAdditionalFeeWithoutTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
-                    false, customer);
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart,
+                    paymentMethodSystemName);
+                paymentMethodAdditionalFeeWithoutTax =
+                    _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
+                        false, customer);
             }
 
 
@@ -869,7 +871,7 @@ namespace Nop.Services.Orders
             }
             resultTemp += paymentMethodAdditionalFeeWithoutTax;
             resultTemp += shoppingCartTax;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation) 
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 resultTemp = Math.Round(resultTemp, 2);
 
             #region Order total discount
@@ -885,7 +887,7 @@ namespace Nop.Services.Orders
 
             if (resultTemp < decimal.Zero)
                 resultTemp = decimal.Zero;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation) 
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 resultTemp = Math.Round(resultTemp, 2);
 
             #endregion
@@ -898,7 +900,7 @@ namespace Nop.Services.Orders
             {
                 //we don't apply gift cards for recurring products
                 var giftCards = _giftCardService.GetActiveGiftCardsAppliedByCustomer(customer);
-                if (giftCards!=null)
+                if (giftCards != null)
                     foreach (var gc in giftCards)
                         if (resultTemp > decimal.Zero)
                         {
@@ -926,56 +928,47 @@ namespace Nop.Services.Orders
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 resultTemp = Math.Round(resultTemp, 2);
 
-            decimal? orderTotal = null;
             if (!shoppingCartShipping.HasValue)
             {
-                //return null if we have errors
-                orderTotal = null;
-                return orderTotal;
+                //we have errors
+                return null;
             }
-            else
-            {
-                //return result if we have no errors
-                orderTotal = resultTemp;
-            }
+
+            decimal orderTotal = resultTemp;
 
             #region Reward points
 
-            if (_rewardPointsSettings.Enabled && 
+            if (_rewardPointsSettings.Enabled &&
                 !ignoreRewardPonts &&
                 customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
-                _genericAttributeService, _storeContext.CurrentStore.Id))
+                    _genericAttributeService, _storeContext.CurrentStore.Id))
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);
-                    if (orderTotal.HasValue && orderTotal.Value > decimal.Zero)
+                    if (orderTotal > decimal.Zero)
                     {
-                        if (orderTotal.Value > rewardPointsBalanceAmount)
+                        if (orderTotal > rewardPointsBalanceAmount)
                         {
                             redeemedRewardPoints = rewardPointsBalance;
                             redeemedRewardPointsAmount = rewardPointsBalanceAmount;
                         }
                         else
                         {
-                            redeemedRewardPointsAmount = orderTotal.Value;
+                            redeemedRewardPointsAmount = orderTotal;
                             redeemedRewardPoints = ConvertAmountToRewardPoints(redeemedRewardPointsAmount);
                         }
                     }
                 }
             }
+
             #endregion
 
-            if (orderTotal.HasValue)
-            {
-                orderTotal = orderTotal.Value - redeemedRewardPointsAmount;
-                if (_shoppingCartSettings.RoundPricesDuringCalculation) 
-                    orderTotal = Math.Round(orderTotal.Value, 2);
-                return orderTotal;
-            }
-            else
-                return null;
+            orderTotal = orderTotal - redeemedRewardPointsAmount;
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                orderTotal = Math.Round(orderTotal, 2);
+            return orderTotal;
         }
 
 

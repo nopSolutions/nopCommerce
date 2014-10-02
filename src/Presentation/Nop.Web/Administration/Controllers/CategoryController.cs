@@ -537,10 +537,7 @@ namespace Nop.Admin.Controllers
 
                     return RedirectToAction("Edit", category.Id);
                 }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return RedirectToAction("List");
             }
 
 

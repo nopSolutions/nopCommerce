@@ -22,8 +22,8 @@ namespace Nop.Data
             {
                 if (throwExceptionIfNonExists)
                     throw new ArgumentException(string.Format("Specified file doesn't exist - {0}", filePath));
-                else
-                    return new string[0];
+                
+                return new string[0];
             }
 
 
@@ -54,8 +54,8 @@ namespace Nop.Data
                 {
                     if (sb.Length > 0)
                         return sb.ToString();
-                    else
-                        return null;
+                    
+                    return null;
                 }
 
                 if (lineOfText.TrimEnd().ToUpper() == "GO")

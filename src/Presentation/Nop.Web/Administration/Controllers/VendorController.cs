@@ -235,10 +235,7 @@ namespace Nop.Admin.Controllers
 
                     return RedirectToAction("Edit", vendor.Id);
                 }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

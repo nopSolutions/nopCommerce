@@ -1096,10 +1096,7 @@ namespace Nop.Admin.Controllers
 
                         return RedirectToAction("Edit", customer.Id);
                     }
-                    else
-                    {
-                        return  RedirectToAction("List");
-                    }
+                    return RedirectToAction("List");
                 }
                 catch (Exception exc)
                 {

@@ -62,10 +62,8 @@ namespace Nop.Web.Framework.Localization
 
                 return url.Substring(1, _seoCodeLength);
             }
-            else
-            {
-                return url.Substring(2, _seoCodeLength);
-            }
+            
+            return url.Substring(2, _seoCodeLength);
         }
 
         /// <summary>

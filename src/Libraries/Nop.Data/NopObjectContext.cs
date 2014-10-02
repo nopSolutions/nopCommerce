@@ -69,11 +69,9 @@ namespace Nop.Data
                 Set<TEntity>().Attach(entity);
                 return entity;
             }
-            else
-            {
-                //entity is already loaded.
-                return alreadyAttached;
-            }
+
+            //entity is already loaded
+            return alreadyAttached;
         }
 
         #endregion

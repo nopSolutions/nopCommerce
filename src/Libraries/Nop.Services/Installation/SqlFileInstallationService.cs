@@ -114,8 +114,8 @@ namespace Nop.Services.Installation
                 {
                     if (sb.Length > 0)
                         return sb.ToString();
-                    else
-                        return null;
+                    
+                    return null;
                 }
 
                 if (lineOfText.TrimEnd().ToUpper() == "GO")

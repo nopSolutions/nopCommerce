@@ -310,12 +310,10 @@ namespace Nop.Web.Controllers
                                 var errorCreatingDatabase = CreateDatabase(connectionString, collation);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
-                                else
-                                {
-                                    //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
-                                    //that's just wait 3 seconds
-                                    Thread.Sleep(3000);
-                                }
+                                
+                                //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
+                                //that's just wait 3 seconds
+                                Thread.Sleep(3000);
                             }
                         }
                         else

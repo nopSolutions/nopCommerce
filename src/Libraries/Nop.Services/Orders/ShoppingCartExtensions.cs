@@ -70,8 +70,6 @@ namespace Nop.Services.Orders
             ILocalizationService localizationService,
             out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
         {
-            string error = "";
-
             cycleLength = 0;
             cyclePeriod = 0;
             totalCycles = 0;
@@ -88,41 +86,24 @@ namespace Nop.Services.Orders
                     throw new NopException(string.Format("Product (Id={0}) cannot be loaded", sci.ProductId));
                 }
 
-                string conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
                 if (product.IsRecurring)
                 {
+                    string conflictError = localizationService.GetResource("ShoppingCart.ConflictingShipmentSchedules");
+
                     //cycle length
                     if (_cycleLength.HasValue && _cycleLength.Value != product.RecurringCycleLength)
-                    {
-                        error = conflictError;
-                        return error;
-                    }
-                    else
-                    {
-                        _cycleLength = product.RecurringCycleLength;
-                    }
+                        return conflictError;
+                    _cycleLength = product.RecurringCycleLength;
 
                     //cycle period
                     if (_cyclePeriod.HasValue && _cyclePeriod.Value != product.RecurringCyclePeriod)
-                    {
-                        error = conflictError;
-                        return error;
-                    }
-                    else
-                    {
-                        _cyclePeriod = product.RecurringCyclePeriod;
-                    }
+                        return conflictError;
+                    _cyclePeriod = product.RecurringCyclePeriod;
 
                     //total cycles
                     if (_totalCycles.HasValue && _totalCycles.Value != product.RecurringTotalCycles)
-                    {
-                        error = conflictError;
-                        return error;
-                    }
-                    else
-                    {
-                        _totalCycles = product.RecurringTotalCycles;
-                    }
+                        return conflictError;
+                    _totalCycles = product.RecurringTotalCycles;
                 }
             }
 
@@ -133,7 +114,7 @@ namespace Nop.Services.Orders
                 totalCycles = _totalCycles.Value;
             }
 
-            return error;
+            return "";
         }
 
         /// <summary>

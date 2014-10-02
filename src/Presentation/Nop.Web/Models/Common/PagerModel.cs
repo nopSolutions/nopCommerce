@@ -66,8 +66,8 @@ namespace Nop.Web.Models.Common
             {
                 if (individualPagesDisplayedCount <= 0)
                     return 5;
-                else
-                    return individualPagesDisplayedCount;
+                
+                return individualPagesDisplayedCount;
             }
             set
             {

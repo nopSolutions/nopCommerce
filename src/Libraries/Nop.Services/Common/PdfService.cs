@@ -146,8 +146,8 @@ namespace Nop.Services.Common
             //if we need the element to be opposite, like logo etc`.
             if (!isOpposite)
                 return lang.Rtl ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT;
-            else
-                return lang.Rtl ? Element.ALIGN_LEFT : Element.ALIGN_RIGHT;
+            
+            return lang.Rtl ? Element.ALIGN_LEFT : Element.ALIGN_RIGHT;
         }
 
         #endregion

@@ -1243,22 +1243,20 @@ namespace Nop.Web.Controllers
                                 redirect = Url.RouteUrl("Wishlist"),
                             });
                         }
-                        else
+                        
+                        //display notification message and update appropriate blocks
+                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
+                        _workContext.CurrentCustomer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .ToList()
+                        .GetTotalProducts());
+                        return Json(new
                         {
-                            //display notification message and update appropriate blocks
-                            var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                                 _workContext.CurrentCustomer.ShoppingCartItems
-                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                 .ToList()
-                                 .GetTotalProducts());
-                            return Json(new
-                            {
-                                success = true,
-                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
-                                updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
-                            });
-                        }
+                            success = true,
+                            message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
+                            updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                        });
                     }
                 case ShoppingCartType.ShoppingCart:
                 default:
@@ -1274,28 +1272,26 @@ namespace Nop.Web.Controllers
                                 redirect = Url.RouteUrl("ShoppingCart"),
                             });
                         }
-                        else
+                        
+                        //display notification message and update appropriate blocks
+                        var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
+                        _workContext.CurrentCustomer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .ToList()
+                        .GetTotalProducts());
+                        
+                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                            ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
+                            : "";
+
+                        return Json(new
                         {
-
-                            //display notification message and update appropriate blocks
-                            var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                                 _workContext.CurrentCustomer.ShoppingCartItems
-                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                 .ToList()
-                                 .GetTotalProducts());
-                            var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                                ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
-                                : "";
-
-                            return Json(new
-                            {
-                                success = true,
-                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                                updatetopcartsectionhtml = updatetopcartsectionhtml,
-                                updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
-                            });
-                        }
+                            success = true,
+                            message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                            updatetopcartsectionhtml = updatetopcartsectionhtml,
+                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
+                        });
                     }
             }
         }
@@ -1456,22 +1452,21 @@ namespace Nop.Web.Controllers
                                 redirect = Url.RouteUrl("Wishlist"),
                             });
                         }
-                        else
+                        
+                        //display notification message and update appropriate blocks
+                        var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
+                        _workContext.CurrentCustomer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .ToList()
+                        .GetTotalProducts());
+                        
+                        return Json(new
                         {
-                            //display notification message and update appropriate blocks
-                            var updatetopwishlistsectionhtml = string.Format(_localizationService.GetResource("Wishlist.HeaderQuantity"),
-                                 _workContext.CurrentCustomer.ShoppingCartItems
-                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
-                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                 .ToList()
-                                 .GetTotalProducts());
-                            return Json(new
-                            {
-                                success = true,
-                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
-                                updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
-                            });
-                        }
+                            success = true,
+                            message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
+                            updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                        });
                     }
                 case ShoppingCartType.ShoppingCart:
                 default:
@@ -1487,28 +1482,26 @@ namespace Nop.Web.Controllers
                                 redirect = Url.RouteUrl("ShoppingCart"),
                             });
                         }
-                        else
+                        
+                        //display notification message and update appropriate blocks
+                        var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
+                        _workContext.CurrentCustomer.ShoppingCartItems
+                        .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                        .LimitPerStore(_storeContext.CurrentStore.Id)
+                        .ToList()
+                        .GetTotalProducts());
+                        
+                        var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                            ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
+                            : "";
+
+                        return Json(new
                         {
-
-                            //display notification message and update appropriate blocks
-                            var updatetopcartsectionhtml = string.Format(_localizationService.GetResource("ShoppingCart.HeaderQuantity"),
-                                 _workContext.CurrentCustomer.ShoppingCartItems
-                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                                 .LimitPerStore(_storeContext.CurrentStore.Id)
-                                 .ToList()
-                                 .GetTotalProducts());
-                            var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
-                                ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
-                                : "";
-
-                            return Json(new
-                            {
-                                success = true,
-                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
-                                updatetopcartsectionhtml = updatetopcartsectionhtml,
-                                updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
-                            });
-                        }
+                            success = true,
+                            message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
+                            updatetopcartsectionhtml = updatetopcartsectionhtml,
+                            updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
+                        });
                     }
             }
 
@@ -1862,19 +1855,13 @@ namespace Nop.Web.Controllers
             //everything is OK
             if (_workContext.CurrentCustomer.IsGuest())
             {
-                if (_orderSettings.AnonymousCheckoutAllowed)
-                {
-                    return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
-                }
-                else
-                {
+                if (!_orderSettings.AnonymousCheckoutAllowed)
                     return new HttpUnauthorizedResult();
-                }
+                
+                return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
             }
-            else
-            {
-                return RedirectToRoute("Checkout");
-            }
+            
+            return RedirectToRoute("Checkout");
         }
 
         [ValidateInput(false)]

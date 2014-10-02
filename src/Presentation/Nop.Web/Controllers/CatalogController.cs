@@ -650,15 +650,12 @@ namespace Nop.Web.Controllers
                 {
                     return PrepareCategorySimpleModels(0, null, 0, int.MaxValue, false).ToList();
                 }
-                else
-                {
-                    var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
-                    var breadCrumb = activeCategory != null ?
-                        activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
-                        .Select(x => x.Id).ToList()
-                        : new List<int>();
-                    return PrepareCategorySimpleModels(0, breadCrumb, 0, int.MaxValue, false).ToList();
-                }
+
+                var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
+                var breadCrumb = activeCategory != null 
+                    ? activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService).Select(x => x.Id).ToList()
+                    : new List<int>();
+                return PrepareCategorySimpleModels(0, breadCrumb, 0, int.MaxValue, false).ToList();
             });
 
             var model = new CategoryNavigationModel()

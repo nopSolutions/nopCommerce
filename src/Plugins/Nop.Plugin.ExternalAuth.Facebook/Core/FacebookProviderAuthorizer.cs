@@ -201,13 +201,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
                 throw new ArgumentException("Facebook plugin cannot automatically determine verifyResponse property");
 
             if (verifyResponse.Value)
-            {
                 return VerifyAuthentication(returnUrl);
-            }
-            else
-            {
-                return RequestAuthentication(returnUrl);
-            }
+            
+            return RequestAuthentication(returnUrl);
         }
 
         #endregion

@@ -179,10 +179,7 @@ namespace Nop.Admin.Controllers
 
                 return RedirectToAction("Edit", payment.Id);
             }
-            else
-            {
-                return RedirectToAction("List");
-            }
+            return RedirectToAction("List");
         }
 
         //delete

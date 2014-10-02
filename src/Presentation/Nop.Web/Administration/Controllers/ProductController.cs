@@ -1049,10 +1049,7 @@ namespace Nop.Admin.Controllers
 
                     return RedirectToAction("Edit", new {id = product.Id});
                 }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
@@ -4057,13 +4054,11 @@ namespace Nop.Admin.Controllers
                 ViewBag.RefreshPage = true;
                 return View(model);
             }
-            else
-            {
-                //If we got this far, something failed, redisplay form
-                PrepareAddProductAttributeCombinationModel(model, product);
-                model.Warnings = warnings;
-                return View(model);
-            }
+            
+            //If we got this far, something failed, redisplay form
+            PrepareAddProductAttributeCombinationModel(model, product);
+            model.Warnings = warnings;
+            return View(model);
         }
         
         [HttpPost]

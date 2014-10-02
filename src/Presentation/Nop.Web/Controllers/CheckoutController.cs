@@ -451,8 +451,8 @@ namespace Nop.Web.Controllers
 
             if (_orderSettings.OnePageCheckoutEnabled)
                 return RedirectToRoute("CheckoutOnePage");
-            else
-                return RedirectToRoute("CheckoutBillingAddress");
+            
+            return RedirectToRoute("CheckoutBillingAddress");
         }
 
         public ActionResult Completed(int? orderId)
@@ -525,12 +525,10 @@ namespace Nop.Web.Controllers
                     //choose the first one
                     return SelectBillingAddress(model.ExistingAddresses.First().Id);
                 }
-                else
-                {
-                    TryValidateModel(model);
-                    TryValidateModel(model.NewAddress);
-                    return NewBillingAddress(model);
-                }
+
+                TryValidateModel(model);
+                TryValidateModel(model.NewAddress);
+                return NewBillingAddress(model);
             }
 
             return View(model);
@@ -1097,8 +1095,8 @@ namespace Nop.Web.Controllers
                     //Check whether payment workflow is required
                     if (IsPaymentWorkflowRequired(cart))
                         return RedirectToRoute("CheckoutPaymentInfo");
-                    else
-                        processPaymentRequest = new ProcessPaymentRequest();
+                    
+                    processPaymentRequest = new ProcessPaymentRequest();
                 }
                 
                 //prevent 2 orders being placed within an X seconds time frame
@@ -1126,16 +1124,12 @@ namespace Nop.Web.Controllers
                         //redirection or POST has been done in PostProcessPayment
                         return Content("Redirected");
                     }
-                    else
-                    {
-                        return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
-                    }
+                    
+                    return RedirectToRoute("CheckoutCompleted", new { orderId = placeOrderResult.PlacedOrder.Id });
                 }
-                else
-                {
-                    foreach (var error in placeOrderResult.Errors)
-                        model.Warnings.Add(error);
-                }
+                
+                foreach (var error in placeOrderResult.Errors)
+                    model.Warnings.Add(error);
             }
             catch (Exception exc)
             {
@@ -1189,37 +1183,33 @@ namespace Nop.Web.Controllers
 
                     return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
                 }
-                else
-                {
-                    //customer have to choose a payment method
-                    return Json(new
-                    {
-                        update_section = new UpdateSectionJsonModel()
-                        {
-                            name = "payment-method",
-                            html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                        },
-                        goto_section = "payment_method"
-                    });
-                }
-            }
-            else
-            {
-                //payment is not required
-                _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
-                    SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
-
-                var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                
+                //customer have to choose a payment method
                 return Json(new
                 {
                     update_section = new UpdateSectionJsonModel()
                     {
-                        name = "confirm-order",
-                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        name = "payment-method",
+                        html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
                     },
-                    goto_section = "confirm_order"
+                    goto_section = "payment_method"
                 });
             }
+
+            //payment is not required
+            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.SelectedPaymentMethod, null, _storeContext.CurrentStore.Id);
+
+            var confirmOrderModel = PrepareConfirmOrderModel(cart);
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel()
+                {
+                    name = "confirm-order",
+                    html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                },
+                goto_section = "confirm_order"
+            });
         }
 
         [NonAction]
@@ -1243,20 +1233,19 @@ namespace Nop.Web.Controllers
                     goto_section = "confirm_order"
                 });
             }
-            else
+
+
+            //return payment info page
+            var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
+            return Json(new
             {
-                //return payment info page
-                var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
-                return Json(new
+                update_section = new UpdateSectionJsonModel()
                 {
-                    update_section = new UpdateSectionJsonModel()
-                    {
-                        name = "payment-info",
-                        html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
-                    },
-                    goto_section = "payment_info"
-                });
-            }
+                    name = "payment-info",
+                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                },
+                goto_section = "payment_info"
+            });
         }
 
         public ActionResult OnePageCheckout()
@@ -1385,14 +1374,12 @@ namespace Nop.Web.Controllers
                         goto_section = "shipping"
                     });
                 }
-                else
-                {
-                    //shipping is not required
-                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
-                    //load next step
-                    return OpcLoadStepAfterShippingMethod(cart);
-                }
+                //shipping is not required
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
+
+                //load next step
+                return OpcLoadStepAfterShippingMethod(cart);
             }
             catch (Exception exc)
             {
@@ -1540,18 +1527,17 @@ namespace Nop.Web.Controllers
                     //load next step
                     return OpcLoadStepAfterShippingMethod(cart);
                 }
-                else
+
+                
+                return Json(new
                 {
-                    return Json(new
+                    update_section = new UpdateSectionJsonModel()
                     {
-                        update_section = new UpdateSectionJsonModel()
-                        {
-                            name = "shipping-method",
-                            html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                        },
-                        goto_section = "shipping_method"
-                    });
-                }
+                        name = "shipping-method",
+                        html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+                    },
+                    goto_section = "shipping_method"
+                });
             }
             catch (Exception exc)
             {
@@ -1823,48 +1809,42 @@ namespace Nop.Web.Controllers
 
 
                     var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
-                    if (paymentMethod != null)
-                    {
-                        if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
-                        {
-                            //Redirection will not work because it's AJAX request.
-                            //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
-
-                            //redirect
-                            return Json(new { redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation()) });
-                        }
-                        else
-                        {
-                            _paymentService.PostProcessPayment(postProcessPaymentRequest);
-                            //success
-                            return Json(new { success = 1 });
-                        }
-                    }
-                    else
-                    {
+                    if (paymentMethod == null)
                         //payment method could be null if order total is 0
-
                         //success
                         return Json(new { success = 1 });
-                    }
-                }
-                else
-                {
-                    //error
-                    var confirmOrderModel = new CheckoutConfirmModel();
-                    foreach (var error in placeOrderResult.Errors)
-                        confirmOrderModel.Warnings.Add(error); 
-                    
-                    return Json(new
+
+                    if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
+                    {
+                        //Redirection will not work because it's AJAX request.
+                        //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
+
+                        //redirect
+                        return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel()
-                            {
-                                name = "confirm-order",
-                                html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
-                            },
-                            goto_section = "confirm_order"
+                            redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation())
                         });
+                    }
+
+                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                    //success
+                    return Json(new {success = 1});
                 }
+                
+                //error
+                var confirmOrderModel = new CheckoutConfirmModel();
+                foreach (var error in placeOrderResult.Errors)
+                    confirmOrderModel.Warnings.Add(error); 
+                    
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel()
+                    {
+                        name = "confirm-order",
+                        html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    },
+                    goto_section = "confirm_order"
+                });
             }
             catch (Exception exc)
             {
@@ -1917,12 +1897,10 @@ namespace Nop.Web.Controllers
                     //redirection or POST has been done in PostProcessPayment
                     return Content("Redirected");
                 }
-                else
-                {
-                    //if no redirection has been done (to a third-party payment page)
-                    //theoretically it's not possible
-                    return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
-                }
+                
+                //if no redirection has been done (to a third-party payment page)
+                //theoretically it's not possible
+                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id });
             }
             catch (Exception exc)
             {

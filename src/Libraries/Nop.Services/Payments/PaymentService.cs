@@ -147,19 +147,17 @@ namespace Nop.Services.Payments
                 };
                 return result;
             }
-            else
+
+            //We should strip out any white space or dash in the CC number entered.
+            if (!String.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
             {
-                //We should strip out any white space or dash in the CC number entered.
-                if (!String.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
-                {
-                    processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", "");
-                    processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", "");
-                }
-                var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-                if (paymentMethod == null)
-                    throw new NopException("Payment method couldn't be loaded");
-                return paymentMethod.ProcessPayment(processPaymentRequest);
+                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", "");
+                processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", "");
             }
+            var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
+            if (paymentMethod == null)
+                throw new NopException("Payment method couldn't be loaded");
+            return paymentMethod.ProcessPayment(processPaymentRequest);
         }
 
         /// <summary>
@@ -359,13 +357,11 @@ namespace Nop.Services.Payments
                 };
                 return result;
             }
-            else
-            {
-                var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
-                if (paymentMethod == null)
-                    throw new NopException("Payment method couldn't be loaded");
-                return paymentMethod.ProcessRecurringPayment(processPaymentRequest);
-            }
+
+            var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
+            if (paymentMethod == null)
+                throw new NopException("Payment method couldn't be loaded");
+            return paymentMethod.ProcessRecurringPayment(processPaymentRequest);
         }
 
         /// <summary>

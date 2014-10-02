@@ -12,8 +12,7 @@ namespace Nop.Core.Plugins
         #region Fields
 
         private IList<PluginDescriptor> _plugins;
-
-        private bool _arePluginsLoaded = false;
+        private bool _arePluginsLoaded;
 
         #endregion
 

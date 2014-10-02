@@ -42,13 +42,11 @@ namespace Nop.Core.Caching
                 {
                     return cacheManager.Get<T>(key);
                 }
-                else
-                {
-                    var result = acquire();
-                    if (cacheTime > 0)
-                        cacheManager.Set(key, result, cacheTime);
-                    return result;
-                }
+
+                var result = acquire();
+                if (cacheTime > 0)
+                    cacheManager.Set(key, result, cacheTime);
+                return result;
             }
         }
     }

@@ -872,14 +872,10 @@ namespace Nop.Web.Controllers
             {
                 //is this one an associated products?
                 var parentGroupedProduct = _productService.GetProductById(product.ParentGroupedProductId);
-                if (parentGroupedProduct != null)
-                {
-                    return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
-                }
-                else
-                {
+                if (parentGroupedProduct == null)
                     return RedirectToRoute("HomePage");
-                }
+
+                return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
             }
 
             //update existing shopping cart item?
@@ -1202,34 +1198,33 @@ namespace Nop.Web.Controllers
                     .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
+                    //subscription already exists
                     //unsubscribe
                     _backInStockSubscriptionService.DeleteSubscription(subscription);
                     return Content("Unsubscribed");
                 }
-                else
+
+                //subscription does not exist
+                //subscribe
+                if (_backInStockSubscriptionService
+                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
+                    .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
                 {
-                    if (_backInStockSubscriptionService
-                        .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                        .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
-                        return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
-            
-                    //subscribe   
-                    subscription = new BackInStockSubscription()
-                    {
-                        Customer = _workContext.CurrentCustomer,
-                        Product = product,
-                        StoreId = _storeContext.CurrentStore.Id,
-                        CreatedOnUtc = DateTime.UtcNow
-                    };
-                    _backInStockSubscriptionService.InsertSubscription(subscription);
-                    return Content("Subscribed");
+                    return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
                 }
-                
+                subscription = new BackInStockSubscription()
+                {
+                    Customer = _workContext.CurrentCustomer,
+                    Product = product,
+                    StoreId = _storeContext.CurrentStore.Id,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                _backInStockSubscriptionService.InsertSubscription(subscription);
+                return Content("Subscribed");
             }
-            else
-            {
-                return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
-            }
+
+            //subscription not possible
+            return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
         }
 
         #endregion

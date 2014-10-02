@@ -334,10 +334,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             {
                 return AuthorizeOrSale(processPaymentRequest, true);
             }
-            else
-            {
-                return AuthorizeOrSale(processPaymentRequest, false);
-            }
+            
+            return AuthorizeOrSale(processPaymentRequest, false);
         }
 
         /// <summary>

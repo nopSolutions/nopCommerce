@@ -86,8 +86,8 @@ namespace Nop.Plugin.Shipping.CanadaPost
                     {
                         if (e.SocketErrorCode == SocketError.TimedOut)
                             break;
-                        else
-                            throw e;
+                        
+                        throw e;
                     }
                     if (iRx > 0)
                     {

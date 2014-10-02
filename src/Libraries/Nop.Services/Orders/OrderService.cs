@@ -237,12 +237,9 @@ namespace Nop.Services.Orders
                 orders = orders.FindAll(o => o.OrderGuid.ToString().ToLowerInvariant().Contains(orderGuid.ToLowerInvariant()));
                 return new PagedList<Order>(orders, pageIndex, pageSize);
             }
-            else
-            {
-                //database layer paging
-                return new PagedList<Order>(query, pageIndex, pageSize);
-            }  
-
+            
+            //database layer paging
+            return new PagedList<Order>(query, pageIndex, pageSize);
         }
 
         /// <summary>

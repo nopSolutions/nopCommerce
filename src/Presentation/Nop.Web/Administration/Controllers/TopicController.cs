@@ -300,10 +300,7 @@ namespace Nop.Admin.Controllers
 
                     return RedirectToAction("Edit", topic.Id);
                 }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return RedirectToAction("List");
             }
 
 

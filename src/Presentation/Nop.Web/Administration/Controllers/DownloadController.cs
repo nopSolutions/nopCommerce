@@ -23,20 +23,20 @@ namespace Nop.Admin.Controllers
                 return Content("No download record found with the specified id");
 
             if (download.UseDownloadUrl)
-            {
                 return new RedirectResult(download.DownloadUrl);
-            }
-            else
+
+            //use stored data
+            if (download.DownloadBinary == null)
+                return Content(string.Format("Download data is not available any more. Download GD={0}", download.Id));
+
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
+                ? download.ContentType
+                : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType)
             {
-                //use stored data
-                if (download.DownloadBinary == null)
-                    return Content(string.Format("Download data is not available any more. Download GD={0}", download.Id));
-
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
-
+                FileDownloadName = fileName + download.Extension
+            };
         }
 
         [HttpPost]

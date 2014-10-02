@@ -53,11 +53,9 @@ namespace Nop.Services.Common
                 var result = _dbContext.SqlQuery<decimal>(string.Format("SELECT IDENT_CURRENT('[{0}]')", tableName));
                 return Convert.ToInt32(result.FirstOrDefault());
             }
-            else
-            {
-                //stored procedures aren't supported
-                return null;
-            }
+            
+            //stored procedures aren't supported
+            return null;
         }
 
         /// <summary>

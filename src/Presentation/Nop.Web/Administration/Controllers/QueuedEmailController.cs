@@ -91,10 +91,10 @@ namespace Nop.Admin.Controllers
         public ActionResult GoToEmailByNumber(QueuedEmailListModel model)
         {
             var queuedEmail = _queuedEmailService.GetQueuedEmailById(model.GoDirectlyToNumber);
-            if (queuedEmail != null)
-                return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
-            else
+            if (queuedEmail == null)
                 return List();
+            
+            return RedirectToAction("Edit", "QueuedEmail", new { id = queuedEmail.Id });
         }
 
 		public ActionResult Edit(int id)

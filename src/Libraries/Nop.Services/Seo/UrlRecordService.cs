@@ -228,20 +228,18 @@ namespace Nop.Services.Seo
                 var urlRecordForCaching = query.FirstOrDefault();
                 return urlRecordForCaching;
             }
-            else
-            {
-                //gradual loading
-                string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
-                return _cacheManager.Get(key, () =>
-                {
-                    var urlRecord = GetBySlug(slug);
-                    if (urlRecord == null)
-                        return null;
 
-                    var urlRecordForCaching = Map(urlRecord);
-                    return urlRecordForCaching;
-                });
-            }
+            //gradual loading
+            string key = string.Format(URLRECORD_BY_SLUG_KEY, slug);
+            return _cacheManager.Get(key, () =>
+            {
+                var urlRecord = GetBySlug(slug);
+                if (urlRecord == null)
+                    return null;
+
+                var urlRecordForCaching = Map(urlRecord);
+                return urlRecordForCaching;
+            });
         }
 
         /// <summary>

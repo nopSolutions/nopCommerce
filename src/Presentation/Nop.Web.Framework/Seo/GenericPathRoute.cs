@@ -107,31 +107,29 @@ namespace Nop.Web.Framework.Seo
                 {
                     //URL record is not active. let's find the latest one
                     var activeSlug = urlRecordService.GetActiveSlug(urlRecord.EntityId, urlRecord.EntityName, urlRecord.LanguageId);
-                    if (!string.IsNullOrWhiteSpace(activeSlug))
-                    {
-                        //the active one is found
-                        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                        var response = httpContext.Response;
-                        response.Status = "301 Moved Permanently";
-                        response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), activeSlug);
-                        response.End();
-                        return null;
-                    }
-                    else
+                    if (string.IsNullOrWhiteSpace(activeSlug))
                     {
                         //no active slug found
-                        
+
                         //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                         //var response = httpContext.Response;
                         //response.Status = "302 Found";
                         //response.RedirectLocation = webHelper.GetStoreLocation(false);
                         //response.End();
                         //return null;
-                        
+
                         data.Values["controller"] = "Common";
                         data.Values["action"] = "PageNotFound";
                         return data;
                     }
+
+                    //the active one is found
+                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                    var response = httpContext.Response;
+                    response.Status = "301 Moved Permanently";
+                    response.RedirectLocation = string.Format("{0}{1}", webHelper.GetStoreLocation(false), activeSlug);
+                    response.End();
+                    return null;
                 }
 
                 //ensure that the slug is the same for the current language

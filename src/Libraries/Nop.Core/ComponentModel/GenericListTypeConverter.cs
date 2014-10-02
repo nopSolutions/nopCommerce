@@ -25,8 +25,8 @@ namespace Nop.Core.ComponentModel
                 Array.ForEach(result, s => s.Trim());
                 return result;
             }
-            else
-                return new string[0];
+            
+            return new string[0];
         }
 
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)

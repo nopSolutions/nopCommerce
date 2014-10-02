@@ -137,10 +137,8 @@ namespace Nop.Services.Helpers
                 //could not convert
                 return dt;
             }
-            else
-            {
-                return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
-            }
+            
+            return TimeZoneInfo.ConvertTimeToUtc(dt, sourceTimeZone);
         }
 
         /// <summary>

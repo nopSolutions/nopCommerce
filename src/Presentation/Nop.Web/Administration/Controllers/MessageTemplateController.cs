@@ -259,10 +259,7 @@ namespace Nop.Admin.Controllers
 
                     return RedirectToAction("Edit", messageTemplate.Id);
                 }
-                else
-                {
-                    return RedirectToAction("List");
-                }
+                return RedirectToAction("List");
             }
 
 

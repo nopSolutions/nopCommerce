@@ -623,8 +623,8 @@ namespace Nop.Plugin.Shipping.Fedex
             int total = TotalPackageSize(length, height, width);
             if (total > 165)
                 return true;
-            else
-                return false;
+            
+            return false;
         }
 
         private int TotalPackageSize(int length, int height, int width)
@@ -636,10 +636,7 @@ namespace Nop.Plugin.Shipping.Fedex
 
         private bool IsPackageTooHeavy(int weight)
         {
-            if (weight > MAXPACKAGEWEIGHT)
-                return true;
-            else
-                return false;
+            return weight > MAXPACKAGEWEIGHT;
         }
 
         private MeasureWeight GetUsedMeasureWeight()
@@ -698,11 +695,9 @@ namespace Nop.Plugin.Shipping.Fedex
             {
                 return primaryStoreCurrency;
             }
-            else
-            {
-                //ensure that this currency exists
-                return _currencyService.GetCurrencyByCode(originCurrencyCode) ?? primaryStoreCurrency;
-            }
+            
+            //ensure that this currency exists
+            return _currencyService.GetCurrencyByCode(originCurrencyCode) ?? primaryStoreCurrency;
         }
 
 
@@ -753,7 +748,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     reply.HighestSeverity == RateServiceWebReference.NotificationSeverityType.NOTE || 
                     reply.HighestSeverity == RateServiceWebReference.NotificationSeverityType.WARNING) // check if the call was successful
                 {
-                    if (reply != null && reply.RateReplyDetails != null)
+                    if (reply.RateReplyDetails != null)
                     {
                         var shippingOptions = ParseResponse(reply, requestedShipmentCurrency);
                         foreach (var shippingOption in shippingOptions)
@@ -761,19 +756,16 @@ namespace Nop.Plugin.Shipping.Fedex
                     }
                     else
                     {
-                        if (reply != null &&
-                            reply.Notifications != null &&
+                        if (reply.Notifications != null &&
                             reply.Notifications.Length > 0 &&
                             !String.IsNullOrEmpty(reply.Notifications[0].Message))
                         {
                             response.AddError(string.Format("{0} (code: {1})", reply.Notifications[0].Message, reply.Notifications[0].Code));
                             return response;
                         }
-                        else
-                        {
-                            response.AddError("Could not get reply from shipping server");
-                            return response;
-                        }
+
+                        response.AddError("Could not get reply from shipping server");
+                        return response;
                     }
                 }
                 else

@@ -45,8 +45,8 @@ namespace Nop.Web.Framework.Mvc
 
                         if (type.IsArray)
                             return ToArrayMethod.MakeGenericMethod(valueType).Invoke(this, new[] { list });
-                        else
-                            return list;
+                        
+                        return list;
                     }
                 }
             }

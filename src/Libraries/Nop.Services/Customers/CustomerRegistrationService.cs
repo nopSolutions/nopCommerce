@@ -98,16 +98,13 @@ namespace Nop.Services.Customers
             }
 
             bool isValid = pwd == customer.Password;
+            if (!isValid)
+                return CustomerLoginResults.WrongPassword;
 
             //save last login date
-            if (isValid)
-            {
-                customer.LastLoginDateUtc = DateTime.UtcNow;
-                _customerService.UpdateCustomer(customer);
-                return CustomerLoginResults.Successful;
-            }
-            else
-                return CustomerLoginResults.WrongPassword;
+            customer.LastLoginDateUtc = DateTime.UtcNow;
+            _customerService.UpdateCustomer(customer);
+            return CustomerLoginResults.Successful;
         }
 
         /// <summary>

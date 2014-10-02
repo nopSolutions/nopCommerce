@@ -50,11 +50,9 @@ namespace Nop.Services.Common
                 var result = _dbContext.SqlQuery<int>("EXEC [FullText_IsSupported]");
                 return result.FirstOrDefault() > 0;
             }
-            else
-            {
-                //stored procedures aren't supported
-                return false;
-            }
+            
+            //stored procedures aren't supported
+            return false;
         }
 
         /// <summary>

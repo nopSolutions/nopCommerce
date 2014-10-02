@@ -41,18 +41,14 @@ namespace Nop.Web.Controllers
                 return Content("Sample download is not available any more.");
 
             if (download.UseDownloadUrl)
-            {
                 return new RedirectResult(download.DownloadUrl);
-            }
-            else
-            {
-                if (download.DownloadBinary == null)
-                    return Content("Download data is not available any more.");
-
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
+            
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+            
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension }; 
         }
 
         public ActionResult GetDownload(Guid orderItemId, bool agree = false)
@@ -99,20 +95,19 @@ namespace Nop.Web.Controllers
                 //return result
                 return new RedirectResult(download.DownloadUrl);
             }
-            else
-            {
-                if (download.DownloadBinary == null)
+            
+            //binary download
+            if (download.DownloadBinary == null)
                     return Content("Download data is not available any more.");
 
-                //increase download
-                orderItem.DownloadCount++;
-                _orderService.UpdateOrder(order);
+            //increase download
+            orderItem.DownloadCount++;
+            _orderService.UpdateOrder(order);
 
-                //return result
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };  
         }
 
         public ActionResult GetLicense(Guid orderItemId)
@@ -137,20 +132,16 @@ namespace Nop.Web.Controllers
                 return Content("Download is not available any more.");
             
             if (download.UseDownloadUrl)
-            {
-                //return result
                 return new RedirectResult(download.DownloadUrl);
-            }
-            else
-            {
-                if (download.DownloadBinary == null)
-                    return Content("Download data is not available any more.");
+
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
                 
-                //return result
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : product.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
         public ActionResult GetFileUpload(Guid downloadId)
@@ -160,20 +151,16 @@ namespace Nop.Web.Controllers
                 return Content("Download is not available any more.");
 
             if (download.UseDownloadUrl)
-            {
-                //return result
                 return new RedirectResult(download.DownloadUrl);
-            }
-            else
-            {
-                if (download.DownloadBinary == null)
-                    return Content("Download data is not available any more.");
 
-                //return result
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : downloadId.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : downloadId.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
 
         public ActionResult GetOrderNoteFile(int orderNoteId)
@@ -192,20 +179,16 @@ namespace Nop.Web.Controllers
                 return Content("Download is not available any more.");
 
             if (download.UseDownloadUrl)
-            {
-                //return result
                 return new RedirectResult(download.DownloadUrl);
-            }
-            else
-            {
-                if (download.DownloadBinary == null)
-                    return Content("Download data is not available any more.");
 
-                //return result
-                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderNote.Id.ToString();
-                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
-            }
+            //binary download
+            if (download.DownloadBinary == null)
+                return Content("Download data is not available any more.");
+
+            //return result
+            string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : orderNote.Id.ToString();
+            string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+            return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
         }
     }
 }

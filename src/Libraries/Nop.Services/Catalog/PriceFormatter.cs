@@ -210,8 +210,8 @@ namespace Nop.Services.Catalog
                 }
                 return string.Format(formatStr, currencyString);
             }
-            else
-                return currencyString;
+            
+            return currencyString;
         }
 
 

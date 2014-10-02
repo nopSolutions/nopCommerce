@@ -538,10 +538,7 @@ namespace Nop.Plugin.Shipping.UPS
         private bool IsPackageTooLarge(int length, int height, int width)
         {
             int total = TotalPackageSize(length, height, width);
-            if (total > 165)
-                return true;
-            else
-                return false;
+            return total > 165;
         }
 
         private int TotalPackageSize(int length, int height, int width)
@@ -553,10 +550,7 @@ namespace Nop.Plugin.Shipping.UPS
 
         private bool IsPackageTooHeavy(int weight)
         {
-            if (weight > MAXPACKAGEWEIGHT)
-                return true;
-            else
-                return false;
+            return weight > MAXPACKAGEWEIGHT;
         }
 
         private MeasureWeight GetUsedMeasureWeight()

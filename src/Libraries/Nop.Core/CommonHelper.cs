@@ -98,10 +98,8 @@ namespace Nop.Core
                 }
                 return result;
             }
-            else
-            {
-                return str;
-            }
+
+            return str;
         }
 
         /// <summary>
@@ -176,7 +174,7 @@ namespace Nop.Core
             return true;
         }
 
-        private static AspNetHostingPermissionLevel? _trustLevel = null;
+        private static AspNetHostingPermissionLevel? _trustLevel;
         /// <summary>
         /// Finds the trust level of the running application (http://blogs.msdn.com/dmitryr/archive/2007/01/23/finding-out-the-current-trust-level-in-asp-net.aspx)
         /// </summary>

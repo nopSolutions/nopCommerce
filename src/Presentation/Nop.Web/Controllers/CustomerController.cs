@@ -707,10 +707,10 @@ namespace Nop.Web.Controllers
                             //activity log
                             _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
-                            if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-                                return Redirect(returnUrl);
-                            else
+                            if (String.IsNullOrEmpty(returnUrl) || !Url.IsLocalUrl(returnUrl))
                                 return RedirectToRoute("HomePage");
+                            
+                            return Redirect(returnUrl);
                         }
                     case CustomerLoginResults.CustomerNotExist:
                         ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials.CustomerNotExist"));
@@ -966,11 +966,10 @@ namespace Nop.Web.Controllers
                             }
                     }
                 }
-                else
-                {
-                    foreach (var error in registrationResult.Errors)
-                        ModelState.AddModelError("", error);
-                }
+
+                //errors
+                foreach (var error in registrationResult.Errors)
+                    ModelState.AddModelError("", error);
             }
 
             //If we got this far, something failed, redisplay form
@@ -1048,17 +1047,14 @@ namespace Nop.Web.Controllers
                 return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
             }
-            else
-            {
-                //standard logout 
 
-                //activity log
-                _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+            //standard logout 
 
-                _authenticationService.SignOut();
-                return RedirectToRoute("HomePage");
-            }
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
 
+            _authenticationService.SignOut();
+            return RedirectToRoute("HomePage");
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -1664,11 +1660,10 @@ namespace Nop.Web.Controllers
                     model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
                     return View(model);
                 }
-                else
-                {
-                    foreach (var error in changePasswordResult.Errors)
-                        ModelState.AddModelError("", error);
-                }
+                
+                //errors
+                foreach (var error in changePasswordResult.Errors)
+                    ModelState.AddModelError("", error);
             }
 
 

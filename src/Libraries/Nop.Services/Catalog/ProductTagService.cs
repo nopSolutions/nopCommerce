@@ -254,8 +254,8 @@ namespace Nop.Services.Catalog
             var dictionary = GetProductCount(storeId);
             if (dictionary.ContainsKey(productTagId))
                 return dictionary[productTagId];
-            else
-                return 0;
+            
+            return 0;
         }
 
         #endregion

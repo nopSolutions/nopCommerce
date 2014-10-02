@@ -185,10 +185,8 @@ namespace Nop.Services.Catalog
                 }
                 return result;
             }
-            else
-            {
-                return product.StockQuantity;
-            }
+            
+            return product.StockQuantity;
         }
 
 

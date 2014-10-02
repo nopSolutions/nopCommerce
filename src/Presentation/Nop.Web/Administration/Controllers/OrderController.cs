@@ -871,10 +871,10 @@ namespace Nop.Admin.Controllers
         public ActionResult GoToOrderId(OrderListModel model)
         {
             var order = _orderService.GetOrderById(model.GoDirectlyToNumber);
-            if (order != null)
-                return RedirectToAction("Edit", "Order", new { id = order.Id });
-            else
+            if (order == null)
                 return List();
+            
+            return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
         #endregion
@@ -1289,14 +1289,12 @@ namespace Nop.Admin.Controllers
                     PrepareOrderDetailsModel(model, order);
                     return View(model);
                 }
-                else
-                {
-                    //error
-                    PrepareOrderDetailsModel(model, order);
-                    foreach (var error in errors)
-                        ErrorNotification(error, false);
-                    return View(model);
-                }
+                
+                //error
+                PrepareOrderDetailsModel(model, order);
+                foreach (var error in errors)
+                    ErrorNotification(error, false);
+                return View(model);
             }
             catch (Exception exc)
             {
@@ -2183,13 +2181,11 @@ namespace Nop.Admin.Controllers
                 //redirect to order details page
                 return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
-            else
-            {
-                //errors
-                var model = PrepareAddProductToOrderModel(order.Id, product.Id);
-                model.Warnings.AddRange(warnings);
-                return View(model);
-            }
+            
+            //errors
+            var model = PrepareAddProductToOrderModel(order.Id, product.Id);
+            model.Warnings.AddRange(warnings);
+            return View(model);
         }
 
         #endregion
@@ -2682,11 +2678,9 @@ namespace Nop.Admin.Controllers
                            ? RedirectToAction("ShipmentDetails", new {id = shipment.Id})
                            : RedirectToAction("Edit", new { id = orderId });
             }
-            else
-            {
-                ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
-                return RedirectToAction("AddShipment", new { orderId = orderId });
-            }
+            
+            ErrorNotification(_localizationService.GetResource("Admin.Orders.Shipments.NoProductsSelected"));
+            return RedirectToAction("AddShipment", new { orderId = orderId });
         }
 
         public ActionResult ShipmentDetails(int id)

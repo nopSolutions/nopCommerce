@@ -533,8 +533,8 @@ namespace Nop.Services.Media
             string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
             if(String.IsNullOrEmpty(url))
                 return String.Empty;
-            else
-                return GetThumbLocalPath(Path.GetFileName(url));
+            
+            return GetThumbLocalPath(Path.GetFileName(url));
         }
 
         #endregion

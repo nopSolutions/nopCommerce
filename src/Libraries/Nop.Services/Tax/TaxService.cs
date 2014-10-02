@@ -710,30 +710,22 @@ namespace Nop.Services.Tax
         public virtual bool IsVatExempt(Address address, Customer customer)
         {
             if (!_taxSettings.EuVatEnabled)
-            {
                 return false;
-            }
 
             if (address == null || address.Country == null || customer == null)
-            {
                 return false;
-            }
 
 
             if (!address.Country.SubjectToVat)
-            {
-                // VAT not chargeable if shipping outside VAT zone:
+                // VAT not chargeable if shipping outside VAT zone
                 return true;
-            }
-            else
-            {
-                // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
-                // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
-                var customerVatStatus = (VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
-                return address.CountryId != _taxSettings.EuVatShopCountryId &&
-                    customerVatStatus == VatNumberStatus.Valid &&
-                    _taxSettings.EuVatAllowVatExemption;
-            }
+
+            // VAT not chargeable if address, customer and config meet our VAT exemption requirements:
+            // returns true if this customer is VAT exempt because they are shipping within the EU but outside our shop country, they have supplied a validated VAT number, and the shop is configured to allow VAT exemption
+            var customerVatStatus = (VatNumberStatus) customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
+            return address.CountryId != _taxSettings.EuVatShopCountryId &&
+                   customerVatStatus == VatNumberStatus.Valid &&
+                   _taxSettings.EuVatAllowVatExemption;
         }
 
         #endregion
