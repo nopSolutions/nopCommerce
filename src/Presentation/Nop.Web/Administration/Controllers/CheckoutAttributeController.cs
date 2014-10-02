@@ -412,7 +412,8 @@ namespace Nop.Admin.Controllers
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
-                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //ensure color is valid (can be instanciated)
+                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {
@@ -501,7 +502,8 @@ namespace Nop.Admin.Controllers
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
-                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //ensure color is valid (can be instanciated)
+                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {

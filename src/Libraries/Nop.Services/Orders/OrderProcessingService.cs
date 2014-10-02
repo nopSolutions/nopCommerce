@@ -1500,8 +1500,8 @@ namespace Nop.Services.Orders
                 var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
                 foreach (var rp in recurringPayments)
                 {
-                    //use errors?
                     var errors = CancelRecurringPayment(rp);
+                    //use "errors" variable?
                 }
 
                 //Adjust inventory for already shipped shipments
@@ -1899,8 +1899,8 @@ namespace Nop.Services.Orders
             var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
             foreach (var rp in recurringPayments)
             {
-                //use errors?
                 var errors = CancelRecurringPayment(rp);
+                //use "errors" variable?
             }
 
             //Adjust inventory for already shipped shipments

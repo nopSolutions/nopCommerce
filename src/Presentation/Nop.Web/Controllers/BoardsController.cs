@@ -1055,7 +1055,6 @@ namespace Nop.Web.Controllers
 
                 _forumService.DeletePost(forumPost);
 
-                string url = string.Empty;
                 //get topic one more time because it can be deleted (first or only post deleted)
                 forumTopic = _forumService.GetTopicById(forumPost.TopicId);
                 if (forumTopic == null)

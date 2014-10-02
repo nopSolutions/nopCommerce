@@ -2003,8 +2003,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var originalParentGroupedProductId = product.ParentGroupedProductId;
-
             product.ParentGroupedProductId = 0;
             _productService.UpdateProduct(product);
 
@@ -3422,7 +3420,8 @@ namespace Nop.Admin.Controllers
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
-                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //ensure color is valid (can be instanciated)
+                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {
@@ -3573,7 +3572,8 @@ namespace Nop.Admin.Controllers
                     ModelState.AddModelError("", "Color is required");
                 try
                 {
-                    var color = System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
+                    //ensure color is valid (can be instanciated)
+                    System.Drawing.ColorTranslator.FromHtml(model.ColorSquaresRgb);
                 }
                 catch (Exception exc)
                 {
@@ -3854,7 +3854,6 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var productId = pvac.ProductId;
             _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
 
             return new NullJsonResult();
