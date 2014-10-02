@@ -414,7 +414,7 @@ namespace Nop.Web.Framework
         {
             string htmlFieldName = ExpressionHelper.GetExpressionText((LambdaExpression)expression);
             var metadata = ModelMetadata.FromLambdaExpression<TModel, TValue>(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new char[] { '.' }).Last<string>());
+            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last<string>());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
                 return MvcHtmlString.Empty;

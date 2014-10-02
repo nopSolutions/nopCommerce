@@ -98,7 +98,7 @@
                     var attributeControlTypes = ((AttributeControlType) Model.AttributeControlTypeId)
                         .ToSelectList(valuesToExclude:
                         //custom customer attributes don't support some attribute control types
-                        new int[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares });
+                        new [] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares });
                 }
                 @Html.DropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
                 @Html.ValidationMessageFor(model => model.AttributeControlTypeId)

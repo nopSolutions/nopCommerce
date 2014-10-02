@@ -187,8 +187,7 @@ namespace Nop.Core
                 _trustLevel = AspNetHostingPermissionLevel.None;
 
                 //determine maximum
-                foreach (AspNetHostingPermissionLevel trustLevel in
-                        new AspNetHostingPermissionLevel[] {
+                foreach (AspNetHostingPermissionLevel trustLevel in new[] {
                                 AspNetHostingPermissionLevel.Unrestricted,
                                 AspNetHostingPermissionLevel.High,
                                 AspNetHostingPermissionLevel.Medium,

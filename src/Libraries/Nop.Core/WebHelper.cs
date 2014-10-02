@@ -138,7 +138,7 @@ namespace Nop.Core
                 //if you want to exclude private IP addresses, then see http://stackoverflow.com/questions/2577496/how-can-i-get-the-clients-ip-address-in-asp-net-mvc
                 if (!String.IsNullOrEmpty(xff))
                 {
-                    string lastIp = xff.Split(new char[] { ',' }).FirstOrDefault();
+                    string lastIp = xff.Split(new [] { ',' }).FirstOrDefault();
                     result = lastIp;
                 }
             }
@@ -468,11 +468,11 @@ namespace Nop.Core
                 if (!string.IsNullOrEmpty(str))
                 {
                     var dictionary = new Dictionary<string, string>();
-                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    foreach (string str3 in str.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))
                         {
-                            string[] strArray = str3.Split(new char[] { '=' });
+                            string[] strArray = str3.Split(new [] { '=' });
                             if (strArray.Length == 2)
                             {
                                 if (!dictionary.ContainsKey(strArray[0]))
@@ -491,11 +491,11 @@ namespace Nop.Core
                             }
                         }
                     }
-                    foreach (string str4 in queryStringModification.Split(new char[] { '&' }))
+                    foreach (string str4 in queryStringModification.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str4))
                         {
-                            string[] strArray2 = str4.Split(new char[] { '=' });
+                            string[] strArray2 = str4.Split(new [] { '=' });
                             if (strArray2.Length == 2)
                             {
                                 dictionary[strArray2[0]] = strArray2[1];
@@ -562,11 +562,11 @@ namespace Nop.Core
                 if (!string.IsNullOrEmpty(str))
                 {
                     var dictionary = new Dictionary<string, string>();
-                    foreach (string str3 in str.Split(new char[] { '&' }))
+                    foreach (string str3 in str.Split(new [] { '&' }))
                     {
                         if (!string.IsNullOrEmpty(str3))
                         {
-                            string[] strArray = str3.Split(new char[] { '=' });
+                            string[] strArray = str3.Split(new [] { '=' });
                             if (strArray.Length == 2)
                             {
                                 dictionary[strArray[0]] = strArray[1];

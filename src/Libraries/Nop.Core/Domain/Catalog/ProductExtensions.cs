@@ -25,7 +25,7 @@ namespace Nop.Core.Domain.Catalog
             var ids = new List<int>();
 
             foreach (var idStr in product.RequiredProductIds
-                .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim()))
             {
                 int id = 0;

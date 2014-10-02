@@ -108,8 +108,6 @@ namespace Nop.Data
                     }
                 }
             }
-
-            return;
         }
     }
 }

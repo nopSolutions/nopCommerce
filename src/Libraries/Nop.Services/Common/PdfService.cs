@@ -238,7 +238,7 @@ namespace Nop.Services.Common
 
                 //store info
                 var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
-                var anchor = new Anchor(store.Url.Trim(new char[] { '/' }), font);
+                var anchor = new Anchor(store.Url.Trim(new [] { '/' }), font);
                 anchor.Reference = store.Url;
 
                 var cellHeader = new PdfPCell(new Phrase(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));

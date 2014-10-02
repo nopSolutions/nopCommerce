@@ -370,7 +370,7 @@ namespace Nop.Web.Controllers
                     var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]) ? 
                         new List<string>(): 
                         ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]
-                            .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                             .Select(x => x.Trim())
                             .ToList();
                     foreach (var plugin in plugins)

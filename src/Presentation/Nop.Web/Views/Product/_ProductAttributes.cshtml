@@ -355,7 +355,7 @@
     string pictureAdjustmentFuncName = "";
     string pictureDefaultSizePrefix = "defaultsize";
     string pictureFullSizePrefix = "fullsize";
-    var pictureSizes = new string[] { pictureDefaultSizePrefix, pictureFullSizePrefix };
+    var pictureSizes = new [] { pictureDefaultSizePrefix, pictureFullSizePrefix };
     foreach (var attribute in Model)
     {
         string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);

@@ -409,7 +409,7 @@ namespace Nop.Admin.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -2023,7 +2023,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
@@ -2066,7 +2066,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 customers.AddRange(_customerService.GetCustomersByIds(ids));

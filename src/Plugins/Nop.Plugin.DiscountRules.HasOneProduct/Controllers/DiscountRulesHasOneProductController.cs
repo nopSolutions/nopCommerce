@@ -209,7 +209,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
             {
                 var ids = new List<int>();
                 var rangeArray = productIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Trim())
                     .ToList();
 

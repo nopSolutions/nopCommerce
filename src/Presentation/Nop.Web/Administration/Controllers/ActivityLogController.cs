@@ -58,7 +58,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             string formKey = "checkbox_activity_types";
-            var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
+            var checkedActivityTypes = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x)).ToList() : new List<int>();
             
             var activityTypes = _customerActivityService.GetAllActivityTypes();
             foreach (var activityType in activityTypes)

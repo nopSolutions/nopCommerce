@@ -96,7 +96,7 @@ namespace Nop.Core.Plugins
                     case "SupportedVersions":
                         {
                             //parse supported versions
-                            descriptor.SupportedVersions = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                            descriptor.SupportedVersions = value.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                                 .Select(x => x.Trim())
                                 .ToList();
                         }
@@ -117,7 +117,7 @@ namespace Nop.Core.Plugins
                     case "LimitedToStores":
                         {
                             //parse list of store IDs
-                            foreach (var str1 in value.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                            foreach (var str1 in value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                                                       .Select(x => x.Trim()))
                             {
                                 int storeId = 0;

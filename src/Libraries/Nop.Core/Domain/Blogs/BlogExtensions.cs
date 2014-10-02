@@ -13,7 +13,7 @@ namespace Nop.Core.Domain.Blogs
             var parsedTags = new List<string>();
             if (!String.IsNullOrEmpty(blogPost.Tags))
             {
-                string[] tags2 = blogPost.Tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] tags2 = blogPost.Tags.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string tag2 in tags2)
                 {
                     var tmp = tag2.Trim();

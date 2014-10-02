@@ -94,7 +94,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
                 var name = authenticationResult.ExtraData["name"];
                 if (!String.IsNullOrEmpty(name))
                 {
-                    var nameSplit = name.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var nameSplit = name.Split(new [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (nameSplit.Length >= 2)
                     {
                         claims.Name.First = nameSplit[0];

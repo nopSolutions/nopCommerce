@@ -1541,7 +1541,7 @@ namespace Nop.Admin.Controllers
                 orderSettings.ReturnRequestActions.Clear();
                 if (model.ReturnRequestActionsParsed != null)
                 {
-                    foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var returnAction in model.ReturnRequestActionsParsed.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                         orderSettings.ReturnRequestActions.Add(returnAction);
                 }
                 //note that we do not store this setting for a store (cannot be overridden)
@@ -1551,7 +1551,7 @@ namespace Nop.Admin.Controllers
                 orderSettings.ReturnRequestReasons.Clear();
                 if (model.ReturnRequestReasonsParsed != null)
                 {
-                    foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var returnReason in model.ReturnRequestReasonsParsed.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                         orderSettings.ReturnRequestReasons.Add(returnReason);
                 }
                 //note that we do not store this setting for a store (cannot be overridden)
@@ -2269,7 +2269,7 @@ namespace Nop.Admin.Controllers
                 securitySettings.AdminAreaAllowedIpAddresses = new List<string>();
             securitySettings.AdminAreaAllowedIpAddresses.Clear();
             if (!String.IsNullOrEmpty(model.SecuritySettings.AdminAreaAllowedIpAddresses))
-                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!String.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;

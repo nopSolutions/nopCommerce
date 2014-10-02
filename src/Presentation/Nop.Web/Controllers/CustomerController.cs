@@ -613,7 +613,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                         int selectedAttributeId = int.Parse(item);
                                         if (selectedAttributeId > 0)

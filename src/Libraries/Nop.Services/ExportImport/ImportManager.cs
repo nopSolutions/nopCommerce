@@ -113,7 +113,7 @@ namespace Nop.Services.ExportImport
                     throw new NopException("No worksheet found");
 
                 //the columns
-                var properties = new string[]
+                var properties = new []
                 {
                     "ProductTypeId",
                     "ParentGroupedProductId",
@@ -410,7 +410,7 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     if (!String.IsNullOrEmpty(categoryIds))
                     {
-                        foreach (var id in categoryIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (var id in categoryIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                         {
                             if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) == null)
                             {
@@ -434,7 +434,7 @@ namespace Nop.Services.ExportImport
                     //manufacturer mappings
                     if (!String.IsNullOrEmpty(manufacturerIds))
                     {
-                        foreach (var id in manufacturerIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (var id in manufacturerIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                         {
                             if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) == null)
                             {
@@ -456,7 +456,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //pictures
-                    foreach (var picturePath in new string[] { picture1, picture2, picture3 })
+                    foreach (var picturePath in new [] { picture1, picture2, picture3 })
                     {
                         if (String.IsNullOrEmpty(picturePath))
                             continue;

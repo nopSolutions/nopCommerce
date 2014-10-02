@@ -108,7 +108,7 @@ namespace Nop.Admin.Controllers
             foreach (var cr in customerRoles)
             {
                 string formKey = "allow_" + cr.Id;
-                var permissionRecordSystemNamesToRestrict = form[formKey] != null ? form[formKey].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
+                var permissionRecordSystemNamesToRestrict = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList() : new List<string>();
 
                 foreach (var pr in permissionRecords)
                 {

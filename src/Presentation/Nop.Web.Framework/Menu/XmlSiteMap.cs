@@ -111,7 +111,7 @@ namespace Nop.Web.Framework.Menu
             if (!string.IsNullOrEmpty(permissionNames))
             {
                 var permissionService = EngineContext.Current.Resolve<IPermissionService>();
-                siteMapNode.Visible = permissionNames.ToString().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                siteMapNode.Visible = permissionNames.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                    .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
             }
             else

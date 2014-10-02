@@ -225,7 +225,7 @@ namespace Nop.Web.Controllers
             pagingFilteringModel.AllowCustomersToSelectPageSize = false;
             if (allowCustomersToSelectPageSize && pageSizeOptions != null)
             {
-                var pageSizes = pageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var pageSizes = pageSizeOptions.Split(new [] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (pageSizes.Any())
                 {

@@ -31,13 +31,13 @@ namespace Nop.Core.Domain.Orders
             if (String.IsNullOrEmpty(taxRatesStr))
                 return taxRatesDictionary;
 
-            string[] lines = taxRatesStr.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = taxRatesStr.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 if (String.IsNullOrEmpty(line.Trim()))
                     continue;
 
-                string[] taxes = line.Split(new char[] { ':' });
+                string[] taxes = line.Split(new [] { ':' });
                 if (taxes.Length == 2)
                 {
                     try

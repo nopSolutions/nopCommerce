@@ -917,7 +917,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
@@ -968,7 +968,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
@@ -1412,7 +1412,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
@@ -1977,7 +1977,7 @@ namespace Nop.Admin.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                foreach (var item in ctrlAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -2966,7 +2966,7 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var ids = selectedIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToArray();
                 shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));

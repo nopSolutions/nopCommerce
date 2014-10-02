@@ -137,7 +137,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 rspContent = reader.ReadToEnd();
             }
 
-            string[] tmp = rspContent.Split(new char[] { '\n' }, 3);
+            string[] tmp = rspContent.Split(new [] { '\n' }, 3);
             if (tmp.Length != 3)
             {
                 throw new NopException("Response is not valid.");
@@ -146,7 +146,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             var rspParams = new NameValueCollection();
             foreach (string s in tmp)
             {
-                string[] tmp2 = s.Split(new char[] { '=' });
+                string[] tmp2 = s.Split(new [] { '=' });
                 if (tmp2.Length != 2)
                 {
                     throw new NopException("Response is not valid.");

@@ -78,7 +78,7 @@ namespace Nop.Web.Framework.Themes
             {
                 return true;
             }
-            string str = this.GetExtensionThunk(virtualPath).TrimStart(new char[] { '.' });
+            string str = this.GetExtensionThunk(virtualPath).TrimStart(new [] { '.' });
             return this.FileExtensions.Contains<string>(str, StringComparer.OrdinalIgnoreCase);
         }
 
@@ -88,7 +88,7 @@ namespace Nop.Web.Framework.Themes
             if (!this.FilePathIsSupported(name) || !this.FileExists(controllerContext, name))
             {
                 virtualPath = string.Empty;
-                searchedLocations = new string[] { name };
+                searchedLocations = new [] { name };
             }
             this.ViewLocationCache.InsertViewLocation(controllerContext.HttpContext, cacheKey, virtualPath);
             return virtualPath;

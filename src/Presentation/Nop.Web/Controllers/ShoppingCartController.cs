@@ -886,7 +886,7 @@ namespace Nop.Web.Controllers
                             var cblAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(cblAttributes))
                             {
-                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in cblAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -999,7 +999,7 @@ namespace Nop.Web.Controllers
                             var ctrlAttributes = form[controlId];
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
-                                foreach (var item in ctrlAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                foreach (var item in ctrlAttributes.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
@@ -1762,7 +1762,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<int, IList<string>>();
@@ -2295,7 +2295,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
 
-            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
 
             //current warnings <cart item identifier, warnings>
             var innerWarnings = new Dictionary<int, IList<string>>();
@@ -2368,7 +2368,7 @@ namespace Nop.Web.Controllers
 
             var allWarnings = new List<string>();
             var numberOfAddedItems = 0;
-            var allIdsToAdd = form["addtocart"] != null ? form["addtocart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+            var allIdsToAdd = form["addtocart"] != null ? form["addtocart"].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
             foreach (var sci in pageCart)
             {
                 if (allIdsToAdd.Contains(sci.Id))

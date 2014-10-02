@@ -494,7 +494,7 @@ namespace Nop.Services.ExportImport
                 // get handle to the existing worksheet
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Products");
                 //Create Headers and format them 
-                var properties = new string[]
+                var properties = new []
                 {
                     "ProductTypeId",
                     "ParentGroupedProductId",
@@ -1053,7 +1053,7 @@ namespace Nop.Services.ExportImport
                 // get handle to the existing worksheet
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Orders");
                 //Create Headers and format them
-                var properties = new string[]
+                var properties = new []
                     {
                         //order properties
                         "OrderId",
@@ -1348,7 +1348,7 @@ namespace Nop.Services.ExportImport
                 // get handle to the existing worksheet
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Customers");
                 //Create Headers and format them
-                var properties = new string[]
+                var properties = new []
                     {
                         "CustomerId",
                         "CustomerGuid",

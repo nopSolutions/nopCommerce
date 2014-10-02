@@ -812,7 +812,7 @@ namespace Nop.Web.Controllers
             //parse selected method 
             if (String.IsNullOrEmpty(shippingoption))
                 return ShippingMethod();
-            var splittedOption = shippingoption.Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+            var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
             if (splittedOption.Length != 2)
                 return ShippingMethod();
             string selectedName = splittedOption[0];
@@ -1572,7 +1572,7 @@ namespace Nop.Web.Controllers
                 string shippingoption = form["shippingoption"];
                 if (String.IsNullOrEmpty(shippingoption))
                     throw new Exception("Selected shipping method can't be parsed");
-                var splittedOption = shippingoption.Split(new string[] { "___" }, StringSplitOptions.RemoveEmptyEntries);
+                var splittedOption = shippingoption.Split(new [] { "___" }, StringSplitOptions.RemoveEmptyEntries);
                 if (splittedOption.Length != 2)
                     throw new Exception("Selected shipping method can't be parsed");
                 string selectedName = splittedOption[0];

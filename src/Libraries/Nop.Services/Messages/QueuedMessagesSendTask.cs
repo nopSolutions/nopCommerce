@@ -33,10 +33,10 @@ namespace Nop.Services.Messages
             {
                 var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 
                             ? null 
-                            : queuedEmail.Bcc.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.Bcc.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 var cc = String.IsNullOrWhiteSpace(queuedEmail.CC) 
                             ? null 
-                            : queuedEmail.CC.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            : queuedEmail.CC.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                 try
                 {
