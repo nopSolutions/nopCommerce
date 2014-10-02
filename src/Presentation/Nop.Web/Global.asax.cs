@@ -10,9 +10,9 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
+using Nop.Web.Controllers;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
@@ -21,7 +21,7 @@ using StackExchange.Profiling;
 
 namespace Nop.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
@@ -161,7 +161,7 @@ namespace Nop.Web
                     Response.TrySkipIisCustomErrors = true;
 
                     // Call target Controller and pass the routeData.
-                    IController errorController = EngineContext.Current.Resolve<Nop.Web.Controllers.CommonController>();
+                    IController errorController = EngineContext.Current.Resolve<CommonController>();
 
                     var routeData = new RouteData();
                     routeData.Values.Add("controller", "Common");

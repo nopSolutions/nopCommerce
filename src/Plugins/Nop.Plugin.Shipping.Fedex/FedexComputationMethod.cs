@@ -149,19 +149,19 @@ namespace Nop.Plugin.Shipping.Fedex
             //set drop off type
             switch (_fedexSettings.DropoffType)
             {
-                case Nop.Plugin.Shipping.Fedex.DropoffType.BusinessServiceCenter:
+                case DropoffType.BusinessServiceCenter:
                     request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.BUSINESS_SERVICE_CENTER;
                     break;
-                case Nop.Plugin.Shipping.Fedex.DropoffType.DropBox:
+                case DropoffType.DropBox:
                     request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.DROP_BOX;
                     break;
-                case Nop.Plugin.Shipping.Fedex.DropoffType.RegularPickup:
+                case DropoffType.RegularPickup:
                     request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.REGULAR_PICKUP;
                     break;
-                case Nop.Plugin.Shipping.Fedex.DropoffType.RequestCourier:
+                case DropoffType.RequestCourier:
                     request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.REQUEST_COURIER;
                     break;
-                case Nop.Plugin.Shipping.Fedex.DropoffType.Station:
+                case DropoffType.Station:
                     request.RequestedShipment.DropoffType = RateServiceWebReference.DropoffType.STATION;
                     break;
                 default:
@@ -823,7 +823,7 @@ namespace Nop.Plugin.Shipping.Fedex
             var settings = new FedexSettings()
             {
                 Url = "https://gatewaybeta.fedex.com:443/web-services/rate",
-                DropoffType = Nop.Plugin.Shipping.Fedex.DropoffType.BusinessServiceCenter,
+                DropoffType = DropoffType.BusinessServiceCenter,
                 PackingPackageVolume = 5184
             };
             _settingService.SaveSetting(settings);

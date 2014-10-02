@@ -539,7 +539,7 @@ namespace Nop.Plugin.Feed.Froogle
         {
             if (store == null)
                 throw new ArgumentNullException("store");
-            string filePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
+            string filePath = Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs, store);

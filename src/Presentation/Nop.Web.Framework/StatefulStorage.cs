@@ -101,7 +101,7 @@ namespace Nop.Web.Framework
             string fullName = FullNameOf(typeof(TValue), name);
             TValue result = (TValue)getter(fullName);
 
-            if (Object.Equals(result, default(TValue)))
+            if (Equals(result, default(TValue)))
             {
                 result = valueFactory();
                 setter(fullName, result);

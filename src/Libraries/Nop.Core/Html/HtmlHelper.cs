@@ -86,12 +86,12 @@ namespace Nop.Core.Html
             {
                 if (stripTags)
                 {
-                    text = HtmlHelper.StripTags(text);
+                    text = StripTags(text);
                 }
 
                 if (allowHtml)
                 {
-                    text = HtmlHelper.EnsureOnlyAllowedHtml(text);
+                    text = EnsureOnlyAllowedHtml(text);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace Nop.Core.Html
 
                 if (convertPlainTextToHtml)
                 {
-                    text = HtmlHelper.ConvertPlainTextToHtml(text);
+                    text = ConvertPlainTextToHtml(text);
                 }
 
                 if (allowBBCode)

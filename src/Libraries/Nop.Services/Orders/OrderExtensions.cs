@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Html;
 
 namespace Nop.Services.Orders
 {
@@ -21,7 +22,7 @@ namespace Nop.Services.Orders
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = Nop.Core.Html.HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
 
             return text;
         }

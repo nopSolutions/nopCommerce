@@ -653,7 +653,7 @@ namespace Nop.Admin.Controllers
                 var addressId = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope) ?
                     shippingSettings.ShippingOriginAddressId : 0;
                 var originAddress = _addressService.GetAddressById(addressId) ??
-                    new Core.Domain.Common.Address()
+                    new Address()
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -836,7 +836,7 @@ namespace Nop.Admin.Controllers
                 var addressId = _settingService.SettingExists(taxSettings, x => x.DefaultTaxAddressId, storeScope) ?
                     taxSettings.DefaultTaxAddressId : 0;
                 var originAddress = _addressService.GetAddressById(addressId) ??
-                    new Core.Domain.Common.Address()
+                    new Address()
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };

@@ -61,9 +61,9 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
             
-            model.FlagFileNames = System.IO.Directory
+            model.FlagFileNames = Directory
                 .EnumerateFiles(_webHelper.MapPath("~/Content/Images/flags/"), "*.png", SearchOption.TopDirectoryOnly)
-                .Select(System.IO.Path.GetFileName)
+                .Select(Path.GetFileName)
                 .ToList();
         }
 

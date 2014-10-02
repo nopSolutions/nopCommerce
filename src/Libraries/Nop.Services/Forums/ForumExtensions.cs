@@ -80,7 +80,7 @@ namespace Nop.Services.Forums
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = Nop.Core.Html.HtmlHelper.FormatText(text, false, true, false, false, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, false, false, false);
             return text;
         }
 
@@ -96,7 +96,7 @@ namespace Nop.Services.Forums
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
 
-            text = Nop.Core.Html.HtmlHelper.FormatText(text, false, true, false, true, false, false);
+            text = HtmlHelper.FormatText(text, false, true, false, true, false, false);
 
             return text;
         }

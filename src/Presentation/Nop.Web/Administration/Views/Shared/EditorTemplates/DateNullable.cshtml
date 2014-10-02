@@ -1,4 +1,4 @@
-﻿@model System.DateTime?
+﻿@model DateTime?
 <input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToShortDateString() : null)" />
 <script>
     $(document).ready(function () {

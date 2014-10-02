@@ -31,7 +31,7 @@ namespace Nop.Web.Framework.Security
             bool flag7 = false;
             bool flag8 = false;
             WindowsIdentity current = WindowsIdentity.GetCurrent();
-            System.Security.AccessControl.AuthorizationRuleCollection rules = null;
+            AuthorizationRuleCollection rules;
             try
             {
                 rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));

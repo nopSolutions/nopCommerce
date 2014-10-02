@@ -2057,8 +2057,8 @@ namespace Nop.Admin.Controllers
                                         DownloadUrl = "",
                                         DownloadBinary = httpPostedFile.GetDownloadBits(),
                                         ContentType = httpPostedFile.ContentType,
-                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
+                                        Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                        Extension = Path.GetExtension(httpPostedFile.FileName),
                                         IsNew = true
                                     };
                                     _downloadService.InsertDownload(download);

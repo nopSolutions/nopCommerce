@@ -1,4 +1,5 @@
 ﻿using System.Web.Routing;
+using Nop.Web.Infrastructure;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Infrastructure
@@ -13,7 +14,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             //var routePublisher = new RoutePublisher(typeFinder);
             //routePublisher.RegisterRoutes(RouteTable.Routes);
 
-            new Nop.Web.Infrastructure.RouteProvider().RegisterRoutes(RouteTable.Routes);
+            new RouteProvider().RegisterRoutes(RouteTable.Routes);
         }
 
         [TearDown]
