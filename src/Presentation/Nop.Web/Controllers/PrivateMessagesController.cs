@@ -95,7 +95,7 @@ namespace Nop.Web.Controllers
                     break;
             }
 
-            var model = new PrivateMessageIndexModel()
+            var model = new PrivateMessageIndexModel
             {
                 InboxPage = inboxPage,
                 SentItemsPage = sentItemsPage,
@@ -123,7 +123,7 @@ namespace Nop.Web.Controllers
 
             foreach (var pm in list)
             {
-                inbox.Add(new PrivateMessageModel()
+                inbox.Add(new PrivateMessageModel
                 {
                     Id = pm.Id,
                     FromCustomerId = pm.FromCustomer.Id,
@@ -139,7 +139,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var pagerModel = new PagerModel()
+            var pagerModel = new PagerModel
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -150,7 +150,7 @@ namespace Nop.Web.Controllers
                 RouteValues = new PrivateMessageRouteValues { page = page, tab = tab }
             };
 
-            var model = new PrivateMessageListModel()
+            var model = new PrivateMessageListModel
             {
                 Messages = inbox,
                 PagerModel = pagerModel
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
 
             foreach (var pm in list)
             {
-                sentItems.Add(new PrivateMessageModel()
+                sentItems.Add(new PrivateMessageModel
                 {
                     Id = pm.Id,
                     FromCustomerId = pm.FromCustomer.Id,
@@ -193,7 +193,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var pagerModel = new PagerModel()
+            var pagerModel = new PagerModel
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -204,7 +204,7 @@ namespace Nop.Web.Controllers
                 RouteValues = new PrivateMessageRouteValues { page = page, tab = tab }
             };
 
-            var model = new PrivateMessageListModel()
+            var model = new PrivateMessageListModel
             {
                 Messages = sentItems,
                 PagerModel = pagerModel
@@ -464,7 +464,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("PrivateMessages");
             }
 
-            var model = new PrivateMessageModel()
+            var model = new PrivateMessageModel
             {
                 Id = pm.Id,
                 FromCustomerId = pm.FromCustomer.Id,

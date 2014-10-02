@@ -113,7 +113,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         {
             actionName = "Configure";
             controllerName = "ShippingFixedRate";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", null } };
         }
 
         /// <summary>

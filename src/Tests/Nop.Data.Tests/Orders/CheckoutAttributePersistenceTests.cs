@@ -64,7 +64,7 @@ namespace Nop.Data.Tests.Orders
             };
             ca.CheckoutAttributeValues.Add
                 (
-                    new CheckoutAttributeValue()
+                    new CheckoutAttributeValue
                     {
                         Name = "Name 2",
                         PriceAdjustment = 1,

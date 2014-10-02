@@ -143,7 +143,7 @@ namespace Nop.Core.Domain.Customers
         {
             int newPointsBalance = customer.GetRewardPointsBalance() + points;
 
-            var rewardPointsHistory = new RewardPointsHistory()
+            var rewardPointsHistory = new RewardPointsHistory
             {
                 Customer = customer,
                 UsedWithOrder = usedWithOrder,

@@ -11,14 +11,14 @@ namespace Nop.Core.Tests.Domain.Orders
         public void Can_validate_giftCard()
         {
 
-            var gc = new GiftCard()
+            var gc = new GiftCard
             {
                 Amount = 100,
                 IsGiftCardActivated = true
             };
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 30
                     }
@@ -26,7 +26,7 @@ namespace Nop.Core.Tests.Domain.Orders
                 );
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 20
                     }
@@ -34,7 +34,7 @@ namespace Nop.Core.Tests.Domain.Orders
                 );
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 5
                     }
@@ -53,7 +53,7 @@ namespace Nop.Core.Tests.Domain.Orders
             gc.IsGiftCardValid().ShouldEqual(true);
 
             //add usage history record
-            gc.GiftCardUsageHistory.Add(new GiftCardUsageHistory()
+            gc.GiftCardUsageHistory.Add(new GiftCardUsageHistory
             {
                 UsedValue = 1000
             });
@@ -63,13 +63,13 @@ namespace Nop.Core.Tests.Domain.Orders
         [Test]
         public void Can_calculate_giftCard_remainingAmount()
         {
-            var gc = new GiftCard()
+            var gc = new GiftCard
             {
                 Amount = 100
             };
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 30
                     }
@@ -77,7 +77,7 @@ namespace Nop.Core.Tests.Domain.Orders
                 );
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 20
                     }
@@ -85,7 +85,7 @@ namespace Nop.Core.Tests.Domain.Orders
                 );
             gc.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 5
                     }

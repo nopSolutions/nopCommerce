@@ -155,7 +155,7 @@ namespace Nop.Web.Controllers
             this.Server.ScriptTimeout = 300;
 
 
-            var model = new InstallModel()
+            var model = new InstallModel
             {
                 AdminEmail = "admin@yourStore.com",
                 InstallSampleData = false,
@@ -174,7 +174,7 @@ namespace Nop.Web.Controllers
             };
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem()
+                model.AvailableLanguages.Add(new SelectListItem
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code}),
                     Text = lang.Name,
@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
             //prepare language list
             foreach (var lang in _locService.GetAvailableLanguages())
             {
-                model.AvailableLanguages.Add(new SelectListItem()
+                model.AvailableLanguages.Add(new SelectListItem
                 {
                     Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
                     Text = lang.Name,
@@ -340,7 +340,7 @@ namespace Nop.Web.Controllers
 
                     //save settings
                     var dataProvider = model.DataProvider;
-                    var settings = new DataSettings()
+                    var settings = new DataSettings
                     {
                         DataProvider = dataProvider,
                         DataConnectionString = connectionString

@@ -18,7 +18,7 @@ namespace Nop.Plugin.Shipping.UPS.Domain
         /// <summary>
         /// UPS Service names
         /// </summary>
-        private static readonly Dictionary<string, string> _services = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _services = new Dictionary<string, string>
         {
             {"UPS Next Day Air", "01"},
             {"UPS 2nd Day Air", "02"},

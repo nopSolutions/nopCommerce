@@ -346,7 +346,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel()
+                var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -362,7 +362,7 @@ namespace Nop.Admin.Controllers
                     var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
                     foreach (var pvaValue in pvaValues)
                     {
-                        var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel()
+                        var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.Name,
@@ -427,7 +427,7 @@ namespace Nop.Admin.Controllers
                 if (productTag2 == null)
                 {
                     //add new product tag
-                    productTag = new ProductTag()
+                    productTag = new ProductTag
                     {
                         Name = productTagName
                     };
@@ -494,7 +494,7 @@ namespace Nop.Admin.Controllers
             var templates = _productTemplateService.GetAllProductTemplates();
             foreach (var template in templates)
             {
-                model.AvailableProductTemplates.Add(new SelectListItem()
+                model.AvailableProductTemplates.Add(new SelectListItem
                 {
                     Text = template.Name,
                     Value = template.Id.ToString()
@@ -503,7 +503,7 @@ namespace Nop.Admin.Controllers
 
             //vendors
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
-            model.AvailableVendors.Add(new SelectListItem()
+            model.AvailableVendors.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Vendor.None"),
                 Value = "0"
@@ -511,7 +511,7 @@ namespace Nop.Admin.Controllers
             var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
             {
-                model.AvailableVendors.Add(new SelectListItem()
+                model.AvailableVendors.Add(new SelectListItem
                 {
                     Text = vendor.Name,
                     Value = vendor.Id.ToString()
@@ -519,7 +519,7 @@ namespace Nop.Admin.Controllers
             }
 
             //delivery dates
-            model.AvailableDeliveryDates.Add(new SelectListItem()
+            model.AvailableDeliveryDates.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.DeliveryDate.None"),
                 Value = "0"
@@ -527,7 +527,7 @@ namespace Nop.Admin.Controllers
             var deliveryDates = _shippingService.GetAllDeliveryDates();
             foreach (var deliveryDate in deliveryDates)
             {
-                model.AvailableDeliveryDates.Add(new SelectListItem()
+                model.AvailableDeliveryDates.Add(new SelectListItem
                 {
                     Text = deliveryDate.Name,
                     Value = deliveryDate.Id.ToString()
@@ -536,14 +536,14 @@ namespace Nop.Admin.Controllers
 
             //warehouses
             var warehouses = _shippingService.GetAllWarehouses();
-            model.AvailableWarehouses.Add(new SelectListItem()
+            model.AvailableWarehouses.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Catalog.Products.Fields.Warehouse.None"),
                 Value = "0"
             });
             foreach (var warehouse in warehouses)
             {
-                model.AvailableWarehouses.Add(new SelectListItem()
+                model.AvailableWarehouses.Add(new SelectListItem
                 {
                     Text = warehouse.Name,
                     Value = warehouse.Id.ToString()
@@ -553,7 +553,7 @@ namespace Nop.Admin.Controllers
             //multiple warehouses
             foreach (var warehouse in warehouses)
             {
-                var pwiModel = new ProductModel.ProductWarehouseInventoryModel()
+                var pwiModel = new ProductModel.ProductWarehouseInventoryModel
                 {
                     WarehouseId = warehouse.Id,
                     WarehouseName = warehouse.Name
@@ -588,21 +588,21 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
-                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
+                model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
             //specification attributes
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
             for (int i = 0; i < specificationAttributes.Count; i++)
             {
                 var sa = specificationAttributes[i];
-                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem() { Text = sa.Name, Value = sa.Id.ToString() });
+                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
                 if (i == 0)
                 {
                     //attribute options
                     foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
-                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem() { Text = sao.Name, Value = sao.Id.ToString() });
+                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
                 }
             }
             //default specs values
@@ -715,7 +715,7 @@ namespace Nop.Admin.Controllers
                     if (used)
                     {
                         //no need to insert a record for qty 0
-                        existingPwI = new ProductWarehouseInventory()
+                        existingPwI = new ProductWarehouseInventory
                         {
                             WarehouseId = warehouse.Id,
                             ProductId = product.Id,
@@ -752,34 +752,34 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //stores
-            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var wh in _shippingService.GetAllWarehouses())
-                model.AvailableWarehouses.Add(new SelectListItem() { Text = wh.Name, Value = wh.Id.ToString() });
+                model.AvailableWarehouses.Add(new SelectListItem { Text = wh.Name, Value = wh.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
 
             return View(model);
         }
@@ -796,7 +796,7 @@ namespace Nop.Admin.Controllers
                 model.SearchVendorId = _workContext.CurrentVendor.Id;
             }
 
-            var categoryIds = new List<int>() { model.SearchCategoryId };
+            var categoryIds = new List<int> { model.SearchCategoryId };
             //include subcategories
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
@@ -1187,29 +1187,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
 
             ViewBag.productIdsInput = productIdsInput;
@@ -1231,7 +1231,7 @@ namespace Nop.Admin.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -1272,7 +1272,7 @@ namespace Nop.Admin.Controllers
             var productCategoriesModel = productCategories
                 .Select(x =>
                 {
-                    return new ProductModel.ProductCategoryModel()
+                    return new ProductModel.ProductCategoryModel
                     {
                         Id = x.Id,
                         Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
@@ -1315,7 +1315,7 @@ namespace Nop.Admin.Controllers
             var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, 0, int.MaxValue, true);
             if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
             {
-                var productCategory = new ProductCategory()
+                var productCategory = new ProductCategory
                 {
                     ProductId = productId,
                     CategoryId = categoryId,
@@ -1415,7 +1415,7 @@ namespace Nop.Admin.Controllers
             var productManufacturersModel = productManufacturers
                 .Select(x =>
                 {
-                    return new ProductModel.ProductManufacturerModel()
+                    return new ProductModel.ProductManufacturerModel
                     {
                         Id = x.Id,
                         Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
@@ -1458,7 +1458,7 @@ namespace Nop.Admin.Controllers
             var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, 0, int.MaxValue, true);
             if (existingProductmanufacturers.FindProductManufacturer(productId, manufacturerId) == null)
             {
-                var productManufacturer = new ProductManufacturer()
+                var productManufacturer = new ProductManufacturer
                 {
                     ProductId = productId,
                     ManufacturerId = manufacturerId,
@@ -1558,7 +1558,7 @@ namespace Nop.Admin.Controllers
             var relatedProductsModel = relatedProducts
                 .Select(x =>
                 {
-                    return new ProductModel.RelatedProductModel()
+                    return new ProductModel.RelatedProductModel
                     {
                         Id = x.Id,
                         //ProductId1 = x.ProductId1,
@@ -1569,7 +1569,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var gridModel = new DataSourceResult()
+            var gridModel = new DataSourceResult
             {
                 Data = relatedProductsModel,
                 Total = relatedProductsModel.Count
@@ -1641,29 +1641,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -1681,7 +1681,7 @@ namespace Nop.Admin.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -1720,7 +1720,7 @@ namespace Nop.Admin.Controllers
                         if (existingRelatedProducts.FindRelatedProduct(model.ProductId, id) == null)
                         {
                             _productService.InsertRelatedProduct(
-                                new RelatedProduct()
+                                new RelatedProduct
                                 {
                                     ProductId1 = model.ProductId,
                                     ProductId2 = id,
@@ -1763,7 +1763,7 @@ namespace Nop.Admin.Controllers
             var crossSellProductsModel = crossSellProducts
                 .Select(x =>
                 {
-                    return new ProductModel.CrossSellProductModel()
+                    return new ProductModel.CrossSellProductModel
                     {
                         Id = x.Id,
                         //ProductId1 = x.ProductId1,
@@ -1773,7 +1773,7 @@ namespace Nop.Admin.Controllers
                 })
                 .ToList();
 
-            var gridModel = new DataSourceResult()
+            var gridModel = new DataSourceResult
             {
                 Data = crossSellProductsModel,
                 Total = crossSellProductsModel.Count
@@ -1819,29 +1819,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -1859,7 +1859,7 @@ namespace Nop.Admin.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -1898,7 +1898,7 @@ namespace Nop.Admin.Controllers
                         if (existingCrossSellProducts.FindCrossSellProduct(model.ProductId, id) == null)
                         {
                             _productService.InsertCrossSellProduct(
-                                new CrossSellProduct()
+                                new CrossSellProduct
                                 {
                                     ProductId1 = model.ProductId,
                                     ProductId2 = id,
@@ -1949,7 +1949,7 @@ namespace Nop.Admin.Controllers
             var associatedProductsModel = associatedProducts
                 .Select(x =>
                 {
-                    return new ProductModel.AssociatedProductModel()
+                    return new ProductModel.AssociatedProductModel
                     {
                         Id = x.Id,
                         ProductName = x.Name,
@@ -2019,29 +2019,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -2059,7 +2059,7 @@ namespace Nop.Admin.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -2139,7 +2139,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
 
-            _productService.InsertProductPicture(new ProductPicture()
+            _productService.InsertProductPicture(new ProductPicture
             {
                 PictureId = pictureId,
                 ProductId = productId,
@@ -2171,7 +2171,7 @@ namespace Nop.Admin.Controllers
             var productPicturesModel = productPictures
                 .Select(x =>
                 {
-                    return new ProductModel.ProductPictureModel()
+                    return new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -2268,7 +2268,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var psa = new ProductSpecificationAttribute()
+            var psa = new ProductSpecificationAttribute
             {
                 SpecificationAttributeOptionId = specificationAttributeOptionId,
                 ProductId = productId,
@@ -2303,7 +2303,7 @@ namespace Nop.Admin.Controllers
             var productrSpecsModel = productrSpecs
                 .Select(x =>
                 {
-                    var psaModel = new ProductSpecificationAttributeModel()
+                    var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
                         SpecificationAttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
@@ -2407,7 +2407,7 @@ namespace Nop.Admin.Controllers
                 .OrderByDescending(x => _productTagService.GetProductCount(x.Id, 0))
                 .Select(x =>
                 {
-                    return new ProductTagModel()
+                    return new ProductTagModel
                     {
                         Id = x.Id,
                         Name = x.Name,
@@ -2450,7 +2450,7 @@ namespace Nop.Admin.Controllers
                 //No product tag found with the specified id
                 return RedirectToAction("List");
 
-            var model = new ProductTagModel()
+            var model = new ProductTagModel
             {
                 Id = productTag.Id,
                 Name = productTag.Name,
@@ -2520,7 +2520,7 @@ namespace Nop.Admin.Controllers
                 Data = orders.Select(x =>
                 {
                     var store = _storeService.GetStoreById(x.StoreId);
-                    return new OrderModel()
+                    return new OrderModel
                     {
                         Id = x.Id,
                         StoreName = store != null ? store.Name : "Unknown",
@@ -2732,7 +2732,7 @@ namespace Nop.Admin.Controllers
             //products
             foreach (var product in products)
             {
-                var lowStockModel = new LowStockProductModel()
+                var lowStockModel = new LowStockProductModel
                 {
                     Id = product.Id,
                     Name = product.Name,
@@ -2746,7 +2746,7 @@ namespace Nop.Admin.Controllers
             foreach (var combination in combinations)
             {
                 var product = combination.Product;
-                var lowStockModel = new LowStockProductModel()
+                var lowStockModel = new LowStockProductModel
                 {
                     Id = product.Id,
                     Name = product.Name,
@@ -2777,19 +2777,19 @@ namespace Nop.Admin.Controllers
 
             var model = new BulkEditListModel();
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -2805,7 +2805,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var products = _productService.SearchProducts(categoryIds: new List<int>() { model.SearchCategoryId},
+            var products = _productService.SearchProducts(categoryIds: new List<int> { model.SearchCategoryId},
                 manufacturerId: model.SearchManufacturerId,
                 vendorId: vendorId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
@@ -2816,7 +2816,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x =>
             {
-                var productModel = new BulkEditProductModel()
+                var productModel = new BulkEditProductModel
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -2932,7 +2932,7 @@ namespace Nop.Admin.Controllers
                     {
                         storeName = _localizationService.GetResource("Admin.Catalog.Products.TierPrices.Fields.Store.All");
                     }
-                    return new ProductModel.TierPriceModel()
+                    return new ProductModel.TierPriceModel
                     {
                         Id = x.Id,
                         StoreId = x.StoreId,
@@ -2969,7 +2969,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var tierPrice = new TierPrice()
+            var tierPrice = new TierPrice
             {
                 ProductId = model.ProductId,
                 StoreId = model.StoreId,
@@ -3061,7 +3061,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributesModel = productVariantAttributes
                 .Select(x =>
                 {
-                    var pvaModel = new ProductModel.ProductVariantAttributeModel()
+                    var pvaModel = new ProductModel.ProductVariantAttributeModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3110,7 +3110,7 @@ namespace Nop.Admin.Controllers
                 return Content("This is not your product");
             }
 
-            var pva = new ProductVariantAttribute()
+            var pva = new ProductVariantAttribute
             {
                 ProductId = model.ProductId,
                 ProductAttributeId = model.ProductAttributeId,
@@ -3197,7 +3197,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductVariantAttributeModel()
+            var model = new ProductModel.ProductVariantAttributeModel
             {
                 //prepare only used properties
                 Id = pva.Id,
@@ -3274,7 +3274,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductVariantAttributeValueListModel()
+            var model = new ProductModel.ProductVariantAttributeValueListModel
             {
                 ProductName = product.Name,
                 ProductId = pva.ProductId,
@@ -3317,7 +3317,7 @@ namespace Nop.Admin.Controllers
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
-                    return new ProductModel.ProductVariantAttributeValueModel()
+                    return new ProductModel.ProductVariantAttributeValueModel
                     {
                         Id = x.Id,
                         ProductVariantAttributeId = x.ProductVariantAttributeId,
@@ -3380,7 +3380,7 @@ namespace Nop.Admin.Controllers
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
                 .Select(x =>
                 {
-                    return new ProductModel.ProductPictureModel()
+                    return new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3431,7 +3431,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var pvav = new ProductVariantAttributeValue()
+                var pvav = new ProductVariantAttributeValue
                 {
                     ProductVariantAttributeId = model.ProductVariantAttributeId,
                     AttributeValueTypeId = model.AttributeValueTypeId,
@@ -3463,7 +3463,7 @@ namespace Nop.Admin.Controllers
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
                 .Select(x =>
                 {
-                    return new ProductModel.ProductPictureModel()
+                    return new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3501,7 +3501,7 @@ namespace Nop.Admin.Controllers
 
             var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
 
-            var model = new ProductModel.ProductVariantAttributeValueModel()
+            var model = new ProductModel.ProductVariantAttributeValueModel
             {
                 ProductVariantAttributeId = pvav.ProductVariantAttributeId,
                 AttributeValueTypeId = pvav.AttributeValueTypeId,
@@ -3532,7 +3532,7 @@ namespace Nop.Admin.Controllers
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
                 .Select(x =>
                 {
-                    return new ProductModel.ProductPictureModel()
+                    return new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3610,7 +3610,7 @@ namespace Nop.Admin.Controllers
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
                 .Select(x =>
                 {
-                    return new ProductModel.ProductPictureModel()
+                    return new ProductModel.ProductPictureModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3665,29 +3665,29 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -3706,7 +3706,7 @@ namespace Nop.Admin.Controllers
             }
 
             var products = _productService.SearchProducts(
-                categoryIds: new List<int>() { model.SearchCategoryId },
+                categoryIds: new List<int> { model.SearchCategoryId },
                 manufacturerId: model.SearchManufacturerId,
                 storeId: model.SearchStoreId,
                 vendorId: model.SearchVendorId,
@@ -3772,7 +3772,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributesModel = productVariantAttributeCombinations
                 .Select(x =>
                 {
-                    var pvacModel = new ProductModel.ProductVariantAttributeCombinationModel()
+                    var pvacModel = new ProductModel.ProductVariantAttributeCombinationModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -4005,7 +4005,7 @@ namespace Nop.Admin.Controllers
                                 if (fileSizeOk)
                                 {
                                     //save an uploaded file
-                                    var download = new Download()
+                                    var download = new Download
                                     {
                                         DownloadGuid = Guid.NewGuid(),
                                         UseDownloadUrl = false,
@@ -4037,7 +4037,7 @@ namespace Nop.Admin.Controllers
             if (warnings.Count == 0)
             {
                 //save combination
-                var combination = new ProductVariantAttributeCombination()
+                var combination = new ProductVariantAttributeCombination
                 {
                     ProductId = product.Id,
                     AttributesXml = attributes,
@@ -4091,7 +4091,7 @@ namespace Nop.Admin.Controllers
                     continue;
 
                 //save combination
-                var combination = new ProductVariantAttributeCombination()
+                var combination = new ProductVariantAttributeCombination
                 {
                     ProductId = product.Id,
                     AttributesXml = attributesXml,

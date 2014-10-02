@@ -147,7 +147,7 @@ namespace Nop.Services.Stores
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
 
-            var storeMapping = new StoreMapping()
+            var storeMapping = new StoreMapping
             {
                 EntityId = entityId,
                 EntityName = entityName,

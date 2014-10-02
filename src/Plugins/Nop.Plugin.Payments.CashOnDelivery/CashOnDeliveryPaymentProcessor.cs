@@ -154,7 +154,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery
         {
             actionName = "Configure";
             controllerName = "PaymentCashOnDelivery";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentCashOnDelivery";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.CashOnDelivery.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -177,7 +177,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery
 
         public override void Install()
         {
-            var settings = new CashOnDeliveryPaymentSettings()
+            var settings = new CashOnDeliveryPaymentSettings
             {
                 DescriptionText = "<p>In cases where an order is placed, an authorized representative will contact you, personally or over telephone, to confirm the order.<br />After the order is confirmed, it will be processed.<br />Orders once confirmed, cannot be cancelled.</p><p>P.S. You can edit this text from admin panel.</p>"
             };

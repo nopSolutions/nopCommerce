@@ -147,7 +147,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
@@ -165,7 +165,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var taxCategory = new TaxCategory();

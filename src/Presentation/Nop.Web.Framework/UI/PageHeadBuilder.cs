@@ -190,7 +190,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _scriptParts[location].Add(new ScriptReferenceMeta()
+            _scriptParts[location].Add(new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 Part = part
@@ -204,7 +204,7 @@ namespace Nop.Web.Framework.UI
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _scriptParts[location].Insert(0, new ScriptReferenceMeta()
+            _scriptParts[location].Insert(0, new ScriptReferenceMeta
             {
                 ExcludeFromBundle = excludeFromBundle,
                 Part = part

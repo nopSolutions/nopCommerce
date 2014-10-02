@@ -91,7 +91,7 @@ namespace Nop.Services.Configuration
                 foreach (var s in settings)
                 {
                     var resourceName = s.Name.ToLowerInvariant();
-                    var settingForCaching = new SettingForCaching()
+                    var settingForCaching = new SettingForCaching
                             {
                                 Id = s.Id,
                                 Name = s.Name,
@@ -101,7 +101,7 @@ namespace Nop.Services.Configuration
                     if (!dictionary.ContainsKey(resourceName))
                     {
                         //first setting
-                        dictionary.Add(resourceName, new List<SettingForCaching>()
+                        dictionary.Add(resourceName, new List<SettingForCaching>
                         {
                             settingForCaching
                         });
@@ -253,7 +253,7 @@ namespace Nop.Services.Configuration
             else
             {
                 //insert
-                var setting = new Setting()
+                var setting = new Setting
                 {
                     Name = key,
                     Value = valueStr,

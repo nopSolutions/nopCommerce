@@ -80,7 +80,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.ReturnRequestReasons != null)
                 foreach (var rrr in _orderSettings.ReturnRequestReasons)
                 {
-                    model.AvailableReturnReasons.Add(new SelectListItem()
+                    model.AvailableReturnReasons.Add(new SelectListItem
                         {
                             Text = rrr,
                             Value = rrr
@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
             if (_orderSettings.ReturnRequestActions != null)
                 foreach (var rra in _orderSettings.ReturnRequestActions)
                 {
-                    model.AvailableReturnActions.Add(new SelectListItem()
+                    model.AvailableReturnActions.Add(new SelectListItem
                     {
                         Text = rra,
                         Value = rra
@@ -102,7 +102,7 @@ namespace Nop.Web.Controllers
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in orderItems)
             {
-                var orderItemModel = new SubmitReturnRequestModel.OrderItemModel()
+                var orderItemModel = new SubmitReturnRequestModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     ProductId = orderItem.Product.Id,
@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
                     }
                 if (quantity > 0)
                 {
-                    var rr = new ReturnRequest()
+                    var rr = new ReturnRequest
                     {
                         StoreId = _storeContext.CurrentStore.Id,
                         OrderItemId = orderItem.Id,

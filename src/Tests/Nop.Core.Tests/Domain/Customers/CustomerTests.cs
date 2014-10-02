@@ -12,7 +12,7 @@ namespace Nop.Core.Tests.Domain.Customers
         [Test]
         public void Can_check_IsInCustomerRole()
         {
-            var customer = new Customer()
+            var customer = new Customer
             {
                 /*CustomerRoles = new List<CustomerRole>()
                 {
@@ -31,13 +31,13 @@ namespace Nop.Core.Tests.Domain.Customers
                 }*/
             };
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Test name 1",
                 SystemName = "Test system name 1",
             });
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = false,
                 Name = "Test name 2",
@@ -57,13 +57,13 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Registered",
                 SystemName = SystemCustomerRoleNames.Registered
             });
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
@@ -73,7 +73,7 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsAdmin().ShouldBeFalse();
 
             customer.CustomerRoles.Add(
-                new CustomerRole()
+                new CustomerRole
                 {
                     Active = true,
                     Name = "Administrators",
@@ -86,13 +86,13 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Registered",
                 SystemName = SystemCustomerRoleNames.Registered
             });
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
@@ -102,7 +102,7 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsForumModerator().ShouldBeFalse();
 
             customer.CustomerRoles.Add(
-                new CustomerRole()
+                new CustomerRole
                 {
                     Active = true,
                     Name = "ForumModerators",
@@ -115,14 +115,14 @@ namespace Nop.Core.Tests.Domain.Customers
         {
             var customer = new Customer();
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Registered",
                 SystemName = SystemCustomerRoleNames.Registered
             });
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Administrators",
@@ -132,7 +132,7 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsGuest().ShouldBeFalse();
 
             customer.CustomerRoles.Add(
-                new CustomerRole()
+                new CustomerRole
                 {
                     Active = true,
                     Name = "Guests",
@@ -146,14 +146,14 @@ namespace Nop.Core.Tests.Domain.Customers
         public void Can_check_whether_customer_is_registered()
         {
             var customer = new Customer();
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Administrators",
                 SystemName = SystemCustomerRoleNames.Administrators
             });
 
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active = true,
                 Name = "Guests",
@@ -163,7 +163,7 @@ namespace Nop.Core.Tests.Domain.Customers
             customer.IsRegistered().ShouldBeFalse();
 
             customer.CustomerRoles.Add(
-                new CustomerRole()
+                new CustomerRole
                 {
                     Active = true,
                     Name = "Registered",

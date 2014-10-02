@@ -96,7 +96,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     continue;
                 }
 
-                var categoryModel = new CategoryModel()
+                var categoryModel = new CategoryModel
                 {
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name),
@@ -150,7 +150,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
-                var model = new ProductOverviewModel()
+                var model = new ProductOverviewModel
                 {
                     Id = product.Id,
                     Name = product.GetLocalized(x => x.Name),
@@ -355,7 +355,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : 125;
                     //prepare picture model
                     var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                    model.DefaultPictureModel = new PictureModel()
+                    model.DefaultPictureModel = new PictureModel
                         {
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
@@ -438,7 +438,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 command.PageNumber = 1;
             }
 
-            var model = new CategoryModel()
+            var model = new CategoryModel
             {
                 Id = category.Id,
                 Name = category.GetLocalized(x => x.Name),
@@ -452,7 +452,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 .Select(x =>
                 {
                     var subCatName = x.GetLocalized(y => y.Name);
-                    var subCatModel = new CategoryModel()
+                    var subCatModel = new CategoryModel
                     {
                         Id = x.Id,
                         Name = subCatName,
@@ -462,7 +462,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     //prepare picture model
                     int pictureSize = 125;
                     var picture = _pictureService.GetPictureById(x.PictureId);
-                    subCatModel.PictureModel = new PictureModel()
+                    subCatModel.PictureModel = new PictureModel
                         {
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
@@ -546,7 +546,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
         public ActionResult Footer()
         {
-            var model = new FooterModel()
+            var model = new FooterModel
             {
                 StoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name)
             };

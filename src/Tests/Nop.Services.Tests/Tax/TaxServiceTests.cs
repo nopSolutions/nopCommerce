@@ -33,7 +33,7 @@ namespace Nop.Services.Tests.Tax
 
             _addressService = MockRepository.GenerateMock<IAddressService>();
             //default tax address
-            _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
+            _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
 
             var pluginFinder = new PluginFinder();
 
@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Tax
             customer.IsTaxExempt = false;
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
 
-            var customerRole = new CustomerRole()
+            var customerRole = new CustomerRole
             {
                 TaxExempt = true,
                 Active = true

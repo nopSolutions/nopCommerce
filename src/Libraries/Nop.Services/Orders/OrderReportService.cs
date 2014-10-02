@@ -106,7 +106,7 @@ namespace Nop.Services.Orders
                         }
                        )
                        .OrderByDescending(x => x.SumOrders)
-                       .Select(r => new OrderByCountryReportLine()
+                       .Select(r => new OrderByCountryReportLine
                        {
                            CountryId = r.CountryId,
                            TotalOrders = r.TotalOrders,
@@ -184,7 +184,7 @@ namespace Nop.Services.Orders
                                        OrderTaxSum = result.Sum(o => o.OrderTax), 
                                        OrderTotalSum = result.Sum(o => o.OrderTotal)
 						           }
-					   ).Select(r => new OrderAverageReportLine()
+					   ).Select(r => new OrderAverageReportLine
                        {
                            CountOrders = r.OrderCount,
                            SumShippingExclTax = r.OrderShippingExclTaxSum, 
@@ -193,7 +193,7 @@ namespace Nop.Services.Orders
                        })
                        .FirstOrDefault();
 
-			item = item ?? new OrderAverageReportLine()
+			item = item ?? new OrderAverageReportLine
 			                   {
                                    CountOrders = 0,
                                    SumShippingExclTax = decimal.Zero,
@@ -335,7 +335,7 @@ namespace Nop.Services.Orders
                 //group by products
                 from orderItem in query1
                 group orderItem by orderItem.ProductId into g
-                select new BestsellersReportLine()
+                select new BestsellersReportLine
                 {
                     ProductId = g.Key,
                     TotalAmount = g.Sum(x => x.PriceExclTax),

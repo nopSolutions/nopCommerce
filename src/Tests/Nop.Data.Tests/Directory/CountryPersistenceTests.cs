@@ -57,7 +57,7 @@ namespace Nop.Data.Tests.Directory
             };
             country.StateProvinces.Add
                 (
-                    new StateProvince()
+                    new StateProvince
                     {
                         Name = "California",
                         Abbreviation = "CA",
@@ -90,7 +90,7 @@ namespace Nop.Data.Tests.Directory
             };
             country.RestrictedShippingMethods.Add
                 (
-                    new ShippingMethod()
+                    new ShippingMethod
                     {
                         Name = "By train",
                     }

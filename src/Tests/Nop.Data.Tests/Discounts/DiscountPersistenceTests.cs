@@ -64,7 +64,7 @@ namespace Nop.Data.Tests.Discounts
             };
             discount.DiscountRequirements.Add
                 (
-                     new DiscountRequirement()
+                     new DiscountRequirement
                      {
                          DiscountRequirementRuleSystemName = "BillingCountryIs"
                      }

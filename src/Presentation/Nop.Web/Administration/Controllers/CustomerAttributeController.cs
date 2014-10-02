@@ -234,7 +234,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = values.Select(x =>
                 {
-                    return new CustomerAttributeValueModel()
+                    return new CustomerAttributeValueModel
                     {
                         Id = x.Id,
                         CustomerAttributeId = x.CustomerAttributeId,
@@ -279,7 +279,7 @@ namespace Nop.Admin.Controllers
             
             if (ModelState.IsValid)
             {
-                var cav = new CustomerAttributeValue()
+                var cav = new CustomerAttributeValue
                 {
                     CustomerAttributeId = model.CustomerAttributeId,
                     Name = model.Name,
@@ -311,7 +311,7 @@ namespace Nop.Admin.Controllers
                 //No customer attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = new CustomerAttributeValueModel()
+            var model = new CustomerAttributeValueModel
             {
                 CustomerAttributeId = cav.CustomerAttributeId,
                 Name = cav.Name,

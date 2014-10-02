@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_orderNote()
         {
-            var on = new OrderNote()
+            var on = new OrderNote
             {
                 Order = GetTestOrder(),
                 Note = "Note1",
@@ -48,13 +48,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

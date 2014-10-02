@@ -83,7 +83,7 @@ namespace Nop.Core.Domain.Common
 
         public object Clone()
         {
-            var addr = new Address()
+            var addr = new Address
             {
                 FirstName = this.FirstName,
                 LastName = this.LastName,

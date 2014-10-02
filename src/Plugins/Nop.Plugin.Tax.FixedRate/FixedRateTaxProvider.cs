@@ -25,7 +25,7 @@ namespace Nop.Plugin.Tax.FixedRate
         /// <returns>Tax</returns>
         public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
-            var result = new CalculateTaxResult()
+            var result = new CalculateTaxResult
             {
                 TaxRate = GetTaxRate(calculateTaxRequest.TaxCategoryId)
             };
@@ -53,7 +53,7 @@ namespace Nop.Plugin.Tax.FixedRate
         {
             actionName = "Configure";
             controllerName = "TaxFixedRate";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", null } };
         }
 
         public override void Install()

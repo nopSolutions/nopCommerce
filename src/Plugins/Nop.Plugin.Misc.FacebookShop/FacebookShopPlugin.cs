@@ -18,7 +18,7 @@ namespace Nop.Plugin.Misc.FacebookShop
         {
             actionName = "Configure";
             controllerName = "MiscFacebookShop";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.FacebookShop.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Misc.FacebookShop.Controllers" }, { "area", null } };
         }
 
         #endregion

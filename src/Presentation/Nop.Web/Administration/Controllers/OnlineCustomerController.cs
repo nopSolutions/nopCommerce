@@ -65,7 +65,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = customers.Select(x =>
                 {
-                    return new OnlineCustomerModel()
+                    return new OnlineCustomerModel
                     {
                         Id = x.Id,
                         CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),

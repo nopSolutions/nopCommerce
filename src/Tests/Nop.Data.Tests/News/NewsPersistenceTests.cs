@@ -29,7 +29,7 @@ namespace Nop.Data.Tests.News
                 MetaTitle = "MetaTitle 1",
                 MetaDescription = "MetaDescription 1",
                 MetaKeywords = "MetaKeywords 1",
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",
@@ -67,7 +67,7 @@ namespace Nop.Data.Tests.News
                 AllowComments = true,
                 Published = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",

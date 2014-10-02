@@ -68,7 +68,7 @@ namespace Nop.Admin.Controllers
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             foreach (var pr in permissionRecords)
             {
-                model.AvailablePermissions.Add(new PermissionRecordModel()
+                model.AvailablePermissions.Add(new PermissionRecordModel
                 {
                     //Name = pr.Name,
                     Name = pr.GetLocalizedPermissionName(_localizationService, _workContext),
@@ -77,7 +77,7 @@ namespace Nop.Admin.Controllers
             }
             foreach (var cr in customerRoles)
             {
-                model.AvailableCustomerRoles.Add(new CustomerRoleModel()
+                model.AvailableCustomerRoles.Add(new CustomerRoleModel
                 {
                     Id = cr.Id,
                     Name = cr.Name

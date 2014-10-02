@@ -10,7 +10,7 @@ namespace Nop.Core.Tests.Domain.Blogs
         [Test]
         public void Can_parse_tags()
         {
-            var blogPost = new BlogPost()
+            var blogPost = new BlogPost
             {
                 Tags = "tag1, tag2, tag 3 4,  "
             };

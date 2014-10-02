@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Customers
             var customer = GetTestCustomer();
             customer.CustomerRoles.Add
             (
-                new CustomerRole()
+                new CustomerRole
                 {
                     Name = "Administrators",
                     FreeShipping = true,
@@ -73,7 +73,7 @@ namespace Nop.Data.Tests.Customers
             var customer = GetTestCustomer();
             customer.ExternalAuthenticationRecords.Add
             (
-                new ExternalAuthenticationRecord()
+                new ExternalAuthenticationRecord
                 {
                     ExternalIdentifier = "ExternalIdentifier 1",
                     ExternalDisplayIdentifier = "ExternalDisplayIdentifier 1",
@@ -181,7 +181,7 @@ namespace Nop.Data.Tests.Customers
 
             customer.ShoppingCartItems.Add
             (
-                new ShoppingCartItem()
+                new ShoppingCartItem
                 {
                     ShoppingCartType = ShoppingCartType.ShoppingCart,
                     AttributesXml = "AttributesXml 1",
@@ -203,7 +203,7 @@ namespace Nop.Data.Tests.Customers
         }
         protected Address GetTestAddress()
         {
-            return new Address()
+            return new Address
             {
                 FirstName = "FirstName 1",
                 LastName = "LastName 1",

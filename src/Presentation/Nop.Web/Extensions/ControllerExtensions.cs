@@ -38,7 +38,7 @@ namespace Nop.Web.Extensions
                 var model = specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
                    .Select(psa =>
                    {
-                       return new ProductSpecificationModel()
+                       return new ProductSpecificationModel
                        {
                            SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                            SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
@@ -77,7 +77,7 @@ namespace Nop.Web.Extensions
             var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
-                var model = new ProductOverviewModel()
+                var model = new ProductOverviewModel
                 {
                     Id = product.Id,
                     Name = product.GetLocalized(x => x.Name),
@@ -90,7 +90,7 @@ namespace Nop.Web.Extensions
                 {
                     #region Prepare product price
 
-                    var priceModel = new ProductOverviewModel.ProductPriceModel()
+                    var priceModel = new ProductOverviewModel.ProductPriceModel
                     {
                         ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart
                     };
@@ -296,7 +296,7 @@ namespace Nop.Web.Extensions
                     model.DefaultPictureModel = cacheManager.Get(defaultProductPictureCacheKey, () =>
                     {
                         var picture = pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                        var pictureModel = new PictureModel()
+                        var pictureModel = new PictureModel
                         {
                             ImageUrl = pictureService.GetPictureUrl(picture, pictureSize),
                             FullSizeImageUrl = pictureService.GetPictureUrl(picture),
@@ -317,7 +317,7 @@ namespace Nop.Web.Extensions
                 }
 
                 //reviews
-                model.ReviewOverviewModel = new ProductReviewOverviewModel()
+                model.ReviewOverviewModel = new ProductReviewOverviewModel
                 {
                     ProductId = product.Id,
                     RatingSum = product.ApprovedRatingSum,

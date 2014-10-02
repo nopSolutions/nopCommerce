@@ -17,7 +17,7 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_parse_allowed_quantities()
         {
-            var product = new Product()
+            var product = new Product
             {
                 AllowedQuantities = "1, 5,4,10,sdf"
             };
@@ -33,23 +33,23 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_total_quantity_when_we_do_not_use_multiple_warehouses()
         {
-            var product = new Product()
+            var product = new Product
             {
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 UseMultipleWarehouses = false,
                 StockQuantity = 6,
             };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 1,
                 StockQuantity = 7,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 2,
                 StockQuantity = 8,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 3,
                 StockQuantity = -2,
@@ -63,25 +63,25 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_reserved()
         {
-            var product = new Product()
+            var product = new Product
             {
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 UseMultipleWarehouses = true,
                 StockQuantity = 6,
             };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 1,
                 StockQuantity = 7,
                 ReservedQuantity = 4,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 2,
                 StockQuantity = 8,
                 ReservedQuantity = 1,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 3,
                 StockQuantity = -2,
@@ -94,25 +94,25 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_without_reserved()
         {
-            var product = new Product()
+            var product = new Product
             {
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 UseMultipleWarehouses = true,
                 StockQuantity = 6,
             };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 1,
                 StockQuantity = 7,
                 ReservedQuantity = 4,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 2,
                 StockQuantity = 8,
                 ReservedQuantity = 1,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 3,
                 StockQuantity = -2,
@@ -125,25 +125,25 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_warehouse_specified()
         {
-            var product = new Product()
+            var product = new Product
             {
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 UseMultipleWarehouses = true,
                 StockQuantity = 6,
             };
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 1,
                 StockQuantity = 7,
                 ReservedQuantity = 4,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 2,
                 StockQuantity = 8,
                 ReservedQuantity = 1,
             });
-            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory()
+            product.ProductWarehouseInventory.Add(new ProductWarehouseInventory
             {
                 WarehouseId = 3,
                 StockQuantity = -2,

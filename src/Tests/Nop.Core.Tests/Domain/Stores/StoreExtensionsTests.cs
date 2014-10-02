@@ -10,7 +10,7 @@ namespace Nop.Core.Tests.Domain.Stores
         [Test]
         public void Can_parse_host_values()
         {
-            var store = new Store()
+            var store = new Store
             {
                 Hosts = "yourstore.com, www.yourstore.com, "
             };
@@ -24,7 +24,7 @@ namespace Nop.Core.Tests.Domain.Stores
         [Test]
         public void Can_find_host_value()
         {
-            var store = new Store()
+            var store = new Store
             {
                 Hosts = "yourstore.com, www.yourstore.com, "
             };

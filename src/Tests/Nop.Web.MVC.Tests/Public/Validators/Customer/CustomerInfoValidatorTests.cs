@@ -100,7 +100,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CompanyEnabled = true,
                     CompanyRequired = true
@@ -113,7 +113,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CompanyEnabled = true,
                     CompanyRequired = false
@@ -127,7 +127,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_company_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CompanyEnabled = true
                 });
@@ -144,7 +144,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddressEnabled = true,
                     StreetAddressRequired = true
@@ -156,7 +156,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddressEnabled = true,
                     StreetAddressRequired = false
@@ -170,7 +170,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_streetaddress_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddressEnabled = true
                 });
@@ -187,7 +187,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddress2Enabled = true,
                     StreetAddress2Required = true
@@ -199,7 +199,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddress2Enabled = true,
                     StreetAddress2Required = false
@@ -213,7 +213,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_streetaddress2_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddress2Enabled = true
                 });
@@ -230,7 +230,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     ZipPostalCodeEnabled = true,
                     ZipPostalCodeRequired = true
@@ -243,7 +243,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     ZipPostalCodeEnabled = true,
                     ZipPostalCodeRequired = false
@@ -257,7 +257,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_zippostalcode_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     StreetAddress2Enabled = true
                 });
@@ -274,7 +274,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CityEnabled = true,
                     CityRequired = true
@@ -287,7 +287,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CityEnabled = true,
                     CityRequired = false
@@ -301,7 +301,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_city_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     CityEnabled = true
                 });
@@ -318,7 +318,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     PhoneEnabled = true,
                     PhoneRequired = true
@@ -330,7 +330,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     PhoneEnabled = true,
                     PhoneRequired = false
@@ -344,7 +344,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_phone_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService, 
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     PhoneEnabled = true
                 });
@@ -361,7 +361,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //required
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     FaxEnabled = true,
                     FaxRequired = true
@@ -374,7 +374,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
 
             //not required
             validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     FaxEnabled = true,
                     FaxRequired = false
@@ -388,7 +388,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         public void Should_not_have_error_when_fax_is_specified()
         {
             var validator = new CustomerInfoValidator(_localizationService, _stateProvinceService,
-                new CustomerSettings()
+                new CustomerSettings
                 {
                     FaxEnabled = true
                 });

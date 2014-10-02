@@ -199,7 +199,7 @@ namespace Nop.Services.Security
                 if (permission1 == null)
                 {
                     //new permission (install it)
-                    permission1 = new PermissionRecord()
+                    permission1 = new PermissionRecord
                     {
                         Name = permission.Name,
                         SystemName = permission.SystemName,
@@ -215,7 +215,7 @@ namespace Nop.Services.Security
                         if (customerRole == null)
                         {
                             //new role (save it)
-                            customerRole = new CustomerRole()
+                            customerRole = new CustomerRole
                             {
                                 Name = defaultPermission.CustomerRoleSystemName,
                                 Active = true,

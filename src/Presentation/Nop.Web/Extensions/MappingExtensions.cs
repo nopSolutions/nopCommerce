@@ -23,7 +23,7 @@ namespace Nop.Web.Extensions
             if (entity == null)
                 return null;
 
-            var model = new CategoryModel()
+            var model = new CategoryModel
             {
                 Id = entity.Id,
                 Name = entity.GetLocalized(x => x.Name),
@@ -42,7 +42,7 @@ namespace Nop.Web.Extensions
             if (entity == null)
                 return null;
 
-            var model = new ManufacturerModel()
+            var model = new ManufacturerModel
             {
                 Id = entity.Id,
                 Name = entity.GetLocalized(x => x.Name),
@@ -130,10 +130,10 @@ namespace Nop.Web.Extensions
                 if (localizationService == null)
                     throw new ArgumentNullException("localizationService");
 
-                model.AvailableCountries.Add(new SelectListItem() { Text = localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in loadCountries())
                 {
-                    model.AvailableCountries.Add(new SelectListItem()
+                    model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.GetLocalized(x => x.Name),
                         Value = c.Id.ToString(),
@@ -152,11 +152,11 @@ namespace Nop.Web.Extensions
                         .ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = localizationService.GetResource("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem()
+                            model.AvailableStates.Add(new SelectListItem
                             {
                                 Text = s.GetLocalized(x => x.Name),
                                 Value = s.Id.ToString(), 
@@ -167,7 +167,7 @@ namespace Nop.Web.Extensions
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = "0"

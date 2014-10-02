@@ -659,7 +659,7 @@ namespace Nop.Plugin.Shipping.USPS
         {
             actionName = "Configure";
             controllerName = "ShippingUSPS";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.USPS.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.USPS.Controllers" }, { "area", null } };
         }
         
         /// <summary>
@@ -668,7 +668,7 @@ namespace Nop.Plugin.Shipping.USPS
         public override void Install()
         {
             //settings
-            var settings = new USPSSettings()
+            var settings = new USPSSettings
             {
                 Url = "http://production.shippingapis.com/ShippingAPI.dll",
                 Username = "123",

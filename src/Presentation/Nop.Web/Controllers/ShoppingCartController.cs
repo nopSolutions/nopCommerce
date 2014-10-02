@@ -220,7 +220,7 @@ namespace Nop.Web.Controllers
                 {
                     sciPicture = _pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
                 }
-                return new PictureModel()
+                return new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),
                     Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
@@ -297,7 +297,7 @@ namespace Nop.Web.Controllers
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
-                var caModel = new ShoppingCartModel.CheckoutAttributeModel()
+                var caModel = new ShoppingCartModel.CheckoutAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name),
@@ -319,7 +319,7 @@ namespace Nop.Web.Controllers
                     var caValues = _checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id);
                     foreach (var caValue in caValues)
                     {
-                        var pvaValueModel = new ShoppingCartModel.CheckoutAttributeValueModel()
+                        var pvaValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
                         {
                             Id = caValue.Id,
                             Name = caValue.GetLocalized(x => x.Name),
@@ -421,9 +421,9 @@ namespace Nop.Web.Controllers
                 {
                     //countries
                     int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
-                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                     foreach (var c in _countryService.GetAllCountriesForShipping())
-                        model.EstimateShipping.AvailableCountries.Add(new SelectListItem()
+                        model.EstimateShipping.AvailableCountries.Add(new SelectListItem
                         {
                             Text = c.GetLocalized(x => x.Name),
                             Value = c.Id.ToString(),
@@ -434,14 +434,14 @@ namespace Nop.Web.Controllers
                     var states = defaultEstimateCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value).ToList() : new List<StateProvince>();
                     if (states.Count > 0)
                         foreach (var s in states)
-                            model.EstimateShipping.AvailableStates.Add(new SelectListItem()
+                            model.EstimateShipping.AvailableStates.Add(new SelectListItem
                             {
                                 Text = s.GetLocalized(x => x.Name),
                                 Value = s.Id.ToString(),
                                 Selected = s.Id == defaultEstimateStateId
                             });
                     else
-                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+                        model.EstimateShipping.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
                     if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
                         model.EstimateShipping.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
@@ -454,7 +454,7 @@ namespace Nop.Web.Controllers
 
             foreach (var sci in cart)
             {
-                var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel()
+                var cartItemModel = new ShoppingCartModel.ShoppingCartItemModel
                 {
                     Id = sci.Id,
                     Sku = sci.Product.FormatSku(sci.AttributesXml, _productAttributeParser),
@@ -479,7 +479,7 @@ namespace Nop.Web.Controllers
                 var allowedQuantities = sci.Product.ParseAllowedQuatities();
                 foreach (var qty in allowedQuantities)
                 {
-                    cartItemModel.AllowedQuantities.Add(new SelectListItem()
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem
                     {
                         Text = qty.ToString(),
                         Value = qty.ToString(),
@@ -659,7 +659,7 @@ namespace Nop.Web.Controllers
 
             foreach (var sci in cart)
             {
-                var cartItemModel = new WishlistModel.ShoppingCartItemModel()
+                var cartItemModel = new WishlistModel.ShoppingCartItemModel
                 {
                     Id = sci.Id,
                     Sku = sci.Product.FormatSku(sci.AttributesXml, _productAttributeParser),
@@ -674,7 +674,7 @@ namespace Nop.Web.Controllers
                 var allowedQuantities = sci.Product.ParseAllowedQuatities();
                 foreach (var qty in allowedQuantities)
                 {
-                    cartItemModel.AllowedQuantities.Add(new SelectListItem()
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem
                     {
                         Text = qty.ToString(),
                         Value = qty.ToString(),
@@ -754,7 +754,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual MiniShoppingCartModel PrepareMiniShoppingCartModel()
         {
-            var model = new MiniShoppingCartModel()
+            var model = new MiniShoppingCartModel
             {
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
                 //let's always display it
@@ -813,7 +813,7 @@ namespace Nop.Web.Controllers
                         .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
                         .ToList())
                     {
-                        var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
+                        var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel
                         {
                             Id = sci.Id,
                             ProductId = sci.Product.Id,
@@ -1611,7 +1611,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var download = new Download()
+            var download = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
@@ -1694,7 +1694,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var download = new Download()
+            var download = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
@@ -1967,7 +1967,7 @@ namespace Nop.Web.Controllers
 
             if (cart.RequiresShipping())
             {
-                var address = new Address()
+                var address = new Address
                 {
                     CountryId = shippingModel.CountryId,
                     Country = shippingModel.CountryId.HasValue ? _countryService.GetCountryById(shippingModel.CountryId.Value) : null,
@@ -1988,7 +1988,7 @@ namespace Nop.Web.Controllers
                     {
                         foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                         {
-                            var soModel = new EstimateShippingModel.ShippingOptionModel()
+                            var soModel = new EstimateShippingModel.ShippingOptionModel
                             {
                                 Name = shippingOption.Name,
                                 Description = shippingOption.Description,
@@ -2008,7 +2008,7 @@ namespace Nop.Web.Controllers
                         //pickup in store?
                         if (_shippingSettings.AllowPickUpInStore)
                         {
-                            var soModel = new EstimateShippingModel.ShippingOptionModel()
+                            var soModel = new EstimateShippingModel.ShippingOptionModel
                             {
                                 Name = _localizationService.GetResource("Checkout.PickUpInStore"),
                                 Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
@@ -2119,7 +2119,7 @@ namespace Nop.Web.Controllers
                             model.Tax = _priceFormatter.FormatPrice(shoppingCartTax, true, false);
                             foreach (var tr in taxRates)
                             {
-                                model.TaxRates.Add(new OrderTotalsModel.TaxRate()
+                                model.TaxRates.Add(new OrderTotalsModel.TaxRate
                                     {
                                         Rate = _priceFormatter.FormatTaxRate(tr.Key),
                                         Value = _priceFormatter.FormatPrice(_currencyService.ConvertFromPrimaryStoreCurrency(tr.Value, _workContext.WorkingCurrency), true, false),
@@ -2161,7 +2161,7 @@ namespace Nop.Web.Controllers
                 {
                     foreach (var appliedGiftCard in appliedGiftCards)
                     {
-                        var gcModel = new OrderTotalsModel.GiftCard()
+                        var gcModel = new OrderTotalsModel.GiftCard
                             {
                                 Id = appliedGiftCard.GiftCard.Id,
                                 CouponCode =  appliedGiftCard.GiftCard.GiftCardCouponCode,
@@ -2422,7 +2422,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("HomePage");
 
-            var model = new WishlistEmailAFriendModel()
+            var model = new WishlistEmailAFriendModel
             {
                 YourEmailAddress = _workContext.CurrentCustomer.Email,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage

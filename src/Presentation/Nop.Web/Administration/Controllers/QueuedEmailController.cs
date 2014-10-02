@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
                 //No email found with the specified id
                 return RedirectToAction("List");
 
-            var requeuedEmail = new QueuedEmail()
+            var requeuedEmail = new QueuedEmail
             {
                 Priority = queuedEmail.Priority,
                 From = queuedEmail.From,

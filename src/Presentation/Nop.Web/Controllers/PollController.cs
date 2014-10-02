@@ -45,7 +45,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
-            var model = new PollModel()
+            var model = new PollModel
             {
                 Id = poll.Id,
                 AlreadyVoted = setAlreadyVotedProperty && _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
@@ -56,7 +56,7 @@ namespace Nop.Web.Controllers
                 model.TotalVotes += answer.NumberOfVotes;
             foreach (var pa in answers)
             {
-                model.Answers.Add(new PollAnswerModel()
+                model.Answers.Add(new PollAnswerModel
                 {
                     Id = pa.Id,
                     Name = pa.Name,
@@ -87,7 +87,7 @@ namespace Nop.Web.Controllers
                     (poll.StartDateUtc.HasValue && poll.StartDateUtc.Value > DateTime.UtcNow) ||
                     (poll.EndDateUtc.HasValue && poll.EndDateUtc.Value < DateTime.UtcNow))
                     //we do not cache nulls. that's why let's return an empty record (ID = 0)
-                    return new PollModel() { Id = 0};
+                    return new PollModel { Id = 0};
 
                 return PreparePollModel(poll, false);
             });
@@ -130,7 +130,7 @@ namespace Nop.Web.Controllers
             if (!alreadyVoted)
             {
                 //vote
-                pollAnswer.PollVotingRecords.Add(new PollVotingRecord()
+                pollAnswer.PollVotingRecords.Add(new PollVotingRecord
                 {
                     PollAnswerId = pollAnswer.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,

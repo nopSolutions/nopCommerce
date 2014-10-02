@@ -45,18 +45,18 @@ namespace Nop.Services.Tests.Customers
         public new void SetUp()
         {
             _customerSettings = new CustomerSettings();
-            _securitySettings = new SecuritySettings()
+            _securitySettings = new SecuritySettings
             {
                 EncryptionKey = "273ece6f97dd844d"
             };
-            _rewardPointsSettings = new RewardPointsSettings()
+            _rewardPointsSettings = new RewardPointsSettings
             {
                 Enabled = false,
             };
 
             _encryptionService = new EncryptionService(_securitySettings);
             _customerRepo = MockRepository.GenerateMock<IRepository<Customer>>();
-            var customer1 = new Customer()
+            var customer1 = new Customer
             {
                 Username = "a@b.com",
                 Email = "a@b.com",
@@ -70,7 +70,7 @@ namespace Nop.Services.Tests.Customers
             customer1.Password = password;
             AddCustomerToRegisteredRole(customer1);
 
-            var customer2 = new Customer()
+            var customer2 = new Customer
             {
                 Username = "test@test.com",
                 Email = "test@test.com",
@@ -80,7 +80,7 @@ namespace Nop.Services.Tests.Customers
             };
             AddCustomerToRegisteredRole(customer2);
 
-            var customer3 = new Customer()
+            var customer3 = new Customer
             {
                 Username = "user@test.com",
                 Email = "user@test.com",
@@ -90,7 +90,7 @@ namespace Nop.Services.Tests.Customers
             };
             AddCustomerToRegisteredRole(customer3);
 
-            var customer4 = new Customer()
+            var customer4 = new Customer
             {
                 Username = "registered@test.com",
                 Email = "registered@test.com",
@@ -100,7 +100,7 @@ namespace Nop.Services.Tests.Customers
             };
             AddCustomerToRegisteredRole(customer4);
 
-            var customer5 = new Customer()
+            var customer5 = new Customer
             {
                 Username = "notregistered@test.com",
                 Email = "notregistered@test.com",
@@ -114,7 +114,7 @@ namespace Nop.Services.Tests.Customers
 
             _storeService = MockRepository.GenerateMock<IStoreService>();
 
-            _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
+            _customerRepo.Expect(x => x.Table).Return(new List<Customer> { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _genericAttributeRepo = MockRepository.GenerateMock<IRepository<GenericAttribute>>();
@@ -197,7 +197,7 @@ namespace Nop.Services.Tests.Customers
 
         private void AddCustomerToRegisteredRole(Customer customer)
         {
-            customer.CustomerRoles.Add(new CustomerRole()
+            customer.CustomerRoles.Add(new CustomerRole
             {
                 Active =  true,
                 IsSystemRole = true,

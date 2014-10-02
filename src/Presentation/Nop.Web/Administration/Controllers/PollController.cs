@@ -204,7 +204,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = answers.Select(x => 
                 {
-                    return new PollAnswerModel()
+                    return new PollAnswerModel
                     {
                         Id = x.Id,
                         PollId = x.PollId,
@@ -228,7 +228,7 @@ namespace Nop.Admin.Controllers
             
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var pollAnswer = _pollService.GetPollAnswerById(model.Id);
@@ -250,7 +250,7 @@ namespace Nop.Admin.Controllers
            
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var poll = _pollService.GetPollById(pollId);

@@ -77,7 +77,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = customers.Select(x =>
                 {
-                    return new ShoppingCartModel()
+                    return new ShoppingCartModel
                     {
                         CustomerId = x.Id,
                         CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
@@ -105,7 +105,7 @@ namespace Nop.Admin.Controllers
                 {
                     decimal taxRate;
                     var store = _storeService.GetStoreById(sci.StoreId); 
-                    var sciModel = new ShoppingCartItemModel()
+                    var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
                         Store = store != null ? store.Name : "Unknown",
@@ -153,7 +153,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = customers.Select(x =>
                 {
-                    return new ShoppingCartModel()
+                    return new ShoppingCartModel
                     {
                         CustomerId = x.Id,
                         CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
@@ -181,7 +181,7 @@ namespace Nop.Admin.Controllers
                 {
                     decimal taxRate;
                     var store = _storeService.GetStoreById(sci.StoreId); 
-                    var sciModel = new ShoppingCartItemModel()
+                    var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
                         Store = store != null ? store.Name : "Unknown",

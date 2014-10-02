@@ -10,7 +10,7 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_categoryTemplate()
         {
-            var categoryTemplate = new CategoryTemplate()
+            var categoryTemplate = new CategoryTemplate
             {
                 Name = "Name 1",
                 ViewPath = "ViewPath 1",

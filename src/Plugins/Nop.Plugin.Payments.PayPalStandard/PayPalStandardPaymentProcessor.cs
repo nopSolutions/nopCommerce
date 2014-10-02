@@ -454,7 +454,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             actionName = "Configure";
             controllerName = "PaymentPayPalStandard";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -467,7 +467,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentPayPalStandard";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalStandard.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -478,7 +478,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public override void Install()
         {
             //settings
-            var settings = new PayPalStandardPaymentSettings()
+            var settings = new PayPalStandardPaymentSettings
             {
                 UseSandbox = true,
                 BusinessEmail = "test@test.com",

@@ -84,7 +84,7 @@ namespace Nop.Web.Controllers
             var name = customer.FormatUserName();
             var title = string.Format(_localizationService.GetResource("Profile.ProfileOf"), name);
 
-            var model = new ProfileIndexModel()
+            var model = new ProfileIndexModel
             {
                 ProfileTitle = title,
                 PostsPage = postsPage,
@@ -171,7 +171,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var model = new ProfileInfoModel()
+            var model = new ProfileInfoModel
             {
                 CustomerProfileId = customer.Id,
                 AvatarUrl = avatarUrl,
@@ -222,7 +222,7 @@ namespace Nop.Web.Controllers
                     posted = _dateTimeHelper.ConvertToUserTime(forumPost.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                 }
 
-                latestPosts.Add(new PostsModel()
+                latestPosts.Add(new PostsModel
                 {
                     ForumTopicId = forumPost.TopicId,
                     ForumTopicTitle = forumPost.ForumTopic.Subject,
@@ -232,7 +232,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var pagerModel = new PagerModel()
+            var pagerModel = new PagerModel
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
                 RouteValues = new RouteValues { page = page, id = customerProfileId }
             };
 
-            var model = new ProfilePostsModel()
+            var model = new ProfilePostsModel
             {
                 PagerModel = pagerModel,
                 Posts = latestPosts,

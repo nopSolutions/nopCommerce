@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Customers
         [Test]
         public void Can_save_and_load_rewardPointsHistory()
         {
-            var rewardPointsHistory = new RewardPointsHistory()
+            var rewardPointsHistory = new RewardPointsHistory
             {
                 Customer = GetTestCustomer(),
                 Points = 1,
@@ -37,7 +37,7 @@ namespace Nop.Data.Tests.Customers
         [Test]
         public void Can_save_and_load_rewardPointsHistory_with_order()
         {
-            var rewardPointsHistory = new RewardPointsHistory()
+            var rewardPointsHistory = new RewardPointsHistory
             {
                 Customer = GetTestCustomer(),
                 UsedWithOrder = GetTestOrder(),
@@ -70,13 +70,13 @@ namespace Nop.Data.Tests.Customers
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

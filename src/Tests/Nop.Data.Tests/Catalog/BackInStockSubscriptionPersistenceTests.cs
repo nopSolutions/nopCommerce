@@ -12,7 +12,7 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_backInStockSubscription()
         {
-            var backInStockSubscription = new BackInStockSubscription()
+            var backInStockSubscription = new BackInStockSubscription
                                      {
                                          Product = GetTestProduct(),
                                          Customer = new Customer

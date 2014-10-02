@@ -65,25 +65,25 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
             //stores
             model.StoreId = _froogleSettings.StoreId;
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //currencies
             model.CurrencyId = _froogleSettings.CurrencyId;
             foreach (var c in _currencyService.GetAllCurrencies())
-                model.AvailableCurrencies.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableCurrencies.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //Google categories
             model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
-            model.AvailableGoogleCategories.Add(new SelectListItem() {Text = "Select a category", Value = ""});
+            model.AvailableGoogleCategories.Add(new SelectListItem {Text = "Select a category", Value = ""});
             foreach (var gc in _googleService.GetTaxonomyList())
-                model.AvailableGoogleCategories.Add(new SelectListItem() {Text = gc, Value = gc});
+                model.AvailableGoogleCategories.Add(new SelectListItem {Text = gc, Value = gc});
 
             //file paths
             foreach (var store in _storeService.GetAllStores())
             {
                 var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
                 if (System.IO.File.Exists(localFilePath))
-                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel
                     {
                         StoreName = store.Name,
                         FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
@@ -151,23 +151,23 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             }
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //currencies
             foreach (var c in _currencyService.GetAllCurrencies())
-                model.AvailableCurrencies.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableCurrencies.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //Google categories
-            model.AvailableGoogleCategories.Add(new SelectListItem() { Text = "Select a category", Value = "" });
+            model.AvailableGoogleCategories.Add(new SelectListItem { Text = "Select a category", Value = "" });
             foreach (var gc in _googleService.GetTaxonomyList())
-                model.AvailableGoogleCategories.Add(new SelectListItem() { Text = gc, Value = gc });
+                model.AvailableGoogleCategories.Add(new SelectListItem { Text = gc, Value = gc });
 
             //file paths
             foreach (var store in _storeService.GetAllStores())
             {
                 var localFilePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", store.Id + "-" + _froogleSettings.StaticFileName);
                 if (System.IO.File.Exists(localFilePath))
-                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel()
+                    model.GeneratedFiles.Add(new FeedFroogleModel.GeneratedFileModel
                     {
                         StoreName = store.Name,
                         FileUrl = string.Format("{0}content/files/exportimport/{1}-{2}", _webHelper.GetStoreLocation(false), store.Id, _froogleSettings.StaticFileName)
@@ -188,7 +188,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             var productsModel = products
                 .Select(x =>
                             {
-                                var gModel = new FeedFroogleModel.GoogleProductModel()
+                                var gModel = new FeedFroogleModel.GoogleProductModel
                                 {
                                     ProductId = x.Id,
                                     ProductName = x.Name
@@ -237,7 +237,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             else
             {
                 //insert
-                googleProduct = new GoogleProductRecord()
+                googleProduct = new GoogleProductRecord
                 {
                     ProductId = model.ProductId,
                     Taxonomy = model.GoogleCategory,

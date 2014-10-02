@@ -149,7 +149,7 @@ namespace Nop.Admin.Controllers
             ViewBag.ExchangeRateProviders = new List<SelectListItem>();
             foreach (var erp in _currencyService.LoadAllExchangeRateProviders())
             {
-                ViewBag.ExchangeRateProviders.Add(new SelectListItem()
+                ViewBag.ExchangeRateProviders.Add(new SelectListItem
                 {
                     Text = erp.PluginDescriptor.FriendlyName,
                     Value = erp.PluginDescriptor.SystemName,

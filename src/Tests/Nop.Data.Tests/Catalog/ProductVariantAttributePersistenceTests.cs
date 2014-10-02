@@ -23,7 +23,7 @@ namespace Nop.Data.Tests.Catalog
                           ValidationFileMaximumSize = 4,
                           DefaultValue = "DefaultValue 1",
                           Product = GetTestProduct(),
-                          ProductAttribute = new ProductAttribute()
+                          ProductAttribute = new ProductAttribute
                           {
                               Name = "Name 1",
                               Description = "Description 1",

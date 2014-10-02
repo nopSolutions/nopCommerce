@@ -202,7 +202,7 @@ namespace Nop.Web.Controllers
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
 
             if (!excludeProperties)
             {
@@ -245,10 +245,10 @@ namespace Nop.Web.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
                 {
-                    model.AvailableCountries.Add(new SelectListItem()
+                    model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.GetLocalized(x => x.Name),
                         Value = c.Id.ToString(),
@@ -262,18 +262,18 @@ namespace Nop.Web.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"),
                             Value = "0"
@@ -321,7 +321,7 @@ namespace Nop.Web.Controllers
                 if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
                     continue;
 
-                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel()
+                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel
                 {
                     Id = ear.Id,
                     Email = ear.Email,
@@ -335,7 +335,7 @@ namespace Nop.Web.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var caModel = new CustomerAttributeModel()
+                var caModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name),
@@ -349,7 +349,7 @@ namespace Nop.Web.Controllers
                     var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
                     foreach (var caValue in caValues)
                     {
-                        var caValueModel = new CustomerAttributeValueModel()
+                        var caValueModel = new CustomerAttributeValueModel
                         {
                             Id = caValue.Id,
                             Name = caValue.GetLocalized(x => x.Name),
@@ -424,7 +424,7 @@ namespace Nop.Web.Controllers
 
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
             
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
@@ -457,11 +457,11 @@ namespace Nop.Web.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 
                 foreach (var c in _countryService.GetAllCountries())
                 {
-                    model.AvailableCountries.Add(new SelectListItem()
+                    model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.GetLocalized(x => x.Name),
                         Value = c.Id.ToString(),
@@ -475,18 +475,18 @@ namespace Nop.Web.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Address.OtherNonUS" : "Address.SelectState"), 
                             Value = "0"
@@ -501,7 +501,7 @@ namespace Nop.Web.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var caModel = new CustomerAttributeModel()
+                var caModel = new CustomerAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name),
@@ -515,7 +515,7 @@ namespace Nop.Web.Controllers
                     var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
                     foreach (var caValue in caValues)
                     {
-                        var caValueModel = new CustomerAttributeValueModel()
+                        var caValueModel = new CustomerAttributeValueModel
                         {
                             Id = caValue.Id,
                             Name = caValue.GetLocalized(x => x.Name),
@@ -544,7 +544,7 @@ namespace Nop.Web.Controllers
                 customerId: customer.Id);
             foreach (var order in orders)
             {
-                var orderModel = new CustomerOrderListModel.OrderDetailsModel()
+                var orderModel = new CustomerOrderListModel.OrderDetailsModel
                 {
                     Id = order.Id,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
@@ -561,7 +561,7 @@ namespace Nop.Web.Controllers
                 customer.Id, 0, null, 0, int.MaxValue);
             foreach (var recurringPayment in recurringPayments)
             {
-                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()
+                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel
                 {
                     Id = recurringPayment.Id,
                     StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
@@ -876,7 +876,7 @@ namespace Nop.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = model.Email,
@@ -899,7 +899,7 @@ namespace Nop.Web.Controllers
                     TryAssociateAccountWithExternalAccount(customer);
                     
                     //insert default address (if possible)
-                    var defaultAddress = new Address()
+                    var defaultAddress = new Address
                     {
                         FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
                         LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
@@ -997,7 +997,7 @@ namespace Nop.Web.Controllers
                 default:
                     break;
             }
-            var model = new RegisterResultModel()
+            var model = new RegisterResultModel
             {
                 Result = resultText
             };
@@ -1225,7 +1225,7 @@ namespace Nop.Web.Controllers
                         {
                             if (model.Newsletter)
                             {
-                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription()
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
                                 {
                                     NewsLetterSubscriptionGuid = Guid.NewGuid(),
                                     Email = customer.Email,
@@ -1498,7 +1498,7 @@ namespace Nop.Web.Controllers
                 {
                     var product = orderItem.Product;
 
-                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel()
+                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
                     {
                         Id = returnRequest.Id,
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -1537,7 +1537,7 @@ namespace Nop.Web.Controllers
                 null, null, null, true);
             foreach (var item in items)
             {
-                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel()
+                var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
                 {
                     OrderItemGuid = item.OrderItemGuid,
                     OrderId = item.OrderId,
@@ -1597,7 +1597,7 @@ namespace Nop.Web.Controllers
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.RewardPoints;
             foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
             {
-                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel()
+                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
                     Points = rph.Points,
                     PointsBalance = rph.PointsBalance,
@@ -1930,7 +1930,7 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                model.ForumSubscriptions.Add(new ForumSubscriptionModel()
+                model.ForumSubscriptions.Add(new ForumSubscriptionModel
                 {
                     Id = forumSubscription.Id,
                     ForumTopicId = forumTopicId,
@@ -1941,7 +1941,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            model.PagerModel = new PagerModel()
+            model.PagerModel = new PagerModel
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,
@@ -2013,7 +2013,7 @@ namespace Nop.Web.Controllers
 
                 if (product != null)
                 {
-                    var subscriptionModel = new BackInStockSubscriptionModel()
+                    var subscriptionModel = new BackInStockSubscriptionModel
                     {
                         Id = subscription.Id,
                         ProductId = product.Id,
@@ -2024,7 +2024,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            model.PagerModel = new PagerModel()
+            model.PagerModel = new PagerModel
             {
                 PageSize = list.PageSize,
                 TotalRecords = list.TotalCount,

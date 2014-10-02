@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Shipping
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
-            _store = new Store() { Id = 1 };
+            _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
@@ -115,11 +115,11 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {
-            var sci1 = new ShoppingCartItem()
+            var sci1 = new ShoppingCartItem
             {
                 AttributesXml = "",
                 Quantity = 3,
-                Product = new Product()
+                Product = new Product
                 {
                     Weight = 1.5M,
                     Height = 2.5M,
@@ -127,11 +127,11 @@ namespace Nop.Services.Tests.Shipping
                     Width = 4.5M
                 }
             };
-            var sci2 = new ShoppingCartItem()
+            var sci2 = new ShoppingCartItem
             {
                 AttributesXml = "",
                 Quantity = 4,
-                Product = new Product()
+                Product = new Product
                 {
                     Weight = 11.5M,
                     Height = 12.5M,
@@ -139,7 +139,7 @@ namespace Nop.Services.Tests.Shipping
                     Width = 14.5M
                 }
             };
-            var cart = new List<ShoppingCartItem>() { sci1, sci2 };
+            var cart = new List<ShoppingCartItem> { sci1, sci2 };
             _shippingService.GetTotalWeight(cart).ShouldEqual(50.5M);
         }
     }

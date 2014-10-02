@@ -11,12 +11,12 @@ namespace Nop.Data.Tests.Customers
         [Test]
         public void Can_save_and_load_customerAttributeValue()
         {
-            var cav = new CustomerAttributeValue()
+            var cav = new CustomerAttributeValue
                     {
                         Name = "Name 2",
                         IsPreSelected = true,
                         DisplayOrder = 1,
-                        CustomerAttribute = new CustomerAttribute()
+                        CustomerAttribute = new CustomerAttribute
                         {
                             Name = "Name 1",
                             IsRequired = true,

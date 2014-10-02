@@ -80,7 +80,7 @@ namespace Nop.Services.Messages
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
             var bodyReplaced = _tokenizer.Replace(body, tokens, true);
             
-            var email = new QueuedEmail()
+            var email = new QueuedEmail
             {
                 Priority = 5,
                 From = emailAccount.Email,

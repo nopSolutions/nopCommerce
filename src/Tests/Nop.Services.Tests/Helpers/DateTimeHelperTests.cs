@@ -32,11 +32,11 @@ namespace Nop.Services.Tests.Helpers
 
             _workContext = MockRepository.GenerateMock<IWorkContext>();
 
-            _store = new Store() { Id = 1 };
+            _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
-            _dateTimeSettings = new DateTimeSettings()
+            _dateTimeSettings = new DateTimeSettings
             {
                 AllowCustomersToSetTimeZone = false,
                 DefaultStoreTimeZoneId = ""
@@ -68,15 +68,15 @@ namespace Nop.Services.Tests.Helpers
             _dateTimeSettings.AllowCustomersToSetTimeZone = true;
             _dateTimeSettings.DefaultStoreTimeZoneId = "E. Europe Standard Time"; //(GMT+02:00) Minsk;
 
-            var customer = new Customer()
+            var customer = new Customer
             {
                 Id = 10,
             };
 
             _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>()
+                .Return(new List<GenericAttribute>
                             {
-                                new GenericAttribute()
+                                new GenericAttribute
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,
@@ -96,15 +96,15 @@ namespace Nop.Services.Tests.Helpers
             _dateTimeSettings.AllowCustomersToSetTimeZone = false;
             _dateTimeSettings.DefaultStoreTimeZoneId = "E. Europe Standard Time"; //(GMT+02:00) Minsk;
 
-            var customer = new Customer()
+            var customer = new Customer
             {
                 Id = 10,
             };
 
             _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>()
+                .Return(new List<GenericAttribute>
                             {
-                                new GenericAttribute()
+                                new GenericAttribute
                                     {
                                         StoreId = 0,
                                         EntityId = customer.Id,

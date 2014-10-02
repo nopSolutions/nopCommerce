@@ -10,7 +10,7 @@ namespace Nop.Data.Tests.Catalog
         [Test]
         public void Can_save_and_load_productTemplate()
         {
-            var productTemplate = new ProductTemplate()
+            var productTemplate = new ProductTemplate
             {
                 Name = "Name 1",
                 ViewPath = "ViewPath 1",

@@ -23,7 +23,7 @@ namespace Nop.Data.Tests.Polls
                 DisplayOrder = 1,
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",
@@ -56,7 +56,7 @@ namespace Nop.Data.Tests.Polls
                 DisplayOrder = 1,
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",
@@ -94,7 +94,7 @@ namespace Nop.Data.Tests.Polls
                 DisplayOrder = 1,
                 StartDateUtc = new DateTime(2010, 01, 01),
                 EndDateUtc = new DateTime(2010, 01, 02),
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",

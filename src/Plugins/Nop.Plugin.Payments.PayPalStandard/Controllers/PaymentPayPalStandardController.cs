@@ -283,7 +283,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
 
                     //order note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = sb.ToString(),
                         DisplayToCustomer = false,
@@ -330,7 +330,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 if (order != null)
                 {
                     //order note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = "PayPal PDT failed. " + response,
                         DisplayToCustomer = false,
@@ -433,7 +433,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 if (recurringPaymentHistory.Count == 0)
                                                 {
                                                     //first payment
-                                                    var rph = new RecurringPaymentHistory()
+                                                    var rph = new RecurringPaymentHistory
                                                     {
                                                         RecurringPaymentId = rp.Id,
                                                         OrderId = initialOrder.Id,
@@ -481,7 +481,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                             {
 
                                 //order note
-                                order.OrderNotes.Add(new OrderNote()
+                                order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = sb.ToString(),
                                     DisplayToCustomer = false,

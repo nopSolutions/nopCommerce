@@ -84,16 +84,16 @@
                 <td class="adminData">
                     @{
             var monthOfBirthValues = new List<SelectListItem>();
-            monthOfBirthValues.Add(new SelectListItem() { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
+            monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
             for (int i = 1; i <= 12; i++)
             {
-                monthOfBirthValues.Add(new SelectListItem() { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
             }
             var dayOfBirthValues = new List<SelectListItem>();
-            dayOfBirthValues.Add(new SelectListItem() { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
+            dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
             for (int i = 1; i <= 31; i++)
             {
-                dayOfBirthValues.Add(new SelectListItem() { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+                dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
             }
                     }
                     @Html.DropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)

@@ -123,7 +123,7 @@ namespace Nop.Admin.Controllers
             var model = new StoreScopeConfigurationModel();
             foreach (var s in allStores)
             {
-                model.Stores.Add(new StoreModel()
+                model.Stores.Add(new StoreModel
                 {
                     Id = s.Id,
                     Name = s.Name
@@ -566,18 +566,18 @@ namespace Nop.Admin.Controllers
             else
                 model.ShippingOriginAddress = new AddressModel();
 
-            model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
+                model.ShippingOriginAddress.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (originAddress != null && c.Id == originAddress.CountryId) });
 
             var states = originAddress != null && originAddress.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(originAddress.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == originAddress.StateProvinceId) });
+                    model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == originAddress.StateProvinceId) });
             }
             else
-                model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.ShippingOriginAddress.CountryEnabled = true;
             model.ShippingOriginAddress.StateProvinceEnabled = true;
             model.ShippingOriginAddress.CityEnabled = true;
@@ -653,7 +653,7 @@ namespace Nop.Admin.Controllers
                 var addressId = _settingService.SettingExists(shippingSettings, x => x.ShippingOriginAddressId, storeScope) ?
                     shippingSettings.ShippingOriginAddressId : 0;
                 var originAddress = _addressService.GetAddressById(addressId) ??
-                    new Address()
+                    new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -728,17 +728,17 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.ShippingTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            model.ShippingTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
-                model.ShippingTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.ShippingTaxClassId });
-            model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+                model.ShippingTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.ShippingTaxClassId });
+            model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
-                model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.PaymentMethodAdditionalFeeTaxClassId });
+                model.PaymentMethodAdditionalFeeTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = tc.Id == taxSettings.PaymentMethodAdditionalFeeTaxClassId });
 
             //EU VAT countries
-            model.EuVatShopCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.EuVatShopCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.EuVatShopCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == taxSettings.EuVatShopCountryId });
+                model.EuVatShopCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = c.Id == taxSettings.EuVatShopCountryId });
 
             //default tax address
             var defaultAddress = taxSettings.DefaultTaxAddressId > 0
@@ -749,18 +749,18 @@ namespace Nop.Admin.Controllers
             else
                 model.DefaultTaxAddress = new AddressModel();
 
-            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
+                model.DefaultTaxAddress.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (defaultAddress != null && c.Id == defaultAddress.CountryId) });
 
             var states = defaultAddress != null && defaultAddress.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(defaultAddress.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
+                    model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == defaultAddress.StateProvinceId) });
             }
             else
-                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.DefaultTaxAddress.CountryEnabled = true;
             model.DefaultTaxAddress.StateProvinceEnabled = true;
             model.DefaultTaxAddress.ZipPostalCodeEnabled = true;
@@ -836,7 +836,7 @@ namespace Nop.Admin.Controllers
                 var addressId = _settingService.SettingExists(taxSettings, x => x.DefaultTaxAddressId, storeScope) ?
                     taxSettings.DefaultTaxAddressId : 0;
                 var originAddress = _addressService.GetAddressById(addressId) ??
-                    new Address()
+                    new Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -1418,9 +1418,9 @@ namespace Nop.Admin.Controllers
 
             //gift card activation/deactivation
             model.GiftCards_Activated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem() { Text = "---", Value = "0" });
+            model.GiftCards_Activated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
             model.GiftCards_Deactivated_OrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem() { Text = "---", Value = "0" });
+            model.GiftCards_Deactivated_OrderStatuses.Insert(0, new SelectListItem { Text = "---", Value = "0" });
 
 
             //parse return request actions
@@ -1886,7 +1886,7 @@ namespace Nop.Admin.Controllers
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
             foreach (TimeZoneInfo timeZone in _dateTimeHelper.GetSystemTimeZones())
             {
-                model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem()
+                model.DateTimeSettings.AvailableTimeZones.Add(new SelectListItem
                     {
                         Text = timeZone.DisplayName,
                         Value = timeZone.Id,
@@ -1961,7 +1961,7 @@ namespace Nop.Admin.Controllers
                 .GetThemeConfigurations()
                 .Select(x =>
                 {
-                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel()
+                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel
                     {
                         ThemeTitle = x.ThemeTitle,
                         ThemeName = x.ThemeName,
@@ -2519,7 +2519,7 @@ namespace Nop.Admin.Controllers
                                     var store = _storeService.GetStoreById(x.StoreId);
                                     storeName = store != null ? store.Name : "Unknown";
                                 }
-                                var settingModel = new SettingModel()
+                                var settingModel = new SettingModel
                                 {
                                     Id = x.Id,
                                     Name = x.Name,
@@ -2554,7 +2554,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var setting = _settingService.GetSettingById(model.Id);
@@ -2590,7 +2590,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
             var storeId = model.StoreId;
             _settingService.SetSetting(model.Name, model.Value, storeId);

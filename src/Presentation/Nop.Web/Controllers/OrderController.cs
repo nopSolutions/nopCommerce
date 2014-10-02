@@ -134,7 +134,7 @@ namespace Nop.Web.Controllers
                 var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
-                    var shipmentModel = new OrderDetailsModel.ShipmentBriefModel()
+                    var shipmentModel = new OrderDetailsModel.ShipmentBriefModel
                     {
                         Id = shipment.Id,
                         TrackingNumber = shipment.TrackingNumber,
@@ -245,7 +245,7 @@ namespace Nop.Web.Controllers
 
                     foreach (var tr in order.TaxRatesDictionary)
                     {
-                        model.TaxRates.Add(new OrderDetailsModel.TaxRate()
+                        model.TaxRates.Add(new OrderDetailsModel.TaxRate
                         {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
                             //TODO pass languageId to _priceFormatter.FormatPrice
@@ -267,7 +267,7 @@ namespace Nop.Web.Controllers
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
             {
-                model.GiftCards.Add(new OrderDetailsModel.GiftCard()
+                model.GiftCards.Add(new OrderDetailsModel.GiftCard
                 {
                     CouponCode = gcuh.GiftCard.GiftCardCouponCode,
                     Amount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage),
@@ -294,7 +294,7 @@ namespace Nop.Web.Controllers
                 .OrderByDescending(on => on.CreatedOnUtc)
                 .ToList())
             {
-                model.OrderNotes.Add(new OrderDetailsModel.OrderNote()
+                model.OrderNotes.Add(new OrderDetailsModel.OrderNote
                 {
                     Id = orderNote.Id,
                     HasDownload = orderNote.DownloadId > 0,
@@ -309,7 +309,7 @@ namespace Nop.Web.Controllers
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
             foreach (var orderItem in orderItems)
             {
-                var orderItemModel = new OrderDetailsModel.OrderItemModel()
+                var orderItemModel = new OrderDetailsModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     OrderItemGuid = orderItem.OrderItemGuid,
@@ -413,7 +413,7 @@ namespace Nop.Web.Controllers
                 if (orderItem == null)
                     continue;
 
-                var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel()
+                var shipmentItemModel = new ShipmentDetailsModel.ShipmentItemModel
                 {
                     Id = shipmentItem.Id,
                     Sku = orderItem.Product.FormatSku(orderItem.AttributesXml, _productAttributeParser),
@@ -500,7 +500,7 @@ namespace Nop.Web.Controllers
             if (!_paymentService.CanRePostProcessPayment(order))
                 return RedirectToRoute("OrderDetails", new { orderId = orderId });
 
-            var postProcessPaymentRequest = new PostProcessPaymentRequest()
+            var postProcessPaymentRequest = new PostProcessPaymentRequest
             {
                 Order = order
             };

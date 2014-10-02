@@ -85,7 +85,7 @@ namespace Nop.Services.Authentication.External
                         break;
                     }
 
-            var externalAuthenticationRecord = new ExternalAuthenticationRecord()
+            var externalAuthenticationRecord = new ExternalAuthenticationRecord
             {
                 CustomerId = customer.Id,
                 Email = email,

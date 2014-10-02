@@ -192,7 +192,7 @@ namespace Nop.Services.Common
                 if (!string.IsNullOrWhiteSpace(valueStr))
                 {
                     //insert
-                    prop = new GenericAttribute()
+                    prop = new GenericAttribute
                     {
                         EntityId = entity.Id,
                         Key = key,

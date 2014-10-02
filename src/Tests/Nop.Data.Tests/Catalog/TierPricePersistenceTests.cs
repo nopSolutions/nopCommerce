@@ -37,7 +37,7 @@ namespace Nop.Data.Tests.Catalog
                 Quantity = 1,
                 Price = 2,
                 Product = GetTestProduct(),
-                CustomerRole = new CustomerRole()
+                CustomerRole = new CustomerRole
                 {
                     Name = "Administrators",
                     FreeShipping = true,

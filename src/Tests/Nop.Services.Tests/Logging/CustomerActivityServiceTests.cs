@@ -41,28 +41,28 @@ namespace Nop.Services.Tests.Logging
                 Enabled = true,
                 Name = "Test name2"
             };
-            _customer1 = new Customer()
+            _customer1 = new Customer
             {
                 Id = 1,
                 Email = "test1@teststore1.com",
                 Username = "TestUser1",
                 Deleted = false,
             };
-           _customer2 = new Customer()
+           _customer2 = new Customer
            {
                Id = 2,
                Email = "test2@teststore2.com",
                Username = "TestUser2",
                Deleted = false,
            };
-            _activity1 = new ActivityLog()
+            _activity1 = new ActivityLog
             {
                 Id = 1,
                 ActivityLogType = _activityType1,
                 CustomerId = _customer1.Id,
                 Customer = _customer1
             };
-            _activity2 = new ActivityLog()
+            _activity2 = new ActivityLog
             {
                 Id = 2,
                 ActivityLogType = _activityType1,
@@ -73,8 +73,8 @@ namespace Nop.Services.Tests.Logging
             _workContext = MockRepository.GenerateMock<IWorkContext>();
             _activityLogRepository = MockRepository.GenerateMock<IRepository<ActivityLog>>();
             _activityLogTypeRepository = MockRepository.GenerateMock<IRepository<ActivityLogType>>();
-            _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType>() { _activityType1, _activityType2 }.AsQueryable());
-            _activityLogRepository.Expect(x => x.Table).Return(new List<ActivityLog>() { _activity1, _activity2 }.AsQueryable());
+            _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
+            _activityLogRepository.Expect(x => x.Table).Return(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
             _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository, _activityLogTypeRepository, _workContext, null, null, null);
         }
 

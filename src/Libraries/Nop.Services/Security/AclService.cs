@@ -148,7 +148,7 @@ namespace Nop.Services.Security
             int entityId = entity.Id;
             string entityName = typeof(T).Name;
 
-            var aclRecord = new AclRecord()
+            var aclRecord = new AclRecord
             {
                 EntityId = entityId,
                 EntityName = entityName,

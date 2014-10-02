@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Catalog
         {
             var pwi = new ProductWarehouseInventory
             {
-                Product = new Product()
+                Product = new Product
                 {
                     Name = "Name 1",
                     Published = true,
@@ -24,7 +24,7 @@ namespace Nop.Data.Tests.Catalog
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02)
                 },
-                Warehouse = new Warehouse()
+                Warehouse = new Warehouse
                 {
                     Name = "Name 2",
                     AddressId = 1,

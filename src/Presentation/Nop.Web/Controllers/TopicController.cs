@@ -52,7 +52,7 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 throw new ArgumentNullException("topic");
 
-            var model = new TopicModel()
+            var model = new TopicModel
             {
                 Id = topic.Id,
                 SystemName = topic.SystemName,

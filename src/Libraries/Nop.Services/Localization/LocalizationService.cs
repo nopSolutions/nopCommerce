@@ -370,7 +370,7 @@ namespace Nop.Services.Localization
                 var inDoc = new XmlDocument();
                 inDoc.LoadXml(xml);
                 var sb = new StringBuilder();
-                using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true }))
+                using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings { OmitXmlDeclaration = true }))
                 {
                     inDoc.Save(xWriter);
                     xWriter.Close();
@@ -419,7 +419,7 @@ namespace Nop.Services.Localization
                     else
                     {
                         language.LocaleStringResources.Add(
-                            new LocaleStringResource()
+                            new LocaleStringResource
                             {
                                 ResourceName = name,
                                 ResourceValue = value

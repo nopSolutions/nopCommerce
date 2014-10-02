@@ -230,7 +230,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
-                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel()
+                    var soModel = new CheckoutShippingMethodModel.ShippingMethodModel
                                       {
                                           Name = shippingOption.Name,
                                           Description = shippingOption.Description,
@@ -324,7 +324,7 @@ namespace Nop.Web.Controllers
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
-                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel()
+                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
                 {
                     Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
@@ -485,7 +485,7 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = new CheckoutCompletedModel()
+            var model = new CheckoutCompletedModel
             {
                 OrderId = order.Id,
                 OnePageCheckoutEnabled = _orderSettings.OnePageCheckoutEnabled
@@ -680,7 +680,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, true, _storeContext.CurrentStore.Id);
 
                     //save "pick up in store" shipping method
-                    var pickUpInStoreShippingOption = new ShippingOption()
+                    var pickUpInStoreShippingOption = new ShippingOption
                     {
                         Name = _localizationService.GetResource("Checkout.PickUpInStore.MethodName"),
                         Rate = decimal.Zero,
@@ -1113,7 +1113,7 @@ namespace Nop.Web.Controllers
                 if (placeOrderResult.Success)
                 {
                     _httpContext.Session["OrderPaymentInfo"] = null;
-                    var postProcessPaymentRequest = new PostProcessPaymentRequest()
+                    var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
@@ -1145,7 +1145,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult CheckoutProgress(CheckoutProgressStep step)
         {
-            var model = new CheckoutProgressModel() {CheckoutProgressStep = step};
+            var model = new CheckoutProgressModel {CheckoutProgressStep = step};
             return PartialView(model);
         }
 
@@ -1187,7 +1187,7 @@ namespace Nop.Web.Controllers
                 //customer have to choose a payment method
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-method",
                         html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
@@ -1203,7 +1203,7 @@ namespace Nop.Web.Controllers
             var confirmOrderModel = PrepareConfirmOrderModel(cart);
             return Json(new
             {
-                update_section = new UpdateSectionJsonModel()
+                update_section = new UpdateSectionJsonModel
                 {
                     name = "confirm-order",
                     html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
@@ -1225,7 +1225,7 @@ namespace Nop.Web.Controllers
                 var confirmOrderModel = PrepareConfirmOrderModel(cart);
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
                         html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
@@ -1239,7 +1239,7 @@ namespace Nop.Web.Controllers
             var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
             return Json(new
             {
-                update_section = new UpdateSectionJsonModel()
+                update_section = new UpdateSectionJsonModel
                 {
                     name = "payment-info",
                     html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
@@ -1264,7 +1264,7 @@ namespace Nop.Web.Controllers
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return new HttpUnauthorizedResult();
 
-            var model = new OnePageCheckoutModel()
+            var model = new OnePageCheckoutModel
             {
                 ShippingRequired = cart.RequiresShipping(),
                 DisableBillingAddressCheckoutStep = _orderSettings.DisableBillingAddressCheckoutStep
@@ -1325,7 +1325,7 @@ namespace Nop.Web.Controllers
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel()
+                            update_section = new UpdateSectionJsonModel
                             {
                                 name = "billing",
                                 html = this.RenderPartialViewToString("OpcBillingAddress", billingAddressModel)
@@ -1428,7 +1428,7 @@ namespace Nop.Web.Controllers
                         _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, true, _storeContext.CurrentStore.Id);
                         
                         //save "pick up in store" shipping method
-                        var pickUpInStoreShippingOption = new ShippingOption()
+                        var pickUpInStoreShippingOption = new ShippingOption
                         {
                             Name = _localizationService.GetResource("Checkout.PickUpInStore.MethodName"),
                             Rate = decimal.Zero,
@@ -1475,7 +1475,7 @@ namespace Nop.Web.Controllers
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
-                            update_section = new UpdateSectionJsonModel()
+                            update_section = new UpdateSectionJsonModel
                             {
                                 name = "shipping",
                                 html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)
@@ -1531,7 +1531,7 @@ namespace Nop.Web.Controllers
                 
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    update_section = new UpdateSectionJsonModel
                     {
                         name = "shipping-method",
                         html = this.RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
@@ -1661,7 +1661,7 @@ namespace Nop.Web.Controllers
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
                     {
-                        update_section = new UpdateSectionJsonModel()
+                        update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
                             html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
@@ -1730,7 +1730,7 @@ namespace Nop.Web.Controllers
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
                     {
-                        update_section = new UpdateSectionJsonModel()
+                        update_section = new UpdateSectionJsonModel
                         {
                             name = "confirm-order",
                             html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
@@ -1743,7 +1743,7 @@ namespace Nop.Web.Controllers
                 var paymenInfoModel = PreparePaymentInfoModel(paymentMethod);
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    update_section = new UpdateSectionJsonModel
                     {
                         name = "payment-info",
                         html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
@@ -1802,7 +1802,7 @@ namespace Nop.Web.Controllers
                 if (placeOrderResult.Success)
                 {
                     _httpContext.Session["OrderPaymentInfo"] = null;
-                    var postProcessPaymentRequest = new PostProcessPaymentRequest()
+                    var postProcessPaymentRequest = new PostProcessPaymentRequest
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
@@ -1838,7 +1838,7 @@ namespace Nop.Web.Controllers
                     
                 return Json(new
                 {
-                    update_section = new UpdateSectionJsonModel()
+                    update_section = new UpdateSectionJsonModel
                     {
                         name = "confirm-order",
                         html = this.RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
@@ -1885,7 +1885,7 @@ namespace Nop.Web.Controllers
 
                 //Redirection will not work on one page checkout page because it's AJAX request.
                 //That's why we process it here
-                var postProcessPaymentRequest = new PostProcessPaymentRequest()
+                var postProcessPaymentRequest = new PostProcessPaymentRequest
                 {
                     Order = order
                 };

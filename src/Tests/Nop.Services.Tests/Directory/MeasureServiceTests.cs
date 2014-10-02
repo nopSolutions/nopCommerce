@@ -26,7 +26,7 @@ namespace Nop.Services.Tests.Directory
         [SetUp]
         public new void SetUp()
         {
-            measureDimension1 = new MeasureDimension()
+            measureDimension1 = new MeasureDimension
             {
                 Id = 1,
                 Name = "inch(es)",
@@ -34,7 +34,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 1M,
                 DisplayOrder = 1,
             };
-            measureDimension2 = new MeasureDimension()
+            measureDimension2 = new MeasureDimension
             {
                 Id = 2,
                 Name = "feet",
@@ -42,7 +42,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 0.08333333M,
                 DisplayOrder = 2,
             };
-            measureDimension3 = new MeasureDimension()
+            measureDimension3 = new MeasureDimension
             {
                 Id = 3,
                 Name = "meter(s)",
@@ -50,7 +50,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 0.0254M,
                 DisplayOrder = 3,
             };
-            measureDimension4 = new MeasureDimension()
+            measureDimension4 = new MeasureDimension
             {
                 Id = 4,
                 Name = "millimetre(s)",
@@ -61,7 +61,7 @@ namespace Nop.Services.Tests.Directory
 
 
 
-            measureWeight1 = new MeasureWeight()
+            measureWeight1 = new MeasureWeight
             {
                 Id = 1,
                 Name = "ounce(s)",
@@ -69,7 +69,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 16M,
                 DisplayOrder = 1,
             };
-            measureWeight2 = new MeasureWeight()
+            measureWeight2 = new MeasureWeight
             {
                 Id = 2,
                 Name = "lb(s)",
@@ -77,7 +77,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 1M,
                 DisplayOrder = 2,
             };
-            measureWeight3 = new MeasureWeight()
+            measureWeight3 = new MeasureWeight
             {
                 Id = 3,
                 Name = "kg(s)",
@@ -85,7 +85,7 @@ namespace Nop.Services.Tests.Directory
                 Ratio = 0.45359237M,
                 DisplayOrder = 3,
             };
-            measureWeight4 = new MeasureWeight()
+            measureWeight4 = new MeasureWeight
             {
                 Id = 4,
                 Name = "gram(s)",
@@ -95,14 +95,14 @@ namespace Nop.Services.Tests.Directory
             };
 
             _measureDimensionRepository = MockRepository.GenerateMock<IRepository<MeasureDimension>>();
-            _measureDimensionRepository.Expect(x => x.Table).Return(new List<MeasureDimension>() { measureDimension1, measureDimension2, measureDimension3, measureDimension4 }.AsQueryable());
+            _measureDimensionRepository.Expect(x => x.Table).Return(new List<MeasureDimension> { measureDimension1, measureDimension2, measureDimension3, measureDimension4 }.AsQueryable());
             _measureDimensionRepository.Expect(x => x.GetById(measureDimension1.Id)).Return(measureDimension1);
             _measureDimensionRepository.Expect(x => x.GetById(measureDimension2.Id)).Return(measureDimension2);
             _measureDimensionRepository.Expect(x => x.GetById(measureDimension3.Id)).Return(measureDimension3);
             _measureDimensionRepository.Expect(x => x.GetById(measureDimension4.Id)).Return(measureDimension4);
 
             _measureWeightRepository = MockRepository.GenerateMock<IRepository<MeasureWeight>>();
-            _measureWeightRepository.Expect(x => x.Table).Return(new List<MeasureWeight>() { measureWeight1, measureWeight2, measureWeight3, measureWeight4 }.AsQueryable());
+            _measureWeightRepository.Expect(x => x.Table).Return(new List<MeasureWeight> { measureWeight1, measureWeight2, measureWeight3, measureWeight4 }.AsQueryable());
             _measureWeightRepository.Expect(x => x.GetById(measureWeight1.Id)).Return(measureWeight1);
             _measureWeightRepository.Expect(x => x.GetById(measureWeight2.Id)).Return(measureWeight2);
             _measureWeightRepository.Expect(x => x.GetById(measureWeight3.Id)).Return(measureWeight3);

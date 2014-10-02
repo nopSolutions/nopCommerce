@@ -461,7 +461,7 @@ namespace Nop.Admin.Controllers
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
             {
-                return Json(new DataSourceResult() { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
+                return Json(new DataSourceResult { Errors = _localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses") });
             }
 
             //int countryId = state.CountryId;

@@ -80,7 +80,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var activityLogSearchModel = new ActivityLogSearchModel();
-            activityLogSearchModel.ActivityLogType.Add(new SelectListItem()
+            activityLogSearchModel.ActivityLogType.Add(new SelectListItem
             {
                 Value = "0",
                 Text = "All"
@@ -90,7 +90,7 @@ namespace Nop.Admin.Controllers
             foreach (var at in _customerActivityService.GetAllActivityTypes()
                 .Select(x =>
                 {
-                    return new SelectListItem()
+                    return new SelectListItem
                     {
                         Value = x.Id.ToString(),
                         Text = x.Name
@@ -113,7 +113,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue,null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
-            var gridModel = new DataSourceResult()
+            var gridModel = new DataSourceResult
             {
                 Data = activityLog.Select(x =>
                 {

@@ -38,7 +38,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         {
             actionName = "Configure";
             controllerName = "ExternalAuthFacebook";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.Facebook.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.ExternalAuth.Facebook.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         {
             actionName = "PublicInfo";
             controllerName = "ExternalAuthFacebook";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.Facebook.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.ExternalAuth.Facebook.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         public override void Install()
         {
             //settings
-            var settings = new FacebookExternalAuthSettings()
+            var settings = new FacebookExternalAuthSettings
             {
                 ClientKeyIdentifier = "",
                 ClientSecret = "",

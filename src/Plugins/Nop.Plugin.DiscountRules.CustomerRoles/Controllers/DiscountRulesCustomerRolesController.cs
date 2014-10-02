@@ -54,9 +54,9 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             model.CustomerRoleId = restrictedToCustomerRoleId;
             //customer roles
             //TODO localize "Select customer role"
-            model.AvailableCustomerRoles.Add(new SelectListItem() { Text = "Select customer role", Value = "0" });
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = "Select customer role", Value = "0" });
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
-                model.AvailableCustomerRoles.Add(new SelectListItem() { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString(), Selected = discountRequirement != null && cr.Id == restrictedToCustomerRoleId });
 
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesCustomerRoles{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
@@ -86,7 +86,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             else
             {
                 //save new rule
-                discountRequirement = new DiscountRequirement()
+                discountRequirement = new DiscountRequirement
                 {
                     DiscountRequirementRuleSystemName = "DiscountRequirement.MustBeAssignedToCustomerRole"
                 };

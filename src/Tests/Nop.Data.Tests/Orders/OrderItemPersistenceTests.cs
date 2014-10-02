@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_orderItem()
         {
-            var orderItem = new OrderItem()
+            var orderItem = new OrderItem
             {
                 Order = GetTestOrder(),
                 Product= GetTestProduct(),
@@ -60,7 +60,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_orderItem_with_giftCard()
         {
-            var orderItem = new OrderItem()
+            var orderItem = new OrderItem
             {
                 Order = GetTestOrder(),
                 Product = GetTestProduct(),
@@ -109,13 +109,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

@@ -695,7 +695,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             actionName = "Configure";
             controllerName = "PaymentPayPalDirect";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -708,7 +708,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentPayPalDirect";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PayPalDirect.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -719,7 +719,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public override void Install()
         {
             //settings
-            var settings = new PayPalDirectPaymentSettings()
+            var settings = new PayPalDirectPaymentSettings
             {
                 TransactMode = TransactMode.Authorize,
                 UseSandbox = true,

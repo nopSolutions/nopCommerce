@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Catalog
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
-                Product = new Product()
+                Product = new Product
                 {
                     Name = "Name 1",
                     Published = true,
@@ -24,11 +24,11 @@ namespace Nop.Data.Tests.Catalog
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02)
                 },
-                SpecificationAttributeOption = new SpecificationAttributeOption()
+                SpecificationAttributeOption = new SpecificationAttributeOption
                 {
                     Name = "SpecificationAttributeOption name 1",
                     DisplayOrder = 1,
-                    SpecificationAttribute = new SpecificationAttribute()
+                    SpecificationAttribute = new SpecificationAttribute
                     {
                         Name = "SpecificationAttribute name 1",
                         DisplayOrder = 2,

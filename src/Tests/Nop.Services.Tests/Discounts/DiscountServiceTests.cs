@@ -57,7 +57,7 @@ namespace Nop.Services.Tests.Discounts
                 LimitationTimes = 3,
             };
 
-            _discountRepo.Expect(x => x.Table).Return(new List<Discount>() { discount1, discount2 }.AsQueryable());
+            _discountRepo.Expect(x => x.Table).Return(new List<Discount> { discount1, discount2 }.AsQueryable());
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -122,9 +122,9 @@ namespace Nop.Services.Tests.Discounts
             };
 
             _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>()
+                .Return(new List<GenericAttribute>
                             {
-                                new GenericAttribute()
+                                new GenericAttribute
                                     {
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.DiscountCouponCode,
@@ -164,9 +164,9 @@ namespace Nop.Services.Tests.Discounts
             };
 
             _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))
-                .Return(new List<GenericAttribute>()
+                .Return(new List<GenericAttribute>
                             {
-                                new GenericAttribute()
+                                new GenericAttribute
                                     {
                                         EntityId = customer.Id,
                                         Key = SystemCustomerAttributeNames.DiscountCouponCode,

@@ -14,7 +14,7 @@ namespace Nop.Services.Tests.Security
         [SetUp]
         public new void SetUp() 
         {
-            _securitySettings = new SecuritySettings()
+            _securitySettings = new SecuritySettings
             {
                 EncryptionKey = "273ece6f97dd844d"
             };

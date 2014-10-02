@@ -208,7 +208,7 @@ namespace Nop.Services.Logging
             if (IgnoreLog(shortMessage) || IgnoreLog(fullMessage))
                 return null;
 
-            var log = new Log()
+            var log = new Log
             {
                 LogLevel = logLevel,
                 ShortMessage = shortMessage,

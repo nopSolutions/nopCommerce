@@ -30,7 +30,7 @@ namespace Nop.Data.Tests.Catalog
                     AttributeControlType = AttributeControlType.DropdownList,
                     DisplayOrder = 1,
                     Product = GetTestProduct(),
-                    ProductAttribute = new ProductAttribute()
+                    ProductAttribute = new ProductAttribute
                     {
                         Name = "Name 1",
                         Description = "Description 1",

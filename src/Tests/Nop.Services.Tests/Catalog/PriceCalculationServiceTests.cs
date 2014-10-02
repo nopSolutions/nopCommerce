@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.Catalog
         {
             _workContext = null;
 
-            _store = new Store() { Id = 1 };
+            _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
@@ -95,13 +95,13 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //add tier prices
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
                 {
                     Price = 10,
                     Quantity = 2,
                     Product = product
                 });
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
             {
                 Price = 8,
                 Quantity = 5,
@@ -132,13 +132,13 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //customer roles
-            var customerRole1 = new CustomerRole()
+            var customerRole1 = new CustomerRole
             {
                 Id = 1,
                 Name = "Some role 1",
                 Active = true,
             };
-            var customerRole2 = new CustomerRole()
+            var customerRole2 = new CustomerRole
             {
                 Id = 2,
                 Name = "Some role 2",
@@ -146,28 +146,28 @@ namespace Nop.Services.Tests.Catalog
             };
 
             //add tier prices
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
             {
                 Price = 10,
                 Quantity = 2,
                 Product= product,
                 CustomerRole = customerRole1
             });
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
             {
                 Price = 9,
                 Quantity = 2,
                 Product = product,
                 CustomerRole = customerRole2
             });
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
             {
                 Price = 8,
                 Quantity = 5,
                 Product= product,
                 CustomerRole = customerRole1
             });
-            product.TierPrices.Add(new TierPrice()
+            product.TierPrices.Add(new TierPrice
             {
                 Price = 5,
                 Quantity = 10,
@@ -222,7 +222,7 @@ namespace Nop.Services.Tests.Catalog
             var customer = new Customer();
 
             //discounts
-            var discount1 = new Discount()
+            var discount1 = new Discount
             {
                 Id = 1,
                 Name = "Discount 1",
@@ -287,7 +287,7 @@ namespace Nop.Services.Tests.Catalog
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            var sci1 = new ShoppingCartItem()
+            var sci1 = new ShoppingCartItem
             {
                 Customer = customer,
                 CustomerId = customer.Id,
@@ -317,7 +317,7 @@ namespace Nop.Services.Tests.Catalog
                 CustomerEntersPrice = false,
                 Published = true,
             };
-            var sci1 = new ShoppingCartItem()
+            var sci1 = new ShoppingCartItem
             {
                 Customer = customer,
                 CustomerId = customer.Id,

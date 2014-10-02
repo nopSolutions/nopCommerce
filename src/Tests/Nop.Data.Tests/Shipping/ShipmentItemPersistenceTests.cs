@@ -15,7 +15,7 @@ namespace Nop.Data.Tests.Shipping
         [Test]
         public void Can_save_and_load_shipmentItem()
         {
-            var shipmentItem = new ShipmentItem()
+            var shipmentItem = new ShipmentItem
             {
                 Shipment = GetTestShipment(),
                 OrderItemId = 2,
@@ -58,13 +58,13 @@ namespace Nop.Data.Tests.Shipping
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

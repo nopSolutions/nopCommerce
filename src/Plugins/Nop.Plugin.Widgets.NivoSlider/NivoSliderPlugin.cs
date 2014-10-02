@@ -33,7 +33,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string>() { "home_page_top" };
+            return new List<string> { "home_page_top" };
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         {
             actionName = "Configure";
             controllerName = "WidgetsNivoSlider";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.NivoSlider.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Widgets.NivoSlider.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         {
             actionName = "PublicInfo";
             controllerName = "WidgetsNivoSlider";
-            routeValues = new RouteValueDictionary()
+            routeValues = new RouteValueDictionary
             {
                 {"Namespaces", "Nop.Plugin.Widgets.NivoSlider.Controllers"},
                 {"area", null},
@@ -78,7 +78,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
 
 
             //settings
-            var settings = new NivoSliderSettings()
+            var settings = new NivoSliderSettings
             {
                 Picture1Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), "image/pjpeg", "banner_1", true).Id,
                 Text1 = "",

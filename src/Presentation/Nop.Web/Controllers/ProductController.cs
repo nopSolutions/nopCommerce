@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
 
             #region Standard properties
 
-            var model = new ProductDetailsModel()
+            var model = new ProductDetailsModel
             {
                 Id = product.Id,
                 Name = product.GetLocalized(x => x.Name),
@@ -258,7 +258,7 @@ namespace Nop.Web.Controllers
                 {
                     model.ShowVendor = true;
 
-                    model.VendorModel = new VendorBriefInfoModel()
+                    model.VendorModel = new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
                         Name = vendor.GetLocalized(x => x.Name),
@@ -305,7 +305,7 @@ namespace Nop.Web.Controllers
                 var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
                 model.Breadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
                 {
-                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel()
+                    var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
                     {
                         Enabled = _catalogSettings.CategoryBreadcrumbEnabled,
                         ProductId = product.Id,
@@ -320,7 +320,7 @@ namespace Nop.Web.Controllers
                         {
                             foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                             {
-                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel()
+                                breadcrumbModel.CategoryBreadcrumb.Add(new CategorySimpleModel
                                 {
                                     Id = catBr.Id,
                                     Name = catBr.GetLocalized(x => x.Name),
@@ -348,7 +348,7 @@ namespace Nop.Web.Controllers
                         .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
                         .Select(x =>
                         {
-                            var ptModel = new ProductTagModel()
+                            var ptModel = new ProductTagModel
                             {
                                 Id = x.Id,
                                 Name = x.GetLocalized(y => y.Name),
@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
             {
                 var pictures = _pictureService.GetPicturesByProductId(product.Id);
 
-                var defaultPictureModel = new PictureModel()
+                var defaultPictureModel = new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault(), defaultPictureSize, !isAssociatedProduct),
                     FullSizeImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault(), 0, !isAssociatedProduct),
@@ -402,7 +402,7 @@ namespace Nop.Web.Controllers
                 var pictureModels = new List<PictureModel>();
                 foreach (var picture in pictures)
                 {
-                    pictureModels.Add(new PictureModel()
+                    pictureModels.Add(new PictureModel
                     {
                         ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
@@ -516,7 +516,7 @@ namespace Nop.Web.Controllers
             var allowedQuantities = product.ParseAllowedQuatities();
             foreach (var qty in allowedQuantities)
             {
-                model.AddToCart.AllowedQuantities.Add(new SelectListItem()
+                model.AddToCart.AllowedQuantities.Add(new SelectListItem
                 {
                     Text = qty.ToString(),
                     Value = qty.ToString(),
@@ -582,7 +582,7 @@ namespace Nop.Web.Controllers
             }
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new ProductDetailsModel.ProductVariantAttributeModel()
+                var pvaModel = new ProductDetailsModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
@@ -607,7 +607,7 @@ namespace Nop.Web.Controllers
                     var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
                     foreach (var pvaValue in pvaValues)
                     {
-                        var pvaValueModel = new ProductDetailsModel.ProductVariantAttributeValueModel()
+                        var pvaValueModel = new ProductDetailsModel.ProductVariantAttributeValueModel
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.GetLocalized(x => x.Name),
@@ -728,7 +728,7 @@ namespace Nop.Web.Controllers
 
             #region Product review overview
 
-            model.ProductReviewOverview = new ProductReviewOverviewModel()
+            model.ProductReviewOverview = new ProductReviewOverviewModel
             {
                 ProductId = product.Id,
                 RatingSum = product.ApprovedRatingSum,
@@ -750,7 +750,7 @@ namespace Nop.Web.Controllers
                     .RemoveDuplicatedQuantities()
                     .Select(tierPrice =>
                     {
-                        var m = new ProductDetailsModel.TierPriceModel()
+                        var m = new ProductDetailsModel.TierPriceModel
                         {
                             Quantity = tierPrice.Quantity,
                         };
@@ -815,7 +815,7 @@ namespace Nop.Web.Controllers
             foreach (var pr in productReviews)
             {
                 var customer = pr.Customer;
-                model.Items.Add(new ProductReviewModel()
+                model.Items.Add(new ProductReviewModel
                 {
                     Id = pr.Id,
                     CustomerId = pr.CustomerId,
@@ -824,7 +824,7 @@ namespace Nop.Web.Controllers
                     Title = pr.Title,
                     ReviewText = pr.ReviewText,
                     Rating = pr.Rating,
-                    Helpfulness = new ProductReviewHelpfulnessModel()
+                    Helpfulness = new ProductReviewHelpfulnessModel
                     {
                         ProductReviewId = pr.Id,
                         HelpfulYesTotal = pr.HelpfulYesTotal,
@@ -1069,7 +1069,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.RecentlyAddedProductsEnabled)
-                return new RssActionResult() { Feed = feed };
+                return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
 
@@ -1095,7 +1095,7 @@ namespace Nop.Web.Controllers
 
             }
             feed.Items = items;
-            return new RssActionResult() { Feed = feed };
+            return new RssActionResult { Feed = feed };
         }
 
         #endregion
@@ -1212,7 +1212,7 @@ namespace Nop.Web.Controllers
                 {
                     return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
                 }
-                subscription = new BackInStockSubscription()
+                subscription = new BackInStockSubscription
                 {
                     Customer = _workContext.CurrentCustomer,
                     Product = product,
@@ -1276,7 +1276,7 @@ namespace Nop.Web.Controllers
                     rating = _catalogSettings.DefaultProductRatingValue;
                 bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
 
-                var productReview = new ProductReview()
+                var productReview = new ProductReview
                 {
                     ProductId = product.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -1359,7 +1359,7 @@ namespace Nop.Web.Controllers
             else
             {
                 //insert new helpfulness
-                prh = new ProductReviewHelpfulness()
+                prh = new ProductReviewHelpfulness
                 {
                     ProductReviewId = productReview.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -1490,7 +1490,7 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToRoute("HomePage");
 
-            var model = new CompareProductsModel()
+            var model = new CompareProductsModel
             {
                 IncludeShortDescriptionInCompareProducts = _catalogSettings.IncludeShortDescriptionInCompareProducts,
                 IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,

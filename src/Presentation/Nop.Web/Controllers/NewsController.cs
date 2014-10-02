@@ -115,7 +115,7 @@ namespace Nop.Web.Controllers
                 var newsComments = newsItem.NewsComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var nc in newsComments)
                 {
-                    var commentModel = new NewsCommentModel()
+                    var commentModel = new NewsCommentModel
                     {
                         Id = nc.Id,
                         CustomerId = nc.CustomerId,
@@ -151,7 +151,7 @@ namespace Nop.Web.Controllers
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
-                return new HomePageNewsItemsModel()
+                return new HomePageNewsItemsModel
                 {
                     WorkingLanguageId = _workContext.WorkingLanguage.Id,
                     NewsItems = newsItems
@@ -211,7 +211,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
-                return new RssActionResult() { Feed = feed };
+                return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
             var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id, 0, int.MaxValue);
@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
                 items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("Blog:{0}", n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult() { Feed = feed };
+            return new RssActionResult { Feed = feed };
         }
 
         public ActionResult NewsItem(int newsItemId)
@@ -269,7 +269,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var comment = new NewsComment()
+                var comment = new NewsComment
                 {
                     NewsItemId = newsItem.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,

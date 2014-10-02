@@ -7,13 +7,13 @@
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
     var taxTypes = new List<SelectListItem>();
-    taxTypes.Add(new SelectListItem()
+    taxTypes.Add(new SelectListItem
     {
         Text = T("Tax.Inclusive").Text,
         Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
         Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
     });
-    taxTypes.Add(new SelectListItem()
+    taxTypes.Add(new SelectListItem
     {
         Text = T("Tax.Exclusive").Text,
         Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),

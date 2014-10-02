@@ -811,7 +811,7 @@ namespace Nop.Plugin.Shipping.Fedex
         {
             actionName = "Configure";
             controllerName = "ShippingFedex";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.Fedex.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.Fedex.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -820,7 +820,7 @@ namespace Nop.Plugin.Shipping.Fedex
         public override void Install()
         {
             //settings
-            var settings = new FedexSettings()
+            var settings = new FedexSettings
             {
                 Url = "https://gatewaybeta.fedex.com:443/web-services/rate",
                 DropoffType = DropoffType.BusinessServiceCenter,

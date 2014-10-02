@@ -15,7 +15,7 @@ namespace Nop.Data.Tests.Catalog
             var productPicture = new ProductPicture
                                      {
                                          DisplayOrder = 1,
-                                         Product = new Product()
+                                         Product = new Product
                                                        {
                                                            Name = "Name 1",
                                                            Published = true,
@@ -23,7 +23,7 @@ namespace Nop.Data.Tests.Catalog
                                                            CreatedOnUtc = new DateTime(2010, 01, 01),
                                                            UpdatedOnUtc = new DateTime(2010, 01, 02)
                                                        },
-                                         Picture = new Picture()
+                                         Picture = new Picture
                                                                       {
                                                                           PictureBinary = new byte[] { 1, 2, 3 },
                                                                           MimeType = "image/pjpeg",

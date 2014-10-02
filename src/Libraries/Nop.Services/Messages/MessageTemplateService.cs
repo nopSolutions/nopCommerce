@@ -230,7 +230,7 @@ namespace Nop.Services.Messages
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
             
-            var mtCopy = new MessageTemplate()
+            var mtCopy = new MessageTemplate
                              {
                                  Name = messageTemplate.Name,
                                  BccEmailAddresses = messageTemplate.BccEmailAddresses,

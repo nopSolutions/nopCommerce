@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_giftCardUsageHistory()
         {
-            var gcuh = new GiftCardUsageHistory()
+            var gcuh = new GiftCardUsageHistory
             {
                 UsedValue = 1.1M,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Orders
 
         protected GiftCard GetTestGiftCard()
         {
-            return new GiftCard()
+            return new GiftCard
              {
                  Amount = 1,
                  IsGiftCardActivated = true,
@@ -64,13 +64,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

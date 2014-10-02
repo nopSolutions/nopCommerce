@@ -141,7 +141,7 @@ namespace Nop.Services.Payments
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
-                var result = new ProcessPaymentResult()
+                var result = new ProcessPaymentResult
                 {
                     NewPaymentStatus = PaymentStatus.Paid
                 };
@@ -351,7 +351,7 @@ namespace Nop.Services.Payments
         {
             if (processPaymentRequest.OrderTotal == decimal.Zero)
             {
-                var result = new ProcessPaymentResult()
+                var result = new ProcessPaymentResult
                 {
                     NewPaymentStatus = PaymentStatus.Paid
                 };

@@ -97,7 +97,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
 
             //templates
-            model.AvailableCurrencies.Add(new SelectListItem()
+            model.AvailableCurrencies.Add(new SelectListItem
                 {
                     Text = "---",
                     Value = "0"
@@ -105,7 +105,7 @@ namespace Nop.Admin.Controllers
             var currencies = _currencyService.GetAllCurrencies(true);
             foreach (var currency in currencies)
             {
-                model.AvailableCurrencies.Add(new SelectListItem()
+                model.AvailableCurrencies.Add(new SelectListItem
                 {
                     Text = currency.Name,
                     Value = currency.Id.ToString()
@@ -358,7 +358,7 @@ namespace Nop.Admin.Controllers
             var resources = _localizationService
                 .GetAllResourceValues(languageId)
                 .OrderBy(x => x.Key)
-                .Select(x => new LanguageResourceModel()
+                .Select(x => new LanguageResourceModel
                     {
                         LanguageId = languageId,
                         LanguageName = language.Name,
@@ -392,7 +392,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -402,7 +402,7 @@ namespace Nop.Admin.Controllers
                 var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
                 if (res != null && res.Id != resource.Id)
                 {
-                    return Json(new DataSourceResult() { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName) });
+                    return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName) });
                 }
             }
 
@@ -426,7 +426,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
@@ -439,7 +439,7 @@ namespace Nop.Admin.Controllers
             }
             else
             {
-                return Json(new DataSourceResult() { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name) });
+                return Json(new DataSourceResult { Errors = string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name) });
             }
 
             return new NullJsonResult();

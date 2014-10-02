@@ -111,7 +111,7 @@ namespace Nop.Services.Customers
 
             var result = query2.ToList().Select(x =>
             {
-                return new BestCustomerReportLine()
+                return new BestCustomerReportLine
                 {
                     CustomerId = x.CustomerId,
                     OrderTotal = x.OrderTotal,

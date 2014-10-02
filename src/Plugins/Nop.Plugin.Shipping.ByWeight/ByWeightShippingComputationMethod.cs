@@ -160,7 +160,7 @@ namespace Nop.Plugin.Shipping.ByWeight
         {
             actionName = "Configure";
             controllerName = "ShippingByWeight";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", null } };
         }
         
         /// <summary>
@@ -169,7 +169,7 @@ namespace Nop.Plugin.Shipping.ByWeight
         public override void Install()
         {
             //settings
-            var settings = new ShippingByWeightSettings()
+            var settings = new ShippingByWeightSettings
             {
                 LimitMethodsToCreated = false,
             };

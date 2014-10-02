@@ -11,7 +11,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_calculate_discount_amount_percentage()
         {
-            var discount = new Discount()
+            var discount = new Discount
             {
                 UsePercentage = true,
                 DiscountPercentage = 30
@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.Discounts
         [Test]
         public void Can_calculate_discount_amount_fixed()
         {
-            var discount = new Discount()
+            var discount = new Discount
             {
                 UsePercentage = false,
                 DiscountAmount = 10

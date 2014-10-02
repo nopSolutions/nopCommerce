@@ -156,7 +156,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         {
             actionName = "Configure";
             controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentPurchaseOrder";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.PurchaseOrder.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -183,7 +183,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         public override void Install()
         {
             //settings
-            var settings = new PurchaseOrderPaymentSettings()
+            var settings = new PurchaseOrderPaymentSettings
             {
                 AdditionalFee = 0,
             };

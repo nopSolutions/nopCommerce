@@ -12,7 +12,7 @@ namespace Nop.Data.Tests.Shipping
         [Test]
         public void Can_save_and_load_warehouse()
         {
-            var warehouse = new Warehouse()
+            var warehouse = new Warehouse
                                {
                                    Name = "Name 1",
                                    AdminComment = "AdminComment 1",

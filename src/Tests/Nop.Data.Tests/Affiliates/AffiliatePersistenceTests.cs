@@ -30,7 +30,7 @@ namespace Nop.Data.Tests.Affiliates
 
         protected Address GetTestAddress()
         {
-            return new Address()
+            return new Address
             {
                 FirstName = "FirstName 1",
                 LastName = "LastName 1",

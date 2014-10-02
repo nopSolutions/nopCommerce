@@ -10,7 +10,7 @@ namespace Nop.Data.Tests.Messages
         [Test]
         public void Can_save_and_load_messageTemplate()
         {
-            var mt = new MessageTemplate()
+            var mt = new MessageTemplate
             {
                 Name = "Template1",
                 BccEmailAddresses = "Bcc",

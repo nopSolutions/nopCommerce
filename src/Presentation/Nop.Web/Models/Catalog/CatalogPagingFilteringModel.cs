@@ -104,7 +104,7 @@ namespace Nop.Web.Models.Catalog
                     if (!String.IsNullOrEmpty(fromTo[1]) && !String.IsNullOrEmpty(fromTo[1].Trim()))
                         to = decimal.Parse(fromTo[1].Trim(), new CultureInfo("en-US"));
 
-                    priceRanges.Add(new PriceRange() { From = from, To = to });
+                    priceRanges.Add(new PriceRange { From = from, To = to });
                 }
                 return priceRanges;
             }

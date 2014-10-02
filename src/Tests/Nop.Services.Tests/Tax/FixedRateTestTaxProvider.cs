@@ -8,7 +8,7 @@ namespace Nop.Services.Tests.Tax
     {
         public CalculateTaxResult GetTaxRate(CalculateTaxRequest calculateTaxRequest)
         {
-            var result = new CalculateTaxResult()
+            var result = new CalculateTaxResult
             {
                 TaxRate = GetTaxRate(calculateTaxRequest.TaxCategoryId)
             };

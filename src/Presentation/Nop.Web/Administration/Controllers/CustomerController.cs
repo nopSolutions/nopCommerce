@@ -179,23 +179,23 @@ namespace Nop.Admin.Controllers
         protected virtual IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
         {
             var report = new List<RegisteredCustomerReportLineModel>();
-            report.Add(new RegisteredCustomerReportLineModel()
+            report.Add(new RegisteredCustomerReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.7days"),
                 Customers = _customerReportService.GetRegisteredCustomersReport(7)
             });
 
-            report.Add(new RegisteredCustomerReportLineModel()
+            report.Add(new RegisteredCustomerReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.14days"),
                 Customers = _customerReportService.GetRegisteredCustomersReport(14)
             });
-            report.Add(new RegisteredCustomerReportLineModel()
+            report.Add(new RegisteredCustomerReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.month"),
                 Customers = _customerReportService.GetRegisteredCustomersReport(30)
             });
-            report.Add(new RegisteredCustomerReportLineModel()
+            report.Add(new RegisteredCustomerReportLineModel
             {
                 Period = _localizationService.GetResource("Admin.Customers.Reports.RegisteredCustomers.Fields.Period.year"),
                 Customers = _customerReportService.GetRegisteredCustomersReport(365)
@@ -217,7 +217,7 @@ namespace Nop.Admin.Controllers
                 if (method == null)
                     continue;
 
-                result.Add(new CustomerModel.AssociatedExternalAuthModel()
+                result.Add(new CustomerModel.AssociatedExternalAuthModel
                 {
                     Id = record.Id,
                     Email = record.Email,
@@ -232,7 +232,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual CustomerModel PrepareCustomerModelForList(Customer customer)
         {
-            return new CustomerModel()
+            return new CustomerModel
             {
                 Id = customer.Id,
                 Email = customer.IsRegistered() ? customer.Email : _localizationService.GetResource("Admin.Customers.Guest"),
@@ -273,7 +273,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableVendors.Add(new SelectListItem()
+            model.AvailableVendors.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Customers.Customers.Fields.Vendor.None"),
                 Value = "0"
@@ -281,7 +281,7 @@ namespace Nop.Admin.Controllers
             var vendors = _vendorService.GetAllVendors(showHidden: true);
             foreach (var vendor in vendors)
             {
-                model.AvailableVendors.Add(new SelectListItem()
+                model.AvailableVendors.Add(new SelectListItem
                 {
                     Text = vendor.Name,
                     Value = vendor.Id.ToString()
@@ -295,7 +295,7 @@ namespace Nop.Admin.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var caModel = new CustomerModel.CustomerAttributeModel()
+                var caModel = new CustomerModel.CustomerAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.Name,
@@ -309,7 +309,7 @@ namespace Nop.Admin.Controllers
                     var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
                     foreach (var caValue in caValues)
                     {
-                        var caValueModel = new CustomerModel.CustomerAttributeValueModel()
+                        var caValueModel = new CustomerModel.CustomerAttributeValueModel
                         {
                             Id = caValue.Id,
                             Name = caValue.Name,
@@ -473,7 +473,7 @@ namespace Nop.Admin.Controllers
 
             //load registered customers by default
             var defaultRoleIds = new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
-            var listModel = new CustomerListModel()
+            var listModel = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
                 DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
@@ -534,7 +534,7 @@ namespace Nop.Admin.Controllers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = false;
             //customer roles
             model.AvailableCustomerRoles = _customerService
@@ -561,10 +561,10 @@ namespace Nop.Admin.Controllers
 
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries(true))
                 {
-                    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                    model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
                 }
 
                 if (_customerSettings.StateProvinceEnabled)
@@ -573,18 +573,18 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
                             Value = "0"
@@ -634,7 +634,7 @@ namespace Nop.Admin.Controllers
             
             if (ModelState.IsValid)
             {
-                var customer = new Customer()
+                var customer = new Customer
                 {
                     CustomerGuid = Guid.NewGuid(),
                     Email = model.Email,
@@ -738,7 +738,7 @@ namespace Nop.Admin.Controllers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = false;
             //customer roles
             model.AvailableCustomerRoles = _customerService
@@ -763,10 +763,10 @@ namespace Nop.Admin.Controllers
             model.FaxEnabled = _customerSettings.FaxEnabled;
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries(true))
                 {
-                    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
+                    model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
                 }
 
 
@@ -776,18 +776,18 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
+                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
                             Value = "0"
@@ -829,7 +829,7 @@ namespace Nop.Admin.Controllers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
             model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
@@ -869,10 +869,10 @@ namespace Nop.Admin.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries(true))
                 {
-                    model.AvailableCountries.Add(new SelectListItem()
+                    model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.Name,
                         Value = c.Id.ToString(),
@@ -886,18 +886,18 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
+                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
                             Value = "0"
@@ -1110,7 +1110,7 @@ namespace Nop.Admin.Controllers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
                 .GetLocalizedEnum(_localizationService, _workContext);
@@ -1137,10 +1137,10 @@ namespace Nop.Admin.Controllers
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries(true))
                 {
-                    model.AvailableCountries.Add(new SelectListItem()
+                    model.AvailableCountries.Add(new SelectListItem
                     {
                         Text = c.Name,
                         Value = c.Id.ToString(),
@@ -1154,18 +1154,18 @@ namespace Nop.Admin.Controllers
                     var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
                     if (states.Count > 0)
                     {
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
 
                         foreach (var s in states)
                         {
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
                         }
                     }
                     else
                     {
                         bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
 
-                        model.AvailableStates.Add(new SelectListItem()
+                        model.AvailableStates.Add(new SelectListItem
                         {
                             Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
                             Value = "0"
@@ -1343,7 +1343,7 @@ namespace Nop.Admin.Controllers
                 if (emailAccount == null)
                     throw new NopException("Email account can't be loaded");
 
-                var email = new QueuedEmail()
+                var email = new QueuedEmail
                 {
                     Priority = 5,
                     EmailAccountId = emailAccount.Id,
@@ -1429,7 +1429,7 @@ namespace Nop.Admin.Controllers
             var model = new List<CustomerModel.RewardPointsHistoryModel>();
             foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
             {
-                model.Add(new CustomerModel.RewardPointsHistoryModel()
+                model.Add(new CustomerModel.RewardPointsHistoryModel
                     {
                         Points = rph.Points,
                         PointsBalance = rph.PointsBalance,
@@ -1565,10 +1565,10 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
-            model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -1603,18 +1603,18 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.CustomerId = customer.Id;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             return View(model);
         }
 
@@ -1659,18 +1659,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -1726,18 +1726,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -1760,7 +1760,7 @@ namespace Nop.Admin.Controllers
                     .Select(order =>
                     {
                         var store = _storeService.GetStoreById(order.StoreId);
-                        var orderModel = new CustomerModel.OrderModel()
+                        var orderModel = new CustomerModel.OrderModel
                         {
                             Id = order.Id, 
                             OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
@@ -1792,20 +1792,20 @@ namespace Nop.Admin.Controllers
             //customers by number of orders
             model.BestCustomersByNumberOfOrders = new BestCustomersReportModel();
             model.BestCustomersByNumberOfOrders.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.BestCustomersByNumberOfOrders.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByNumberOfOrders.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //customers by order total
             model.BestCustomersByOrderTotal = new BestCustomersReportModel();
             model.BestCustomersByOrderTotal.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.BestCustomersByOrderTotal.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.BestCustomersByOrderTotal.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.BestCustomersByOrderTotal.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             
             return View(model);
         }
@@ -1833,7 +1833,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = items.Select(x =>
                 {
-                    var m = new BestCustomerReportLineModel()
+                    var m = new BestCustomerReportLineModel
                     {
                         CustomerId = x.CustomerId,
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
@@ -1874,7 +1874,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = items.Select(x =>
                 {
-                    var m = new BestCustomerReportLineModel()
+                    var m = new BestCustomerReportLineModel
                     {
                         CustomerId = x.CustomerId,
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
@@ -1936,7 +1936,7 @@ namespace Nop.Admin.Controllers
                 {
                     decimal taxRate;
                     var store = _storeService.GetStoreById(sci.StoreId); 
-                    var sciModel = new ShoppingCartItemModel()
+                    var sciModel = new ShoppingCartItemModel
                     {
                         Id = sci.Id,
                         Store = store != null ? store.Name : "Unknown",
@@ -1970,7 +1970,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = activityLog.Select(x =>
                 {
-                    var m = new CustomerModel.ActivityLogModel()
+                    var m = new CustomerModel.ActivityLogModel
                     {
                         Id = x.Id,
                         ActivityLogTypeName = x.ActivityLogType.Name,

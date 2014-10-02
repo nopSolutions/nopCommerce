@@ -76,18 +76,18 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new GiftCardListModel();
-            model.ActivatedList.Add(new SelectListItem()
+            model.ActivatedList.Add(new SelectListItem
                 {
                     Value = "0",
                     Selected = true,
                     Text = "All"
                 });
-            model.ActivatedList.Add(new SelectListItem()
+            model.ActivatedList.Add(new SelectListItem
             {
                 Value = "1",
                 Text = "Activated"
             });
-            model.ActivatedList.Add(new SelectListItem()
+            model.ActivatedList.Add(new SelectListItem
             {
                 Value = "2",
                 Text = "Deactivated"
@@ -313,7 +313,7 @@ namespace Nop.Admin.Controllers
             var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
                 .Select(x =>
                 {
-                    return new GiftCardModel.GiftCardUsageHistoryModel()
+                    return new GiftCardModel.GiftCardUsageHistoryModel
                     {
                         Id = x.Id,
                         OrderId = x.UsedWithOrderId,

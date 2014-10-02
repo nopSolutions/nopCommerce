@@ -15,7 +15,7 @@ namespace Nop.Data.Tests.Discounts
         [Test]
         public void Can_save_and_load_discountUsageHistory()
         {
-            var discount = new DiscountUsageHistory()
+            var discount = new DiscountUsageHistory
                     {
                         Discount = GetTestDiscount(),
                         Order = GetTestOrder(),
@@ -45,13 +45,13 @@ namespace Nop.Data.Tests.Discounts
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
                 {
                     OrderGuid = Guid.NewGuid(),
                     Customer = GetTestCustomer(),
-                    BillingAddress = new Address()
+                    BillingAddress = new Address
                     {
-                        Country = new Country()
+                        Country = new Country
                         {
                             Name = "United States",
                             TwoLetterIsoCode = "US",

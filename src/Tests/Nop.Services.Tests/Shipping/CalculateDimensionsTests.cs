@@ -66,7 +66,7 @@ namespace Nop.Services.Tests.Shipping
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
 
-            _store = new Store() { Id = 1 };
+            _store = new Store { Id = 1 };
             _storeContext = MockRepository.GenerateMock<IStoreContext>();
             _storeContext.Expect(x => x.CurrentStore).Return(_store);
 
@@ -93,10 +93,10 @@ namespace Nop.Services.Tests.Shipping
         public void should_return_zero_with_all_zero_dimensions()
         {
             var items = new List<ShoppingCartItem>();
-            items.Add(new ShoppingCartItem()
+            items.Add(new ShoppingCartItem
                                   {
                                       Quantity = 1,
-                                      Product = new Product()
+                                      Product = new Product
                                                            {
                                                                Length = 0,
                                                                Width = 0,
@@ -115,10 +115,10 @@ namespace Nop.Services.Tests.Shipping
         public void can_calculate_with_single_item_and_qty_1()
         {
             var items = new List<ShoppingCartItem>();
-            items.Add(new ShoppingCartItem()
+            items.Add(new ShoppingCartItem
                                   {
                                       Quantity = 1,
-                                      Product= new Product()
+                                      Product= new Product
                                                            {
                                                                Length = 2,
                                                                Width = 2,
@@ -137,10 +137,10 @@ namespace Nop.Services.Tests.Shipping
         public void can_calculate_with_cubic_item_and_multiple_qty()
         {
             var items = new List<ShoppingCartItem>();
-            items.Add(new ShoppingCartItem()
+            items.Add(new ShoppingCartItem
                                   {
                                       Quantity = 3,
-                                      Product = new Product()
+                                      Product = new Product
                                                            {
                                                                Length = 2,
                                                                Width = 2,
@@ -159,20 +159,20 @@ namespace Nop.Services.Tests.Shipping
         public void can_calculate_with_multple_items_1()
         {
             var items = new List<ShoppingCartItem>();
-            items.Add(new ShoppingCartItem()
+            items.Add(new ShoppingCartItem
                                   {
                                       Quantity = 3,
-                                      Product = new Product()
+                                      Product = new Product
                                                            {
                                                                Length = 2,
                                                                Width = 2,
                                                                Height = 2
                                                            }
                                   });
-            items.Add(new ShoppingCartItem()
+            items.Add(new ShoppingCartItem
                                   {
                                       Quantity = 1,
-                                      Product = new Product()
+                                      Product = new Product
                                                            {
                                                                Length = 3,
                                                                Width = 5,
@@ -194,10 +194,10 @@ namespace Nop.Services.Tests.Shipping
             //take 8 cubes of 1x1x1 which is "packed" as 2x2x2 
             var items = new List<ShoppingCartItem>();
             for (int i = 0; i < 8;i++)
-                items.Add(new ShoppingCartItem()
+                items.Add(new ShoppingCartItem
                 {
                     Quantity = 1,
-                    Product = new Product()
+                    Product = new Product
                     {
                         Length = 1,
                         Width = 1,

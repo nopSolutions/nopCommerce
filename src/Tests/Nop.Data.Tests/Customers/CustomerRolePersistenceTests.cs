@@ -31,7 +31,7 @@ namespace Nop.Data.Tests.Customers
             var customerRole = GetTestCustomerRole();
             customerRole.PermissionRecords.Add
             (
-                new PermissionRecord()
+                new PermissionRecord
                 {
                     Name = "Name 1",
                     SystemName = "SystemName 2",

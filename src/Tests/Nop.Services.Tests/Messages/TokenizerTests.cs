@@ -12,13 +12,13 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void Can_replace_tokens_case_sensitive()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings()
+            var messageTemplatesSettings = new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false
             };
             var tokenizer = new Tokenizer(messageTemplatesSettings);
 
-            var tokens = new List<Token>()
+            var tokens = new List<Token>
             {
                 new Token("Token1", "Value1")
             };
@@ -35,13 +35,13 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void Can_replace_tokens_case_invariant()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings()
+            var messageTemplatesSettings = new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = true
             };
             var tokenizer = new Tokenizer(messageTemplatesSettings);
 
-            var tokens = new List<Token>()
+            var tokens = new List<Token>
             {
                 new Token("Token1", "Value1")
             };
@@ -53,13 +53,13 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void Can_html_encode()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings()
+            var messageTemplatesSettings = new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false
             };
             var tokenizer = new Tokenizer(messageTemplatesSettings);
 
-            var tokens = new List<Token>()
+            var tokens = new List<Token>
             {
                 new Token("Token1", "<Value1>")
             };
@@ -72,13 +72,13 @@ namespace Nop.Services.Tests.Messages
         [Test]
         public void Should_not_html_encode_if_token_doesnt_allow_it()
         {
-            var messageTemplatesSettings = new MessageTemplatesSettings()
+            var messageTemplatesSettings = new MessageTemplatesSettings
             {
                 CaseInvariantReplacement = false
             };
             var tokenizer = new Tokenizer(messageTemplatesSettings);
 
-            var tokens = new List<Token>()
+            var tokens = new List<Token>
             {
                 new Token("Token1", "<Value1>", true)
             };

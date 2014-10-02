@@ -771,7 +771,7 @@ namespace Nop.Plugin.Shipping.UPS
         {
             actionName = "Configure";
             controllerName = "ShippingUPS";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.UPS.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.UPS.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -780,7 +780,7 @@ namespace Nop.Plugin.Shipping.UPS
         public override void Install()
         {
             //settings
-            var settings = new UPSSettings()
+            var settings = new UPSSettings
             {
                 Url = "https://www.ups.com/ups.app/xml/Rate",
                 AccessKey = "AccessKey1",

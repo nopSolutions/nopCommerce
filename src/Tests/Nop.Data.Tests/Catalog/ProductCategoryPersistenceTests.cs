@@ -15,7 +15,7 @@ namespace Nop.Data.Tests.Catalog
                                      {
                                          IsFeaturedProduct = true,
                                          DisplayOrder = 1,
-                                         Product = new Product()
+                                         Product = new Product
                                                        {
                                                            Name = "Name 1",
                                                            Published = true,
@@ -23,7 +23,7 @@ namespace Nop.Data.Tests.Catalog
                                                            CreatedOnUtc = new DateTime(2010, 01, 01),
                                                            UpdatedOnUtc = new DateTime(2010, 01, 02)
                                                        },
-                                                       Category = new Category()
+                                                       Category = new Category
                                                                       {
                                                                           Name = "Books",
                                                                           Description = "Description 1",

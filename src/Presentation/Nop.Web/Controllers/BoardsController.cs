@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
         {
-            var topicModel = new ForumTopicRowModel()
+            var topicModel = new ForumTopicRowModel
             {
                 Id = topic.Id,
                 Subject = topic.Subject,
@@ -100,7 +100,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual ForumRowModel PrepareForumRowModel(Forum forum)
         {
-            var forumModel = new ForumRowModel()
+            var forumModel = new ForumRowModel
             {
                 Id = forum.Id,
                 Name = forum.Name,
@@ -116,7 +116,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {
-            var forumGroupModel = new ForumGroupModel()
+            var forumGroupModel = new ForumGroupModel
             {
                 Id = forumGroup.Id,
                 Name = forumGroup.Name,
@@ -192,7 +192,7 @@ namespace Nop.Web.Controllers
 
             var forumGroups = _forumService.GetAllForumGroups();
 
-            var model = new BoardsIndexModel()
+            var model = new BoardsIndexModel
             {
                 CurrentTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow)
             };
@@ -294,7 +294,7 @@ namespace Nop.Web.Controllers
             }
             feed.Items = items;
 
-            return new RssActionResult() { Feed = feed };
+            return new RssActionResult { Feed = feed };
         }
 
         public ActionResult ForumGroup(int id)
@@ -415,10 +415,10 @@ namespace Nop.Web.Controllers
 
                 feed.Items = items;
 
-                return new RssActionResult() { Feed = feed };
+                return new RssActionResult { Feed = feed };
             }
 
-            return new RssActionResult() { Feed = new SyndicationFeed() };
+            return new RssActionResult { Feed = new SyndicationFeed() };
         }
 
         [HttpPost]
@@ -445,7 +445,7 @@ namespace Nop.Web.Controllers
 
             if (forumSubscription == null)
             {
-                forumSubscription = new ForumSubscription()
+                forumSubscription = new ForumSubscription
                 {
                     SubscriptionGuid = Guid.NewGuid(),
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -516,7 +516,7 @@ namespace Nop.Web.Controllers
                 model.PostsTotalRecords = posts.TotalCount;
                 foreach (var post in posts)
                 {
-                    var forumPostModel = new ForumPostModel()
+                    var forumPostModel = new ForumPostModel
                     {
                         Id = post.Id,
                         ForumTopicId =  post.TopicId,
@@ -595,7 +595,7 @@ namespace Nop.Web.Controllers
 
             if (forumSubscription == null)
             {
-                forumSubscription = new ForumSubscription()
+                forumSubscription = new ForumSubscription
                 {
                     SubscriptionGuid = Guid.NewGuid(),
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -774,7 +774,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //forum topic
-                    var forumTopic = new ForumTopic()
+                    var forumTopic = new ForumTopic
                     {
                         ForumId = forum.Id,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -786,7 +786,7 @@ namespace Nop.Web.Controllers
                     _forumService.InsertTopic(forumTopic, true);
 
                     //forum post
-                    var forumPost = new ForumPost()
+                    var forumPost = new ForumPost
                     {
                         TopicId = forumTopic.Id,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -810,7 +810,7 @@ namespace Nop.Web.Controllers
                     {
                         if (model.Subscribed)
                         {
-                            var forumSubscription = new ForumSubscription()
+                            var forumSubscription = new ForumSubscription
                             {
                                 SubscriptionGuid = Guid.NewGuid(),
                                 CustomerId = _workContext.CurrentCustomer.Id,
@@ -968,7 +968,7 @@ namespace Nop.Web.Controllers
                     else
                     {
                         //error (not possible)
-                        firstPost = new ForumPost()
+                        firstPost = new ForumPost
                         {
                             TopicId = forumTopic.Id,
                             CustomerId = forumTopic.CustomerId,
@@ -984,13 +984,12 @@ namespace Nop.Web.Controllers
                     if (_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
                     {
                         var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
-                                                                                  0, forumTopic.Id, 0, 1).FirstOrDefault
-                            ();
+                            0, forumTopic.Id, 0, 1).FirstOrDefault();
                         if (model.Subscribed)
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription()
+                                forumSubscription = new ForumSubscription
                                 {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -1092,7 +1091,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            var model = new EditForumPostModel()
+            var model = new EditForumPostModel
             {
                 Id = 0,
                 ForumTopicId = forumTopic.Id,
@@ -1169,7 +1168,7 @@ namespace Nop.Web.Controllers
 
                     DateTime nowUtc = DateTime.UtcNow;
 
-                    var forumPost = new ForumPost()
+                    var forumPost = new ForumPost
                     {
                         TopicId = forumTopic.Id,
                         CustomerId = _workContext.CurrentCustomer.Id,
@@ -1189,7 +1188,7 @@ namespace Nop.Web.Controllers
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription()
+                                forumSubscription = new ForumSubscription
                                 {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -1277,7 +1276,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            var model = new EditForumPostModel()
+            var model = new EditForumPostModel
             {
                 Id = forumPost.Id,
                 ForumTopicId = forumTopic.Id,
@@ -1360,7 +1359,7 @@ namespace Nop.Web.Controllers
                         {
                             if (forumSubscription == null)
                             {
-                                forumSubscription = new ForumSubscription()
+                                forumSubscription = new ForumSubscription
                                 {
                                     SubscriptionGuid = Guid.NewGuid(),
                                     CustomerId = _workContext.CurrentCustomer.Id,

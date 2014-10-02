@@ -143,7 +143,7 @@ namespace Nop.Web.Infrastructure.Installation
                     var isRightToLeft = isRightToLeftAttribute != null ? Convert.ToBoolean(isRightToLeftAttribute.InnerText.Trim()) : false;
 
                     //create language
-                    var language = new InstallationLanguage()
+                    var language = new InstallationLanguage
                     {
                         Code = languageCode,
                         Name = languageName,
@@ -166,7 +166,7 @@ namespace Nop.Web.Infrastructure.Installation
                             throw new NopException("All installation resources must have an element \"Value\".");
                         var resourceValue = resValueNode.InnerText.Trim();
                         
-                        language.Resources.Add(new InstallationLocaleResource()
+                        language.Resources.Add(new InstallationLocaleResource
                         {
                             Name = resourceName,
                             Value = resourceValue

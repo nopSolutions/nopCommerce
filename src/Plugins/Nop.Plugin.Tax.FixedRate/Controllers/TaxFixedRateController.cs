@@ -50,7 +50,7 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
 
             var taxRateModels = new List<FixedTaxRateModel>();
             foreach (var taxCategory in _taxCategoryService.GetAllTaxCategories())
-                taxRateModels.Add(new FixedTaxRateModel()
+                taxRateModels.Add(new FixedTaxRateModel
                 {
                     TaxCategoryId = taxCategory.Id,
                     TaxCategoryName = taxCategory.Name,

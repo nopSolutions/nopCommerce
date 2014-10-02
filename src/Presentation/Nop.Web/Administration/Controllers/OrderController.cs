@@ -298,7 +298,7 @@ namespace Nop.Admin.Controllers
             bool displayTax = !displayTaxRates;
             foreach (var tr in order.TaxRatesDictionary)
             {
-                model.TaxRates.Add(new OrderModel.TaxRate()
+                model.TaxRates.Add(new OrderModel.TaxRate
                 {
                     Rate = _priceFormatter.FormatTaxRate(tr.Key),
                     Value = _priceFormatter.FormatPrice(tr.Value, true, false),
@@ -317,7 +317,7 @@ namespace Nop.Admin.Controllers
             //gift cards
             foreach (var gcuh in order.GiftCardUsageHistory)
             {
-                model.GiftCards.Add(new OrderModel.GiftCard()
+                model.GiftCards.Add(new OrderModel.GiftCard
                 {
                     CouponCode = gcuh.GiftCard.GiftCardCouponCode,
                     Amount = _priceFormatter.FormatPrice(-gcuh.UsedValue, true, false),
@@ -343,7 +343,7 @@ namespace Nop.Admin.Controllers
             var duh = _discountService.GetAllDiscountUsageHistory(null, null, order.Id, 0, int.MaxValue);
             foreach (var d in duh)
             {
-                model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel()
+                model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
                 {
                     DiscountId = d.DiscountId,
                     DiscountName = d.Discount.Name
@@ -504,7 +504,7 @@ namespace Nop.Admin.Controllers
                 if (orderItem.Product.IsDownload)
                     hasDownloadableItems = true;
 
-                var orderItemModel = new OrderModel.OrderItemModel()
+                var orderItemModel = new OrderModel.OrderItemModel
                 {
                     Id = orderItem.Id,
                     ProductId = orderItem.ProductId,
@@ -569,7 +569,7 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel()
+            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
             {
                 ProductId = productId,
                 OrderId = orderId,
@@ -586,7 +586,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel()
+                var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -602,7 +602,7 @@ namespace Nop.Admin.Controllers
                     var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
                     foreach (var pvaValue in pvaValues)
                     {
-                        var pvaValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel()
+                        var pvaValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.Name,
@@ -632,7 +632,7 @@ namespace Nop.Admin.Controllers
             var baseDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             var baseDimensionIn = baseDimension != null ? baseDimension.Name : "";
 
-            var model = new ShipmentModel()
+            var model = new ShipmentModel
             {
                 Id = shipment.Id,
                 OrderId = shipment.OrderId,
@@ -662,7 +662,7 @@ namespace Nop.Admin.Controllers
                     var qtyInAllShipments = orderItem.GetTotalNumberOfItemsInAllShipment();
 
                     var warehouse = _shippingService.GetWarehouseById(shipmentItem.WarehouseId);
-                    var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
+                    var shipmentItemModel = new ShipmentModel.ShipmentItemModel
                     {
                         Id = shipmentItem.Id,
                         OrderItemId = orderItem.Id,
@@ -740,7 +740,7 @@ namespace Nop.Admin.Controllers
             //order statuses
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             if (orderStatusId.HasValue)
             {
                 //pre-select value?
@@ -751,7 +751,7 @@ namespace Nop.Admin.Controllers
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             if (paymentStatusId.HasValue)
             {
                 //pre-select value?
@@ -762,7 +762,7 @@ namespace Nop.Admin.Controllers
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             if (shippingStatusId.HasValue)
             {
                 //pre-select value?
@@ -772,19 +772,19 @@ namespace Nop.Admin.Controllers
             }
 
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             //vendors
-            model.AvailableVendors.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var v in _vendorService.GetAllVendors(showHidden: true))
-                model.AvailableVendors.Add(new SelectListItem() { Text = v.Name, Value = v.Id.ToString() });
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var w in _shippingService.GetAllWarehouses())
-                model.AvailableWarehouses.Add(new SelectListItem() { Text = w.Name, Value = w.Id.ToString() });
+                model.AvailableWarehouses.Add(new SelectListItem { Text = w.Name, Value = w.Id.ToString() });
 
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -826,7 +826,7 @@ namespace Nop.Admin.Controllers
                 Data = orders.Select(x =>
                 {
                     var store = _storeService.GetStoreById(x.StoreId);
-                    return new OrderModel()
+                    return new OrderModel
                     {
                         Id = x.Id,
                         StoreName = store != null ? store.Name : "Unknown",
@@ -853,7 +853,7 @@ namespace Nop.Admin.Controllers
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
 
-            gridModel.ExtraData = new OrderAggreratorModel()
+            gridModel.ExtraData = new OrderAggreratorModel
             {
                 aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
                 aggregatorshipping = _priceFormatter.FormatShippingPrice(reportSummary.SumShippingExclTax, true, primaryStoreCurrency, _workContext.WorkingLanguage, false),
@@ -1766,7 +1766,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToOrderItem(orderItem))
                 return RedirectToAction("List");
 
-            var model = new OrderModel.UploadLicenseModel()
+            var model = new OrderModel.UploadLicenseModel
             {
                 LicenseDownloadId = orderItem.LicenseDownloadId.HasValue ? orderItem.LicenseDownloadId.Value : 0,
                 OrderId = order.Id,
@@ -1855,19 +1855,19 @@ namespace Nop.Admin.Controllers
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //product types
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
-            model.AvailableProductTypes.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -1883,7 +1883,7 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             var gridModel = new DataSourceResult();
-            var products = _productService.SearchProducts(categoryIds: new List<int>() {model.SearchCategoryId},
+            var products = _productService.SearchProducts(categoryIds: new List<int> {model.SearchCategoryId},
                 manufacturerId: model.SearchManufacturerId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName, 
@@ -1892,7 +1892,7 @@ namespace Nop.Admin.Controllers
                 showHidden: true);
             gridModel.Data = products.Select(x =>
             {
-                var productModel = new OrderModel.AddOrderProductModel.ProductModel()
+                var productModel = new OrderModel.AddOrderProductModel.ProductModel
                 {
                     Id = x.Id,
                     Name =  x.Name,
@@ -2050,7 +2050,7 @@ namespace Nop.Admin.Controllers
                                 if (fileSizeOk)
                                 {
                                     //save an uploaded file
-                                    var download = new Download()
+                                    var download = new Download
                                     {
                                         DownloadGuid = Guid.NewGuid(),
                                         UseDownloadUrl = false,
@@ -2132,7 +2132,7 @@ namespace Nop.Admin.Controllers
                 string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributes, order.Customer);
 
                 //save item
-                var orderItem = new OrderItem()
+                var orderItem = new OrderItem
                 {
                     OrderItemGuid = Guid.NewGuid(),
                     Order = order,
@@ -2159,7 +2159,7 @@ namespace Nop.Admin.Controllers
                 {
                     for (int i = 0; i < orderItem.Quantity; i++)
                     {
-                        var gc = new GiftCard()
+                        var gc = new GiftCard
                         {
                             GiftCardType = product.GiftCardType,
                             PurchasedWithOrderItem = orderItem,
@@ -2239,18 +2239,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxRequired = _addressSettings.FaxRequired;
 
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -2308,18 +2308,18 @@ namespace Nop.Admin.Controllers
             model.Address.FaxEnabled = _addressSettings.FaxEnabled;
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -2335,16 +2335,16 @@ namespace Nop.Admin.Controllers
 
             var model = new ShipmentListModel();
             //countries
-            model.AvailableCountries.Add(new SelectListItem() { Text = "*", Value = "0" });
+            model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
-            model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
 
             //warehouses
-            model.AvailableWarehouses.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableWarehouses.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var w in _shippingService.GetAllWarehouses())
-                model.AvailableWarehouses.Add(new SelectListItem() { Text = w.Name, Value = w.Id.ToString() });
+                model.AvailableWarehouses.Add(new SelectListItem { Text = w.Name, Value = w.Id.ToString() });
 
             return View(model);
 		}
@@ -2465,7 +2465,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && !HasAccessToOrder(order))
                 return RedirectToAction("List");
 
-            var model = new ShipmentModel()
+            var model = new ShipmentModel
             {
                 OrderId = order.Id,
             };
@@ -2499,7 +2499,7 @@ namespace Nop.Admin.Controllers
                 if (maxQtyToAdd <= 0)
                     continue;
 
-                var shipmentItemModel = new ShipmentModel.ShipmentItemModel()
+                var shipmentItemModel = new ShipmentModel.ShipmentItemModel
                 {
                     OrderItemId = orderItem.Id,
                     ProductId = orderItem.ProductId,
@@ -2526,7 +2526,7 @@ namespace Nop.Admin.Controllers
                         var warehouse = pwi.Warehouse;
                         if (warehouse != null)
                         {
-                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo()
+                            shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
                             {
                                 WarehouseId = warehouse.Id,
                                 WarehouseName = warehouse.Name,
@@ -2542,7 +2542,7 @@ namespace Nop.Admin.Controllers
                     var warehouse = _shippingService.GetWarehouseById(orderItem.Product.WarehouseId);
                     if (warehouse != null)
                     {
-                        shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo()
+                        shipmentItemModel.AvailableWarehouses.Add(new ShipmentModel.ShipmentItemModel.WarehouseInfo
                         {
                             WarehouseId = warehouse.Id,
                             WarehouseName = warehouse.Name,
@@ -2646,7 +2646,7 @@ namespace Nop.Admin.Controllers
                 {
                     var trackingNumber = form["TrackingNumber"];
                     var adminComment = form["AdminComment"];
-                    shipment = new Shipment()
+                    shipment = new Shipment
                     {
                         OrderId = order.Id,
                         TrackingNumber = trackingNumber,
@@ -2658,7 +2658,7 @@ namespace Nop.Admin.Controllers
                     };
                 }
                 //create a shipment item
-                var shipmentItem = new ShipmentItem()
+                var shipmentItem = new ShipmentItem
                 {
                     OrderItemId = orderItem.Id,
                     Quantity = qtyToAdd,
@@ -3079,7 +3079,7 @@ namespace Nop.Admin.Controllers
                 .OrderByDescending(on => on.CreatedOnUtc))
             {
                 var download = _downloadService.GetDownloadById(orderNote.DownloadId);
-                orderNoteModels.Add(new OrderModel.OrderNote()
+                orderNoteModels.Add(new OrderModel.OrderNote
                 {
                     Id = orderNote.Id,
                     OrderId = orderNote.OrderId,
@@ -3114,7 +3114,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
-            var orderNote = new OrderNote()
+            var orderNote = new OrderNote
             {
                 DisplayToCustomer = displayToCustomer,
                 Note = message,
@@ -3181,7 +3181,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = items.Select(x =>
                 {
-                    var m = new BestsellersReportLineModel()
+                    var m = new BestsellersReportLineModel
                     {
                         ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
@@ -3244,29 +3244,29 @@ namespace Nop.Admin.Controllers
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             var categories = _categoryService.GetAllCategories(showHidden: true);
             foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
 
             //manufacturers
-            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
-                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //billing countries
             foreach (var c in _countryService.GetAllCountriesForBilling(true))
             {
-                model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             }
-            model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //vendor
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
@@ -3310,7 +3310,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = items.Select(x =>
                 {
-                    var m = new BestsellersReportLineModel()
+                    var m = new BestsellersReportLineModel
                     {
                         ProductId = x.ProductId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
@@ -3360,7 +3360,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
-                    new NeverSoldReportLineModel()
+                    new NeverSoldReportLineModel
                     {
                         ProductId = x.Id,
                         ProductName = x.Name,
@@ -3398,7 +3398,7 @@ namespace Nop.Admin.Controllers
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Cancelled));
             var model = report.Select(x =>
             {
-                return new OrderAverageReportLineSummaryModel()
+                return new OrderAverageReportLineSummaryModel
                 {
                     OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
                     SumTodayOrders = _priceFormatter.FormatPrice(x.SumTodayOrders, true, false),
@@ -3439,7 +3439,7 @@ namespace Nop.Admin.Controllers
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
             var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
-            model.Add(new OrderIncompleteReportLineModel()
+            model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
                 Count = psPending.CountOrders,
@@ -3448,7 +3448,7 @@ namespace Nop.Admin.Controllers
             });
             //not shipped
             var ssPending = _orderReportService.GetOrderAverageReportLine(0, 0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
-            model.Add(new OrderIncompleteReportLineModel()
+            model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
                 Count = ssPending.CountOrders,
@@ -3457,7 +3457,7 @@ namespace Nop.Admin.Controllers
             });
             //pending
             var osPending = _orderReportService.GetOrderAverageReportLine(0, 0, OrderStatus.Pending, null, null, null, null, null, true);
-            model.Add(new OrderIncompleteReportLineModel()
+            model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
@@ -3485,11 +3485,11 @@ namespace Nop.Admin.Controllers
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -3518,7 +3518,7 @@ namespace Nop.Admin.Controllers
                 Data = items.Select(x =>
                 {
                     var country = _countryService.GetCountryById(x.CountryId.HasValue ? x.CountryId.Value : 0);
-                    var m = new CountryReportLineModel()
+                    var m = new CountryReportLineModel
                     {
                         CountryName = country != null ? country.Name : "Unknown",
                         SumOrders = _priceFormatter.FormatPrice(x.SumOrders, true, false),

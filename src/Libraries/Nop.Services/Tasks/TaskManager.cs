@@ -36,7 +36,7 @@ namespace Nop.Services.Tasks
             foreach (var scheduleTaskGrouped in scheduleTasks.GroupBy(x => x.Seconds))
             {
                 //create a thread
-                var taskThread = new TaskThread()
+                var taskThread = new TaskThread
                                      {
                                          Seconds = scheduleTaskGrouped.Key
                                      };
@@ -58,7 +58,7 @@ namespace Nop.Services.Tasks
             //create a thread for the tasks which weren't run for a long time
             if (notRunTasks.Count > 0)
             {
-                var taskThread = new TaskThread()
+                var taskThread = new TaskThread
                 {
                     RunOnlyOnce = true,
                     Seconds = 60 * 5 //let's run such tasks in 5 minutes after application start

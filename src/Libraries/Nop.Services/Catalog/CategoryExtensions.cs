@@ -76,7 +76,7 @@ namespace Nop.Services.Catalog
             string result = string.Empty;
 
             //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>() { };
+            var alreadyProcessedCategoryIds = new List<int>();
 
             while (category != null &&  //not null
                 !category.Deleted &&  //not deleted
@@ -120,7 +120,7 @@ namespace Nop.Services.Catalog
             string result = string.Empty;
 
             //used to prevent circular references 
-            var alreadyProcessedCategoryIds = new List<int>() {};
+            var alreadyProcessedCategoryIds = new List<int>();
 
             while (category != null && //not null 
                    !category.Deleted && //not deleted 
@@ -165,7 +165,7 @@ namespace Nop.Services.Catalog
             var result = new List<Category>();
 
             //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>() { };
+            var alreadyProcessedCategoryIds = new List<int>();
 
             while (category != null && //not null
                 !category.Deleted && //not deleted

@@ -13,12 +13,12 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("Configure", "TaxFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
+                                    url: "@Html.Raw(Url.Action("Configure", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
                                     type: "POST",
                                     dataType: "json"
                                 },
                                 update: {
-                                    url:"@Html.Raw(Url.Action("TaxRateUpdate", "TaxFixedRate", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
+                                    url:"@Html.Raw(Url.Action("TaxRateUpdate", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
                                     type: "POST",
                                     dataType: "json"
                                 }

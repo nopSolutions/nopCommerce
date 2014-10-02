@@ -344,7 +344,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         {
             actionName = "Configure";
             controllerName = "ShippingAustraliaPost";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.AustraliaPost.Controllers" }, { "area", null } };
         }
         
         /// <summary>
@@ -353,7 +353,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         public override void Install()
         {
             //settings
-            var settings = new AustraliaPostSettings()
+            var settings = new AustraliaPostSettings
             {
                 GatewayUrl = "http://drc.edeliver.com.au/ratecalc.asp",
             };

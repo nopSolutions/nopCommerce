@@ -103,7 +103,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
         {
             var cashOnDeliveryPaymentSettings = _settingService.LoadSetting<CashOnDeliveryPaymentSettings>(_storeContext.CurrentStore.Id);
 
-            var model = new PaymentInfoModel()
+            var model = new PaymentInfoModel
             {
                 DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText
             };

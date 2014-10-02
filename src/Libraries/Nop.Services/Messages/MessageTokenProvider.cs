@@ -778,7 +778,7 @@ namespace Nop.Services.Messages
         /// <returns>List of allowed (supported) message tokens for campaigns</returns>
         public virtual string[] GetListOfCampaignAllowedTokens()
         {
-            var allowedTokens = new List<string>()
+            var allowedTokens = new List<string>
             {
                 "%Store.Name%",
                 "%Store.URL%",
@@ -792,7 +792,7 @@ namespace Nop.Services.Messages
 
         public virtual string[] GetListOfAllowedTokens()
         {
-            var allowedTokens = new List<string>()
+            var allowedTokens = new List<string>
             {
                 "%Store.Name%",
                 "%Store.URL%",

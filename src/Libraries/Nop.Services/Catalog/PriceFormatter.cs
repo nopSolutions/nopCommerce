@@ -155,7 +155,11 @@ namespace Nop.Services.Catalog
         public string FormatPrice(decimal price, bool showCurrency,
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() { CurrencyCode = currencyCode };
+            var currency = _currencyService.GetCurrencyByCode(currencyCode) 
+                ?? new Currency
+                   {
+                       CurrencyCode = currencyCode
+                   };
             return FormatPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -271,7 +275,11 @@ namespace Nop.Services.Catalog
         public string FormatShippingPrice(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() { CurrencyCode = currencyCode };
+            var currency = _currencyService.GetCurrencyByCode(currencyCode) 
+                ?? new Currency
+                   {
+                       CurrencyCode = currencyCode
+                   };
             return FormatShippingPrice(price, showCurrency, currency, language, priceIncludesTax);
         }
 
@@ -335,7 +343,11 @@ namespace Nop.Services.Catalog
         public string FormatPaymentMethodAdditionalFee(decimal price, bool showCurrency, 
             string currencyCode, Language language, bool priceIncludesTax)
         {
-            var currency = _currencyService.GetCurrencyByCode(currencyCode) ?? new Currency() {CurrencyCode = currencyCode};
+            var currency = _currencyService.GetCurrencyByCode(currencyCode)
+                ?? new Currency
+                   {
+                       CurrencyCode = currencyCode
+                   };
             return FormatPaymentMethodAdditionalFee(price, showCurrency, currency, 
                 language, priceIncludesTax);
         }

@@ -39,12 +39,12 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json"
                                     },
                                     destroy: {
-                                        url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
+                                        url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
                                         type: "POST",
                                         dataType: "json"
                                     }

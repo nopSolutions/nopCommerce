@@ -114,9 +114,9 @@ namespace Nop.Admin.Controllers
 
             //tax categories
             var taxCategories = _taxCategoryService.GetAllTaxCategories();
-            model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
+            model.AvailableTaxCategories.Add(new SelectListItem { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
-                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
+                model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = checkoutAttribute != null && !excludeProperties && tc.Id == checkoutAttribute.TaxCategoryId });
         }
 
         [NonAction]
@@ -353,7 +353,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = values.Select(x =>
                 {
-                    return new CheckoutAttributeValueModel()
+                    return new CheckoutAttributeValueModel
                     {
                         Id = x.Id,
                         CheckoutAttributeId = x.CheckoutAttributeId,
@@ -423,7 +423,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var cav = new CheckoutAttributeValue()
+                var cav = new CheckoutAttributeValue
                 {
                     CheckoutAttributeId = model.CheckoutAttributeId,
                     Name = model.Name,
@@ -458,7 +458,7 @@ namespace Nop.Admin.Controllers
                 //No checkout attribute value found with the specified id
                 return RedirectToAction("List");
 
-            var model = new CheckoutAttributeValueModel()
+            var model = new CheckoutAttributeValueModel
             {
                 CheckoutAttributeId = cav.CheckoutAttributeId,
                 Name = cav.Name,

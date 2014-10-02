@@ -18,7 +18,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <summary>
         /// USPS Domestic Services
         /// </summary>
-        private static readonly Dictionary<string, string> _domesticServices = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _domesticServices = new Dictionary<string, string>
         {
             {"NONE (disable all domestic services)", "NONE"},
             {"First-Class", "0"},
@@ -42,7 +42,7 @@ namespace Nop.Plugin.Shipping.USPS.Domain
         /// <summary>
         /// USPS International services
         /// </summary>
-        private static readonly Dictionary<string, string> _internationalServices = new Dictionary<string, string>()
+        private static readonly Dictionary<string, string> _internationalServices = new Dictionary<string, string>
         {
             {"NONE (disable all international services)", "NONE"},
             {"Global Express Guaranteed (GXG)", "4"},

@@ -171,9 +171,9 @@ namespace Nop.Services.Installation
         {
             //var storeUrl = "http://www.yourStore.com/";
             var storeUrl = _webHelper.GetStoreLocation(false);
-            var stores = new List<Store>()
+            var stores = new List<Store>
             {
-                new Store()
+                new Store
                 {
                     Name = "Your store name",
                     Url = storeUrl,
@@ -188,30 +188,30 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallMeasures()
         {
-            var measureDimensions = new List<MeasureDimension>()
+            var measureDimensions = new List<MeasureDimension>
             {
-                new MeasureDimension()
+                new MeasureDimension
                 {
                     Name = "inch(es)",
                     SystemKeyword = "inches",
                     Ratio = 1M,
                     DisplayOrder = 1,
                 },
-                new MeasureDimension()
+                new MeasureDimension
                 {
                     Name = "feet",
                     SystemKeyword = "feet",
                     Ratio = 0.08333333M,
                     DisplayOrder = 2,
                 },
-                new MeasureDimension()
+                new MeasureDimension
                 {
                     Name = "meter(s)",
                     SystemKeyword = "meters",
                     Ratio = 0.0254M,
                     DisplayOrder = 3,
                 },
-                new MeasureDimension()
+                new MeasureDimension
                 {
                     Name = "millimetre(s)",
                     SystemKeyword = "millimetres",
@@ -222,30 +222,30 @@ namespace Nop.Services.Installation
 
             measureDimensions.ForEach(x => _measureDimensionRepository.Insert(x));
 
-            var measureWeights = new List<MeasureWeight>()
+            var measureWeights = new List<MeasureWeight>
             {
-                new MeasureWeight()
+                new MeasureWeight
                 {
                     Name = "ounce(s)",
                     SystemKeyword = "ounce",
                     Ratio = 16M,
                     DisplayOrder = 1,
                 },
-                new MeasureWeight()
+                new MeasureWeight
                 {
                     Name = "lb(s)",
                     SystemKeyword = "lb",
                     Ratio = 1M,
                     DisplayOrder = 2,
                 },
-                new MeasureWeight()
+                new MeasureWeight
                 {
                     Name = "kg(s)",
                     SystemKeyword = "kg",
                     Ratio = 0.45359237M,
                     DisplayOrder = 3,
                 },
-                new MeasureWeight()
+                new MeasureWeight
                 {
                     Name = "gram(s)",
                     SystemKeyword = "grams",
@@ -322,7 +322,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCurrencies()
         {
-            var currencies = new List<Currency>()
+            var currencies = new List<Currency>
             {
                 new Currency
                 {
@@ -475,434 +475,434 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
                 Published = true,
             };
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "AA (Armed Forces Americas)",
                 Abbreviation = "AA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "AE (Armed Forces Europe)",
                 Abbreviation = "AE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Alabama",
                 Abbreviation = "AL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Alaska",
                 Abbreviation = "AK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "American Samoa",
                 Abbreviation = "AS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "AP (Armed Forces Pacific)",
                 Abbreviation = "AP",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Arizona",
                 Abbreviation = "AZ",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Arkansas",
                 Abbreviation = "AR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "California",
                 Abbreviation = "CA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Colorado",
                 Abbreviation = "CO",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Connecticut",
                 Abbreviation = "CT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Delaware",
                 Abbreviation = "DE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "District of Columbia",
                 Abbreviation = "DC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Federated States of Micronesia",
                 Abbreviation = "FM",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Florida",
                 Abbreviation = "FL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Georgia",
                 Abbreviation = "GA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Guam",
                 Abbreviation = "GU",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Hawaii",
                 Abbreviation = "HI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Idaho",
                 Abbreviation = "ID",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Illinois",
                 Abbreviation = "IL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Indiana",
                 Abbreviation = "IN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Iowa",
                 Abbreviation = "IA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Kansas",
                 Abbreviation = "KS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Kentucky",
                 Abbreviation = "KY",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Louisiana",
                 Abbreviation = "LA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Maine",
                 Abbreviation = "ME",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Marshall Islands",
                 Abbreviation = "MH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Maryland",
                 Abbreviation = "MD",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Massachusetts",
                 Abbreviation = "MA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Michigan",
                 Abbreviation = "MI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Minnesota",
                 Abbreviation = "MN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Mississippi",
                 Abbreviation = "MS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Missouri",
                 Abbreviation = "MO",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Montana",
                 Abbreviation = "MT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Nebraska",
                 Abbreviation = "NE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Nevada",
                 Abbreviation = "NV",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "New Hampshire",
                 Abbreviation = "NH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "New Jersey",
                 Abbreviation = "NJ",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "New Mexico",
                 Abbreviation = "NM",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "New York",
                 Abbreviation = "NY",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "North Carolina",
                 Abbreviation = "NC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "North Dakota",
                 Abbreviation = "ND",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Northern Mariana Islands",
                 Abbreviation = "MP",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Ohio",
                 Abbreviation = "OH",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Oklahoma",
                 Abbreviation = "OK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Oregon",
                 Abbreviation = "OR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Palau",
                 Abbreviation = "PW",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Pennsylvania",
                 Abbreviation = "PA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Puerto Rico",
                 Abbreviation = "PR",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Rhode Island",
                 Abbreviation = "RI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "South Carolina",
                 Abbreviation = "SC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "South Dakota",
                 Abbreviation = "SD",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Tennessee",
                 Abbreviation = "TN",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Texas",
                 Abbreviation = "TX",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Utah",
                 Abbreviation = "UT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Vermont",
                 Abbreviation = "VT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Virgin Islands",
                 Abbreviation = "VI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Virginia",
                 Abbreviation = "VA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Washington",
                 Abbreviation = "WA",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "West Virginia",
                 Abbreviation = "WV",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Wisconsin",
                 Abbreviation = "WI",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cUsa.StateProvinces.Add(new StateProvince()
+            cUsa.StateProvinces.Add(new StateProvince
             {
                 Name = "Wyoming",
                 Abbreviation = "WY",
@@ -921,91 +921,91 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
                 Published = true,
             };
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Alberta",
                 Abbreviation = "AB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "British Columbia",
                 Abbreviation = "BC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Manitoba",
                 Abbreviation = "MB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "New Brunswick",
                 Abbreviation = "NB",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Newfoundland and Labrador",
                 Abbreviation = "NL",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Northwest Territories",
                 Abbreviation = "NT",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Nova Scotia",
                 Abbreviation = "NS",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Nunavut",
                 Abbreviation = "NU",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Ontario",
                 Abbreviation = "ON",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Prince Edward Island",
                 Abbreviation = "PE",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Quebec",
                 Abbreviation = "QC",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Saskatchewan",
                 Abbreviation = "SK",
                 Published = true,
                 DisplayOrder = 1,
             });
-            cCanada.StateProvinces.Add(new StateProvince()
+            cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Yukon Territory",
                 Abbreviation = "YU",
@@ -3940,7 +3940,7 @@ namespace Nop.Services.Installation
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
 
             //admin user
-            var adminUser = new Customer()
+            var adminUser = new Customer
             {
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
@@ -3952,7 +3952,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc= DateTime.UtcNow,
             };
-            var defaultAdminUserAddress = new Address()
+            var defaultAdminUserAddress = new Address
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -3981,7 +3981,7 @@ namespace Nop.Services.Installation
 
 
             //search engine (crawler) built-in user
-            var searchEngineUser = new Customer()
+            var searchEngineUser = new Customer
             {
                 Email = "builtin@search_engine_record.com",
                 CustomerGuid = Guid.NewGuid(),
@@ -3998,7 +3998,7 @@ namespace Nop.Services.Installation
 
 
             //built-in user for background tasks
-            var backgroundTaskUser = new Customer()
+            var backgroundTaskUser = new Customer
             {
                 Email = "builtin@background-task-record.com",
                 CustomerGuid = Guid.NewGuid(),
@@ -4378,7 +4378,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var topic in topics)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = topic.Id,
                     EntityName = "Topic",
@@ -4393,7 +4393,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallSettings()
         {
             var settingService = EngineContext.Current.Resolve<ISettingService>();
-            settingService.SaveSetting(new PdfSettings()
+            settingService.SaveSetting(new PdfSettings
                 {
                     LogoPictureId = 0,
                     LetterPageSizeEnabled = false,
@@ -4403,7 +4403,7 @@ namespace Nop.Services.Installation
                     InvoiceFooterTextColumn2 = null,
                 });
 
-            settingService.SaveSetting(new CommonSettings()
+            settingService.SaveSetting(new CommonSettings
                 {
                     UseSystemEmailForContactUsForm = true,
                     UseStoredProceduresIfSupported = true,
@@ -4421,7 +4421,7 @@ namespace Nop.Services.Installation
                     XuaCompatibleValue = "IE=edge"
                 });
 
-            settingService.SaveSetting(new SeoSettings()
+            settingService.SaveSetting(new SeoSettings
                 {
                     PageTitleSeparator = ". ",
                     PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
@@ -4438,7 +4438,7 @@ namespace Nop.Services.Installation
                     EnableCssBundling = false,
                     TwitterMetaTags = true,
                     OpenGraphMetaTags = true,
-                    ReservedUrlRecordSlugs = new List<string>()
+                    ReservedUrlRecordSlugs = new List<string>
                     {
                         "admin", 
                         "install", 
@@ -4471,14 +4471,14 @@ namespace Nop.Services.Installation
                     },
                 });
 
-            settingService.SaveSetting(new AdminAreaSettings()
+            settingService.SaveSetting(new AdminAreaSettings
                 {
                     DefaultGridPageSize = 15,
                     GridPageSizes = "10, 15, 20, 50, 100",
                     DisplayProductPictures = true,
                 });
 
-            settingService.SaveSetting(new CatalogSettings()
+            settingService.SaveSetting(new CatalogSettings
                 {
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,
@@ -4542,7 +4542,7 @@ namespace Nop.Services.Installation
                     DisplayTaxShippingInfoProductBoxes = false,
                 });
 
-            settingService.SaveSetting(new LocalizationSettings()
+            settingService.SaveSetting(new LocalizationSettings
                 {
                     DefaultAdminLanguageId = _languageRepository.Table.Single(l => l.Name == "English").Id,
                     UseImagesForLanguageSelection = false,
@@ -4554,7 +4554,7 @@ namespace Nop.Services.Installation
                     IgnoreRtlPropertyForAdminArea = false,
                 });
 
-            settingService.SaveSetting(new CustomerSettings()
+            settingService.SaveSetting(new CustomerSettings
                 {
                     UsernamesEnabled = false,
                     CheckUsernameAvailabilityEnabled = false,
@@ -4596,7 +4596,7 @@ namespace Nop.Services.Installation
                     SuffixDeletedCustomers = false,
                 });
 
-            settingService.SaveSetting(new AddressSettings()
+            settingService.SaveSetting(new AddressSettings
                 {
                     CompanyEnabled = true,
                     StreetAddressEnabled = true,
@@ -4613,7 +4613,7 @@ namespace Nop.Services.Installation
                     FaxEnabled = true,
                 });
 
-            settingService.SaveSetting(new MediaSettings()
+            settingService.SaveSetting(new MediaSettings
                 {
                     AvatarPictureSize = 85,
                     ProductThumbPictureSize = 125,
@@ -4632,7 +4632,7 @@ namespace Nop.Services.Installation
                     MultipleThumbDirectories = false
                 });
 
-            settingService.SaveSetting(new StoreInformationSettings()
+            settingService.SaveSetting(new StoreInformationSettings
                 {
                     StoreClosed = false,
                     StoreClosedAllowForAdmins = false,
@@ -4647,12 +4647,12 @@ namespace Nop.Services.Installation
                     GooglePlusLink = "https://plus.google.com/+nopcommerce",
                 });
 
-            settingService.SaveSetting(new ExternalAuthenticationSettings()
+            settingService.SaveSetting(new ExternalAuthenticationSettings
                 {
                     AutoRegisterEnabled = true,
                 });
 
-            settingService.SaveSetting(new RewardPointsSettings()
+            settingService.SaveSetting(new RewardPointsSettings
                 {
                     Enabled = true,
                     ExchangeRate = 1,
@@ -4664,7 +4664,7 @@ namespace Nop.Services.Installation
                     DisplayHowMuchWillBeEarned = true,
                 });
 
-            settingService.SaveSetting(new CurrencySettings()
+            settingService.SaveSetting(new CurrencySettings
                 {
                     DisplayCurrencyLabel = false,
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
@@ -4674,13 +4674,13 @@ namespace Nop.Services.Installation
                     LastUpdateTime = 0
                 });
 
-            settingService.SaveSetting(new MeasureSettings()
+            settingService.SaveSetting(new MeasureSettings
                 {
                     BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
                     BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
                 });
 
-            settingService.SaveSetting(new MessageTemplatesSettings()
+            settingService.SaveSetting(new MessageTemplatesSettings
                 {
                     CaseInvariantReplacement = false,
                     Color1 = "#b9babe",
@@ -4688,7 +4688,7 @@ namespace Nop.Services.Installation
                     Color3 = "#dde2e6",
                 });
 
-            settingService.SaveSetting(new ShoppingCartSettings()
+            settingService.SaveSetting(new ShoppingCartSettings
                 {
                     DisplayCartAfterAddingProduct = false,
                     DisplayWishlistAfterAddingProduct = false,
@@ -4712,7 +4712,7 @@ namespace Nop.Services.Installation
                     RenderAssociatedAttributeValueQuantity = false
                 });
 
-            settingService.SaveSetting(new OrderSettings()
+            settingService.SaveSetting(new OrderSettings
                 {
                     IsReOrderAllowed = true,
                     MinOrderSubtotalAmount = 0,
@@ -4727,22 +4727,22 @@ namespace Nop.Services.Installation
                     AttachPdfInvoiceToOrderPlacedEmail = false,
                     AttachPdfInvoiceToOrderCompletedEmail = false,
                     ReturnRequestsEnabled = true,
-                    ReturnRequestActions = new List<string>() { "Repair", "Replacement", "Store Credit" },
-                    ReturnRequestReasons = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
+                    ReturnRequestActions = new List<string> { "Repair", "Replacement", "Store Credit" },
+                    ReturnRequestReasons = new List<string> { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
                     NumberOfDaysReturnRequestAvailable = 365,
                     MinimumOrderPlacementInterval = 30,
                 });
 
-            settingService.SaveSetting(new SecuritySettings()
+            settingService.SaveSetting(new SecuritySettings
                 {
                     ForceSslForAllPages = false,
                     EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                     AdminAreaAllowedIpAddresses = null,
                 });
 
-            settingService.SaveSetting(new ShippingSettings()
+            settingService.SaveSetting(new ShippingSettings
                 {
-                    ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                     AllowPickUpInStore = true,
                     UseWarehouseLocation = false,
                     FreeShippingOverXEnabled = false,
@@ -4756,9 +4756,9 @@ namespace Nop.Services.Installation
                     UseCubeRootMethod = true
                 });
 
-            settingService.SaveSetting(new PaymentSettings()
+            settingService.SaveSetting(new PaymentSettings
                 {
-                    ActivePaymentMethodSystemNames = new List<string>() 
+                    ActivePaymentMethodSystemNames = new List<string> 
                     { 
                         "Payments.CashOnDelivery",
                         "Payments.CheckMoneyOrder",
@@ -4770,7 +4770,7 @@ namespace Nop.Services.Installation
                     BypassPaymentMethodSelectionIfOnlyOne = true,
                 });
 
-            settingService.SaveSetting(new TaxSettings()
+            settingService.SaveSetting(new TaxSettings
                 {
                     TaxBasedOn = TaxBasedOn.BillingAddress,
                     TaxDisplayType = TaxDisplayType.ExcludingTax,
@@ -4797,13 +4797,13 @@ namespace Nop.Services.Installation
                     EuVatEmailAdminWhenNewVatSubmitted = false
                 });
 
-            settingService.SaveSetting(new DateTimeSettings()
+            settingService.SaveSetting(new DateTimeSettings
                 {
                     DefaultStoreTimeZoneId = "",
                     AllowCustomersToSetTimeZone = false
                 });
 
-            settingService.SaveSetting(new BlogSettings()
+            settingService.SaveSetting(new BlogSettings
                 {
                     Enabled = true,
                     PostsPageSize = 10,
@@ -4812,7 +4812,7 @@ namespace Nop.Services.Installation
                     NumberOfTags = 15,
                     ShowHeaderRssUrl = false,
                 });
-            settingService.SaveSetting(new NewsSettings()
+            settingService.SaveSetting(new NewsSettings
                 {
                     Enabled = true,
                     AllowNotRegisteredUsersToLeaveComments = true,
@@ -4823,7 +4823,7 @@ namespace Nop.Services.Installation
                     ShowHeaderRssUrl = false,
                 });
 
-            settingService.SaveSetting(new ForumSettings()
+            settingService.SaveSetting(new ForumSettings
                 {
                     ForumsEnabled = false,
                     RelativeDateTimeFormattingEnabled = true,
@@ -4858,7 +4858,7 @@ namespace Nop.Services.Installation
                     ForumSearchTermMinimumLength = 3,
                 });
             
-            settingService.SaveSetting(new VendorSettings()
+            settingService.SaveSetting(new VendorSettings
             {
                 DefaultVendorPageSizeOptions = "8, 4, 12",
                 VendorsBlockItemsToDisplay = 0,
@@ -4868,14 +4868,14 @@ namespace Nop.Services.Installation
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
             if (eaGeneral == null)
                 throw new Exception("Default email account cannot be loaded");
-            settingService.SaveSetting(new EmailAccountSettings()
+            settingService.SaveSetting(new EmailAccountSettings
                 {
                     DefaultEmailAccountId = eaGeneral.Id
                 });
 
-            settingService.SaveSetting(new WidgetSettings()
+            settingService.SaveSetting(new WidgetSettings
                 {
-                    ActiveWidgetSystemNames = new List<string>() { "Widgets.NivoSlider" },
+                    ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
                 });
         }
 
@@ -4889,14 +4889,14 @@ namespace Nop.Services.Installation
                 AttributeControlType = AttributeControlType.DropdownList,
                 DisplayOrder = 1,
             };
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
             {
                 Name = "No",
                 PriceAdjustment = 0,
                 DisplayOrder = 1,
                 IsPreSelected = true,
             });
-            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue()
+            ca1.CheckoutAttributeValues.Add(new CheckoutAttributeValue
             {
                 Name = "Yes",
                 PriceAdjustment = 10,
@@ -4916,22 +4916,22 @@ namespace Nop.Services.Installation
                 Name = "Screensize",
                 DisplayOrder = 1,
             };
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "10.0''",
                 DisplayOrder = 3,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "14.1''",
                 DisplayOrder = 4,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "15.4''",
                 DisplayOrder = 5,
             });
-            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "16.0''",
                 DisplayOrder = 6,
@@ -4941,12 +4941,12 @@ namespace Nop.Services.Installation
                 Name = "CPU Type",
                 DisplayOrder = 2,
             };
-            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "AMD",
                 DisplayOrder = 1,
             });
-            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "Intel",
                 DisplayOrder = 2,
@@ -4956,12 +4956,12 @@ namespace Nop.Services.Installation
                 Name = "Memory",
                 DisplayOrder = 3,
             };
-            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "1 GB",
                 DisplayOrder = 1,
             });
-            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "3 GB",
                 DisplayOrder = 2,
@@ -4971,17 +4971,17 @@ namespace Nop.Services.Installation
                 Name = "Hardrive",
                 DisplayOrder = 5,
             };
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "320 GB",
                 DisplayOrder = 7,
             });
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "250 GB",
                 DisplayOrder = 4,
             });
-            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption()
+            sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
                 Name = "160 GB",
                 DisplayOrder = 3,
@@ -5046,8 +5046,8 @@ namespace Nop.Services.Installation
 
 
 
-            var categoryTemplateInGridAndLines =
-                _categoryTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
+            var categoryTemplateInGridAndLines = _categoryTemplateRepository
+                .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
 
 
 
@@ -5304,7 +5304,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var category in allCategories)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = category.Id,
                     EntityName = "Category",
@@ -5356,7 +5356,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var manufacturer in allManufacturers)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = manufacturer.Id,
                     EntityName = "Manufacturer",
@@ -5396,7 +5396,7 @@ namespace Nop.Services.Installation
 
             //products
             var allProducts = new List<Product>();
-            var product5GiftCard = new Product()
+            var product5GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5420,12 +5420,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(product5GiftCard);
-            product5GiftCard.ProductCategories.Add(new ProductCategory()
+            product5GiftCard.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 1,
             });
-            product5GiftCard.ProductPictures.Add(new ProductPicture()
+            product5GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name), true),
                 DisplayOrder = 1,
@@ -5434,7 +5434,7 @@ namespace Nop.Services.Installation
 
 
 
-            var product25GiftCard = new Product()
+            var product25GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5459,12 +5459,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(product25GiftCard);
-            product25GiftCard.ProductCategories.Add(new ProductCategory()
+            product25GiftCard.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 2,
             });
-            product25GiftCard.ProductPictures.Add(new ProductPicture()
+            product25GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name), true),
                 DisplayOrder = 1,
@@ -5475,7 +5475,7 @@ namespace Nop.Services.Installation
 
 
 
-            var product50GiftCard = new Product()
+            var product50GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5506,12 +5506,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(product50GiftCard);
-            product50GiftCard.ProductCategories.Add(new ProductCategory()
+            product50GiftCard.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 3,
             });
-            product50GiftCard.ProductPictures.Add(new ProductPicture()
+            product50GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name), true),
                 DisplayOrder = 1,
@@ -5522,7 +5522,7 @@ namespace Nop.Services.Installation
 
 
 
-            var product100GiftCard = new Product()
+            var product100GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5552,12 +5552,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(product100GiftCard);
-            product100GiftCard.ProductCategories.Add(new ProductCategory()
+            product100GiftCard.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
                 DisplayOrder = 4,
             });
-            product100GiftCard.ProductPictures.Add(new ProductPicture()
+            product100GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name), true),
                 DisplayOrder = 1,
@@ -5568,7 +5568,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productRockabillyPolka = new Product()
+            var productRockabillyPolka = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5599,55 +5599,55 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productRockabillyPolka);
-            var pvaRockabillyPolka1 = new ProductVariantAttribute()
+            var pvaRockabillyPolka1 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Small",
                 DisplayOrder = 1,
             });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "1X",
                 DisplayOrder = 2,
             });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "2X",
                 DisplayOrder = 3,
             });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "3X",
                 DisplayOrder = 4,
             });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "4X",
                 DisplayOrder = 5,
             });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "5X",
                 DisplayOrder = 6,
             });
             productRockabillyPolka.ProductVariantAttributes.Add(pvaRockabillyPolka1);
-            productRockabillyPolka.ProductCategories.Add(new ProductCategory()
+            productRockabillyPolka.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productRockabillyPolka.ProductPictures.Add(new ProductPicture()
+            productRockabillyPolka.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_RockabillyPolka.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productRockabillyPolka.Name), true),
                 DisplayOrder = 1,
@@ -5658,7 +5658,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productAcerAspireOne = new Product()
+            var productAcerAspireOne = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5690,34 +5690,34 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAcerAspireOne);
-            productAcerAspireOne.TierPrices.Add(new TierPrice()
+            productAcerAspireOne.TierPrices.Add(new TierPrice
             {
                 Quantity = 2,
                 Price = 19
             });
-            productAcerAspireOne.TierPrices.Add(new TierPrice()
+            productAcerAspireOne.TierPrices.Add(new TierPrice
             {
                 Quantity = 5,
                 Price = 17
             });
-            productAcerAspireOne.TierPrices.Add(new TierPrice()
+            productAcerAspireOne.TierPrices.Add(new TierPrice
             {
                 Quantity = 10,
                 Price = 15
             });
             productAcerAspireOne.HasTierPrices = true;
 
-            productAcerAspireOne.ProductCategories.Add(new ProductCategory()
+            productAcerAspireOne.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
-            productAcerAspireOne.ProductPictures.Add(new ProductPicture()
+            productAcerAspireOne.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
                 DisplayOrder = 1,
             });
-            productAcerAspireOne.ProductPictures.Add(new ProductPicture()
+            productAcerAspireOne.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
                 DisplayOrder = 2,
@@ -5728,7 +5728,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productAdidasShoe = new Product()
+            var productAdidasShoe = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5759,67 +5759,67 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAdidasShoe);
-            var pvaAdidasShoe1 = new ProductVariantAttribute()
+            var pvaAdidasShoe1 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "8",
                 DisplayOrder = 1,
             });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "9",
                 DisplayOrder = 2,
             });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "10",
                 DisplayOrder = 3,
             });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "11",
                 DisplayOrder = 4,
             });
             productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe1);
-            var pvaAdidasShoe2 = new ProductVariantAttribute()
+            var pvaAdidasShoe2 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "White/Blue",
                 DisplayOrder = 1,
             });
-            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "White/Black",
                 DisplayOrder = 2,
             });
             productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe2);
-            productAdidasShoe.ProductCategories.Add(new ProductCategory()
+            productAdidasShoe.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productAdidasShoe.ProductPictures.Add(new ProductPicture()
+            productAdidasShoe.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
                 DisplayOrder = 1,
             });
-            productAdidasShoe.ProductPictures.Add(new ProductPicture()
+            productAdidasShoe.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
                 DisplayOrder = 2,
@@ -5830,7 +5830,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productAdobePhotoshop = new Product()
+            var productAdobePhotoshop = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5861,12 +5861,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductCategories.Add(new ProductCategory()
+            productAdobePhotoshop.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productAdobePhotoshop.ProductPictures.Add(new ProductPicture()
+            productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name), true),
                 DisplayOrder = 1,
@@ -5877,7 +5877,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productApcUps = new Product()
+            var productApcUps = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5908,12 +5908,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productApcUps);
-            productApcUps.ProductCategories.Add(new ProductCategory()
+            productApcUps.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
-            productApcUps.ProductPictures.Add(new ProductPicture()
+            productApcUps.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ApcUps.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productApcUps.Name), true),
                 DisplayOrder = 1,
@@ -5924,7 +5924,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productArrow = new Product()
+            var productArrow = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -5955,29 +5955,29 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productArrow);
-            productArrow.TierPrices.Add(new TierPrice()
+            productArrow.TierPrices.Add(new TierPrice
             {
                 Quantity = 3,
                 Price = 21
             });
-            productArrow.TierPrices.Add(new TierPrice()
+            productArrow.TierPrices.Add(new TierPrice
             {
                 Quantity = 7,
                 Price = 19
             });
-            productArrow.TierPrices.Add(new TierPrice()
+            productArrow.TierPrices.Add(new TierPrice
             {
                 Quantity = 10,
                 Price = 16
             });
             productArrow.HasTierPrices = true;
 
-            productArrow.ProductCategories.Add(new ProductCategory()
+            productArrow.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productArrow.ProductPictures.Add(new ProductPicture()
+            productArrow.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_arrow.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productArrow.Name), true),
                 DisplayOrder = 1,
@@ -5988,7 +5988,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productAsusPc1000 = new Product()
+            var productAsusPc1000 = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6020,43 +6020,43 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAsusPc1000);
-            productAsusPc1000.ProductCategories.Add(new ProductCategory()
+            productAsusPc1000.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
-            productAsusPc1000.ProductManufacturers.Add(new ProductManufacturer()
+            productAsusPc1000.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
                 DisplayOrder = 2,
             });
-            productAsusPc1000.ProductPictures.Add(new ProductPicture()
+            productAsusPc1000.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc1000.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc1000.Name), true),
                 DisplayOrder = 1,
             });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "10.0''")
             });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
             });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
@@ -6069,7 +6069,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productAsusPc900 = new Product()
+            var productAsusPc900 = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6100,36 +6100,36 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productAsusPc900);
-            productAsusPc900.ProductCategories.Add(new ProductCategory()
+            productAsusPc900.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
-            productAsusPc900.ProductManufacturers.Add(new ProductManufacturer()
+            productAsusPc900.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
                 DisplayOrder = 1,
             });
-            productAsusPc900.ProductPictures.Add(new ProductPicture()
+            productAsusPc900.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc900.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc900.Name), true),
                 DisplayOrder = 1,
             });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
             });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
@@ -6142,7 +6142,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productBestGrillingRecipes = new Product()
+            var productBestGrillingRecipes = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6175,12 +6175,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBestGrillingRecipes);
-            productBestGrillingRecipes.ProductCategories.Add(new ProductCategory()
+            productBestGrillingRecipes.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
-            productBestGrillingRecipes.ProductPictures.Add(new ProductPicture()
+            productBestGrillingRecipes.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestGrillingRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestGrillingRecipes.Name), true),
                 DisplayOrder = 1,
@@ -6191,7 +6191,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productDiamondHeart = new Product()
+            var productDiamondHeart = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6223,12 +6223,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productDiamondHeart);
-            productDiamondHeart.ProductCategories.Add(new ProductCategory()
+            productDiamondHeart.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
-            productDiamondHeart.ProductPictures.Add(new ProductPicture()
+            productDiamondHeart.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name), true),
                 DisplayOrder = 1,
@@ -6239,7 +6239,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productBlackBerry = new Product()
+            var productBlackBerry = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6270,12 +6270,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBlackBerry);
-            productBlackBerry.ProductCategories.Add(new ProductCategory()
+            productBlackBerry.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
                 DisplayOrder = 1,
             });
-            productBlackBerry.ProductPictures.Add(new ProductPicture()
+            productBlackBerry.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BlackBerry.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBlackBerry.Name), true),
                 DisplayOrder = 1,
@@ -6285,7 +6285,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productBuildComputer = new Product()
+            var productBuildComputer = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6318,19 +6318,19 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBuildComputer);
-            var pvaBuildComputer1 = new ProductVariantAttribute()
+            var pvaBuildComputer1 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "2.2 GHz Intel Pentium Dual-Core E2200",
                 DisplayOrder = 1,
             });
-            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "2.5 GHz Intel Pentium Dual-Core E2200",
@@ -6339,26 +6339,26 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer1);
-            var pvaBuildComputer2 = new ProductVariantAttribute()
+            var pvaBuildComputer2 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "2 GB",
                 DisplayOrder = 1,
             });
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "4GB",
                 PriceAdjustment = 20,
                 DisplayOrder = 2,
             });
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "8GB",
@@ -6366,19 +6366,19 @@ namespace Nop.Services.Installation
                 DisplayOrder = 3,
             });
             productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer2);
-            var pvaBuildComputer3 = new ProductVariantAttribute()
+            var pvaBuildComputer3 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
-            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "320 GB",
                 DisplayOrder = 1,
             });
-            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "400 GB",
@@ -6386,13 +6386,13 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer3);
-            var pvaBuildComputer4 = new ProductVariantAttribute()
+            var pvaBuildComputer4 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
                 AttributeControlType = AttributeControlType.RadioList,
                 IsRequired = true,
             };
-            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Vista Home",
@@ -6400,7 +6400,7 @@ namespace Nop.Services.Installation
                 IsPreSelected = true,
                 DisplayOrder = 1,
             });
-            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Vista Premium",
@@ -6408,12 +6408,12 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer4);
-            var pvaBuildComputer5 = new ProductVariantAttribute()
+            var pvaBuildComputer5 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
                 AttributeControlType = AttributeControlType.Checkboxes,
             };
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Microsoft Office",
@@ -6421,14 +6421,14 @@ namespace Nop.Services.Installation
                 IsPreSelected = true,
                 DisplayOrder = 1,
             });
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Acrobat Reader",
                 PriceAdjustment = 10,
                 DisplayOrder = 2,
             });
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Total Commander",
@@ -6436,22 +6436,22 @@ namespace Nop.Services.Installation
                 DisplayOrder = 2,
             });
             productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer5);
-            productBuildComputer.ProductCategories.Add(new ProductCategory()
+            productBuildComputer.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
-            productBuildComputer.ProductPictures.Add(new ProductPicture()
+            productBuildComputer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 1,
             });
-            productBuildComputer.ProductPictures.Add(new ProductPicture()
+            productBuildComputer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductPictures.Add(new ProductPicture()
+            productBuildComputer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 3,
@@ -6462,7 +6462,7 @@ namespace Nop.Services.Installation
 
             
             //this one is a grouped product with two associated ones
-            var productCanonCamera = new Product()
+            var productCanonCamera = new Product
             {
                 ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
@@ -6493,23 +6493,23 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCanonCamera);
-            productCanonCamera.ProductCategories.Add(new ProductCategory()
+            productCanonCamera.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
-            productCanonCamera.ProductPictures.Add(new ProductPicture()
+            productCanonCamera.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name), true),
                 DisplayOrder = 1,
             });
-            productCanonCamera.ProductPictures.Add(new ProductPicture()
+            productCanonCamera.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productCanonCamera);
-            var productCanonCamera_associated_1 = new Product()
+            var productCanonCamera_associated_1 = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
@@ -6539,13 +6539,13 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCanonCamera_associated_1);
-            productCanonCamera_associated_1.ProductPictures.Add(new ProductPicture()
+            productCanonCamera_associated_1.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black"), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCanonCamera_associated_1);
-            var productCanonCamera_associated_2 = new Product()
+            var productCanonCamera_associated_2 = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = false, //hide this products
@@ -6575,7 +6575,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCanonCamera_associated_2);
-            productCanonCamera_associated_2.ProductPictures.Add(new ProductPicture()
+            productCanonCamera_associated_2.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver"), true),
                 DisplayOrder = 1,
@@ -6586,7 +6586,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productCanonCamcoder = new Product()
+            var productCanonCamcoder = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6617,12 +6617,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCanonCamcoder);
-            productCanonCamcoder.ProductCategories.Add(new ProductCategory()
+            productCanonCamcoder.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
-            productCanonCamcoder.ProductPictures.Add(new ProductPicture()
+            productCanonCamcoder.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamcoder.Name), true),
                 DisplayOrder = 1,
@@ -6633,7 +6633,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productCompaq = new Product()
+            var productCompaq = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6664,12 +6664,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCompaq);
-            productCompaq.ProductCategories.Add(new ProductCategory()
+            productCompaq.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
-            productCompaq.ProductPictures.Add(new ProductPicture()
+            productCompaq.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Compaq.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCompaq.Name), true),
                 DisplayOrder = 1,
@@ -6680,7 +6680,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productCookingForTwo = new Product()
+            var productCookingForTwo = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6713,12 +6713,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCookingForTwo);
-            productCookingForTwo.ProductCategories.Add(new ProductCategory()
+            productCookingForTwo.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
-            productCookingForTwo.ProductPictures.Add(new ProductPicture()
+            productCookingForTwo.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name), true),
                 DisplayOrder = 1,
@@ -6729,7 +6729,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productCorel = new Product()
+            var productCorel = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6760,12 +6760,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCorel);
-            productCorel.ProductCategories.Add(new ProductCategory()
+            productCorel.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productCorel.ProductPictures.Add(new ProductPicture()
+            productCorel.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Corel.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCorel.Name), true),
                 DisplayOrder = 1,
@@ -6776,7 +6776,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productCustomTShirt = new Product()
+            var productCustomTShirt = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6807,7 +6807,7 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductVariantAttributes.Add(new ProductVariantAttribute()
+            productCustomTShirt.ProductVariantAttributes.Add(new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
                 TextPrompt = "Enter your text:",
@@ -6815,12 +6815,12 @@ namespace Nop.Services.Installation
                 IsRequired = true,
             });
 
-            productCustomTShirt.ProductCategories.Add(new ProductCategory()
+            productCustomTShirt.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productCustomTShirt.ProductPictures.Add(new ProductPicture()
+            productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name), true),
                 DisplayOrder = 1,
@@ -6831,7 +6831,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productDiamondEarrings = new Product()
+            var productDiamondEarrings = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6862,12 +6862,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productDiamondEarrings);
-            productDiamondEarrings.ProductCategories.Add(new ProductCategory()
+            productDiamondEarrings.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
-            productDiamondEarrings.ProductPictures.Add(new ProductPicture()
+            productDiamondEarrings.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondEarrings.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondEarrings.Name), true),
                 DisplayOrder = 1,
@@ -6878,7 +6878,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productDiamondBracelet = new Product()
+            var productDiamondBracelet = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6910,17 +6910,17 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productDiamondBracelet);
-            productDiamondBracelet.ProductCategories.Add(new ProductCategory()
+            productDiamondBracelet.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
-            productDiamondBracelet.ProductPictures.Add(new ProductPicture()
+            productDiamondBracelet.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name), true),
                 DisplayOrder = 1,
             });
-            productDiamondBracelet.ProductPictures.Add(new ProductPicture()
+            productDiamondBracelet.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name), true),
                 DisplayOrder = 2,
@@ -6931,7 +6931,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productEatingWell = new Product()
+            var productEatingWell = new Product
             {
                 ProductType = ProductType.SimpleProduct, 
                 VisibleIndividually = true,
@@ -6963,12 +6963,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productEatingWell);
-            productEatingWell.ProductCategories.Add(new ProductCategory()
+            productEatingWell.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
-            productEatingWell.ProductPictures.Add(new ProductPicture()
+            productEatingWell.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EatingWell.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productEatingWell.Name), true),
                 DisplayOrder = 1,
@@ -6978,7 +6978,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productEtnies = new Product()
+            var productEtnies = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7009,44 +7009,44 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productEtnies);
-            var pvaEtnies1 = new ProductVariantAttribute()
+            var pvaEtnies1 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "8",
                 DisplayOrder = 1,
             });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "9",
                 DisplayOrder = 2,
             });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "10",
                 DisplayOrder = 3,
             });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "11",
                 DisplayOrder = 4,
             });
             productEtnies.ProductVariantAttributes.Add(pvaEtnies1);
-            var pvaEtnies2 = new ProductVariantAttribute()
+            var pvaEtnies2 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                 AttributeControlType = AttributeControlType.ColorSquares,
                 IsRequired = true,
             };
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "White",
@@ -7054,14 +7054,14 @@ namespace Nop.Services.Installation
                 ColorSquaresRgb = "#FFFFFF",
                 DisplayOrder = 1,
             });
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Black",
                 ColorSquaresRgb = "#000000",
                 DisplayOrder = 2,
             });
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Green",
@@ -7069,12 +7069,12 @@ namespace Nop.Services.Installation
                 DisplayOrder = 3,
             });
             productEtnies.ProductVariantAttributes.Add(pvaEtnies2);
-            productEtnies.ProductCategories.Add(new ProductCategory()
+            productEtnies.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productEtnies.ProductPictures.Add(new ProductPicture()
+            productEtnies.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Etnies.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEtnies.Name), true),
                 DisplayOrder = 1,
@@ -7085,7 +7085,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productLeatherHandbag = new Product()
+            var productLeatherHandbag = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7116,17 +7116,17 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productLeatherHandbag);
-            productLeatherHandbag.ProductCategories.Add(new ProductCategory()
+            productLeatherHandbag.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productLeatherHandbag.ProductPictures.Add(new ProductPicture()
+            productLeatherHandbag.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name), true),
                 DisplayOrder = 1,
             });
-            productLeatherHandbag.ProductPictures.Add(new ProductPicture()
+            productLeatherHandbag.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name), true),
                 DisplayOrder = 2,
@@ -7137,7 +7137,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productHp506 = new Product()
+            var productHp506 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7168,17 +7168,17 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productHp506);
-            productHp506.ProductCategories.Add(new ProductCategory()
+            productHp506.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
-            productHp506.ProductManufacturers.Add(new ProductManufacturer()
+            productHp506.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 1,
             });
-            productHp506.ProductPictures.Add(new ProductPicture()
+            productHp506.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Hp506.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHp506.Name), true),
                 DisplayOrder = 1,
@@ -7189,7 +7189,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productHpPavilion1 = new Product()
+            var productHpPavilion1 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7221,43 +7221,43 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productHpPavilion1);
-            productHpPavilion1.ProductCategories.Add(new ProductCategory()
+            productHpPavilion1.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
-            productHpPavilion1.ProductManufacturers.Add(new ProductManufacturer()
+            productHpPavilion1.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 2,
             });
-            productHpPavilion1.ProductPictures.Add(new ProductPicture()
+            productHpPavilion1.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion1.Name), true),
                 DisplayOrder = 1,
             });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.1''")
             });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
             });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
             });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
@@ -7270,7 +7270,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productHpPavilion2 = new Product()
+            var productHpPavilion2 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7301,22 +7301,22 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productHpPavilion2);
-            productHpPavilion2.ProductCategories.Add(new ProductCategory()
+            productHpPavilion2.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                 DisplayOrder = 1,
             });
-            productHpPavilion2.ProductManufacturers.Add(new ProductManufacturer()
+            productHpPavilion2.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 3,
             });
-            productHpPavilion2.ProductPictures.Add(new ProductPicture()
+            productHpPavilion2.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name), true),
                 DisplayOrder = 1,
             });
-            productHpPavilion2.ProductPictures.Add(new ProductPicture()
+            productHpPavilion2.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name), true),
                 DisplayOrder = 2,
@@ -7327,7 +7327,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productHpPavilion3 = new Product()
+            var productHpPavilion3 = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7358,43 +7358,43 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productHpPavilion3);
-            productHpPavilion3.ProductCategories.Add(new ProductCategory()
+            productHpPavilion3.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
-            productHpPavilion3.ProductManufacturers.Add(new ProductManufacturer()
+            productHpPavilion3.ProductManufacturers.Add(new ProductManufacturer
             {
                 Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
                 DisplayOrder = 4,
             });
-            productHpPavilion3.ProductPictures.Add(new ProductPicture()
+            productHpPavilion3.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion3.Name), true),
                 DisplayOrder = 1,
             });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "16.0''")
             });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")            
             });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
             });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
@@ -7407,7 +7407,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productHat = new Product()
+            var productHat = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7438,43 +7438,43 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productHat);
-            var pvaHat1 = new ProductVariantAttribute()
+            var pvaHat1 = new ProductVariantAttribute
             {
                 ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                 AttributeControlType = AttributeControlType.DropdownList,
                 IsRequired = true,
             };
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Small",
                 DisplayOrder = 1,
             });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Medium",
                 DisplayOrder = 2,
             });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "Large",
                 DisplayOrder = 3,
             });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue()
+            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
             {
                 AttributeValueType = AttributeValueType.Simple,
                 Name = "X-Large",
                 DisplayOrder = 4,
             });
             productHat.ProductVariantAttributes.Add(pvaHat1);
-            productHat.ProductCategories.Add(new ProductCategory()
+            productHat.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productHat.ProductPictures.Add(new ProductPicture()
+            productHat.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productHat.Name), true),
                 DisplayOrder = 1,
@@ -7485,7 +7485,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productKensington = new Product()
+            var productKensington = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7516,12 +7516,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productKensington);
-            productKensington.ProductCategories.Add(new ProductCategory()
+            productKensington.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
-            productKensington.ProductPictures.Add(new ProductPicture()
+            productKensington.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name), true),
                 DisplayOrder = 1,
@@ -7532,7 +7532,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productLeviJeans = new Product()
+            var productLeviJeans = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7564,34 +7564,34 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productLeviJeans);
-            productLeviJeans.TierPrices.Add(new TierPrice()
+            productLeviJeans.TierPrices.Add(new TierPrice
             {
                 Quantity = 3,
                 Price = 40
             });
-            productLeviJeans.TierPrices.Add(new TierPrice()
+            productLeviJeans.TierPrices.Add(new TierPrice
             {
                 Quantity = 6,
                 Price = 38
             });
-            productLeviJeans.TierPrices.Add(new TierPrice()
+            productLeviJeans.TierPrices.Add(new TierPrice
             {
                 Quantity = 10,
                 Price = 35
             });
             productLeviJeans.HasTierPrices = true;
 
-            productLeviJeans.ProductCategories.Add(new ProductCategory()
+            productLeviJeans.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productLeviJeans.ProductPictures.Add(new ProductPicture()
+            productLeviJeans.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name), true),
                 DisplayOrder = 1,
             });
-            productLeviJeans.ProductPictures.Add(new ProductPicture()
+            productLeviJeans.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name), true),
                 DisplayOrder = 2,
@@ -7602,7 +7602,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productBaseball = new Product()
+            var productBaseball = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7633,12 +7633,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBaseball);
-            productBaseball.ProductCategories.Add(new ProductCategory()
+            productBaseball.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productBaseball.ProductPictures.Add(new ProductPicture()
+            productBaseball.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Baseball.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBaseball.Name), true),
                 DisplayOrder = 1,
@@ -7649,7 +7649,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productMedalOfHonor = new Product()
+            var productMedalOfHonor = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7680,12 +7680,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productMedalOfHonor);
-            productMedalOfHonor.ProductCategories.Add(new ProductCategory()
+            productMedalOfHonor.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productMedalOfHonor.ProductPictures.Add(new ProductPicture()
+            productMedalOfHonor.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name), true),
                 DisplayOrder = 1,
@@ -7696,7 +7696,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productMouse = new Product()
+            var productMouse = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7727,12 +7727,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productMouse);
-            productMouse.ProductCategories.Add(new ProductCategory()
+            productMouse.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                 DisplayOrder = 1,
             });
-            productMouse.ProductPictures.Add(new ProductPicture()
+            productMouse.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mouse.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMouse.Name), true),
                 DisplayOrder = 1,
@@ -7743,7 +7743,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productGolfBelt = new Product()
+            var productGolfBelt = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7774,12 +7774,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productGolfBelt);
-            productGolfBelt.ProductCategories.Add(new ProductCategory()
+            productGolfBelt.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productGolfBelt.ProductPictures.Add(new ProductPicture()
+            productGolfBelt.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GolfBelt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGolfBelt.Name), true),
                 DisplayOrder = 1,
@@ -7790,7 +7790,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productPanasonic = new Product()
+            var productPanasonic = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7821,12 +7821,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productPanasonic);
-            productPanasonic.ProductCategories.Add(new ProductCategory()
+            productPanasonic.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
-            productPanasonic.ProductPictures.Add(new ProductPicture()
+            productPanasonic.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_productPanasonic.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPanasonic.Name), true),
                 DisplayOrder = 1,
@@ -7837,7 +7837,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productSunglasses = new Product()
+            var productSunglasses = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7868,12 +7868,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSunglasses);
-            productSunglasses.ProductCategories.Add(new ProductCategory()
+            productSunglasses.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productSunglasses.ProductPictures.Add(new ProductPicture()
+            productSunglasses.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name), true),
                 DisplayOrder = 1,
@@ -7884,7 +7884,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productSamsungPhone = new Product()
+            var productSamsungPhone = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7915,17 +7915,17 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSamsungPhone);
-            productSamsungPhone.ProductCategories.Add(new ProductCategory()
+            productSamsungPhone.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
                 DisplayOrder = 1,
             });
-            productSamsungPhone.ProductPictures.Add(new ProductPicture()
+            productSamsungPhone.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name), true),
                 DisplayOrder = 1,
             });
-            productSamsungPhone.ProductPictures.Add(new ProductPicture()
+            productSamsungPhone.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name), true),
                 DisplayOrder = 2,
@@ -7936,7 +7936,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productSonyCamcoder = new Product()
+            var productSonyCamcoder = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -7967,12 +7967,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSonyCamcoder);
-            productSonyCamcoder.ProductCategories.Add(new ProductCategory()
+            productSonyCamcoder.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
                 DisplayOrder = 1,
             });
-            productSonyCamcoder.ProductPictures.Add(new ProductPicture()
+            productSonyCamcoder.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SonyCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyCamcoder.Name), true),
                 DisplayOrder = 1,
@@ -7983,7 +7983,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productBestSkilletRecipes = new Product()
+            var productBestSkilletRecipes = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8015,12 +8015,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBestSkilletRecipes);
-            productBestSkilletRecipes.ProductCategories.Add(new ProductCategory()
+            productBestSkilletRecipes.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                 DisplayOrder = 1,
             });
-            productBestSkilletRecipes.ProductPictures.Add(new ProductPicture()
+            productBestSkilletRecipes.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestSkilletRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestSkilletRecipes.Name), true),
                 DisplayOrder = 1,
@@ -8031,7 +8031,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productSatellite = new Product()
+            var productSatellite = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8062,38 +8062,38 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSatellite);
-            productSatellite.ProductCategories.Add(new ProductCategory()
+            productSatellite.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
                 DisplayOrder = 1,
             });
-            productSatellite.ProductPictures.Add(new ProductPicture()
+            productSatellite.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Notebooks.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSatellite.Name), true),
                 DisplayOrder = 1,
             });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.4''")
             });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 2,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
             });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 3,
                 SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
             });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
+            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
             {
                 AllowFiltering = false,
                 ShowOnProductPage = true,
@@ -8106,7 +8106,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productDenimShort = new Product()
+            var productDenimShort = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8137,12 +8137,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productDenimShort);
-            productDenimShort.ProductCategories.Add(new ProductCategory()
+            productDenimShort.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
                 DisplayOrder = 1,
             });
-            productDenimShort.ProductPictures.Add(new ProductPicture()
+            productDenimShort.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DenimShort.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDenimShort.Name), true),
                 DisplayOrder = 1,
@@ -8153,7 +8153,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productEngagementRing = new Product()
+            var productEngagementRing = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8184,17 +8184,17 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductCategories.Add(new ProductCategory()
+            productEngagementRing.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                 DisplayOrder = 1,
             });
-            productEngagementRing.ProductPictures.Add(new ProductPicture()
+            productEngagementRing.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name), true),
                 DisplayOrder = 1,
             });
-            productEngagementRing.ProductPictures.Add(new ProductPicture()
+            productEngagementRing.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name), true),
                 DisplayOrder = 2,
@@ -8205,7 +8205,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productWoW = new Product()
+            var productWoW = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8236,12 +8236,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productWoW);
-            productWoW.ProductCategories.Add(new ProductCategory()
+            productWoW.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productWoW.ProductPictures.Add(new ProductPicture()
+            productWoW.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name), true),
                 DisplayOrder = 1,
@@ -8252,7 +8252,7 @@ namespace Nop.Services.Installation
 
 
 
-            var productSoccer = new Product()
+            var productSoccer = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8283,12 +8283,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productSoccer);
-            productSoccer.ProductCategories.Add(new ProductCategory()
+            productSoccer.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
                 DisplayOrder = 1,
             });
-            productSoccer.ProductPictures.Add(new ProductPicture()
+            productSoccer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name), true),
                 DisplayOrder = 1,
@@ -8299,7 +8299,7 @@ namespace Nop.Services.Installation
 
 
 
-            var downloadPokerFace1 = new Download()
+            var downloadPokerFace1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
@@ -8309,7 +8309,7 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadPokerFace1);
-            var downloadPokerFace2 = new Download()
+            var downloadPokerFace2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
@@ -8319,7 +8319,7 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadPokerFace2);
-            var productPokerFace = new Product()
+            var productPokerFace = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8352,12 +8352,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productPokerFace);
-            productPokerFace.ProductCategories.Add(new ProductCategory()
+            productPokerFace.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
-            productPokerFace.ProductPictures.Add(new ProductPicture()
+            productPokerFace.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PokerFace.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPokerFace.Name), true),
                 DisplayOrder = 1,
@@ -8368,7 +8368,7 @@ namespace Nop.Services.Installation
 
 
 
-            var downloadSingleLadies1 = new Download()
+            var downloadSingleLadies1 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
@@ -8378,7 +8378,7 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadSingleLadies1);
-            var downloadSingleLadies2 = new Download()
+            var downloadSingleLadies2 = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
@@ -8388,7 +8388,7 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadSingleLadies2);
-            var productSingleLadies = new Product()
+            var productSingleLadies = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8422,12 +8422,12 @@ namespace Nop.Services.Installation
             };
             allProducts.Add(productSingleLadies);
 
-            productSingleLadies.ProductCategories.Add(new ProductCategory()
+            productSingleLadies.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
-            productSingleLadies.ProductPictures.Add(new ProductPicture()
+            productSingleLadies.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SingleLadies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSingleLadies.Name), true),
                 DisplayOrder = 1,
@@ -8438,7 +8438,7 @@ namespace Nop.Services.Installation
 
 
 
-            var downloadBattleOfLa = new Download()
+            var downloadBattleOfLa = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
@@ -8448,7 +8448,7 @@ namespace Nop.Services.Installation
                 IsNew = true,
             };
             downloadService.InsertDownload(downloadBattleOfLa);
-            var productBattleOfLa = new Product()
+            var productBattleOfLa = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
@@ -8479,12 +8479,12 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allProducts.Add(productBattleOfLa);
-            productBattleOfLa.ProductCategories.Add(new ProductCategory()
+            productBattleOfLa.ProductCategories.Add(new ProductCategory
             {
                 Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
                 DisplayOrder = 1,
             });
-            productBattleOfLa.ProductPictures.Add(new ProductPicture()
+            productBattleOfLa.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BattleOfLA.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBattleOfLa.Name), true),
                 DisplayOrder = 1,
@@ -8495,7 +8495,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var product in allProducts)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = product.Id,
                     EntityName = "Product",
@@ -8508,249 +8508,249 @@ namespace Nop.Services.Installation
 
 
             //related products
-            var relatedProducts = new List<RelatedProduct>()
+            var relatedProducts = new List<RelatedProduct>
             {
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondHeart.Id,
                      ProductId2 = productDiamondBracelet.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondHeart.Id,
                      ProductId2 = productDiamondEarrings.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondHeart.Id,
                      ProductId2 = productEngagementRing.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondBracelet.Id,
                      ProductId2 = productDiamondHeart.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondBracelet.Id,
                      ProductId2 = productEngagementRing.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondBracelet.Id,
                      ProductId2 = productDiamondEarrings.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEngagementRing.Id,
                      ProductId2 = productDiamondHeart.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEngagementRing.Id,
                      ProductId2 = productDiamondBracelet.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEngagementRing.Id,
                      ProductId2 = productDiamondEarrings.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondEarrings.Id,
                      ProductId2 = productDiamondHeart.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondEarrings.Id,
                      ProductId2 = productDiamondBracelet.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productDiamondEarrings.Id,
                      ProductId2 = productEngagementRing.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSingleLadies.Id,
                      ProductId2 = productPokerFace.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSingleLadies.Id,
                      ProductId2 = productBattleOfLa.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productPokerFace.Id,
                      ProductId2 = productSingleLadies.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productPokerFace.Id,
                      ProductId2 = productBattleOfLa.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestSkilletRecipes.Id,
                      ProductId2 = productCookingForTwo.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestSkilletRecipes.Id,
                      ProductId2 = productEatingWell.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestSkilletRecipes.Id,
                      ProductId2 = productBestGrillingRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCookingForTwo.Id,
                      ProductId2 = productBestSkilletRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCookingForTwo.Id,
                      ProductId2 = productEatingWell.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCookingForTwo.Id,
                      ProductId2 = productBestGrillingRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEatingWell.Id,
                      ProductId2 = productBestSkilletRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEatingWell.Id,
                      ProductId2 = productCookingForTwo.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productEatingWell.Id,
                      ProductId2 = productBestGrillingRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestGrillingRecipes.Id,
                      ProductId2 = productCookingForTwo.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestGrillingRecipes.Id,
                      ProductId2 = productEatingWell.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productBestGrillingRecipes.Id,
                      ProductId2 = productBestSkilletRecipes.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc900.Id,
                      ProductId2 = productSatellite.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc900.Id,
                      ProductId2 = productAsusPc1000.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc900.Id,
                      ProductId2 = productHpPavilion1.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSatellite.Id,
                      ProductId2 = productAsusPc900.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSatellite.Id,
                      ProductId2 = productAsusPc1000.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSatellite.Id,
                      ProductId2 = productAcerAspireOne.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc1000.Id,
                      ProductId2 = productSatellite.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc1000.Id,
                      ProductId2 = productHpPavilion1.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productAsusPc1000.Id,
                      ProductId2 = productAcerAspireOne.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion3.Id,
                      ProductId2 = productAsusPc900.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion3.Id,
                      ProductId2 = productAsusPc1000.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion3.Id,
                      ProductId2 = productAcerAspireOne.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion1.Id,
                      ProductId2 = productAsusPc900.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion1.Id,
                      ProductId2 = productAsusPc1000.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productHpPavilion1.Id,
                      ProductId2 = productAcerAspireOne.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCanonCamcoder.Id,
                      ProductId2 = productSamsungPhone.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCanonCamcoder.Id,
                      ProductId2 = productSonyCamcoder.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productCanonCamcoder.Id,
                      ProductId2 = productCanonCamera.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSonyCamcoder.Id,
                      ProductId2 = productSamsungPhone.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSonyCamcoder.Id,
                      ProductId2 = productCanonCamcoder.Id,
                 },
-                new RelatedProduct()
+                new RelatedProduct
                 {
                      ProductId1 = productSonyCamcoder.Id,
                      ProductId2 = productCanonCamera.Id,
@@ -8881,7 +8881,7 @@ namespace Nop.Services.Installation
 
                 //rating from 4 to 5
                 var rating = random.Next(4, 6);
-                product.ProductReviews.Add(new ProductReview()
+                product.ProductReviews.Add(new ProductReview
                 {
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
@@ -8903,7 +8903,7 @@ namespace Nop.Services.Installation
         
         protected virtual void InstallForums()
         {
-            var forumGroup = new ForumGroup()
+            var forumGroup = new ForumGroup
             {
                 Name = "General",
                 DisplayOrder = 5,
@@ -8913,7 +8913,7 @@ namespace Nop.Services.Installation
 
             _forumGroupRepository.Insert(forumGroup);
 
-            var newProductsForum = new Forum()
+            var newProductsForum = new Forum
             {
                 ForumGroup = forumGroup,
                 Name = "New Products",
@@ -8928,7 +8928,7 @@ namespace Nop.Services.Installation
             };
             _forumRepository.Insert(newProductsForum);
 
-            var mobileDevicesForum = new Forum()
+            var mobileDevicesForum = new Forum
             {
                 ForumGroup = forumGroup,
                 Name = "Mobile Devices Forum",
@@ -8943,7 +8943,7 @@ namespace Nop.Services.Installation
             };
             _forumRepository.Insert(mobileDevicesForum);
 
-            var packagingShippingForum = new Forum()
+            var packagingShippingForum = new Forum
             {
                 ForumGroup = forumGroup,
                 Name = "Packaging & Shipping",
@@ -9018,7 +9018,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var blogPost in blogPosts)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = blogPost.Id,
                     EntityName = "BlogPost",
@@ -9060,7 +9060,7 @@ namespace Nop.Services.Installation
             //search engine names
             foreach (var newsItem in news)
             {
-                _urlRecordRepository.Insert(new UrlRecord()
+                _urlRecordRepository.Insert(new UrlRecord
                 {
                     EntityId = newsItem.Id,
                     EntityName = "NewsItem",
@@ -9082,22 +9082,22 @@ namespace Nop.Services.Installation
                 Published = true,
                 DisplayOrder = 1,
             };
-            poll1.PollAnswers.Add(new PollAnswer()
+            poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Excellent",
                 DisplayOrder = 1,
             });
-            poll1.PollAnswers.Add(new PollAnswer()
+            poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Good",
                 DisplayOrder = 2,
             });
-            poll1.PollAnswers.Add(new PollAnswer()
+            poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Poor",
                 DisplayOrder = 3,
             });
-            poll1.PollAnswers.Add(new PollAnswer()
+            poll1.PollAnswers.Add(new PollAnswer
             {
                 Name = "Very bad",
                 DisplayOrder = 4,
@@ -9107,7 +9107,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallActivityLogTypes()
         {
-            var activityLogTypes = new List<ActivityLogType>()
+            var activityLogTypes = new List<ActivityLogType>
                                       {
                                           //admin area activities
                                           new ActivityLogType
@@ -9522,9 +9522,9 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallScheduleTasks()
         {
-            var tasks = new List<ScheduleTask>()
+            var tasks = new List<ScheduleTask>
             {
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Send emails",
                     Seconds = 60,
@@ -9532,7 +9532,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     StopOnError = false,
                 },
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Keep alive",
                     Seconds = 300,
@@ -9540,7 +9540,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     StopOnError = false,
                 },
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Delete guests",
                     Seconds = 600,
@@ -9548,7 +9548,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     StopOnError = false,
                 },
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Clear cache",
                     Seconds = 600,
@@ -9556,7 +9556,7 @@ namespace Nop.Services.Installation
                     Enabled = false,
                     StopOnError = false,
                 },
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Clear log",
                     //60 minutes
@@ -9565,7 +9565,7 @@ namespace Nop.Services.Installation
                     Enabled = false,
                     StopOnError = false,
                 },
-                new ScheduleTask()
+                new ScheduleTask
                 {
                     Name = "Update currency exchange rates",
                     Seconds = 900,
@@ -9583,7 +9583,7 @@ namespace Nop.Services.Installation
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
             if (productTag == null)
             {
-                productTag = new ProductTag()
+                productTag = new ProductTag
                 {
                     Name = tag,
                 };

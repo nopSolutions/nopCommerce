@@ -81,10 +81,10 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
-            model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
+            model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Promotions.Discounts.Requirements.DiscountRequirementType.Select"), Value = "" });
             var discountRules = _discountService.LoadAllDiscountRequirementRules();
             foreach (var discountRule in discountRules)
-                model.AvailableDiscountRequirementRules.Add(new SelectListItem() { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
+                model.AvailableDiscountRequirementRules.Add(new SelectListItem { Text = discountRule.PluginDescriptor.FriendlyName, Value = discountRule.PluginDescriptor.SystemName });
 
             if (discount != null)
             {
@@ -93,7 +93,7 @@ namespace Nop.Admin.Controllers
                 {
                     if (category != null && !category.Deleted)
                     {
-                        model.AppliedToCategoryModels.Add(new DiscountModel.AppliedToCategoryModel()
+                        model.AppliedToCategoryModels.Add(new DiscountModel.AppliedToCategoryModel
                         {
                             CategoryId = category.Id,
                             Name = category.Name
@@ -106,7 +106,7 @@ namespace Nop.Admin.Controllers
                 {
                     if (product != null && !product.Deleted)
                     {
-                        var appliedToProductModel = new DiscountModel.AppliedToProductModel()
+                        var appliedToProductModel = new DiscountModel.AppliedToProductModel
                         {
                             ProductId = product.Id,
                             ProductName = product.Name
@@ -121,7 +121,7 @@ namespace Nop.Admin.Controllers
                     var drr = _discountService.LoadDiscountRequirementRuleBySystemName(dr.DiscountRequirementRuleSystemName);
                     if (drr != null)
                     {
-                        model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo()
+                        model.DiscountRequirementMetaInfos.Add(new DiscountModel.DiscountRequirementMetaInfo
                         {
                             DiscountRequirementId = dr.Id,
                             RuleName = drr.PluginDescriptor.FriendlyName,
@@ -401,7 +401,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = duh.Select(x =>
                 {
-                    return new DiscountModel.DiscountUsageHistoryModel()
+                    return new DiscountModel.DiscountUsageHistoryModel
                     {
                         Id = x.Id,
                         DiscountId = x.DiscountId,

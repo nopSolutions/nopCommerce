@@ -369,7 +369,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         {
             actionName = "Configure";
             controllerName = "ShippingCanadaPost";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.CanadaPost.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.CanadaPost.Controllers" }, { "area", null } };
         }
         
         /// <summary>
@@ -378,7 +378,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
         public override void Install()
         {
             //settings
-            var settings = new CanadaPostSettings()
+            var settings = new CanadaPostSettings
             {
                 Url = "sellonline.canadapost.ca",
                 Port = 30000,

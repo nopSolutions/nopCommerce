@@ -625,7 +625,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             actionName = "Configure";
             controllerName = "PaymentAuthorizeNet";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.AuthorizeNet.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.AuthorizeNet.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -638,7 +638,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentAuthorizeNet";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.AuthorizeNet.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.AuthorizeNet.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -649,7 +649,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         public override void Install()
         {
             //settings
-            var settings = new AuthorizeNetPaymentSettings()
+            var settings = new AuthorizeNetPaymentSettings
             {
                 UseSandbox = true,
                 TransactMode = TransactMode.Authorize,

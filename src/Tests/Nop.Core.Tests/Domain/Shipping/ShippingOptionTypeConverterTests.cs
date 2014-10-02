@@ -25,7 +25,7 @@ namespace Nop.Core.Tests.Domain.Shipping
         [Test]
         public void Can_convert_shippingOption_to_string_and_back()
         {
-            var shippingOptionInput = new ShippingOption()
+            var shippingOptionInput = new ShippingOption
             {
                 Name = "1",
                 Description = "2",

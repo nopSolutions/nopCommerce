@@ -418,7 +418,7 @@ namespace Nop.Services.ExportImport
                                 var category = _categoryService.GetCategoryById(id);
                                 if (category != null)
                                 {
-                                    var productCategory = new ProductCategory()
+                                    var productCategory = new ProductCategory
                                     {
                                         ProductId = product.Id,
                                         CategoryId = category.Id,
@@ -442,7 +442,7 @@ namespace Nop.Services.ExportImport
                                 var manufacturer = _manufacturerService.GetManufacturerById(id);
                                 if (manufacturer != null)
                                 {
-                                    var productManufacturer = new ProductManufacturer()
+                                    var productManufacturer = new ProductManufacturer
                                     {
                                         ProductId = product.Id,
                                         ManufacturerId = manufacturer.Id,
@@ -484,7 +484,7 @@ namespace Nop.Services.ExportImport
 
                         if (!pictureAlreadyExists)
                         {
-                            product.ProductPictures.Add(new ProductPicture()
+                            product.ProductPictures.Add(new ProductPicture
                             {
                                 Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name), true),
                                 DisplayOrder = 1,
@@ -557,7 +557,7 @@ namespace Nop.Services.ExportImport
                     }
                     else
                     {
-                        subscription = new NewsLetterSubscription()
+                        subscription = new NewsLetterSubscription
                         {
                             Active = isActive,
                             CreatedOnUtc = DateTime.UtcNow,
@@ -621,7 +621,7 @@ namespace Nop.Services.ExportImport
                     }
                     else
                     {
-                        state = new StateProvince()
+                        state = new StateProvince
                         {
                             CountryId = country.Id,
                             Name = name,

@@ -25,7 +25,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string>()
+            return new List<string>
             { 
                 "body_end_html_tag_before"
             };
@@ -41,7 +41,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         {
             actionName = "Configure";
             controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         {
             actionName = "PublicInfo";
             controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary()
+            routeValues = new RouteValueDictionary
             {
                 {"Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers"},
                 {"area", null},
@@ -68,7 +68,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// </summary>
         public override void Install()
         {
-            var settings = new GoogleAnalyticsSettings()
+            var settings = new GoogleAnalyticsSettings
             {
                 GoogleId = "UA-0000000-0",
                 TrackingScript = @"<!-- Google code for Analytics tracking -->

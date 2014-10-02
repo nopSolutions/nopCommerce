@@ -103,7 +103,7 @@ namespace Nop.Services.Localization
                 var list = new List<LocalizedPropertyForCaching>();
                 foreach (var lp in localizedProperties)
                 {
-                    var localizedPropertyForCaching = new LocalizedPropertyForCaching()
+                    var localizedPropertyForCaching = new LocalizedPropertyForCaching
                     {
                         Id = lp.Id,
                         EntityId = lp.EntityId,
@@ -319,7 +319,7 @@ namespace Nop.Services.Localization
                 if (!string.IsNullOrWhiteSpace(localeValueStr))
                 {
                     //insert
-                    prop = new LocalizedProperty()
+                    prop = new LocalizedProperty
                     {
                         EntityId = entity.Id,
                         LanguageId = languageId,

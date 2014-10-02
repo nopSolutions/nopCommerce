@@ -58,22 +58,22 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
 
             var model = new TaxRateListModel();
             //stores
-            model.AvailableStores.Add(new SelectListItem() { Text = "*", Value = "0" });
+            model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             var stores = _storeService.GetAllStores();
             foreach (var s in stores)
-                model.AvailableStores.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
             //tax categories
             foreach (var tc in taxCategories)
-                model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString() });
+                model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString() });
             //countries
             var countries = _countryService.GetAllCountries(true);
             foreach (var c in countries)
-                model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
-            model.AvailableStates.Add(new SelectListItem() { Text = "*", Value = "0" });
+            model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
             var states = _stateProvinceService.GetStateProvincesByCountryId(countries.FirstOrDefault().Id);
             foreach (var s in states)
-                model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
 
             return View("~/Plugins/Tax.CountryStateZip/Views/TaxCountryStateZip/Configure.cshtml", model);
         }
@@ -88,7 +88,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             var taxRatesModel = records
                 .Select(x =>
                 {
-                    var m = new TaxRateModel()
+                    var m = new TaxRateModel
                     {
                         Id = x.Id,
                         StoreId = x.StoreId,
@@ -157,7 +157,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
                 return Content("Access denied");
 
-            var taxRate = new TaxRate()
+            var taxRate = new TaxRate
             {
                 StoreId = model.AddStoreId,
                 TaxCategoryId = model.AddTaxCategoryId,

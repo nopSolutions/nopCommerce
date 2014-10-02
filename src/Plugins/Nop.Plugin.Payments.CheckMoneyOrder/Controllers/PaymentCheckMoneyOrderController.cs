@@ -103,7 +103,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         {
             var checkMoneyOrderPaymentSettings = _settingService.LoadSetting<CheckMoneyOrderPaymentSettings>(_storeContext.CurrentStore.Id);
 
-            var model = new PaymentInfoModel()
+            var model = new PaymentInfoModel
             {
                 DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText
             };

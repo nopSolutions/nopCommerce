@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Directory
                 Abbreviation = "CA",
                 Published = true,
                 DisplayOrder = 1,
-                Country = new Country()
+                Country = new Country
                                {
                                    Name = "United States",
                                    AllowsBilling = true,

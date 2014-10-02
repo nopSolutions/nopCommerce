@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Catalog
             {
                 Name = "SpecificationAttributeOption name 1",
                 DisplayOrder = 1,
-                SpecificationAttribute = new SpecificationAttribute()
+                SpecificationAttribute = new SpecificationAttribute
                 {
                     Name = "SpecificationAttribute name 1",
                     DisplayOrder = 2,

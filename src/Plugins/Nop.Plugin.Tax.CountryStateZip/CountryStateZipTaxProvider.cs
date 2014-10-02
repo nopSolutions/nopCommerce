@@ -57,7 +57,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
                     .GetAllTaxRates()
                     .Select(x =>
                             {
-                                return new TaxRateForCaching()
+                                return new TaxRateForCaching
                                        {
                                            Id = x.Id,
                                            StoreId = x.StoreId,
@@ -142,7 +142,7 @@ namespace Nop.Plugin.Tax.CountryStateZip
         {
             actionName = "Configure";
             controllerName = "TaxCountryStateZip";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", null } };
         }
 
         /// <summary>

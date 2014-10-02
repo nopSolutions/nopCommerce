@@ -121,7 +121,7 @@ namespace Nop.Web.Controllers
                 var blogComments = blogPost.BlogComments.OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var bc in blogComments)
                 {
-                    var commentModel = new BlogCommentModel()
+                    var commentModel = new BlogCommentModel
                     {
                         Id = bc.Id,
                         CustomerId = bc.CustomerId,
@@ -226,7 +226,7 @@ namespace Nop.Web.Controllers
                                     DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
-                return new RssActionResult() { Feed = feed };
+                return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId,
@@ -237,7 +237,7 @@ namespace Nop.Web.Controllers
                 items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
-            return new RssActionResult() { Feed = feed };
+            return new RssActionResult { Feed = feed };
         }
 
         public ActionResult BlogPost(int blogPostId)
@@ -286,7 +286,7 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                var comment = new BlogComment()
+                var comment = new BlogComment
                 {
                     BlogPostId = blogPost.Id,
                     CustomerId = _workContext.CurrentCustomer.Id,
@@ -336,7 +336,7 @@ namespace Nop.Web.Controllers
                 tags = tags.OrderBy(x => x.Name).ToList();
 
                 foreach (var tag in tags)
-                    model.Tags.Add(new BlogPostTagModel()
+                    model.Tags.Add(new BlogPostTagModel
                     {
                         Name = tag.Name,
                         BlogPostCount = tag.BlogPostCount
@@ -388,14 +388,14 @@ namespace Nop.Web.Controllers
 
                         if (date.Year > current || model.Count == 0)
                         {
-                            var yearModel = new BlogPostYearModel()
+                            var yearModel = new BlogPostYearModel
                             {
                                 Year = date.Year
                             };
                             model.Add(yearModel);
                         }
 
-                        model.Last().Months.Add(new BlogPostMonthModel()
+                        model.Last().Months.Add(new BlogPostMonthModel
                         {
                             Month = date.Month,
                             BlogPostCount = blogPostCount

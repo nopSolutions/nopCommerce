@@ -174,7 +174,7 @@ namespace Nop.Services.Blogs
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));
                     if (foundBlogPostTag == null)
                     {
-                        foundBlogPostTag = new BlogPostTag()
+                        foundBlogPostTag = new BlogPostTag
                         {
                             Name = tag,
                             BlogPostCount = 1

@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_returnRequest()
         {
-            var rr = new ReturnRequest()
+            var rr = new ReturnRequest
             {
                 StoreId = 1,
                 Customer = GetTestCustomer(),
@@ -57,13 +57,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

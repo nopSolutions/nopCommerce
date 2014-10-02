@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_giftCard()
         {
-            var giftCard = new GiftCard()
+            var giftCard = new GiftCard
             {
                 GiftCardType = GiftCardType.Physical,
                 Amount = 1.1M,
@@ -49,7 +49,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_giftCard_with_usageHistory()
         {
-            var giftCard = new GiftCard()
+            var giftCard = new GiftCard
             {
                 GiftCardType = GiftCardType.Physical,
                 Amount = 1.1M,
@@ -65,7 +65,7 @@ namespace Nop.Data.Tests.Orders
             };
             giftCard.GiftCardUsageHistory.Add
                 (
-                    new GiftCardUsageHistory()
+                    new GiftCardUsageHistory
                     {
                         UsedValue = 1.1M,
                         CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -84,7 +84,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_giftCard_with_associatedItem()
         {
-            var giftCard = new GiftCard()
+            var giftCard = new GiftCard
             {
                 GiftCardType = GiftCardType.Physical,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -115,7 +115,7 @@ namespace Nop.Data.Tests.Orders
 
         protected OrderItem GetTestOrderItem()
         {
-            return new OrderItem()
+            return new OrderItem
             {
                 Order = GetTestOrder(),
                 Product = GetTestProduct(),
@@ -134,13 +134,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

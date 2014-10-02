@@ -28,7 +28,7 @@ namespace Nop.Services.Tests.Directory
         [SetUp]
         public new void SetUp()
         {
-            currencyUSD = new Currency()
+            currencyUSD = new Currency
             {
                 Id = 1,
                 Name = "US Dollar",
@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Directory
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
-            currencyEUR = new Currency()
+            currencyEUR = new Currency
             {
                 Id = 2,
                 Name = "Euro",
@@ -54,7 +54,7 @@ namespace Nop.Services.Tests.Directory
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
             };
-            currencyRUR = new Currency()
+            currencyRUR = new Currency
             {
                 Id = 3,
                 Name = "Russian Rouble",
@@ -68,7 +68,7 @@ namespace Nop.Services.Tests.Directory
                 UpdatedOnUtc = DateTime.UtcNow,
             };
             _currencyRepository = MockRepository.GenerateMock<IRepository<Currency>>();
-            _currencyRepository.Expect(x => x.Table).Return(new List<Currency>() { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
+            _currencyRepository.Expect(x => x.Table).Return(new List<Currency> { currencyUSD, currencyEUR, currencyRUR }.AsQueryable());
             _currencyRepository.Expect(x => x.GetById(currencyUSD.Id)).Return(currencyUSD);
             _currencyRepository.Expect(x => x.GetById(currencyEUR.Id)).Return(currencyEUR);
             _currencyRepository.Expect(x => x.GetById(currencyRUR.Id)).Return(currencyRUR);

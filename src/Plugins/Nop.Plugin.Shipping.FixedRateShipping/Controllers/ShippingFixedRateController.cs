@@ -50,7 +50,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 
             var rateModels = new List<FixedShippingRateModel>();
             foreach (var shippingMethod in _shippingService.GetAllShippingMethods())
-                rateModels.Add(new FixedShippingRateModel()
+                rateModels.Add(new FixedShippingRateModel
                 {
                     ShippingMethodId = shippingMethod.Id,
                     ShippingMethodName = shippingMethod.Name,

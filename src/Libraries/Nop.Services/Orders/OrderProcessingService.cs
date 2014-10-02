@@ -300,7 +300,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //order notes, notifications
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Order status has been changed to {0}", os.ToString()),
                     DisplayToCustomer = false,
@@ -323,7 +323,7 @@ namespace Nop.Services.Orders
                     orderCompletedAttachmentFileName);
                 if (orderCompletedCustomerNotificationQueuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("\"Order completed\" email (to customer) has been queued. Queued email identifier: {0}.", orderCompletedCustomerNotificationQueuedEmailId),
                         DisplayToCustomer = false,
@@ -341,7 +341,7 @@ namespace Nop.Services.Orders
                 int orderCancelledCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderCancelledCustomerNotification(order, order.CustomerLanguageId);
                 if (orderCancelledCustomerNotificationQueuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("\"Order cancelled\" email (to customer) has been queued. Queued email identifier: {0}.", orderCancelledCustomerNotificationQueuedEmailId),
                         DisplayToCustomer = false,
@@ -1028,7 +1028,7 @@ namespace Nop.Services.Orders
                         if (!shoppingCartRequiresShipping)
                             shippingStatus = ShippingStatus.ShippingNotRequired;
 
-                        var order = new Order()
+                        var order = new Order
                         {
                             StoreId = processPaymentRequest.StoreId,
                             OrderGuid = processPaymentRequest.OrderGuid,
@@ -1114,7 +1114,7 @@ namespace Nop.Services.Orders
                                 var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
 
                                 //save order item
-                                var orderItem = new OrderItem()
+                                var orderItem = new OrderItem
                                 {
                                     OrderItemGuid = Guid.NewGuid(),
                                     Order = order,
@@ -1148,7 +1148,7 @@ namespace Nop.Services.Orders
 
                                     for (int i = 0; i < sc.Quantity; i++)
                                     {
-                                        var gc = new GiftCard()
+                                        var gc = new GiftCard
                                         {
                                             GiftCardType = sc.Product.GiftCardType,
                                             PurchasedWithOrderItem = orderItem,
@@ -1181,7 +1181,7 @@ namespace Nop.Services.Orders
                             foreach (var orderItem in initialOrderItems)
                             {
                                 //save item
-                                var newOrderItem = new OrderItem()
+                                var newOrderItem = new OrderItem
                                 {
                                     OrderItemGuid = Guid.NewGuid(),
                                     Order = order,
@@ -1215,7 +1215,7 @@ namespace Nop.Services.Orders
 
                                     for (int i = 0; i < orderItem.Quantity; i++)
                                     {
-                                        var gc = new GiftCard()
+                                        var gc = new GiftCard
                                         {
                                             GiftCardType = orderItem.Product.GiftCardType,
                                             PurchasedWithOrderItem = newOrderItem,
@@ -1243,7 +1243,7 @@ namespace Nop.Services.Orders
                         if (!processPaymentRequest.IsRecurringPayment)
                             foreach (var discount in appliedDiscounts)
                             {
-                                var duh = new DiscountUsageHistory()
+                                var duh = new DiscountUsageHistory
                                 {
                                     Discount = discount,
                                     Order = order,
@@ -1258,7 +1258,7 @@ namespace Nop.Services.Orders
                                 foreach (var agc in appliedGiftCards)
                                 {
                                     decimal amountUsed = agc.AmountCanBeUsed;
-                                    var gcuh = new GiftCardUsageHistory()
+                                    var gcuh = new GiftCardUsageHistory
                                     {
                                         GiftCard = agc.GiftCard,
                                         UsedWithOrder = order,
@@ -1283,7 +1283,7 @@ namespace Nop.Services.Orders
                         if (!processPaymentRequest.IsRecurringPayment && isRecurringShoppingCart)
                         {
                             //create recurring payment (the first payment)
-                            var rp = new RecurringPayment()
+                            var rp = new RecurringPayment
                             {
                                 CycleLength = processPaymentRequest.RecurringCycleLength,
                                 CyclePeriod = processPaymentRequest.RecurringCyclePeriod,
@@ -1307,7 +1307,7 @@ namespace Nop.Services.Orders
                                 case RecurringPaymentType.Manual:
                                     {
                                         //first payment
-                                        var rph = new RecurringPaymentHistory()
+                                        var rph = new RecurringPaymentHistory
                                         {
                                             RecurringPayment = rp,
                                             CreatedOnUtc = DateTime.UtcNow,
@@ -1335,7 +1335,7 @@ namespace Nop.Services.Orders
                         if (_workContext.OriginalCustomerIfImpersonated != null)
                         {
                             //this order is placed by a store administrator impersonating a customer
-                            order.OrderNotes.Add(new OrderNote()
+                            order.OrderNotes.Add(new OrderNote
                             {
                                 Note = string.Format( "Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
                                     _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
@@ -1346,7 +1346,7 @@ namespace Nop.Services.Orders
                         }
                         else
                         {
-                            order.OrderNotes.Add(new OrderNote()
+                            order.OrderNotes.Add(new OrderNote
                             {
                                 Note = "Order placed",
                                 DisplayToCustomer = false,
@@ -1360,7 +1360,7 @@ namespace Nop.Services.Orders
                         int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
                         if (orderPlacedStoreOwnerNotificationQueuedEmailId > 0)
                         {
-                            order.OrderNotes.Add(new OrderNote()
+                            order.OrderNotes.Add(new OrderNote
                             {
                                 Note = string.Format("\"Order placed\" email (to store owner) has been queued. Queued email identifier: {0}.", orderPlacedStoreOwnerNotificationQueuedEmailId),
                                 DisplayToCustomer = false,
@@ -1377,7 +1377,7 @@ namespace Nop.Services.Orders
                             .SendOrderPlacedCustomerNotification(order, order.CustomerLanguageId, orderPlacedAttachmentFilePath, orderPlacedAttachmentFileName);
                         if (orderPlacedCustomerNotificationQueuedEmailId > 0)
                         {
-                            order.OrderNotes.Add(new OrderNote()
+                            order.OrderNotes.Add(new OrderNote
                             {
                                 Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
                                 DisplayToCustomer = false,
@@ -1407,7 +1407,7 @@ namespace Nop.Services.Orders
                             int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
                             if (orderPlacedVendorNotificationQueuedEmailId > 0)
                             {
-                                order.OrderNotes.Add(new OrderNote()
+                                order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = string.Format("\"Order placed\" email (to vendor) has been queued. Queued email identifier: {0}.", orderPlacedVendorNotificationQueuedEmailId),
                                     DisplayToCustomer = false,
@@ -1526,7 +1526,7 @@ namespace Nop.Services.Orders
             }
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = "Order has been deleted",
                 DisplayToCustomer = false,
@@ -1565,7 +1565,7 @@ namespace Nop.Services.Orders
                     throw new NopException("Next payment date could not be calculated");
 
                 //payment info
-                var paymentInfo = new ProcessPaymentRequest()
+                var paymentInfo = new ProcessPaymentRequest
                 {
                     StoreId = initialOrder.StoreId,
                     CustomerId = customer.Id,
@@ -1584,7 +1584,7 @@ namespace Nop.Services.Orders
                     if (result.PlacedOrder == null)
                         throw new NopException("Placed order could not be loaded");
 
-                    var rph = new RecurringPaymentHistory()
+                    var rph = new RecurringPaymentHistory
                     {
                         RecurringPayment = recurringPayment,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -1623,7 +1623,7 @@ namespace Nop.Services.Orders
 
             var initialOrder = recurringPayment.InitialOrder;
             if (initialOrder == null)
-                return new List<string>() { "Initial order could not be loaded" };
+                return new List<string> { "Initial order could not be loaded" };
 
 
             var request = new CancelRecurringPaymentRequest();
@@ -1640,7 +1640,7 @@ namespace Nop.Services.Orders
 
 
                     //add a note
-                    initialOrder.OrderNotes.Add(new OrderNote()
+                    initialOrder.OrderNotes.Add(new OrderNote
                     {
                         Note = "Recurring payment has been cancelled",
                         DisplayToCustomer = false,
@@ -1673,7 +1673,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                initialOrder.OrderNotes.Add(new OrderNote()
+                initialOrder.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Unable to cancel recurring payment. {0}", error),
                     DisplayToCustomer = false,
@@ -1762,7 +1762,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Shipment# {0} has been sent", shipment.Id),
                     DisplayToCustomer = false,
@@ -1776,7 +1776,7 @@ namespace Nop.Services.Orders
                 int queuedEmailId = _workflowMessageService.SendShipmentSentCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("\"Shipped\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
@@ -1821,7 +1821,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = string.Format("Shipment# {0} has been delivered", shipment.Id),
                 DisplayToCustomer = false,
@@ -1835,7 +1835,7 @@ namespace Nop.Services.Orders
                 int queuedEmailId = _workflowMessageService.SendShipmentDeliveredCustomerNotification(shipment, order.CustomerLanguageId);
                 if (queuedEmailId > 0)
                 {
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("\"Delivered\" email (to customer) has been queued. Queued email identifier: {0}.", queuedEmailId),
                         DisplayToCustomer = false,
@@ -1887,7 +1887,7 @@ namespace Nop.Services.Orders
             SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = "Order has been cancelled",
                 DisplayToCustomer = false,
@@ -1958,7 +1958,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = "Order has been marked as authorized",
                 DisplayToCustomer = false,
@@ -2027,7 +2027,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = "Order has been captured",
                         DisplayToCustomer = false,
@@ -2062,7 +2062,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote()
+                order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Unable to capture order. {0}", error),
                     DisplayToCustomer = false,
@@ -2115,7 +2115,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = "Order has been marked as paid",
                 DisplayToCustomer = false,
@@ -2189,7 +2189,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("Order has been refunded. Amount = {0}", _priceFormatter.FormatPrice(request.AmountToRefund, true, false)),
                         DisplayToCustomer = false,
@@ -2220,7 +2220,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote()
+                order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Unable to refund order. {0}", error),
                     DisplayToCustomer = false,
@@ -2282,7 +2282,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = string.Format("Order has been marked as refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
                 DisplayToCustomer = false,
@@ -2363,7 +2363,7 @@ namespace Nop.Services.Orders
 
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = string.Format("Order has been partially refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
                         DisplayToCustomer = false,
@@ -2393,7 +2393,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote()
+                order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Unable to partially refund order. {0}", error),
                     DisplayToCustomer = false,
@@ -2463,7 +2463,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = string.Format("Order has been marked as partially refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
                 DisplayToCustomer = false,
@@ -2528,7 +2528,7 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     //add a note
-                    order.OrderNotes.Add(new OrderNote()
+                    order.OrderNotes.Add(new OrderNote
                     {
                         Note = "Order has been voided",
                         DisplayToCustomer = false,
@@ -2558,7 +2558,7 @@ namespace Nop.Services.Orders
             if (!String.IsNullOrEmpty(error))
             {
                 //add a note
-                order.OrderNotes.Add(new OrderNote()
+                order.OrderNotes.Add(new OrderNote
                 {
                     Note = string.Format("Unable to voiding order. {0}", error),
                     DisplayToCustomer = false,
@@ -2612,7 +2612,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //add a note
-            order.OrderNotes.Add(new OrderNote()
+            order.OrderNotes.Add(new OrderNote
             {
                 Note = "Order has been marked as voided",
                 DisplayToCustomer = false,

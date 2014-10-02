@@ -118,13 +118,13 @@ namespace Nop.Services.Tests.Orders
             #endregion
             
             _checkoutAttributeRepo = MockRepository.GenerateMock<IRepository<CheckoutAttribute>>();
-            _checkoutAttributeRepo.Expect(x => x.Table).Return(new List<CheckoutAttribute>() { ca1, ca2, ca3 }.AsQueryable());
+            _checkoutAttributeRepo.Expect(x => x.Table).Return(new List<CheckoutAttribute> { ca1, ca2, ca3 }.AsQueryable());
             _checkoutAttributeRepo.Expect(x => x.GetById(ca1.Id)).Return(ca1);
             _checkoutAttributeRepo.Expect(x => x.GetById(ca2.Id)).Return(ca2);
             _checkoutAttributeRepo.Expect(x => x.GetById(ca3.Id)).Return(ca3);
 
             _checkoutAttributeValueRepo = MockRepository.GenerateMock<IRepository<CheckoutAttributeValue>>();
-            _checkoutAttributeValueRepo.Expect(x => x.Table).Return(new List<CheckoutAttributeValue>() { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
+            _checkoutAttributeValueRepo.Expect(x => x.Table).Return(new List<CheckoutAttributeValue> { cav1_1, cav1_2, cav2_1, cav2_2 }.AsQueryable());
             _checkoutAttributeValueRepo.Expect(x => x.GetById(cav1_1.Id)).Return(cav1_1);
             _checkoutAttributeValueRepo.Expect(x => x.GetById(cav1_2.Id)).Return(cav1_2);
             _checkoutAttributeValueRepo.Expect(x => x.GetById(cav2_1.Id)).Return(cav2_1);

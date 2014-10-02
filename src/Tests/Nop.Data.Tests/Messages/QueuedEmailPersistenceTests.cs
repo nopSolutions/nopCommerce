@@ -11,7 +11,7 @@ namespace Nop.Data.Tests.Messages
         [Test]
         public void Can_save_and_load_queuedEmail()
         {
-            var qe = new QueuedEmail()
+            var qe = new QueuedEmail
             {
                 Priority = 1,
                 From = "From",

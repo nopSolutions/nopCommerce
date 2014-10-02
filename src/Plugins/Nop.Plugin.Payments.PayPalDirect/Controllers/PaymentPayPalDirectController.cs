@@ -159,22 +159,22 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             var model = new PaymentInfoModel();
 
             //CC types
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Visa",
                 Value = "Visa",
             });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Master card",
                 Value = "MasterCard",
             });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Discover",
                 Value = "Discover",
             });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Amex",
                 Value = "Amex",
@@ -184,7 +184,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             for (int i = 0; i < 15; i++)
             {
                 string year = Convert.ToString(DateTime.Now.Year + i);
-                model.ExpireYears.Add(new SelectListItem()
+                model.ExpireYears.Add(new SelectListItem
                 {
                     Text = year,
                     Value = year,
@@ -194,8 +194,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             //months
             for (int i = 1; i <= 12; i++)
             {
-                string text = (i < 10) ? "0" + i.ToString() : i.ToString();
-                model.ExpireMonths.Add(new SelectListItem()
+                string text = (i < 10) ? "0" + i : i.ToString();
+                model.ExpireMonths.Add(new SelectListItem
                 {
                     Text = text,
                     Value = i.ToString(),
@@ -227,7 +227,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
 
             //validate
             var validator = new PaymentInfoValidator(_localizationService);
-            var model = new PaymentInfoModel()
+            var model = new PaymentInfoModel
             {
                 CardholderName = form["CardholderName"],
                 CardNumber = form["CardNumber"],
@@ -346,7 +346,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                                 if (recurringPaymentHistory.Count == 0)
                                                 {
                                                     //first payment
-                                                    var rph = new RecurringPaymentHistory()
+                                                    var rph = new RecurringPaymentHistory
                                                     {
                                                         RecurringPaymentId = rp.Id,
                                                         OrderId = initialOrder.Id,
@@ -394,7 +394,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                             {
 
                                 //order note
-                                order.OrderNotes.Add(new OrderNote()
+                                order.OrderNotes.Add(new OrderNote
                                 {
                                     Note = sb.ToString(),
                                     DisplayToCustomer = false,

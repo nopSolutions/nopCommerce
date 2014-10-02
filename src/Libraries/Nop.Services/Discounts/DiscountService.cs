@@ -360,7 +360,7 @@ namespace Nop.Services.Discounts
                 if (!_pluginFinder.AuthenticateStore(requirementRule.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
 
-                var request = new CheckDiscountRequirementRequest()
+                var request = new CheckDiscountRequirementRequest
                 {
                     DiscountRequirement = req,
                     Customer = customer,

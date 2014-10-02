@@ -14,7 +14,7 @@ namespace Nop.Data.Tests.Localization
             {
                 ResourceName = "ResourceName1",
                 ResourceValue = "ResourceValue2",
-                Language = new Language()
+                Language = new Language
                                {
                                    Name = "English",
                                    LanguageCulture = "en-Us",

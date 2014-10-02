@@ -50,7 +50,7 @@ namespace Nop.Data.Tests.Localization
                            };
             lang.LocaleStringResources.Add
                 (
-                    new LocaleStringResource()
+                    new LocaleStringResource
                     {
                         ResourceName = "ResourceName1",
                         ResourceValue = "ResourceValue2"

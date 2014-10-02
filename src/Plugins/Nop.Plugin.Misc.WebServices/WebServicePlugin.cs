@@ -64,7 +64,7 @@ namespace Nop.Plugin.Misc.WebServices
         {
             actionName = "Configure";
             controllerName = "MiscWebServices";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.WebServices.Controllers.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Misc.WebServices.Controllers.Controllers" }, { "area", null } };
         }
 
         #endregion

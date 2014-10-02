@@ -94,9 +94,9 @@ namespace Nop.Services.Tests.ExportImport
         [Test]
         public void Can_export_orders_xlsx()
         {
-            var orders = new List<Order>()
+            var orders = new List<Order>
             {
-                new Order()
+                new Order
                 {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
@@ -157,7 +157,7 @@ namespace Nop.Services.Tests.ExportImport
 
         protected Address GetTestBillingAddress()
         {
-            return new Address()
+            return new Address
             {
                 FirstName = "FirstName 1",
                 LastName = "LastName 1",
@@ -176,7 +176,7 @@ namespace Nop.Services.Tests.ExportImport
 
         protected Address GetTestShippingAddress()
         {
-            return new Address()
+            return new Address
             {
                 FirstName = "FirstName 2",
                 LastName = "LastName 2",

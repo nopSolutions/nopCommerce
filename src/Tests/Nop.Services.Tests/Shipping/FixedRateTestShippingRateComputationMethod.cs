@@ -26,13 +26,13 @@ namespace Nop.Services.Tests.Shipping
                 throw new ArgumentNullException("getShippingOptionRequest");
 
             var response = new GetShippingOptionResponse();
-            response.ShippingOptions.Add(new ShippingOption()
+            response.ShippingOptions.Add(new ShippingOption
                 {
                     Name = "Shipping option 1",
                     Description = "",
                     Rate = GetRate()
                 }); 
-            response.ShippingOptions.Add(new ShippingOption()
+            response.ShippingOptions.Add(new ShippingOption
                 {
                     Name = "Shipping option 2",
                     Description = "",

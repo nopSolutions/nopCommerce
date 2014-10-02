@@ -44,7 +44,7 @@ namespace Nop.Services.Tests.Localization
                 DisplayOrder = 2
             };
 
-            _languageRepo.Expect(x => x.Table).Return(new List<Language>() { lang1, lang2 }.AsQueryable());
+            _languageRepo.Expect(x => x.Table).Return(new List<Language> { lang1, lang2 }.AsQueryable());
 
             _storeMappingService = MockRepository.GenerateMock<IStoreMappingService>();
 

@@ -11,7 +11,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_checkoutAttributeValue()
         {
-            var cav = new CheckoutAttributeValue()
+            var cav = new CheckoutAttributeValue
                     {
                         Name = "Name 2",
                         ColorSquaresRgb = "#112233",

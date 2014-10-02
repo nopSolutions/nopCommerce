@@ -221,7 +221,7 @@ namespace Nop.Data.Tests.Catalog
                     {
                         IsFeaturedProduct = true,
                         DisplayOrder = 1,
-                        Category = new Category()
+                        Category = new Category
                         {
                             Name = "Books",
                             Description = "Description 1",
@@ -270,7 +270,7 @@ namespace Nop.Data.Tests.Catalog
                     {
                         IsFeaturedProduct = true,
                         DisplayOrder = 1,
-                        Manufacturer = new Manufacturer()
+                        Manufacturer = new Manufacturer
                         {
                             Name = "Name",
                             Description = "Description 1",
@@ -318,7 +318,7 @@ namespace Nop.Data.Tests.Catalog
                     new ProductPicture
                     {
                         DisplayOrder = 1,
-                        Picture = new Picture()
+                        Picture = new Picture
                         {
                             PictureBinary = new byte[] { 1, 2, 3 },
                             MimeType = "image/pjpeg",
@@ -407,7 +407,7 @@ namespace Nop.Data.Tests.Catalog
                 (
                     new ProductWarehouseInventory
                     {
-                        Warehouse = new Warehouse()
+                        Warehouse = new Warehouse
                         {
                             Name = "Name 2",
                             AddressId = 1,

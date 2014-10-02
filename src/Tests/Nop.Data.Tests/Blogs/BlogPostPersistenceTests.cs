@@ -27,7 +27,7 @@ namespace Nop.Data.Tests.Blogs
                 MetaDescription = "MetaDescription 1",
                 MetaKeywords = "MetaKeywords 1",
                 LimitedToStores = true,
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",
@@ -62,7 +62,7 @@ namespace Nop.Data.Tests.Blogs
                 Body = "Body 1",
                 AllowComments = true,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",

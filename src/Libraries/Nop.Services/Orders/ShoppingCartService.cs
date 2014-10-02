@@ -1022,7 +1022,7 @@ namespace Nop.Services.Orders
                     }
 
                     DateTime now = DateTime.UtcNow;
-                    shoppingCartItem = new ShoppingCartItem()
+                    shoppingCartItem = new ShoppingCartItem
                     {
                         ShoppingCartType = shoppingCartType,
                         StoreId = storeId,

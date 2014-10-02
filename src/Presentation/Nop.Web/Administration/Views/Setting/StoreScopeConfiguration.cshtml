@@ -10,7 +10,7 @@
             Selected = store.Id.Equals(Model.StoreId)
         })
         .ToList();
-    stores.Insert(0, new SelectListItem()
+    stores.Insert(0, new SelectListItem
     {
         Text = T("Admin.Configuration.Settings.StoreScope.AllStores").Text,
         Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = 0 }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),

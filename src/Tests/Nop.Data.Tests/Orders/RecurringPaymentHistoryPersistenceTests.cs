@@ -14,10 +14,10 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_recurringPaymentHistory()
         {
-            var rph = new RecurringPaymentHistory()
+            var rph = new RecurringPaymentHistory
             {
                 CreatedOnUtc = new DateTime(2010, 01, 03),
-                RecurringPayment = new RecurringPayment()
+                RecurringPayment = new RecurringPayment
                 {
                     StartDateUtc = new DateTime(2010, 01, 01),
                     CreatedOnUtc = new DateTime(2010, 01, 02),
@@ -48,13 +48,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

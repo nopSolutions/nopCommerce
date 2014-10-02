@@ -228,7 +228,7 @@ namespace Nop.Plugin.Misc.WebServices
             try
             {
                 var order = _orderService.GetOrderById(orderId);
-                order.OrderNotes.Add(new OrderNote()
+                order.OrderNotes.Add(new OrderNote
                 {
                     Note = note,
                     DisplayToCustomer = displayToCustomer,

@@ -42,7 +42,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual ScheduleTaskModel PrepareScheduleTaskModel(ScheduleTask task)
         {
-            var model = new ScheduleTaskModel()
+            var model = new ScheduleTaskModel
                             {
                                 Id = task.Id,
                                 Name = task.Name,
@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var scheduleTask = _scheduleTaskService.GetTaskById(model.Id);

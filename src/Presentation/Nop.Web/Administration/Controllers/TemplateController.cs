@@ -76,7 +76,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _categoryTemplateService.GetCategoryTemplateById(model.Id);
@@ -96,7 +96,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new CategoryTemplate();
@@ -159,7 +159,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _manufacturerTemplateService.GetManufacturerTemplateById(model.Id);
@@ -179,7 +179,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new ManufacturerTemplate();
@@ -245,7 +245,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = _productTemplateService.GetProductTemplateById(model.Id);
@@ -265,7 +265,7 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return Json(new DataSourceResult() { Errors = ModelState.SerializeErrors() });
+                return Json(new DataSourceResult { Errors = ModelState.SerializeErrors() });
             }
 
             var template = new ProductTemplate();

@@ -12,11 +12,11 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
         public void Can_clone()
         {	    
             //create
-            var model1 = new HomePageNewsItemsModel()
+            var model1 = new HomePageNewsItemsModel
             {
                 WorkingLanguageId = 1,
             };
-            var newsItemModel1 = new NewsItemModel()
+            var newsItemModel1 = new NewsItemModel
             {
                 Id = 1,
                 SeName = "SeName 1",
@@ -26,14 +26,14 @@ namespace Nop.Web.MVC.Tests.Public.Models.News
                 AllowComments = true,
                 NumberOfComments = 2,
                 CreatedOn = new DateTime(2010, 01, 01),
-                AddNewComment = new AddNewsCommentModel()
+                AddNewComment = new AddNewsCommentModel
                 {
                     CommentTitle = "CommentTitle 1",
                     CommentText = "CommentText 1",
                     DisplayCaptcha = true
                 }
             };
-            newsItemModel1.Comments.Add(new NewsCommentModel()
+            newsItemModel1.Comments.Add(new NewsCommentModel
             {
                 Id = 3,
                 CustomerId = 4,

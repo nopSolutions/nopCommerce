@@ -90,7 +90,7 @@ namespace Nop.Services.Catalog
                 var download = _downloadService.GetDownloadById(product.DownloadId);
                 if (download != null)
                 {
-                    var downloadCopy = new Download()
+                    var downloadCopy = new Download
                     {
                         DownloadGuid = Guid.NewGuid(),
                         UseDownloadUrl = download.UseDownloadUrl,
@@ -110,7 +110,7 @@ namespace Nop.Services.Catalog
                     var sampleDownload = _downloadService.GetDownloadById(product.SampleDownloadId);
                     if (sampleDownload != null)
                     {
-                        var sampleDownloadCopy = new Download()
+                        var sampleDownloadCopy = new Download
                         {
                             DownloadGuid = Guid.NewGuid(),
                             UseDownloadUrl = sampleDownload.UseDownloadUrl,
@@ -128,7 +128,7 @@ namespace Nop.Services.Catalog
             }
 
             // product
-            productCopy = new Product()
+            productCopy = new Product
             {
                 ProductTypeId = product.ProductTypeId,
                 ParentGroupedProductId = product.ParentGroupedProductId,
@@ -276,7 +276,7 @@ namespace Nop.Services.Catalog
                         picture.MimeType,
                         _pictureService.GetPictureSeName(newName),
                         true);
-                    _productService.InsertProductPicture(new ProductPicture()
+                    _productService.InsertProductPicture(new ProductPicture
                     {
                         ProductId = productCopy.Id,
                         PictureId = pictureCopy.Id,
@@ -289,7 +289,7 @@ namespace Nop.Services.Catalog
             // product <-> warehouses mappings
             foreach (var pwi in product.ProductWarehouseInventory)
             {
-                var pwiCopy = new ProductWarehouseInventory()
+                var pwiCopy = new ProductWarehouseInventory
                 {
                     ProductId = productCopy.Id,
                     WarehouseId = pwi.WarehouseId,
@@ -304,7 +304,7 @@ namespace Nop.Services.Catalog
             // product <-> categories mappings
             foreach (var productCategory in product.ProductCategories)
             {
-                var productCategoryCopy = new ProductCategory()
+                var productCategoryCopy = new ProductCategory
                 {
                     ProductId = productCopy.Id,
                     CategoryId = productCategory.CategoryId,
@@ -318,7 +318,7 @@ namespace Nop.Services.Catalog
             // product <-> manufacturers mappings
             foreach (var productManufacturers in product.ProductManufacturers)
             {
-                var productManufacturerCopy = new ProductManufacturer()
+                var productManufacturerCopy = new ProductManufacturer
                 {
                     ProductId = productCopy.Id,
                     ManufacturerId = productManufacturers.ManufacturerId,
@@ -333,7 +333,7 @@ namespace Nop.Services.Catalog
             foreach (var relatedProduct in _productService.GetRelatedProductsByProductId1(product.Id, true))
             {
                 _productService.InsertRelatedProduct(
-                    new RelatedProduct()
+                    new RelatedProduct
                     {
                         ProductId1 = productCopy.Id,
                         ProductId2 = relatedProduct.ProductId2,
@@ -345,7 +345,7 @@ namespace Nop.Services.Catalog
             foreach (var csProduct in _productService.GetCrossSellProductsByProductId1(product.Id, true))
             {
                 _productService.InsertCrossSellProduct(
-                    new CrossSellProduct()
+                    new CrossSellProduct
                     {
                         ProductId1 = productCopy.Id,
                         ProductId2 = csProduct.ProductId2,
@@ -355,7 +355,7 @@ namespace Nop.Services.Catalog
             // product specifications
             foreach (var productSpecificationAttribute in product.ProductSpecificationAttributes)
             {
-                var psaCopy = new ProductSpecificationAttribute()
+                var psaCopy = new ProductSpecificationAttribute
                 {
                     ProductId = productCopy.Id,
                     SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
@@ -380,7 +380,7 @@ namespace Nop.Services.Catalog
             var associatedAttributeValues = new Dictionary<int, int>();
             foreach (var productVariantAttribute in _productAttributeService.GetProductVariantAttributesByProductId(product.Id))
             {
-                var productVariantAttributeCopy = new ProductVariantAttribute()
+                var productVariantAttributeCopy = new ProductVariantAttribute
                 {
                     ProductId = productCopy.Id,
                     ProductAttributeId = productVariantAttribute.ProductAttributeId,
@@ -407,7 +407,7 @@ namespace Nop.Services.Catalog
                     {
                         pvavPictureId = originalNewPictureIdentifiers[productVariantAttributeValue.PictureId];
                     }
-                    var pvavCopy = new ProductVariantAttributeValue()
+                    var pvavCopy = new ProductVariantAttributeValue
                     {
                         ProductVariantAttributeId = productVariantAttributeCopy.Id,
                         AttributeValueTypeId = productVariantAttributeValue.AttributeValueTypeId,
@@ -478,7 +478,7 @@ namespace Nop.Services.Catalog
                         }
                     }
                 }
-                var combinationCopy = new ProductVariantAttributeCombination()
+                var combinationCopy = new ProductVariantAttributeCombination
                 {
                     ProductId = productCopy.Id,
                     AttributesXml = newAttributesXml,
@@ -496,7 +496,7 @@ namespace Nop.Services.Catalog
             foreach (var tierPrice in product.TierPrices)
             {
                 _productService.InsertTierPrice(
-                    new TierPrice()
+                    new TierPrice
                     {
                         ProductId = productCopy.Id,
                         StoreId = tierPrice.StoreId,

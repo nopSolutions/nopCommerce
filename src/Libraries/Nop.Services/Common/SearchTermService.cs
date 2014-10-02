@@ -95,7 +95,7 @@ namespace Nop.Services.Common
                             Count = groupedResult.Sum(o => o.Count)
                         })
                         .OrderByDescending(m => m.Count)
-                        .Select(r => new SearchTermReportLine()
+                        .Select(r => new SearchTermReportLine
                         {
                             Keyword = r.Keyword,
                             Count = r.Count

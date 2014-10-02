@@ -100,7 +100,7 @@ namespace Nop.Services.Logging
                 var activityLogTypes = GetAllActivityTypes();
                 foreach (var alt in activityLogTypes)
                 {
-                    var altForCaching = new ActivityLogTypeForCaching()
+                    var altForCaching = new ActivityLogTypeForCaching
                     {
                         Id = alt.Id,
                         SystemKeyword = alt.SystemKeyword,

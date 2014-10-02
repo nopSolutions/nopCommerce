@@ -130,22 +130,22 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             var model = new PaymentInfoModel();
             
             //CC types
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
                 {
                     Text = "Visa",
                     Value = "Visa",
                 });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Master card",
                 Value = "MasterCard",
             });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Discover",
                 Value = "Discover",
             });
-            model.CreditCardTypes.Add(new SelectListItem()
+            model.CreditCardTypes.Add(new SelectListItem
             {
                 Text = "Amex",
                 Value = "Amex",
@@ -155,7 +155,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             for (int i = 0; i < 15; i++)
             {
                 string year = Convert.ToString(DateTime.Now.Year + i);
-                model.ExpireYears.Add(new SelectListItem()
+                model.ExpireYears.Add(new SelectListItem
                 {
                     Text = year,
                     Value = year,
@@ -165,7 +165,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             //months
             for (int i = 1; i <= 12; i++)
             {
-                string text = (i < 10) ? "0" + i.ToString() : i.ToString();
+                string text = (i < 10) ? "0" + i : i.ToString();
                 model.ExpireMonths.Add(new SelectListItem()
                 {
                     Text = text,
@@ -198,7 +198,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
 
             //validate
             var validator = new PaymentInfoValidator(_localizationService);
-            var model = new PaymentInfoModel()
+            var model = new PaymentInfoModel
             {
                 CardholderName = form["CardholderName"],
                 CardNumber = form["CardNumber"],

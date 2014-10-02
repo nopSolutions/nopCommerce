@@ -44,7 +44,7 @@ namespace Nop.Admin.Controllers
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
-            var download = new Download()
+            var download = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = true,
@@ -88,7 +88,7 @@ namespace Nop.Admin.Controllers
             if (!String.IsNullOrEmpty(fileExtension))
                 fileExtension = fileExtension.ToLowerInvariant();
 
-            var download = new Download()
+            var download = new Download
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,

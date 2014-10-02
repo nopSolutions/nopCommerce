@@ -46,7 +46,7 @@ namespace Nop.Admin.Controllers
 
             var model = new LogListModel();
             model.AvailableLogLevels = LogLevel.Debug.ToSelectList(false).ToList();
-            model.AvailableLogLevels.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailableLogLevels.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             return View(model);
         }
@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = logItems.Select(x =>
                 {
-                    return new LogModel()
+                    return new LogModel
                     {
                         Id = x.Id,
                         LogLevel = x.LogLevel.GetLocalizedEnum(_localizationService, _workContext),
@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
                 //No log found with the specified id
                 return RedirectToAction("List");
 
-            var model = new LogModel()
+            var model = new LogModel
             {
                 Id = log.Id,
                 LogLevel = log.LogLevel.GetLocalizedEnum(_localizationService, _workContext),

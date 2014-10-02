@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Localization
                 LocaleKeyGroup = "LocaleKeyGroup 1",
                 LocaleKey = "LocaleKey 1",
                 LocaleValue = "LocaleValue 1",
-                Language = new Language()
+                Language = new Language
                 {
                     Name = "English",
                     LanguageCulture = "en-Us",

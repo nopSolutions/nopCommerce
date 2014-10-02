@@ -137,7 +137,7 @@ namespace Nop.Plugin.Feed.Froogle
         {
             actionName = "Configure";
             controllerName = "FeedFroogle";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -459,7 +459,7 @@ namespace Nop.Plugin.Feed.Froogle
         public override void Install()
         {
             //settings
-            var settings = new FroogleSettings()
+            var settings = new FroogleSettings
             {
                 ProductPictureSize = 125,
                 PassShippingInfo = false,

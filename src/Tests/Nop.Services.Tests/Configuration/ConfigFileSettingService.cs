@@ -67,7 +67,7 @@ namespace Nop.Services.Tests.Configuration
             var appSettings = ConfigurationManager.AppSettings;
             foreach (var setting in appSettings.AllKeys)
             {
-                settings.Add(new Setting()
+                settings.Add(new Setting
                                  {
                                      Name = setting.ToLowerInvariant(),
                                      Value = appSettings[setting]

@@ -192,7 +192,7 @@ namespace Nop.Plugin.Payments.Manual
         {
             actionName = "Configure";
             controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Nop.Plugin.Payments.Manual
         {
             actionName = "PaymentInfo";
             controllerName = "PaymentManual";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Payments.Manual.Controllers" }, { "area", null } };
         }
 
         public Type GetControllerType()
@@ -216,7 +216,7 @@ namespace Nop.Plugin.Payments.Manual
         public override void Install()
         {
             //settings
-            var settings = new ManualPaymentSettings()
+            var settings = new ManualPaymentSettings
             {
                 TransactMode = TransactMode.Pending
             };

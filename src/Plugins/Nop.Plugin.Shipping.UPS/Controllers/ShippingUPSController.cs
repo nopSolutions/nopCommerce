@@ -44,7 +44,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
 
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
-                model.AvailableCustomerClassifications.Add(new SelectListItem()
+                model.AvailableCustomerClassifications.Add(new SelectListItem
                     {
                         Text = CommonHelper.ConvertEnum(customerClassification.ToString()),
                         Value = customerClassification.ToString(),
@@ -53,7 +53,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
             foreach (UPSPickupType pickupType in Enum.GetValues(typeof(UPSPickupType)))
             {
-                model.AvailablePickupTypes.Add(new SelectListItem()
+                model.AvailablePickupTypes.Add(new SelectListItem
                 {
                     Text = CommonHelper.ConvertEnum(pickupType.ToString()),
                     Value = pickupType.ToString(),
@@ -62,7 +62,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             }
             foreach (UPSPackagingType packagingType in Enum.GetValues(typeof(UPSPackagingType)))
             {
-                model.AvailablePackagingTypes.Add(new SelectListItem()
+                model.AvailablePackagingTypes.Add(new SelectListItem
                 {
                     Text = CommonHelper.ConvertEnum(packagingType.ToString()),
                     Value = packagingType.ToString(),

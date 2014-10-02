@@ -231,7 +231,7 @@ namespace Nop.Services.Localization
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
-                    lsr = new LocaleStringResource()
+                    lsr = new LocaleStringResource
                     {
                         LanguageId = lang.Id,
                         ResourceName = resourceName,
@@ -351,7 +351,7 @@ namespace Nop.Services.Localization
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
-                    lsr = new LocaleStringResource()
+                    lsr = new LocaleStringResource
                     {
                         LanguageId = lang.Id,
                         ResourceName = resourceName,
@@ -452,7 +452,7 @@ namespace Nop.Services.Localization
                 if (!string.IsNullOrWhiteSpace(localizedFriendlyName))
                 {
                     //insert
-                    resource = new LocaleStringResource()
+                    resource = new LocaleStringResource
                     {
                         LanguageId = languageId,
                         ResourceName = resourceName,

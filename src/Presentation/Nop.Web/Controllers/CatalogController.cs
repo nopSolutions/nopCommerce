@@ -162,7 +162,7 @@ namespace Nop.Web.Controllers
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
 
                     var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem()
+                    pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
                         Text = sortValue,
                         Value = sortUrl,
@@ -191,14 +191,14 @@ namespace Nop.Web.Controllers
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
                 //grid
-                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem()
+                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
-                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem()
+                pagingFilteringModel.AvailableViewModes.Add(new SelectListItem
                 {
                     Text = _localizationService.GetResource("Catalog.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
                             continue;
                         }
 
-                        pagingFilteringModel.PageSizeOptions.Add(new SelectListItem()
+                        pagingFilteringModel.PageSizeOptions.Add(new SelectListItem
                         {
                             Text = pageSize,
                             Value = String.Format(sortUrl, pageSize),
@@ -332,7 +332,7 @@ namespace Nop.Web.Controllers
                     continue;
                 }
 
-                var categoryModel = new CategorySimpleModel()
+                var categoryModel = new CategorySimpleModel
                 {
                     Id = category.Id,
                     Name = category.GetLocalized(x => x.Name),
@@ -477,7 +477,7 @@ namespace Nop.Web.Controllers
             {
                 foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
                 {
-                    model.CategoryBreadcrumb.Add(new CategoryModel()
+                    model.CategoryBreadcrumb.Add(new CategoryModel
                     {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name),
@@ -505,7 +505,7 @@ namespace Nop.Web.Controllers
                 return _categoryService.GetAllCategoriesByParentCategoryId(categoryId)
                 .Select(x =>
                 {
-                    var subCatModel = new CategoryModel.SubCategoryModel()
+                    var subCatModel = new CategoryModel.SubCategoryModel
                     {
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name),
@@ -518,7 +518,7 @@ namespace Nop.Web.Controllers
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var picture = _pictureService.GetPictureById(x.PictureId);
-                        var pictureModel = new PictureModel()
+                        var pictureModel = new PictureModel
                         {
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
@@ -549,7 +549,7 @@ namespace Nop.Web.Controllers
                     //no value in the cache yet
                     //let's load products and cache the result (true/false)
                     featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int>() { category.Id },
+                       categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
@@ -561,7 +561,7 @@ namespace Nop.Web.Controllers
                     //cache indicates that the category has featured products
                     //let's load them
                     featuredProducts = _productService.SearchProducts(
-                       categoryIds: new List<int>() { category.Id },
+                       categoryIds: new List<int> { category.Id },
                        storeId: _storeContext.CurrentStore.Id,
                        visibleIndividuallyOnly: true,
                        featuredProducts: true);
@@ -658,7 +658,7 @@ namespace Nop.Web.Controllers
                 return PrepareCategorySimpleModels(0, breadCrumb, 0, int.MaxValue, false).ToList();
             });
 
-            var model = new CategoryNavigationModel()
+            var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
                 Categories = cachedModel
@@ -689,7 +689,7 @@ namespace Nop.Web.Controllers
                     .ToList()
                     .FindAll(t => t.IncludeInTopMenu)
                     .ToList()
-                    .Select(t => new TopMenuModel.TopMenuTopicModel()
+                    .Select(t => new TopMenuModel.TopMenuTopicModel
                     {
                         Id = t.Id,
                         Name = t.GetLocalized(x => x.Title),
@@ -697,7 +697,7 @@ namespace Nop.Web.Controllers
                     })
                     .ToList();
             });
-            var model = new TopMenuModel()
+            var model = new TopMenuModel
             {
                 Categories = cachedCategoriesModel,
                 Topics = cachedTopicModel,
@@ -733,7 +733,7 @@ namespace Nop.Web.Controllers
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var picture = _pictureService.GetPictureById(x.PictureId);
-                        var pictureModel = new PictureModel()
+                        var pictureModel = new PictureModel
                         {
                             FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
@@ -907,7 +907,7 @@ namespace Nop.Web.Controllers
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
                     var picture = _pictureService.GetPictureById(manufacturer.PictureId);
-                    var pictureModel = new PictureModel()
+                    var pictureModel = new PictureModel
                     {
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
@@ -936,14 +936,14 @@ namespace Nop.Web.Controllers
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
 
                     var manufacturers = _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
-                    var model = new ManufacturerNavigationModel()
+                    var model = new ManufacturerNavigationModel
                     {
                         TotalManufacturers = manufacturers.TotalCount
                     };
 
                     foreach (var manufacturer in manufacturers)
                     {
-                        var modelMan = new ManufacturerBriefInfoModel()
+                        var modelMan = new ManufacturerBriefInfoModel
                         {
                             Id = manufacturer.Id,
                             Name = manufacturer.GetLocalized(x => x.Name),
@@ -982,7 +982,7 @@ namespace Nop.Web.Controllers
                 _webHelper.GetThisPageUrl(false),
                 _storeContext.CurrentStore.Id);
             
-            var model = new VendorModel()
+            var model = new VendorModel
             {
                 Id = vendor.Id,
                 Name = vendor.GetLocalized(x => x.Name),
@@ -1032,7 +1032,7 @@ namespace Nop.Web.Controllers
             var vendors = _vendorService.GetAllVendors();
             foreach (var vendor in vendors)
             {
-                var vendorModel = new VendorModel()
+                var vendorModel = new VendorModel
                 {
                     Id = vendor.Id,
                     Name = vendor.GetLocalized(x => x.Name),
@@ -1058,14 +1058,14 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var vendors = _vendorService.GetAllVendors(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
-                var model = new VendorNavigationModel()
+                var model = new VendorNavigationModel
                 {
                     TotalVendors = vendors.TotalCount
                 };
 
                 foreach (var vendor in vendors)
                 {
-                    model.Vendors.Add(new VendorBriefInfoModel()
+                    model.Vendors.Add(new VendorBriefInfoModel
                     {
                         Id = vendor.Id,
                         Name = vendor.GetLocalized(x => x.Name),
@@ -1111,7 +1111,7 @@ namespace Nop.Web.Controllers
                 model.TotalTags = allTags.Count;
                 
                 foreach (var tag in tags)
-                    model.Tags.Add(new ProductTagModel()
+                    model.Tags.Add(new ProductTagModel
                     {
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name),
@@ -1134,7 +1134,7 @@ namespace Nop.Web.Controllers
             if (productTag == null)
                 return InvokeHttp404();
 
-            var model = new ProductsByTagModel()
+            var model = new ProductsByTagModel
             {
                 Id = productTag.Id,
                 TagName = productTag.GetLocalized(y => y.Name),
@@ -1179,7 +1179,7 @@ namespace Nop.Web.Controllers
                 .OrderBy(x => x.GetLocalized(y => y.Name))
                 .Select(x =>
                             {
-                                var ptModel = new ProductTagModel()
+                                var ptModel = new ProductTagModel
                                 {
                                     Id = x.Id,
                                     Name = x.GetLocalized(y => y.Name),
@@ -1244,7 +1244,7 @@ namespace Nop.Web.Controllers
                         if (i != breadcrumb.Count - 1)
                             categoryBreadcrumb += " >> ";
                     }
-                    categoriesModel.Add(new SearchModel.CategoryModel()
+                    categoriesModel.Add(new SearchModel.CategoryModel
                     {
                         Id = c.Id,
                         Breadcrumb = categoryBreadcrumb
@@ -1255,7 +1255,7 @@ namespace Nop.Web.Controllers
             if (categories.Count > 0)
             {
                 //first empty entry
-                model.AvailableCategories.Add(new SelectListItem()
+                model.AvailableCategories.Add(new SelectListItem
                     {
                          Value = "0",
                          Text = _localizationService.GetResource("Common.All")
@@ -1263,7 +1263,7 @@ namespace Nop.Web.Controllers
                 //all other categories
                 foreach (var c in categories)
                 {
-                    model.AvailableCategories.Add(new SelectListItem()
+                    model.AvailableCategories.Add(new SelectListItem
                     {
                         Value = c.Id.ToString(),
                         Text = c.Breadcrumb,
@@ -1275,13 +1275,13 @@ namespace Nop.Web.Controllers
             var manufacturers = _manufacturerService.GetAllManufacturers();
             if (manufacturers.Count > 0)
             {
-                model.AvailableManufacturers.Add(new SelectListItem()
+                model.AvailableManufacturers.Add(new SelectListItem
                 {
                     Value = "0",
                     Text = _localizationService.GetResource("Common.All")
                 });
                 foreach (var m in manufacturers)
-                    model.AvailableManufacturers.Add(new SelectListItem()
+                    model.AvailableManufacturers.Add(new SelectListItem
                     {
                         Value = m.Id.ToString(),
                         Text = m.GetLocalized(x => x.Name),
@@ -1373,7 +1373,7 @@ namespace Nop.Web.Controllers
                         }
                         else
                         {
-                            searchTerm = new SearchTerm()
+                            searchTerm = new SearchTerm
                             {
                                 Keyword = model.Q,
                                 StoreId = _storeContext.CurrentStore.Id,
@@ -1384,7 +1384,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //event
-                    _eventPublisher.Publish(new ProductSearchEvent()
+                    _eventPublisher.Publish(new ProductSearchEvent
                     {
                         SearchTerm = model.Q,
                         SearchInDescriptions = searchInDescriptions,
@@ -1402,7 +1402,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult SearchBox()
         {
-            var model = new SearchBoxModel()
+            var model = new SearchBoxModel
             {
                 AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
                 ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,

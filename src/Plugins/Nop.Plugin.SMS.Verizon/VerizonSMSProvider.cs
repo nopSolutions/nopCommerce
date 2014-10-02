@@ -57,7 +57,7 @@ namespace Nop.Plugin.SMS.Verizon
                 if (emailAccount == null)
                     throw new Exception("No email account could be loaded");
 
-                var queuedEmail = new QueuedEmail()
+                var queuedEmail = new QueuedEmail
                 {
                     Priority = 5,
                     From = emailAccount.Email,
@@ -91,7 +91,7 @@ namespace Nop.Plugin.SMS.Verizon
         {
             actionName = "Configure";
             controllerName = "SmsVerizon";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.SMS.Verizon.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.SMS.Verizon.Controllers" }, { "area", null } };
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nop.Plugin.SMS.Verizon
         public override void Install()
         {
             //settings
-            var settings = new VerizonSettings()
+            var settings = new VerizonSettings
             {
                 Email = "yournumber@vtext.com",
             };

@@ -48,7 +48,7 @@ namespace Nop.Data.Tests.Shipping
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
                 CreatedOnUtc = new DateTime(2010, 01, 03),
             };
-            shipment.ShipmentItems.Add(new ShipmentItem()
+            shipment.ShipmentItems.Add(new ShipmentItem
             {
                 OrderItemId = 1,
                 Quantity = 2,
@@ -79,13 +79,13 @@ namespace Nop.Data.Tests.Shipping
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

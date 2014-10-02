@@ -468,7 +468,7 @@ namespace Nop.Admin.Controllers
             var warehousesModel = _shippingService.GetAllWarehouses()
                 .Select(x =>
                             {
-                                var warehouseModel = new WarehouseModel()
+                                var warehouseModel = new WarehouseModel
                                 {
                                     Id = x.Id,
                                     Name = x.Name
@@ -493,10 +493,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new WarehouseModel();
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
-            model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
@@ -518,7 +518,7 @@ namespace Nop.Admin.Controllers
                 var address = model.Address.ToEntity();
                 address.CreatedOnUtc = DateTime.UtcNow;
                 _addressService.InsertAddress(address);
-                var warehouse = new Warehouse()
+                var warehouse = new Warehouse
                 {
                     Name = model.Name,
                     AdminComment = model.AdminComment,
@@ -533,18 +533,18 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             var states = model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -560,7 +560,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Warehouses");
 
             var address = _addressService.GetAddressById(warehouse.AddressId);
-            var model = new WarehouseModel()
+            var model = new WarehouseModel
             {
                 Id = warehouse.Id,
                 Name = warehouse.Name,
@@ -572,18 +572,18 @@ namespace Nop.Admin.Controllers
                 model.Address = address.ToModel();
             }
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (address != null && c.Id == address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (address != null && c.Id == address.CountryId) });
             //states
             var states = address != null && address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
             model.Address.CountryEnabled = true;
             model.Address.StateProvinceEnabled = true;
             model.Address.CityEnabled = true;
@@ -608,7 +608,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var address = _addressService.GetAddressById(warehouse.AddressId) ??
-                    new Core.Domain.Common.Address()
+                    new Core.Domain.Common.Address
                     {
                         CreatedOnUtc = DateTime.UtcNow,
                     };
@@ -632,18 +632,18 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //countries
-            model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+            model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
-                model.Address.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
+                model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.Address.CountryId) });
             //states
             var states =  model.Address.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.Address.CountryId.Value, true).ToList() : new List<StateProvince>();
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.Address.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
+                    model.Address.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.Address.StateProvinceId) });
             }
             else
-                model.Address.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+                model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
 
             return View(model);
         }
@@ -680,7 +680,7 @@ namespace Nop.Admin.Controllers
             var shippingMethods = _shippingService.GetAllShippingMethods();
             foreach (var country in countries)
             {
-                model.AvailableCountries.Add(new CountryModel()
+                model.AvailableCountries.Add(new CountryModel
                     {
                         Id = country.Id,
                         Name = country.Name
@@ -688,7 +688,7 @@ namespace Nop.Admin.Controllers
             }
             foreach (var sm in shippingMethods)
             {
-                model.AvailableShippingMethods.Add(new ShippingMethodModel()
+                model.AvailableShippingMethods.Add(new ShippingMethodModel
                 {
                     Id = sm.Id,
                     Name = sm.Name

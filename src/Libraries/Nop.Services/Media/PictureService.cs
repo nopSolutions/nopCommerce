@@ -382,7 +382,7 @@ namespace Nop.Services.Media
                         var newSize = CalculateDimensions(b.Size, targetSize);
 
                         var destStream = new MemoryStream();
-                        ImageBuilder.Current.Build(b, destStream, new ResizeSettings()
+                        ImageBuilder.Current.Build(b, destStream, new ResizeSettings
                         {
                             Width = newSize.Width,
                             Height = newSize.Height,
@@ -502,7 +502,7 @@ namespace Nop.Services.Media
                             var newSize = CalculateDimensions(b.Size, targetSize);
 
                             var destStream = new MemoryStream();
-                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings()
+                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings
                             {
                                 Width = newSize.Width,
                                 Height = newSize.Height,
@@ -638,7 +638,7 @@ namespace Nop.Services.Media
             if (validateBinary)
                 pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
-            var picture = new Picture()
+            var picture = new Picture
                               {
                                   PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
                                   MimeType = mimeType,
@@ -731,7 +731,7 @@ namespace Nop.Services.Media
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
             var destStream = new MemoryStream();
-            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings()
+            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
             {
                 MaxWidth = _mediaSettings.MaximumImageSize,
                 MaxHeight = _mediaSettings.MaximumImageSize,

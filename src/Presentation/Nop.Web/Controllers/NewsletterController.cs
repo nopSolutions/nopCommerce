@@ -68,7 +68,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    subscription = new NewsLetterSubscription()
+                    subscription = new NewsLetterSubscription
                     {
                         NewsLetterSubscriptionGuid = Guid.NewGuid(),
                         Email = email,

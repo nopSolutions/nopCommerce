@@ -16,7 +16,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_recurringPayment()
         {
-            var rp = new RecurringPayment()
+            var rp = new RecurringPayment
             {
                 CycleLength = 1,
                 CyclePeriod = RecurringProductCyclePeriod.Days,
@@ -44,7 +44,7 @@ namespace Nop.Data.Tests.Orders
         [Test]
         public void Can_save_and_load_recurringPayment_with_history()
         {
-            var rp = new RecurringPayment()
+            var rp = new RecurringPayment
             {
                 CycleLength = 1,
                 CyclePeriod = RecurringProductCyclePeriod.Days,
@@ -57,7 +57,7 @@ namespace Nop.Data.Tests.Orders
             };
             rp.RecurringPaymentHistory.Add
                 (
-                  new RecurringPaymentHistory()
+                  new RecurringPaymentHistory
                   {
                       CreatedOnUtc = new DateTime(2010, 01, 03),
                       //Order = GetTestOrder()
@@ -86,13 +86,13 @@ namespace Nop.Data.Tests.Orders
 
         protected Order GetTestOrder()
         {
-            return new Order()
+            return new Order
             {
                 OrderGuid = Guid.NewGuid(),
                 Customer = GetTestCustomer(),
-                BillingAddress = new Address()
+                BillingAddress = new Address
                 {
-                    Country = new Country()
+                    Country = new Country
                     {
                         Name = "United States",
                         TwoLetterIsoCode = "US",

@@ -12,7 +12,7 @@ namespace Nop.Data.Tests.Customers
         [Test]
         public void Can_save_and_load_customerAttribute()
         {
-            var ca = new CustomerAttribute()
+            var ca = new CustomerAttribute
             {
                 Name = "Name 1",
                 IsRequired = true,
@@ -31,7 +31,7 @@ namespace Nop.Data.Tests.Customers
         [Test]
         public void Can_save_and_load_customerAttribute_with_values()
         {
-            var ca = new CustomerAttribute()
+            var ca = new CustomerAttribute
             {
                 Name = "Name 1",
                 IsRequired = true,
@@ -40,7 +40,7 @@ namespace Nop.Data.Tests.Customers
             };
             ca.CustomerAttributeValues.Add
                 (
-                    new CustomerAttributeValue()
+                    new CustomerAttributeValue
                     {
                         Name = "Name 2",
                         IsPreSelected = true,

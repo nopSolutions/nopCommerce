@@ -36,7 +36,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId
         {
             actionName = "PublicInfo";
             controllerName = "ExternalAuthOpenId";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.OpenId.Controllers" }, { "area", null } };
+            routeValues = new RouteValueDictionary { { "Namespaces", "Nop.Plugin.ExternalAuth.OpenId.Controllers" }, { "area", null } };
         }
 
         /// <summary>

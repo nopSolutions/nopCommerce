@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.AvailableStores.Add(new SelectListItem()
+            model.AvailableStores.Add(new SelectListItem
             {
                 Text = _localizationService.GetResource("Admin.Common.All"),
                 Value = "0"
@@ -81,7 +81,7 @@ namespace Nop.Admin.Controllers
             var stores = _storeService.GetAllStores();
             foreach (var store in stores)
             {
-                model.AvailableStores.Add(new SelectListItem()
+                model.AvailableStores.Add(new SelectListItem
                 {
                     Text = store.Name,
                     Value = store.Id.ToString()

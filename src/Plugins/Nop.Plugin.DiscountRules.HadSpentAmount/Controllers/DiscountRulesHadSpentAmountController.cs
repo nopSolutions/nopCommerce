@@ -88,7 +88,7 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
             else
             {
                 //save new rule
-                discountRequirement = new DiscountRequirement()
+                discountRequirement = new DiscountRequirement
                 {
                     DiscountRequirementRuleSystemName = "DiscountRequirement.HadSpentAmount"
                 };
