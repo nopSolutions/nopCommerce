@@ -445,7 +445,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var result = new ProcessPaymentResult();
 
-            var authentication = PopulateMerchantAuthentication();
             if (!processPaymentRequest.IsRecurringPayment)
             {
                 var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
@@ -540,6 +539,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                     else
                         webService.Url = "https://api.authorize.net/soap/v1/Service.asmx";
 
+                    var authentication = PopulateMerchantAuthentication();
                     var response = webService.ARBCreateSubscription(authentication, subscription);
 
                     if (response.resultCode == MessageTypeEnum.Ok)
@@ -575,7 +575,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             var result = new CancelRecurringPaymentResult();
-            var authentication = PopulateMerchantAuthentication();
             long subscriptionId = 0;
             long.TryParse(cancelPaymentRequest.Order.SubscriptionTransactionId, out subscriptionId);
 
@@ -587,6 +586,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 else
                     webService.Url = "https://api.authorize.net/soap/v1/Service.asmx";
 
+                var authentication = PopulateMerchantAuthentication();
                 var response = webService.ARBCancelSubscription(authentication, subscriptionId);
 
                 if (response.resultCode == MessageTypeEnum.Ok)
