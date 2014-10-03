@@ -1359,7 +1359,7 @@ namespace Nop.Services.Seo
         private static string ToUnichar(string hexString)
         {
             string returnChar;
-            byte[] b = new byte[2];
+            var b = new byte[2];
             var ue = new UnicodeEncoding();
 
             // Take hexadecimal as text and make a Unicode char number

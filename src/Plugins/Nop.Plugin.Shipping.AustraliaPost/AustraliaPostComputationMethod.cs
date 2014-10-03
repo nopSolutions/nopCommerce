@@ -120,7 +120,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             sb.AppendFormat("Height={0}&", height);
             sb.AppendFormat("Quantity={0}", quantity);
 
-            HttpWebRequest request = WebRequest.Create(sb.ToString()) as HttpWebRequest;
+            var request = WebRequest.Create(sb.ToString()) as HttpWebRequest;
             request.Method = "GET";
             //request.ContentType = "application/x-www-form-urlencoded";
             //byte[] reqContent = Encoding.ASCII.GetBytes(sb.ToString());
@@ -132,7 +132,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
             WebResponse response = request.GetResponse();
             string rspContent;
-            using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            using (var reader = new StreamReader(response.GetResponseStream()))
             {
                 rspContent = reader.ReadToEnd();
             }

@@ -237,8 +237,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var result = new CapturePaymentResult();
 
-            WebClient webClient = new WebClient();
-            NameValueCollection form = new NameValueCollection();
+            var webClient = new WebClient();
+            var form = new NameValueCollection();
             form.Add("x_login", _authorizeNetPaymentSettings.LoginId);
             form.Add("x_tran_key", _authorizeNetPaymentSettings.TransactionKey);
 
@@ -305,8 +305,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var result = new RefundPaymentResult();
 
-            WebClient webClient = new WebClient();
-            NameValueCollection form = new NameValueCollection();
+            var webClient = new WebClient();
+            var form = new NameValueCollection();
             form.Add("x_login", _authorizeNetPaymentSettings.LoginId);
             form.Add("x_tran_key", _authorizeNetPaymentSettings.TransactionKey);
 
@@ -377,8 +377,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var result = new VoidPaymentResult();
 
-            WebClient webClient = new WebClient();
-            NameValueCollection form = new NameValueCollection();
+            var webClient = new WebClient();
+            var form = new NameValueCollection();
             form.Add("x_login", _authorizeNetPaymentSettings.LoginId);
             form.Add("x_tran_key", _authorizeNetPaymentSettings.TransactionKey);
 

@@ -178,7 +178,7 @@ namespace Nop.Services.Tests.Catalog
             product.HasTierPrices = true;
 
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
             customer.CustomerRoles.Add(customerRole1);
 
             _priceCalcService.GetFinalPrice(product, customer, 0, false, 1).ShouldEqual(12.34M);

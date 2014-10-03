@@ -128,7 +128,7 @@ namespace Nop.Web.Models.Catalog
 
             public virtual PriceRange GetSelectedPriceRange(IWebHelper webHelper, string priceRangesStr)
             {
-                string range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
+                var range = webHelper.QueryString<string>(QUERYSTRINGPARAM);
                 if (String.IsNullOrEmpty(range))
                     return null;
                 string[] fromTo = range.Trim().Split(new [] { '-' });
@@ -281,7 +281,7 @@ namespace Nop.Web.Models.Catalog
             {
                 var result = new List<int>();
 
-                string alreadyFilteredSpecsStr = webHelper.QueryString<string>(QUERYSTRINGPARAM);
+                var alreadyFilteredSpecsStr = webHelper.QueryString<string>(QUERYSTRINGPARAM);
                 if (String.IsNullOrWhiteSpace(alreadyFilteredSpecsStr))
                     return result;
 

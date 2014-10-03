@@ -295,7 +295,7 @@ namespace Nop.Services.Customers
         /// <returns>Customers</returns>
         public virtual IList<Customer> GetAllCustomersByPasswordFormat(PasswordFormat passwordFormat)
         {
-            int passwordFormatId = (int)passwordFormat;
+            var passwordFormatId = (int)passwordFormat;
 
             var query = _customerRepository.Table;
             query = query.Where(c => c.PasswordFormatId == passwordFormatId);

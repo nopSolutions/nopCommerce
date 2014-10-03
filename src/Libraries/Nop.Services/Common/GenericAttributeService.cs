@@ -171,7 +171,7 @@ namespace Nop.Services.Common
             var prop = props.FirstOrDefault(ga =>
                 ga.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
-            string valueStr = CommonHelper.To<string>(value);
+            var valueStr = CommonHelper.To<string>(value);
 
             if (prop != null)
             {

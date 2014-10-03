@@ -145,7 +145,7 @@ namespace Nop.Services.Logging
                 query = query.Where(l => toUtc.Value >= l.CreatedOnUtc);
             if (logLevel.HasValue)
             {
-                int logLevelId = (int)logLevel.Value;
+                var logLevelId = (int)logLevel.Value;
                 query = query.Where(l => logLevelId == l.LogLevelId);
             }
              if (!String.IsNullOrEmpty(message))

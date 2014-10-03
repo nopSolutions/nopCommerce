@@ -145,7 +145,7 @@ namespace Nop.Tests
         [Test]
         public void ReturnsTheException_generic()
         {
-            ArgumentException ex = ExceptionAssert.Throws<ArgumentException>(
+            var ex = ExceptionAssert.Throws<ArgumentException>(
                 delegate
                 {
                     throw new ArgumentException("return me");

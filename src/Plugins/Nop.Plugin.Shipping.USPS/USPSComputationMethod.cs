@@ -566,7 +566,7 @@ namespace Nop.Plugin.Shipping.USPS
                         while (!((tr.Name == postageStr) && (tr.NodeType == XmlNodeType.EndElement)));
 
                         //USPS issue fixed
-                        char reg = (char)174; // registered sign "\u00AE"
+                        var reg = (char)174; // registered sign "\u00AE"
                         string tm = "\u2122"; // trademark sign
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;reg;&lt;/sup&gt;", reg.ToString());
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&#174;&lt;/sup&gt;", reg.ToString());

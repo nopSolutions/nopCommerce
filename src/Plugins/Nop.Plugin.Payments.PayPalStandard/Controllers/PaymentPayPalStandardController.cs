@@ -214,7 +214,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [ValidateInput(false)]
         public ActionResult PDTHandler(FormCollection form)
         {
-            string tx = _webHelper.QueryString<string>("tx");
+            var tx = _webHelper.QueryString<string>("tx");
             Dictionary<string, string> values;
             string response;
 

@@ -17,7 +17,7 @@ namespace Nop.Web.Framework.Kendoui
             {
                 return error.ErrorMessage;
             }
-            object[] args = new object[] { modelState.Value.AttemptedValue };
+            var args = new object[] { modelState.Value.AttemptedValue };
             return string.Format("ValueNotValidForProperty=The value '{0}' is invalid", args);
         }
 

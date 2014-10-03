@@ -147,7 +147,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         {
             if ((args != null) && (args.Count<KeyValuePair<string, string>>() > 0))
             {
-                StringBuilder builder2 = new StringBuilder(50 + (args.Count<KeyValuePair<string, string>>() * 10));
+                var builder2 = new StringBuilder(50 + (args.Count<KeyValuePair<string, string>>() * 10));
                 if (!string.IsNullOrEmpty(builder.Query))
                 {
                     builder2.Append(builder.Query.Substring(1));
@@ -163,7 +163,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             {
                 return string.Empty;
             }
-            StringBuilder builder = new StringBuilder(args.Count<KeyValuePair<string, string>>() * 10);
+            var builder = new StringBuilder(args.Count<KeyValuePair<string, string>>() * 10);
             foreach (KeyValuePair<string, string> pair in args)
             {
                 builder.Append(EscapeUriDataStringRfc3986(pair.Key));
@@ -177,7 +177,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         private readonly string[] UriRfc3986CharsToEscape = new string[] { "!", "*", "'", "(", ")" };
         private string EscapeUriDataStringRfc3986(string value)
         {
-            StringBuilder builder = new StringBuilder(Uri.EscapeDataString(value));
+            var builder = new StringBuilder(Uri.EscapeDataString(value));
             for (int i = 0; i < UriRfc3986CharsToEscape.Length; i++)
             {
                 builder.Replace(UriRfc3986CharsToEscape[i], Uri.HexEscape(UriRfc3986CharsToEscape[i][0]));

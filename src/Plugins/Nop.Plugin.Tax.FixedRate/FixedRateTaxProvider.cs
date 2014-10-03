@@ -39,7 +39,7 @@ namespace Nop.Plugin.Tax.FixedRate
         /// <returns>Tax rate</returns>
         protected decimal GetTaxRate(int taxCategoryId)
         {
-            decimal rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
+            var rate = this._settingService.GetSettingByKey<decimal>(string.Format("Tax.TaxProvider.FixedRate.TaxCategoryId{0}", taxCategoryId));
             return rate;
         }
         

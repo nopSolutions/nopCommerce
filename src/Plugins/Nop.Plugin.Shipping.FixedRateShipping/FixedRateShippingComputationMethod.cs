@@ -36,7 +36,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
         private decimal GetRate(int shippingMethodId)
         {
             string key = string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId);
-            decimal rate = this._settingService.GetSettingByKey<decimal>(key);
+            var rate = this._settingService.GetSettingByKey<decimal>(key);
             return rate;
         }
         #endregion

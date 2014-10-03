@@ -145,7 +145,7 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_subTotal_excluding_tax()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
 
             //shopping cart
             var product1 = new Product
@@ -205,7 +205,7 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_subTotal_including_tax()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
 
             //shopping cart
             var product1 = new Product
@@ -265,7 +265,7 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_subTotal_discount_excluding_tax()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
 
             //shopping cart
             var product1 = new Product
@@ -337,7 +337,7 @@ namespace Nop.Services.Tests.Orders
         public void Can_get_shopping_cart_subTotal_discount_including_tax()
         {
             //customer
-            Customer customer = new Customer();
+            var customer = new Customer();
 
             //shopping cart
             var product1 = new Product

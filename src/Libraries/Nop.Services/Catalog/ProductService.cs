@@ -726,7 +726,7 @@ namespace Nop.Services.Catalog
                 }
                 if (productType.HasValue)
                 {
-                    int productTypeId = (int) productType.Value;
+                    var productTypeId = (int) productType.Value;
                     query = query.Where(p => p.ProductTypeId == productTypeId);
                 }
 

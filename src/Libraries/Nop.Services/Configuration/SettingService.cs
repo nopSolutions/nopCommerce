@@ -307,7 +307,7 @@ namespace Nop.Services.Configuration
 
             string key = typeof(T).Name + "." + propInfo.Name;
 
-            string setting = GetSettingByKey<string>(key, storeId: storeId);
+            var setting = GetSettingByKey<string>(key, storeId: storeId);
             return setting != null;
         }
 
@@ -328,7 +328,7 @@ namespace Nop.Services.Configuration
 
                 var key = typeof(T).Name + "." + prop.Name;
                 //load by store
-                string setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
+                var setting = GetSettingByKey<string>(key, storeId: storeId, loadSharedValueIfNotFound: true);
                 if (setting == null)
                     continue;
 

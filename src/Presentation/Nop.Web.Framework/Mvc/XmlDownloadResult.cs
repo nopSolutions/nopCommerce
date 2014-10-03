@@ -26,9 +26,9 @@ namespace Nop.Web.Framework.Mvc
 
         public override void ExecuteResult(ControllerContext context)
         {
-            XmlDocument document = new XmlDocument();
+            var document = new XmlDocument();
             document.LoadXml(Xml);
-            XmlDeclaration decl = document.FirstChild as XmlDeclaration;
+            var decl = document.FirstChild as XmlDeclaration;
             if (decl != null)
             {
                 decl.Encoding = "utf-8";

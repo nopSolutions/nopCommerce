@@ -99,7 +99,7 @@ namespace Nop.Web.Framework
         public TValue GetOrAdd<TValue>(string name, Func<TValue> valueFactory)
         {
             string fullName = FullNameOf(typeof(TValue), name);
-            TValue result = (TValue)_getter(fullName);
+            var result = (TValue)_getter(fullName);
 
             if (Equals(result, default(TValue)))
             {

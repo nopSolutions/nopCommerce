@@ -70,7 +70,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public static bool CheckSuccess(AbstractResponseType abstractResponse, out string errorMsg)
         {
             bool success = false;
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             switch (abstractResponse.Ack)
             {
                 case AckCodeType.Success:
@@ -104,7 +104,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>Paypal currency code</returns>
         public static CurrencyCodeType GetPaypalCurrency(Currency currency)
         {
-            CurrencyCodeType currencyCodeType = CurrencyCodeType.USD;
+            var currencyCodeType = CurrencyCodeType.USD;
             try
             {
                 currencyCodeType = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), currency.CurrencyCode, true);

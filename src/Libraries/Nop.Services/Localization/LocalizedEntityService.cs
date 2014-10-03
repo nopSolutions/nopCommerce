@@ -298,7 +298,7 @@ namespace Nop.Services.Localization
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
                 lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
-            string localeValueStr = CommonHelper.To<string>(localeValue);
+            var localeValueStr = CommonHelper.To<string>(localeValue);
             
             if (prop != null)
             {

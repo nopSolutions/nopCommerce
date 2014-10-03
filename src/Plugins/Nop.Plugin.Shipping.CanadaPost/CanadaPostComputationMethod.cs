@@ -67,7 +67,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 socCanadaPost.Send(data);
 
                 string resp = String.Empty;
-                byte[] buffer = new byte[8192];
+                var buffer = new byte[8192];
 
                 while (!resp.Contains("<!--END_OF_EPARCEL-->"))
                 {

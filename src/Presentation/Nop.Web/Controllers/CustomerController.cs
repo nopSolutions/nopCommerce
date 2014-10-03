@@ -360,7 +360,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //set already selected attributes
-                string selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

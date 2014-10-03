@@ -82,7 +82,7 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [NonAction]
         protected decimal GetShippingRate(int shippingMethodId)
         {
-            decimal rate = this._settingService.GetSettingByKey<decimal>(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
+            var rate = this._settingService.GetSettingByKey<decimal>(string.Format("ShippingRateComputationMethod.FixedRate.Rate.ShippingMethodId{0}", shippingMethodId));
             return rate;
         }
     }

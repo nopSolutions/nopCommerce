@@ -77,7 +77,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>Paypal country code</returns>
         protected CountryCodeType GetPaypalCountryCodeType(Country country)
         {
-            CountryCodeType payerCountry = CountryCodeType.US;
+            var payerCountry = CountryCodeType.US;
             try
             {
                 payerCountry = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), country.TwoLetterIsoCode);

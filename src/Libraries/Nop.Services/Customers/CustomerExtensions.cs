@@ -93,7 +93,7 @@ namespace Nop.Services.Customers
         public static string[] ParseAppliedGiftCardCouponCodes(this Customer customer)
         {
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-            string existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
+            var existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
                 genericAttributeService);
 
             var couponCodes = new List<string>();
@@ -134,7 +134,7 @@ namespace Nop.Services.Customers
             string result = string.Empty;
             try
             {
-                string existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
+                var existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
                     genericAttributeService);
 
                 couponCode = couponCode.Trim().ToLower();

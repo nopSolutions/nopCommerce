@@ -49,7 +49,7 @@ namespace Nop.Data
 
         private static DbContext CastOrThrow(IDbContext context)
         {
-            DbContext output = (context as DbContext);
+            var output = context as DbContext;
 
             if (output == null)
             {

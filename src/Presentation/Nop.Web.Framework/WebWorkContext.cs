@@ -208,7 +208,7 @@ namespace Nop.Web.Framework
                 //impersonate user if required (currently used for 'phone order' support)
                 if (customer != null && !customer.Deleted && customer.Active)
                 {
-                    int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
+                    var impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
                     if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
                     {
                         var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);

@@ -232,7 +232,7 @@ namespace Nop.Services.Common
                 var logoExists = logoPicture != null;
 
                 //header
-                PdfPTable headerTable = new PdfPTable(logoExists ? 2 : 1);
+                var headerTable = new PdfPTable(logoExists ? 2 : 1);
                 headerTable.RunDirection = GetDirection(lang);
                 headerTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
@@ -385,7 +385,7 @@ namespace Nop.Services.Common
                 #region Products
 
                 //products
-                PdfPTable productsHeader = new PdfPTable(1);
+                var productsHeader = new PdfPTable(1);
                 productsHeader.RunDirection = GetDirection(lang);
                 productsHeader.WidthPercentage = 100f;
                 var cellProducts = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.Product(s)", lang.Id), titleFont));
@@ -525,12 +525,12 @@ namespace Nop.Services.Common
                 if (!String.IsNullOrEmpty(order.CheckoutAttributeDescription))
                 {
                     doc.Add(new Paragraph(" "));
-                    PdfPTable attribTable = new PdfPTable(1);
+                    var attribTable = new PdfPTable(1);
                     attribTable.RunDirection = GetDirection(lang);
                     attribTable.WidthPercentage = 100f;
 
                     string attributes = HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true);
-                    PdfPCell cCheckoutAttributes = new PdfPCell(new Phrase(attributes, font));
+                    var cCheckoutAttributes = new PdfPCell(new Phrase(attributes, font));
                     cCheckoutAttributes.Border = Rectangle.NO_BORDER;
                     cCheckoutAttributes.HorizontalAlignment = Element.ALIGN_RIGHT;
                     attribTable.AddCell(cCheckoutAttributes);
@@ -542,7 +542,7 @@ namespace Nop.Services.Common
                 #region Totals
 
                 //subtotal
-                PdfPTable totalsTable = new PdfPTable(1);
+                var totalsTable = new PdfPTable(1);
                 totalsTable.RunDirection = GetDirection(lang);
                 totalsTable.DefaultCell.Border = Rectangle.NO_BORDER;
                 totalsTable.WidthPercentage = 100f;
@@ -765,7 +765,7 @@ namespace Nop.Services.Common
                         .ToList();
                     if (orderNotes.Count > 0)
                     { 
-                        PdfPTable notesHeader = new PdfPTable(1);
+                        var notesHeader = new PdfPTable(1);
                         notesHeader.RunDirection = GetDirection(lang);
                         notesHeader.WidthPercentage = 100f;
                         var cellOrderNote = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.OrderNotes", lang.Id), titleFont));

@@ -576,7 +576,7 @@ namespace Nop.Services.Orders
                 query = query.Where(rr => customerId == rr.CustomerId);
             if (rs.HasValue)
             {
-                int returnStatusId = (int)rs.Value;
+                var returnStatusId = (int)rs.Value;
                 query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
             }
             if (orderItemId > 0)

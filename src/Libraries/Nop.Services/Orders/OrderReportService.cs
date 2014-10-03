@@ -159,7 +159,7 @@ namespace Nop.Services.Orders
             }
             if (ignoreCancelledOrders)
             {
-                int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
+                var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
                 query = query.Where(o => o.OrderStatusId != cancelledOrderStatusId);
             }
             if (orderStatusId.HasValue)
@@ -218,7 +218,7 @@ namespace Nop.Services.Orders
             TimeZoneInfo timeZone = _dateTimeHelper.CurrentTimeZone;
 
             //today
-            DateTime t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
+            var t1 = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             if (!timeZone.IsInvalidTime(t1))
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
@@ -229,7 +229,7 @@ namespace Nop.Services.Orders
             }
             //week
             DayOfWeek fdow = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
-            DateTime today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
+            var today = new DateTime(nowDt.Year, nowDt.Month, nowDt.Day);
             DateTime t2 = today.AddDays(-(today.DayOfWeek - fdow));
             if (!timeZone.IsInvalidTime(t2))
             {
@@ -240,7 +240,7 @@ namespace Nop.Services.Orders
                 item.CountThisWeekOrders = weekResult.CountOrders;
             }
             //month
-            DateTime t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
+            var t3 = new DateTime(nowDt.Year, nowDt.Month, 1);
             if (!timeZone.IsInvalidTime(t3))
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
@@ -250,7 +250,7 @@ namespace Nop.Services.Orders
                 item.CountThisMonthOrders = monthResult.CountOrders;
             }
             //year
-            DateTime t4 = new DateTime(nowDt.Year, 1, 1);
+            var t4 = new DateTime(nowDt.Year, 1, 1);
             if (!timeZone.IsInvalidTime(t4))
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
@@ -436,7 +436,7 @@ namespace Nop.Services.Orders
                                 (!o.Deleted)
                           select orderItem.ProductId).Distinct();
 
-            int simpleProductTypeId = (int)ProductType.SimpleProduct;
+            var simpleProductTypeId = (int)ProductType.SimpleProduct;
 
             var query2 = from p in _productRepository.Table
                          orderby p.Name

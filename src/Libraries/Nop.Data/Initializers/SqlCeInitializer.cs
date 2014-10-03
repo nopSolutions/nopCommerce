@@ -37,7 +37,7 @@ namespace Nop.Data.Initializers
             {
                 return str;
             }
-            string data = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
+            var data = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
             if (string.IsNullOrEmpty(data))
             {
                 data = AppDomain.CurrentDomain.BaseDirectory ?? Environment.CurrentDirectory;

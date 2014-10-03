@@ -17,7 +17,7 @@ namespace Nop.Services.Media
         {
             Stream fs = postedFile.InputStream;
             int size = postedFile.ContentLength;
-            byte[] binary = new byte[size];
+            var binary = new byte[size];
             fs.Read(binary, 0, size);
             return binary;
         }
@@ -31,7 +31,7 @@ namespace Nop.Services.Media
         {
             Stream fs = postedFile.InputStream;
             int size = postedFile.ContentLength;
-            byte[] img = new byte[size];
+            var img = new byte[size];
             fs.Read(img, 0, size);
             return img;
         }
