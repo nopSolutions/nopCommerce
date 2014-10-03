@@ -25,12 +25,6 @@ namespace Nop.Plugin.Shipping.CanadaPost
     /// </summary>
     public class CanadaPostComputationMethod : BasePlugin, IShippingRateComputationMethod
     {
-        #region Constants
-
-        private const int MAXPACKAGEWEIGHT = 30;
-
-        #endregion
-
         #region Fields
 
         private readonly IMeasureService _measureService;
