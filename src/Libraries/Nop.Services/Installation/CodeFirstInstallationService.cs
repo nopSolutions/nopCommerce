@@ -5048,7 +5048,8 @@ namespace Nop.Services.Installation
 
             var categoryTemplateInGridAndLines = _categoryTemplateRepository
                 .Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
-
+            if (categoryTemplateInGridAndLines == null)
+                throw new Exception("Category template cannot be loaded");
 
 
             //categories
@@ -5319,6 +5320,8 @@ namespace Nop.Services.Installation
         {
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
+            if (manufacturerTemplateInGridAndLines == null)
+                throw new Exception("Manufacturer template cannot be loaded");
 
             var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer

@@ -1027,6 +1027,9 @@ namespace Nop.Web.Controllers
 
             var paymentControllerType = paymentMethod.GetControllerType();
             var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
+            if (paymentController == null)
+                throw new Exception("Payment controller cannot be loaded");
+
             var warnings = paymentController.ValidatePaymentForm(form);
             foreach (var warning in warnings)
                 ModelState.AddModelError("", warning);
@@ -1717,6 +1720,9 @@ namespace Nop.Web.Controllers
 
                 var paymentControllerType = paymentMethod.GetControllerType();
                 var paymentController = DependencyResolver.Current.GetService(paymentControllerType) as BasePaymentController;
+                if (paymentController == null)
+                    throw new Exception("Payment controller cannot be loaded");
+
                 var warnings = paymentController.ValidatePaymentForm(form);
                 foreach (var warning in warnings)
                     ModelState.AddModelError("", warning);

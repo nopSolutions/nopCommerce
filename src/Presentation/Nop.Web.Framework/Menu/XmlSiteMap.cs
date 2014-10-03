@@ -121,7 +121,7 @@ namespace Nop.Web.Framework.Menu
         {
             string value = null;
 
-            if (node.Attributes.Count > 0)
+            if (node.Attributes != null && node.Attributes.Count > 0)
             {
                 XmlAttribute attribute = node.Attributes[attributeName];
 

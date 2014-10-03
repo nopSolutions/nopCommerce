@@ -480,7 +480,7 @@ namespace Nop.Plugin.Shipping.USPS
             //return USPSPackageSize.Large;
         }
 
-        private List<ShippingOption> ParseResponse(string response, bool isDomestic, ref string error)
+        private IEnumerable<ShippingOption> ParseResponse(string response, bool isDomestic, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
 

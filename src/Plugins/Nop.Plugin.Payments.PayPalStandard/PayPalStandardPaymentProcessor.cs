@@ -94,7 +94,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))
                 sw.Write(formContent);
 
-            response = null;
             using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
                 response = HttpUtility.UrlDecode(sr.ReadToEnd());
 

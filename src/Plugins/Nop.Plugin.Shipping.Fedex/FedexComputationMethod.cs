@@ -122,8 +122,8 @@ namespace Nop.Plugin.Shipping.Fedex
             else
                 subTotalShipmentCurrency = _currencyService.ConvertFromPrimaryStoreCurrency(subTotalBase, requestedShipmentCurrency);
 
-            Debug.WriteLine(String.Format("SubTotal (Primary Currency) : {0} ({1})", subTotalBase, primaryStoreCurrency.CurrencyCode));
-            Debug.WriteLine(String.Format("SubTotal (Shipment Currency): {0} ({1})", subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode));
+            Debug.WriteLine("SubTotal (Primary Currency) : {0} ({1})", subTotalBase, primaryStoreCurrency.CurrencyCode);
+            Debug.WriteLine("SubTotal (Shipment Currency): {0} ({1})", subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
 
             SetShipmentDetails(request, subTotalShipmentCurrency, requestedShipmentCurrency.CurrencyCode);
             SetPayment(request);
@@ -207,7 +207,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 request.RequestedShipment.Recipient.Address.Residential = true;
                 request.RequestedShipment.Recipient.Address.ResidentialSpecified = true;
             }
-            request.RequestedShipment.Recipient.Address.StreetLines = new string[1] { getShippingOptionRequest.ShippingAddress.Address1 };
+            request.RequestedShipment.Recipient.Address.StreetLines = new [] { getShippingOptionRequest.ShippingAddress.Address1 };
             request.RequestedShipment.Recipient.Address.City = getShippingOptionRequest.ShippingAddress.City;
             if (getShippingOptionRequest.ShippingAddress.StateProvince != null &&
                 IncludeStateProvinceCode(getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode))
@@ -230,7 +230,7 @@ namespace Nop.Plugin.Shipping.Fedex
             if (getShippingOptionRequest.CountryFrom == null)
                 throw new Exception("FROM country is not specified");
 
-            request.RequestedShipment.Shipper.Address.StreetLines = new string[1] { getShippingOptionRequest.AddressFrom };
+            request.RequestedShipment.Shipper.Address.StreetLines = new [] { getShippingOptionRequest.AddressFrom };
             request.RequestedShipment.Shipper.Address.City = getShippingOptionRequest.CityFrom;
             if (IncludeStateProvinceCode(getShippingOptionRequest.CountryFrom.TwoLetterIsoCode))
             {
@@ -530,7 +530,7 @@ namespace Nop.Plugin.Shipping.Fedex
 
         }
 
-        private List<ShippingOption> ParseResponse(RateReply reply, Currency requestedShipmentCurrency)
+        private IEnumerable<ShippingOption> ParseResponse(RateReply reply, Currency requestedShipmentCurrency)
         {
             var result = new List<ShippingOption>();
 
@@ -610,8 +610,8 @@ namespace Nop.Plugin.Shipping.Fedex
 
                 amount = _currencyService.ConvertToPrimaryStoreCurrency(charge.Amount, amountCurrency);
 
-                Debug.WriteLine(String.Format("ConvertChargeToPrimaryCurrency - from {0} ({1}) to {2} ({3})",
-                    charge.Amount, charge.Currency, amount, primaryStoreCurrency.CurrencyCode));
+                Debug.WriteLine("ConvertChargeToPrimaryCurrency - from {0} ({1}) to {2} ({3})",
+                    charge.Amount, charge.Currency, amount, primaryStoreCurrency.CurrencyCode);
             }
 
             return amount;

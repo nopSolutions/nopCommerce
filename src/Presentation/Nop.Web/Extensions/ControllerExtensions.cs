@@ -160,7 +160,7 @@ namespace Nop.Web.Extensions
                                                     {
                                                         //Actually it's not possible (we presume that minimalPrice always has a value)
                                                         //We never should get here
-                                                        Debug.WriteLine(string.Format("Cannot calculate minPrice for product #{0}", product.Id));
+                                                        Debug.WriteLine("Cannot calculate minPrice for product #{0}", product.Id);
                                                     }
                                                 }
                                             }

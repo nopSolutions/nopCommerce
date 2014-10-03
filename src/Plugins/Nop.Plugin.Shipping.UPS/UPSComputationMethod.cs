@@ -580,7 +580,7 @@ namespace Nop.Plugin.Shipping.UPS
             return Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureWeight(quantity, usedMeasureWeighht)));
         }
 
-        private List<ShippingOption> ParseResponse(string response, ref string error)
+        private IEnumerable<ShippingOption> ParseResponse(string response, ref string error)
         {
             var shippingOptions = new List<ShippingOption>();
 
