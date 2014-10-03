@@ -642,7 +642,7 @@ namespace Nop.Web.Controllers
 
             #region Simple properties
 
-            var customer = cart.FirstOrDefault().Customer;
+            var customer = cart.GetCustomer();
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
             model.ShowProductImages = _shoppingCartSettings.ShowProductImagesOnShoppingCart;
