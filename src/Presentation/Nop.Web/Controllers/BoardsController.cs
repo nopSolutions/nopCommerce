@@ -424,7 +424,6 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult ForumWatch(int id)
         {
-            bool subscribed = false;
             string watchTopic = _localizationService.GetResource("Forum.WatchForum");
             string unwatchTopic = _localizationService.GetResource("Forum.UnwatchForum");
             string returnText = watchTopic;
@@ -432,17 +431,18 @@ namespace Nop.Web.Controllers
             var forum = _forumService.GetForumById(id);
             if (forum == null)
             {
-                return Json(new { Subscribed = subscribed, Text = returnText, Error = true });
+                return Json(new { Subscribed = false, Text = returnText, Error = true });
             }
 
             if (!_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
             {
-                return Json(new { Subscribed = subscribed, Text = returnText, Error = true });
+                return Json(new { Subscribed = false, Text = returnText, Error = true });
             }
 
             var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
                 forum.Id, 0, 0, 1).FirstOrDefault();
 
+            bool subscribed;
             if (forumSubscription == null)
             {
                 forumSubscription = new ForumSubscription
@@ -574,7 +574,6 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult TopicWatch(int id)
         {
-            bool subscribed = false;
             string watchTopic = _localizationService.GetResource("Forum.WatchTopic");
             string unwatchTopic = _localizationService.GetResource("Forum.UnwatchTopic");
             string returnText = watchTopic;
@@ -582,17 +581,18 @@ namespace Nop.Web.Controllers
             var forumTopic = _forumService.GetTopicById(id);
             if (forumTopic == null)
             {
-                return Json(new { Subscribed = subscribed, Text = returnText, Error = true });
+                return Json(new { Subscribed = false, Text = returnText, Error = true });
             }
 
             if (!_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
             {
-                return Json(new { Subscribed = subscribed, Text = returnText, Error = true });
+                return Json(new { Subscribed = false, Text = returnText, Error = true });
             }
 
             var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
                 0, forumTopic.Id, 0, 1).FirstOrDefault();
 
+            bool subscribed;
             if (forumSubscription == null)
             {
                 forumSubscription = new ForumSubscription

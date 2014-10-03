@@ -57,7 +57,7 @@ namespace Nop.Services.Catalog
         {
             var productIds = new List<int>();
             var recentlyViewedCookie = _httpContext.Request.Cookies.Get("NopCommerce.RecentlyViewedProducts");
-            if ((recentlyViewedCookie == null) || (recentlyViewedCookie.Values == null))
+            if (recentlyViewedCookie == null)
                 return productIds;
             string[] values = recentlyViewedCookie.Values.GetValues("RecentlyViewedProductIds");
             if (values == null)

@@ -55,7 +55,7 @@ namespace Nop.Services.Catalog
         {
             var productIds = new List<int>();
             HttpCookie compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
-            if ((compareCookie == null) || (compareCookie.Values == null))
+            if (compareCookie == null)
                 return productIds;
             string[] values = compareCookie.Values.GetValues("CompareProductIds");
             if (values == null)
@@ -117,7 +117,7 @@ namespace Nop.Services.Catalog
             newProductIds.Remove(productId);
 
             var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
-            if ((compareCookie == null) || (compareCookie.Values == null))
+            if (compareCookie == null)
                 return;
             compareCookie.Values.Clear();
             foreach (int newProductId in newProductIds)

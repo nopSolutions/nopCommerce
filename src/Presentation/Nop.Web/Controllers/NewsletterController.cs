@@ -101,16 +101,15 @@ namespace Nop.Web.Controllers
 
             if (active)
             {
-                subscription.Active = active;
+                subscription.Active = true;
                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
             }
             else
                 _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            if (active)
-                model.Result = _localizationService.GetResource("Newsletter.ResultActivated");
-            else
-                model.Result = _localizationService.GetResource("Newsletter.ResultDeactivated");
+            model.Result = active 
+                ?  _localizationService.GetResource("Newsletter.ResultActivated")
+                : _localizationService.GetResource("Newsletter.ResultDeactivated");
 
             return View(model);
         }

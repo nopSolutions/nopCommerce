@@ -194,11 +194,7 @@ namespace Nop.Services.Security
                             where ur.EntityId == entityId &&
                             ur.EntityName == entityName 
                             select ur.CustomerRoleId;
-                var result = query.ToArray();
-                //little hack here. nulls aren't cacheable so set it to ""
-                if (result == null)
-                    result = new int[0];
-                return result;
+                return query.ToArray();
             });
         }
 

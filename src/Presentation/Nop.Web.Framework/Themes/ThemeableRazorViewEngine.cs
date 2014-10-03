@@ -87,19 +87,15 @@ namespace Nop.Web.Framework.Themes
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-            string layoutPath = null;
-            var runViewStartPages = false;
             IEnumerable<string> fileExtensions = base.FileExtensions;
-            return new RazorView(controllerContext, partialPath, layoutPath, runViewStartPages, fileExtensions);
+            return new RazorView(controllerContext, partialPath, null, false, fileExtensions);
             //return new RazorView(controllerContext, partialPath, layoutPath, runViewStartPages, fileExtensions, base.ViewPageActivator);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            string layoutPath = masterPath;
-            var runViewStartPages = true;
             IEnumerable<string> fileExtensions = base.FileExtensions;
-            return new RazorView(controllerContext, viewPath, layoutPath, runViewStartPages, fileExtensions);
+            return new RazorView(controllerContext, viewPath, masterPath, true, fileExtensions);
         }
     }
 }
