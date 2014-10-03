@@ -898,10 +898,9 @@ namespace Nop.Services.Orders
                 bool skipPaymentWorkflow = orderTotal.Value == decimal.Zero;
 
                 //payment workflow
-                IPaymentMethod paymentMethod = null;
                 if (!skipPaymentWorkflow)
                 {
-                    paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
+                    var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
                     if (paymentMethod == null)
                         throw new NopException("Payment method couldn't be loaded");
 

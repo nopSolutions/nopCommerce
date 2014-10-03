@@ -225,10 +225,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
 
-            string analyticsEcommerceScript = "";
             if (order != null)
             {
-                analyticsEcommerceScript = googleAnalyticsSettings.EcommerceScript + "\n";
+                var analyticsEcommerceScript = googleAnalyticsSettings.EcommerceScript + "\n";
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{ORDERID}", order.Id.ToString());
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));

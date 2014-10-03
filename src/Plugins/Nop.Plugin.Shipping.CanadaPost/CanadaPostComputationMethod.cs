@@ -74,10 +74,10 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
                 string resp = String.Empty;
                 byte[] buffer = new byte[8192];
-                int iRx = 0;
 
                 while (!resp.Contains("<!--END_OF_EPARCEL-->"))
                 {
+                    int iRx = 0;
                     try
                     {
                         iRx = socCanadaPost.Receive(buffer, 0, 8192, SocketFlags.None);

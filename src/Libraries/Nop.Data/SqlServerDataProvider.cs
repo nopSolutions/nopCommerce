@@ -45,11 +45,9 @@ namespace Nop.Data
         {
             var sb = new StringBuilder();
 
-            string lineOfText;
-
             while (true)
             {
-                lineOfText = reader.ReadLine();
+                var lineOfText = reader.ReadLine();
                 if (lineOfText == null)
                 {
                     if (sb.Length > 0)
