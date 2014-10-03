@@ -33,9 +33,10 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
             xmlString.AppendLine("<height> " + this.Height.ToString("0.00", CultureInfo.InvariantCulture) + "</height>");
             // Description (mandatory)
             xmlString.AppendLine("<description> " + this.Description + "</description>");
-            if (this.ReadyToShip == true)
-            {   // if we want to include the comments in the xml
-                if (includeComments == true)
+            if (this.ReadyToShip)
+            {   
+                // if we want to include the comments in the xml
+                if (includeComments)
                 {
                     xmlString.AppendLine("<!--**********************************************-->");
                     xmlString.AppendLine("<!-- By adding the 'readyToShip' tag, Sell Online -->");

@@ -1556,7 +1556,7 @@ namespace Nop.Web.Controllers
 
                     ForumSearchType searchWithin = 0;
                     int limitResultsToPrevious = 0;
-                    if (adv.GetValueOrDefault() == true)
+                    if (adv.GetValueOrDefault())
                     {
                         searchWithin = (ForumSearchType)withinSelected;
                         limitResultsToPrevious = limitDaysSelected;

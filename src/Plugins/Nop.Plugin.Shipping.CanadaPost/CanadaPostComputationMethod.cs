@@ -152,13 +152,13 @@ namespace Nop.Plugin.Shipping.CanadaPost
                         rate.Name = product.Element("name").Value;
                         rate.Amount = Convert.ToDecimal(product.Element("rate").Value, new CultureInfo("en-US", false).NumberFormat);
                         DateTime shipDate;
-                        if (DateTime.TryParse(product.Element("shippingDate").Value, out shipDate) == true)
+                        if (DateTime.TryParse(product.Element("shippingDate").Value, out shipDate))
                         {
                             rate.ShippingDate = shipDate;
                         }
 
                         DateTime delivDate;
-                        if (DateTime.TryParse(product.Element("deliveryDate").Value, out delivDate) == true)
+                        if (DateTime.TryParse(product.Element("deliveryDate").Value, out delivDate))
                         {
                             CultureInfo culture;
                             if (language == CanadaPostLanguageEnum.French)

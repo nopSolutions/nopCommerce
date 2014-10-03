@@ -112,7 +112,7 @@ namespace Nop.Plugin.Shipping.UPS
             sb.Append("<RequestAction>Rate</RequestAction>");
             sb.Append("<RequestOption>Shop</RequestOption>");
             sb.Append("</Request>");
-            if (String.Equals(countryCodeFrom, "US", StringComparison.InvariantCultureIgnoreCase) == true)
+            if (String.Equals(countryCodeFrom, "US", StringComparison.InvariantCultureIgnoreCase))
             {
                 sb.Append("<PickupType>");
                 sb.AppendFormat("<Code>{0}</Code>", GetPickupTypeCode(pickupType));

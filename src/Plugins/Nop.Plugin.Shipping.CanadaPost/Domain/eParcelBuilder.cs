@@ -54,7 +54,7 @@ namespace Nop.Plugin.Shipping.CanadaPost.Domain
             // adding information related to the profile of the merchant
             msg.Append(_profile.ToXml(includeComments));
             // if we want to include the comments in the xml
-            if (includeComments == true)
+            if (includeComments)
             {
                 msg.AppendLine("<!--**********************************-->");
                 msg.AppendLine("<!-- List of items in the shopping    -->");

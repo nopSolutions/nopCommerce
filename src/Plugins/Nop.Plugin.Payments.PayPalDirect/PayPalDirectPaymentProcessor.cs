@@ -445,8 +445,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 RefundTransactionResponseType response = service1.RefundTransaction(req);
 
                 string error = string.Empty;
-                bool Success = PaypalHelper.CheckSuccess(response, out error);
-                if (Success)
+                bool success = PaypalHelper.CheckSuccess(response, out error);
+                if (success)
                 {
                     result.NewPaymentStatus = PaymentStatus.Refunded;
                     //cancelPaymentResult.RefundTransactionID = response.RefundTransactionID;

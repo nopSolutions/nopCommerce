@@ -91,12 +91,12 @@
             @pager
         </div>
         <div class="search-results">
-            @if (Model.NoResultsVisisble == true)
+            @if (Model.NoResultsVisisble)
             {   
                 <span class="result">@T("Forum.SearchNoResultsText")</span>                
             }
             <div class="forums-table-section topics-group">
-                @if (Model.SearchResultsVisible == true)
+                @if (Model.SearchResultsVisible)
                 {   
                     <table>
                         <thead>
