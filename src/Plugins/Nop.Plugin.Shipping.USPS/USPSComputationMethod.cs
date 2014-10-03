@@ -573,7 +573,7 @@ namespace Nop.Plugin.Shipping.USPS
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&amp;trade;&lt;/sup&gt;", tm);
                         serviceCode = serviceCode.Replace("&lt;sup&gt;&#8482;&lt;/sup&gt;", tm);
 
-                        ShippingOption shippingOption = shippingOptions.Find((s) => s.Name == serviceCode);
+                        ShippingOption shippingOption = shippingOptions.Find(s => s.Name == serviceCode);
                         if (shippingOption == null)
                         {
                             shippingOption = new ShippingOption();

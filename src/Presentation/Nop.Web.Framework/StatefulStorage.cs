@@ -32,12 +32,12 @@ namespace Nop.Web.Framework
     {
         // Ambient environment constructor
         public StatefulStoragePerApplication()
-            : base((key) => HttpContext.Current.Application[key],
+            : base(key => HttpContext.Current.Application[key],
                    (key, value) => HttpContext.Current.Application[key] = value) { }
 
         // IoC-friendly constructor
         public StatefulStoragePerApplication(HttpApplicationStateBase app)
-            : base((key) => app[key],
+            : base(key => app[key],
                    (key, value) => app[key] = value) { }
     }
 
@@ -56,12 +56,12 @@ namespace Nop.Web.Framework
     {
         // Ambient environment constructor
         public StatefulStoragePerSession()
-            : base((key) => HttpContext.Current.Session[key],
+            : base(key => HttpContext.Current.Session[key],
                    (key, value) => HttpContext.Current.Session[key] = value) { }
 
         // IoC-friendly constructor
         public StatefulStoragePerSession(HttpSessionStateBase session)
-            : base((key) => session[key],
+            : base(key => session[key],
                    (key, value) => session[key] = value) { }
     }
 
@@ -72,7 +72,7 @@ namespace Nop.Web.Framework
 
         protected DictionaryStatefulStorage(Func<IDictionary> dictionaryAccessor)
         {
-            _getter = (key) => dictionaryAccessor()[key];
+            _getter = key => dictionaryAccessor()[key];
             _setter = (key, value) => dictionaryAccessor()[key] = value;
         }
 

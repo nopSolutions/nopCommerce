@@ -72,9 +72,9 @@ namespace Nop.Services.Messages
             string replyToEmailAddress = null, string replyToName = null)
         {
             //retrieve localized message template data
-            var bcc = messageTemplate.GetLocalized((mt) => mt.BccEmailAddresses, languageId);
-            var subject = messageTemplate.GetLocalized((mt) => mt.Subject, languageId);
-            var body = messageTemplate.GetLocalized((mt) => mt.Body, languageId);
+            var bcc = messageTemplate.GetLocalized(mt => mt.BccEmailAddresses, languageId);
+            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
 
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
