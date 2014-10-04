@@ -230,7 +230,7 @@ namespace Nop.Admin.Controllers
 
             var pollAnswer = _pollService.GetPollAnswerById(model.Id);
             if (pollAnswer == null)
-                throw new ArgumentException("No poll answer found with the specified id", "id");
+                throw new ArgumentException("No poll answer found with the specified id");
 
             pollAnswer.Name = model.Name;
             pollAnswer.DisplayOrder = model.DisplayOrder;

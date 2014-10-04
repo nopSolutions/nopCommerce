@@ -19,7 +19,6 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductTemplateService _productTemplateService;
         private readonly IPermissionService _permissionService;
-        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -28,14 +27,12 @@ namespace Nop.Admin.Controllers
         public TemplateController(ICategoryTemplateService categoryTemplateService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductTemplateService productTemplateService,
-            IPermissionService permissionService,
-            ILocalizationService localizationService)
+            IPermissionService permissionService)
         {
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._productTemplateService = productTemplateService;
             this._permissionService = permissionService;
-            this._localizationService = localizationService;
         }
 
         #endregion

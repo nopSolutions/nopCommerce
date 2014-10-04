@@ -23,7 +23,6 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
-        private readonly IProductService _productService;
 
         #endregion Fields
 
@@ -34,7 +33,7 @@ namespace Nop.Admin.Controllers
             ILocalizedEntityService localizedEntityService,
             ILocalizationService localizationService, 
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService, IProductService productService)
+            IPermissionService permissionService)
         {
             this._specificationAttributeService = specificationAttributeService;
             this._languageService = languageService;
@@ -42,7 +41,6 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
-            this._productService = productService;
         }
 
         #endregion

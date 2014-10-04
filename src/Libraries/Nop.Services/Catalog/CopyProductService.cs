@@ -26,7 +26,6 @@ namespace Nop.Services.Catalog
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDownloadService _downloadService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly IProductTagService _productTagService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IStoreMappingService _storeMappingService;
 
@@ -35,12 +34,17 @@ namespace Nop.Services.Catalog
         #region Ctor
 
         public CopyProductService(IProductService productService,
-            IProductAttributeService productAttributeService, ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService, IPictureService pictureService,
-            ICategoryService categoryService, IManufacturerService manufacturerService,
-            ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService,
-            IProductAttributeParser productAttributeParser, IProductTagService productTagService,
-            IUrlRecordService urlRecordService, IStoreMappingService storeMappingService)
+            IProductAttributeService productAttributeService,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService, 
+            IPictureService pictureService,
+            ICategoryService categoryService, 
+            IManufacturerService manufacturerService,
+            ISpecificationAttributeService specificationAttributeService,
+            IDownloadService downloadService,
+            IProductAttributeParser productAttributeParser,
+            IUrlRecordService urlRecordService, 
+            IStoreMappingService storeMappingService)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -52,7 +56,6 @@ namespace Nop.Services.Catalog
             this._specificationAttributeService = specificationAttributeService;
             this._downloadService = downloadService;
             this._productAttributeParser = productAttributeParser;
-            this._productTagService = productTagService;
             this._urlRecordService = urlRecordService;
             this._storeMappingService = storeMappingService;
         }

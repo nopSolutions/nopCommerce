@@ -20,7 +20,6 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
-        private readonly IWebHelper _webHelper;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -28,13 +27,13 @@ namespace Nop.Web.Controllers
         #region Constructors
 
         public PollController(ILocalizationService localizationService,
-            IWorkContext workContext, IPollService pollService,
-            IWebHelper webHelper, ICacheManager cacheManager)
+            IWorkContext workContext,
+            IPollService pollService,
+            ICacheManager cacheManager)
         {
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._pollService = pollService;
-            this._webHelper = webHelper;
             this._cacheManager = cacheManager;
         }
 

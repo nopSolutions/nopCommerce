@@ -46,7 +46,7 @@ namespace Nop.Services.Security
             //return FormsAuthentication.HashPasswordForStoringInConfigFile(saltAndPassword, passwordFormat);
             var algorithm = HashAlgorithm.Create(passwordFormat);
             if (algorithm == null)
-                throw new ArgumentException("Unrecognized hash name", "hashName");
+                throw new ArgumentException("Unrecognized hash name");
 
             var hashByteArray = algorithm.ComputeHash(Encoding.UTF8.GetBytes(saltAndPassword));
             return BitConverter.ToString(hashByteArray).Replace("-", "");

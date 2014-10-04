@@ -20,7 +20,7 @@ namespace Nop.Tests
                 Assert.IsNull(instance);
             else
                 Assert.IsNotNull(instance, "Instance was null");
-            Assert.AreEqual(expected, instance.GetType(), "Expected: " + expected.GetType() + ", was: " + instance.GetType() + " was not of type " + instance.GetType());
+            Assert.AreEqual(expected, instance.GetType(), "Expected: " + expected + ", was: " + instance.GetType() + " was not of type " + instance.GetType());
         }
 
         public static void Equals<T>(object instance)

@@ -63,7 +63,6 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
-        private readonly IWebHelper _webHelper;
         private readonly IFulltextService _fulltextService;
         private readonly IMaintenanceService _maintenanceService;
         private readonly IStoreService _storeService;
@@ -75,16 +74,25 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public SettingController(ISettingService settingService,
-            ICountryService countryService, IStateProvinceService stateProvinceService,
-            IAddressService addressService, ITaxCategoryService taxCategoryService,
-            ICurrencyService currencyService, IPictureService pictureService, 
-            ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
-            IOrderService orderService, IEncryptionService encryptionService,
-            IThemeProvider themeProvider, ICustomerService customerService, 
-            ICustomerActivityService customerActivityService, IPermissionService permissionService,
-            IWebHelper webHelper, IFulltextService fulltextService, 
-            IMaintenanceService maintenanceService, IStoreService storeService,
-            IWorkContext workContext, IGenericAttributeService genericAttributeService)
+            ICountryService countryService, 
+            IStateProvinceService stateProvinceService,
+            IAddressService addressService, 
+            ITaxCategoryService taxCategoryService,
+            ICurrencyService currencyService,
+            IPictureService pictureService, 
+            ILocalizationService localizationService, 
+            IDateTimeHelper dateTimeHelper,
+            IOrderService orderService,
+            IEncryptionService encryptionService,
+            IThemeProvider themeProvider,
+            ICustomerService customerService, 
+            ICustomerActivityService customerActivityService,
+            IPermissionService permissionService,
+            IFulltextService fulltextService, 
+            IMaintenanceService maintenanceService,
+            IStoreService storeService,
+            IWorkContext workContext, 
+            IGenericAttributeService genericAttributeService)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -101,7 +109,6 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
-            this._webHelper = webHelper;
             this._fulltextService = fulltextService;
             this._maintenanceService = maintenanceService;
             this._storeService = storeService;

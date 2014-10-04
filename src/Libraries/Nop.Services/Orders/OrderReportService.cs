@@ -23,9 +23,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<Order> _orderRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<Product> _productRepository;
-        
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IProductService _productService;
 
         #endregion
 
@@ -38,18 +36,15 @@ namespace Nop.Services.Orders
         /// <param name="orderItemRepository">Order item repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
-        /// <param name="productService">Product service</param>
         public OrderReportService(IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
             IRepository<Product> productRepository,
-            IDateTimeHelper dateTimeHelper,
-            IProductService productService)
+            IDateTimeHelper dateTimeHelper)
         {
             this._orderRepository = orderRepository;
             this._orderItemRepository = orderItemRepository;
             this._productRepository = productRepository;
             this._dateTimeHelper = dateTimeHelper;
-            this._productService = productService;
         }
 
         #endregion
