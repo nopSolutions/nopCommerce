@@ -27,9 +27,9 @@
                 {
                 <div class="message-error">
                     <ul>
-                        @for (int i = 0; i < Model.Warnings.Count; i++)
+                        @foreach (var warning in Model.Warnings)
                         {
-                            <li>@Model.Warnings[i]</li>
+                            <li>@warning</li>
                         }
                     </ul>
                 </div>
@@ -149,9 +149,9 @@
                                     {
                                         <div class="message-error">
                                             <ul>
-                                                @for (int i = 0; i < item.Warnings.Count; i++)
+                                                @foreach (var warning in item.Warnings)
                                                 {
-                                                    <li>@item.Warnings[i]</li>
+                                                    <li>@warning</li>
                                                 }
                                             </ul>
                                         </div>

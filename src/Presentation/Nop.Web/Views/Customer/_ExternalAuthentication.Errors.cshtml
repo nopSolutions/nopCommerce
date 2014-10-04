@@ -6,9 +6,9 @@
 {
     <div class="external-auth-errors">
         <ul>
-            @for (int i = 0; i < errors.Count; i++)
+            @foreach (var error in errors)
             {
-                <li>@errors[i]</li>
+                <li>@error</li>
             }
         </ul>
     </div>

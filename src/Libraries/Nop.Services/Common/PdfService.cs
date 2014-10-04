@@ -446,13 +446,12 @@ namespace Nop.Services.Common
                 cellProductItem.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cellProductItem);
 
-                for (int i = 0; i < orderItems.Count; i++)
+                foreach (var orderItem in orderItems)
                 {
                     var pAttribTable = new PdfPTable(1);
                     pAttribTable.RunDirection = GetDirection(lang);
                     pAttribTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                    var orderItem = orderItems[i];
                     var p = orderItem.Product;
 
                     //product name
@@ -1157,20 +1156,16 @@ namespace Nop.Services.Common
                         table.RunDirection = PdfWriter.RUN_DIRECTION_RTL;
                     }
 
-                    for (int i = 0; i < pictures.Count; i++)
+                    foreach (var pic in pictures)
                     {
-                        var pic = pictures[i];
-                        if (pic != null)
+                        var picBinary = _pictureService.LoadPictureBinary(pic);
+                        if (picBinary != null && picBinary.Length > 0)
                         {
-                            var picBinary = _pictureService.LoadPictureBinary(pic);
-                            if (picBinary != null && picBinary.Length > 0)
-                            {
-                                var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
-                                var cell = new PdfPCell(Image.GetInstance(pictureLocalPath));
-                                cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                                cell.Border = Rectangle.NO_BORDER;
-                                table.AddCell(cell);
-                            }
+                            var pictureLocalPath = _pictureService.GetThumbLocalPath(pic, 200, false);
+                            var cell = new PdfPCell(Image.GetInstance(pictureLocalPath));
+                            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            cell.Border = Rectangle.NO_BORDER;
+                            table.AddCell(cell);
                         }
                     }
 

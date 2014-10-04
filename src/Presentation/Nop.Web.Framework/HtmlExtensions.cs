@@ -56,10 +56,9 @@ namespace Nop.Web.Framework
                     tabStrip.AppendLine("Standard");
                     tabStrip.AppendLine("</li>");
 
-                    for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
+                    foreach (var locale in helper.ViewData.Model.Locales)
                     {
                         //languages
-                        var locale = helper.ViewData.Model.Locales[i];
                         var language = EngineContext.Current.Resolve<ILanguageService>().GetLanguageById(locale.LanguageId);
 
                         tabStrip.AppendLine("<li>");

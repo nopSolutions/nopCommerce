@@ -99,10 +99,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var sb = new StringBuilder();
             sb.AppendLine("The API request failed with the following errors:");
-            for (int i = 0; i < response.messages.Length; i++)
-            {
-                sb.AppendLine("[" + response.messages[i].code + "] " + response.messages[i].text);
-            }
+            foreach (var message in response.messages)
+                sb.AppendLine("[" + message.code + "] " + message.text);
             return sb.ToString();
         }
         #endregion
