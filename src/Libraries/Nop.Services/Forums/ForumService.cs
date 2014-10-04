@@ -699,7 +699,7 @@ namespace Nop.Services.Forums
         {
             var forumTopic = GetTopicById(forumTopicId);
             if (forumTopic == null)
-                return forumTopic;
+                return null;
 
             if (this.IsCustomerAllowedToMoveTopic(_workContext.CurrentCustomer, forumTopic))
             {

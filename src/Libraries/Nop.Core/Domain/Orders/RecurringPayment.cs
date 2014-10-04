@@ -58,17 +58,17 @@ namespace Nop.Core.Domain.Orders
         {
             get
             {
-                //result
-                DateTime? result = null;
-
                 if (!this.IsActive)
-                    return result;
+                    return null;
 
                 var historyCollection = this.RecurringPaymentHistory;
                 if (historyCollection.Count >= this.TotalCycles)
                 {
-                    return result;
+                    return null;
                 }
+
+                //result
+                DateTime? result = null;
 
                 //set another value to change calculation method
                 //bool useLatestPayment = false;

@@ -670,7 +670,7 @@ namespace Nop.Web.Controllers
         {
             var model = new LoginModel();
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.CheckoutAsGuest = checkoutAsGuest.HasValue ? checkoutAsGuest.Value : false;
+            model.CheckoutAsGuest = checkoutAsGuest.GetValueOrDefault();
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnLoginPage;
             return View(model);
         }

@@ -1023,7 +1023,7 @@ namespace Nop.Web.Controllers
             //prepare model
             var model = new List<ProductOverviewModel>();
             model.AddRange(PrepareProductOverviewModels(products,
-                preparePriceModel.HasValue ? preparePriceModel.Value : false,
+                preparePriceModel.GetValueOrDefault(),
                 preparePictureModel,
                 productThumbPictureSize));
 

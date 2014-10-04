@@ -1744,8 +1744,8 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
             PrepareShoppingCartModel(model, cart, 
                 isEditable: false, 
-                prepareEstimateShippingIfEnabled: false, 
-                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.HasValue ? prepareAndDisplayOrderReviewData.Value : false);
+                prepareEstimateShippingIfEnabled: false,
+                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.GetValueOrDefault());
             return PartialView(model);
         }
 

@@ -183,7 +183,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             _currencySettings.ActiveExchangeRateProviderSystemName = formValues["exchangeRateProvider"];
-            _currencySettings.AutoUpdateEnabled = formValues["autoUpdateEnabled"].Equals("false") ? false : true;
+            _currencySettings.AutoUpdateEnabled = !formValues["autoUpdateEnabled"].Equals("false");
             _settingService.SaveSetting(_currencySettings);
             return RedirectToAction("List", "Currency");
         }
@@ -196,9 +196,9 @@ namespace Nop.Admin.Controllers
 
             var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
             foreach (var currency in currenciesModel)
-                currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
+                currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId;
             foreach (var currency in currenciesModel)
-                currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
+                currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId;
 
             var gridModel = new DataSourceResult
             {

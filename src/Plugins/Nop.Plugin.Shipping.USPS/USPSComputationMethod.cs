@@ -438,11 +438,11 @@ namespace Nop.Plugin.Shipping.USPS
             requestStream.Write(bytes, 0, bytes.Length);
             requestStream.Close();
             var response = request.GetResponse();
-            string responseXML = string.Empty;
+            string responseXml = string.Empty;
             using (var reader = new StreamReader(response.GetResponseStream()))
-                responseXML = reader.ReadToEnd();
+                responseXml = reader.ReadToEnd();
 
-            return responseXML;
+            return responseXml;
         }
 
         private bool IsPackageTooLarge(int length, int height, int width)

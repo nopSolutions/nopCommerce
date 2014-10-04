@@ -31,9 +31,9 @@ namespace Nop.Core.Html.CodeFormatter
 
             options.Language = match.Groups["lang"].Value;
             options.Code = match.Groups["code"].Value;
-            options.DisplayLineNumbers = match.Groups["linenumbers"].Value == "on" ? true : false;
+            options.DisplayLineNumbers = match.Groups["linenumbers"].Value == "on";
             options.Title = match.Groups["title"].Value;
-            options.AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on" ? true : false;
+            options.AlternateLineNumbers = match.Groups["altlinenumbers"].Value == "on";
 
             string result = match.Value.Replace(match.Groups["begin"].Value, "");
             result = result.Replace(match.Groups["end"].Value, "");
