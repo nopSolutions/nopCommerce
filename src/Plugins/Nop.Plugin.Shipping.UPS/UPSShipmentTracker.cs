@@ -87,7 +87,7 @@ namespace Nop.Plugin.Shipping.UPS
                 tr.InquiryNumber = trackingNumber;
                 System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
                 var trackResponse = track.ProcessTrack(tr);
-                result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(x => ToStatusEvent(x))).ToList());
+                result.AddRange(trackResponse.Shipment.SelectMany(c => c.Package[0].Activity.Select(ToStatusEvent)).ToList());
             }
             catch (SoapException ex)
             {

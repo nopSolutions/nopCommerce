@@ -11,7 +11,7 @@ namespace Nop.Admin
         public static MvcHtmlString NopField<TModel>(this HtmlHelper<TModel> helper, 
             System.Linq.Expressions.Expression<Func<TModel, string>> expression)
         {
-            return helper.NopCommonField(expression, x => helper.TextBoxFor(x));
+            return helper.NopCommonField(expression, helper.TextBoxFor);
         }
 
         private static MvcHtmlString NopCommonField<TModel, TValue>(this HtmlHelper<TModel> helper, 

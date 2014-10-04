@@ -719,7 +719,11 @@ namespace Nop.Admin.Controllers
             foreach (var shippingMethod in shippingMethods)
             {
                 string formKey = "restrict_" + shippingMethod.Id;
-                var countryIdsToRestrict = form[formKey] != null ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+                var countryIdsToRestrict = form[formKey] != null 
+                    ? form[formKey].Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(int.Parse)
+                    .ToList() 
+                    : new List<int>();
 
                 foreach (var country in countries)
                 {

@@ -1421,7 +1421,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orders = orders.Where(o => HasAccessToOrder(o)).ToList();
+                orders = orders.Where(HasAccessToOrder).ToList();
             }
 
             //ensure that we at least one order selected
@@ -2480,7 +2480,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orderItems = orderItems.Where(orderItem => HasAccessToOrderItem(orderItem)).ToList();
+                orderItems = orderItems.Where(HasAccessToOrderItem).ToList();
             }
 
             foreach (var orderItem in orderItems)
@@ -2577,7 +2577,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                orderItems = orderItems.Where(orderItem => HasAccessToOrderItem(orderItem)).ToList();
+                orderItems = orderItems.Where(HasAccessToOrderItem).ToList();
             }
 
             Shipment shipment = null;
@@ -2974,7 +2974,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+                shipments = shipments.Where(HasAccessToShipment).ToList();
             }
 
             //ensure that we at least one shipment selected
@@ -3006,7 +3006,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+                shipments = shipments.Where(HasAccessToShipment).ToList();
             }
             
             foreach (var shipment in shipments)
@@ -3037,7 +3037,7 @@ namespace Nop.Admin.Controllers
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null)
             {
-                shipments = shipments.Where(s => HasAccessToShipment(s)).ToList();
+                shipments = shipments.Where(HasAccessToShipment).ToList();
             }
 
             foreach (var shipment in shipments)
