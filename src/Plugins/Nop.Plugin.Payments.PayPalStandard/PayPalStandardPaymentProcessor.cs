@@ -80,7 +80,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <param name="values">Values</param>
         /// <param name="response">Response</param>
         /// <returns>Result</returns>
-        public bool GetPDTDetails(string tx, out Dictionary<string, string> values, out string response)
+        public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";
@@ -124,7 +124,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         /// <param name="formString">Form string</param>
         /// <param name="values">Values</param>
         /// <returns>Result</returns>
-        public bool VerifyIPN(string formString, out Dictionary<string, string> values)
+        public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";

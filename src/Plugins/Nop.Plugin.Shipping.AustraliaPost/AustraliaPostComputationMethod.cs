@@ -155,10 +155,10 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             }
 
 
-            string err_msg = rspParams["err_msg"];
-            if (!err_msg.ToUpperInvariant().StartsWith("OK"))
+            string errMsg = rspParams["err_msg"];
+            if (!errMsg.ToUpperInvariant().StartsWith("OK"))
             {
-                throw new NopException(err_msg);
+                throw new NopException(errMsg);
             }
 
             var serviceName = GetServiceNameByType(serviceType);

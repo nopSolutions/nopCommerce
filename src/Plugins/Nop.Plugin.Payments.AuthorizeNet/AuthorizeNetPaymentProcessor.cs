@@ -69,7 +69,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         /// Gets Authorize.NET URL
         /// </summary>
         /// <returns></returns>
-        private string GetAuthorizeNETUrl()
+        private string GetAuthorizeNetUrl()
         {
             return _authorizeNetPaymentSettings.UseSandbox ? "https://test.authorize.net/gateway/transact.dll" :
                 "https://secure.authorize.net/gateway/transact.dll";
@@ -166,7 +166,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_customer_ip", _webHelper.GetCurrentIpAddress());
 
             string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNETUrl(), form);
+            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
             reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
@@ -263,7 +263,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_trans_id", codes[0]);
 
             string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNETUrl(), form);
+            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
             reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
@@ -339,7 +339,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             
             // Send Request to Authorize and Get Response
             string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNETUrl(), form);
+            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
             reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
@@ -407,7 +407,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
             // Send Request to Authorize and Get Response
             string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNETUrl(), form);
+            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
             reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))

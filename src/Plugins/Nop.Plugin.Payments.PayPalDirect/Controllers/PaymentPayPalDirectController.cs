@@ -267,7 +267,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Direct module cannot be loaded");
 
-            if (processor.VerifyIPN(strRequest, out values))
+            if (processor.VerifyIpn(strRequest, out values))
             {
                 #region values
                 decimal total = decimal.Zero;

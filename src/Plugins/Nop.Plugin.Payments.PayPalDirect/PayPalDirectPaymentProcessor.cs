@@ -284,7 +284,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <param name="formString">Form string</param>
         /// <param name="values">Values</param>
         /// <returns>Result</returns>
-        public bool VerifyIPN(string formString, out Dictionary<string, string> values)
+        public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
             req.Method = "POST";

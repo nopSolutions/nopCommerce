@@ -223,7 +223,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.GetPDTDetails(tx, out values, out response))
+            if (processor.GetPdtDetails(tx, out values, out response))
             {
                 string orderNumber = string.Empty;
                 values.TryGetValue("custom", out orderNumber);
@@ -354,7 +354,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 !processor.IsPaymentMethodActive(_paymentSettings) || !processor.PluginDescriptor.Installed)
                 throw new NopException("PayPal Standard module cannot be loaded");
 
-            if (processor.VerifyIPN(strRequest, out values))
+            if (processor.VerifyIpn(strRequest, out values))
             {
                 #region values
                 decimal total = decimal.Zero;
