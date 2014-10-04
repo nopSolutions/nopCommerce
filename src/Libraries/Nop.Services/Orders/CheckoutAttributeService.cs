@@ -152,7 +152,7 @@ namespace Nop.Services.Orders
                 return null;
             
             string key = string.Format(CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
-            return _cacheManager.Get(key, () => { return _checkoutAttributeRepository.GetById(checkoutAttributeId); });
+            return _cacheManager.Get(key, () => _checkoutAttributeRepository.GetById(checkoutAttributeId));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace Nop.Services.Orders
                 return null;
             
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_BY_ID_KEY, checkoutAttributeValueId);
-            return _cacheManager.Get(key, () => { return _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId); });
+            return _cacheManager.Get(key, () => _checkoutAttributeValueRepository.GetById(checkoutAttributeValueId));
         }
 
         /// <summary>

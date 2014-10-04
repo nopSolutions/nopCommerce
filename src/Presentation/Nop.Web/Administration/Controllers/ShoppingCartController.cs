@@ -75,14 +75,11 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = customers.Select(x =>
+                Data = customers.Select(x => new ShoppingCartModel
                 {
-                    return new ShoppingCartModel
-                    {
-                        CustomerId = x.Id,
-                        CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                        TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
-                    };
+                    CustomerId = x.Id,
+                    CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
                 }),
                 Total = customers.TotalCount
             };
@@ -151,14 +148,11 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = customers.Select(x =>
+                Data = customers.Select(x => new ShoppingCartModel
                 {
-                    return new ShoppingCartModel
-                    {
-                        CustomerId = x.Id,
-                        CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                        TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
-                    };
+                    CustomerId = x.Id,
+                    CustomerEmail = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
+                    TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
                 }),
                 Total = customers.TotalCount
             };

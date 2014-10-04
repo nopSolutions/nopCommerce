@@ -351,19 +351,16 @@ namespace Nop.Admin.Controllers
             var values = _checkoutAttributeService.GetCheckoutAttributeValues(checkoutAttributeId);
             var gridModel = new DataSourceResult
             {
-                Data = values.Select(x =>
+                Data = values.Select(x => new CheckoutAttributeValueModel
                 {
-                    return new CheckoutAttributeValueModel
-                    {
-                        Id = x.Id,
-                        CheckoutAttributeId = x.CheckoutAttributeId,
-                        Name = x.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
-                        ColorSquaresRgb = x.ColorSquaresRgb,
-                        PriceAdjustment = x.PriceAdjustment,
-                        WeightAdjustment = x.WeightAdjustment,
-                        IsPreSelected = x.IsPreSelected,
-                        DisplayOrder = x.DisplayOrder,
-                    };
+                    Id = x.Id,
+                    CheckoutAttributeId = x.CheckoutAttributeId,
+                    Name = x.CheckoutAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                    ColorSquaresRgb = x.ColorSquaresRgb,
+                    PriceAdjustment = x.PriceAdjustment,
+                    WeightAdjustment = x.WeightAdjustment,
+                    IsPreSelected = x.IsPreSelected,
+                    DisplayOrder = x.DisplayOrder,
                 }),
                 Total = values.Count()
             };

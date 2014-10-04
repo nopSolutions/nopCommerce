@@ -311,15 +311,12 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No gift card found with the specified id");
 
             var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
-                .Select(x =>
+                .Select(x => new GiftCardModel.GiftCardUsageHistoryModel
                 {
-                    return new GiftCardModel.GiftCardUsageHistoryModel
-                    {
-                        Id = x.Id,
-                        OrderId = x.UsedWithOrderId,
-                        UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                    };
+                    Id = x.Id,
+                    OrderId = x.UsedWithOrderId,
+                    UsedValue = _priceFormatter.FormatPrice(x.UsedValue, true, false),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 })
                 .ToList();
             var gridModel = new DataSourceResult

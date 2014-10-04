@@ -180,7 +180,7 @@ namespace Nop.Services.Catalog
                 return null;
 
             string key = string.Format(PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
-            return _cacheManager.Get(key, () => { return _productAttributeRepository.GetById(productAttributeId); });
+            return _cacheManager.Get(key, () => _productAttributeRepository.GetById(productAttributeId));
         }
 
         /// <summary>
@@ -281,7 +281,7 @@ namespace Nop.Services.Catalog
                 return null;
             
             string key = string.Format(PRODUCTVARIANTATTRIBUTES_BY_ID_KEY, productVariantAttributeId);
-            return _cacheManager.Get(key, () => { return _productVariantAttributeRepository.GetById(productVariantAttributeId); });
+            return _cacheManager.Get(key, () => _productVariantAttributeRepository.GetById(productVariantAttributeId));
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace Nop.Services.Catalog
                 return null;
             
            string key = string.Format(PRODUCTVARIANTATTRIBUTEVALUES_BY_ID_KEY, productVariantAttributeValueId);
-           return _cacheManager.Get(key, () => { return _productVariantAttributeValueRepository.GetById(productVariantAttributeValueId); });
+           return _cacheManager.Get(key, () => _productVariantAttributeValueRepository.GetById(productVariantAttributeValueId));
         }
 
         /// <summary>

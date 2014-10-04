@@ -150,7 +150,7 @@ namespace Nop.Services.Localization
                 return null;
             
             string key = string.Format(LANGUAGES_BY_ID_KEY, languageId);
-            return _cacheManager.Get(key, () => { return _languageRepository.GetById(languageId); });
+            return _cacheManager.Get(key, () => _languageRepository.GetById(languageId));
         }
 
         /// <summary>

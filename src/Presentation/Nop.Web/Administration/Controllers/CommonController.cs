@@ -637,13 +637,10 @@ namespace Nop.Admin.Controllers
             var searchTermRecordLines = _searchTermService.GetStats(command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = searchTermRecordLines.Select(x =>
+                Data = searchTermRecordLines.Select(x => new SearchTermReportLineModel
                 {
-                    return new SearchTermReportLineModel
-                    {
-                        Keyword = x.Keyword,
-                        Count = x.Count,
-                    };
+                    Keyword = x.Keyword,
+                    Count = x.Count,
                 }),
                 Total = searchTermRecordLines.TotalCount
             };

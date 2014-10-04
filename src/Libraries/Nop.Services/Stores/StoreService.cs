@@ -111,7 +111,7 @@ namespace Nop.Services.Stores
                 return null;
             
             string key = string.Format(STORES_BY_ID_KEY, storeId);
-            return _cacheManager.Get(key, () => { return _storeRepository.GetById(storeId); });
+            return _cacheManager.Get(key, () => _storeRepository.GetById(storeId));
         }
 
         /// <summary>

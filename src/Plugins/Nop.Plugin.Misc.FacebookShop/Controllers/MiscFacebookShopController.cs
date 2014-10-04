@@ -403,9 +403,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(cacheKey, () =>
-            {
-                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList();
-            });
+                PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList()
+                );
 
             return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/CategoryNavigation.cshtml", model);
         }

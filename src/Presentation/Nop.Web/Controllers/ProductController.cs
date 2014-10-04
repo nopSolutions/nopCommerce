@@ -342,23 +342,17 @@ namespace Nop.Web.Controllers
             {
                 var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
                 model.ProductTags = _cacheManager.Get(productTagsCacheKey, () =>
-                {
-                    return product.ProductTags
-                        //filter by store
-                        .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
-                        .Select(x =>
-                        {
-                            var ptModel = new ProductTagModel
-                            {
-                                Id = x.Id,
-                                Name = x.GetLocalized(y => y.Name),
-                                SeName = x.GetSeName(),
-                                ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
-                            };
-                            return ptModel;
-                        })
-                        .ToList();
-                });
+                    product.ProductTags
+                    //filter by store
+                    .Where(x => _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id) > 0)
+                    .Select(x =>  new ProductTagModel
+                    {
+                        Id = x.Id,
+                        Name = x.GetLocalized(y => y.Name),
+                        SeName = x.GetSeName(),
+                        ProductCount = _productTagService.GetProductCount(x.Id, _storeContext.CurrentStore.Id)
+                    })
+                    .ToList());
             }
 
             #endregion
@@ -772,11 +766,10 @@ namespace Nop.Web.Controllers
             {
                 string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
                 model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
-                {
-                    return _manufacturerService.GetProductManufacturersByProductId(product.Id)
-                        .Select(x => x.Manufacturer.ToModel())
-                        .ToList();
-                });
+                    _manufacturerService.GetProductManufacturersByProductId(product.Id)
+                    .Select(x => x.Manufacturer.ToModel())
+                    .ToList()
+                    );
             }
             #endregion
 

@@ -399,15 +399,12 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = duh.Select(x =>
+                Data = duh.Select(x => new DiscountModel.DiscountUsageHistoryModel
                 {
-                    return new DiscountModel.DiscountUsageHistoryModel
-                    {
-                        Id = x.Id,
-                        DiscountId = x.DiscountId,
-                        OrderId = x.OrderId,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
-                    };
+                    Id = x.Id,
+                    DiscountId = x.DiscountId,
+                    OrderId = x.OrderId,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                 }),
                 Total = duh.TotalCount
             };

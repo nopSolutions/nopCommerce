@@ -20,13 +20,7 @@ namespace Nop.Services.Blogs
         public static IList<BlogPost> GetPostsByDate(this IList<BlogPost> source,
             DateTime dateFrom, DateTime dateTo)
         {
-            var list = source.ToList().FindAll(delegate(BlogPost p)
-            {
-                return (dateFrom.Date <= p.CreatedOnUtc && p.CreatedOnUtc.Date <= dateTo);
-            });
-
-            list.TrimExcess();
-            return list;
+            return source.Where(p => dateFrom.Date <= p.CreatedOnUtc && p.CreatedOnUtc.Date <= dateTo).ToList();
         }
     }
 }

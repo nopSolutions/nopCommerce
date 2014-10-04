@@ -232,16 +232,13 @@ namespace Nop.Admin.Controllers
             var values = _customerAttributeService.GetCustomerAttributeValues(customerAttributeId);
             var gridModel = new DataSourceResult
             {
-                Data = values.Select(x =>
+                Data = values.Select(x => new CustomerAttributeValueModel
                 {
-                    return new CustomerAttributeValueModel
-                    {
-                        Id = x.Id,
-                        CustomerAttributeId = x.CustomerAttributeId,
-                        Name = x.Name,
-                        IsPreSelected = x.IsPreSelected,
-                        DisplayOrder = x.DisplayOrder,
-                    };
+                    Id = x.Id,
+                    CustomerAttributeId = x.CustomerAttributeId,
+                    Name = x.Name,
+                    IsPreSelected = x.IsPreSelected,
+                    DisplayOrder = x.DisplayOrder,
                 }),
                 Total = values.Count()
             };

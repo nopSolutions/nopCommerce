@@ -63,19 +63,16 @@ namespace Nop.Admin.Controllers
                 null, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
-                Data = customers.Select(x =>
+                Data = customers.Select(x => new OnlineCustomerModel
                 {
-                    return new OnlineCustomerModel
-                    {
-                        Id = x.Id,
-                        CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
-                        LastIpAddress = x.LastIpAddress,
-                        Location = _geoLookupService.LookupCountryName(x.LastIpAddress),
-                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                        LastVisitedPage = _customerSettings.StoreLastVisitedPage ?
-                            x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage) :
-                            _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled")
-                    };
+                    Id = x.Id,
+                    CustomerInfo = x.IsRegistered() ? x.Email : _localizationService.GetResource("Admin.Customers.Guest"),
+                    LastIpAddress = x.LastIpAddress,
+                    Location = _geoLookupService.LookupCountryName(x.LastIpAddress),
+                    LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
+                    LastVisitedPage = _customerSettings.StoreLastVisitedPage ?
+                        x.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage) :
+                        _localizationService.GetResource("Admin.Customers.OnlineCustomers.Fields.LastVisitedPage.Disabled")
                 }),
                 Total = customers.TotalCount
             };

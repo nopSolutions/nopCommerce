@@ -52,24 +52,21 @@ namespace Nop.Plugin.Tax.CountryStateZip
             //first, load all tax rate records (cached) - loaded only once
             string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
             var allTaxRates = _cacheManager.Get(cacheKey, () =>
-            {
-                return _taxRateService
-                    .GetAllTaxRates()
-                    .Select(x =>
-                            {
-                                return new TaxRateForCaching
-                                       {
-                                           Id = x.Id,
-                                           StoreId = x.StoreId,
-                                           TaxCategoryId = x.TaxCategoryId,
-                                           CountryId = x.CountryId,
-                                           StateProvinceId = x.StateProvinceId,
-                                           Zip = x.Zip,
-                                           Percentage = x.Percentage,
-                                       };
-                            })
-                            .ToList();
-            });
+                _taxRateService
+                .GetAllTaxRates()
+                .Select(x => new TaxRateForCaching
+                {
+                    Id = x.Id,
+                    StoreId = x.StoreId,
+                    TaxCategoryId = x.TaxCategoryId,
+                    CountryId = x.CountryId,
+                    StateProvinceId = x.StateProvinceId,
+                    Zip = x.Zip,
+                    Percentage = x.Percentage,
+                }
+                )
+                .ToList()
+                );
 
             int storeId = _storeContext.CurrentStore.Id;
             int taxCategoryId = calculateTaxRequest.TaxCategoryId;

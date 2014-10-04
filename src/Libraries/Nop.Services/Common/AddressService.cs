@@ -127,7 +127,7 @@ namespace Nop.Services.Common
                 return null;
 
             string key = string.Format(ADDRESSES_BY_ID_KEY, addressId);
-            return _cacheManager.Get(key, () => { return _addressRepository.GetById(addressId); });
+            return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
         }
 
         /// <summary>

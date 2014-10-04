@@ -107,7 +107,7 @@ namespace Nop.Services.Tax
                 return null;
             
             string key = string.Format(TAXCATEGORIES_BY_ID_KEY, taxCategoryId);
-            return _cacheManager.Get(key, () => { return _taxCategoryRepository.GetById(taxCategoryId); });
+            return _cacheManager.Get(key, () => _taxCategoryRepository.GetById(taxCategoryId));
         }
 
         /// <summary>

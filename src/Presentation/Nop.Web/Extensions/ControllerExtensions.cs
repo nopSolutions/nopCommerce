@@ -34,19 +34,15 @@ namespace Nop.Web.Extensions
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, workContext.WorkingLanguage.Id);
             return cacheManager.Get(cacheKey, () =>
-            {
-                var model = specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
-                   .Select(psa =>
-                   {
-                       return new ProductSpecificationModel
-                       {
-                           SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                           SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                           SpecificationAttributeOption = !String.IsNullOrEmpty(psa.CustomValue) ? psa.CustomValue : psa.SpecificationAttributeOption.GetLocalized(x => x.Name),
-                       };
-                   }).ToList();
-                return model;
-            });
+                specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                .Select(psa => new ProductSpecificationModel
+                {
+                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                    SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                    SpecificationAttributeOption = !String.IsNullOrEmpty(psa.CustomValue) ? psa.CustomValue : psa.SpecificationAttributeOption.GetLocalized(x => x.Name),
+                })
+                .ToList()
+            );
         }
 
         public static IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(this Controller controller,

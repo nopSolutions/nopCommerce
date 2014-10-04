@@ -3396,17 +3396,14 @@ namespace Nop.Admin.Controllers
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Processing));
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Complete));
             report.Add(_orderReportService.OrderAverageReport(0, OrderStatus.Cancelled));
-            var model = report.Select(x =>
+            var model = report.Select(x => new OrderAverageReportLineSummaryModel
             {
-                return new OrderAverageReportLineSummaryModel
-                {
-                    OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    SumTodayOrders = _priceFormatter.FormatPrice(x.SumTodayOrders, true, false),
-                    SumThisWeekOrders = _priceFormatter.FormatPrice(x.SumThisWeekOrders, true, false),
-                    SumThisMonthOrders = _priceFormatter.FormatPrice(x.SumThisMonthOrders, true, false),
-                    SumThisYearOrders = _priceFormatter.FormatPrice(x.SumThisYearOrders, true, false),
-                    SumAllTimeOrders = _priceFormatter.FormatPrice(x.SumAllTimeOrders, true, false),
-                };
+                OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                SumTodayOrders = _priceFormatter.FormatPrice(x.SumTodayOrders, true, false),
+                SumThisWeekOrders = _priceFormatter.FormatPrice(x.SumThisWeekOrders, true, false),
+                SumThisMonthOrders = _priceFormatter.FormatPrice(x.SumThisMonthOrders, true, false),
+                SumThisYearOrders = _priceFormatter.FormatPrice(x.SumThisYearOrders, true, false),
+                SumAllTimeOrders = _priceFormatter.FormatPrice(x.SumAllTimeOrders, true, false),
             }).ToList();
 
             var gridModel = new DataSourceResult

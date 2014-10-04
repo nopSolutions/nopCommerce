@@ -501,17 +501,14 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = productManufacturers
-                .Select(x =>
+                .Select(x => new ManufacturerModel.ManufacturerProductModel
                 {
-                    return new ManufacturerModel.ManufacturerProductModel
-                    {
-                        Id = x.Id,
-                        ManufacturerId = x.ManufacturerId,
-                        ProductId = x.ProductId,
-                        ProductName = _productService.GetProductById(x.ProductId).Name,
-                        IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ManufacturerId = x.ManufacturerId,
+                    ProductId = x.ProductId,
+                    ProductName = _productService.GetProductById(x.ProductId).Name,
+                    IsFeaturedProduct = x.IsFeaturedProduct,
+                    DisplayOrder = x.DisplayOrder
                 }),
                 Total = productManufacturers.TotalCount
             };

@@ -87,16 +87,14 @@ namespace Nop.Admin.Controllers
             });
 
 
-            foreach (var at in _customerActivityService.GetAllActivityTypes()
-                .Select(x =>
+            foreach (var at in _customerActivityService.GetAllActivityTypes())
+            {
+                activityLogSearchModel.ActivityLogType.Add(new SelectListItem
                 {
-                    return new SelectListItem
-                    {
-                        Value = x.Id.ToString(),
-                        Text = x.Name
-                    };
-                }))
-                activityLogSearchModel.ActivityLogType.Add(at);
+                    Value = at.Id.ToString(),
+                    Text = at.Name
+                });
+            }
             return View(activityLogSearchModel);
         }
 

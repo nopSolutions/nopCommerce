@@ -1959,17 +1959,14 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
                 .GetThemeConfigurations()
-                .Select(x =>
+                .Select(x => new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel
                 {
-                    return new GeneralCommonSettingsModel.StoreInformationSettingsModel.ThemeConfigurationModel
-                    {
-                        ThemeTitle = x.ThemeTitle,
-                        ThemeName = x.ThemeName,
-                        PreviewImageUrl = x.PreviewImageUrl,
-                        PreviewText = x.PreviewText,
-                        SupportRtl = x.SupportRtl,
-                        Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
-                    };
+                    ThemeTitle = x.ThemeTitle,
+                    ThemeName = x.ThemeName,
+                    PreviewImageUrl = x.PreviewImageUrl,
+                    PreviewText = x.PreviewText,
+                    SupportRtl = x.SupportRtl,
+                    Selected = x.ThemeName.Equals(storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = storeInformationSettings.AllowCustomerToSelectTheme;

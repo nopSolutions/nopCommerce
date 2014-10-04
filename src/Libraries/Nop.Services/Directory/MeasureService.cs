@@ -117,7 +117,7 @@ namespace Nop.Services.Directory
                 return null;
             
             string key = string.Format(MEASUREDIMENSIONS_BY_ID_KEY, measureDimensionId);
-            return _cacheManager.Get(key, () => { return _measureDimensionRepository.GetById(measureDimensionId); });
+            return _cacheManager.Get(key, () => _measureDimensionRepository.GetById(measureDimensionId));
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Nop.Services.Directory
                 return null;
             
             string key = string.Format(MEASUREWEIGHTS_BY_ID_KEY, measureWeightId);
-            return _cacheManager.Get(key, () => { return _measureWeightRepository.GetById(measureWeightId); });
+            return _cacheManager.Get(key, () => _measureWeightRepository.GetById(measureWeightId));
         }
 
         /// <summary>

@@ -152,11 +152,9 @@ namespace Nop.Web.Controllers
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
-            {
-                return _pollService.GetPolls(_workContext.WorkingLanguage.Id, true, 0, int.MaxValue)
-                    .Select(x => PreparePollModel(x, false))
-                    .ToList();
-            });
+                _pollService.GetPolls(_workContext.WorkingLanguage.Id, true, 0, int.MaxValue)
+                .Select(x => PreparePollModel(x, false))
+                .ToList());
             //"AlreadyVoted" property of "PollModel" object depends on the current customer. Let's update it.
             //But first we need to clone the cached model (the updated one should not be cached)
             var model = new List<PollModel>();

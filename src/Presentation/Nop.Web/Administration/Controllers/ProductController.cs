@@ -1270,17 +1270,14 @@ namespace Nop.Admin.Controllers
 
             var productCategories = _categoryService.GetProductCategoriesByProductId(productId, true);
             var productCategoriesModel = productCategories
-                .Select(x =>
+                .Select(x => new ProductModel.ProductCategoryModel
                 {
-                    return new ProductModel.ProductCategoryModel
-                    {
-                        Id = x.Id,
-                        Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
-                        ProductId = x.ProductId,
-                        CategoryId = x.CategoryId,
-                        IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder  = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    Category = _categoryService.GetCategoryById(x.CategoryId).GetFormattedBreadCrumb(_categoryService),
+                    ProductId = x.ProductId,
+                    CategoryId = x.CategoryId,
+                    IsFeaturedProduct = x.IsFeaturedProduct,
+                    DisplayOrder  = x.DisplayOrder
                 })
                 .ToList();
 
@@ -1413,17 +1410,14 @@ namespace Nop.Admin.Controllers
 
             var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(productId, true);
             var productManufacturersModel = productManufacturers
-                .Select(x =>
+                .Select(x => new ProductModel.ProductManufacturerModel
                 {
-                    return new ProductModel.ProductManufacturerModel
-                    {
-                        Id = x.Id,
-                        Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
-                        ProductId = x.ProductId,
-                        ManufacturerId = x.ManufacturerId,
-                        IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    Manufacturer = _manufacturerService.GetManufacturerById(x.ManufacturerId).Name,
+                    ProductId = x.ProductId,
+                    ManufacturerId = x.ManufacturerId,
+                    IsFeaturedProduct = x.IsFeaturedProduct,
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -1556,16 +1550,13 @@ namespace Nop.Admin.Controllers
 
             var relatedProducts = _productService.GetRelatedProductsByProductId1(productId, true);
             var relatedProductsModel = relatedProducts
-                .Select(x =>
+                .Select(x => new ProductModel.RelatedProductModel
                 {
-                    return new ProductModel.RelatedProductModel
-                    {
-                        Id = x.Id,
-                        //ProductId1 = x.ProductId1,
-                        ProductId2 = x.ProductId2,
-                        Product2Name = _productService.GetProductById(x.ProductId2).Name,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    //ProductId1 = x.ProductId1,
+                    ProductId2 = x.ProductId2,
+                    Product2Name = _productService.GetProductById(x.ProductId2).Name,
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -1761,15 +1752,12 @@ namespace Nop.Admin.Controllers
 
             var crossSellProducts = _productService.GetCrossSellProductsByProductId1(productId, true);
             var crossSellProductsModel = crossSellProducts
-                .Select(x =>
+                .Select(x => new ProductModel.CrossSellProductModel
                 {
-                    return new ProductModel.CrossSellProductModel
-                    {
-                        Id = x.Id,
-                        //ProductId1 = x.ProductId1,
-                        ProductId2 = x.ProductId2,
-                        Product2Name = _productService.GetProductById(x.ProductId2).Name,
-                    };
+                    Id = x.Id,
+                    //ProductId1 = x.ProductId1,
+                    ProductId2 = x.ProductId2,
+                    Product2Name = _productService.GetProductById(x.ProductId2).Name,
                 })
                 .ToList();
 
@@ -1947,14 +1935,11 @@ namespace Nop.Admin.Controllers
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts
-                .Select(x =>
+                .Select(x => new ProductModel.AssociatedProductModel
                 {
-                    return new ProductModel.AssociatedProductModel
-                    {
-                        Id = x.Id,
-                        ProductName = x.Name,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductName = x.Name,
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -2169,16 +2154,13 @@ namespace Nop.Admin.Controllers
 
             var productPictures = _productService.GetProductPicturesByProductId(productId);
             var productPicturesModel = productPictures
-                .Select(x =>
+                .Select(x => new ProductModel.ProductPictureModel
                 {
-                    return new ProductModel.ProductPictureModel
-                    {
-                        Id = x.Id,
-                        ProductId = x.ProductId,
-                        PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    PictureId = x.PictureId,
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -2405,14 +2387,11 @@ namespace Nop.Admin.Controllers
             var tags = _productTagService.GetAllProductTags()
                 //order by product count
                 .OrderByDescending(x => _productTagService.GetProductCount(x.Id, 0))
-                .Select(x =>
+                .Select(x => new ProductTagModel
                 {
-                    return new ProductTagModel
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        ProductCount = _productTagService.GetProductCount(x.Id, 0)
-                    };
+                    Id = x.Id,
+                    Name = x.Name,
+                    ProductCount = _productTagService.GetProductCount(x.Id, 0)
                 })
                 .ToList();
 
@@ -3378,16 +3357,13 @@ namespace Nop.Admin.Controllers
 
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
-                .Select(x =>
+                .Select(x => new ProductModel.ProductPictureModel
                 {
-                    return new ProductModel.ProductPictureModel
-                    {
-                        Id = x.Id,
-                        ProductId = x.ProductId,
-                        PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    PictureId = x.PictureId,
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -3461,16 +3437,13 @@ namespace Nop.Admin.Controllers
 
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
-                .Select(x =>
+                .Select(x => new ProductModel.ProductPictureModel
                 {
-                    return new ProductModel.ProductPictureModel
-                    {
-                        Id = x.Id,
-                        ProductId = x.ProductId,
-                        PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    PictureId = x.PictureId,
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -3530,16 +3503,13 @@ namespace Nop.Admin.Controllers
             });
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
-                .Select(x =>
+                .Select(x => new ProductModel.ProductPictureModel
                 {
-                    return new ProductModel.ProductPictureModel
-                    {
-                        Id = x.Id,
-                        ProductId = x.ProductId,
-                        PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    PictureId = x.PictureId,
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 
@@ -3608,16 +3578,13 @@ namespace Nop.Admin.Controllers
 
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
-                .Select(x =>
+                .Select(x => new ProductModel.ProductPictureModel
                 {
-                    return new ProductModel.ProductPictureModel
-                    {
-                        Id = x.Id,
-                        ProductId = x.ProductId,
-                        PictureId = x.PictureId,
-                        PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    ProductId = x.ProductId,
+                    PictureId = x.PictureId,
+                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
+                    DisplayOrder = x.DisplayOrder
                 })
                 .ToList();
 

@@ -612,17 +612,14 @@ namespace Nop.Admin.Controllers
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
-                Data = productCategories.Select(x =>
+                Data = productCategories.Select(x => new CategoryModel.CategoryProductModel
                 {
-                    return new CategoryModel.CategoryProductModel
-                    {
-                        Id = x.Id,
-                        CategoryId = x.CategoryId,
-                        ProductId = x.ProductId,
-                        ProductName = _productService.GetProductById(x.ProductId).Name,
-                        IsFeaturedProduct = x.IsFeaturedProduct,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    CategoryId = x.CategoryId,
+                    ProductId = x.ProductId,
+                    ProductName = _productService.GetProductById(x.ProductId).Name,
+                    IsFeaturedProduct = x.IsFeaturedProduct,
+                    DisplayOrder = x.DisplayOrder
                 }),
                 Total = productCategories.TotalCount
             };

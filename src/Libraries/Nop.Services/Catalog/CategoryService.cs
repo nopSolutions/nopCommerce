@@ -313,7 +313,7 @@ namespace Nop.Services.Catalog
                 return null;
             
             string key = string.Format(CATEGORIES_BY_ID_KEY, categoryId);
-            return _cacheManager.Get(key, () => { return _categoryRepository.GetById(categoryId); });
+            return _cacheManager.Get(key, () => _categoryRepository.GetById(categoryId));
         }
 
         /// <summary>

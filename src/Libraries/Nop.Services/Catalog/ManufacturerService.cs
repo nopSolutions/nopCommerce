@@ -195,7 +195,7 @@ namespace Nop.Services.Catalog
                 return null;
             
             string key = string.Format(MANUFACTURERS_BY_ID_KEY, manufacturerId);
-            return _cacheManager.Get(key, () => { return _manufacturerRepository.GetById(manufacturerId); });
+            return _cacheManager.Get(key, () => _manufacturerRepository.GetById(manufacturerId));
         }
 
         /// <summary>

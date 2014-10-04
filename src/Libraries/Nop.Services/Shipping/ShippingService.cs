@@ -362,7 +362,7 @@ namespace Nop.Services.Shipping
                 return null;
 
             string key = string.Format(WAREHOUSES_BY_ID_KEY, warehouseId);
-            return _cacheManager.Get(key, () => { return _warehouseRepository.GetById(warehouseId); });
+            return _cacheManager.Get(key, () => _warehouseRepository.GetById(warehouseId));
         }
 
         /// <summary>

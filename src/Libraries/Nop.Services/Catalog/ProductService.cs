@@ -204,7 +204,7 @@ namespace Nop.Services.Catalog
                 return null;
             
             string key = string.Format(PRODUCTS_BY_ID_KEY, productId);
-            return _cacheManager.Get(key, () => { return _productRepository.GetById(productId); });
+            return _cacheManager.Get(key, () => _productRepository.GetById(productId));
         }
 
         /// <summary>

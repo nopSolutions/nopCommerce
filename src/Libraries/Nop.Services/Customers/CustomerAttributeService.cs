@@ -128,7 +128,7 @@ namespace Nop.Services.Customers
                 return null;
 
             string key = string.Format(CUSTOMERATTRIBUTES_BY_ID_KEY, customerAttributeId);
-            return _cacheManager.Get(key, () => { return _customerAttributeRepository.GetById(customerAttributeId); });
+            return _cacheManager.Get(key, () => _customerAttributeRepository.GetById(customerAttributeId));
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Nop.Services.Customers
                 return null;
 
             string key = string.Format(CUSTOMERATTRIBUTEVALUES_BY_ID_KEY, customerAttributeValueId);
-            return _cacheManager.Get(key, () => { return _customerAttributeValueRepository.GetById(customerAttributeValueId); });
+            return _cacheManager.Get(key, () => _customerAttributeValueRepository.GetById(customerAttributeValueId));
         }
 
         /// <summary>

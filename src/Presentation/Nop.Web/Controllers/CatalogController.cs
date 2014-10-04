@@ -501,8 +501,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
             model.SubCategories = _cacheManager.Get(subCategoriesCacheKey, () =>
-            {
-                return _categoryService.GetAllCategoriesByParentCategoryId(categoryId)
+                _categoryService.GetAllCategoriesByParentCategoryId(categoryId)
                 .Select(x =>
                 {
                     var subCatModel = new CategoryModel.SubCategoryModel
@@ -530,8 +529,8 @@ namespace Nop.Web.Controllers
 
                     return subCatModel;
                 })
-                .ToList();
-            });
+                .ToList()
+            );
 
 
 
@@ -676,27 +675,24 @@ namespace Nop.Web.Controllers
             string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
-            {
-                return PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList();
-            });
+                PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true)
+                .ToList()
+            );
 
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
-            {
-                return _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
-                    .ToList()
-                    .FindAll(t => t.IncludeInTopMenu)
-                    .ToList()
-                    .Select(t => new TopMenuModel.TopMenuTopicModel
-                    {
-                        Id = t.Id,
-                        Name = t.GetLocalized(x => x.Title),
-                        SeName = t.GetSeName()
-                    })
-                    .ToList();
-            });
+                _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                .Where(t => t.IncludeInTopMenu)
+                .Select(t => new TopMenuModel.TopMenuTopicModel
+                {
+                    Id = t.Id,
+                    Name = t.GetLocalized(x => x.Title),
+                    SeName = t.GetSeName()
+                })
+                .ToList()
+            );
             var model = new TopMenuModel
             {
                 Categories = cachedCategoriesModel,
@@ -721,8 +717,7 @@ namespace Nop.Web.Controllers
                 _webHelper.IsCurrentConnectionSecured());
 
             var model = _cacheManager.Get(categoriesCacheKey, () =>
-            {
-                return _categoryService.GetAllCategoriesDisplayedOnHomePage()
+                _categoryService.GetAllCategoriesDisplayedOnHomePage()
                 .Select(x =>
                 {
                     var catModel = x.ToModel();
@@ -745,8 +740,8 @@ namespace Nop.Web.Controllers
 
                     return catModel;
                 })
-                .ToList();
-            });
+                .ToList()
+            );
 
             if (model.Count == 0)
                 return Content("");

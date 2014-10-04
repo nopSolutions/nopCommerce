@@ -202,16 +202,13 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = answers.Select(x => 
+                Data = answers.Select(x =>  new PollAnswerModel
                 {
-                    return new PollAnswerModel
-                    {
-                        Id = x.Id,
-                        PollId = x.PollId,
-                        Name = x.Name,
-                        NumberOfVotes = x.NumberOfVotes,
-                        DisplayOrder = x.DisplayOrder
-                    };
+                    Id = x.Id,
+                    PollId = x.PollId,
+                    Name = x.Name,
+                    NumberOfVotes = x.NumberOfVotes,
+                    DisplayOrder = x.DisplayOrder
                 }),
                 Total = answers.Count
             };

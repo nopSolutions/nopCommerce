@@ -109,15 +109,13 @@ namespace Nop.Services.Customers
             //load 20 customers
             query2 = query2.Take(20);
 
-            var result = query2.ToList().Select(x =>
+            var result = query2.ToList().Select(x => new BestCustomerReportLine
             {
-                return new BestCustomerReportLine
-                {
-                    CustomerId = x.CustomerId,
-                    OrderTotal = x.OrderTotal,
-                    OrderCount = x.OrderCount
-                };
-            }).ToList();
+                CustomerId = x.CustomerId,
+                OrderTotal = x.OrderTotal,
+                OrderCount = x.OrderCount
+            })
+            .ToList();
             return result;
         }
 
