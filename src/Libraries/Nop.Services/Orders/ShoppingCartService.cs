@@ -372,7 +372,7 @@ namespace Nop.Services.Orders
                         break;
                     case ManageInventoryMethod.ManageStock:
                         {
-                            if ((BackorderMode)product.BackorderMode == BackorderMode.NoBackorders)
+                            if (product.BackorderMode == BackorderMode.NoBackorders)
                             {
                                 int maximumQuantityCanBeAdded = product.GetTotalStockQuantity();
                                 if (maximumQuantityCanBeAdded < quantity)

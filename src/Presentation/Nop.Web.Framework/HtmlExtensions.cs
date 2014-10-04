@@ -411,7 +411,7 @@ namespace Nop.Web.Framework
         /// <returns>Label</returns>
         public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
         {
-            string htmlFieldName = ExpressionHelper.GetExpressionText((LambdaExpression)expression);
+            string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
             string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))

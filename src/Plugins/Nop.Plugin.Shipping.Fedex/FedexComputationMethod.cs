@@ -328,7 +328,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
-                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = (decimal)weight2;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weight2;
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
 
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = _fedexSettings.PassDimensions ? length2.ToString() : "0";
@@ -376,7 +376,7 @@ namespace Nop.Plugin.Shipping.Fedex
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
-                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = (decimal)weight;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weight;
 
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = length.ToString();
@@ -516,7 +516,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
                 request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                 request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
-                request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = (decimal)weightPerPackage;
+                request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weightPerPackage;
 
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = length.ToString();

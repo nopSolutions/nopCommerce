@@ -66,7 +66,7 @@ namespace Nop.Core.ComponentModel
             if (destinationType == typeof(string))
             {
                 string result = string.Empty;
-                if (((IList<T>)value) != null)
+                if (value != null)
                 {
                     //we don't use string.Join() because it doesn't support invariant culture
                     for (int i = 0; i < ((IList<T>)value).Count; i++)
