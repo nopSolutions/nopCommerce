@@ -128,7 +128,7 @@ namespace Nop.Services.Payments
 
             //we should be sure that countryIds is of type List<int> (not IList<int>)
             var settingKey = string.Format("PaymentMethodRestictions.{0}", paymentMethod.PluginDescriptor.SystemName);
-            _settingService.SetSetting<List<int>>(settingKey, countryIds);
+            _settingService.SetSetting(settingKey, countryIds);
         }
 
 

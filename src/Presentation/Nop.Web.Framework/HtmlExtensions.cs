@@ -108,7 +108,7 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string buttonsSelector) where T : BaseNopEntityModel
         {
-            return DeleteConfirmation<T>(helper, "", buttonsSelector);
+            return DeleteConfirmation(helper, "", buttonsSelector);
         }
 
         public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName,
@@ -412,8 +412,8 @@ namespace Nop.Web.Framework
         public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, string suffix)
         {
             string htmlFieldName = ExpressionHelper.GetExpressionText((LambdaExpression)expression);
-            var metadata = ModelMetadata.FromLambdaExpression<TModel, TValue>(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last<string>());
+            var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
+            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
                 return MvcHtmlString.Empty;
@@ -427,7 +427,7 @@ namespace Nop.Web.Framework
             tag.SetInnerText(resolvedLabelText);
 
             var dictionary = ((IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
-            tag.MergeAttributes<string, object>(dictionary, true);
+            tag.MergeAttributes(dictionary, true);
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }

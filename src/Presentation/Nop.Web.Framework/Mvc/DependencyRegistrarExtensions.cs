@@ -29,21 +29,21 @@ namespace Nop.Web.Framework.Mvc
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
             {
                 //register named context
-                builder.Register<IDbContext>(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (IDbContext)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
                     .Named<IDbContext>(contextName)
                     .InstancePerLifetimeScope();
 
-                builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { dataProviderSettings.DataConnectionString }))
                     .InstancePerLifetimeScope();
             }
             else
             {
                 //register named context
-                builder.Register<IDbContext>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
                     .Named<IDbContext>(contextName)
                     .InstancePerLifetimeScope();
 
-                builder.Register<T>(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
+                builder.Register(c => (T)Activator.CreateInstance(typeof(T), new object[] { c.Resolve<DataSettings>().DataConnectionString }))
                     .InstancePerLifetimeScope();
             }
         }

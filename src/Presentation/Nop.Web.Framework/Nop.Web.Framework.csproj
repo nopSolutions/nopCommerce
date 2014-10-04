@@ -180,7 +180,6 @@
     <Compile Include="RssActionResult.cs" />
     <Compile Include="Security\SslRequirement.cs" />
     <Compile Include="Security\NopHttpsRequirementAttribute.cs" />
-    <Compile Include="StatefulStorage.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\IThemeContext.cs" />
     <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />

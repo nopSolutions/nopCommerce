@@ -131,7 +131,7 @@ namespace Nop.Services.Localization
             if (workContext == null)
                 throw new ArgumentNullException("workContext");
 
-            return GetLocalizedEnum<T>(enumValue, localizationService, workContext.WorkingLanguage.Id);
+            return GetLocalizedEnum(enumValue, localizationService, workContext.WorkingLanguage.Id);
         }
         /// <summary>
         /// Get localized value of enum

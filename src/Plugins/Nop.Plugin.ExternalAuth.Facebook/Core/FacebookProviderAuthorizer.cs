@@ -145,9 +145,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
         private void AppendQueryArgs(UriBuilder builder, IEnumerable<KeyValuePair<string, string>> args)
         {
-            if ((args != null) && (args.Count<KeyValuePair<string, string>>() > 0))
+            if (args != null && args.Any())
             {
-                var builder2 = new StringBuilder(50 + (args.Count<KeyValuePair<string, string>>() * 10));
+                var builder2 = new StringBuilder();
                 if (!string.IsNullOrEmpty(builder.Query))
                 {
                     builder2.Append(builder.Query.Substring(1));
@@ -159,11 +159,11 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         }
         private string CreateQueryString(IEnumerable<KeyValuePair<string, string>> args)
         {
-            if (!args.Any<KeyValuePair<string, string>>())
+            if (!args.Any())
             {
                 return string.Empty;
             }
-            var builder = new StringBuilder(args.Count<KeyValuePair<string, string>>() * 10);
+            var builder = new StringBuilder();
             foreach (KeyValuePair<string, string> pair in args)
             {
                 builder.Append(EscapeUriDataStringRfc3986(pair.Key));

@@ -23,14 +23,14 @@ namespace Nop.Web.Framework.Kendoui
 
         public static object SerializeErrors(this ModelStateDictionary modelState)
         {
-            return modelState.Where<KeyValuePair<string, ModelState>>(entry => entry.Value.Errors.Any<ModelError>())
-                .ToDictionary<KeyValuePair<string, ModelState>, string, Dictionary<string, object>>(entry => entry.Key, entry => SerializeModelState(entry.Value));
+            return modelState.Where(entry => entry.Value.Errors.Any())
+                .ToDictionary(entry => entry.Key, entry => SerializeModelState(entry.Value));
         }
 
         private static Dictionary<string, object> SerializeModelState(ModelState modelState)
         {
             var dictionary = new Dictionary<string, object>();
-            dictionary["errors"] = modelState.Errors.Select<ModelError, string>(x => GetErrorMessage(x, modelState)).ToArray<string>();
+            dictionary["errors"] = modelState.Errors.Select(x => GetErrorMessage(x, modelState)).ToArray<string>();
             return dictionary;
         }
 

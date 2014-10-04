@@ -46,7 +46,7 @@ namespace Nop.Services.Tests.Configuration
         [Test]
         public void Default_value_returned_if_setting_does_not_exist()
         {
-            var setting = config.GetSettingByKey<int>("NonExistentKey", 100);
+            var setting = config.GetSettingByKey("NonExistentKey", 100);
             setting.ShouldEqual(100);
         }
     }

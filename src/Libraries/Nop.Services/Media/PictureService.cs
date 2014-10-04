@@ -751,7 +751,7 @@ namespace Nop.Services.Media
         {
             get
             {
-                return _settingService.GetSettingByKey<bool>("Media.Images.StoreInDB", true);
+                return _settingService.GetSettingByKey("Media.Images.StoreInDB", true);
             }
             set
             {
@@ -759,7 +759,7 @@ namespace Nop.Services.Media
                 if (this.StoreInDb != value)
                 {
                     //save the new setting value
-                    _settingService.SetSetting<bool>("Media.Images.StoreInDB", value);
+                    _settingService.SetSetting("Media.Images.StoreInDB", value);
 
                     //update all picture objects
                     var pictures = this.GetPictures(0, int.MaxValue);

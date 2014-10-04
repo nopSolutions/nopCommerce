@@ -883,7 +883,7 @@ namespace Nop.Web.Controllers
                 //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
                 //so customer doesn't have to choose a payment method
 
-                _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedPaymentMethod, 
                     paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName,
                     _storeContext.CurrentStore.Id);
@@ -938,7 +938,7 @@ namespace Nop.Web.Controllers
                 return PaymentMethod();
 
             //save
-            _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
             
             return RedirectToRoute("CheckoutPaymentInfo");
@@ -1174,7 +1174,7 @@ namespace Nop.Web.Controllers
                     //so customer doesn't have to choose a payment method
 
                     var selectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
-                    _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                         SystemCustomerAttributeNames.SelectedPaymentMethod,
                         selectedPaymentMethodSystemName, _storeContext.CurrentStore.Id);
 
@@ -1680,7 +1680,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected payment method can't be parsed");
 
                 //save
-                _genericAttributeService.SaveAttribute<string>(_workContext.CurrentCustomer,
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     SystemCustomerAttributeNames.SelectedPaymentMethod, paymentmethod, _storeContext.CurrentStore.Id);
 
                 return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
