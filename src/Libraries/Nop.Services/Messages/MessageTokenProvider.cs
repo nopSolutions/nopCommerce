@@ -222,7 +222,7 @@ namespace Nop.Services.Messages
 
                 //subtotal
                 string cusSubTotal = string.Empty;
-                bool dislaySubTotalDiscount = false;
+                bool displaySubTotalDiscount = false;
                 string cusSubTotalDiscount = string.Empty;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
                 {
@@ -236,7 +236,7 @@ namespace Nop.Services.Messages
                     if (orderSubTotalDiscountInclTaxInCustomerCurrency > decimal.Zero)
                     {
                         cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, true);
-                        dislaySubTotalDiscount = true;
+                        displaySubTotalDiscount = true;
                     }
                 }
                 else
@@ -251,7 +251,7 @@ namespace Nop.Services.Messages
                     if (orderSubTotalDiscountExclTaxInCustomerCurrency > decimal.Zero)
                     {
                         cusSubTotalDiscount = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, language, false);
-                        dislaySubTotalDiscount = true;
+                        displaySubTotalDiscount = true;
                     }
                 }
                 
@@ -286,14 +286,10 @@ namespace Nop.Services.Messages
                 }
 
                 //shipping
-                bool dislayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
+                bool displayShipping = order.ShippingStatus != ShippingStatus.ShippingNotRequired;
 
                 //payment method fee
-                bool displayPaymentMethodFee = true;
-                if (order.PaymentMethodAdditionalFeeExclTax == decimal.Zero)
-                {
-                    displayPaymentMethodFee = false;
-                }
+                bool displayPaymentMethodFee = order.PaymentMethodAdditionalFeeExclTax > decimal.Zero;
 
                 //tax
                 bool displayTax = true;
@@ -326,12 +322,12 @@ namespace Nop.Services.Messages
                 }
 
                 //discount
-                bool dislayDiscount = false;
+                bool displayDiscount = false;
                 if (order.OrderDiscount > decimal.Zero)
                 {
                     var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
                     cusDiscount = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, language);
-                    dislayDiscount = true;
+                    displayDiscount = true;
                 }
 
                 //total
@@ -345,14 +341,14 @@ namespace Nop.Services.Messages
                 sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.SubTotal", languageId), cusSubTotal));
 
                 //discount (applied to order subtotal)
-                if (dislaySubTotalDiscount)
+                if (displaySubTotalDiscount)
                 {
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.SubTotalDiscount", languageId), cusSubTotalDiscount));
                 }
 
 
                 //shipping
-                if (dislayShipping)
+                if (displayShipping)
                 {
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.Shipping", languageId), cusShipTotal));
                 }
@@ -380,7 +376,7 @@ namespace Nop.Services.Messages
                 }
 
                 //discount
-                if (dislayDiscount)
+                if (displayDiscount)
                 {
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, _localizationService.GetResource("Messages.Order.TotalDiscount", languageId), cusDiscount));
                 }
