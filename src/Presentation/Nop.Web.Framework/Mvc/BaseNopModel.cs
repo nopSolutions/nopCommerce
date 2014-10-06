@@ -6,6 +6,7 @@ namespace Nop.Web.Framework.Mvc
     /// <summary>
     /// Base nopCommerce model
     /// </summary>
+    [ModelBinder(typeof(NopModelBinder))]
     public partial class BaseNopModel
     {
         public BaseNopModel()

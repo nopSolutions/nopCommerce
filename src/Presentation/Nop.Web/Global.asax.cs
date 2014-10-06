@@ -45,9 +45,6 @@ namespace Nop.Web
             //initialize engine context
             EngineContext.Initialize(false);
 
-            //model binders
-            ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
-            
             bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
             if (databaseInstalled)
             {
