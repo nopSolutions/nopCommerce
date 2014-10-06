@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Represents the customer login result enumeration
     /// </summary>
-    public enum CustomerLoginResults : int
+    public enum CustomerLoginResults
     {
         /// <summary>
         /// Login successful

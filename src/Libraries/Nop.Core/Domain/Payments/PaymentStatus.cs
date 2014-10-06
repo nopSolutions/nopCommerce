@@ -4,7 +4,7 @@ namespace Nop.Core.Domain.Payments
     /// <summary>
     /// Represents a payment status enumeration
     /// </summary>
-    public enum PaymentStatus : int
+    public enum PaymentStatus
     {
         /// <summary>
         /// Pending

@@ -3,7 +3,7 @@ namespace Nop.Services.Payments
     /// <summary>
     /// Represents a recurring payment type
     /// </summary>
-    public enum RecurringPaymentType : int
+    public enum RecurringPaymentType
     {
         /// <summary>
         /// Not supported

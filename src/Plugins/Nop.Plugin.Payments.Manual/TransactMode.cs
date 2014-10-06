@@ -3,7 +3,7 @@ namespace Nop.Plugin.Payments.Manual
     /// <summary>
     /// Represents manual payment processor transaction mode
     /// </summary>
-    public enum TransactMode : int
+    public enum TransactMode
     {
         /// <summary>
         /// Pending

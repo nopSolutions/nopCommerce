@@ -3,7 +3,7 @@ namespace Nop.Plugin.Shipping.Fedex
     /// <summary>
     /// Represents a drop off type
     /// </summary>
-    public enum DropoffType : int
+    public enum DropoffType
     {
         /// <summary>
         /// Business service center

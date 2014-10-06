@@ -3,7 +3,7 @@ namespace Nop.Services.Payments
     /// <summary>
     /// Represents a payment method type
     /// </summary>
-    public enum PaymentMethodType : int
+    public enum PaymentMethodType
     {
         /// <summary>
         /// Unknown

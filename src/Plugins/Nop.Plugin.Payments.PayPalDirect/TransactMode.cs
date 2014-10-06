@@ -3,7 +3,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
     /// <summary>
     /// Represents payment processor transaction mode
     /// </summary>
-    public enum TransactMode : int
+    public enum TransactMode
     {
         /// <summary>
         /// Authorize

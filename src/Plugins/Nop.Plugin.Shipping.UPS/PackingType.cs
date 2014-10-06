@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a packing type
     /// </summary>
-    public enum PackingType : int
+    public enum PackingType
     {
         /// <summary>
         /// Pack by dimensions

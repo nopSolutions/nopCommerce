@@ -4,7 +4,7 @@ namespace Nop.Services.Shipping
     /// <summary>
     /// Represents a shipping rate computation method type
     /// </summary>
-    public enum ShippingRateComputationMethodType : int
+    public enum ShippingRateComputationMethodType
     {
         /// <summary>
         /// Unknown

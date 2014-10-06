@@ -3,7 +3,7 @@ namespace Nop.Core.Domain.Customers
     /// <summary>
     /// Represents the customer registration type fortatting enumeration
     /// </summary>
-    public enum UserRegistrationType : int
+    public enum UserRegistrationType
     {
         /// <summary>
         /// Standard account creation

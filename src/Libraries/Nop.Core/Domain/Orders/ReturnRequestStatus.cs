@@ -4,7 +4,7 @@ namespace Nop.Core.Domain.Orders
     /// <summary>
     /// Represents a return status
     /// </summary>
-    public enum ReturnRequestStatus : int
+    public enum ReturnRequestStatus
     {
         /// <summary>
         /// Pending
