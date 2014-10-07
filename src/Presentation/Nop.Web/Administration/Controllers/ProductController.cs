@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
@@ -2233,7 +2234,7 @@ namespace Nop.Admin.Controllers
         #region Product specification attributes
 
         [ValidateInput(false)]
-        public ActionResult ProductSpecificationAttributeAdd(int specificationAttributeOptionId,
+        public ActionResult ProductSpecificationAttributeAdd(int attributeTypeId, int specificationAttributeOptionId,
             string customValue, bool allowFiltering, bool showOnProductPage, 
             int displayOrder, int productId)
         {
@@ -2250,8 +2251,15 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            //we allow filtering only for "Option" attribute type
+            if (attributeTypeId != (int)SpecificationAttributeType.Option)
+            {
+                allowFiltering = false;
+            }
+
             var psa = new ProductSpecificationAttribute
             {
+                AttributeTypeId = attributeTypeId,
                 SpecificationAttributeOptionId = specificationAttributeOptionId,
                 ProductId = productId,
                 CustomValue = customValue,
@@ -2288,13 +2296,31 @@ namespace Nop.Admin.Controllers
                     var psaModel = new ProductSpecificationAttributeModel
                     {
                         Id = x.Id,
-                        SpecificationAttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
-                        SpecificationAttributeOptionName = x.SpecificationAttributeOption.Name,
-                        CustomValue = x.CustomValue,
+                        AttributeTypeName = x.AttributeType.GetLocalizedEnum(_localizationService, _workContext),
+                        AttributeName = x.SpecificationAttributeOption.SpecificationAttribute.Name,
                         AllowFiltering = x.AllowFiltering,
                         ShowOnProductPage = x.ShowOnProductPage,
                         DisplayOrder = x.DisplayOrder
                     };
+                    switch (x.AttributeType)
+                    {
+                        case SpecificationAttributeType.Option:
+                            psaModel.ValueRaw = HttpUtility.HtmlEncode(x.SpecificationAttributeOption.Name);
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
+                            break;
+                        case SpecificationAttributeType.CustomHtmlText:
+                            //do not encode?
+                            //psaModel.ValueRaw = x.CustomValue;
+                            psaModel.ValueRaw = HttpUtility.HtmlEncode(x.CustomValue);
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            psaModel.ValueRaw = x.CustomValue;
+                            break;
+                        default:
+                            break;
+                    }
                     return psaModel;
                 })
                 .ToList();
@@ -2330,8 +2356,9 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            psa.CustomValue = model.CustomValue;
-            psa.AllowFiltering = model.AllowFiltering;
+            //we do not allow editing these fields anymore (when we have distinct attribute types)
+            //psa.CustomValue = model.CustomValue;
+            //psa.AllowFiltering = model.AllowFiltering;
             psa.ShowOnProductPage = model.ShowOnProductPage;
             psa.DisplayOrder = model.DisplayOrder;
             _specificationAttributeService.UpdateProductSpecificationAttribute(psa);

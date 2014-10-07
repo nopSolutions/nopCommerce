@@ -434,9 +434,13 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
             public int SpecificationAttributeId { get; set; }
 
+            [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")]
+            public int AttributeTypeId { get; set; }
+
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")]
             public int SpecificationAttributeOptionId { get; set; }
 
+            [AllowHtml]
             [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")]
             public string CustomValue { get; set; }
 

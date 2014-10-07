@@ -188,6 +188,33 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products.Choose">
     <Value>Choose</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType">
+    <Value>Attribute type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType.Hint">
+    <Value>Choose attribute type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.Value">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue.Hint">
+    <Value>Custom value (text, hyperlink, etc).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Option">
+    <Value>Option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.CustomText">
+    <Value>Custom text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.CustomHtmlText">
+    <Value>Custom HTML text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Hyperlink">
+    <Value>Hyperlink</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1102,4 +1129,26 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.loadallsidecategorymenusubcategories', N'false', 0)
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product_SpecificationAttribute_Mapping]') and NAME='AttributeTypeId')
+BEGIN
+	ALTER TABLE [Product_SpecificationAttribute_Mapping]
+	ADD [AttributeTypeId] int NULL
+END
+GO
+
+--"custom text" attribute type (if "CustomValue" column is specified)
+UPDATE [Product_SpecificationAttribute_Mapping]
+SET [AttributeTypeId] = 10
+WHERE [AttributeTypeId] IS NULL AND [CustomValue] is not null
+GO
+
+UPDATE [Product_SpecificationAttribute_Mapping]
+SET [AttributeTypeId] = 0
+WHERE [AttributeTypeId] IS NULL
+GO
+
+ALTER TABLE [Product_SpecificationAttribute_Mapping] ALTER COLUMN [AttributeTypeId] int NOT NULL
 GO

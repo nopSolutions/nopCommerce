@@ -20,7 +20,7 @@
                             @item.SpecificationAttributeName
                         </td>
                         <td class="a-left spec-value">
-                            @item.SpecificationAttributeOption
+                            @Html.Raw(item.ValueRaw)
                         </td>
                     </tr>
                 }

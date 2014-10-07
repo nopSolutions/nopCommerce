@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -35,13 +36,33 @@ namespace Nop.Web.Extensions
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, workContext.WorkingLanguage.Id);
             return cacheManager.Get(cacheKey, () =>
                 specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
-                .Select(psa => new ProductSpecificationModel
+                .Select(psa =>
                 {
-                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                    SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                    SpecificationAttributeOption = !String.IsNullOrEmpty(psa.CustomValue) ? psa.CustomValue : psa.SpecificationAttributeOption.GetLocalized(x => x.Name),
-                })
-                .ToList()
+                    var m = new ProductSpecificationModel
+                    {
+                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                    };
+
+                    switch (psa.AttributeType)
+                    {
+                        case SpecificationAttributeType.Option:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.SpecificationAttributeOption.GetLocalized(x => x.Name));
+                            break;
+                        case SpecificationAttributeType.CustomText:
+                            m.ValueRaw = HttpUtility.HtmlEncode(psa.CustomValue);
+                            break;
+                        case SpecificationAttributeType.CustomHtmlText:
+                            m.ValueRaw = psa.CustomValue;
+                            break;
+                        case SpecificationAttributeType.Hyperlink:
+                            m.ValueRaw = string.Format("<a href='{0}' target='_blank'>{0}</a>", psa.CustomValue);
+                            break;
+                        default:
+                            break;
+                    }
+                    return m;
+                }).ToList()
             );
         }
 

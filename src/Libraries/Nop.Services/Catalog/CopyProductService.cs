@@ -361,6 +361,7 @@ namespace Nop.Services.Catalog
                 var psaCopy = new ProductSpecificationAttribute
                 {
                     ProductId = productCopy.Id,
+                    AttributeTypeId = productSpecificationAttribute.AttributeTypeId,
                     SpecificationAttributeOptionId = productSpecificationAttribute.SpecificationAttributeOptionId,
                     CustomValue = productSpecificationAttribute.CustomValue,
                     AllowFiltering = productSpecificationAttribute.AllowFiltering,

@@ -1,4 +1,5 @@
-﻿@model ProductModel
+﻿@using Nop.Core.Domain.Catalog
+@model ProductModel
 
 @if (Model.Id > 0)
 {
@@ -39,10 +40,10 @@
                                     id: "Id",
                                     fields: {
                                         //ProductId: { editable: false, type: "number" },
-                                        SpecificationAttributeName: { editable: false, type: "string" },
-                                        SpecificationAttributeOptionName: { editable: false, type: "string" },
-                                        CustomValue: { editable: true, type: "string" },
-                                        AllowFiltering: { editable: true, type: "boolean" },
+                                        AttributeTypeName: { editable: false, type: "string" },
+                                        AttributeName: { editable: false, type: "string" },
+                                        ValueRaw: { editable: false, type: "string" },
+                                        AllowFiltering: { editable: false, type: "boolean" },
                                         ShowOnProductPage: { editable: true, type: "boolean" },
                                         DisplayOrder: { editable: true, type: "number" },
                                         Id: { editable: false, type: "number" }
@@ -75,17 +76,18 @@
                         },
                         scrollable: false,
                         columns: [{
-                                field: "SpecificationAttributeName",
+                                field: "AttributeTypeName",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType")",
+                                width: 150
+                            },{
+                                field: "AttributeName",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")",
                                 width: 200
                             }, {
-                                field: "SpecificationAttributeOptionName",
-                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption")",
-                                width: 200
-                            }, {
-                                field: "CustomValue",
-                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue")",
-                                width: 200
+                                field: "ValueRaw",
+                                title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.Value")",
+                                width: 200,
+                                encoded: false
                             }, {
                                 field: "AllowFiltering",
                                 title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering")",
@@ -130,14 +132,14 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
-                var selectedItem = $(this).val();
-                var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)")
+                var selectedAttributeId = $(this).val();
                 $.ajax({
                     cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
-                    data: { "attributeId": selectedItem },
+                    data: { "attributeId": selectedAttributeId },
                     success: function(data) {
+                        var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)");
                         ddlSpecOptions.html('');
                         $.each(data, function(id, option) {
                             ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
@@ -152,6 +154,7 @@
 
         $(document).ready(function() {
             $('#addProductSpec').click(function() {
+                var attributeTypeId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
                 var customValue = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.CustomValue)").val();
                 var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
@@ -166,7 +169,15 @@
                         cache: false,
                         type: "POST",
                         url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                        data: { "specificationAttributeOptionId": specificationAttributeOptionId, "customValue": customValue, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @(Model.Id) },
+                        data: {
+                            "attributeTypeId": attributeTypeId,
+                            "specificationAttributeOptionId": specificationAttributeOptionId,
+                            "customValue": customValue,
+                            "allowFiltering": allowFiltering,
+                            "showOnProductPage": showOnProductPage,
+                            "displayOrder": displayOrder,
+                            "productId": @(Model.Id)
+                        },
                         success: function(data) {
                             var grid = $("#specificationattributes-grid").data('kendoGrid');
                             grid.dataSource.read();
@@ -180,8 +191,45 @@
                 }
             });
         });
+
+
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
+
+            toggleAttributeType();
+        });
+
+        function toggleAttributeType() {
+            var selectedTypeId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").val();
+            if (selectedTypeId == @(((int)SpecificationAttributeType.Option).ToString())) {
+                $('#pnlSpecificationAttributeOptionId').show();
+                $('#pnlCustomValue').hide();
+                $('#pnlAllowFiltering').show();
+            } else if (selectedTypeId == @(((int)SpecificationAttributeType.CustomText).ToString())) {
+                $('#pnlSpecificationAttributeOptionId').hide();
+                $('#pnlCustomValue').show();
+                $('#pnlAllowFiltering').hide();
+            } else if (selectedTypeId == @(((int)SpecificationAttributeType.CustomHtmlText).ToString())) {
+                $('#pnlSpecificationAttributeOptionId').hide();
+                $('#pnlCustomValue').show();
+                $('#pnlAllowFiltering').hide();
+            } else if (selectedTypeId == @(((int)SpecificationAttributeType.Hyperlink).ToString())) {
+                $('#pnlSpecificationAttributeOptionId').hide();
+                $('#pnlCustomValue').show();
+                $('#pnlAllowFiltering').hide();
+            }
+        }
     </script>
     <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AttributeTypeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddSpecificationAttributeModel.AttributeTypeId, ((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
@@ -191,7 +239,7 @@
                 @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
             </td>
         </tr>
-        <tr>
+        <tr id="pnlSpecificationAttributeOptionId">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId):
             </td>
@@ -200,7 +248,7 @@
                 @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
             </td>
         </tr>
-        <tr>
+        <tr id="pnlCustomValue">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue):
             </td>
@@ -209,7 +257,7 @@
                 @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
             </td>
         </tr>
-        <tr>
+        <tr id="pnlAllowFiltering">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering):
             </td>

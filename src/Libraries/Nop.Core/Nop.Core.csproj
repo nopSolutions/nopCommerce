@@ -84,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Domain\Catalog\SpecificationAttributeType.cs" />
     <Compile Include="Domain\Catalog\AttributeValueType.cs" />
     <Compile Include="Domain\Catalog\ProductWarehouseInventory.cs" />
     <Compile Include="Domain\Catalog\ProductType.cs" />

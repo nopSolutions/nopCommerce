@@ -13,6 +13,7 @@ namespace Nop.Data.Tests.Catalog
         {
             var productSpecificationAttribute = new ProductSpecificationAttribute
             {
+                AttributeType = SpecificationAttributeType.Hyperlink,
                 AllowFiltering = true,
                 ShowOnProductPage = true,
                 DisplayOrder = 1,
@@ -38,6 +39,7 @@ namespace Nop.Data.Tests.Catalog
 
             var fromDb = SaveAndLoadEntity(productSpecificationAttribute);
             fromDb.ShouldNotBeNull();
+            fromDb.AttributeType.ShouldEqual(SpecificationAttributeType.Hyperlink);
             fromDb.AllowFiltering.ShouldEqual(true);
             fromDb.ShowOnProductPage.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);

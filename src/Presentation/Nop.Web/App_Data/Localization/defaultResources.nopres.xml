@@ -2856,11 +2856,17 @@
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AllowFiltering.Hint">
     <Value>Allow product filtering by this attribute.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType">
+    <Value>Attribute type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.AttributeType.Hint">
+    <Value>Choose attribute type</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue">
-    <Value>Custom value</Value>
+    <Value>Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.CustomValue.Hint">
-    <Value>Enter custom value or leave empty. If entered, it'll be used instead of the selected attribute option. Important note: ensure that 'Allow filtering' is not enabled if custom value is entered.</Value>
+    <Value>Custom value (text, hyperlink, etc).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.DisplayOrder">
     <Value>Display order</Value>
@@ -2885,6 +2891,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttributeOption.Hint">
     <Value>The value of the specification attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.Fields.Value">
+    <Value>Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.SpecificationAttributes.NoAttributes">
     <Value>No specification attributes defined.</Value>
@@ -10727,6 +10736,18 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RecurringProductCyclePeriod.Years">
     <Value>Years</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Option">
+    <Value>Option</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.CustomText">
+    <Value>Custom text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.CustomHtmlText">
+    <Value>Custom HTML text</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Hyperlink">
+    <Value>Hyperlink</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.And">
     <Value>Using CONTAINS and AND with prefix_term</Value>
