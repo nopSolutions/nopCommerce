@@ -8,7 +8,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Services.Catalog;
 using Nop.Services.Helpers;
 
 namespace Nop.Services.Orders

@@ -4,7 +4,6 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Templates;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
-using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
