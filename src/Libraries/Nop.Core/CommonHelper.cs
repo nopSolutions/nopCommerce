@@ -284,7 +284,7 @@ namespace Nop.Core
                     return sourceConverter.ConvertTo(null, culture, value, destinationType);
                 if (destinationType.IsEnum && value is int)
                     return Enum.ToObject(destinationType, (int)value);
-                if (!destinationType.IsAssignableFrom(value.GetType()))
+                if (!destinationType.IsInstanceOfType(value))
                     return Convert.ChangeType(value, destinationType, culture);
             }
             return value;
