@@ -91,8 +91,7 @@ namespace Nop.Core.Html.CodeFormatter
 		protected CodeFormat()
 		{
 			//generate the keyword and preprocessor regexes from the keyword lists
-			Regex r;
-			r = new Regex(@"\w+|-\w+|#\w+|@@\w+|#(?:\\(?:s|w)(?:\*|\+)?\w+)+|@\\w\*+");
+			var r = new Regex(@"\w+|-\w+|#\w+|@@\w+|#(?:\\(?:s|w)(?:\*|\+)?\w+)+|@\\w\*+");
 			string regKeyword = r.Replace(Keywords, @"(?<=^|\W)$0(?=\W)");
 			string regPreproc = r.Replace(Preprocessors, @"(?<=^|\s)$0(?=\s|$)");
 			r = new Regex(@" +");
