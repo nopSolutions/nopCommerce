@@ -166,7 +166,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             for (int i = 1; i <= 12; i++)
             {
                 string text = (i < 10) ? "0" + i : i.ToString();
-                model.ExpireMonths.Add(new SelectListItem()
+                model.ExpireMonths.Add(new SelectListItem
                 {
                     Text = text,
                     Value = i.ToString(),

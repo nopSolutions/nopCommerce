@@ -1206,7 +1206,7 @@ namespace Nop.Services.Tests.Orders
                                         KeyGroup = "Customer",
                                         Value = "test1"
                                     },
-                                new GenericAttribute()
+                                new GenericAttribute
                                         {
                                         StoreId = 1,
                                         EntityId = customer.Id,

@@ -21,8 +21,8 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
-        private Dictionary<string, string> _settings = null;
-        private Dictionary<string, string> _lang = null;
+        private Dictionary<string, string> _settings;
+        private Dictionary<string, string> _lang;
         private string confFile = "~/Content/Roxy_Fileman/conf.json";
         private string rootDirectory = "~/content/images/uploaded";
 

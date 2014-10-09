@@ -30,7 +30,7 @@ namespace Nop.Services.Logging
         private static void FilteredLog(ILogger logger, LogLevel level, string message, Exception exception = null, Customer customer = null)
         {
             //don't log thread abort exception
-            if ((exception != null) && (exception is System.Threading.ThreadAbortException))
+            if (exception is System.Threading.ThreadAbortException)
                 return;
 
             if (logger.IsEnabled(level))

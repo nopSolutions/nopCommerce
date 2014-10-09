@@ -35,7 +35,6 @@ namespace Nop.Web.Models.Common
         private bool? showPrevious;
         private bool? showTotalSummary;
 
-        private int totalRecords;
         private string firstButtonText;
         private string lastButtonText;
         private string nextButtonText;
@@ -237,17 +236,7 @@ namespace Nop.Web.Models.Common
         /// <summary>
         /// Gets or sets a total records count
         /// </summary>
-        public int TotalRecords
-        {
-            get
-            {
-                return totalRecords;
-            }
-            set
-            {
-                totalRecords = value;
-            }
-        }
+        public int TotalRecords { get; set; }
 
         /// <summary>
         /// Gets or sets the first button text

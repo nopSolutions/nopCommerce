@@ -1369,7 +1369,7 @@ namespace Nop.Web.Controllers
                     var shippingAddressModel = PrepareShippingAddressModel(prePopulateNewAddressWithCustomerFields: true);
                     return Json(new
                     {
-                        update_section = new UpdateSectionJsonModel()
+                        update_section = new UpdateSectionJsonModel
                         {
                             name = "shipping",
                             html = this.RenderPartialViewToString("OpcShippingAddress", shippingAddressModel)

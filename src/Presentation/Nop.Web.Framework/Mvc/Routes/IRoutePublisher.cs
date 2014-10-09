@@ -11,6 +11,6 @@ namespace Nop.Web.Framework.Mvc.Routes
         /// Register routes
         /// </summary>
         /// <param name="routes">Routes</param>
-        void RegisterRoutes(RouteCollection routeCollection);
+        void RegisterRoutes(RouteCollection routes);
     }
 }
