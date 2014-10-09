@@ -21,8 +21,10 @@ namespace Nop.Core.ComponentModel
         {
             if (!String.IsNullOrEmpty(input))
             {
-                string[] result = input.Split(',');
-                Array.ForEach(result, s => s.Trim());
+                var result = input
+                    .Split(',')
+                    .Select(x=>x.Trim())
+                    .ToArray();
                 return result;
             }
             
