@@ -646,12 +646,9 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            decimal taxRate = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal? shipping = null;
-            
-
-            shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out taxRate, out appliedDiscount);
+            decimal taxRate;
+            Discount appliedDiscount;
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out taxRate, out appliedDiscount);
             shipping.ShouldNotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.ShouldEqual(52.5);
@@ -716,11 +713,9 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.Customer = customer);
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
-            decimal taxRate = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal? shipping = null;
-
-            shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out taxRate, out appliedDiscount);
+            decimal taxRate;
+            Discount appliedDiscount;
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out taxRate, out appliedDiscount);
             shipping.ShouldNotBeNull();
             //10 - default fixed shipping rate, 42.5 - additional shipping change
             shipping.ShouldEqual(57.75);
@@ -798,12 +793,9 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToShipping)).Return(new List<Discount> { discount1 });
 
 
-            decimal taxRate = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal? shipping = null;
-
-
-            shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out taxRate, out appliedDiscount);
+            decimal taxRate;
+            Discount appliedDiscount;
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, false, out taxRate, out appliedDiscount);
             appliedDiscount.ShouldNotBeNull();
             appliedDiscount.Name.ShouldEqual("Discount 1");
             shipping.ShouldNotBeNull();
@@ -882,11 +874,9 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToShipping)).Return(new List<Discount> { discount1 });
 
 
-            decimal taxRate = decimal.Zero;
-            Discount appliedDiscount = null;
-            decimal? shipping = null;
-
-            shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out taxRate, out appliedDiscount);
+            decimal taxRate;
+            Discount appliedDiscount;
+            var shipping = _orderTotalCalcService.GetShoppingCartShippingTotal(cart, true, out taxRate, out appliedDiscount);
             appliedDiscount.ShouldNotBeNull();
             appliedDiscount.Name.ShouldEqual("Discount 1");
             shipping.ShouldNotBeNull();

@@ -149,10 +149,10 @@ namespace Nop.Plugin.Shipping.UPS
 
             //get subTotalWithoutDiscountBase, for use as insured value (when Settings.InsurePackage)
             //(note: prior versions used "with discount", but "without discount" better reflects true value to insure.)
-            decimal orderSubTotalDiscountAmount = decimal.Zero;
-            Discount orderSubTotalAppliedDiscount = null;
-            decimal subTotalWithoutDiscountBase = decimal.Zero;
-            decimal subTotalWithDiscountBase = decimal.Zero;
+            decimal orderSubTotalDiscountAmount;
+            Discount orderSubTotalAppliedDiscount;
+            decimal subTotalWithoutDiscountBase;
+            decimal subTotalWithDiscountBase;
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
                 false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
@@ -240,7 +240,6 @@ namespace Nop.Plugin.Shipping.UPS
             }
             else
             {
-                int totalPackages = 1;
                 int totalPackagesDims = 1;
                 int totalPackagesWeights = 1;
                 if (IsPackageTooHeavy(weight))
@@ -251,7 +250,7 @@ namespace Nop.Plugin.Shipping.UPS
                 {
                     totalPackagesDims = Convert.ToInt32(Math.Ceiling((decimal)TotalPackageSize(length, height, width) / (decimal)108));
                 }
-                totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+                var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
                 if (totalPackages == 0)
                     totalPackages = 1;
 
@@ -426,11 +425,11 @@ namespace Nop.Plugin.Shipping.UPS
             requestStream.Write(bytes, 0, bytes.Length);
             requestStream.Close();
             var response = request.GetResponse();
-            string responseXML = string.Empty;
+            string responseXml;
             using (var reader = new StreamReader(response.GetResponseStream()))
-                responseXML = reader.ReadToEnd();
+                responseXml = reader.ReadToEnd();
 
-            return responseXML;
+            return responseXml;
         }
 
         private string GetCustomerClassificationCode(UPSCustomerClassification customerClassification)

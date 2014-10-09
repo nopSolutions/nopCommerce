@@ -295,11 +295,9 @@ namespace Nop.Services.Media
             if (picture == null)
                 throw new ArgumentNullException("picture");
 
-            byte[] result = null;
-            if (fromDb)
-                result = picture.PictureBinary;
-            else
-                result = LoadPictureFromFile(picture.Id, picture.MimeType);
+            var result = fromDb 
+                ? picture.PictureBinary
+                : LoadPictureFromFile(picture.Id, picture.MimeType);
             return result;
         }
 

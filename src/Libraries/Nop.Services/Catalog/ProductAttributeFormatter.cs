@@ -158,7 +158,7 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //attributes with values
-                            int pvaId = 0;
+                            int pvaId;
                             if (int.TryParse(valueStr, out pvaId))
                             {
                                 var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
@@ -168,7 +168,7 @@ namespace Nop.Services.Catalog
                                     
                                     if (renderPrices)
                                     {
-                                        decimal taxRate = decimal.Zero;
+                                        decimal taxRate;
                                         decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
                                         decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, customer, out taxRate);
                                         decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
@@ -217,11 +217,11 @@ namespace Nop.Services.Catalog
             {
                 if (product.IsGiftCard)
                 {
-                    string giftCardRecipientName = "";
-                    string giftCardRecipientEmail = "";
-                    string giftCardSenderName = "";
-                    string giftCardSenderEmail = "";
-                    string giftCardMessage = "";
+                    string giftCardRecipientName;
+                    string giftCardRecipientEmail;
+                    string giftCardSenderName;
+                    string giftCardSenderEmail;
+                    string giftCardMessage;
                     _productAttributeParser.GetGiftCardAttribute(attributes, out giftCardRecipientName, out giftCardRecipientEmail,
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 

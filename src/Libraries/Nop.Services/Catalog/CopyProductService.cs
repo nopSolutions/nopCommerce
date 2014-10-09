@@ -82,9 +82,6 @@ namespace Nop.Services.Catalog
             if (String.IsNullOrEmpty(newName))
                 throw new ArgumentException("Product name is required");
 
-
-            Product productCopy = null;
-
             //product download & sample download
             int downloadId = product.DownloadId;
             int sampleDownloadId = product.SampleDownloadId;
@@ -131,7 +128,7 @@ namespace Nop.Services.Catalog
             }
 
             // product
-            productCopy = new Product
+            var productCopy = new Product
             {
                 ProductTypeId = product.ProductTypeId,
                 ParentGroupedProductId = product.ParentGroupedProductId,

@@ -176,7 +176,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             if (String.IsNullOrEmpty(type))
                 return type;
 
-            var serviceName = "";
+            string serviceName;
             switch (type)
             {
                 case "Standard":
@@ -249,7 +249,6 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             var country = getShippingOptionRequest.ShippingAddress.Country;
 
             //estimate packaging
-            int totalPackages = 1;
             int totalPackagesDims = 1;
             int totalPackagesWeights = 1;
             if (length > MAX_LENGTH || width > MAX_LENGTH || height > MAX_LENGTH)
@@ -260,7 +259,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             {
                 totalPackagesWeights = Convert.ToInt32(Math.Ceiling((decimal)weight / (decimal)MAX_WEIGHT));
             }
-            totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+            var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
             if (totalPackages == 0)
                 totalPackages = 1;
             if (totalPackages > 1)

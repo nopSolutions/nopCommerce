@@ -71,7 +71,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
                 while (!resp.Contains("<!--END_OF_EPARCEL-->"))
                 {
-                    int iRx = 0;
+                    int iRx;
                     try
                     {
                         iRx = socCanadaPost.Receive(buffer, 0, 8192, SocketFlags.None);

@@ -158,7 +158,7 @@ namespace Nop.Web.Framework
             var result = new StringBuilder();
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             var hintResource = string.Empty;
-            object value = null;
+            object value;
             if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
             {
                 var resourceDisplayName = value as NopResourceDisplayName;

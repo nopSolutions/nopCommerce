@@ -165,9 +165,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_description", string.Format("Full order #{0}", processPaymentRequest.OrderGuid));
             form.Add("x_customer_ip", _webHelper.GetCurrentIpAddress());
 
-            string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
-            reply = Encoding.ASCII.GetString(responseData);
+            var responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
+            var reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
             {
@@ -262,9 +261,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             //or when Test mode is enabled on the payment gateway, this value will be "0".
             form.Add("x_trans_id", codes[0]);
 
-            string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
-            reply = Encoding.ASCII.GetString(responseData);
+            var responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
+            var reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
             {
@@ -338,9 +336,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_type", "CREDIT");
             
             // Send Request to Authorize and Get Response
-            string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
-            reply = Encoding.ASCII.GetString(responseData);
+            var responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
+            var reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
             {
@@ -406,9 +403,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_type", "VOID");
 
             // Send Request to Authorize and Get Response
-            string reply = null;
-            Byte[] responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
-            reply = Encoding.ASCII.GetString(responseData);
+            var responseData = webClient.UploadValues(GetAuthorizeNetUrl(), form);
+            var reply = Encoding.ASCII.GetString(responseData);
 
             if (!String.IsNullOrEmpty(reply))
             {
@@ -573,7 +569,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
             var result = new CancelRecurringPaymentResult();
-            long subscriptionId = 0;
+            long subscriptionId;
             long.TryParse(cancelPaymentRequest.Order.SubscriptionTransactionId, out subscriptionId);
 
 

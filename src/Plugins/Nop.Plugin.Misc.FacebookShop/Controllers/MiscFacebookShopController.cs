@@ -218,7 +218,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                                     else if (minPossiblePrice.HasValue)
                                                     {
                                                         //calculate prices
-                                                        decimal taxRate = decimal.Zero;
+                                                        decimal taxRate;
                                                         decimal finalPriceBase = _taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
                                                         decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
@@ -286,7 +286,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                         else
                                         {
                                             //calculate prices
-                                            decimal taxRate = decimal.Zero;
+                                            decimal taxRate;
                                             decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                             decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 
@@ -479,7 +479,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                 categoryIds.Add(categoryId);
             }
             //products
-            IList<int> filterableSpecificationAttributeOptionIds = null;
+            IList<int> filterableSpecificationAttributeOptionIds;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds,
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,

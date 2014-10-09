@@ -50,7 +50,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             ids.Add(id);
@@ -104,7 +104,7 @@ namespace Nop.Services.Catalog
                 {
                     if (!String.IsNullOrEmpty(pvaValueStr))
                     {
-                        int pvaValueId = 0;
+                        int pvaValueId;
                         if (int.TryParse(pvaValueStr, out pvaValueId))
                         {
                             var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaValueId);
@@ -137,7 +137,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             if (id == productVariantAttributeId)
@@ -192,7 +192,7 @@ namespace Nop.Services.Catalog
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 =node1.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             if (id == pva.Id)

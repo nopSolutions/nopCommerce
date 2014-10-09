@@ -131,16 +131,16 @@ namespace Nop.Services.Catalog
             if (!String.IsNullOrWhiteSpace(product.AllowedQuantities))
             {
                 product.AllowedQuantities
-                    .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                     .ToList()
                     .ForEach(qtyStr =>
-                                 {
-                                     int qty = 0;
-                                     if (int.TryParse(qtyStr.Trim(), out qty))
-                                     {
-                                         result.Add(qty);
-                                     }
-                                 } );
+                    {
+                        int qty;
+                        if (int.TryParse(qtyStr.Trim(), out qty))
+                        {
+                            result.Add(qty);
+                        }
+                    });
             }
 
             return result.ToArray();
@@ -248,9 +248,9 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string sku = null;
-            string manufacturerPartNumber = null;
-            string gtin = null;
+            string sku;
+            string manufacturerPartNumber;
+            string gtin;
 
             product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);
@@ -270,9 +270,9 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string sku = null;
-            string manufacturerPartNumber = null;
-            string gtin = null;
+            string sku;
+            string manufacturerPartNumber;
+            string gtin;
 
             product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);
@@ -292,9 +292,9 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            string sku = null;
-            string manufacturerPartNumber = null;
-            string gtin = null;
+            string sku;
+            string manufacturerPartNumber;
+            string gtin;
 
             product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);

@@ -31,7 +31,7 @@ namespace Nop.Data
             using (var stream = File.OpenRead(filePath))
             using (var reader = new StreamReader(stream))
             {
-                var statement = "";
+                string statement;
                 while ((statement = ReadNextStatementFromStream(reader)) != null)
                 {
                     statements.Add(statement);

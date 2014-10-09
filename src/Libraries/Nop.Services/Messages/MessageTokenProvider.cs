@@ -714,7 +714,7 @@ namespace Nop.Services.Messages
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            string topicUrl = null;
+            string topicUrl;
             if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
                 topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", GetStoreUrl(), forumTopic.Id, forumTopic.GetSeName(), friendlyForumTopicPageIndex.Value);
             else

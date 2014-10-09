@@ -104,7 +104,7 @@ namespace Nop.Services.Tests.Shipping
                                                            }
                                   });
 
-            decimal length, width, height = 0;
+            decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             length.ShouldEqual(0);
             width.ShouldEqual(0);
@@ -126,7 +126,7 @@ namespace Nop.Services.Tests.Shipping
                                                            }
                                   });
 
-            decimal length, width, height = 0;
+            decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             length.ShouldEqual(2);
             width.ShouldEqual(2);
@@ -148,7 +148,7 @@ namespace Nop.Services.Tests.Shipping
                                                            }
                                   });
 
-            decimal length, width, height = 0;
+            decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             Math.Round(length, 2).ShouldEqual(2.88);
             Math.Round(width, 2).ShouldEqual(2.88);
@@ -180,7 +180,7 @@ namespace Nop.Services.Tests.Shipping
                                                            }
                                   });
 
-            decimal length, width, height = 0;
+            decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             Math.Round(length, 2).ShouldEqual(3.78);
             Math.Round(width, 2).ShouldEqual(5);    //preserve max width
@@ -205,7 +205,7 @@ namespace Nop.Services.Tests.Shipping
                     }
                 });
 
-            decimal length, width, height = 0;
+            decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             Math.Round(length, 2).ShouldEqual(2);
             Math.Round(width, 2).ShouldEqual(2);

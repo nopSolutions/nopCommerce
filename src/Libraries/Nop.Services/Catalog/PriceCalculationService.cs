@@ -253,7 +253,7 @@ namespace Nop.Services.Catalog
             bool includeDiscounts = true,
             int quantity = 1)
         {
-            decimal discountAmount = decimal.Zero;
+            decimal discountAmount;
             Discount appliedDiscount;
             return GetFinalPrice(product, customer, additionalCharge, includeDiscounts,
                 quantity, out discountAmount, out appliedDiscount);
@@ -317,7 +317,7 @@ namespace Nop.Services.Catalog
                 if (includeDiscounts)
                 {
                     //discount
-                    Discount tmpAppliedDiscount = null;
+                    Discount tmpAppliedDiscount;
                     decimal tmpDiscountAmount = GetDiscountAmount(product, customer, price, out tmpAppliedDiscount);
                     price = price - tmpDiscountAmount;
 
@@ -361,7 +361,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetUnitPrice(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts = true)
         {
-            decimal discountAmount = decimal.Zero;
+            decimal discountAmount;
             Discount appliedDiscount;
             return GetUnitPrice(shoppingCartItem, includeDiscounts,
                 out discountAmount, out appliedDiscount);
@@ -424,7 +424,7 @@ namespace Nop.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscount = null;
 
-            decimal finalPrice = decimal.Zero;
+            decimal finalPrice;
 
             var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
             if (combination != null && combination.OverriddenPrice.HasValue)
@@ -451,7 +451,7 @@ namespace Nop.Services.Catalog
                 }
                 else
                 {
-                    var qty = 0;
+                    int qty;
                     if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
                     {
                         //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
@@ -493,7 +493,7 @@ namespace Nop.Services.Catalog
         public virtual decimal GetSubTotal(ShoppingCartItem shoppingCartItem,
             bool includeDiscounts = true)
         {
-            decimal discountAmount = decimal.Zero;
+            decimal discountAmount;
             Discount appliedDiscount;
             return GetSubTotal(shoppingCartItem, includeDiscounts, out discountAmount, out appliedDiscount);
         }
@@ -513,7 +513,7 @@ namespace Nop.Services.Catalog
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
-            decimal subTotal = 0;
+            decimal subTotal;
 
             //unit price
             var unitPrice = GetUnitPrice(shoppingCartItem, includeDiscounts,

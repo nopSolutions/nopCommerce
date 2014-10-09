@@ -64,10 +64,10 @@ namespace Nop.Web.Models.Catalog
 
         public virtual int GetFontSize(ProductTagModel productTag)
         {
-            double mean = 0;
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.ProductCount);
+            double mean;
             double stdDev = StdDev(itemWeights, out mean);
 
             return GetFontSize(productTag.ProductCount, mean, stdDev);

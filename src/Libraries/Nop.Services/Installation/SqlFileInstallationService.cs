@@ -94,7 +94,7 @@ namespace Nop.Services.Installation
             using (var stream = File.OpenRead(path))
             using (var reader = new StreamReader(stream))
             {
-                string statement = "";
+                string statement;
                 while ((statement = ReadNextStatementFromStream(reader)) != null)
                     statements.Add(statement);
             }

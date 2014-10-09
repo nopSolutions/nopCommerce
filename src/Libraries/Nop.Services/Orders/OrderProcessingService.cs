@@ -543,7 +543,7 @@ namespace Nop.Services.Orders
 
                 //customer currency
                 string customerCurrencyCode = "";
-                decimal customerCurrencyRate = decimal.Zero;
+                decimal customerCurrencyRate;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     var currencyTmp = _currencyService.GetCurrencyById(customer.GetAttribute<int>(SystemCustomerAttributeNames.CurrencyId, processPaymentRequest.StoreId));
@@ -558,7 +558,7 @@ namespace Nop.Services.Orders
                     customerCurrencyRate = initialOrder.CurrencyRate;
                 }
                 //customer language
-                Language customerLanguage = null;
+                Language customerLanguage;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     customerLanguage = _languageService.GetLanguageById(customer.GetAttribute<int>(
@@ -576,7 +576,7 @@ namespace Nop.Services.Orders
                     throw new NopException("Anonymous checkout is not allowed");
 
                 //billing address
-                Address billingAddress = null;
+                Address billingAddress;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     if (customer.BillingAddress == null)
@@ -701,10 +701,10 @@ namespace Nop.Services.Orders
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     //sub total (incl tax)
-                    decimal orderSubTotalDiscountAmount1 = decimal.Zero;
-                    Discount orderSubTotalAppliedDiscount1 = null;
-                    decimal subTotalWithoutDiscountBase1 = decimal.Zero;
-                    decimal subTotalWithDiscountBase1 = decimal.Zero;
+                    decimal orderSubTotalDiscountAmount1;
+                    Discount orderSubTotalAppliedDiscount1;
+                    decimal subTotalWithoutDiscountBase1;
+                    decimal subTotalWithDiscountBase1;
                     _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
                         true, out orderSubTotalDiscountAmount1, out orderSubTotalAppliedDiscount1,
                         out subTotalWithoutDiscountBase1, out subTotalWithDiscountBase1);
@@ -716,10 +716,10 @@ namespace Nop.Services.Orders
                         appliedDiscounts.Add(orderSubTotalAppliedDiscount1);
 
                     //sub total (excl tax)
-                    decimal orderSubTotalDiscountAmount2 = decimal.Zero;
-                    Discount orderSubTotalAppliedDiscount2 = null;
-                    decimal subTotalWithoutDiscountBase2 = decimal.Zero;
-                    decimal subTotalWithDiscountBase2 = decimal.Zero;
+                    decimal orderSubTotalDiscountAmount2;
+                    Discount orderSubTotalAppliedDiscount2;
+                    decimal subTotalWithoutDiscountBase2;
+                    decimal subTotalWithDiscountBase2;
                     _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
                         false, out orderSubTotalDiscountAmount2, out orderSubTotalAppliedDiscount2,
                         out subTotalWithoutDiscountBase2, out subTotalWithDiscountBase2);
@@ -802,8 +802,8 @@ namespace Nop.Services.Orders
                 decimal? orderShippingTotalInclTax, orderShippingTotalExclTax = null;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    decimal taxRate = decimal.Zero;
-                    Discount shippingTotalDiscount = null;
+                    decimal taxRate;
+                    Discount shippingTotalDiscount;
                     orderShippingTotalInclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, true, out taxRate, out shippingTotalDiscount);
                     orderShippingTotalExclTax = _orderTotalCalculationService.GetShoppingCartShippingTotal(cart, false);
                     if (!orderShippingTotalInclTax.HasValue || !orderShippingTotalExclTax.HasValue)
@@ -840,7 +840,7 @@ namespace Nop.Services.Orders
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
                     //tax amount
-                    SortedDictionary<decimal, decimal> taxRatesDictionary = null;
+                    SortedDictionary<decimal, decimal> taxRatesDictionary;
                     orderTaxTotal = _orderTotalCalculationService.GetTaxTotal(cart, out taxRatesDictionary);
 
                     //VAT number
@@ -872,7 +872,7 @@ namespace Nop.Services.Orders
                 decimal redeemedRewardPointsAmount = decimal.Zero;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    Discount orderAppliedDiscount = null;
+                    Discount orderAppliedDiscount;
                     orderTotal = _orderTotalCalculationService.GetShoppingCartTotal(cart,
                         out orderDiscountAmount, out orderAppliedDiscount, out appliedGiftCards,
                         out redeemedRewardPoints, out redeemedRewardPointsAmount);
@@ -918,9 +918,9 @@ namespace Nop.Services.Orders
                     isRecurringShoppingCart = cart.IsRecurring();
                     if (isRecurringShoppingCart)
                     {
-                        int recurringCycleLength = 0;
+                        int recurringCycleLength;
                         RecurringProductCyclePeriod recurringCyclePeriod;
-                        int recurringTotalCycles = 0;
+                        int recurringTotalCycles;
                         string recurringCyclesError = cart.GetRecurringCycleInfo(_localizationService,
                             out recurringCycleLength, out recurringCyclePeriod, out recurringTotalCycles);
                         if (!string.IsNullOrEmpty(recurringCyclesError))
@@ -1092,9 +1092,9 @@ namespace Nop.Services.Orders
                             foreach (var sc in cart)
                             {
                                 //prices
-                                decimal taxRate = decimal.Zero;
-                                Discount scDiscount = null;
-                                decimal discountAmount = decimal.Zero;
+                                decimal taxRate;
+                                Discount scDiscount;
+                                decimal discountAmount;
                                 decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc);
                                 decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true, out discountAmount, out scDiscount);
                                 decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.Product, scUnitPrice, true, customer, out taxRate);
@@ -2687,10 +2687,10 @@ namespace Nop.Services.Orders
             if (cart.Count > 0 && _orderSettings.MinOrderSubtotalAmount > decimal.Zero)
             {
                 //subtotal
-                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
-                Discount orderSubTotalAppliedDiscount = null;
-                decimal subTotalWithoutDiscountBase = decimal.Zero;
-                decimal subTotalWithDiscountBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase;
+                Discount orderSubTotalAppliedDiscount;
+                decimal subTotalWithoutDiscountBase;
+                decimal subTotalWithDiscountBase;
                 _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);

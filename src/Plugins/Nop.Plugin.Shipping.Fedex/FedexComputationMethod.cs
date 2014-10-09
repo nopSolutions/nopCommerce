@@ -96,15 +96,14 @@ namespace Nop.Plugin.Shipping.Fedex
             request.CarrierCodes[0] = RateServiceWebReference.CarrierCodeType.FDXE;
             request.CarrierCodes[1] = RateServiceWebReference.CarrierCodeType.FDXG;
 
-            decimal subTotalBase = decimal.Zero;
-            decimal orderSubTotalDiscountAmount = decimal.Zero;
-            Discount orderSubTotalAppliedDiscount = null;
-            decimal subTotalWithoutDiscountBase = decimal.Zero;
-            decimal subTotalWithDiscountBase = decimal.Zero;
+            decimal orderSubTotalDiscountAmount;
+            Discount orderSubTotalAppliedDiscount;
+            decimal subTotalWithoutDiscountBase;
+            decimal subTotalWithDiscountBase;
             _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
                 false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-            subTotalBase = subTotalWithDiscountBase;
+            decimal subTotalBase = subTotalWithDiscountBase;
 
             request.RequestedShipment = new RequestedShipment();
 
@@ -289,7 +288,6 @@ namespace Nop.Plugin.Shipping.Fedex
             }
             else
             {
-                int totalPackages = 1;
                 int totalPackagesDims = 1;
                 int totalPackagesWeights = 1;
                 if (IsPackageTooHeavy(weight))
@@ -300,7 +298,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 {
                     totalPackagesDims = Convert.ToInt32(Math.Ceiling((decimal)TotalPackageSize(length, height, width) / (decimal)108));
                 }
-                totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+                var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
                 if (totalPackages == 0)
                     totalPackages = 1;
 

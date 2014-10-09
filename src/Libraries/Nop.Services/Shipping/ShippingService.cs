@@ -602,7 +602,7 @@ namespace Nop.Services.Shipping
         /// <returns>Total width</returns>
         public virtual decimal GetTotalWidth(IList<ShoppingCartItem> cart)
         {
-            decimal length, width, height = 0;
+            decimal length, width, height;
             GetDimensions(cart, out width, out length, out height);
             return width;
         }
@@ -614,7 +614,7 @@ namespace Nop.Services.Shipping
         /// <returns>Total length</returns>
         public virtual decimal GetTotalLength(IList<ShoppingCartItem> cart)
         {
-            decimal length, width, height = 0;
+            decimal length, width, height;
             GetDimensions(cart, out width, out length, out height);
             return length;
         }
@@ -626,7 +626,7 @@ namespace Nop.Services.Shipping
         /// <returns>Total height</returns>
         public virtual decimal GetTotalHeight(IList<ShoppingCartItem> cart)
         {
-            decimal length, width, height = 0;
+            decimal length, width, height;
             GetDimensions(cart, out width, out length, out height);
             return height;
         }

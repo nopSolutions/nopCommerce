@@ -2513,7 +2513,7 @@ namespace Nop.Admin.Controllers
                 .GetAllSettings()
                 .Select(x =>
                             {
-                                string storeName = "";
+                                string storeName;
                                 if (x.StoreId == 0)
                                 {
                                     storeName = _localizationService.GetResource("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores");

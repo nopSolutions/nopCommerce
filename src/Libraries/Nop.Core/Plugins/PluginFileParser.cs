@@ -120,7 +120,7 @@ namespace Nop.Core.Plugins
                             foreach (var str1 in value.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
                                                       .Select(x => x.Trim()))
                             {
-                                int storeId = 0;
+                                int storeId;
                                 if (int.TryParse(str1, out storeId))
                                 {
                                     descriptor.LimitedToStores.Add(storeId);

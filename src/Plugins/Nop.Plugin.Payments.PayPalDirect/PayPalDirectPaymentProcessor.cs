@@ -183,7 +183,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //    for (int i = 0; i < cart.Count; i++)
             //    {
             //        var sc = cart[i];
-            //        decimal taxRate = decimal.Zero;
+            //        decimal taxRate;
             //        var customer = processPaymentRequest.Customer;
             //        decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc, true);
             //        decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true);
@@ -249,7 +249,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 DoDirectPaymentResponseType response = service2.DoDirectPayment(req);
 
-                string error = "";
+                string error;
                 bool success = PaypalHelper.CheckSuccess(response, out error);
                 if (success)
                 {
@@ -300,7 +300,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 sw.Write(formContent);
             }
 
-            string response = null;
+            string response;
             using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
             {
                 response = HttpUtility.UrlDecode(sr.ReadToEnd());
@@ -393,7 +393,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 DoCaptureResponseType response = service2.DoCapture(req);
 
-                string error = "";
+                string error;
                 bool success = PaypalHelper.CheckSuccess(response, out error);
                 if (success)
                 {
@@ -444,7 +444,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 RefundTransactionResponseType response = service1.RefundTransaction(req);
 
-                string error = string.Empty;
+                string error;
                 bool success = PaypalHelper.CheckSuccess(response, out error);
                 if (success)
                 {
@@ -495,7 +495,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 DoVoidResponseType response = service2.DoVoid(req);
 
-                string error = "";
+                string error;
                 bool success = PaypalHelper.CheckSuccess(response, out error);
                 if (success)
                 {
@@ -606,7 +606,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 CreateRecurringPaymentsProfileResponseType response = service2.CreateRecurringPaymentsProfile(req);
 
-                string error = "";
+                string error;
                 bool success = PaypalHelper.CheckSuccess(response, out error);
                 if (success)
                 {
@@ -661,7 +661,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
                 var response = service2.ManageRecurringPaymentsProfileStatus(req);
 
-                string error = "";
+                string error;
                 if (!PaypalHelper.CheckSuccess(response, out error))
                 {
                     result.AddError(error);

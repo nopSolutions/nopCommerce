@@ -171,7 +171,7 @@ namespace Nop.Plugin.Shipping.USPS
 
 
 
-            string requestString = string.Empty;
+            string requestString;
 
             bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
             if (isDomestic)
@@ -227,7 +227,6 @@ namespace Nop.Plugin.Shipping.USPS
                 }
                 else
                 {
-                    int totalPackages = 1;
                     int totalPackagesDims = 1;
                     int totalPackagesWeights = 1;
                     if (IsPackageTooHeavy(pounds))
@@ -238,7 +237,7 @@ namespace Nop.Plugin.Shipping.USPS
                     {
                         totalPackagesDims = Convert.ToInt32(Math.Ceiling((decimal)TotalPackageSize(length, height, width) / (decimal)108));
                     }
-                    totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+                    var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
                     if (totalPackages == 0)
                         totalPackages = 1;
 
@@ -305,15 +304,7 @@ namespace Nop.Plugin.Shipping.USPS
                 sb.AppendFormat("<IntlRateV2Request USERID=\"{0}\" PASSWORD=\"{1}\">", username, password);
 
                 //V2 International rates require the package value to be declared.  Max content value for most shipping options is $400 so it is limited here.  
-                decimal intlSubTotal = decimal.Zero;
-                if (subTotal > 400)
-                {
-                    intlSubTotal = 400;
-                }
-                else
-                {
-                    intlSubTotal = subTotal;
-                }
+                decimal intlSubTotal = subTotal > 400 ? 400 : subTotal;
 
                 //little hack here for international requests
                 length = 12;
@@ -357,7 +348,6 @@ namespace Nop.Plugin.Shipping.USPS
                 }
                 else
                 {
-                    int totalPackages = 1;
                     int totalPackagesDims = 1;
                     int totalPackagesWeights = 1;
                     if (IsPackageTooHeavy(pounds))
@@ -368,7 +358,7 @@ namespace Nop.Plugin.Shipping.USPS
                     {
                         totalPackagesDims = Convert.ToInt32(Math.Ceiling((decimal)TotalPackageSize(length, height, width) / (decimal)108));
                     }
-                    totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
+                    var totalPackages = totalPackagesDims > totalPackagesWeights ? totalPackagesDims : totalPackagesWeights;
                     if (totalPackages == 0)
                         totalPackages = 1;
 
@@ -438,7 +428,7 @@ namespace Nop.Plugin.Shipping.USPS
             requestStream.Write(bytes, 0, bytes.Length);
             requestStream.Close();
             var response = request.GetResponse();
-            string responseXml = string.Empty;
+            string responseXml;
             using (var reader = new StreamReader(response.GetResponseStream()))
                 responseXml = reader.ReadToEnd();
 

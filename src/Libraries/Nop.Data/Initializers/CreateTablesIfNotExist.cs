@@ -31,7 +31,7 @@ namespace Nop.Data.Initializers
             }
             if (dbExists)
             {
-                bool createTables = false;
+                bool createTables;
                 if (_tablesToValidate != null && _tablesToValidate.Length > 0)
                 {
                     //we have some table names to validate

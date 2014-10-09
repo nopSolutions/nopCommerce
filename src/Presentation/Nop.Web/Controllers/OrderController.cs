@@ -470,7 +470,7 @@ namespace Nop.Web.Controllers
 
             var orders = new List<Order>();
             orders.Add(order);
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);

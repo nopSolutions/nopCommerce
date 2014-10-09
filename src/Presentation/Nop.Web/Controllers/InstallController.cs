@@ -275,7 +275,7 @@ namespace Nop.Web.Controllers
                 var settingsManager = new DataSettingsManager();
                 try
                 {
-                    string connectionString = null;
+                    string connectionString;
                     if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL Server

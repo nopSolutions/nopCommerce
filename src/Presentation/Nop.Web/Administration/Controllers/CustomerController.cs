@@ -1999,7 +1999,7 @@ namespace Nop.Admin.Controllers
             {
                 var customers = _customerService.GetAllCustomers();
 
-                byte[] bytes = null;
+                byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
                     _exportManager.ExportCustomersToXlsx(stream, customers);
@@ -2029,7 +2029,7 @@ namespace Nop.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _exportManager.ExportCustomersToXlsx(stream, customers);

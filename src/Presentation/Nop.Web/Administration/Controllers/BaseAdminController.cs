@@ -90,7 +90,7 @@ namespace Nop.Admin.Controllers
             //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
             if (!index.HasValue)
             {
-                int tmp = 0;
+                int tmp;
                 if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
                 {
                     index = tmp;

@@ -808,8 +808,8 @@ namespace Nop.Web.Controllers
                     {
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         
-                        string vatName = "";
-                        string vatAddress = "";
+                        string vatName;
+                        string vatAddress;
                         var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
                         _genericAttributeService.SaveAttribute(customer,
                             SystemCustomerAttributeNames.VatNumberStatusId,
@@ -1160,8 +1160,8 @@ namespace Nop.Web.Controllers
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.VatNumber, model.VatNumber);
                         if (prevVatNumber != model.VatNumber)
                         {
-                            string vatName = "";
-                            string vatAddress = "";
+                            string vatName;
+                            string vatAddress;
                             var vatNumberStatus = _taxService.GetVatNumberStatus(model.VatNumber, out vatName, out vatAddress);
                             _genericAttributeService.SaveAttribute(customer,
                                     SystemCustomerAttributeNames.VatNumberStatusId,
@@ -1965,8 +1965,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("fs", "").Trim();
-                    int forumSubscriptionId = 0;
-
+                    int forumSubscriptionId;
                     if (Int32.TryParse(id, out forumSubscriptionId))
                     {
                         var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
@@ -2048,8 +2047,7 @@ namespace Nop.Web.Controllers
                 if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
                 {
                     var id = key.Replace("biss", "").Trim();
-                    int subscriptionId = 0;
-
+                    int subscriptionId;
                     if (Int32.TryParse(id, out subscriptionId))
                     {
                         var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);

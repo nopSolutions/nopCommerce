@@ -18,7 +18,7 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException("discount");
 
 
-            decimal result = decimal.Zero;
+            decimal result;
             if (discount.UsePercentage)
                 result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
             else

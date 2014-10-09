@@ -165,7 +165,7 @@ namespace Nop.Web.Extensions
                                                     else if (minPossiblePrice.HasValue)
                                                     {
                                                         //calculate prices
-                                                        decimal taxRate = decimal.Zero;
+                                                        decimal taxRate;
                                                         decimal finalPriceBase = taxService.GetProductPrice(minPriceProduct, minPossiblePrice.Value, out taxRate);
                                                         decimal finalPrice = currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, workContext.WorkingCurrency);
 
@@ -233,7 +233,7 @@ namespace Nop.Web.Extensions
                                         else
                                         {
                                             //calculate prices
-                                            decimal taxRate = decimal.Zero;
+                                            decimal taxRate;
                                             decimal oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                             decimal finalPriceBase = taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
 

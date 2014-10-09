@@ -372,7 +372,7 @@ namespace Nop.Services.Catalog
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
             bool showHidden = false)
         {
-            IList<int> filterableSpecificationAttributeOptionIds = null;
+            IList<int> filterableSpecificationAttributeOptionIds;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,

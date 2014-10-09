@@ -239,7 +239,7 @@ namespace Nop.Web.Controllers
                                       };
 
                     //adjust rate
-                    Discount appliedDiscount = null;
+                    Discount appliedDiscount;
                     var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
                         shippingOption.Rate, cart, out appliedDiscount);
 
@@ -1301,7 +1301,7 @@ namespace Nop.Web.Controllers
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     throw new Exception("Anonymous checkout is not allowed");
 
-                int billingAddressId = 0;
+                int billingAddressId;
                 int.TryParse(form["billing_address_id"], out billingAddressId);
 
                 if (billingAddressId > 0)
@@ -1451,7 +1451,7 @@ namespace Nop.Web.Controllers
                     _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
                 }
 
-                int shippingAddressId = 0;
+                int shippingAddressId;
                 int.TryParse(form["shipping_address_id"], out shippingAddressId);
 
                 if (shippingAddressId > 0)

@@ -423,7 +423,7 @@ namespace Nop.Admin.Controllers
             }
             foreach (string productTagName in productTags)
             {
-                ProductTag productTag = null;
+                ProductTag productTag;
                 var productTag2 = _productTagService.GetProductTagByName(productTagName);
                 if (productTag2 == null)
                 {
@@ -689,7 +689,7 @@ namespace Nop.Admin.Controllers
                 foreach (string formKey in this.Request.Form.AllKeys)
                     if (formKey.Equals(string.Format("warehouse_used_{0}", warehouse.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int tmp = 0;
+                        int tmp;
                         int.TryParse(this.Request.Form[formKey], out tmp);
                         used = tmp == warehouse.Id;
                         break;
@@ -1161,7 +1161,7 @@ namespace Nop.Admin.Controllers
 
                 foreach (string str1 in rangeArray)
                 {
-                    int tmp1 = 0;
+                    int tmp1;
                     if (int.TryParse(str1, out tmp1))
                         ids.Add(tmp1);
                 }
@@ -2559,7 +2559,7 @@ namespace Nop.Admin.Controllers
 
                 var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
 
-                byte[] bytes = null;
+                byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
                     _pdfService.PrintProductsToPdf(stream, products);
@@ -2631,7 +2631,7 @@ namespace Nop.Admin.Controllers
 
                 var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
                 
-                byte[] bytes = null;
+                byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
                     _exportManager.ExportProductsToXlsx(stream, products);
@@ -2928,7 +2928,7 @@ namespace Nop.Admin.Controllers
                 .ThenBy(x => x.CustomerRoleId)
                 .Select(x =>
                 {
-                    var storeName = "";
+                    string storeName;
                     if (x.StoreId > 0)
                     {
                         var store = _storeService.GetStoreById(x.StoreId);

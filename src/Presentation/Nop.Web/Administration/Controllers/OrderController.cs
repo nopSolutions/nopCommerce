@@ -939,7 +939,7 @@ namespace Nop.Admin.Controllers
             {
                 var orders = _orderService.SearchOrders();
                 
-                byte[] bytes = null;
+                byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
                     _exportManager.ExportOrdersToXlsx(stream, orders);
@@ -973,7 +973,7 @@ namespace Nop.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _exportManager.ExportOrdersToXlsx(stream, orders);
@@ -1393,7 +1393,7 @@ namespace Nop.Admin.Controllers
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
             orders.Add(order);
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
@@ -1430,7 +1430,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
@@ -1933,15 +1933,15 @@ namespace Nop.Admin.Controllers
             //save order item
 
             //basic properties
-            var unitPriceInclTax = decimal.Zero;
+            decimal unitPriceInclTax;
             decimal.TryParse(form["UnitPriceInclTax"], out unitPriceInclTax);
-            var unitPriceExclTax = decimal.Zero;
+            decimal unitPriceExclTax;
             decimal.TryParse(form["UnitPriceExclTax"], out unitPriceExclTax);
-            var quantity = 1;
+            int quantity;
             int.TryParse(form["Quantity"], out quantity);
-            var priceInclTax = decimal.Zero;
+            decimal priceInclTax;
             decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
-            var priceExclTax = decimal.Zero;
+            decimal priceExclTax;
             decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
 
             //attributes
@@ -2919,7 +2919,7 @@ namespace Nop.Admin.Controllers
             var shipments = new List<Shipment>();
             shipments.Add(shipment);
             
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
@@ -2947,7 +2947,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("ShipmentList");
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
@@ -2983,7 +2983,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("ShipmentList");
             }
 
-            byte[] bytes = null;
+            byte[] bytes;
             using (var stream = new MemoryStream())
             {
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);

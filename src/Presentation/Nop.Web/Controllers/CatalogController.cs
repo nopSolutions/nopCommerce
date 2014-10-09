@@ -230,8 +230,7 @@ namespace Nop.Web.Controllers
                     // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
                     if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
                     {
-                        int temp = 0;
-
+                        int temp;
                         if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
                         {
                             if (temp > 0)
@@ -247,7 +246,7 @@ namespace Nop.Web.Controllers
 
                     foreach (var pageSize in pageSizes)
                     {
-                        int temp = 0;
+                        int temp;
                         if (!int.TryParse(pageSize, out temp))
                         {
                             continue;
@@ -579,7 +578,7 @@ namespace Nop.Web.Controllers
             }
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
-            IList<int> filterableSpecificationAttributeOptionIds = null;
+            IList<int> filterableSpecificationAttributeOptionIds;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
@@ -851,7 +850,7 @@ namespace Nop.Web.Controllers
 
 
             //products
-            IList<int> filterableSpecificationAttributeOptionIds = null;
+            IList<int> filterableSpecificationAttributeOptionIds;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 manufacturerId: manufacturer.Id,
                 storeId: _storeContext.CurrentStore.Id,
@@ -999,7 +998,7 @@ namespace Nop.Web.Controllers
                 vendor.PageSize);
 
             //products
-            IList<int> filterableSpecificationAttributeOptionIds = null;
+            IList<int> filterableSpecificationAttributeOptionIds;
             var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
                 vendorId: vendor.Id,
                 storeId: _storeContext.CurrentStore.Id,
@@ -1317,14 +1316,14 @@ namespace Nop.Web.Controllers
                         //min price
                         if (!string.IsNullOrEmpty(model.Pf))
                         {
-                            decimal minPrice = decimal.Zero;
+                            decimal minPrice;
                             if (decimal.TryParse(model.Pf, out minPrice))
                                 minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
                         }
                         //max price
                         if (!string.IsNullOrEmpty(model.Pt))
                         {
-                            decimal maxPrice = decimal.Zero;
+                            decimal maxPrice;
                             if (decimal.TryParse(model.Pt, out maxPrice))
                                 maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
                         }

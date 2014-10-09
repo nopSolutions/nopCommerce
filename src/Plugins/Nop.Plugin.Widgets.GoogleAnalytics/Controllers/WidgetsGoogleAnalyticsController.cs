@@ -174,8 +174,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         private string GetTrackingScript()
         {
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
-            string analyticsTrackingScript = "";
-            analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
+            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
             analyticsTrackingScript = analyticsTrackingScript.Replace("{ECOMMERCE}", "");
             return analyticsTrackingScript;
@@ -221,8 +220,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
         {
             var googleAnalyticsSettings = _settingService.LoadSetting<GoogleAnalyticsSettings>(_storeContext.CurrentStore.Id);
             var usCulture = new CultureInfo("en-US");
-            string analyticsTrackingScript = "";
-            analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
+            var analyticsTrackingScript = googleAnalyticsSettings.TrackingScript + "\n";
             analyticsTrackingScript = analyticsTrackingScript.Replace("{GOOGLEID}", googleAnalyticsSettings.GoogleId);
 
             if (order != null)

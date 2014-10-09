@@ -39,7 +39,7 @@ namespace Nop.Services.Orders
                     if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
                         string str1 = node.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             ids.Add(id);
@@ -93,7 +93,7 @@ namespace Nop.Services.Orders
                 {
                     if (!String.IsNullOrEmpty(caValueStr))
                     {
-                        int caValueId = 0;
+                        int caValueId;
                         if (int.TryParse(caValueStr, out caValueId))
                         {
                             var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caValueId);
@@ -126,7 +126,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             if (id == checkoutAttributeId)
@@ -181,7 +181,7 @@ namespace Nop.Services.Orders
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
                     {
                         string str1 = node1.Attributes["ID"].InnerText.Trim();
-                        int id = 0;
+                        int id;
                         if (int.TryParse(str1, out id))
                         {
                             if (id == ca.Id)
@@ -255,7 +255,7 @@ namespace Nop.Services.Orders
                         if (node.Attributes != null && node.Attributes["ID"] != null)
                         {
                             string str1 = node.Attributes["ID"].InnerText.Trim();
-                            int id = 0;
+                            int id;
                             if (int.TryParse(str1, out id))
                             {
                                 if (checkoutAttributeIdsToRemove.Contains(id))

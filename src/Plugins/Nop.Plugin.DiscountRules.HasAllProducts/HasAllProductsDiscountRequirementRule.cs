@@ -77,15 +77,15 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                          {
                              //the third way (the quantity rage specified)
                              //{Product ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-                             int restrictedProductId = 0;
+                             int restrictedProductId;
                              if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
                                  //parsing error; exit;
                                  return false;
-                             int quantityMin = 0;
+                             int quantityMin;
                              if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
                                  //parsing error; exit;
                                  return false;
-                             int quantityMax = 0;
+                             int quantityMax;
                              if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
                                  //parsing error; exit;
                                  return false;
@@ -100,11 +100,11 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                          {
                              //the second way (the quantity specified)
                              //{Product ID}:{Quantity}. For example, 77:1, 123:2, 156:3
-                             int restrictedProductId = 0;
+                             int restrictedProductId;
                              if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
                                  //parsing error; exit;
                                  return false;
-                             int quantity = 0;
+                             int quantity;
                              if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out quantity))
                                  //parsing error; exit;
                                  return false;
@@ -119,7 +119,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                     else
                     {
                         //the first way (the quantity is not specified)
-                        int restrictedProductId = 0;
+                        int restrictedProductId;
                         if (int.TryParse(restrictedProduct, out restrictedProductId))
                         {
                             if (sci.ProductId == restrictedProductId)

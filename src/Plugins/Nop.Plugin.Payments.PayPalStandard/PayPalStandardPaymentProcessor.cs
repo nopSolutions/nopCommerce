@@ -140,7 +140,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 sw.Write(formContent);
             }
 
-            string response = null;
+            string response;
             using (var sr = new StreamReader(req.GetResponse().GetResponseStream()))
             {
                 response = HttpUtility.UrlDecode(sr.ReadToEnd());
@@ -183,15 +183,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             var builder = new StringBuilder();
             builder.Append(GetPaypalUrl());
-            string cmd = string.Empty;
-            if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
-            {
-                cmd = "_cart";
-            }
-            else
-            {
-                cmd = "_xclick";
-            }
+            var cmd =_paypalStandardPaymentSettings.PassProductNamesAndTotals 
+                ? "_cart"
+                :  "_xclick";
             builder.AppendFormat("?cmd={0}&business={1}", cmd, HttpUtility.UrlEncode(_paypalStandardPaymentSettings.BusinessEmail));
             if (_paypalStandardPaymentSettings.PassProductNamesAndTotals)
             {

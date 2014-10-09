@@ -13,10 +13,10 @@ namespace Nop.Web.Models.Blogs
 
         public int GetFontSize(BlogPostTagModel blogPostTag)
         {
-            double mean = 0;
             var itemWeights = new List<double>();
             foreach (var tag in Tags)
                 itemWeights.Add(tag.BlogPostCount);
+            double mean;
             double stdDev = StdDev(itemWeights, out mean);
 
             return GetFontSize(blogPostTag.BlogPostCount, mean, stdDev);

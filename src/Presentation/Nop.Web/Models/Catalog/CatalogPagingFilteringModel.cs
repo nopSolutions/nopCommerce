@@ -287,7 +287,7 @@ namespace Nop.Web.Models.Catalog
 
                 foreach (var spec in alreadyFilteredSpecsStr.Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    int specId = 0;
+                    int specId;
                     int.TryParse(spec.Trim(), out specId);
                     if (!result.Contains(specId))
                         result.Add(specId);

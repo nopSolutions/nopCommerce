@@ -300,9 +300,8 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertFromPrimaryStoreCurrency(decimal amount, Currency targetCurrencyCode)
         {
-            decimal result = amount;
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
-            result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
+            var result = ConvertCurrency(amount, primaryStoreCurrency, targetCurrencyCode);
             return result;
         }
        

@@ -125,10 +125,10 @@ namespace Nop.Services.Tax
         /// <returns>New price</returns>
         protected virtual decimal CalculatePrice(decimal price, decimal percent, bool increase)
         {
-            decimal result = decimal.Zero;
             if (percent == decimal.Zero)
                 return price;
 
+            decimal result;
             if (increase)
             {
                 result = price * (1 + percent / 100);
@@ -379,7 +379,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetShippingPrice(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate = decimal.Zero;
+            decimal taxRate;
             return GetShippingPrice(price, includingTax, customer, out taxRate);
         }
 
@@ -430,7 +430,7 @@ namespace Nop.Services.Tax
         /// <returns>Price</returns>
         public virtual decimal GetPaymentMethodAdditionalFee(decimal price, bool includingTax, Customer customer)
         {
-            decimal taxRate = decimal.Zero;
+            decimal taxRate;
             return GetPaymentMethodAdditionalFee(price, includingTax,
                 customer, out taxRate);
         }
@@ -494,7 +494,7 @@ namespace Nop.Services.Tax
         public virtual decimal GetCheckoutAttributePrice(CheckoutAttributeValue cav,
             bool includingTax, Customer customer)
         {
-            decimal taxRate = decimal.Zero;
+            decimal taxRate;
             return GetCheckoutAttributePrice(cav, includingTax, customer, out taxRate);
         }
 
@@ -608,7 +608,7 @@ namespace Nop.Services.Tax
             if (!_taxSettings.EuVatUseWebService)
                 return VatNumberStatus.Unknown;
 
-            Exception exception = null;
+            Exception exception;
             return DoVatCheck(twoLetterIsoCode, vatNumber, out name, out address, out exception);
         }
 

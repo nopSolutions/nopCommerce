@@ -417,7 +417,7 @@ namespace Nop.Plugin.Feed.Froogle
                         //We accept only the following units of weight: lb, oz, g, kg.
                         if (_froogleSettings.PassShippingInfo)
                         {
-                            var weightName = "kg";
+                            string weightName;
                             var shippingWeight = product.Weight;
                             switch (_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword)
                             {

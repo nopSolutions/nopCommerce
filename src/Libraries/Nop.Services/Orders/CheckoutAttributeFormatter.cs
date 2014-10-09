@@ -143,7 +143,7 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        int caId = 0;
+                        int caId;
                         if (int.TryParse(valueStr, out caId))
                         {
                             var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caId);

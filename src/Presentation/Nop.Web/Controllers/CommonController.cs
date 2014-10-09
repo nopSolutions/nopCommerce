@@ -467,8 +467,8 @@ namespace Nop.Web.Controllers
                 if (emailAccount == null)
                     throw new Exception("No email account could be loaded");
 
-                string from = null;
-                string fromName = null;
+                string from;
+                string fromName;
                 string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
                 //required for some SMTP servers
                 if (_commonSettings.UseSystemEmailForContactUsForm)

@@ -430,7 +430,7 @@ namespace Nop.Web.Controllers
                     }
                     else
                     {
-                        decimal taxRate = decimal.Zero;
+                        decimal taxRate;
                         decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                         decimal finalPriceWithoutDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: false), out taxRate);
                         decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, includeDiscounts: true), out taxRate);
@@ -613,7 +613,7 @@ namespace Nop.Web.Controllers
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            decimal taxRate = decimal.Zero;
+                            decimal taxRate;
                             decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
                             decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, out taxRate);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
@@ -748,7 +748,7 @@ namespace Nop.Web.Controllers
                         {
                             Quantity = tierPrice.Quantity,
                         };
-                        decimal taxRate = decimal.Zero;
+                        decimal taxRate;
                         decimal priceBase = _taxService.GetProductPrice(product, _priceCalculationService.GetFinalPrice(product, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
                         decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
                         m.Price = _priceFormatter.FormatPrice(price, false, false);
