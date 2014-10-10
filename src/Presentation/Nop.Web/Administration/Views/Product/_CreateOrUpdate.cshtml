@@ -1,6 +1,19 @@
 ﻿@model ProductModel
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function () {
+        $("#product-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="product-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -42,7 +55,7 @@
         <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
             @T("Admin.Catalog.Products.CrossSells")
         </li>
-        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex())>
+        <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
             @T("Admin.Catalog.Products.AssociatedProducts")
         </li>
         @if (Model.Id > 0)
@@ -101,18 +114,6 @@
         </div>
     }
 </div>
-<script>
-    $(document).ready(function () {
-        $("#product-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

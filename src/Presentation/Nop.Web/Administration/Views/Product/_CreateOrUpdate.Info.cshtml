@@ -8,7 +8,7 @@
 @using Nop.Services.Catalog;
 @using System.Text;
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -50,40 +50,40 @@
     function toggleShowOnHomePage() {
         if ($('#@Html.FieldIdFor(model => model.ShowOnHomePage)').is(':checked')) {
             $('#pnlDisplayOrder').show();
-        }
-        else {
+        } else {
             $('#pnlDisplayOrder').hide();
         }
     }
 
     function toggleProductType() {
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
-        if (selectedProductTypeId == @(((int)ProductType.SimpleProduct).ToString())) {
+        if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-prices').show();
-        $('#group-required-other-products').show();
-        $('#group-giftcard').show();
-        $('#group-downloads').show();
-        $('#group-recurring').show();
-        $('#group-shipping').show();
-        $('#group-tax').show();
-        $('#group-inventory').show();
-    } else if (selectedProductTypeId == @(((int)ProductType.GroupedProduct).ToString())) {
-        $('#group-prices').hide();
-        $('#group-required-other-products').hide();
-        $('#group-giftcard').hide();
-        $('#group-downloads').hide();
-        $('#group-recurring').hide();
-        $('#group-shipping').hide();
-        $('#group-tax').hide();
-        $('#group-inventory').hide();
-    }
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-shipping').show();
+            $('#group-tax').show();
+            $('#group-inventory').show();
+            $('#tab-associated-products').hide();
+        } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
+            $('#group-prices').hide();
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').hide();
+            $('#group-recurring').hide();
+            $('#group-shipping').hide();
+            $('#group-tax').hide();
+            $('#group-inventory').hide();
+            $('#tab-associated-products').show();
+        }
     }
 
     function togglePreOrder() {
         if ($('#@Html.FieldIdFor(model => model.AvailableForPreOrder)').is(':checked')) {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').show();
-        }
-        else {
+        } else {
             $('#pnlPreOrderAvailabilityStartDateTimeUtc').hide();
         }
     }
@@ -92,8 +92,7 @@
         if ($('#@Html.FieldIdFor(model => model.RequireOtherProducts)').is(':checked')) {
             $('#pnlRequiredProductIds').show();
             $('#pnlAutomaticallyAddRequiredProducts').show();
-        }
-        else {
+        } else {
             $('#pnlRequiredProductIds').hide();
             $('#pnlAutomaticallyAddRequiredProducts').hide();
         }
@@ -102,8 +101,7 @@
     function toggleGiftCard() {
         if ($('#@Html.FieldIdFor(model => model.IsGiftCard)').is(':checked')) {
             $('#pnlGiftCardType').show();
-        }
-        else {
+        } else {
             $('#pnlGiftCardType').hide();
         }
     }
@@ -112,8 +110,7 @@
         if ($('#@Html.FieldIdFor(model => model.CustomerEntersPrice)').is(':checked')) {
             $('#pnlMinimumCustomerEnteredPrice').show();
             $('#pnlMaximumCustomerEnteredPrice').show();
-        }
-        else {
+        } else {
             $('#pnlMinimumCustomerEnteredPrice').hide();
             $('#pnlMaximumCustomerEnteredPrice').hide();
         }
@@ -126,8 +123,7 @@
             $('#pnlUnlimitedDownloads').show();
             if ($('#@Html.FieldIdFor(model => model.UnlimitedDownloads)').is(':checked')) {
                 $('#pnlMaxNumberOfDownloads').hide();
-            }
-            else {
+            } else {
                 $('#pnlMaxNumberOfDownloads').show();
             }
             $('#pnlDownloadExpirationDays').show();
@@ -136,8 +132,7 @@
             $('#pnlHasUserAgreement').show();
             if ($('#@Html.FieldIdFor(model => model.HasUserAgreement)').is(':checked')) {
                 $('#pnlUserAgreementText').show();
-            }
-            else {
+            } else {
                 $('#pnlUserAgreementText').hide();
             }
 
@@ -145,12 +140,10 @@
 
             if ($('#@Html.FieldIdFor(model => model.HasSampleDownload)').is(':checked')) {
                 $('#pnlSampleDownloadFile').show();
-            }
-            else {
+            } else {
                 $('#pnlSampleDownloadFile').hide();
             }
-        }
-        else {
+        } else {
             $('#pnlDownloadFile').hide();
             $('#pnlUnlimitedDownloads').hide();
             $('#pnlMaxNumberOfDownloads').hide();
@@ -173,8 +166,7 @@
             $('#pnlWidth').show();
             $('#pnlHeight').show();
             $('#pnlDeliveryDate').show();
-        }
-        else {
+        } else {
             $('#pnlFreeShipping').hide();
             $('#pnlShipSeparately').hide();
             $('#pnlAdditionalShippingCharge').hide();
@@ -191,8 +183,7 @@
             $('#pnlCycleLength').show();
             $('#pnlCyclePeriod').show();
             $('#pnlTotalCycles').show();
-        }
-        else {
+        } else {
             $('#pnlCycleLength').hide();
             $('#pnlCyclePeriod').hide();
             $('#pnlTotalCycles').hide();
@@ -202,15 +193,14 @@
     function toggleTax() {
         if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
-        }
-        else {
+        } else {
             $('#pnlTaxCategory').show();
         }
     }
 
     function toggleManageStock() {
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
-        if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.DontManageStock).ToString())) {
+        if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').hide();
             $('#pnlWarehouse').show();
             $('#pnlMultipleWarehouses').hide();
@@ -223,15 +213,14 @@
             $('#pnlAllowBackInStockSubscriptions').hide();
             $('#pnlBackorders').hide();
             $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-        } else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
+        } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').show();
 
             if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
                 $('#pnlWarehouse').hide();
                 $('#pnlMultipleWarehouses').show();
                 $('#pnlStockQuantity').hide();
-            }
-            else {
+            } else {
                 $('#pnlWarehouse').show();
                 $('#pnlMultipleWarehouses').hide();
                 $('#pnlStockQuantity').show();
@@ -241,8 +230,7 @@
 
             if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
                 $('#pnlDisplayStockQuantity').show();
-            }
-            else {
+            } else {
                 $('#pnlDisplayStockQuantity').hide();
             }
 
@@ -251,7 +239,7 @@
             $('#pnlNotifyForQuantityBelow').show();
             $('#pnlBackorders').show();
             var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-            if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
+            if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
                 //no backorders
                 $('#pnlAllowBackInStockSubscriptions').show();
             } else {
