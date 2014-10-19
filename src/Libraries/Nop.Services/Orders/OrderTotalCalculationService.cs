@@ -568,8 +568,18 @@ namespace Nop.Services.Orders
             {
                 //use last shipping option (get from cache)
 
-                //adjust shipping rate
-                shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
+                var pickUpInStore = _shippingSettings.AllowPickUpInStore && 
+                    customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
+                if (pickUpInStore)
+                {
+                    //shipping is free for pick up in store
+                    shippingTotal = 0;
+                }
+                else
+                {
+                    //adjust shipping rate
+                    shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
+                }
             }
             else
             {
