@@ -1731,6 +1731,11 @@
             Timeout in milliseconds to be used for the request
             </summary>
         </member>
+        <member name="P:RestSharp.Http.ReadWriteTimeout">
+            <summary>
+            The number of milliseconds before the writing or reading times out.
+            </summary>
+        </member>
         <member name="P:RestSharp.Http.Credentials">
             <summary>
             System.Net.ICredentials to be sent with request
@@ -1795,6 +1800,11 @@
         <member name="P:RestSharp.Http.Url">
             <summary>
             URL to call for this request
+            </summary>
+        </member>
+        <member name="P:RestSharp.Http.PreAuthenticate">
+            <summary>
+            Flag to send authorisation header with the HttpWebRequest
             </summary>
         </member>
         <member name="T:RestSharp.HttpCookie">
@@ -2155,6 +2165,11 @@
             
             </summary>
         </member>
+        <member name="P:RestSharp.IRestClient.ReadWriteTimeout">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="P:RestSharp.IRestClient.UseSynchronizationContext">
             <summary>
             
@@ -2166,6 +2181,11 @@
             </summary>
         </member>
         <member name="P:RestSharp.IRestClient.BaseUrl">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:RestSharp.IRestClient.PreAuthenticate">
             <summary>
             
             </summary>
@@ -2192,13 +2212,13 @@
         </member>
         <member name="M:RestSharp.IRestRequest.AddObject(System.Object,System.String[])">
             <summary>
-            Calls AddParameter() for all public, readable properties specified in the white list
+            Calls AddParameter() for all public, readable properties specified in the includedProperties list
             </summary>
             <example>
             request.AddObject(product, "ProductId", "Price", ...);
             </example>
             <param name="obj">The object with properties to add as parameters</param>
-            <param name="whitelist">The names of the properties to include</param>
+            <param name="includedProperties">The names of the properties to include</param>
             <returns>This request</returns>
         </member>
         <member name="M:RestSharp.IRestRequest.AddObject(System.Object)">
@@ -2344,6 +2364,11 @@
         <member name="P:RestSharp.IRestRequest.Timeout">
             <summary>
             Timeout in milliseconds to be used for the request. This timeout value overrides a timeout set on the RestClient.
+            </summary>
+        </member>
+        <member name="P:RestSharp.IRestRequest.ReadWriteTimeout">
+            <summary>
+            The number of milliseconds before the writing or reading times out.  This timeout value overrides a timeout set on the RestClient.
             </summary>
         </member>
         <member name="P:RestSharp.IRestRequest.Attempts">
@@ -2612,6 +2637,11 @@
             Timeout in milliseconds to use for requests made by this client instance
             </summary>
         </member>
+        <member name="P:RestSharp.RestClient.ReadWriteTimeout">
+            <summary>
+            The number of milliseconds before the writing or reading times out.
+            </summary>
+        </member>
         <member name="P:RestSharp.RestClient.UseSynchronizationContext">
             <summary>
             Whether to invoke async callbacks using the SynchronizationContext.Current captured when invoked
@@ -2812,13 +2842,13 @@
         </member>
         <member name="M:RestSharp.RestRequest.AddObject(System.Object,System.String[])">
             <summary>
-            Calls AddParameter() for all public, readable properties specified in the white list
+            Calls AddParameter() for all public, readable properties specified in the includedProperties list
             </summary>
             <example>
             request.AddObject(product, "ProductId", "Price", ...);
             </example>
             <param name="obj">The object with properties to add as parameters</param>
-            <param name="whitelist">The names of the properties to include</param>
+            <param name="includedProperties">The names of the properties to include</param>
             <returns>This request</returns>
         </member>
         <member name="M:RestSharp.RestRequest.AddObject(System.Object)">
@@ -2985,6 +3015,11 @@
         <member name="P:RestSharp.RestRequest.Timeout">
             <summary>
             Timeout in milliseconds to be used for the request. This timeout value overrides a timeout set on the RestClient.
+            </summary>
+        </member>
+        <member name="P:RestSharp.RestRequest.ReadWriteTimeout">
+            <summary>
+            The number of milliseconds before the writing or reading times out.  This timeout value overrides a timeout set on the RestClient.
             </summary>
         </member>
         <member name="P:RestSharp.RestRequest.Attempts">
@@ -3258,6 +3293,12 @@
             </summary>
             <param name="obj">Object to serialize</param>
             <returns>XML as string</returns>
+        </member>
+        <member name="M:RestSharp.Serializers.XmlSerializer.IsNumeric(System.Object)">
+            <summary>
+            Determines if a given object is numeric in any way
+            (can be integer, double, null, etc).
+            </summary>
         </member>
         <member name="P:RestSharp.Serializers.XmlSerializer.RootElement">
             <summary>
