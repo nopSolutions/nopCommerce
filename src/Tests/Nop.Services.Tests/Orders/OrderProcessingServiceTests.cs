@@ -213,7 +213,8 @@ namespace Nop.Services.Tests.Orders
                 _encryptionService, _workContext, 
                 _workflowMessageService, _vendorService,
                 _customerActivityService, _currencyService, _affiliateService,
-                _eventPublisher,_pdfService, _paymentSettings, _rewardPointsSettings,
+                _eventPublisher,_pdfService, 
+                _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);
         }

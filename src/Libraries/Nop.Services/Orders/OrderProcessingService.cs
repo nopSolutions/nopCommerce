@@ -71,6 +71,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPdfService _pdfService;
 
+        private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly OrderSettings _orderSettings;
@@ -115,6 +116,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event published</param>
         /// <param name="pdfService">PDF service</param>
         /// <param name="paymentSettings">Payment settings</param>
+        /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
@@ -149,6 +151,7 @@ namespace Nop.Services.Orders
             IAffiliateService affiliateService,
             IEventPublisher eventPublisher,
             IPdfService pdfService,
+            ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
@@ -186,6 +189,7 @@ namespace Nop.Services.Orders
             this._eventPublisher = eventPublisher;
             this._pdfService = pdfService;
             this._paymentSettings = paymentSettings;
+            this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
@@ -750,7 +754,8 @@ namespace Nop.Services.Orders
                 {
                     if (!processPaymentRequest.IsRecurringPayment)
                     {
-                        pickUpInStore = customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, processPaymentRequest.StoreId);
+                        pickUpInStore = _shippingSettings.AllowPickUpInStore &&
+                            customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, processPaymentRequest.StoreId);
 
                         if (!pickUpInStore)
                         {
