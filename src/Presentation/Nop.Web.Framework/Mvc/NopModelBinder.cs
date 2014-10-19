@@ -13,17 +13,5 @@ namespace Nop.Web.Framework.Mvc
             }
             return model;
         }
-
-        protected override System.ComponentModel.PropertyDescriptorCollection GetModelProperties(ControllerContext controllerContext, ModelBindingContext bindingContext)
-        {
-            bindingContext.PropertyFilter = new System.Predicate<string>(pred);
-            var values = base.GetModelProperties(controllerContext, bindingContext);
-            return values;
-        }
-
-        protected bool pred(string target)
-        {
-            return true;
-        }
     }
 }
