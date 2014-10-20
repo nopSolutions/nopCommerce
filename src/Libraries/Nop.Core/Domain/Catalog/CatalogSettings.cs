@@ -301,5 +301,15 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display information about shipping and tax in product boxes (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoProductBoxes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax on wishlist page (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoWishlist { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax on order details page (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoOrderDetailsPage { get; set; }
     }
 }

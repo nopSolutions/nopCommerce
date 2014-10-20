@@ -31,6 +31,8 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 .order-details-page .order-details-area ul{float:left;margin-right:20px;}
 .order-details-page .order-details-area li{list-style:none;}
 .order-details-page .order-details-area li:first-child{margin-top:0;}
+.order-details-page .tax-shipping-info{font-size:11px;margin:10px 0;}
+.order-details-page .tax-shipping-info a{text-decoration:underline;}
 .order-details-page .section{text-align:left;padding:10px;margin-bottom:20px;height:auto;}
 .order-details-page .checkout-attributes{text-align:right;vertical-align:middle;padding:10px;height:auto;}
 .order-details-page .cart-total-left{color:#000;}

@@ -316,6 +316,8 @@ td.fieldname{font-size:12px;}
 .wishlist-page .share-info{margin:5px 0;}
 .wishlist-page .share-info .share-label{font-weight:700;}
 .wishlist-page .share-info a.share-link{color:#B80709;text-decoration:none;}
+.wishlist-page .tax-shipping-info{font-size:11px;margin:10px 0;}
+.wishlist-page .tax-shipping-info a{text-decoration:underline;}
 .order-summary-content,.wishlist-content{margin:0;padding:0;font-size:11px;color:#555;}
 .order-summary-content .message-error,.wishlist-content .message-error{margin:5px 0;}
 .order-summary-content .totals{float:left;padding:23px 5px 0;width:320px;}
@@ -500,6 +502,8 @@ td.fieldname{font-size:12px;}
 .order-details-page .order-details-area ul{float:right;margin-right:20px;}
 .order-details-page .order-details-area li{list-style:none;}
 .order-details-page .order-details-area li:first-child{margin-top:0;}
+.order-details-page .tax-shipping-info{font-size:11px;margin:10px 0;}
+.order-details-page .tax-shipping-info a{text-decoration:underline;}
 .order-details-page .repost{margin:10px 0px 10px 0px;}
 .order-details-page .repost .hint{margin:0px;}
 .order-details-page .section{text-align:right;padding:10px;margin-bottom:20px;height:auto;}

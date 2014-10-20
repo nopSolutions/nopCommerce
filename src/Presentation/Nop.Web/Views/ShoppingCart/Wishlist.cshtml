@@ -1,5 +1,8 @@
 ﻿@model WishlistModel
-@using Nop.Web.Models.ShoppingCart;
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.ShoppingCart
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -196,7 +199,16 @@
                             </tr>
                         }
                     </tbody>
-                </table>                
+                </table>
+                if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+                {
+                var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+                //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                //of course, you can modify appropriate locales to include VAT info there
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Wishlist.TaxShipping.InclTax" : "Wishlist.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </div>
+                }
                 <div class="buttons">
                     <div class="common-buttons">
                         @if (Model.IsEditable)

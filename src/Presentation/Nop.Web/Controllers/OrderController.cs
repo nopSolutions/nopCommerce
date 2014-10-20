@@ -256,7 +256,8 @@ namespace Nop.Web.Controllers
             }
             model.DisplayTaxRates = displayTaxRates;
             model.DisplayTax = displayTax;
-
+            model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoOrderDetailsPage;
+            model.PricesIncludeTax = order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax;
 
             //discount (applied to order total)
             var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);

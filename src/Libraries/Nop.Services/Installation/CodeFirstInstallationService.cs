@@ -4540,6 +4540,8 @@ namespace Nop.Services.Installation
                     DisplayTaxShippingInfoFooter = false,
                     DisplayTaxShippingInfoProductDetailsPage = false,
                     DisplayTaxShippingInfoProductBoxes = false,
+                    DisplayTaxShippingInfoWishlist = false,
+                    DisplayTaxShippingInfoOrderDetailsPage = false,
                 });
 
             settingService.SaveSetting(new LocalizationSettings

@@ -1,5 +1,5 @@
 ﻿@model OrderDetailsModel
-@using Nop.Web.Models.Order;
+@using Nop.Web.Models.Order
 @{
     if (!Model.PrintMode)
     {
@@ -350,6 +350,15 @@
                         }
                     </tbody>
                 </table>
+                @if (Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+                {
+                var inclTax = Model.PricesIncludeTax;
+                //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+                //of course, you can modify appropriate locales to include VAT info there
+                <div class="tax-shipping-info">
+                    @T(inclTax ? "Order.TaxShipping.InclTax" : "Order.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+                </div>
+                }
                 @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
                     <div class="checkout-attributes">

@@ -27,6 +27,8 @@ namespace Nop.Web.Models.ShoppingCart
 
         public bool DisplayAddToCart { get; set; }
 
+        public bool DisplayTaxShippingInfo { get; set; }
+
         public IList<ShoppingCartItemModel> Items { get; set; }
 
         public IList<string> Warnings { get; set; }

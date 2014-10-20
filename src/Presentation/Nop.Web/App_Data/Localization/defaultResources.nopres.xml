@@ -4086,6 +4086,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter.Hint">
     <Value>Check to display tax and shipping info in the footer. This option is used in Germany.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoOrderDetailsPage">
+    <Value>Display tax/shipping info (order details page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoOrderDetailsPage.Hint">
+    <Value>Check to display tax and shipping info on the order details page. This option is used in Germany.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductBoxes">
     <Value>Display tax/shipping info (product boxes)</Value>
   </LocaleResource>
@@ -4097,6 +4103,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductDetailsPage.Hint">
     <Value>Check to display tax and shipping info on product details pages. This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist">
+    <Value>Display tax/shipping info (wishlist)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist.Hint">
+    <Value>Check to display tax and shipping info on the wishlist page. This option is used in Germany.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax">
     <Value>Use AJAX to dynamically update prices</Value>
@@ -11697,6 +11709,12 @@
   <LocaleResource Name="Order.TaxRateLine">
     <Value>Tax {0}%</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.TaxShipping.ExclTax">
+    <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxShipping.InclTax">
+    <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Order.TotalDiscount">
     <Value>Discount</Value>
   </LocaleResource>
@@ -13112,6 +13130,12 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.HeaderQuantity">
     <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
+    <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.TaxShipping.InclTax">
+    <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="Wishlist.UpdateCart">
     <Value>Update wishlist</Value>

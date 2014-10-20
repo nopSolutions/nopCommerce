@@ -648,5 +648,25 @@
                 @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, model => model.DisplayTaxShippingInfoWishlist, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoWishlist):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoWishlist)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoWishlist)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoOrderDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+            </td>
+        </tr>
     </table>
 }

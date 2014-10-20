@@ -215,6 +215,30 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Hyperlink">
     <Value>Hyperlink</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist">
+    <Value>Display tax/shipping info (wishlist)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist.Hint">
+    <Value>Check to display tax and shipping info on the wishlist page. This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoOrderDetailsPage">
+    <Value>Display tax/shipping info (order details page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoOrderDetailsPage.Hint">
+    <Value>Check to display tax and shipping info on the order details page. This option is used in Germany.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.TaxShipping.ExclTax">
+    <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.TaxShipping.InclTax">
+    <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxShipping.ExclTax">
+    <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TaxShipping.InclTax">
+    <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1151,4 +1175,20 @@ WHERE [AttributeTypeId] IS NULL
 GO
 
 ALTER TABLE [Product_SpecificationAttribute_Mapping] ALTER COLUMN [AttributeTypeId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytaxshippinginfowishlist')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaytaxshippinginfowishlist', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytaxshippinginfoorderdetailspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaytaxshippinginfoorderdetailspage', N'false', 0)
+END
 GO
