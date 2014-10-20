@@ -101,4 +101,40 @@
             @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CompanyName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CompanyName)
+            @Html.ValidationMessageFor(model => model.CompanyName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CompanyAddress):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CompanyAddress)
+            @Html.ValidationMessageFor(model => model.CompanyAddress)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CompanyPhoneNumber):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CompanyPhoneNumber)
+            @Html.ValidationMessageFor(model => model.CompanyPhoneNumber)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CompanyVat):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CompanyVat)
+            @Html.ValidationMessageFor(model => model.CompanyVat)
+        </td>
+    </tr>
 </table>

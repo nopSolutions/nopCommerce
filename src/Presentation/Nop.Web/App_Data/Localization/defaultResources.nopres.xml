@@ -6057,6 +6057,30 @@
   <LocaleResource Name="Admin.Configuration.Stores.EditStoreDetails">
     <Value>Edit store details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyAddress">
+    <Value>Company address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyAddress.Hint">
+    <Value>Enter your company address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyName">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyName.Hint">
+    <Value>Enter your company name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyPhoneNumber">
+    <Value>Company phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyPhoneNumber.Hint">
+    <Value>Enter your company phone number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat">
+    <Value>Company VAT</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat.Hint">
+    <Value>Enter your company VAT (the European Union Value Added Tax)</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

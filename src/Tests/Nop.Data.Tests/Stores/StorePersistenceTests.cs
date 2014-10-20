@@ -15,7 +15,11 @@ namespace Nop.Data.Tests.Stores
                 Name = "Computer store",
                 Url = "http://www.yourStore.com",
                 Hosts = "yourStore.com,www.yourStore.com",
-                DisplayOrder = 1
+                DisplayOrder = 1,
+                CompanyName = "company name",
+                CompanyAddress = "some address",
+                CompanyPhoneNumber = "123456789",
+                CompanyVat = "some vat",
             };
 
             var fromDb = SaveAndLoadEntity(store);
@@ -24,6 +28,10 @@ namespace Nop.Data.Tests.Stores
             fromDb.Url.ShouldEqual("http://www.yourStore.com");
             fromDb.Hosts.ShouldEqual("yourStore.com,www.yourStore.com");
             fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.CompanyName.ShouldEqual("company name");
+            fromDb.CompanyAddress.ShouldEqual("some address");
+            fromDb.CompanyPhoneNumber.ShouldEqual("123456789");
+            fromDb.CompanyVat.ShouldEqual("some vat");
         }
     }
 }

@@ -1,4 +1,3 @@
-
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Stores
@@ -37,5 +36,25 @@ namespace Nop.Core.Domain.Stores
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets the company name
+        /// </summary>
+        public string CompanyName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the company address
+        /// </summary>
+        public string CompanyAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store phone number
+        /// </summary>
+        public string CompanyPhoneNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the company VAT (used in Europe Union countries)
+        /// </summary>
+        public string CompanyVat { get; set; }
     }
 }

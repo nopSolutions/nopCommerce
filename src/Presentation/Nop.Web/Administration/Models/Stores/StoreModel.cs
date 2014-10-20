@@ -38,6 +38,22 @@ namespace Nop.Admin.Models.Stores
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyName")]
+        [AllowHtml]
+        public string CompanyName { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyAddress")]
+        [AllowHtml]
+        public string CompanyAddress { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyPhoneNumber")]
+        [AllowHtml]
+        public string CompanyPhoneNumber { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.CompanyVat")]
+        [AllowHtml]
+        public string CompanyVat { get; set; }
+
 
         public IList<StoreLocalizedModel> Locales { get; set; }
     }

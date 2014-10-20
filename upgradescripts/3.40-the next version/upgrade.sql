@@ -239,6 +239,30 @@ set @resources='
   <LocaleResource Name="Order.TaxShipping.InclTax">
     <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyName">
+    <Value>Company name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyName.Hint">
+    <Value>Enter your company name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyAddress">
+    <Value>Company address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyAddress.Hint">
+    <Value>Enter your company address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyPhoneNumber">
+    <Value>Company phone number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyPhoneNumber.Hint">
+    <Value>Enter your company phone number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat">
+    <Value>Company VAT</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat.Hint">
+    <Value>Enter your company VAT (the European Union Value Added Tax)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1190,5 +1214,34 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displayt
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.displaytaxshippinginfoorderdetailspage', N'false', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='CompanyName')
+BEGIN
+	ALTER TABLE [Store]
+	ADD [CompanyName] nvarchar(1000) NULL
+END
+GO
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='CompanyAddress')
+BEGIN
+	ALTER TABLE [Store]
+	ADD [CompanyAddress] nvarchar(1000) NULL
+END
+GO
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='CompanyPhoneNumber')
+BEGIN
+	ALTER TABLE [Store]
+	ADD [CompanyPhoneNumber] nvarchar(1000) NULL
+END
+GO
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='CompanyVat')
+BEGIN
+	ALTER TABLE [Store]
+	ADD [CompanyVat] nvarchar(1000) NULL
 END
 GO

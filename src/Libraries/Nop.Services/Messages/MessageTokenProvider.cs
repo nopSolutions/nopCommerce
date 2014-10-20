@@ -502,6 +502,10 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Store.Name", store.GetLocalized(x => x.Name)));
             tokens.Add(new Token("Store.URL", store.Url, true));
             tokens.Add(new Token("Store.Email", emailAccount.Email));
+            tokens.Add(new Token("Store.CompanyName", store.CompanyName));
+            tokens.Add(new Token("Store.CompanyAddress", store.CompanyAddress));
+            tokens.Add(new Token("Store.CompanyPhoneNumber", store.CompanyPhoneNumber));
+            tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
 
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);
@@ -779,6 +783,10 @@ namespace Nop.Services.Messages
                 "%Store.Name%",
                 "%Store.URL%",
                 "%Store.Email%",
+                "%Store.CompanyName%",
+                "%Store.CompanyAddress%",
+                "%Store.CompanyPhoneNumber%",
+                "%Store.CompanyVat%",
                 "%NewsLetterSubscription.Email%",
                 "%NewsLetterSubscription.ActivationUrl%",
                 "%NewsLetterSubscription.DeactivationUrl%"
@@ -793,6 +801,10 @@ namespace Nop.Services.Messages
                 "%Store.Name%",
                 "%Store.URL%",
                 "%Store.Email%",
+                "%Store.CompanyName%",
+                "%Store.CompanyAddress%",
+                "%Store.CompanyPhoneNumber%",
+                "%Store.CompanyVat%",
                 "%Order.OrderNumber%",
                 "%Order.CustomerFullName%",
                 "%Order.CustomerEmail%",
