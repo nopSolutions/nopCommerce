@@ -398,6 +398,7 @@ namespace Nop.Services.Orders
                 //we should not send it for free ($0 total) orders?
                 //remove this "if" statement if you want to send it in this case
                 _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                _workflowMessageService.SendOrderPaidCustomerNotification(order, _localizationSettings.DefaultAdminLanguageId);
             }
 
             //customer roles with "purchased with product" specified
