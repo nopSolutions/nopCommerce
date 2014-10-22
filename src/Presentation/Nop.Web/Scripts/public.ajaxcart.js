@@ -89,7 +89,6 @@ var AjaxCart = {
                     //no timeout for errors
                     displayBarNotification(response.message, 'error', 0);
                 }
-                
             }
             return false;
         }

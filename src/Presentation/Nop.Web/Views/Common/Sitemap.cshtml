@@ -14,7 +14,8 @@
         <div class="entity">
             <div class="entity-body">
                 <ul>
-                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                    <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+                    <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
                     @if (Model.NewsEnabled)
                     {
                         <li><a href="@Url.RouteUrl("NewsArchive")">@T("News")</a></li>
@@ -27,7 +28,8 @@
                     {
                         <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
                     }
-                    <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@T("Account.MyAccount")</a></li>
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                    <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
                     @if (Model.Topics.Count > 0)
                     {
                         foreach (var item in Model.Topics)
