@@ -263,6 +263,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat.Hint">
     <Value>Enter your company VAT (the European Union Value Added Tax)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
 </Language>
 '
 

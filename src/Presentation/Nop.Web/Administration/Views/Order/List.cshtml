@@ -99,6 +99,43 @@
                 @Html.DropDownList("WarehouseId", Model.AvailableWarehouses)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductId):
+            </td>
+            <td class="adminData">
+                <input type="text" id="search-product-name" autocomplete="off" />
+                <span id="search-product-friendly-name"></span>
+                <input type="button" id="search-product-clear" class="k-button" style="display:none;" value="@T("Admin.Common.Clear")" />
+                
+
+                @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
+                <script type="text/javascript">
+                    $(function() {
+                        $('#search-product-name').autocomplete({
+                            delay: 500,
+                            minLength: 3,
+                            source: '@(Url.Action("ProductSearchAutoComplete"))',
+                            select: function(event, ui) {
+                                $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
+                                $('#search-product-friendly-name').text(ui.item.label);
+
+                                $('#search-product-clear').show();
+                                return false;
+                            }
+                        });
+
+                        //remove button
+                        $('#search-product-clear').click(function () {
+                            $('#@Html.FieldIdFor(model => model.ProductId)').val('0');
+                            $('#search-product-friendly-name').text('');
+                            $('#search-product-clear').hide();
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderGuid):
@@ -319,6 +356,7 @@
                             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
+                            ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
                             OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
                         };
                     }

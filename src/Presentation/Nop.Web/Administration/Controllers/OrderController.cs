@@ -198,6 +198,20 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected virtual bool HasAccessToProduct(Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (_workContext.CurrentVendor == null)
+                //not a vendor; has access
+                return true;
+
+            var vendorId = _workContext.CurrentVendor.Id;
+            return product.VendorId == vendorId;
+        }
+
+        [NonAction]
         protected virtual bool HasAccessToShipment(Shipment shipment)
         {
             if (shipment == null)
@@ -813,13 +827,25 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
+		    var filterByProductId = 0;
+		    var product = _productService.GetProductById(model.ProductId);
+		    if (product != null && HasAccessToProduct(product))
+                filterByProductId = model.ProductId;
+
             //load orders
             var orders = _orderService.SearchOrders(storeId: model.StoreId,
-                vendorId: model.VendorId, warehouseId: model.WarehouseId,
-                createdFromUtc: startDateValue, createdToUtc: endDateValue,
-                os: orderStatus, ps: paymentStatus, ss: shippingStatus, 
-                billingEmail: model.CustomerEmail, orderGuid: model.OrderGuid,
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                vendorId: model.VendorId,
+                productId: filterByProductId,
+                warehouseId: model.WarehouseId,
+                createdFromUtc: startDateValue, 
+                createdToUtc: endDateValue,
+                os: orderStatus, 
+                ps: paymentStatus, 
+                ss: shippingStatus, 
+                billingEmail: model.CustomerEmail,
+                orderGuid: model.OrderGuid,
+                pageIndex: command.Page - 1, 
+                pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = orders.Select(x =>
@@ -876,6 +902,36 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", "Order", new { id = order.Id });
         }
 
+        public ActionResult ProductSearchAutoComplete(string term)
+        {
+            const int searchTermMinimumLength = 3;
+            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content("");
+
+            //a vendor should have access only to his products
+            var vendorId = 0;
+            if (_workContext.CurrentVendor != null)
+            {
+                vendorId = _workContext.CurrentVendor.Id;
+            }
+
+            //products
+            const int productNumber = 15;
+            var products = _productService.SearchProducts(
+                vendorId: vendorId,
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true);
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          })
+                          .ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Export / Import

@@ -8367,6 +8367,12 @@
   <LocaleResource Name="Admin.Orders.List.PaymentStatus.Hint">
     <Value>Search by a specific payment status e.g. Paid.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.Product.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.ShippingStatus">
     <Value>Shipping status</Value>
   </LocaleResource>
