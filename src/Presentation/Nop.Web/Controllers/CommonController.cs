@@ -528,18 +528,21 @@ namespace Nop.Web.Controllers
                 {
                     BlogEnabled = _blogSettings.Enabled,
                     ForumEnabled = _forumSettings.ForumsEnabled,
-                    NewsEnabled = _newsSettings.Enabled,    
+                    NewsEnabled = _newsSettings.Enabled,
                 };
+                //categories
                 if (_commonSettings.SitemapIncludeCategories)
                 {
                     var categories = _categoryService.GetAllCategories();
                     model.Categories = categories.Select(x => x.ToModel()).ToList();
                 }
+                //manufacturers
                 if (_commonSettings.SitemapIncludeManufacturers)
                 {
                     var manufacturers = _manufacturerService.GetAllManufacturers();
                     model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
                 }
+                //products
                 if (_commonSettings.SitemapIncludeProducts)
                 {
                     //limit product to 200 until paging is supported on this page
@@ -555,21 +558,20 @@ namespace Nop.Web.Controllers
                         SeName = product.GetSeName(),
                     }).ToList();
                 }
-                if (_commonSettings.SitemapIncludeTopics)
-                {
-                    var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
-                        .ToList()
-                        .FindAll(t => t.IncludeInSitemap);
-                    model.Topics = topics.Select(topic => new TopicModel
-                    {
-                        Id = topic.Id,
-                        SystemName = topic.SystemName,
-                        IncludeInSitemap = topic.IncludeInSitemap,
-                        IsPasswordProtected = topic.IsPasswordProtected,
-                        Title = topic.GetLocalized(x => x.Title),
-                    })
+
+                //topics
+                var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                    .Where(t => t.IncludeInSitemap)
                     .ToList();
-                }
+                model.Topics = topics.Select(topic => new TopicModel
+                {
+                    Id = topic.Id,
+                    SystemName = topic.SystemName,
+                    IncludeInSitemap = topic.IncludeInSitemap,
+                    IsPasswordProtected = topic.IsPasswordProtected,
+                    Title = topic.GetLocalized(x => x.Title),
+                })
+                .ToList();
                 return model;
             });
 

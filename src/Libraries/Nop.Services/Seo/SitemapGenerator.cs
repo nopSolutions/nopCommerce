@@ -98,10 +98,7 @@ namespace Nop.Services.Seo
                 WriteProducts(urlHelper);
             }
             //topics
-            if (_commonSettings.SitemapIncludeTopics)
-            {
-                WriteTopics(urlHelper);
-            }
+            WriteTopics(urlHelper);
         }
 
         private void WriteCategories(UrlHelper urlHelper, int parentCategoryId)
@@ -141,7 +138,9 @@ namespace Nop.Services.Seo
 
         private void WriteTopics(UrlHelper urlHelper)
         {
-            var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id).ToList().FindAll(t => t.IncludeInSitemap);
+            var topics = _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
+                .Where(t => t.IncludeInSitemap)
+                .ToList();
             foreach (var topic in topics)
             {
                 var url = urlHelper.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");

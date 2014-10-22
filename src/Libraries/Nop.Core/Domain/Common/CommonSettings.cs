@@ -20,7 +20,6 @@ namespace Nop.Core.Domain.Common
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
         public bool SitemapIncludeProducts { get; set; }
-        public bool SitemapIncludeTopics { get; set; }
 
         /// <summary>
         /// Gets a sets a value indicating whether to display a warning if java-script is disabled

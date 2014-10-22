@@ -26,7 +26,7 @@ namespace Nop.Services.Catalog
 
             var result = new List<Category>();
 
-            foreach (var cat in source.ToList().FindAll(c => c.ParentCategoryId == parentId))
+            foreach (var cat in source.Where(c => c.ParentCategoryId == parentId).ToList())
             {
                 result.Add(cat);
                 result.AddRange(SortCategoriesForTree(source, cat.Id, true));

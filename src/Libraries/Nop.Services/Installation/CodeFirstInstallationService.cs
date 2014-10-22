@@ -4425,7 +4425,6 @@ namespace Nop.Services.Installation
                     SitemapIncludeCategories = true,
                     SitemapIncludeManufacturers = true,
                     SitemapIncludeProducts = false,
-                    SitemapIncludeTopics = true,
                     DisplayJavaScriptDisabledWarning = false,
                     UseFullTextSearch = false,
                     FullTextMode = FulltextSearchMode.ExactMatch,
