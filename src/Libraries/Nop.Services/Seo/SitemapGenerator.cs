@@ -56,30 +56,30 @@ namespace Nop.Services.Seo
         protected override void GenerateUrlNodes(UrlHelper urlHelper)
         {
             //home page
-            var homePageUrl = urlHelper.RouteUrl("HomePage", "http");
+            var homePageUrl = urlHelper.RouteUrl("HomePage", null, "http");
             WriteUrlLocation(homePageUrl, UpdateFrequency.Weekly, DateTime.UtcNow);
             //search products
-            var productSearchUrl = urlHelper.RouteUrl("ProductSearch", "http");
+            var productSearchUrl = urlHelper.RouteUrl("ProductSearch", null, "http");
             WriteUrlLocation(productSearchUrl, UpdateFrequency.Weekly, DateTime.UtcNow);
             //contact us
-            var contactUsUrl = urlHelper.RouteUrl("ContactUs", "http");
+            var contactUsUrl = urlHelper.RouteUrl("ContactUs", null, "http");
             WriteUrlLocation(contactUsUrl, UpdateFrequency.Weekly, DateTime.UtcNow);
             //news
             if (_newsSettings.Enabled)
             {
-                var url = urlHelper.RouteUrl("NewsArchive", "http");
+                var url = urlHelper.RouteUrl("NewsArchive", null, "http");
                 WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
             //blog
             if (_blogSettings.Enabled)
             {
-                var url = urlHelper.RouteUrl("Blog", "http");
+                var url = urlHelper.RouteUrl("Blog", null, "http");
                 WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
             //blog
             if (_forumSettings.ForumsEnabled)
             {
-                var url = urlHelper.RouteUrl("Boards", "http");
+                var url = urlHelper.RouteUrl("Boards", null, "http");
                 WriteUrlLocation(url, UpdateFrequency.Weekly, DateTime.UtcNow);
             }
             //categories
