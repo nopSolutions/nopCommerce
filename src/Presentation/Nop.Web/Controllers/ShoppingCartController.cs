@@ -2220,7 +2220,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired(FormValueRequirement.StartsWith, "removegiftcard-")]
-        public ActionResult RemoveGiftardCode(FormCollection form)
+        public ActionResult RemoveGiftCardCode(FormCollection form)
         {
             var model = new ShoppingCartModel();
 
