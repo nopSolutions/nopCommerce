@@ -398,7 +398,13 @@ namespace Nop.Services.Orders
                 //we should not send it for free ($0 total) orders?
                 //remove this "if" statement if you want to send it in this case
                 _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-                _workflowMessageService.SendOrderPaidCustomerNotification(order, _localizationSettings.DefaultAdminLanguageId);
+                _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId);
+                var vendors = GetVendorsInOrder(order);
+                foreach (var vendor in vendors)
+                {
+                    _workflowMessageService.SendOrderPaidVendorNotification(order, vendor, _localizationSettings.DefaultAdminLanguageId);
+                }
+                //TODO add "order paid email sent" order note
             }
 
             //customer roles with "purchased with product" specified
@@ -453,6 +459,32 @@ namespace Nop.Services.Orders
             }
         }
 
+        /// <summary>
+        /// Get a list of vendors in order (order items)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Vendors</returns>
+        protected virtual IList<Vendor> GetVendorsInOrder(Order order)
+        {
+            var vendors = new List<Vendor>();
+            foreach (var orderItem in order.OrderItems)
+            {
+                var vendorId = orderItem.Product.VendorId;
+                //find existing
+                var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
+                if (vendor == null)
+                {
+                    //not found. load by Id
+                    vendor = _vendorService.GetVendorById(vendorId);
+                    if (vendor != null && !vendor.Deleted && vendor.Active)
+                    {
+                        vendors.Add(vendor);
+                    }
+                }
+            }
+
+            return vendors;
+        }
         #endregion
 
         #region Methods
@@ -1391,22 +1423,7 @@ namespace Nop.Services.Orders
                             _orderService.UpdateOrder(order);
                         }
 
-                        var vendors = new List<Vendor>();
-                        foreach (var orderItem in order.OrderItems)
-                        {
-                            var vendorId = orderItem.Product.VendorId;
-                            //find existing
-                            var vendor = vendors.FirstOrDefault(v => v.Id == vendorId);
-                            if (vendor == null)
-                            {
-                                //not found. load by Id
-                                vendor = _vendorService.GetVendorById(vendorId);
-                                if (vendor != null && !vendor.Deleted && vendor.Active)
-                                {
-                                    vendors.Add(vendor);
-                                }
-                            }
-                        }
+                        var vendors = GetVendorsInOrder(order);
                         foreach (var vendor in vendors)
                         {
                             int orderPlacedVendorNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedVendorNotification(order, vendor, order.CustomerLanguageId);
