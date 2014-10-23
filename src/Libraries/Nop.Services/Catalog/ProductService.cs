@@ -1149,7 +1149,7 @@ namespace Nop.Services.Catalog
         /// Adjust inventory
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="quantityToChange">Quantity to increase to descrease</param>
+        /// <param name="quantityToChange">Quantity to increase or descrease</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         public virtual void AdjustInventory(Product product, int quantityToChange, string attributesXml = "")
         {
