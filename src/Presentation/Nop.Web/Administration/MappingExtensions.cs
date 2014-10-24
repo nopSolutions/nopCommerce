@@ -53,21 +53,31 @@ namespace Nop.Admin
 {
     public static class MappingExtensions
     {
+        public static TDestination MapTo<TSource, TDestination>(this TSource source)
+        {
+            return Mapper.Map<TSource, TDestination>(source);
+        }
+
+        public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
+        {
+            return Mapper.Map(source, destination);
+        }
+        
         #region Category
 
         public static CategoryModel ToModel(this Category entity)
         {
-            return Mapper.Map<Category, CategoryModel>(entity);
+            return entity.MapTo<Category, CategoryModel>();
         }
 
         public static Category ToEntity(this CategoryModel model)
         {
-            return Mapper.Map<CategoryModel, Category>(model);
+            return model.MapTo<CategoryModel, Category>();
         }
 
         public static Category ToEntity(this CategoryModel model, Category destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -76,17 +86,17 @@ namespace Nop.Admin
 
         public static ManufacturerModel ToModel(this Manufacturer entity)
         {
-            return Mapper.Map<Manufacturer, ManufacturerModel>(entity);
+            return entity.MapTo<Manufacturer, ManufacturerModel>();
         }
 
         public static Manufacturer ToEntity(this ManufacturerModel model)
         {
-            return Mapper.Map<ManufacturerModel, Manufacturer>(model);
+            return model.MapTo<ManufacturerModel, Manufacturer>();
         }
 
         public static Manufacturer ToEntity(this ManufacturerModel model, Manufacturer destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -95,17 +105,17 @@ namespace Nop.Admin
 
         public static VendorModel ToModel(this Vendor entity)
         {
-            return Mapper.Map<Vendor, VendorModel>(entity);
+            return entity.MapTo<Vendor, VendorModel>();
         }
 
         public static Vendor ToEntity(this VendorModel model)
         {
-            return Mapper.Map<VendorModel, Vendor>(model);
+            return model.MapTo<VendorModel, Vendor>();
         }
 
         public static Vendor ToEntity(this VendorModel model, Vendor destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -114,17 +124,17 @@ namespace Nop.Admin
 
         public static ProductModel ToModel(this Product entity)
         {
-            return Mapper.Map<Product, ProductModel>(entity);
+            return entity.MapTo<Product, ProductModel>();
         }
 
         public static Product ToEntity(this ProductModel model)
         {
-            return Mapper.Map<ProductModel, Product>(model);
+            return model.MapTo<ProductModel, Product>();
         }
 
         public static Product ToEntity(this ProductModel model, Product destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -133,17 +143,17 @@ namespace Nop.Admin
 
         public static ProductAttributeModel ToModel(this ProductAttribute entity)
         {
-            return Mapper.Map<ProductAttribute, ProductAttributeModel>(entity);
+            return entity.MapTo<ProductAttribute, ProductAttributeModel>();
         }
 
         public static ProductAttribute ToEntity(this ProductAttributeModel model)
         {
-            return Mapper.Map<ProductAttributeModel, ProductAttribute>(model);
+            return model.MapTo<ProductAttributeModel, ProductAttribute>();
         }
 
         public static ProductAttribute ToEntity(this ProductAttributeModel model, ProductAttribute destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -153,33 +163,33 @@ namespace Nop.Admin
         //attributes
         public static SpecificationAttributeModel ToModel(this SpecificationAttribute entity)
         {
-            return Mapper.Map<SpecificationAttribute, SpecificationAttributeModel>(entity);
+            return entity.MapTo<SpecificationAttribute, SpecificationAttributeModel>();
         }
 
         public static SpecificationAttribute ToEntity(this SpecificationAttributeModel model)
         {
-            return Mapper.Map<SpecificationAttributeModel, SpecificationAttribute>(model);
+            return model.MapTo<SpecificationAttributeModel, SpecificationAttribute>();
         }
 
         public static SpecificationAttribute ToEntity(this SpecificationAttributeModel model, SpecificationAttribute destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         //attribute options
         public static SpecificationAttributeOptionModel ToModel(this SpecificationAttributeOption entity)
         {
-            return Mapper.Map<SpecificationAttributeOption, SpecificationAttributeOptionModel>(entity);
+            return entity.MapTo<SpecificationAttributeOption, SpecificationAttributeOptionModel>();
         }
 
         public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model)
         {
-            return Mapper.Map<SpecificationAttributeOptionModel, SpecificationAttributeOption>(model);
+            return model.MapTo<SpecificationAttributeOptionModel, SpecificationAttributeOption>();
         }
 
         public static SpecificationAttributeOption ToEntity(this SpecificationAttributeOptionModel model, SpecificationAttributeOption destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         #endregion
 
@@ -188,17 +198,17 @@ namespace Nop.Admin
         //attributes
         public static CheckoutAttributeModel ToModel(this CheckoutAttribute entity)
         {
-            return Mapper.Map<CheckoutAttribute, CheckoutAttributeModel>(entity);
+            return entity.MapTo<CheckoutAttribute, CheckoutAttributeModel>();
         }
 
         public static CheckoutAttribute ToEntity(this CheckoutAttributeModel model)
         {
-            return Mapper.Map<CheckoutAttributeModel, CheckoutAttribute>(model);
+            return model.MapTo<CheckoutAttributeModel, CheckoutAttribute>();
         }
 
         public static CheckoutAttribute ToEntity(this CheckoutAttributeModel model, CheckoutAttribute destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -208,17 +218,17 @@ namespace Nop.Admin
         //attributes
         public static CustomerAttributeModel ToModel(this CustomerAttribute entity)
         {
-            return Mapper.Map<CustomerAttribute, CustomerAttributeModel>(entity);
+            return entity.MapTo<CustomerAttribute, CustomerAttributeModel>();
         }
 
         public static CustomerAttribute ToEntity(this CustomerAttributeModel model)
         {
-            return Mapper.Map<CustomerAttributeModel, CustomerAttribute>(model);
+            return model.MapTo<CustomerAttributeModel, CustomerAttribute>();
         }
 
         public static CustomerAttribute ToEntity(this CustomerAttributeModel model, CustomerAttribute destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -227,17 +237,17 @@ namespace Nop.Admin
 
         public static LanguageModel ToModel(this Language entity)
         {
-            return Mapper.Map<Language, LanguageModel>(entity);
+            return entity.MapTo<Language, LanguageModel>();
         }
 
         public static Language ToEntity(this LanguageModel model)
         {
-            return Mapper.Map<LanguageModel, Language>(model);
+            return model.MapTo<LanguageModel, Language>();
         }
 
         public static Language ToEntity(this LanguageModel model, Language destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         
         #endregion
@@ -246,17 +256,17 @@ namespace Nop.Admin
 
         public static EmailAccountModel ToModel(this EmailAccount entity)
         {
-            return Mapper.Map<EmailAccount, EmailAccountModel>(entity);
+            return entity.MapTo<EmailAccount, EmailAccountModel>();
         }
 
         public static EmailAccount ToEntity(this EmailAccountModel model)
         {
-            return Mapper.Map<EmailAccountModel, EmailAccount>(model);
+            return model.MapTo<EmailAccountModel, EmailAccount>();
         }
 
         public static EmailAccount ToEntity(this EmailAccountModel model, EmailAccount destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -265,17 +275,17 @@ namespace Nop.Admin
 
         public static MessageTemplateModel ToModel(this MessageTemplate entity)
         {
-            return Mapper.Map<MessageTemplate, MessageTemplateModel>(entity);
+            return entity.MapTo<MessageTemplate, MessageTemplateModel>();
         }
 
         public static MessageTemplate ToEntity(this MessageTemplateModel model)
         {
-            return Mapper.Map<MessageTemplateModel, MessageTemplate>(model);
+            return model.MapTo<MessageTemplateModel, MessageTemplate>();
         }
 
         public static MessageTemplate ToEntity(this MessageTemplateModel model, MessageTemplate destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -284,17 +294,17 @@ namespace Nop.Admin
 
         public static QueuedEmailModel ToModel(this QueuedEmail entity)
         {
-            return Mapper.Map<QueuedEmail, QueuedEmailModel>(entity);
+            return entity.MapTo<QueuedEmail, QueuedEmailModel>();
         }
 
         public static QueuedEmail ToEntity(this QueuedEmailModel model)
         {
-            return Mapper.Map<QueuedEmailModel, QueuedEmail>(model);
+            return model.MapTo<QueuedEmailModel, QueuedEmail>();
         }
 
         public static QueuedEmail ToEntity(this QueuedEmailModel model, QueuedEmail destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -303,17 +313,17 @@ namespace Nop.Admin
 
         public static CampaignModel ToModel(this Campaign entity)
         {
-            return Mapper.Map<Campaign, CampaignModel>(entity);
+            return entity.MapTo<Campaign, CampaignModel>();
         }
 
         public static Campaign ToEntity(this CampaignModel model)
         {
-            return Mapper.Map<CampaignModel, Campaign>(model);
+            return model.MapTo<CampaignModel, Campaign>();
         }
 
         public static Campaign ToEntity(this CampaignModel model, Campaign destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -322,17 +332,17 @@ namespace Nop.Admin
 
         public static TopicModel ToModel(this Topic entity)
         {
-            return Mapper.Map<Topic, TopicModel>(entity);
+            return entity.MapTo<Topic, TopicModel>();
         }
 
         public static Topic ToEntity(this TopicModel model)
         {
-            return Mapper.Map<TopicModel, Topic>(model);
+            return model.MapTo<TopicModel, Topic>();
         }
 
         public static Topic ToEntity(this TopicModel model, Topic destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -341,27 +351,27 @@ namespace Nop.Admin
 
         public static LogModel ToModel(this Log entity)
         {
-            return Mapper.Map<Log, LogModel>(entity);
+            return entity.MapTo<Log, LogModel>();
         }
 
         public static Log ToEntity(this LogModel model)
         {
-            return Mapper.Map<LogModel, Log>(model);
+            return model.MapTo<LogModel, Log>();
         }
 
         public static Log ToEntity(this LogModel model, Log destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         public static ActivityLogTypeModel ToModel(this ActivityLogType entity)
         {
-            return Mapper.Map<ActivityLogType, ActivityLogTypeModel>(entity);
+            return entity.MapTo<ActivityLogType, ActivityLogTypeModel>();
         }
 
         public static ActivityLogModel ToModel(this ActivityLog entity)
         {
-            return Mapper.Map<ActivityLog, ActivityLogModel>(entity);
+            return entity.MapTo<ActivityLog, ActivityLogModel>();
         }
 
         #endregion
@@ -370,17 +380,17 @@ namespace Nop.Admin
 
         public static CurrencyModel ToModel(this Currency entity)
         {
-            return Mapper.Map<Currency, CurrencyModel>(entity);
+            return entity.MapTo<Currency, CurrencyModel>();
         }
 
         public static Currency ToEntity(this CurrencyModel model)
         {
-            return Mapper.Map<CurrencyModel, Currency>(model);
+            return model.MapTo<CurrencyModel, Currency>();
         }
 
         public static Currency ToEntity(this CurrencyModel model, Currency destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         #endregion
 
@@ -388,17 +398,17 @@ namespace Nop.Admin
 
         public static MeasureWeightModel ToModel(this MeasureWeight entity)
         {
-            return Mapper.Map<MeasureWeight, MeasureWeightModel>(entity);
+            return entity.MapTo<MeasureWeight, MeasureWeightModel>();
         }
 
         public static MeasureWeight ToEntity(this MeasureWeightModel model)
         {
-            return Mapper.Map<MeasureWeightModel, MeasureWeight>(model);
+            return model.MapTo<MeasureWeightModel, MeasureWeight>();
         }
 
         public static MeasureWeight ToEntity(this MeasureWeightModel model, MeasureWeight destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -407,17 +417,17 @@ namespace Nop.Admin
 
         public static MeasureDimensionModel ToModel(this MeasureDimension entity)
         {
-            return Mapper.Map<MeasureDimension, MeasureDimensionModel>(entity);
+            return entity.MapTo<MeasureDimension, MeasureDimensionModel>();
         }
 
         public static MeasureDimension ToEntity(this MeasureDimensionModel model)
         {
-            return Mapper.Map<MeasureDimensionModel, MeasureDimension>(model);
+            return model.MapTo<MeasureDimensionModel, MeasureDimension>();
         }
 
         public static MeasureDimension ToEntity(this MeasureDimensionModel model, MeasureDimension destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -426,7 +436,7 @@ namespace Nop.Admin
 
         public static TaxProviderModel ToModel(this ITaxProvider entity)
         {
-            return Mapper.Map<ITaxProvider, TaxProviderModel>(entity);
+            return entity.MapTo<ITaxProvider, TaxProviderModel>();
         }
 
         #endregion
@@ -435,17 +445,17 @@ namespace Nop.Admin
 
         public static TaxCategoryModel ToModel(this TaxCategory entity)
         {
-            return Mapper.Map<TaxCategory, TaxCategoryModel>(entity);
+            return entity.MapTo<TaxCategory, TaxCategoryModel>();
         }
 
         public static TaxCategory ToEntity(this TaxCategoryModel model)
         {
-            return Mapper.Map<TaxCategoryModel, TaxCategory>(model);
+            return model.MapTo<TaxCategoryModel, TaxCategory>();
         }
 
         public static TaxCategory ToEntity(this TaxCategoryModel model, TaxCategory destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -454,7 +464,7 @@ namespace Nop.Admin
 
         public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
         {
-            return Mapper.Map<IShippingRateComputationMethod, ShippingRateComputationMethodModel>(entity);
+            return entity.MapTo<IShippingRateComputationMethod, ShippingRateComputationMethodModel>();
         }
 
         #endregion
@@ -463,17 +473,17 @@ namespace Nop.Admin
 
         public static ShippingMethodModel ToModel(this ShippingMethod entity)
         {
-            return Mapper.Map<ShippingMethod, ShippingMethodModel>(entity);
+            return entity.MapTo<ShippingMethod, ShippingMethodModel>();
         }
 
         public static ShippingMethod ToEntity(this ShippingMethodModel model)
         {
-            return Mapper.Map<ShippingMethodModel, ShippingMethod>(model);
+            return model.MapTo<ShippingMethodModel, ShippingMethod>();
         }
 
         public static ShippingMethod ToEntity(this ShippingMethodModel model, ShippingMethod destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -482,17 +492,17 @@ namespace Nop.Admin
 
         public static DeliveryDateModel ToModel(this DeliveryDate entity)
         {
-            return Mapper.Map<DeliveryDate, DeliveryDateModel>(entity);
+            return entity.MapTo<DeliveryDate, DeliveryDateModel>();
         }
 
         public static DeliveryDate ToEntity(this DeliveryDateModel model)
         {
-            return Mapper.Map<DeliveryDateModel, DeliveryDate>(model);
+            return model.MapTo<DeliveryDateModel, DeliveryDate>();
         }
 
         public static DeliveryDate ToEntity(this DeliveryDateModel model, DeliveryDate destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -501,7 +511,7 @@ namespace Nop.Admin
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
         {
-            return Mapper.Map<IPaymentMethod, PaymentMethodModel>(entity);
+            return entity.MapTo<IPaymentMethod, PaymentMethodModel>();
         }
 
         #endregion
@@ -510,7 +520,7 @@ namespace Nop.Admin
 
         public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
         {
-            return Mapper.Map<IExternalAuthenticationMethod, AuthenticationMethodModel>(entity);
+            return entity.MapTo<IExternalAuthenticationMethod, AuthenticationMethodModel>();
         }
 
         #endregion
@@ -519,7 +529,7 @@ namespace Nop.Admin
 
         public static WidgetModel ToModel(this IWidgetPlugin entity)
         {
-            return Mapper.Map<IWidgetPlugin, WidgetModel>(entity);
+            return entity.MapTo<IWidgetPlugin, WidgetModel>();
         }
 
         #endregion
@@ -528,17 +538,17 @@ namespace Nop.Admin
 
         public static AddressModel ToModel(this Address entity)
         {
-            return Mapper.Map<Address, AddressModel>(entity);
+            return entity.MapTo<Address, AddressModel>();
         }
 
         public static Address ToEntity(this AddressModel model)
         {
-            return Mapper.Map<AddressModel, Address>(model);
+            return model.MapTo<AddressModel, Address>();
         }
 
         public static Address ToEntity(this AddressModel model, Address destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -547,17 +557,17 @@ namespace Nop.Admin
 
         public static NewsLetterSubscriptionModel ToModel(this NewsLetterSubscription entity)
         {
-            return Mapper.Map<NewsLetterSubscription, NewsLetterSubscriptionModel>(entity);
+            return entity.MapTo<NewsLetterSubscription, NewsLetterSubscriptionModel>();
         }
 
         public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model)
         {
-            return Mapper.Map<NewsLetterSubscriptionModel, NewsLetterSubscription>(model);
+            return model.MapTo<NewsLetterSubscriptionModel, NewsLetterSubscription>();
         }
 
         public static NewsLetterSubscription ToEntity(this NewsLetterSubscriptionModel model, NewsLetterSubscription destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -566,17 +576,17 @@ namespace Nop.Admin
 
         public static DiscountModel ToModel(this Discount entity)
         {
-            return Mapper.Map<Discount, DiscountModel>(entity);
+            return entity.MapTo<Discount, DiscountModel>();
         }
 
         public static Discount ToEntity(this DiscountModel model)
         {
-            return Mapper.Map<DiscountModel, Discount>(model);
+            return model.MapTo<DiscountModel, Discount>();
         }
 
         public static Discount ToEntity(this DiscountModel model, Discount destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -586,32 +596,32 @@ namespace Nop.Admin
         //forum groups
         public static ForumGroupModel ToModel(this ForumGroup entity)
         {
-            return Mapper.Map<ForumGroup, ForumGroupModel>(entity);
+            return entity.MapTo<ForumGroup, ForumGroupModel>();
         }
 
         public static ForumGroup ToEntity(this ForumGroupModel model)
         {
-            return Mapper.Map<ForumGroupModel, ForumGroup>(model);
+            return model.MapTo<ForumGroupModel, ForumGroup>();
         }
 
         public static ForumGroup ToEntity(this ForumGroupModel model, ForumGroup destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         //forums
         public static ForumModel ToModel(this Forum entity)
         {
-            return Mapper.Map<Forum, ForumModel>(entity);
+            return entity.MapTo<Forum, ForumModel>();
         }
 
         public static Forum ToEntity(this ForumModel model)
         {
-            return Mapper.Map<ForumModel, Forum>(model);
+            return model.MapTo<ForumModel, Forum>();
         }
 
         public static Forum ToEntity(this ForumModel model, Forum destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         #endregion
 
@@ -620,17 +630,17 @@ namespace Nop.Admin
         //blog posts
         public static BlogPostModel ToModel(this BlogPost entity)
         {
-            return Mapper.Map<BlogPost, BlogPostModel>(entity);
+            return entity.MapTo<BlogPost, BlogPostModel>();
         }
 
         public static BlogPost ToEntity(this BlogPostModel model)
         {
-            return Mapper.Map<BlogPostModel, BlogPost>(model);
+            return model.MapTo<BlogPostModel, BlogPost>();
         }
 
         public static BlogPost ToEntity(this BlogPostModel model, BlogPost destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -640,17 +650,17 @@ namespace Nop.Admin
         //news items
         public static NewsItemModel ToModel(this NewsItem entity)
         {
-            return Mapper.Map<NewsItem, NewsItemModel>(entity);
+            return entity.MapTo<NewsItem, NewsItemModel>();
         }
 
         public static NewsItem ToEntity(this NewsItemModel model)
         {
-            return Mapper.Map<NewsItemModel, NewsItem>(model);
+            return model.MapTo<NewsItemModel, NewsItem>();
         }
 
         public static NewsItem ToEntity(this NewsItemModel model, NewsItem destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -660,36 +670,37 @@ namespace Nop.Admin
         //news items
         public static PollModel ToModel(this Poll entity)
         {
-            return Mapper.Map<Poll, PollModel>(entity);
+            return entity.MapTo<Poll, PollModel>();
         }
 
         public static Poll ToEntity(this PollModel model)
         {
-            return Mapper.Map<PollModel, Poll>(model);
+            return model.MapTo<PollModel, Poll>();
         }
 
         public static Poll ToEntity(this PollModel model, Poll destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
 
-        #region Customers/users/customer roles
+        #region Customer roles
+
         //customer roles
         public static CustomerRoleModel ToModel(this CustomerRole entity)
         {
-            return Mapper.Map<CustomerRole, CustomerRoleModel>(entity);
+            return entity.MapTo<CustomerRole, CustomerRoleModel>();
         }
 
         public static CustomerRole ToEntity(this CustomerRoleModel model)
         {
-            return Mapper.Map<CustomerRoleModel, CustomerRole>(model);
+            return model.MapTo<CustomerRoleModel, CustomerRole>();
         }
 
         public static CustomerRole ToEntity(this CustomerRoleModel model, CustomerRole destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -698,17 +709,17 @@ namespace Nop.Admin
 
         public static GiftCardModel ToModel(this GiftCard entity)
         {
-            return Mapper.Map<GiftCard, GiftCardModel>(entity);
+            return entity.MapTo<GiftCard, GiftCardModel>();
         }
 
         public static GiftCard ToEntity(this GiftCardModel model)
         {
-            return Mapper.Map<GiftCardModel, GiftCard>(model);
+            return model.MapTo<GiftCardModel, GiftCard>();
         }
 
         public static GiftCard ToEntity(this GiftCardModel model, GiftCard destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -717,32 +728,32 @@ namespace Nop.Admin
 
         public static CountryModel ToModel(this Country entity)
         {
-            return Mapper.Map<Country, CountryModel>(entity);
+            return entity.MapTo<Country, CountryModel>();
         }
 
         public static Country ToEntity(this CountryModel model)
         {
-            return Mapper.Map<CountryModel, Country>(model);
+            return model.MapTo<CountryModel, Country>();
         }
 
         public static Country ToEntity(this CountryModel model, Country destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         public static StateProvinceModel ToModel(this StateProvince entity)
         {
-            return Mapper.Map<StateProvince, StateProvinceModel>(entity);
+            return entity.MapTo<StateProvince, StateProvinceModel>();
         }
 
         public static StateProvince ToEntity(this StateProvinceModel model)
         {
-            return Mapper.Map<StateProvinceModel, StateProvince>(model);
+            return model.MapTo<StateProvinceModel, StateProvince>();
         }
 
         public static StateProvince ToEntity(this StateProvinceModel model, StateProvince destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
@@ -752,181 +763,129 @@ namespace Nop.Admin
 
         public static TaxSettingsModel ToModel(this TaxSettings entity)
         {
-            return Mapper.Map<TaxSettings, TaxSettingsModel>(entity);
-        }
-        public static TaxSettings ToEntity(this TaxSettingsModel model)
-        {
-            return Mapper.Map<TaxSettingsModel, TaxSettings>(model);
+            return entity.MapTo<TaxSettings, TaxSettingsModel>();
         }
         public static TaxSettings ToEntity(this TaxSettingsModel model, TaxSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static ShippingSettingsModel ToModel(this ShippingSettings entity)
         {
-            return Mapper.Map<ShippingSettings, ShippingSettingsModel>(entity);
-        }
-        public static ShippingSettings ToEntity(this ShippingSettingsModel model)
-        {
-            return Mapper.Map<ShippingSettingsModel, ShippingSettings>(model);
+            return entity.MapTo<ShippingSettings, ShippingSettingsModel>();
         }
         public static ShippingSettings ToEntity(this ShippingSettingsModel model, ShippingSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static ForumSettingsModel ToModel(this ForumSettings entity)
         {
-            return Mapper.Map<ForumSettings, ForumSettingsModel>(entity);
-        }
-        public static ForumSettings ToEntity(this ForumSettingsModel model)
-        {
-            return Mapper.Map<ForumSettingsModel, ForumSettings>(model);
+            return entity.MapTo<ForumSettings, ForumSettingsModel>();
         }
         public static ForumSettings ToEntity(this ForumSettingsModel model, ForumSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static BlogSettingsModel ToModel(this BlogSettings entity)
         {
-            return Mapper.Map<BlogSettings, BlogSettingsModel>(entity);
-        }
-        public static BlogSettings ToEntity(this BlogSettingsModel model)
-        {
-            return Mapper.Map<BlogSettingsModel, BlogSettings>(model);
+            return entity.MapTo<BlogSettings, BlogSettingsModel>();
         }
         public static BlogSettings ToEntity(this BlogSettingsModel model, BlogSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static VendorSettingsModel ToModel(this VendorSettings entity)
         {
-            return Mapper.Map<VendorSettings, VendorSettingsModel>(entity);
-        }
-        public static VendorSettings ToEntity(this VendorSettingsModel model)
-        {
-            return Mapper.Map<VendorSettingsModel, VendorSettings>(model);
+            return entity.MapTo<VendorSettings, VendorSettingsModel>();
         }
         public static VendorSettings ToEntity(this VendorSettingsModel model, VendorSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static NewsSettingsModel ToModel(this NewsSettings entity)
         {
-            return Mapper.Map<NewsSettings, NewsSettingsModel>(entity);
-        }
-        public static NewsSettings ToEntity(this NewsSettingsModel model)
-        {
-            return Mapper.Map<NewsSettingsModel, NewsSettings>(model);
+            return entity.MapTo<NewsSettings, NewsSettingsModel>();
         }
         public static NewsSettings ToEntity(this NewsSettingsModel model, NewsSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static CatalogSettingsModel ToModel(this CatalogSettings entity)
         {
-            return Mapper.Map<CatalogSettings, CatalogSettingsModel>(entity);
-        }
-        public static CatalogSettings ToEntity(this CatalogSettingsModel model)
-        {
-            return Mapper.Map<CatalogSettingsModel, CatalogSettings>(model);
+            return entity.MapTo<CatalogSettings, CatalogSettingsModel>();
         }
         public static CatalogSettings ToEntity(this CatalogSettingsModel model, CatalogSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static RewardPointsSettingsModel ToModel(this RewardPointsSettings entity)
         {
-            return Mapper.Map<RewardPointsSettings, RewardPointsSettingsModel>(entity);
-        }
-        public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model)
-        {
-            return Mapper.Map<RewardPointsSettingsModel, RewardPointsSettings>(model);
+            return entity.MapTo<RewardPointsSettings, RewardPointsSettingsModel>();
         }
         public static RewardPointsSettings ToEntity(this RewardPointsSettingsModel model, RewardPointsSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static OrderSettingsModel ToModel(this OrderSettings entity)
         {
-            return Mapper.Map<OrderSettings, OrderSettingsModel>(entity);
-        }
-        public static OrderSettings ToEntity(this OrderSettingsModel model)
-        {
-            return Mapper.Map<OrderSettingsModel, OrderSettings>(model);
+            return entity.MapTo<OrderSettings, OrderSettingsModel>();
         }
         public static OrderSettings ToEntity(this OrderSettingsModel model, OrderSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static ShoppingCartSettingsModel ToModel(this ShoppingCartSettings entity)
         {
-            return Mapper.Map<ShoppingCartSettings, ShoppingCartSettingsModel>(entity);
-        }
-        public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model)
-        {
-            return Mapper.Map<ShoppingCartSettingsModel, ShoppingCartSettings>(model);
+            return entity.MapTo<ShoppingCartSettings, ShoppingCartSettingsModel>();
         }
         public static ShoppingCartSettings ToEntity(this ShoppingCartSettingsModel model, ShoppingCartSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static MediaSettingsModel ToModel(this MediaSettings entity)
         {
-            return Mapper.Map<MediaSettings, MediaSettingsModel>(entity);
-        }
-        public static MediaSettings ToEntity(this MediaSettingsModel model)
-        {
-            return Mapper.Map<MediaSettingsModel, MediaSettings>(model);
+            return entity.MapTo<MediaSettings, MediaSettingsModel>();
         }
         public static MediaSettings ToEntity(this MediaSettingsModel model, MediaSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         //customer/user settings
         public static CustomerUserSettingsModel.CustomerSettingsModel ToModel(this CustomerSettings entity)
         {
-            return Mapper.Map<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>(entity);
-        }
-        public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model)
-        {
-            return Mapper.Map<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>(model);
+            return entity.MapTo<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>();
         }
         public static CustomerSettings ToEntity(this CustomerUserSettingsModel.CustomerSettingsModel model, CustomerSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
         {
-            return Mapper.Map<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>(entity);
-        }
-        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model)
-        {
-            return Mapper.Map<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>(model);
+            return entity.MapTo<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>();
         }
         public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         #endregion
 
@@ -934,7 +893,7 @@ namespace Nop.Admin
 
         public static PluginModel ToModel(this PluginDescriptor entity)
         {
-            return Mapper.Map<PluginDescriptor, PluginModel>(entity);
+            return entity.MapTo<PluginDescriptor, PluginModel>();
         }
 
         #endregion
@@ -943,17 +902,17 @@ namespace Nop.Admin
 
         public static StoreModel ToModel(this Store entity)
         {
-            return Mapper.Map<Store, StoreModel>(entity);
+            return entity.MapTo<Store, StoreModel>();
         }
 
         public static Store ToEntity(this StoreModel model)
         {
-            return Mapper.Map<StoreModel, Store>(model);
+            return model.MapTo<StoreModel, Store>();
         }
 
         public static Store ToEntity(this StoreModel model, Store destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
         #endregion
@@ -962,49 +921,49 @@ namespace Nop.Admin
 
         public static CategoryTemplateModel ToModel(this CategoryTemplate entity)
         {
-            return Mapper.Map<CategoryTemplate, CategoryTemplateModel>(entity);
+            return entity.MapTo<CategoryTemplate, CategoryTemplateModel>();
         }
 
         public static CategoryTemplate ToEntity(this CategoryTemplateModel model)
         {
-            return Mapper.Map<CategoryTemplateModel, CategoryTemplate>(model);
+            return model.MapTo<CategoryTemplateModel, CategoryTemplate>();
         }
 
         public static CategoryTemplate ToEntity(this CategoryTemplateModel model, CategoryTemplate destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static ManufacturerTemplateModel ToModel(this ManufacturerTemplate entity)
         {
-            return Mapper.Map<ManufacturerTemplate, ManufacturerTemplateModel>(entity);
+            return entity.MapTo<ManufacturerTemplate, ManufacturerTemplateModel>();
         }
 
         public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model)
         {
-            return Mapper.Map<ManufacturerTemplateModel, ManufacturerTemplate>(model);
+            return model.MapTo<ManufacturerTemplateModel, ManufacturerTemplate>();
         }
 
         public static ManufacturerTemplate ToEntity(this ManufacturerTemplateModel model, ManufacturerTemplate destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
 
 
         public static ProductTemplateModel ToModel(this ProductTemplate entity)
         {
-            return Mapper.Map<ProductTemplate, ProductTemplateModel>(entity);
+            return entity.MapTo<ProductTemplate, ProductTemplateModel>();
         }
 
         public static ProductTemplate ToEntity(this ProductTemplateModel model)
         {
-            return Mapper.Map<ProductTemplateModel, ProductTemplate>(model);
+            return model.MapTo<ProductTemplateModel, ProductTemplate>();
         }
 
         public static ProductTemplate ToEntity(this ProductTemplateModel model, ProductTemplate destination)
         {
-            return Mapper.Map(model, destination);
+            return model.MapTo(destination);
         }
         #endregion
 
