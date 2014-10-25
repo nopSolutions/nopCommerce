@@ -1628,6 +1628,17 @@
             </summary>
             <value>The collection's items converter.</value>
         </member>
+        <member name="P:Newtonsoft.Json.JsonContainerAttribute.ItemConverterParameters">
+            <summary>
+            The parameter list to use when constructing the JsonConverter described by ItemConverterType.
+            If null, the default constructor is used.
+            When non-null, there must be a constructor defined in the JsonConverter that exactly matches the number,
+            order, and type of these parameters.
+            </summary>
+            <example>
+            [JsonContainer(ItemConverterType = typeof(MyContainerConverter), ItemConverterParameters = new object[] { 123, "Four" })]
+            </example>
+        </member>
         <member name="P:Newtonsoft.Json.JsonContainerAttribute.IsReference">
             <summary>
             Gets or sets a value that indicates whether to preserve object references.
@@ -3627,11 +3638,24 @@
             </summary>
             <param name="converterType">Type of the converter.</param>
         </member>
+        <member name="M:Newtonsoft.Json.JsonConverterAttribute.#ctor(System.Type,System.Object[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Newtonsoft.Json.JsonConverterAttribute"/> class.
+            </summary>
+            <param name="converterType">Type of the converter.</param>
+            <param name="converterParameters">Parameter list to use when constructing the JsonConverter.  Can be null.</param>
+        </member>
         <member name="P:Newtonsoft.Json.JsonConverterAttribute.ConverterType">
             <summary>
             Gets the type of the converter.
             </summary>
             <value>The type of the converter.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.JsonConverterAttribute.ConverterParameters">
+            <summary>
+            The parameter list to use when constructing the JsonConverter described by ConverterType.  
+            If null, the default constructor is used.
+            </summary>
         </member>
         <member name="T:Newtonsoft.Json.JsonObjectAttribute">
             <summary>
@@ -4249,6 +4273,17 @@
             Gets or sets the converter used when serializing the property's collection items.
             </summary>
             <value>The collection's items converter.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.JsonPropertyAttribute.ItemConverterParameters">
+            <summary>
+            The parameter list to use when constructing the JsonConverter described by ItemConverterType.
+            If null, the default constructor is used.
+            When non-null, there must be a constructor defined in the JsonConverter that exactly matches the number,
+            order, and type of these parameters.
+            </summary>
+            <example>
+            [JsonProperty(ItemConverterType = typeof(MyContainerConverter), ItemConverterParameters = new object[] { 123, "Four" })]
+            </example>
         </member>
         <member name="P:Newtonsoft.Json.JsonPropertyAttribute.NullValueHandling">
             <summary>
@@ -4890,6 +4925,15 @@
             </summary>
             <param name="value">The value to convert.</param>
             <param name="delimiter">The string delimiter character.</param>
+            <returns>A JSON string representation of the <see cref="T:System.String"/>.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonConvert.ToString(System.String,System.Char,Newtonsoft.Json.StringEscapeHandling)">
+            <summary>
+            Converts the <see cref="T:System.String"/> to its JSON string representation.
+            </summary>
+            <param name="value">The value to convert.</param>
+            <param name="delimiter">The string delimiter character.</param>
+            <param name="stringEscapeHandling">The string escape handling.</param>
             <returns>A JSON string representation of the <see cref="T:System.String"/>.</returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonConvert.ToString(System.Object)">
@@ -6008,6 +6052,15 @@
             </summary>
             <returns>
             An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JEnumerable`1.Equals(Newtonsoft.Json.Linq.JEnumerable{`0})">
+            <summary>
+            Determines whether the specified <see cref="T:Newtonsoft.Json.Linq.JEnumerable`1"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:Newtonsoft.Json.Linq.JEnumerable`1"/> to compare with this instance.</param>
+            <returns>
+            	<c>true</c> if the specified <see cref="T:Newtonsoft.Json.Linq.JEnumerable`1"/> is equal to this instance; otherwise, <c>false</c>.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JEnumerable`1.Equals(System.Object)">
@@ -7140,9 +7193,9 @@
             </summary>
             <param name="shareCache">
             If set to <c>true</c> the <see cref="T:Newtonsoft.Json.Serialization.DefaultContractResolver"/> will use a cached shared with other resolvers of the same type.
-            Sharing the cache will significantly performance because expensive reflection will only happen once but could cause unexpected
-            behavior if different instances of the resolver are suppose to produce different results. When set to false it is highly
-            recommended to reuse <see cref="T:Newtonsoft.Json.Serialization.DefaultContractResolver"/> instances with the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
+            Sharing the cache will significantly improve performance with multiple resolver instances because expensive reflection will only
+            happen once. This setting can cause unexpected behavior if different instances of the resolver are suppose to produce different
+            results. When set to false it is highly recommended to reuse <see cref="T:Newtonsoft.Json.Serialization.DefaultContractResolver"/> instances with the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
             </param>
         </member>
         <member name="M:Newtonsoft.Json.Serialization.DefaultContractResolver.ResolveContract(System.Type)">
@@ -8182,6 +8235,21 @@
             Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.JsonStringContract"/> class.
             </summary>
             <param name="underlyingType">The underlying type for the contract.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.JsonTypeReflector.CreateJsonConverterInstance(System.Type,System.Object[])">
+            <summary>
+            Lookup and create an instance of the JsonConverter type described by the argument.
+            </summary>
+            <param name="converterType">The JsonConverter type to create.</param>
+            <param name="converterArgs">Optional arguments to pass to an initializing constructor of the JsonConverter.
+            If null, the default constructor is used.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.JsonTypeReflector.GetJsonConverterCreator(System.Type)">
+            <summary>
+            Create a factory function that can be used to create instances of a JsonConverter described by the 
+            argument type.  The returned function can then be used to either invoke the converter's default ctor, or any 
+            parameterized constructors by way of an object array.
+            </summary>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.ReflectionValueProvider">
             <summary>
