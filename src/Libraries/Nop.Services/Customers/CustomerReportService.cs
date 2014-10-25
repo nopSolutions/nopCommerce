@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -56,9 +56,12 @@ namespace Nop.Services.Customers
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="orderBy">1 - order by order total, 2 - order by number of orders</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Report</returns>
-        public virtual IList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc, 
-            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy)
+        public virtual IPagedList<BestCustomerReportLine> GetBestCustomersReport(DateTime? createdFromUtc,
+            DateTime? createdToUtc, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, int orderBy,
+            int pageIndex = 0, int pageSize = 214748364)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -106,17 +109,14 @@ namespace Nop.Services.Customers
                     throw new ArgumentException("Wrong orderBy parameter", "orderBy");
             }
 
-            //load 20 customers
-            query2 = query2.Take(20);
-
-            var result = query2.ToList().Select(x => new BestCustomerReportLine
-            {
-                CustomerId = x.CustomerId,
-                OrderTotal = x.OrderTotal,
-                OrderCount = x.OrderCount
-            })
-            .ToList();
-            return result;
+            var tmp = new PagedList<dynamic>(query2, pageIndex, pageSize);
+            return new PagedList<BestCustomerReportLine>(tmp.Select(x => new BestCustomerReportLine
+                {
+                    CustomerId = x.CustomerId,
+                    OrderTotal = x.OrderTotal,
+                    OrderCount = x.OrderCount
+                }),
+                tmp.PageIndex, tmp.PageSize, tmp.TotalCount);
         }
 
         /// <summary>

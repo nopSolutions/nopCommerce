@@ -1,5 +1,8 @@
 ﻿@model BestCustomersReportModel
-
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
 <table width="100%">
     <tr>
         <td class="adminTitle">
@@ -77,15 +80,14 @@
                                 // Cancel the changes
                                 this.cancelChanges();
                             },
+                            pageSize: @(defaultGridPageSize),
                             serverPaging: true,
                             serverFiltering: true,
                             serverSorting: true
                         },
                         pageable: {
                             refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
+                            pageSizes: [@(gridPageSizes)]
                         },
                         editable: {
                             confirmation: false,

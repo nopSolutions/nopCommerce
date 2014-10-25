@@ -7624,10 +7624,10 @@
     <Value>Customer reports</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByNumberOfOrders">
-    <Value>Top 20 customers by number of orders</Value>
+    <Value>Customers by number of orders</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByOrderTotal">
-    <Value>Top 20 customers by order total</Value>
+    <Value>Customers by order total</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Reports.BestBy.EndDate">
     <Value>End date</Value>

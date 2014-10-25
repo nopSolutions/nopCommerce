@@ -269,6 +269,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.Product.Hint">
     <Value>Search by a specific product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByNumberOfOrders">
+    <Value>Customers by number of orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByOrderTotal">
+    <Value>Customers by order total</Value>
+  </LocaleResource>
 </Language>
 '
 

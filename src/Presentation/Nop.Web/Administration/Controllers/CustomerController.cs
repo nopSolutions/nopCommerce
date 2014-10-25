@@ -1828,7 +1828,7 @@ namespace Nop.Admin.Controllers
 
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
-                orderStatus, paymentStatus, shippingStatus, 1);
+                orderStatus, paymentStatus, shippingStatus, 1, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
@@ -1846,7 +1846,7 @@ namespace Nop.Admin.Controllers
                     }
                     return m;
                 }),
-                Total = items.Count
+                Total = items.TotalCount
             };
 
             return Json(gridModel);
@@ -1869,7 +1869,7 @@ namespace Nop.Admin.Controllers
 
 
             var items = _customerReportService.GetBestCustomersReport(startDateValue, endDateValue,
-                orderStatus, paymentStatus, shippingStatus, 2);
+                orderStatus, paymentStatus, shippingStatus, 2, command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = items.Select(x =>
@@ -1887,7 +1887,7 @@ namespace Nop.Admin.Controllers
                     }
                     return m;
                 }),
-                Total = items.Count
+                Total = items.TotalCount
             };
 
             return Json(gridModel);
