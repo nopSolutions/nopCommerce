@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Authorization result
+    /// </summary>
     public partial class AuthorizationResult
     {
         public AuthorizationResult(OpenAuthenticationStatus status)

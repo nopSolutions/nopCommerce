@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Open authentication parameters
+    /// </summary>
     [Serializable]
     public abstract partial class OpenAuthenticationParameters
     {

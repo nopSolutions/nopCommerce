@@ -5,6 +5,9 @@ using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Open authentication service
+    /// </summary>
     public partial interface IOpenAuthenticationService
     {
         /// <summary>

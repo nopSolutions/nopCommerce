@@ -3,6 +3,9 @@
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Open authentication status
+    /// </summary>
     public enum OpenAuthenticationStatus
     {
         Unknown,

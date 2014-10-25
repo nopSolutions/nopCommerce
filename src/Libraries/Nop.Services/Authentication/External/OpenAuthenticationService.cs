@@ -10,6 +10,9 @@ using Nop.Services.Customers;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Open authentication service
+    /// </summary>
     public partial class OpenAuthenticationService : IOpenAuthenticationService
     {
         private readonly ICustomerService _customerService;

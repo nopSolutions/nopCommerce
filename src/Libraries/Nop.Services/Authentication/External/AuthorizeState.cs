@@ -5,6 +5,9 @@ using System.Web.Mvc;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Authorize state
+    /// </summary>
     public partial class AuthorizeState
     {
         public IList<string> Errors { get; set; }

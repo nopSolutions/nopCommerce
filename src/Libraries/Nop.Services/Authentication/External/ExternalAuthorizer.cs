@@ -13,6 +13,9 @@ using Nop.Services.Orders;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// External authorizer
+    /// </summary>
     public partial class ExternalAuthorizer : IExternalAuthorizer
     {
         #region Fields

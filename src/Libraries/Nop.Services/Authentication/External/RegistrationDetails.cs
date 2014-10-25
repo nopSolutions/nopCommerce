@@ -3,6 +3,9 @@
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// Registration details
+    /// </summary>
     public struct RegistrationDetails
     {
         public RegistrationDetails(OpenAuthenticationParameters parameters)

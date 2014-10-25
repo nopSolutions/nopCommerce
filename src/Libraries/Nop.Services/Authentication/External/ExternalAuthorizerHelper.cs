@@ -6,6 +6,9 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Authentication.External
 {
+    /// <summary>
+    /// External authorizer helper
+    /// </summary>
     public static partial class ExternalAuthorizerHelper
     {
         private static HttpSessionStateBase GetSession()
