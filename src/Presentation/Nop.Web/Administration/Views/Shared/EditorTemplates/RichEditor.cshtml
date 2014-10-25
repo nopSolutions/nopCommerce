@@ -1,7 +1,9 @@
 ﻿@model String
 @using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Services.Configuration
 @using Nop.Services.Security
-@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework.UI
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
@@ -17,6 +19,9 @@
 
     var random = CommonHelper.GenerateRandomInteger();
 
+    //extend editor with additional settings
+    var additionalEditorSettings = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAdditionalSettings;
+    
     //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
@@ -46,7 +51,7 @@
             return false;
         }
 
-        tinyMCE.init({
+        var defaultEditorSettings@(random) = {
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 350,
@@ -61,14 +66,21 @@
             relative_urls: false,
             @if (allowRoxyFileman){
                 <text>
-                //picture manager
-                file_browser_callback: RoxyFileBrowser@(random),
+            //picture manager
+            file_browser_callback: RoxyFileBrowser@(random),
                 </text>
             }
             //we should set "convert_urls" set to "false" (because of "relative_urls" requirement)
             //otherwise, it'll break existing links when editing message template
             convert_urls: false
-        });
+        };
+
+        function getAdditionalEditorSettings@(random)(settings) {
+            @Html.Raw(additionalEditorSettings)
+            return settings;
+        }
+
+        tinyMCE.init(getAdditionalEditorSettings@(random)(defaultEditorSettings@(random)));
     });
 </script>
 @Html.TextArea(string.Empty, /* Name suffix */
