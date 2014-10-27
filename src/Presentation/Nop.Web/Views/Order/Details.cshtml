@@ -143,14 +143,17 @@
                                             @Model.PaymentMethod
                                         </span>
                                     </li>
-                                    <li class="payment-method-status">
-                                        <span class="label">
-                                            @T("Order.Payment.Status"):
-                                        </span>
-                                        <span class="value">
-                                            @Model.PaymentMethodStatus
-                                        </span>
-                                    </li>
+                                    if (!Model.PrintMode)
+                                    {
+                                        <li class="payment-method-status">
+                                            <span class="label">
+                                                @T("Order.Payment.Status"):
+                                            </span>
+                                            <span class="value">
+                                                @Model.PaymentMethodStatus
+                                            </span>
+                                        </li>
+                                    }
                                     if (!Model.PrintMode && Model.CanRePostProcessPayment)
                                     {
                                         @*Complete payment (for redirection payment methods)*@
@@ -266,14 +269,17 @@
                                             @Model.ShippingMethod
                                         </span>
                                     </li>
-                                    <li class="shipping-status">
-                                        <span class="label">
-                                            @T("Order.Shipping.Status"):
-                                        </span>
-                                        <span class="value">
-                                            @Model.ShippingStatus
-                                        </span>
-                                    </li>
+                                    @if (!Model.PrintMode)
+                                    {
+                                        <li class="shipping-status">
+                                            <span class="label">
+                                                @T("Order.Shipping.Status"):
+                                            </span>
+                                            <span class="value">
+                                                @Model.ShippingStatus
+                                            </span>
+                                        </li>
+                                    }
                                 </ul>
                             </td>
                         }
