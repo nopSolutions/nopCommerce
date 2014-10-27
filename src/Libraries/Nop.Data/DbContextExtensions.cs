@@ -1,6 +1,7 @@
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Nop.Core;
@@ -133,6 +134,47 @@ namespace Nop.Data
             //string schemaName = productEntitySetBase.MetadataProperties.First(p => p.Name == "Schema").Value.ToString();
             return tableName;
         }
+
+        /// <summary>
+        /// Get column maximum length
+        /// </summary>
+        /// <param name="context">Context</param>
+        /// <param name="entityTypeName">Entity type name</param>
+        /// <param name="columnName">Column name</param>
+        /// <returns>Maximum length. Null if such rule does not exist</returns>
+        public static int? GetColumnMaxLength(this IDbContext context, string entityTypeName, string columnName)
+        {
+            //original: http://stackoverflow.com/questions/5081109/entity-framework-4-0-automatically-truncate-trim-string-before-insert
+            int? result = null;
+
+            Type entType = Type.GetType(entityTypeName);
+            var adapter = ((IObjectContextAdapter)context).ObjectContext;
+            var metadataWorkspace = adapter.MetadataWorkspace;
+            var q = from meta in metadataWorkspace.GetItems(DataSpace.CSpace).Where(m => m.BuiltInTypeKind == BuiltInTypeKind.EntityType)
+                    from p in (meta as EntityType).Properties.Where(p => p.Name == columnName && p.TypeUsage.EdmType.Name == "String")
+                    select p;
+
+            var queryResult = q.Where(p =>
+            {
+                bool match = p.DeclaringType.Name == entityTypeName;
+                if (!match && entType != null)
+                {
+                    //Is a fully qualified name....
+                    match = entType.Name == p.DeclaringType.Name;
+                }
+
+                return match;
+
+            }).Select(sel => sel.TypeUsage.Facets["MaxLength"].Value);
+
+            if (queryResult.Any())
+            {
+                result = Convert.ToInt32(queryResult.First());
+            }
+
+            return result;
+        }
+
         #endregion
     }
 }
