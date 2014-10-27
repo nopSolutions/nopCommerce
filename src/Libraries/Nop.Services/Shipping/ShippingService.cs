@@ -640,9 +640,43 @@ namespace Nop.Services.Shipping
         public virtual Warehouse GetNearestWarehouse(Address address, IList<Warehouse> warehouses = null)
         {
             warehouses = warehouses ?? GetAllWarehouses();
-            //TODO put a logic to choose a warehouse here
-            //for example, first compare countries, then states, city, etc
-            return warehouses.FirstOrDefault();
+
+            //no address specified. return any
+            if (address == null)
+                return warehouses.FirstOrDefault();
+
+            //of course, we should use some better logic to find nearest warehouse
+            //but we don't have a built-in geographic database which supports "distance" functionality
+            //that's why we simply look for exact matches
+
+            //find by country
+            var matchedByCountry = new List<Warehouse>();
+            foreach (var warehouse in warehouses)
+            {
+                var warehouseAddress = _addressService.GetAddressById(warehouse.AddressId);
+                if (warehouseAddress != null)
+                    if (warehouseAddress.CountryId == address.CountryId)
+                        matchedByCountry.Add(warehouse);
+            }
+            //no country matches. return any
+            if (matchedByCountry.Count == 0)
+                return warehouses.FirstOrDefault();
+
+
+            //find by state
+            var matchedByState = new List<Warehouse>();
+            foreach (var warehouse in matchedByCountry)
+            {
+                var warehouseAddress = _addressService.GetAddressById(warehouse.AddressId);
+                if (warehouseAddress != null)
+                    if (warehouseAddress.StateProvinceId == address.StateProvinceId)
+                        matchedByState.Add(warehouse);
+            }
+            if (matchedByState.Any())
+                return matchedByState.FirstOrDefault();
+
+            //no state matches. return any
+            return matchedByCountry.FirstOrDefault();
         }
 
         /// <summary>
