@@ -269,7 +269,7 @@
                                             @Model.ShippingMethod
                                         </span>
                                     </li>
-                                    @if (!Model.PrintMode)
+                                    @if (!Model.PrintMode && !Model.PickUpInStore)
                                     {
                                         <li class="shipping-status">
                                             <span class="label">
