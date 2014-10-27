@@ -11598,8 +11598,14 @@
   <LocaleResource Name="Order.OrderTotal">
     <Value>Order Total</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.PaymentMethod">
+  <LocaleResource Name="Order.Payment">
+    <Value>Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Payment.Method">
     <Value>Payment Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Payment.Status">
+    <Value>Payment Status</Value>
   </LocaleResource>
   <LocaleResource Name="Order.PaymentMethodAdditionalFee">
     <Value>Payment method additional fee</Value>
@@ -11724,8 +11730,14 @@
   <LocaleResource Name="Order.ShippingAddress">
     <Value>Shipping Address</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.ShippingMethod">
+  <LocaleResource Name="Order.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.Name">
     <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.Status">
+    <Value>Shipping Status</Value>
   </LocaleResource>
   <LocaleResource Name="Order.SubTotal">
     <Value>Sub-Total</Value>

@@ -133,14 +133,27 @@
                                 @if (!String.IsNullOrEmpty(Model.PaymentMethod))
                                 {
                                     <li class="title">
-                                        <strong>@T("Order.PaymentMethod")</strong>
+                                        <strong>@T("Order.Payment")</strong>
                                     </li>
                                     <li class="payment-method">
-                                        @Model.PaymentMethod
+                                        <span class="label">
+                                            @T("Order.Payment.Method"):
+                                        </span>
+                                        <span class="value">
+                                            @Model.PaymentMethod
+                                        </span>
+                                    </li>
+                                    <li class="payment-method-status">
+                                        <span class="label">
+                                            @T("Order.Payment.Status"):
+                                        </span>
+                                        <span class="value">
+                                            @Model.PaymentMethodStatus
+                                        </span>
                                     </li>
                                     if (!Model.PrintMode && Model.CanRePostProcessPayment)
                                     {
-@*Completing payment support (for redirection payment methods)*@
+                                        @*Complete payment (for redirection payment methods)*@
                                     <li class="repost">
                                         @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                                         {
@@ -154,11 +167,11 @@
                                 }
                                 @if (Model.DisplayPurchaseOrderNumber)
                                 {
-                                    <li class="po">
-                                        <span class="po-label">
-                                            <strong>@T("Order.PurchaseOrderNumber")</strong>
+                                    <li class="purchase-order-number">
+                                        <span class="label">
+                                            @T("Order.PurchaseOrderNumber"):
                                         </span>
-                                        <span class="po-value">
+                                        <span class="value">
                                             @Model.PurchaseOrderNumber
                                         </span>
                                     </li>
@@ -243,10 +256,23 @@
                                         }
                                     }
                                     <li class="title">
-                                        <strong>@T("Order.ShippingMethod")</strong>
+                                        <strong>@T("Order.Shipping")</strong>
                                     </li>
                                     <li class="shipping-method">
-                                        @Model.ShippingMethod
+                                        <span class="label">
+                                            @T("Order.Shipping.Name"):
+                                        </span>
+                                        <span class="value">
+                                            @Model.ShippingMethod
+                                        </span>
+                                    </li>
+                                    <li class="shipping-status">
+                                        <span class="label">
+                                            @T("Order.Shipping.Status"):
+                                        </span>
+                                        <span class="value">
+                                            @Model.ShippingStatus
+                                        </span>
                                     </li>
                                 </ul>
                             </td>

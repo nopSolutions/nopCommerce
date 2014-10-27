@@ -275,6 +275,30 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Reports.BestBy.BestByOrderTotal">
     <Value>Customers by order total</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.PaymentMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Payment">
+    <Value>Payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Payment.Method">
+    <Value>Payment Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Payment.Status">
+    <Value>Payment Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShippingMethod">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping">
+    <Value>Shipping</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.Name">
+    <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipping.Status">
+    <Value>Shipping Status</Value>
+  </LocaleResource>
 </Language>
 '
 
