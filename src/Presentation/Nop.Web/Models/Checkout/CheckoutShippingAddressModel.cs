@@ -19,6 +19,7 @@ namespace Nop.Web.Models.Checkout
         public bool NewAddressPreselected { get; set; }
 
         public bool AllowPickUpInStore { get; set; }
+        public string PickUpInStoreFee { get; set; }
         public bool PickUpInStore { get; set; }
     }
 }

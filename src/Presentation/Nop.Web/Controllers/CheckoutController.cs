@@ -182,6 +182,13 @@ namespace Nop.Web.Controllers
             var model = new CheckoutShippingAddressModel();
             //allow pickup in store?
             model.AllowPickUpInStore = _shippingSettings.AllowPickUpInStore;
+            if (model.AllowPickUpInStore && _shippingSettings.PickUpInStoreFee > 0)
+            {
+                decimal shippingTotal = _shippingSettings.PickUpInStoreFee;
+                decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                model.PickUpInStoreFee = _priceFormatter.FormatShippingPrice(rate, true);
+            }
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
                 //allow shipping
@@ -683,7 +690,7 @@ namespace Nop.Web.Controllers
                     var pickUpInStoreShippingOption = new ShippingOption
                     {
                         Name = _localizationService.GetResource("Checkout.PickUpInStore.MethodName"),
-                        Rate = decimal.Zero,
+                        Rate = _shippingSettings.PickUpInStoreFee,
                         Description = null,
                         ShippingRateComputationMethodSystemName = null
                     };
@@ -1434,7 +1441,7 @@ namespace Nop.Web.Controllers
                         var pickUpInStoreShippingOption = new ShippingOption
                         {
                             Name = _localizationService.GetResource("Checkout.PickUpInStore.MethodName"),
-                            Rate = decimal.Zero,
+                            Rate = _shippingSettings.PickUpInStoreFee,
                             Description = null,
                             ShippingRateComputationMethodSystemName = null
                         };

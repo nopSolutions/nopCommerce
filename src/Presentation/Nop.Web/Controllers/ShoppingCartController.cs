@@ -2012,8 +2012,11 @@ namespace Nop.Web.Controllers
                             {
                                 Name = _localizationService.GetResource("Checkout.PickUpInStore"),
                                 Description = _localizationService.GetResource("Checkout.PickUpInStore.Description"),
-                                Price = _priceFormatter.FormatShippingPrice(decimal.Zero, true)
                             };
+                            decimal shippingTotal = _shippingSettings.PickUpInStoreFee;
+                            decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                            decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
+                            soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
                             model.EstimateShipping.ShippingOptions.Add(soModel);
                         }
                     }

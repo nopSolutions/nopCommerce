@@ -655,6 +655,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                 .ForMember(dest => dest.AllowPickUpInStore_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.PickUpInStoreFee_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.UseWarehouseLocation_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.FreeShippingOverXValue_OverrideForStore, mo => mo.Ignore())

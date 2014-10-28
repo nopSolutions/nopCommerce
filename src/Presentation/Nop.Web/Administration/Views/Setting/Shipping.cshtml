@@ -6,18 +6,27 @@
 @using (Html.BeginForm())
 {    
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
+        $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
 
-        toggleFreeShippingOverX();
-    });
+            toggleAllowPickUpInStore();
+            toggleFreeShippingOverX();
+        });
 
-    function toggleFreeShippingOverX() {
-        if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
+        function toggleAllowPickUpInStore() {
+            if ($('#@Html.FieldIdFor(model => model.AllowPickUpInStore)').is(':checked')) {
+                $('#pnlPickUpInStoreFee').show();
+            } else {
+                $('#pnlPickUpInStoreFee').hide();
+            }
+        }
+
+        function toggleFreeShippingOverX() {
+            if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
             $('#pnlValueOfX').show();
             $('#pnlValueOfXincltax').show();
-        }
-        else {
+        } else {
             $('#pnlValueOfX').hide();
             $('#pnlValueOfXincltax').hide();
         }
@@ -45,6 +54,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.AllowPickUpInStore)
                 @Html.ValidationMessageFor(model => model.AllowPickUpInStore)
+            </td>
+        </tr>
+        <tr id="pnlPickUpInStoreFee">
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PickUpInStoreFee_OverrideForStore, model => model.PickUpInStoreFee, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PickUpInStoreFee):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PickUpInStoreFee)
+                @Html.ValidationMessageFor(model => model.PickUpInStoreFee)
             </td>
         </tr>
         <tr>

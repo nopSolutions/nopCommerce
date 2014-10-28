@@ -554,6 +554,7 @@ namespace Nop.Admin.Controllers
             if (storeScope > 0)
             {
                 model.AllowPickUpInStore_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.AllowPickUpInStore, storeScope);
+                model.PickUpInStoreFee_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.PickUpInStoreFee, storeScope);
                 model.UseWarehouseLocation_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.UseWarehouseLocation, storeScope);
                 model.FreeShippingOverXEnabled_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXEnabled, storeScope);
                 model.FreeShippingOverXValue_OverrideForStore = _settingService.SettingExists(shippingSettings, x => x.FreeShippingOverXValue, storeScope);
@@ -613,6 +614,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(shippingSettings, x => x.AllowPickUpInStore, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(shippingSettings, x => x.AllowPickUpInStore, storeScope);
+
+            if (model.PickUpInStoreFee_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(shippingSettings, x => x.PickUpInStoreFee, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(shippingSettings, x => x.PickUpInStoreFee, storeScope);
 
             if (model.UseWarehouseLocation_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(shippingSettings, x => x.UseWarehouseLocation, storeScope, false);

@@ -572,8 +572,9 @@ namespace Nop.Services.Orders
                     customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
                 if (pickUpInStore)
                 {
-                    //shipping is free for pick up in store
-                    shippingTotal = 0;
+                    //"pick up in store" fee
+                    //we do not adjust shipping rate ("AdjustShippingRate" method) for pickup in store
+                    shippingTotal = _shippingSettings.PickUpInStoreFee;
                 }
                 else
                 {

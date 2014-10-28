@@ -62,8 +62,15 @@
     {
         <div class="section pickup-in-store">
             <p class="selector">
+                @{
+                    var pickupInStoreName = T("Checkout.PickUpInStore").Text;
+                    if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
+                    {
+                        pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
+                    }
+                }
                 @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })
-                <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@T("Checkout.PickUpInStore")</label>
+                <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
             </p>
             <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
         </div>

@@ -299,6 +299,15 @@ set @resources='
   <LocaleResource Name="Order.Shipping.Status">
     <Value>Shipping Status</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee">
+    <Value>"Pick Up in Store" fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
+    <Value>Specify "Pick Up in Store" fee.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStoreAndFee">
+    <Value>In-Store Pickup ({0})</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1316,5 +1325,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.riched
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'adminareasettings.richeditoradditionalsettings', N'', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.pickupinstorefee')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.pickupinstorefee', N'0', 0)
 END
 GO

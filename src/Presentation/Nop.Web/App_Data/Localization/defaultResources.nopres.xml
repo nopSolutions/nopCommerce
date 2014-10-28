@@ -5586,6 +5586,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXValue.Hint">
     <Value>All orders with a total greater than the value of 'X' will qualify for free shipping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee">
+    <Value>"Pick Up in Store" fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee.Hint">
+    <Value>Specify "Pick Up in Store" fee.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.ShippingOriginAddress">
     <Value>Shipping Origin</Value>
   </LocaleResource>
@@ -10376,6 +10382,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.PickUpInStore">
     <Value>In-Store Pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PickUpInStoreAndFee">
+    <Value>In-Store Pickup ({0})</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.PickUpInStore.Description">
     <Value>Pick up your items at the store (put your store address here)</Value>

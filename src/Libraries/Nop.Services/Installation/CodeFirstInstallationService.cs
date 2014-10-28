@@ -4768,6 +4768,7 @@ namespace Nop.Services.Installation
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string> { "Shipping.FixedRate" },
                     AllowPickUpInStore = true,
+                    PickUpInStoreFee = decimal.Zero,
                     UseWarehouseLocation = false,
                     FreeShippingOverXEnabled = false,
                     FreeShippingOverXValue = decimal.Zero,
