@@ -40,7 +40,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
-            var model = new QueuedEmailListModel();
+		    var model = new QueuedEmailListModel()
+		    {
+                //default value
+		        SearchMaxSentTries = 10
+		    };
             return View(model);
 		}
 

@@ -8,12 +8,6 @@ namespace Nop.Admin.Models.Messages
 {
     public partial class QueuedEmailListModel : BaseNopModel
     {
-        public QueuedEmailListModel()
-        {
-            SearchLoadNotSent = true;
-            SearchMaxSentTries = 10;
-        }
-
         [NopResourceDisplayName("Admin.System.QueuedEmails.List.StartDate")]
         [UIHint("DateNullable")]
         public DateTime? SearchStartDate { get; set; }
