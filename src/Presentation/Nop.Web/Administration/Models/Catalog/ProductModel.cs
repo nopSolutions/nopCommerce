@@ -883,6 +883,10 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")]
             [UIHint("DecimalNullable")]
             public decimal? OverriddenPrice { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
+            public int NotifyAdminForQuantityBelow { get; set; }
+
         }
 
         #endregion

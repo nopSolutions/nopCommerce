@@ -44,7 +44,12 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the attribute combination price. This way a store owner can override the default product price when this attribute combination is added to the cart. For example, you can give a discount this way.
         /// </summary>
         public decimal? OverriddenPrice { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the quantity when admin should be notified
+        /// </summary>
+        public int NotifyAdminForQuantityBelow { get; set; }
+
         /// <summary>
         /// Gets the product
         /// </summary>

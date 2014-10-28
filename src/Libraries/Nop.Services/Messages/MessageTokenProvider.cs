@@ -16,6 +16,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -714,6 +715,24 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
+        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductVariantAttributeCombination combination,  int languageId)
+        {
+            //attributes
+            //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.
+            //that's why we resolve it here this way
+            var productAttributeFormatter = EngineContext.Current.Resolve<IProductAttributeFormatter>();
+            string attributes = productAttributeFormatter.FormatAttributes(combination.Product, 
+                combination.AttributesXml, 
+                _workContext.CurrentCustomer, 
+                renderPrices: false);
+
+            tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
+            tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity.ToString()));
+            
+            //event notification
+            _eventPublisher.EntityTokensAdded(combination, tokens);
+        }
+
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
             int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
@@ -885,7 +904,9 @@ namespace Nop.Services.Messages
                 "%Forums.PostAuthor%",
                 "%Forums.PostBody%",
                 "%Forums.ForumURL%", 
-                "%Forums.ForumName%", 
+                "%Forums.ForumName%",
+                "%AttributeCombination.Formatted%",
+                "%AttributeCombination.StockQuantity%",
                 "%PrivateMessage.Subject%", 
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",

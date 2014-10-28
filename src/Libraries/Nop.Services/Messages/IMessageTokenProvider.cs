@@ -39,6 +39,8 @@ namespace Nop.Services.Messages
 
         void AddProductTokens(IList<Token> tokens, Product product, int languageId);
 
+        void AddAttributeCombinationTokens(IList<Token> tokens, ProductVariantAttributeCombination combination, int languageId);
+
         void AddForumTokens(IList<Token> tokens, Forum forum);
 
         void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,

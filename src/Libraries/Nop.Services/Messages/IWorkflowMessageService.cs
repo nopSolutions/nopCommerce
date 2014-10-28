@@ -277,7 +277,7 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendGiftCardNotification(GiftCard giftCard, int languageId);
-        
+
 
         /// <summary>
         /// Sends a "quantity below" notification to a store owner
@@ -287,6 +287,13 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendQuantityBelowStoreOwnerNotification(Product product, int languageId);
 
+        /// <summary>
+        /// Sends a "quantity below" notification to a store owner
+        /// </summary>
+        /// <param name="combination">Attribute combination</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendQuantityBelowStoreOwnerNotification(ProductVariantAttributeCombination combination, int languageId);
 
         /// <summary>
         /// Sends a "new VAT sumitted" notification to a store owner

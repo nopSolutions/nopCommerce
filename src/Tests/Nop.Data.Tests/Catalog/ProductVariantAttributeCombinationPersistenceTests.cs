@@ -20,6 +20,7 @@ namespace Nop.Data.Tests.Catalog
                            ManufacturerPartNumber = "ManufacturerPartNumber1",
                            Gtin = "Gtin1",
                            OverriddenPrice = 0.01M,
+                           NotifyAdminForQuantityBelow = 3,
                            Product = GetTestProduct()
                        };
 
@@ -32,6 +33,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ManufacturerPartNumber.ShouldEqual("ManufacturerPartNumber1");
             fromDb.Gtin.ShouldEqual("Gtin1");
             fromDb.OverriddenPrice.ShouldEqual(0.01M);
+            fromDb.NotifyAdminForQuantityBelow.ShouldEqual(3);
         }
 
         protected Product GetTestProduct()

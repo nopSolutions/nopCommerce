@@ -308,6 +308,12 @@ set @resources='
   <LocaleResource Name="Checkout.PickUpInStoreAndFee">
     <Value>In-Store Pickup ({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow">
+    <Value>Notify admin for quantity below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow.Hint">
+    <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1333,5 +1339,32 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.pickupi
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'shippingsettings.pickupinstorefee', N'0', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductVariantAttributeCombination]') and NAME='NotifyAdminForQuantityBelow')
+BEGIN
+	ALTER TABLE [ProductVariantAttributeCombination]
+	ADD [NotifyAdminForQuantityBelow] int NULL
+END
+GO
+
+UPDATE [ProductVariantAttributeCombination]
+SET [NotifyAdminForQuantityBelow] = 1
+WHERE [NotifyAdminForQuantityBelow] IS NULL
+GO
+
+ALTER TABLE [ProductVariantAttributeCombination] ALTER COLUMN [NotifyAdminForQuantityBelow] int NOT NULL
+GO
+
+--'Quantity below' message template for attribute combinations
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'QuantityBelow.AttributeCombination.StoreOwnerNotification')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores])
+	VALUES (N'QuantityBelow.AttributeCombination.StoreOwnerNotification', null, N'%Store.Name%. Quantity below notification. %Product.Name%', N'<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Product.Name% (ID: %Product.ID%) low quantity. <br />%AttributeCombination.Formatted%<br />Quantity: %AttributeCombination.StockQuantity%<br /></p>', 1, 0, 0)
 END
 GO

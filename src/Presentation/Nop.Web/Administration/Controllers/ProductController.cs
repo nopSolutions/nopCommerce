@@ -343,6 +343,7 @@ namespace Nop.Admin.Controllers
 
             model.ProductId = product.Id;
             model.StockQuantity = 10000;
+            model.NotifyAdminForQuantityBelow = 1;
 
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
@@ -3776,7 +3777,8 @@ namespace Nop.Admin.Controllers
                         Sku = x.Sku,
                         ManufacturerPartNumber = x.ManufacturerPartNumber,
                         Gtin = x.Gtin,
-                        OverriddenPrice = x.OverriddenPrice
+                        OverriddenPrice = x.OverriddenPrice,
+                        NotifyAdminForQuantityBelow = x.NotifyAdminForQuantityBelow
                     };
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
@@ -3825,6 +3827,7 @@ namespace Nop.Admin.Controllers
             pvac.ManufacturerPartNumber = model.ManufacturerPartNumber;
             pvac.Gtin = model.Gtin;
             pvac.OverriddenPrice = model.OverriddenPrice;
+            pvac.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
             return new NullJsonResult();
@@ -4040,7 +4043,8 @@ namespace Nop.Admin.Controllers
                     Sku = model.Sku,
                     ManufacturerPartNumber = model.ManufacturerPartNumber,
                     Gtin = model.Gtin,
-                    OverriddenPrice = model.OverriddenPrice
+                    OverriddenPrice = model.OverriddenPrice,
+                    NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
 
@@ -4094,7 +4098,8 @@ namespace Nop.Admin.Controllers
                     Sku = null,
                     ManufacturerPartNumber = null,
                     Gtin = null,
-                    OverriddenPrice = null
+                    OverriddenPrice = null,
+                    NotifyAdminForQuantityBelow = 1
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
             }

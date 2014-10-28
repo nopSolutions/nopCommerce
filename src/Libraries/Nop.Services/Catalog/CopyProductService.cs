@@ -488,7 +488,8 @@ namespace Nop.Services.Catalog
                     Sku = combination.Sku,
                     ManufacturerPartNumber = combination.ManufacturerPartNumber,
                     Gtin = combination.Gtin,
-                    OverriddenPrice = combination.OverriddenPrice
+                    OverriddenPrice = combination.OverriddenPrice,
+                    NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
                 };
                 _productAttributeService.InsertProductVariantAttributeCombination(combinationCopy);
             }

@@ -33,6 +33,9 @@ namespace Nop.Admin.Models.Catalog
         [UIHint("DecimalNullable")]
         public decimal? OverriddenPrice { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
+        public int NotifyAdminForQuantityBelow { get; set; }
+
         public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }

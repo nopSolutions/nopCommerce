@@ -321,6 +321,7 @@ else
                                     ManufacturerPartNumber: { editable: true, type: "string" },
                                     Gtin: { editable: true, type: "string" },
                                     OverriddenPrice: { editable: true, type: "number" },
+                                    NotifyAdminForQuantityBelow: { editable: true, type: "number" },
                                     Id: { editable: false, type: "number" }
                                 }
                             }
@@ -394,6 +395,12 @@ else
                                             decimals: 4
                                         });
                             }
+                        }, {
+                            field: "NotifyAdminForQuantityBelow",
+                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")",
+                            width: 150,
+                            //integer format
+                            format: "{0:0}"
                         }, {
                             command: [
                                 {

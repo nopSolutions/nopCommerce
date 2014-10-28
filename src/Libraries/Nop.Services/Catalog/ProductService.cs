@@ -1197,7 +1197,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //send email notification
-                if (quantityToChange < 0 && product.NotifyAdminForQuantityBelow > product.GetTotalStockQuantity())
+                if (quantityToChange < 0 && product.GetTotalStockQuantity() < product.NotifyAdminForQuantityBelow)
                 {
                     _workflowMessageService.SendQuantityBelowStoreOwnerNotification(product, _localizationSettings.DefaultAdminLanguageId);
                 }
@@ -1210,6 +1210,12 @@ namespace Nop.Services.Catalog
                 {
                     combination.StockQuantity += quantityToChange;
                     _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+
+                    //send email notification
+                    if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)
+                    {
+                        _workflowMessageService.SendQuantityBelowStoreOwnerNotification(combination, _localizationSettings.DefaultAdminLanguageId);
+                    }
                 }
             }
 
