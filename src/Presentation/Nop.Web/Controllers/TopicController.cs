@@ -7,6 +7,7 @@ using Nop.Services.Localization;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Topics;
+using Nop.Web.Framework.Security;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Topics;
 
@@ -72,6 +73,7 @@ namespace Nop.Web.Controllers
 
         #region Methods
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult TopicDetails(int topicId)
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_BY_ID_KEY, topicId, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
