@@ -345,7 +345,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Australian Dollar",
                     CurrencyCode = "AUD",
-                    Rate = 0.94M,
+                    Rate = 1.14M,
                     DisplayLocale = "en-AU",
                     CustomFormatting = "",
                     Published = false,
@@ -357,7 +357,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "British Pound",
                     CurrencyCode = "GBP",
-                    Rate = 0.61M,
+                    Rate = 0.62M,
                     DisplayLocale = "en-GB",
                     CustomFormatting = "",
                     Published = false,
@@ -369,7 +369,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Canadian Dollar",
                     CurrencyCode = "CAD",
-                    Rate = 0.98M,
+                    Rate = 1.12M,
                     DisplayLocale = "en-CA",
                     CustomFormatting = "",
                     Published = false,
@@ -381,7 +381,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Chinese Yuan Renminbi",
                     CurrencyCode = "CNY",
-                    Rate = 6.48M,
+                    Rate = 6.11M,
                     DisplayLocale = "zh-CN",
                     CustomFormatting = "",
                     Published = false,
@@ -418,7 +418,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Japanese Yen",
                     CurrencyCode = "JPY",
-                    Rate = 80.07M,
+                    Rate = 109.27M,
                     DisplayLocale = "ja-JP",
                     CustomFormatting = "",
                     Published = false,
@@ -430,7 +430,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Russian Rouble",
                     CurrencyCode = "RUB",
-                    Rate = 27.7M,
+                    Rate = 43.51M,
                     DisplayLocale = "ru-RU",
                     CustomFormatting = "",
                     Published = false,
@@ -442,7 +442,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Swedish Krona",
                     CurrencyCode = "SEK",
-                    Rate = 6.19M,
+                    Rate = 7.39M,
                     DisplayLocale = "sv-SE",
                     CustomFormatting = "",
                     Published = false,
@@ -454,7 +454,7 @@ namespace Nop.Services.Installation
                 {
                     Name = "Romanian Leu",
                     CurrencyCode = "RON",
-                    Rate = 2.85M,
+                    Rate = 3.52M,
                     DisplayLocale = "ro-RO",
                     CustomFormatting = "",
                     Published = false,
