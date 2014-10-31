@@ -233,7 +233,7 @@ namespace Nop.Services.Orders
             //removing "shippable" checkout attributes if there's no any shippable products in the cart
             if (!cart.RequiresShipping())
             {
-                //find attrbiute IDs to remove
+                //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<int>();
                 var caCollection = ParseCheckoutAttributes(attributes);
                 for (int i = 0; i < caCollection.Count; i++)

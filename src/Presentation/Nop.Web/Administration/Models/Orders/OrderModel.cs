@@ -374,7 +374,7 @@ namespace Nop.Admin.Models.Orders
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
                 public decimal SubTotalExclTax { get; set; }
 
-                //product attrbiutes
+                //product attributes
                 public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
                 //gift card info
                 public GiftCardModel GiftCard { get; set; }

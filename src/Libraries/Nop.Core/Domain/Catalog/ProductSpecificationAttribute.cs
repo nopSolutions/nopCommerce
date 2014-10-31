@@ -31,7 +31,7 @@ namespace Nop.Core.Domain.Catalog
         public bool AllowFiltering { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the attrbiute will be shown on the product page
+        /// Gets or sets whether the attribute will be shown on the product page
         /// </summary>
         public bool ShowOnProductPage { get; set; }
 
