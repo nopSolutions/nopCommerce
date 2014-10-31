@@ -184,10 +184,11 @@
     <Compile Include="Controllers\PictureController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\QueuedEmailController.cs" />
-    <Compile Include="HtmlExtensions.cs" />
+    <Compile Include="Extensions\AttributeParserHelper.cs" />
+    <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
-    <Compile Include="MappingExtensions.cs" />
+    <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />

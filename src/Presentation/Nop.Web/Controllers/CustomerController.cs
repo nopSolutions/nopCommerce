@@ -680,85 +680,6 @@ namespace Nop.Web.Controllers
             return selectedAttributes;
         }
 
-        [NonAction]
-        protected virtual string ParseCustomAddressAttributes(FormCollection form)
-        {
-            if (form == null)
-                throw new ArgumentNullException("form");
-
-            string selectedAttributes = "";
-            var attributes = _addressAttributeService.GetAllAddressAttributes();
-            foreach (var attribute in attributes)
-            {
-                string controlId = string.Format("address_attribute_{0}", attribute.Id);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                int selectedAttributeId = int.Parse(ctrlAttributes);
-                                if (selectedAttributeId > 0)
-                                    selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
-                                        attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            var cblAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(cblAttributes))
-                            {
-                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                                {
-                                    int selectedAttributeId = int.Parse(item);
-                                    if (selectedAttributeId > 0)
-                                        selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
-                                            attribute, selectedAttributeId.ToString());
-                                }
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //load read-only (already server-side selected) values
-                            var cvaValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in cvaValues
-                                .Where(pvav => pvav.IsPreSelected)
-                                .Select(pvav => pvav.Id)
-                                .ToList())
-                            {
-                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
-                                            attribute, selectedAttributeId.ToString());
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            var ctrlAttributes = form[controlId];
-                            if (!String.IsNullOrEmpty(ctrlAttributes))
-                            {
-                                string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
-                                    attribute, enteredText);
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.FileUpload:
-                    //not supported address attributes
-                    default:
-                        break;
-                }
-            }
-
-            return selectedAttributes;
-        }
-
         #endregion
 
         #region Login / logout / register
@@ -1462,7 +1383,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom address attributes
-            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {
@@ -1544,7 +1465,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             //custom address attributes
-            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributes = form.ParseCustomAddressAttributes(_addressAttributeParser, _addressAttributeService);
             var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
             foreach (var error in customAttributeWarnings)
             {

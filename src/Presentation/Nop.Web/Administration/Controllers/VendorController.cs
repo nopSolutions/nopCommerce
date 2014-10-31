@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;

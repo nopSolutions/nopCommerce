@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
 using Nop.Core;

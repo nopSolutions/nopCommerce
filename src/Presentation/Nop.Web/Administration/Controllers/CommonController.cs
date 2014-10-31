@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.Common;
 using Nop.Core;
 using Nop.Core.Caching;

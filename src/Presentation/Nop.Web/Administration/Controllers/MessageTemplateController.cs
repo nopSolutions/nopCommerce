@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;

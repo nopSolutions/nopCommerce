@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.Forums;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;

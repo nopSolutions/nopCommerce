@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Admin.Extensions;
 using Nop.Admin.Models.ExternalAuthentication;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Plugins;
