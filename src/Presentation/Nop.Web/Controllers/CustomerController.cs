@@ -35,6 +35,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using WebGrease.Css.Extensions;
 
 namespace Nop.Web.Controllers
 {
@@ -214,6 +215,96 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
+        protected virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer)
+        {
+            var result = new List<CustomerAttributeModel>();
+
+            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
+            foreach (var attribute in customerAttributes)
+            {
+                var attributeModel = new CustomerAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.GetLocalized(x => x.Name),
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var valueModel = new CustomerAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.GetLocalized(x => x.Name),
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(valueModel);
+                    }
+                }
+
+                //set already selected attributes
+                if (customer != null)
+                {
+                    var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.Checkboxes:
+                            {
+                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    //clear default selection
+                                    foreach (var item in attributeModel.Values)
+                                        item.IsPreSelected = false;
+
+                                    //select new values
+                                    var selectedCaValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    foreach (var caValue in selectedCaValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (caValue.Id == item.Id)
+                                                item.IsPreSelected = true;
+                                }
+                            }
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                            {
+                                //do nothing
+                                //values are already pre-set
+                            }
+                            break;
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                            {
+                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                                {
+                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                    if (enteredText.Count > 0)
+                                        attributeModel.DefaultValue = enteredText[0];
+                                }
+                            }
+                            break;
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.FileUpload:
+                        default:
+                            //not supported attribute control types
+                            break;
+                    }
+                }
+
+                result.Add(attributeModel);
+            }
+
+
+            return result;
+        }
+
+        [NonAction]
         protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
         {
             if (model == null)
@@ -352,87 +443,9 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            #region Custom customer attributes
-
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var attribute in customerAttributes)
-            {
-                var caModel = new CustomerAttributeModel
-                {
-                    Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
-                    foreach (var caValue in caValues)
-                    {
-                        var caValueModel = new CustomerAttributeValueModel
-                        {
-                            Id = caValue.Id,
-                            Name = caValue.GetLocalized(x => x.Name),
-                            IsPreSelected = caValue.IsPreSelected
-                        };
-                        caModel.Values.Add(caValueModel);
-                    }
-                }
-
-                //set already selected attributes
-                var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
-                switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
-                    case AttributeControlType.RadioList:
-                    case AttributeControlType.Checkboxes:
-                        {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
-                            {
-                                //clear default selection
-                                foreach (var item in caModel.Values)
-                                    item.IsPreSelected = false;
-
-                                //select new values
-                                var selectedCaValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var caValue in selectedCaValues)
-                                    foreach (var item in caModel.Values)
-                                        if (caValue.Id == item.Id)
-                                            item.IsPreSelected = true;
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ReadonlyCheckboxes:
-                        {
-                            //do nothing
-                            //values are already pre-set
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
-                            {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                if (enteredText.Count > 0)
-                                    caModel.DefaultValue = enteredText[0];
-                            }
-                        }
-                        break;
-                    case AttributeControlType.ColorSquares:
-                    case AttributeControlType.Datepicker:
-                    case AttributeControlType.FileUpload:
-                    default:
-                        //not supported attribute control types
-                        break;
-                }
-
-                model.CustomerAttributes.Add(caModel);
-            }
-
-            #endregion 
+            //custom customer attributes
+            var customAttributes = PrepareCustomCustomerAttributes(customer);
+            customAttributes.ForEach(model.CustomerAttributes.Add);
 
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;
@@ -518,39 +531,9 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            #region Custom customer attributes
-
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var attribute in customerAttributes)
-            {
-                var caModel = new CustomerAttributeModel
-                {
-                    Id = attribute.Id,
-                    Name = attribute.GetLocalized(x => x.Name),
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType,
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
-                    foreach (var caValue in caValues)
-                    {
-                        var caValueModel = new CustomerAttributeValueModel
-                        {
-                            Id = caValue.Id,
-                            Name = caValue.GetLocalized(x => x.Name),
-                            IsPreSelected = caValue.IsPreSelected
-                        };
-                        caModel.Values.Add(caValueModel);
-                    }
-                }
-
-                model.CustomerAttributes.Add(caModel);
-            }
-
-            #endregion 
+            //custom customer attributes
+            var customAttributes = PrepareCustomCustomerAttributes(null);
+            customAttributes.ForEach(model.CustomerAttributes.Add);
         }
 
         [NonAction]
