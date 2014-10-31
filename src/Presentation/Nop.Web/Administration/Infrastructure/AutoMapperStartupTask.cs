@@ -62,6 +62,8 @@ namespace Nop.Admin.Infrastructure
             //address
             Mapper.CreateMap<Address, AddressModel>()
                 .ForMember(dest => dest.AddressHtml, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomAddressAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.FormattedCustomAddressAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableCountries, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStates, mo => mo.Ignore())
                 .ForMember(dest => dest.FirstNameEnabled, mo => mo.Ignore())
@@ -92,6 +94,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<AddressModel, Address>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Country, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomAttributes, mo => mo.Ignore())
                 .ForMember(dest => dest.StateProvince, mo => mo.Ignore());
 
             //countries
@@ -516,6 +519,14 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<CustomerAttributeModel, CustomerAttribute>()
                 .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomerAttributeValues, mo => mo.Ignore());
+            //address attributes
+            Mapper.CreateMap<AddressAttribute, AddressAttributeModel>()
+                .ForMember(dest => dest.AttributeControlTypeName, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<AddressAttributeModel, AddressAttribute>()
+                .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
+                .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
             //discounts
             Mapper.CreateMap<Discount, DiscountModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())

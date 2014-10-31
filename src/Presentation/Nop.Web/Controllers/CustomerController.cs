@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -76,6 +77,9 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -100,21 +104,37 @@ namespace Nop.Web.Controllers
             ICustomerAttributeService customerAttributeService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService,
-            ITaxService taxService, RewardPointsSettings rewardPointsSettings,
-            CustomerSettings customerSettings,AddressSettings addressSettings, ForumSettings forumSettings,
-            OrderSettings orderSettings, IAddressService addressService,
-            ICountryService countryService, IStateProvinceService stateProvinceService,
+            ITaxService taxService, 
+            RewardPointsSettings rewardPointsSettings,
+            CustomerSettings customerSettings,
+            AddressSettings addressSettings, 
+            ForumSettings forumSettings,
+            OrderSettings orderSettings, 
+            IAddressService addressService,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             IOrderTotalCalculationService orderTotalCalculationService,
-            IOrderProcessingService orderProcessingService, IOrderService orderService,
-            ICurrencyService currencyService, IPriceFormatter priceFormatter,
-            IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IForumService forumService, IShoppingCartService shoppingCartService,
+            IOrderProcessingService orderProcessingService, 
+            IOrderService orderService,
+            ICurrencyService currencyService, 
+            IPriceFormatter priceFormatter,
+            IPictureService pictureService, 
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IForumService forumService, 
+            IShoppingCartService shoppingCartService,
             IOpenAuthenticationService openAuthenticationService, 
             IBackInStockSubscriptionService backInStockSubscriptionService, 
-            IDownloadService downloadService, IWebHelper webHelper,
-            ICustomerActivityService customerActivityService, MediaSettings mediaSettings,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
+            IDownloadService downloadService,
+            IWebHelper webHelper,
+            ICustomerActivityService customerActivityService,
+            IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeFormatter addressAttributeFormatter,
+            MediaSettings mediaSettings,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings,
+            CaptchaSettings captchaSettings,
+            ExternalAuthenticationSettings externalAuthenticationSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -152,7 +172,9 @@ namespace Nop.Web.Controllers
             this._downloadService = downloadService;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
-
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeFormatter = addressAttributeFormatter;
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
@@ -580,17 +602,14 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual string ParseCustomCustomerAttributes(Customer customer, FormCollection form)
+        protected virtual string ParseCustomCustomerAttributes(FormCollection form)
         {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
             if (form == null)
                 throw new ArgumentNullException("form");
 
             string selectedAttributes = "";
-            var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
-            foreach (var attribute in customerAttributes)
+            var attributes = _customerAttributeService.GetAllCustomerAttributes();
+            foreach (var attribute in attributes)
             {
                 string controlId = string.Format("customer_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
@@ -653,6 +672,85 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.FileUpload:
                         //not supported customer attributes
+                    default:
+                        break;
+                }
+            }
+
+            return selectedAttributes;
+        }
+
+        [NonAction]
+        protected virtual string ParseCustomAddressAttributes(FormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
+            string selectedAttributes = "";
+            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                string controlId = string.Format("address_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var cvaValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in cvaValues
+                                .Where(pvav => pvav.IsPreSelected)
+                                .Select(pvav => pvav.Id)
+                                .ToList())
+                            {
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported address attributes
                     default:
                         break;
                 }
@@ -778,7 +876,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom customer attributes
-            var customerAttributes = ParseCustomCustomerAttributes(customer, form);
+            var customerAttributes = ParseCustomCustomerAttributes(form);
             var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
             foreach (var error in customerAttributeWarnings)
             {
@@ -1115,7 +1213,7 @@ namespace Nop.Web.Controllers
             try
             {
                 //custom customer attributes
-                var customerAttributes = ParseCustomCustomerAttributes(customer, form);
+                var customerAttributes = ParseCustomCustomerAttributes(form);
                 var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
                 foreach (var error in customerAttributeWarnings)
                 {
@@ -1296,8 +1394,14 @@ namespace Nop.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(address, false, _addressSettings, _localizationService,
-                    _stateProvinceService, () => _countryService.GetAllCountries());
+                addressModel.PrepareModel(
+                    address: address,
+                    excludeProperties: false,
+                    addressSettings: _addressSettings,
+                    localizationService: _localizationService,
+                    stateProvinceService: _stateProvinceService,
+                    addressAttributeFormatter: _addressAttributeFormatter,
+                    loadCountries: () => _countryService.GetAllCountries());
                 model.Addresses.Add(addressModel);
             }
             return View(model);
@@ -1335,24 +1439,40 @@ namespace Nop.Web.Controllers
             var model = new CustomerAddressEditModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
-            model.Address.PrepareModel(null, false, _addressSettings, _localizationService,
-                    _stateProvinceService, () => _countryService.GetAllCountries());
+            model.Address.PrepareModel(
+                address: null,
+                excludeProperties: false,
+                addressSettings:_addressSettings,
+                localizationService:_localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountries());
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddressAdd(CustomerAddressEditModel model)
+        [ValidateInput(false)]
+        public ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
 
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
+                address.CustomAttributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
                 //some validation
                 if (address.CountryId == 0)
@@ -1368,8 +1488,15 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
-            model.Address.PrepareModel(null, true, _addressSettings, _localizationService,
-                    _stateProvinceService, () => _countryService.GetAllCountries());
+            model.Address.PrepareModel(
+                address: null,
+                excludeProperties: true,
+                addressSettings:_addressSettings,
+                localizationService:_localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountries());
 
             return View(model);
         }
@@ -1390,14 +1517,21 @@ namespace Nop.Web.Controllers
             var model = new CustomerAddressEditModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
-            model.Address.PrepareModel(address, false, _addressSettings, _localizationService,
-                    _stateProvinceService, () => _countryService.GetAllCountries());
+            model.Address.PrepareModel(address: address,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                localizationService: _localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountries());
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId)
+        [ValidateInput(false)]
+        public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -1409,9 +1543,18 @@ namespace Nop.Web.Controllers
                 //address is not found
                 return RedirectToRoute("CustomerAddresses");
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             if (ModelState.IsValid)
             {
                 address = model.Address.ToEntity(address);
+                address.CustomAttributes = customAttributes;
                 _addressService.UpdateAddress(address);
 
                 return RedirectToRoute("CustomerAddresses");
@@ -1420,8 +1563,15 @@ namespace Nop.Web.Controllers
             //If we got this far, something failed, redisplay form
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
-            model.Address.PrepareModel(address, true, _addressSettings, _localizationService,
-                    _stateProvinceService, () => _countryService.GetAllCountries());
+            model.Address.PrepareModel(
+                address: address,
+                excludeProperties: true,
+                addressSettings: _addressSettings,
+                localizationService: _localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountries());
             return View(model);
         }
 

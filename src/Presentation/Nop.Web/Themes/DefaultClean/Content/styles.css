@@ -418,6 +418,10 @@ td.fieldname{font-size:12px;}
 .checkout-data .enter-address{border:1px solid #EEE;height:auto;padding:10px;}
 .checkout-data .enter-address label{display:inline-block;width:95px;}
 .checkout-data .enter-address .buttons{margin-top:10px;}
+.checkout-data .enter-address .custom-attributes ul.option-list{display:inline-block;}
+.checkout-data .enter-address .custom-attributes ul.option-list li{list-style:none;display:inline-block;}
+.checkout-data .enter-address .custom-attributes ul.option-list li label{width:auto;margin-left:0px;}
+.checkout-data .enter-address .custom-attributes textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
 .checkout-data .pickup-in-store{border:1px solid #EEE;height:auto;padding:10px;}
 .checkout-data .pickup-in-store .description{font-style:italic;}
 .checkout-data .shipping-method{text-align:left;border:1px solid #EEE;height:auto;}
@@ -682,9 +686,9 @@ td.fieldname{font-size:12px;}
 .registration-page .page-title{}
 .registration-page .page-body{margin:0;padding:0;color:#555;background-color:inherit;}
 .registration-page .gender{display:inline-block;}
-.registration-page ul.option-list{display:inline-block;}
-.registration-page ul.option-list li{list-style:none;display:inline-block;}
-.registration-page ul.option-list li label{width:auto;margin-left:0px;}
+.registration-page .custom-attributes ul.option-list{display:inline-block;}
+.registration-page .custom-attributes ul.option-list li{list-style:none;display:inline-block;}
+.registration-page .custom-attributes ul.option-list li label{width:auto;margin-left:0px;}
 .registration-page .vat-note{display:block;}
 .registration-page .accept-privacy-policy{float:left;margin-bottom:5px;margin-top:5px;clear:both;}
 .registration-page .accept-privacy-policy .read{text-decoration:underline;}
@@ -905,6 +909,10 @@ td.fieldname{font-size:12px;}
 .address-edit-page .edit-address{margin-bottom:10px;}
 .address-edit-page .edit-address .inputs{margin-bottom:5px;}
 .address-edit-page .edit-address label{display:inline-block;width:100px;}
+.address-edit-page .edit-address .custom-attributes ul.option-list{display:inline-block;}
+.address-edit-page .edit-address .custom-attributes ul.option-list li{list-style:none;display:inline-block;}
+.address-edit-page .edit-address .custom-attributes ul.option-list li label{width:auto;margin-left:0px;}
+.address-edit-page .edit-address .custom-attributes textarea{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
 .address-edit-page .buttons{}
 .avatar-page{padding:10px;}
 .avatar-page .buttons{margin:5px 0;}
@@ -924,9 +932,9 @@ td.fieldname{font-size:12px;}
 .forum-subscriptions-page .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
 .customer-info-page{}
 .customer-info-page .gender{display:inline-block;}
-.customer-info-page ul.option-list{display:inline-block;}
-.customer-info-page ul.option-list li{list-style:none;display:inline-block;}
-.customer-info-page ul.option-list li label{width:auto;margin-left:0px;}
+.customer-info-page .custom-attributes ul.option-list{display:inline-block;}
+.customer-info-page .custom-attributes ul.option-list li{list-style:none;display:inline-block;}
+.customer-info-page .custom-attributes ul.option-list li label{width:auto;margin-left:0px;}
 .customer-info-page .vat-status{}
 .customer-info-page .vat-note{display:block;}
 .customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}

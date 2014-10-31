@@ -102,6 +102,12 @@
                                 @address.CountryName
                             </li>
                         }
+                        @if (!String.IsNullOrEmpty(address.FormattedCustomAddressAttributes))
+                        {
+                            <li class="custom-attributes-view">
+                                @Html.Raw(address.FormattedCustomAddressAttributes)
+                            </li>
+                        }
                     </ul>
                     <div class="buttons">
                         <input type="button" class="button-2 edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'" value='@T("Common.Edit")' />

@@ -93,6 +93,12 @@
                                                 @item.CountryName
                                             </li>
                                         }
+                                        @if (!String.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
+                                        {
+                                            <li class="custom-attributes-view">
+                                                @Html.Raw(item.FormattedCustomAddressAttributes)
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
                             }
@@ -112,6 +118,9 @@
                         }
                     </div>
                     <div class="enter-address">
+                        <div class="message-error">
+                            @Html.ValidationSummary(true)
+                        </div>
                         <div class="enter-address-body">
                             @{
                                 var dataDictAddress = new ViewDataDictionary();

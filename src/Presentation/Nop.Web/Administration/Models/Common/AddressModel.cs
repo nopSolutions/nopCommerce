@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Common;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -14,6 +15,7 @@ namespace Nop.Admin.Models.Common
         {
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
+            CustomAddressAttributes = new List<AddressAttributeModel>();
         }
 
         [NopResourceDisplayName("Admin.Address.Fields.FirstName")]
@@ -70,9 +72,13 @@ namespace Nop.Admin.Models.Common
         [AllowHtml]
         public string FaxNumber { get; set; }
 
+        //address in HTML format (usually used in grids)
         [NopResourceDisplayName("Admin.Address")]
         public string AddressHtml { get; set; }
 
+        //formatted custom address attributes
+        public string FormattedCustomAddressAttributes { get; set; }
+        public IList<AddressAttributeModel> CustomAddressAttributes { get; set; }
 
 
         public IList<SelectListItem> AvailableCountries { get; set; }
@@ -102,5 +108,38 @@ namespace Nop.Admin.Models.Common
         public bool PhoneRequired { get; set; }
         public bool FaxEnabled { get; set; }
         public bool FaxRequired { get; set; }
+
+
+        #region Nested classes
+
+        public partial class AddressAttributeModel : BaseNopEntityModel
+        {
+            public AddressAttributeModel()
+            {
+                Values = new List<AddressAttributeValueModel>();
+            }
+
+            public string Name { get; set; }
+
+            public bool IsRequired { get; set; }
+
+            /// <summary>
+            /// Selected value for textboxes
+            /// </summary>
+            public string DefaultValue { get; set; }
+
+            public AttributeControlType AttributeControlType { get; set; }
+
+            public IList<AddressAttributeValueModel> Values { get; set; }
+        }
+
+        public partial class AddressAttributeValueModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+
+            public bool IsPreSelected { get; set; }
+        }
+
+        #endregion
     }
 }

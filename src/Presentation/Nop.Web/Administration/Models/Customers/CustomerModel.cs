@@ -298,7 +298,7 @@ namespace Nop.Admin.Models.Customers
             public bool IsRequired { get; set; }
 
             /// <summary>
-            /// Selected value for textboxes
+            /// Default value for textboxes
             /// </summary>
             public string DefaultValue { get; set; }
 

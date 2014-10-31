@@ -127,6 +127,14 @@
                         </td>
                     </tr>
                 }
+                @if (!String.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                {
+                    <tr class="custom-attributes-view">
+                        <td colspan="2">
+                            @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
+                        </td>
+                    </tr>
+                }
                 @if (!Model.IsLoggedInAsVendor)
                 {
                     <tr>

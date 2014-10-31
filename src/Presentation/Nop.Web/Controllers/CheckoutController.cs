@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -56,7 +57,11 @@ namespace Nop.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
-        private readonly HttpContextBase _httpContext;
+        private readonly HttpContextBase _httpContext; 
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+
         
 
         private readonly OrderSettings _orderSettings;
@@ -90,6 +95,9 @@ namespace Nop.Web.Controllers
             IOrderService orderService,
             IWebHelper webHelper,
             HttpContextBase httpContext,
+            IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeFormatter addressAttributeFormatter,
             OrderSettings orderSettings, 
             RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings,
@@ -117,6 +125,9 @@ namespace Nop.Web.Controllers
             this._orderService = orderService;
             this._webHelper = webHelper;
             this._httpContext = httpContext;
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeFormatter = addressAttributeFormatter;
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -156,22 +167,27 @@ namespace Nop.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(address, 
-                    false, 
-                    _addressSettings);
+                addressModel.PrepareModel(
+                    address: address, 
+                    excludeProperties: false, 
+                    addressSettings: _addressSettings,
+                    addressAttributeFormatter: _addressAttributeFormatter);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(null,
-                false,
-                _addressSettings,
-                _localizationService,
-                _stateProvinceService,
-                () => _countryService.GetAllCountriesForBilling(),
-                prePopulateNewAddressWithCustomerFields,
-                _workContext.CurrentCustomer);
+            model.NewAddress.PrepareModel(address: 
+                null,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                localizationService: _localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountriesForBilling(),
+                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
+                customer: _workContext.CurrentCustomer);
             return model;
         }
 
@@ -199,22 +215,27 @@ namespace Nop.Web.Controllers
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                addressModel.PrepareModel(address,
-                    false,
-                    _addressSettings);
+                addressModel.PrepareModel(
+                    address: address,
+                    excludeProperties: false,
+                    addressSettings: _addressSettings,
+                    addressAttributeFormatter: _addressAttributeFormatter);
                 model.ExistingAddresses.Add(addressModel);
             }
 
             //new address
             model.NewAddress.CountryId = selectedCountryId;
-            model.NewAddress.PrepareModel(null,
-                false,
-                _addressSettings,
-                _localizationService,
-                _stateProvinceService,
-                () => _countryService.GetAllCountriesForShipping(),
-                prePopulateNewAddressWithCustomerFields,
-                _workContext.CurrentCustomer);
+            model.NewAddress.PrepareModel(
+                address: null,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                localizationService: _localizationService,
+                stateProvinceService: _stateProvinceService,
+                addressAttributeService: _addressAttributeService,
+                addressAttributeParser: _addressAttributeParser,
+                loadCountries: () => _countryService.GetAllCountriesForShipping(),
+                prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
+                customer: _workContext.CurrentCustomer);
             return model;
         }
 
@@ -417,6 +438,85 @@ namespace Nop.Web.Controllers
             return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
         }
 
+        [NonAction]
+        protected virtual string ParseCustomAddressAttributes(FormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
+            string selectedAttributes = "";
+            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                string controlId = string.Format("address_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var cvaValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in cvaValues
+                                .Where(pvav => pvav.IsPreSelected)
+                                .Select(pvav => pvav.Id)
+                                .ToList())
+                            {
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported address attributes
+                    default:
+                        break;
+                }
+            }
+
+            return selectedAttributes;
+        }
+
         #endregion
 
         #region Methods (common)
@@ -505,7 +605,7 @@ namespace Nop.Web.Controllers
 
         #region Methods (multistep checkout)
 
-        public ActionResult BillingAddress()
+        public ActionResult BillingAddress(FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -535,7 +635,7 @@ namespace Nop.Web.Controllers
 
                 TryValidateModel(model);
                 TryValidateModel(model.NewAddress);
-                return NewBillingAddress(model);
+                return NewBillingAddress(model, form);
             }
 
             return View(model);
@@ -553,7 +653,8 @@ namespace Nop.Web.Controllers
         }
         [HttpPost, ActionName("BillingAddress")]
         [FormValueRequired("nextstep")]
-        public ActionResult NewBillingAddress(CheckoutBillingAddressModel model)
+        [ValidateInput(false)]
+        public ActionResult NewBillingAddress(CheckoutBillingAddressModel model, FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -569,6 +670,14 @@ namespace Nop.Web.Controllers
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return new HttpUnauthorizedResult();
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             if (ModelState.IsValid)
             {
                 //try to find an address with the same values (don't duplicate records)
@@ -576,11 +685,13 @@ namespace Nop.Web.Controllers
                     model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
                     model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                     model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                    model.NewAddress.CountryId, customAttributes);
                 if (address == null)
                 {
                     //address is not found. let's create a new one
                     address = model.NewAddress.ToEntity();
+                    address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     //some validation
                     if (address.CountryId == 0)
@@ -648,7 +759,8 @@ namespace Nop.Web.Controllers
         }
         [HttpPost, ActionName("ShippingAddress")]
         [FormValueRequired("nextstep")]
-        public ActionResult NewShippingAddress(CheckoutShippingAddressModel model)
+        [ValidateInput(false)]
+        public ActionResult NewShippingAddress(CheckoutShippingAddressModel model, FormCollection form)
         {
             //validation
             var cart = _workContext.CurrentCustomer.ShoppingCartItems
@@ -707,6 +819,13 @@ namespace Nop.Web.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedPickUpInStore, false, _storeContext.CurrentStore.Id);
             }
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
 
             if (ModelState.IsValid)
             {
@@ -715,10 +834,12 @@ namespace Nop.Web.Controllers
                     model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
                     model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                     model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                    model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                    model.NewAddress.CountryId, customAttributes);
                 if (address == null)
                 {
                     address = model.NewAddress.ToEntity();
+                    address.CustomAttributes = customAttributes;
                     address.CreatedOnUtc = DateTime.UtcNow;
                     //some validation
                     if (address.CountryId == 0)
@@ -1326,6 +1447,15 @@ namespace Nop.Web.Controllers
                     //new address
                     var model = new CheckoutBillingAddressModel();
                     TryUpdateModel(model.NewAddress, "BillingNewAddress");
+
+                    //custom address attributes
+                    var customAttributes = ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                    foreach (var error in customAttributeWarnings)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+
                     //validate model
                     TryValidateModel(model.NewAddress);
                     if (!ModelState.IsValid)
@@ -1349,11 +1479,13 @@ namespace Nop.Web.Controllers
                         model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
                         model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                         model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                        model.NewAddress.CountryId, customAttributes);
                     if (address == null)
                     {
                         //address is not found. let's create a new one
                         address = model.NewAddress.ToEntity();
+                        address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
                         //some validation
                         if (address.CountryId == 0)
@@ -1476,6 +1608,15 @@ namespace Nop.Web.Controllers
                     //new address
                     var model = new CheckoutShippingAddressModel();
                     TryUpdateModel(model.NewAddress, "ShippingNewAddress");
+
+                    //custom address attributes
+                    var customAttributes = ParseCustomAddressAttributes(form);
+                    var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+                    foreach (var error in customAttributeWarnings)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+
                     //validate model
                     TryValidateModel(model.NewAddress);
                     if (!ModelState.IsValid)
@@ -1498,10 +1639,12 @@ namespace Nop.Web.Controllers
                         model.NewAddress.FirstName, model.NewAddress.LastName, model.NewAddress.PhoneNumber,
                         model.NewAddress.Email, model.NewAddress.FaxNumber, model.NewAddress.Company,
                         model.NewAddress.Address1, model.NewAddress.Address2, model.NewAddress.City,
-                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode, model.NewAddress.CountryId);
+                        model.NewAddress.StateProvinceId, model.NewAddress.ZipPostalCode,
+                        model.NewAddress.CountryId, customAttributes);
                     if (address == null)
                     {
                         address = model.NewAddress.ToEntity();
+                        address.CustomAttributes = customAttributes;
                         address.CreatedOnUtc = DateTime.UtcNow;
                         //little hack here (TODO: find a better solution)
                         //EF does not load navigation properties for newly created entities (such as this "Address").

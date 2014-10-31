@@ -70,6 +70,8 @@
     <Compile Include="Catalog\ManufacturerTemplatePersistenceTests.cs" />
     <Compile Include="Catalog\ProductWarehouseInventoryPersistenceTests.cs" />
     <Compile Include="Catalog\ProductTemplatePersistenceTests.cs" />
+    <Compile Include="Common\AddressAttributePersistenceTests.cs" />
+    <Compile Include="Common\AddressAttributeValuePersistenceTests.cs" />
     <Compile Include="Common\SearchTermPeristenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
     <Compile Include="Catalog\CategoryPersistenceTests.cs" />

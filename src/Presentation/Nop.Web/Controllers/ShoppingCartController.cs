@@ -79,6 +79,7 @@ namespace Nop.Web.Controllers
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -125,6 +126,7 @@ namespace Nop.Web.Controllers
             IWebHelper webHelper, 
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
+            IAddressAttributeFormatter addressAttributeFormatter,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -167,6 +169,7 @@ namespace Nop.Web.Controllers
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
             this._genericAttributeService = genericAttributeService;
+            this._addressAttributeFormatter = addressAttributeFormatter;
             
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -587,7 +590,11 @@ namespace Nop.Web.Controllers
                 //billing info
                 var billingAddress = _workContext.CurrentCustomer.BillingAddress;
                 if (billingAddress != null)
-                    model.OrderReviewData.BillingAddress.PrepareModel(billingAddress, false, _addressSettings);
+                    model.OrderReviewData.BillingAddress.PrepareModel(
+                        address: billingAddress, 
+                        excludeProperties: false,
+                        addressSettings: _addressSettings,
+                        addressAttributeFormatter: _addressAttributeFormatter);
                
                 //shipping info
                 if (cart.RequiresShipping())
@@ -604,7 +611,11 @@ namespace Nop.Web.Controllers
                         var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
                         if (shippingAddress != null)
                         {
-                            model.OrderReviewData.ShippingAddress.PrepareModel(shippingAddress, false, _addressSettings);
+                            model.OrderReviewData.ShippingAddress.PrepareModel(
+                                address: shippingAddress, 
+                                excludeProperties: false,
+                                addressSettings: _addressSettings,
+                                addressAttributeFormatter: _addressAttributeFormatter);
                         }
                     }
                     

@@ -92,6 +92,12 @@
                                             @item.CountryName
                                         </li>
                                     }
+                                    @if (!String.IsNullOrEmpty(item.FormattedCustomAddressAttributes))
+                                    {
+                                        <li class="custom-attributes-view">
+                                            @Html.Raw(item.FormattedCustomAddressAttributes)
+                                        </li>
+                                    }
                                 </ul>
                             </div>
                         }
@@ -111,6 +117,9 @@
                     }
                 </div>
                 <div class="enter-address">
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
                     <div class="enter-address-body">
                         @{
                             var dataDictAddress = new ViewDataDictionary();
@@ -127,7 +136,6 @@
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
         }
-        
         <div class="section order-summary-body">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>

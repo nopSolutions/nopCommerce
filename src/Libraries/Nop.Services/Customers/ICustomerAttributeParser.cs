@@ -4,7 +4,7 @@ using Nop.Core.Domain.Customers;
 namespace Nop.Services.Customers
 {
     /// <summary>
-    /// Cusomer attribute parser interface
+    /// Customer attribute parser interface
     /// </summary>
     public partial interface ICustomerAttributeParser
     {

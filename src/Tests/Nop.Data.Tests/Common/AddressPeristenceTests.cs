@@ -24,6 +24,7 @@ namespace Nop.Data.Tests.Common
                 ZipPostalCode = "ZipPostalCode 1",
                 PhoneNumber = "PhoneNumber 1",
                 FaxNumber = "FaxNumber 1",
+                CustomAttributes = "CustomAttributes 1",
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 Country = GetTestCountry()
             };
@@ -41,6 +42,7 @@ namespace Nop.Data.Tests.Common
             fromDb.ZipPostalCode.ShouldEqual("ZipPostalCode 1");
             fromDb.PhoneNumber.ShouldEqual("PhoneNumber 1");
             fromDb.FaxNumber.ShouldEqual("FaxNumber 1");
+            fromDb.CustomAttributes.ShouldEqual("CustomAttributes 1");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
             fromDb.Country.ShouldNotBeNull();

@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+
+@model AddressAttributeValueModel
+
+@{
+    //page title
+    ViewBag.Title = T("Admin.Address.AddressAttributes.Values.EditValueDetails").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Address.AddressAttributes.Values.EditValueDetails")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateValue", Model)
+}

@@ -55,6 +55,8 @@ namespace Nop.Web.Extensions
             return model;
         }
 
+
+        //address
         /// <summary>
         /// Prepare address model
         /// </summary>
@@ -64,6 +66,9 @@ namespace Nop.Web.Extensions
         /// <param name="addressSettings">Address settings</param>
         /// <param name="localizationService">Localization service (used to prepare a select list)</param>
         /// <param name="stateProvinceService">State service (used to prepare a select list). null to don't prepare the list.</param>
+        /// <param name="addressAttributeService">Address attribute service. null to don't prepare the list.</param>
+        /// <param name="addressAttributeParser">Address attribute parser. null to don't prepare the list.</param>
+        /// <param name="addressAttributeFormatter">Address attribute formatter. null to don't prepare the formatted custom attributes.</param>
         /// <param name="loadCountries">A function to load countries  (used to prepare a select list). null to don't prepare the list.</param>
         /// <param name="prePopulateWithCustomerFields">A value indicating whether to pre-populate an address with customer fields entered during registration. It's used only when "address" parameter is set to "null"</param>
         /// <param name="customer">Customer record which will be used to pre-populate address. Used only when "prePopulateWithCustomerFields" is "true".</param>
@@ -72,6 +77,9 @@ namespace Nop.Web.Extensions
             AddressSettings addressSettings,
             ILocalizationService localizationService = null,
             IStateProvinceService stateProvinceService = null,
+            IAddressAttributeService addressAttributeService = null,
+            IAddressAttributeParser addressAttributeParser = null,
+            IAddressAttributeFormatter addressAttributeFormatter = null,
             Func<IList<Country>> loadCountries = null,
             bool prePopulateWithCustomerFields = false,
             Customer customer = null)
@@ -193,6 +201,105 @@ namespace Nop.Web.Extensions
             model.PhoneRequired = addressSettings.PhoneRequired;
             model.FaxEnabled = addressSettings.FaxEnabled;
             model.FaxRequired = addressSettings.FaxRequired;
+
+            //customer attribute services
+            if (addressAttributeService != null && addressAttributeParser != null)
+            {
+                PrepareCustomAddressAttributes(model, address, addressAttributeService, addressAttributeParser);
+            }
+            if (addressAttributeFormatter != null && address != null)
+            {
+                model.FormattedCustomAddressAttributes = addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+            }
+        }
+        private static void PrepareCustomAddressAttributes(this AddressModel model, 
+            Address address,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeParser addressAttributeParser)
+        {
+            if (addressAttributeService == null)
+                throw new ArgumentNullException("addressAttributeService");
+
+            if (addressAttributeParser == null)
+                throw new ArgumentNullException("addressAttributeParser");
+
+            var attributes = addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                var aaModel = new AddressAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.GetLocalized(x => x.Name),
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var aaValues = addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    foreach (var aaValue in aaValues)
+                    {
+                        var aaValueModel = new AddressAttributeValueModel
+                        {
+                            Id = aaValue.Id,
+                            Name = aaValue.GetLocalized(x => x.Name),
+                            IsPreSelected = aaValue.IsPreSelected
+                        };
+                        aaModel.Values.Add(aaValueModel);
+                    }
+                }
+
+                //set already selected attributes
+                var selectedAddressAttributes = address != null ? address.CustomAttributes : null;
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in aaModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedAaValues = addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                foreach (var aaValue in selectedAaValues)
+                                    foreach (var item in aaModel.Values)
+                                        if (aaValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
+                                if (enteredText.Count > 0)
+                                    aaModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
+                }
+
+                model.CustomAddressAttributes.Add(aaModel);
+            }
         }
         public static Address ToEntity(this AddressModel model, bool trimFields = true)
         {

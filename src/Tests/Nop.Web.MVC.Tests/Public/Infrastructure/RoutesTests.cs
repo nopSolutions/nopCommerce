@@ -136,7 +136,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/checkout".ShouldMapTo<CheckoutController>(c => c.Index());
             "~/onepagecheckout".ShouldMapTo<CheckoutController>(c => c.OnePageCheckout());
             "~/checkout/shippingaddress".ShouldMapTo<CheckoutController>(c => c.ShippingAddress());
-            "~/checkout/billingaddress".ShouldMapTo<CheckoutController>(c => c.BillingAddress());
+            "~/checkout/billingaddress".ShouldMapTo<CheckoutController>(c => c.BillingAddress(null));
             "~/checkout/shippingmethod".ShouldMapTo<CheckoutController>(c => c.ShippingMethod());
             "~/checkout/paymentmethod".ShouldMapTo<CheckoutController>(c => c.PaymentMethod());
             "~/checkout/paymentinfo".ShouldMapTo<CheckoutController>(c => c.PaymentInfo());

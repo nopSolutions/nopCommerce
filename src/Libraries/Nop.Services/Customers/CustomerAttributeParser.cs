@@ -8,7 +8,7 @@ using Nop.Services.Localization;
 namespace Nop.Services.Customers
 {
     /// <summary>
-    /// Cusomer attribute parser
+    /// Customer attribute parser
     /// </summary>
     public partial class CustomerAttributeParser : ICustomerAttributeParser
     {
@@ -233,14 +233,14 @@ namespace Nop.Services.Customers
             //ensure it's our attributes
             var cva1Collection = ParseCustomerAttributes(selectedAttributes);
 
-            //validate required checkout attributes (whether they're chosen/selected/entered)
+            //validate required customer attributes (whether they're chosen/selected/entered)
             var cva2Collection = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var cva2 in cva2Collection)
             {
                 if (cva2.IsRequired)
                 {
                     bool found = false;
-                    //selected checkout attributes
+                    //selected customer attributes
                     foreach (var cva1 in cva1Collection)
                     {
                         if (cva1.Id == cva2.Id)

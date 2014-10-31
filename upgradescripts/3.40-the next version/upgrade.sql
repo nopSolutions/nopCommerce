@@ -314,6 +314,93 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow.Hint">
     <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes">
+	<Value>Custom address attributes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.AddNew">
+	<Value>Add a new address attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.BackToList">
+	<Value>back to address attribute list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Description">
+	<Value>If the default form fields are not enough for your needs, then you can manage additional address attributes below.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.EditAttributeDetails">
+	<Value>Edit address attribute details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Info">
+	<Value>Attribute info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Added">
+	<Value>The new attribute has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Deleted">
+	<Value>The attribute has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Updated">
+	<Value>The attribute has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name.Hint">
+	<Value>The name of the address attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired">
+	<Value>Required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired.Hint">
+	<Value>When an attribute is required, the address must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.AttributeControlType">
+	<Value>Control type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.AttributeControlType.Hint">
+	<Value>Choose how to display your attribute values.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.DisplayOrder.Hint">
+	<Value>The address attribute display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values">
+	<Value>Attribute values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.AddNew">
+	<Value>Add a new address value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.EditValueDetails">
+	<Value>Edit address value details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.SaveBeforeEdit">
+	<Value>You need to save the address attribute before you can add values for this address attribute page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name.Hint">
+	<Value>The name of the address value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.IsPreSelected">
+	<Value>Pre-selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.IsPreSelected.Hint">
+	<Value>Determines whether this attribute value is pre selected for the address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.DisplayOrder.Hint">
+	<Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1366,5 +1453,62 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores])
 	VALUES (N'QuantityBelow.AttributeCombination.StoreOwnerNotification', null, N'%Store.Name%. Quantity below notification. %Product.Name%', N'<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Product.Name% (ID: %Product.ID%) low quantity. <br />%AttributeCombination.Formatted%<br />Quantity: %AttributeCombination.StockQuantity%<br /></p>', 1, 0, 0)
+END
+GO
+
+
+
+--address attributes
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[AddressAttribute]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[AddressAttribute](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] nvarchar(400) NOT NULL,
+	[IsRequired] [bit] NOT NULL,
+	[AttributeControlTypeId] [int] NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[AddressAttributeValue]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[AddressAttributeValue](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[AddressAttributeId] [int] NOT NULL,
+	[Name] nvarchar(400) NOT NULL,
+	[IsPreSelected] [bit] NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'AddressAttributeValue_AddressAttribute'
+           AND parent_object_id = Object_id('AddressAttributeValue')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.AddressAttributeValue
+DROP CONSTRAINT AddressAttributeValue_AddressAttribute
+GO
+ALTER TABLE [dbo].[AddressAttributeValue]  WITH CHECK ADD  CONSTRAINT [AddressAttributeValue_AddressAttribute] FOREIGN KEY([AddressAttributeId])
+REFERENCES [dbo].[AddressAttribute] ([Id])
+ON DELETE CASCADE
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Address]') and NAME='CustomAttributes')
+BEGIN
+	ALTER TABLE [Address]
+	ADD [CustomAttributes] nvarchar(MAX) NULL
 END
 GO

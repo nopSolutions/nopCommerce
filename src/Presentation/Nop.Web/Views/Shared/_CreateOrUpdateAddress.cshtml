@@ -1,6 +1,5 @@
 ﻿@model AddressModel
 @using Nop.Web.Models.Common;
-
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script type="text/javascript">
@@ -155,5 +154,9 @@
             }
             @Html.ValidationMessageFor(model => model.FaxNumber)
         </div>
+    }
+    @if (Model.CustomAddressAttributes.Count > 0)
+    {
+        @Html.Partial("_AddressAttributes", Model.CustomAddressAttributes)
     }
 </div>

@@ -130,6 +130,12 @@
                                         </span>
                                     </li>
                                 }
+                                @if (!String.IsNullOrEmpty(Model.BillingAddress.FormattedCustomAddressAttributes))
+                                {
+                                    <li class="custom-attributes-view">
+                                        @Html.Raw(Model.BillingAddress.FormattedCustomAddressAttributes)
+                                    </li>
+                                }
                                 @if (!String.IsNullOrEmpty(Model.PaymentMethod))
                                 {
                                     <li class="title">
@@ -255,6 +261,12 @@
                                         {
                                             <li class="country">
                                                 @Model.ShippingAddress.CountryName
+                                            </li>
+                                        }
+                                        if (!String.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
+                                        {
+                                            <li class="custom-attributes-view">
+                                                @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
                                             </li>
                                         }
                                     }

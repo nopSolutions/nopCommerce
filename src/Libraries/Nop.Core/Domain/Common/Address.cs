@@ -66,6 +66,11 @@ namespace Nop.Core.Domain.Common
         public string FaxNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the custom attributes (see "AddressAttribute" entity for more info)
+        /// </summary>
+        public string CustomAttributes { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
@@ -99,6 +104,7 @@ namespace Nop.Core.Domain.Common
                 ZipPostalCode = this.ZipPostalCode,
                 PhoneNumber = this.PhoneNumber,
                 FaxNumber = this.FaxNumber,
+                CustomAttributes = this.CustomAttributes,
                 CreatedOnUtc = this.CreatedOnUtc,
             };
             return addr;

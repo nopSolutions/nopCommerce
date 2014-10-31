@@ -45,6 +45,7 @@ namespace Nop.Web.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWebHelper _webHelper;
         private readonly IDownloadService _downloadService;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
             IProductAttributeParser productAttributeParser,
             IWebHelper webHelper,
             IDownloadService downloadService,
+             IAddressAttributeFormatter addressAttributeFormatter,
             CatalogSettings catalogSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -92,6 +94,7 @@ namespace Nop.Web.Controllers
             this._productAttributeParser = productAttributeParser;
             this._webHelper = webHelper;
             this._downloadService = downloadService;
+            this._addressAttributeFormatter = addressAttributeFormatter;
 
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
@@ -125,7 +128,11 @@ namespace Nop.Web.Controllers
                 model.PickUpInStore = order.PickUpInStore;
                 if (!order.PickUpInStore)
                 {
-                    model.ShippingAddress.PrepareModel(order.ShippingAddress, false, _addressSettings);
+                    model.ShippingAddress.PrepareModel(
+                        address: order.ShippingAddress,
+                        excludeProperties: false,
+                        addressSettings: _addressSettings,
+                        addressAttributeFormatter: _addressAttributeFormatter);
                 }
                 model.ShippingMethod = order.ShippingMethod;
    
@@ -149,7 +156,11 @@ namespace Nop.Web.Controllers
 
 
             //billing info
-            model.BillingAddress.PrepareModel(order.BillingAddress, false, _addressSettings);
+            model.BillingAddress.PrepareModel(
+                address: order.BillingAddress,
+                excludeProperties: false,
+                addressSettings: _addressSettings,
+                addressAttributeFormatter: _addressAttributeFormatter);
 
             //VAT number
             model.VatNumber = order.VatNumber;

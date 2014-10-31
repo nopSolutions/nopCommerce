@@ -88,6 +88,8 @@
     <Compile Include="Domain\Catalog\AttributeValueType.cs" />
     <Compile Include="Domain\Catalog\ProductWarehouseInventory.cs" />
     <Compile Include="Domain\Catalog\ProductType.cs" />
+    <Compile Include="Domain\Common\AddressAttribute.cs" />
+    <Compile Include="Domain\Common\AddressAttributeValue.cs" />
     <Compile Include="Domain\Common\SearchTermReportLine.cs" />
     <Compile Include="Domain\Common\SearchTerm.cs" />
     <Compile Include="Domain\Customers\CustomerAttribute.cs" />

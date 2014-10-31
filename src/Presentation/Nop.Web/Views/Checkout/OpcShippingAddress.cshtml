@@ -35,6 +35,7 @@
                             {
                                 addressLine += ", " + address.CountryName;
                             }
+                            //how should we render "FormattedCustomAddressAttributes" here?
                             <option value="@(address.Id)">@(addressLine)</option>
                         }
                         <option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>
@@ -45,6 +46,9 @@
         @Html.Widget("op_checkout_shipping_address_middle")
         <div class="section new-shipping-address" id="shipping-new-address-form">
             <div class="enter-address">
+                <div class="message-error">
+                    @Html.ValidationSummary(true)
+                </div>
                 <div class="enter-address-body">
                     @{
                         var dataDictAddress = new ViewDataDictionary();

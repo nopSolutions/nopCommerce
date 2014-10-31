@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -45,6 +46,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
+using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
@@ -227,6 +229,26 @@ namespace Nop.Admin
         }
 
         public static CustomerAttribute ToEntity(this CustomerAttributeModel model, CustomerAttribute destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Address attributes
+
+        //attributes
+        public static AddressAttributeModel ToModel(this AddressAttribute entity)
+        {
+            return entity.MapTo<AddressAttribute, AddressAttributeModel>();
+        }
+
+        public static AddressAttribute ToEntity(this AddressAttributeModel model)
+        {
+            return model.MapTo<AddressAttributeModel, AddressAttribute>();
+        }
+
+        public static AddressAttribute ToEntity(this AddressAttributeModel model, AddressAttribute destination)
         {
             return model.MapTo(destination);
         }
@@ -549,6 +571,97 @@ namespace Nop.Admin
         public static Address ToEntity(this AddressModel model, Address destination)
         {
             return model.MapTo(destination);
+        }
+
+        public static void PrepareCustomAddressAttributes(this AddressModel model,
+            Address address,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeParser addressAttributeParser)
+        {
+            //this method is very similar to the same one in Nop.Web project
+            if (addressAttributeService == null)
+                throw new ArgumentNullException("addressAttributeService");
+
+            if (addressAttributeParser == null)
+                throw new ArgumentNullException("addressAttributeParser");
+
+            var attributes = addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                var aaModel = new AddressModel.AddressAttributeModel
+                {
+                    Id = attribute.Id,
+                    Name = attribute.Name,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType,
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var aaValues = addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    foreach (var aaValue in aaValues)
+                    {
+                        var aaValueModel = new AddressModel.AddressAttributeValueModel
+                        {
+                            Id = aaValue.Id,
+                            Name = aaValue.Name,
+                            IsPreSelected = aaValue.IsPreSelected
+                        };
+                        aaModel.Values.Add(aaValueModel);
+                    }
+                }
+
+                //set already selected attributes
+                var selectedAddressAttributes = address != null ? address.CustomAttributes : null;
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                //clear default selection
+                                foreach (var item in aaModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedAaValues = addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                foreach (var aaValue in selectedAaValues)
+                                    foreach (var item in aaModel.Values)
+                                        if (aaValue.Id == item.Id)
+                                            item.IsPreSelected = true;
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedAddressAttributes))
+                            {
+                                var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
+                                if (enteredText.Count > 0)
+                                    aaModel.DefaultValue = enteredText[0];
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
+                }
+
+                model.CustomAddressAttributes.Add(aaModel);
+            }
         }
 
         #endregion

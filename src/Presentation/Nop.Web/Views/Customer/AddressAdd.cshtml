@@ -17,12 +17,15 @@
             <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses.AddNew")</h1>
         </div>
         <div class="page-body">
+            <div class="message-error">
+                @Html.ValidationSummary(true)
+            </div>
             @{
-    var dataDictAddress = new ViewDataDictionary();
-    //Merge ModelState (required for validation)
-    dataDictAddress.ModelState.Merge(ViewData.ModelState);
-    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
-                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)              
+                var dataDictAddress = new ViewDataDictionary();
+                //Merge ModelState (required for validation)
+                dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
             }
             <div class="buttons">
                 <input type="submit" class="button-1 save-address-button" value="@T("Common.Save")" />

@@ -51,6 +51,7 @@ namespace Nop.Services.Common
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingContext;
         private readonly IWebHelper _webHelper;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
@@ -78,7 +79,8 @@ namespace Nop.Services.Common
             IStoreService storeService,
             IStoreContext storeContext,
             ISettingService settingContext,
-            IWebHelper webHelper, 
+            IWebHelper webHelper,
+            IAddressAttributeFormatter addressAttributeFormatter,
             CatalogSettings catalogSettings, 
             CurrencySettings currencySettings,
             MeasureSettings measureSettings,
@@ -102,6 +104,7 @@ namespace Nop.Services.Common
             this._storeContext = storeContext;
             this._settingContext = settingContext;
             this._webHelper = webHelper;
+            this._addressAttributeFormatter = addressAttributeFormatter;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
             this._measureSettings = measureSettings;
@@ -313,6 +316,15 @@ namespace Nop.Services.Common
                 if (!String.IsNullOrEmpty(order.VatNumber))
                     billingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
 
+                //custom attributes
+                var customBillingAddressAttributes = _addressAttributeFormatter.FormatAttributes( order.BillingAddress.CustomAttributes);
+                if (!String.IsNullOrEmpty(customBillingAddressAttributes))
+                {
+                    //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
+                    billingAddress.AddCell(new Paragraph("   " + HtmlHelper.ConvertHtmlToPlainText(customBillingAddressAttributes, true, true), font));
+                }
+
+
                 //payment method
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 string paymentMethodStr = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, lang.Id) : order.PaymentMethodSystemName;
@@ -364,6 +376,13 @@ namespace Nop.Services.Common
                             shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name, lang.Id) : "", order.ShippingAddress.ZipPostalCode), font));
                         if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
                             shippingAddress.AddCell(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name, lang.Id) : ""), font));
+                        //custom attributes
+                        var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                        if (!String.IsNullOrEmpty(customShippingAddressAttributes))
+                        {
+                            //TODO: we should add padding to each line (in case if we have sevaral custom address attributes)
+                            shippingAddress.AddCell(new Paragraph("   " + HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
+                        }
                         shippingAddress.AddCell(new Paragraph(" "));
                     }
                     shippingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
@@ -994,6 +1013,13 @@ namespace Nop.Services.Common
                         addressTable.AddCell(new Paragraph(String.Format("{0}", order.ShippingAddress.Country != null
                                         ? order.ShippingAddress.Country.GetLocalized(x => x.Name, lang.Id)
                                         : ""), font));
+
+                    //custom attributes
+                    var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                    if (!String.IsNullOrEmpty(customShippingAddressAttributes))
+                    {
+                        addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));
+                    }
                 }
 
                 addressTable.AddCell(new Paragraph(" "));

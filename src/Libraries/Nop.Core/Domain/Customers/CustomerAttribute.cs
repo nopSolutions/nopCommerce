@@ -34,9 +34,6 @@ namespace Nop.Core.Domain.Customers
 
 
 
-
-
-        
         /// <summary>
         /// Gets the attribute control type
         /// </summary>

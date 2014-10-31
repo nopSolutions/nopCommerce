@@ -79,6 +79,9 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly ICustomerAttributeParser _customerAttributeParser;
         private readonly ICustomerAttributeService _customerAttributeService;
+        private readonly IAddressAttributeParser _addressAttributeParser;
+        private readonly IAddressAttributeService _addressAttributeService;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         #endregion
 
@@ -117,7 +120,10 @@ namespace Nop.Admin.Controllers
             AddressSettings addressSettings,
             IStoreService storeService,
             ICustomerAttributeParser customerAttributeParser,
-            ICustomerAttributeService customerAttributeService)
+            ICustomerAttributeService customerAttributeService,
+            IAddressAttributeParser addressAttributeParser,
+            IAddressAttributeService addressAttributeService,
+            IAddressAttributeFormatter addressAttributeFormatter)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -153,6 +159,9 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._customerAttributeParser = customerAttributeParser;
             this._customerAttributeService = customerAttributeService;
+            this._addressAttributeParser = addressAttributeParser;
+            this._addressAttributeService = addressAttributeService;
+            this._addressAttributeFormatter = addressAttributeFormatter;
         }
 
         #endregion
@@ -449,6 +458,85 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ColorSquares:
                     case AttributeControlType.FileUpload:
                     //not supported customer attributes
+                    default:
+                        break;
+                }
+            }
+
+            return selectedAttributes;
+        }
+
+        [NonAction]
+        protected virtual string ParseCustomAddressAttributes(FormCollection form)
+        {
+            if (form == null)
+                throw new ArgumentNullException("form");
+
+            string selectedAttributes = "";
+            var attributes = _addressAttributeService.GetAllAddressAttributes();
+            foreach (var attribute in attributes)
+            {
+                string controlId = string.Format("address_attribute_{0}", attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ctrlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //load read-only (already server-side selected) values
+                            var cvaValues = _addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in cvaValues
+                                .Where(pvav => pvav.IsPreSelected)
+                                .Select(pvav => pvav.Id)
+                                .ToList())
+                            {
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var ctrlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ctrlAttributes))
+                            {
+                                string enteredText = ctrlAttributes.Trim();
+                                selectedAttributes = _addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.FileUpload:
+                    //not supported address attributes
                     default:
                         break;
                 }
@@ -1497,6 +1585,12 @@ namespace Nop.Admin.Controllers
                         addressHtmlSb.AppendFormat("{0}<br />", Server.HtmlEncode(model.ZipPostalCode));
                     if (_addressSettings.CountryEnabled && !String.IsNullOrEmpty(model.CountryName))
                         addressHtmlSb.AppendFormat("{0}", Server.HtmlEncode(model.CountryName));
+                    var customAttributesFormatted = _addressAttributeFormatter.FormatAttributes(x.CustomAttributes);
+                    if (!String.IsNullOrEmpty(customAttributesFormatted))
+                    {
+                        //already encoded
+                        addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+                    }
                     addressHtmlSb.Append("</div>");
                     model.AddressHtml = addressHtmlSb.ToString();
                     return model;
@@ -1569,12 +1663,15 @@ namespace Nop.Admin.Controllers
             foreach (var c in _countryService.GetAllCountries(true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+            //customer attribute services
+            model.Address.PrepareCustomAddressAttributes(null, _addressAttributeService, _addressAttributeParser);
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddressCreate(CustomerAddressModel model)
+        [ValidateInput(false)]
+        public ActionResult AddressCreate(CustomerAddressModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1584,9 +1681,18 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             if (ModelState.IsValid)
             {
                 var address = model.Address.ToEntity();
+                address.CustomAttributes = customAttributes;
                 address.CreatedOnUtc = DateTime.UtcNow;
                 //some validation
                 if (address.CountryId == 0)
@@ -1615,6 +1721,9 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+            //customer attribute services
+            model.Address.PrepareCustomAddressAttributes(null, _addressAttributeService, _addressAttributeParser);
+
             return View(model);
         }
 
@@ -1671,12 +1780,15 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+            //customer attribute services
+            model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult AddressEdit(CustomerAddressModel model)
+        [ValidateInput(false)]
+        public ActionResult AddressEdit(CustomerAddressModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1691,9 +1803,18 @@ namespace Nop.Admin.Controllers
                 //No address found with the specified id
                 return RedirectToAction("Edit", new { id = customer.Id });
 
+            //custom address attributes
+            var customAttributes = ParseCustomAddressAttributes(form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             if (ModelState.IsValid)
             {
                 address = model.Address.ToEntity(address);
+                address.CustomAttributes = customAttributes;
                 _addressService.UpdateAddress(address);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Updated"));
@@ -1738,6 +1859,8 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.Address.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
+            //customer attribute services
+            model.Address.PrepareCustomAddressAttributes(address, _addressAttributeService, _addressAttributeParser);
 
             return View(model);
         }

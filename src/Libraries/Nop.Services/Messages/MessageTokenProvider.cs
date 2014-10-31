@@ -47,6 +47,7 @@ namespace Nop.Services.Messages
         private readonly IOrderService _orderService;
         private readonly IPaymentService _paymentService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
 
@@ -72,6 +73,7 @@ namespace Nop.Services.Messages
             IStoreService storeService,
             IStoreContext storeContext,
             IProductAttributeParser productAttributeParser,
+            IAddressAttributeFormatter addressAttributeFormatter,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
             TaxSettings taxSettings, 
@@ -87,6 +89,7 @@ namespace Nop.Services.Messages
             this._orderService = orderService;
             this._paymentService = paymentService;
             this._productAttributeParser = productAttributeParser;
+            this._addressAttributeFormatter = addressAttributeFormatter;
             this._storeService = storeService;
             this._storeContext = storeContext;
 
@@ -532,6 +535,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
             tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes), true));
 
             tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
             tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? order.ShippingAddress.FirstName : ""));
@@ -546,6 +550,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : ""));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : ""));
             tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingCustomAttributes", _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes), true));
 
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
@@ -839,6 +844,7 @@ namespace Nop.Services.Messages
                 "%Order.BillingStateProvince%",
                 "%Order.BillingZipPostalCode%",
                 "%Order.BillingCountry%",
+                "%Order.BillingCustomAttributes%",
                 "%Order.ShippingMethod%",
                 "%Order.ShippingFirstName%",
                 "%Order.ShippingLastName%",
@@ -852,6 +858,7 @@ namespace Nop.Services.Messages
                 "%Order.ShippingStateProvince%",
                 "%Order.ShippingZipPostalCode%", 
                 "%Order.ShippingCountry%",
+                "%Order.ShippingCustomAttributes%",
                 "%Order.PaymentMethod%",
                 "%Order.VatNumber%", 
                 "%Order.Product(s)%",

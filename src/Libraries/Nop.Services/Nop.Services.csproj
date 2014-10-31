@@ -173,6 +173,11 @@
     <Compile Include="Cms\WidgetExtensions.cs" />
     <Compile Include="Cms\WidgetService.cs" />
     <Compile Include="Cms\IWidgetPlugin.cs" />
+    <Compile Include="Common\AddressAttributeExtensions.cs" />
+    <Compile Include="Common\AddressAttributeParser.cs" />
+    <Compile Include="Common\AddressAttributeService.cs" />
+    <Compile Include="Common\IAddressAttributeParser.cs" />
+    <Compile Include="Common\IAddressAttributeService.cs" />
     <Compile Include="Common\ISearchTermService.cs" />
     <Compile Include="Common\SearchTermService.cs" />
     <Compile Include="Common\AddressService.cs" />
@@ -189,6 +194,8 @@
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
     <Compile Include="Common\FulltextService.cs" />
+    <Compile Include="Common\AddressAttributeFormatter.cs" />
+    <Compile Include="Common\IAddressAttributeFormatter.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
     <Compile Include="Customers\CustomerAttributeParser.cs" />
     <Compile Include="Customers\ICustomerAttributeService.cs" />

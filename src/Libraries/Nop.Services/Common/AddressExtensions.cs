@@ -23,12 +23,13 @@ namespace Nop.Services.Common
         /// <param name="stateProvinceId">State/province identifier</param>
         /// <param name="zipPostalCode">Zip postal code</param>
         /// <param name="countryId">Country identifier</param>
+        /// <param name="customAttributes">Custom address attributes (XML format)</param>
         /// <returns>Address</returns>
         public static Address FindAddress(this List<Address> source,
             string firstName, string lastName, string phoneNumber,
             string email, string faxNumber, string company, string address1,
             string address2, string city, int? stateProvinceId,
-            string zipPostalCode, int? countryId)
+            string zipPostalCode, int? countryId, string customAttributes)
         {
             return source.Find(a => ((String.IsNullOrEmpty(a.FirstName) && String.IsNullOrEmpty(firstName)) || a.FirstName == firstName) &&
                 ((String.IsNullOrEmpty(a.LastName) && String.IsNullOrEmpty(lastName)) || a.LastName == lastName) &&
@@ -41,7 +42,10 @@ namespace Nop.Services.Common
                 ((String.IsNullOrEmpty(a.City) && String.IsNullOrEmpty(city)) || a.City == city) &&
                 ((a.StateProvinceId.IsNullOrDefault() && stateProvinceId.IsNullOrDefault()) || a.StateProvinceId == stateProvinceId) &&
                 ((String.IsNullOrEmpty(a.ZipPostalCode) && String.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-                ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId));
+                ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId) &&
+                //actually we should parse custom address attibutes (in case if "Display order" is changed) and then compare
+                //bu we simplify this process and simply compare their values in XML
+                ((String.IsNullOrEmpty(a.CustomAttributes) && String.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
         }
 
     }
