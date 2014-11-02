@@ -1509,6 +1509,7 @@
             Parses most common JSON date formats
             </summary>
             <param name="input">JSON value to parse</param>
+            <param name="culture"></param>
             <returns>DateTime</returns>
         </member>
         <member name="M:RestSharp.Extensions.StringExtensions.RemoveSurroundingQuotes(System.String)">
@@ -1531,6 +1532,7 @@
             Converts a string to pascal case
             </summary>
             <param name="lowercaseAndUnderscoredWord">String to convert</param>
+            <param name="culture"></param>
             <returns>string</returns>
         </member>
         <member name="M:RestSharp.Extensions.StringExtensions.ToPascalCase(System.String,System.Boolean,System.Globalization.CultureInfo)">
@@ -1539,6 +1541,7 @@
             </summary>
             <param name="text">String to convert</param>
             <param name="removeUnderscores">Option to remove underscores</param>
+            <param name="culture"></param>
             <returns></returns>
         </member>
         <member name="M:RestSharp.Extensions.StringExtensions.ToCamelCase(System.String,System.Globalization.CultureInfo)">
@@ -1546,6 +1549,7 @@
             Converts a string to camel case
             </summary>
             <param name="lowercaseAndUnderscoredWord">String to convert</param>
+            <param name="culture"></param>
             <returns>String</returns>
         </member>
         <member name="M:RestSharp.Extensions.StringExtensions.MakeInitialLowerCase(System.String)">
@@ -1582,6 +1586,13 @@
             </summary>
             <param name="pascalCasedWord"></param>
             <returns></returns>
+        </member>
+        <member name="M:RestSharp.Extensions.StringExtensions.AddSpaces(System.String)">
+            <summary>
+            Add spaces to a pascal-cased string
+            </summary>
+            <param name="pascalCasedWord">String to convert</param>
+            <returns>string</returns>
         </member>
         <member name="M:RestSharp.Extensions.StringExtensions.GetNameVariants(System.String,System.Globalization.CultureInfo)">
             <summary>
@@ -1675,6 +1686,7 @@
             <summary>
             Execute an async POST-style request with the specified HTTP Method.  
             </summary>
+            <param name="action"></param>
             <param name="httpMethod">The HTTP method to execute.</param>
             <returns></returns>
         </member>
@@ -1682,6 +1694,7 @@
             <summary>
             Execute an async GET-style request with the specified HTTP Method.  
             </summary>
+            <param name="action"></param>
             <param name="httpMethod">The HTTP method to execute.</param>
             <returns></returns>
         </member>
@@ -2109,12 +2122,14 @@
             
             </summary>
             <param name="request"></param>
+            <param name="callback"></param>
         </member>
         <member name="M:RestSharp.IRestClient.ExecuteAsync``1(RestSharp.IRestRequest,System.Action{RestSharp.IRestResponse{``0},RestSharp.RestRequestAsyncHandle})">
             <summary>
             
             </summary>
             <param name="request"></param>
+            <param name="callback"></param>
         </member>
         <member name="M:RestSharp.IRestClient.ExecuteAsyncGet(RestSharp.IRestRequest,System.Action{RestSharp.IRestResponse,RestSharp.RestRequestAsyncHandle},System.String)">
             <summary>
@@ -2198,6 +2213,7 @@
         <member name="M:RestSharp.IRestRequest.AddBody(System.Object,System.String)">
             <summary>
             Serializes obj to format specified by RequestFormat, but passes xmlNamespace if using the default XmlSerializer
+            The default format is XML. Change RequestFormat if you wish to use a different serialization format.
             </summary>
             <param name="obj">The object to serialize</param>
             <param name="xmlNamespace">The XML namespace to use when serializing</param>
@@ -2206,8 +2222,32 @@
         <member name="M:RestSharp.IRestRequest.AddBody(System.Object)">
             <summary>
             Serializes obj to data format specified by RequestFormat and adds it to the request body.
+            The default format is XML. Change RequestFormat if you wish to use a different serialization format.
             </summary>
             <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.IRestRequest.AddJsonBody(System.Object)">
+            <summary>
+            Serializes obj to JSON format and adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.IRestRequest.AddXmlBody(System.Object)">
+            <summary>
+            Serializes obj to XML format and adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.IRestRequest.AddXmlBody(System.Object,System.String)">
+            <summary>
+            Serializes obj to format specified by RequestFormat, but passes xmlNamespace if using the default XmlSerializer
+            Serializes obj to XML format and passes xmlNamespace then adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <param name="xmlNamespace">The XML namespace to use when serializing</param>
             <returns>This request</returns>
         </member>
         <member name="M:RestSharp.IRestRequest.AddObject(System.Object,System.String[])">
@@ -2279,6 +2319,14 @@
             </summary>
             <param name="name">Name of the segment to add</param>
             <param name="value">Value of the segment to add</param>
+            <returns></returns>
+        </member>
+        <member name="M:RestSharp.IRestRequest.AddQueryParameter(System.String,System.String)">
+            <summary>
+            Shortcut to AddParameter(name, value, QueryString) overload
+            </summary>
+            <param name="name">Name of the parameter to add</param>
+            <param name="value">Value of the parameter to add</param>
             <returns></returns>
         </member>
         <member name="P:RestSharp.IRestRequest.AlwaysMultipartFormData">
@@ -2469,7 +2517,8 @@
             <summary>
             Exceptions thrown during the request, if any.  
             </summary>
-            <remarks>Will contain only network transport or framework exceptions thrown during the request.  HTTP protocol errors are handled by RestSharp and will not appear here.</remarks>
+            <remarks>Will contain only network transport or framework exceptions thrown during the request.
+            HTTP protocol errors are handled by RestSharp and will not appear here.</remarks>
         </member>
         <member name="T:RestSharp.IRestResponse`1">
             <summary>
@@ -2567,6 +2616,12 @@
             Default constructor that registers default content handlers
             </summary>
         </member>
+        <member name="M:RestSharp.RestClient.#ctor(System.Uri)">
+            <summary>
+            Sets the BaseUrl property for requests made by this client instance
+            </summary>
+            <param name="baseUrl"></param>
+        </member>
         <member name="M:RestSharp.RestClient.#ctor(System.String)">
             <summary>
             Sets the BaseUrl property for requests made by this client instance
@@ -2658,7 +2713,7 @@
             Should include scheme and domain without trailing slash.
             </summary>
             <example>
-            client.BaseUrl = "http://example.com";
+            client.BaseUrl = new Uri("http://example.com");
             </example>
         </member>
         <member name="M:RestSharp.RestClientExtensions.ExecuteAsync(RestSharp.IRestClient,RestSharp.IRestRequest,System.Action{RestSharp.IRestResponse})">
@@ -2707,10 +2762,10 @@
         <member name="M:RestSharp.RestClientExtensions.AddDefaultParameter(RestSharp.IRestClient,System.String,System.Object,RestSharp.ParameterType)">
             <summary>
             Adds a parameter to the request. There are four types of parameters:
-            - GetOrPost: Either a QueryString value or encoded form value based on method
-            - HttpHeader: Adds the name/value pair to the HTTP request's Headers collection
-            - UrlSegment: Inserted into URL if there is a matching url token e.g. {AccountId}
-            - RequestBody: Used by AddBody() (not recommended to use directly)
+               - GetOrPost: Either a QueryString value or encoded form value based on method
+               - HttpHeader: Adds the name/value pair to the HTTP request's Headers collection
+               - UrlSegment: Inserted into URL if there is a matching url token e.g. {AccountId}
+               - RequestBody: Used by AddBody() (not recommended to use directly)
             </summary>
             <param name="restClient">The IRestClient instance</param>
             <param name="name">Name of the parameter</param>
@@ -2828,6 +2883,7 @@
         <member name="M:RestSharp.RestRequest.AddBody(System.Object,System.String)">
             <summary>
             Serializes obj to format specified by RequestFormat, but passes xmlNamespace if using the default XmlSerializer
+            The default format is XML. Change RequestFormat if you wish to use a different serialization format.
             </summary>
             <param name="obj">The object to serialize</param>
             <param name="xmlNamespace">The XML namespace to use when serializing</param>
@@ -2836,8 +2892,32 @@
         <member name="M:RestSharp.RestRequest.AddBody(System.Object)">
             <summary>
             Serializes obj to data format specified by RequestFormat and adds it to the request body.
+            The default format is XML. Change RequestFormat if you wish to use a different serialization format.
             </summary>
             <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.RestRequest.AddJsonBody(System.Object)">
+            <summary>
+            Serializes obj to JSON format and adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.RestRequest.AddXmlBody(System.Object)">
+            <summary>
+            Serializes obj to XML format and adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <returns>This request</returns>
+        </member>
+        <member name="M:RestSharp.RestRequest.AddXmlBody(System.Object,System.String)">
+            <summary>
+            Serializes obj to format specified by RequestFormat, but passes xmlNamespace if using the default XmlSerializer
+            Serializes obj to XML format and passes xmlNamespace then adds it to the request body.
+            </summary>
+            <param name="obj">The object to serialize</param>
+            <param name="xmlNamespace">The XML namespace to use when serializing</param>
             <returns>This request</returns>
         </member>
         <member name="M:RestSharp.RestRequest.AddObject(System.Object,System.String[])">
@@ -2908,6 +2988,14 @@
             </summary>
             <param name="name">Name of the segment to add</param>
             <param name="value">Value of the segment to add</param>
+            <returns></returns>
+        </member>
+        <member name="M:RestSharp.RestRequest.AddQueryParameter(System.String,System.String)">
+            <summary>
+            Shortcut to AddParameter(name, value, QueryString) overload
+            </summary>
+            <param name="name">Name of the parameter to add</param>
+            <param name="value">Value of the parameter to add</param>
             <returns></returns>
         </member>
         <member name="M:RestSharp.RestRequest.IncreaseNumAttempts">
