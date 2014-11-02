@@ -952,6 +952,11 @@ namespace Nop.Services.Orders
                 warnings.Add("Wishlist is disabled");
                 return warnings;
             }
+            if (customer.IsSearchEngineAccount())
+            {
+                warnings.Add("Search engine can't add to cart");
+                return warnings;
+            }
 
             if (quantity <= 0)
             {
