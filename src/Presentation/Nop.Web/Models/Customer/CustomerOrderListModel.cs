@@ -24,6 +24,8 @@ namespace Nop.Web.Models.Customer
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
             public string OrderStatus { get; set; }
+            public string PaymentStatus { get; set; }
+            public string ShippingStatus { get; set; }
             public DateTime CreatedOn { get; set; }
         }
         public partial class RecurringOrderModel : BaseNopEntityModel

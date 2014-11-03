@@ -535,6 +535,8 @@ namespace Nop.Web.Controllers
                     Id = order.Id,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
                     OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
                     IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
                 };
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
