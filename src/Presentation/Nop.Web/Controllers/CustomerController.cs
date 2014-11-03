@@ -186,21 +186,7 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected virtual CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
-        {
-            var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, customer.Id, 0, null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
-            return model;
-        }
-
+        
         [NonAction]
         protected virtual void TryAssociateAccountWithExternalAccount(Customer customer)
         {
@@ -446,9 +432,6 @@ namespace Nop.Web.Controllers
             //custom customer attributes
             var customAttributes = PrepareCustomCustomerAttributes(customer);
             customAttributes.ForEach(model.CustomerAttributes.Add);
-
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;
         }
 
         [NonAction]
@@ -543,8 +526,6 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("customer");
 
             var model = new CustomerOrderListModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
             var orders = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
                 customerId: customer.Id);
             foreach (var order in orders)
@@ -1289,8 +1270,6 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAddressListModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             var addresses = customer.Addresses
                 //enabled for the current store
                 .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
@@ -1338,11 +1317,7 @@ namespace Nop.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
-            var customer = _workContext.CurrentCustomer;
-
             var model = new CustomerAddressEditModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             model.Address.PrepareModel(
                 address: null,
                 excludeProperties: false,
@@ -1390,8 +1365,6 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             model.Address.PrepareModel(
                 address: null,
                 excludeProperties: true,
@@ -1419,8 +1392,6 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerAddresses");
 
             var model = new CustomerAddressEditModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             model.Address.PrepareModel(address: address,
                 excludeProperties: false,
                 addressSettings: _addressSettings,
@@ -1465,8 +1436,6 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             model.Address.PrepareModel(
                 address: address,
                 excludeProperties: true,
@@ -1542,8 +1511,6 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerReturnRequestsModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ReturnRequests;
             var returnRequests = _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, customer.Id, 0, null, 0, int.MaxValue);
             foreach (var returnRequest in returnRequests)
             {
@@ -1585,8 +1552,6 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.DownloadableProducts;
             var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
                 null, null, null, true);
             foreach (var item in items)
@@ -1647,8 +1612,6 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerRewardPointsModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.RewardPoints;
             foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
             {
                 model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
@@ -1684,11 +1647,7 @@ namespace Nop.Web.Controllers
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
 
-            var customer = _workContext.CurrentCustomer;
-
             var model = new ChangePasswordModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
             return View(model);
         }
 
@@ -1700,9 +1659,6 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             var customer = _workContext.CurrentCustomer;
-
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ChangePassword;
 
             if (ModelState.IsValid)
             {
@@ -1741,8 +1697,6 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerAvatarModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
             model.AvatarUrl = _pictureService.GetPictureUrl(
                 customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
                 _mediaSettings.AvatarPictureSize,
@@ -1761,11 +1715,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
-
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
-
-
+            
             if (ModelState.IsValid)
             {
                 try
@@ -1823,9 +1773,6 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Avatar;
-
             var customerAvatar = _pictureService.GetPictureById(customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId));
             if (customerAvatar != null)
                 _pictureService.DeletePicture(customerAvatar);
@@ -1835,6 +1782,23 @@ namespace Nop.Web.Controllers
         }
 
         #endregion
+
+        [ChildActionOnly]
+        public ActionResult CustomerNavigation(int selectedTabId = 0)
+        {
+            var model = new CustomerNavigationModel();
+            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
+            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
+            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
+            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
+                _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
+            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
+            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+
+            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
+
+            return PartialView(model);
+        }
 
         #endregion
 
@@ -1953,8 +1917,6 @@ namespace Nop.Web.Controllers
             var list = _forumService.GetAllSubscriptions(customer.Id, 0, 0, pageIndex, pageSize);
 
             var model = new CustomerForumSubscriptionsModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.ForumSubscriptions;
 
             foreach (var forumSubscription in list)
             {
@@ -2050,15 +2012,13 @@ namespace Nop.Web.Controllers
             {
                 pageIndex = page.Value - 1;
             }
+            var pageSize = 10;
 
             var customer = _workContext.CurrentCustomer;
-            var pageSize = 10;
             var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
                 _storeContext.CurrentStore.Id, pageIndex, pageSize);
 
             var model = new CustomerBackInStockSubscriptionsModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.BackInStockSubscriptions;
 
             foreach (var subscription in list)
             {

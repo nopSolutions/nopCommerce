@@ -9,7 +9,7 @@
 }
 @section left
 {
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {

@@ -133,8 +133,6 @@ namespace Nop.Web.Models.Customer
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
         public int NumberOfExternalAuthenticationProviders { get; set; }
 
-        public CustomerNavigationModel NavigationModel { get; set; }
-
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }
 
         #region Nested classes

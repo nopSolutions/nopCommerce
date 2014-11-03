@@ -8,7 +8,7 @@
 }
 @section left
 {
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Avatar })
 }
 @using (Html.BeginRouteForm("CustomerAvatar", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {

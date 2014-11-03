@@ -8,7 +8,7 @@
 }
 @section left
 {
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
 }
 <div class="page account-page forum-subscriptions-page">
     <div class="page-title">

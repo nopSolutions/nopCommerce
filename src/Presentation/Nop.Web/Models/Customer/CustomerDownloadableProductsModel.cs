@@ -12,7 +12,6 @@ namespace Nop.Web.Models.Customer
         }
 
         public IList<DownloadableProductsModel> Items { get; set; }
-        public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
         public partial class DownloadableProductsModel : BaseNopModel

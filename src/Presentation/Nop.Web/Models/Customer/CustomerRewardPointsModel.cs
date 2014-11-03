@@ -17,7 +17,6 @@ namespace Nop.Web.Models.Customer
         public string RewardPointsAmount { get; set; }
         public int MinimumRewardPointsBalance { get; set; }
         public string MinimumRewardPointsAmount { get; set; }
-        public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
         public partial class RewardPointsHistoryModel : BaseNopEntityModel

@@ -2006,7 +2006,7 @@
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
     <Content Include="Views\Customer\Info.cshtml" />
-    <Content Include="Views\Customer\MyAccountNavigation.cshtml" />
+    <Content Include="Views\Customer\CustomerNavigation.cshtml" />
     <Content Include="Views\Customer\Addresses.cshtml" />
     <Content Include="Views\Customer\AddressAdd.cshtml" />
     <Content Include="Views\Customer\AddressEdit.cshtml" />

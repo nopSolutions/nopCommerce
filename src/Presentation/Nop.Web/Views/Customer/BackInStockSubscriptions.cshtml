@@ -8,7 +8,7 @@
 }
 @section left
 {
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.BackInStockSubscriptions })
 }
 <div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title">
