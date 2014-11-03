@@ -35,6 +35,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Controllers
@@ -65,7 +66,6 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
@@ -108,7 +108,6 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, 
             IProductTagService productTagService,
             IOrderReportService orderReportService, 
-            IBackInStockSubscriptionService backInStockSubscriptionService, 
             IAclService aclService,
             IStoreMappingService storeMappingService,
             IPermissionService permissionService, 
@@ -147,7 +146,6 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
@@ -1137,87 +1135,6 @@ namespace Nop.Web.Controllers
 
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
-        }
-
-        #endregion
-
-        #region Back in stock subscriptions
-
-        public ActionResult BackInStockSubscribePopup(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted)
-                throw new ArgumentException("No product found with the specified id");
-
-            var model = new BackInStockSubscribeModel();
-            model.ProductId = product.Id;
-            model.ProductName = product.GetLocalized(x => x.Name);
-            model.ProductSeName = product.GetSeName();
-            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
-            model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
-            model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService
-                .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                .TotalCount;
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
-            {
-                //out of stock
-                model.SubscriptionAllowed = true;
-                model.AlreadySubscribed = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id) != null;
-            }
-            return View(model);
-        }
-
-        [HttpPost, ActionName("BackInStockSubscribePopup")]
-        public ActionResult BackInStockSubscribePopupPOST(int productId)
-        {
-            var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted)
-                throw new ArgumentException("No product found with the specified id");
-
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return Content(_localizationService.GetResource("BackInStockSubscriptions.OnlyRegistered"));
-
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                product.BackorderMode == BackorderMode.NoBackorders &&
-                product.AllowBackInStockSubscriptions &&
-                product.GetTotalStockQuantity() <= 0)
-            {
-                //out of stock
-                var subscription = _backInStockSubscriptionService
-                    .FindSubscription(_workContext.CurrentCustomer.Id, product.Id, _storeContext.CurrentStore.Id);
-                if (subscription != null)
-                {
-                    //subscription already exists
-                    //unsubscribe
-                    _backInStockSubscriptionService.DeleteSubscription(subscription);
-                    return Content("Unsubscribed");
-                }
-
-                //subscription does not exist
-                //subscribe
-                if (_backInStockSubscriptionService
-                    .GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, 0, 1)
-                    .TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
-                {
-                    return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
-                }
-                subscription = new BackInStockSubscription
-                {
-                    Customer = _workContext.CurrentCustomer,
-                    Product = product,
-                    StoreId = _storeContext.CurrentStore.Id,
-                    CreatedOnUtc = DateTime.UtcNow
-                };
-                _backInStockSubscriptionService.InsertSubscription(subscription);
-                return Content("Subscribed");
-            }
-
-            //subscription not possible
-            return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
         }
 
         #endregion

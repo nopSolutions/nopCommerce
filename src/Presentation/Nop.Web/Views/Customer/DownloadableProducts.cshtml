@@ -8,7 +8,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.DownloadableProducts })
 }
 <div class="page account-page downloadable-products-page">
     <div class="page-title">

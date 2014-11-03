@@ -9,7 +9,7 @@
 }
 @section left
 {
-    @Html.Action("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.Info })
 }
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {

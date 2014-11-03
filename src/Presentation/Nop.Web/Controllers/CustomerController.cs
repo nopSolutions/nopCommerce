@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Nop.Core;
+﻿using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -15,11 +10,9 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
-using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -35,6 +28,11 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 using WebGrease.Css.Extensions;
 
 namespace Nop.Web.Controllers
@@ -64,17 +62,11 @@ namespace Nop.Web.Controllers
         private readonly IAddressService _addressService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
-        private readonly ICurrencyService _currencyService;
-        private readonly IPriceFormatter _priceFormatter;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly IForumService _forumService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
-        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
         private readonly ICustomerActivityService _customerActivityService;
@@ -114,17 +106,11 @@ namespace Nop.Web.Controllers
             IAddressService addressService,
             ICountryService countryService,
             IStateProvinceService stateProvinceService,
-            IOrderTotalCalculationService orderTotalCalculationService,
-            IOrderProcessingService orderProcessingService, 
             IOrderService orderService,
-            ICurrencyService currencyService, 
-            IPriceFormatter priceFormatter,
             IPictureService pictureService, 
             INewsLetterSubscriptionService newsLetterSubscriptionService,
-            IForumService forumService, 
             IShoppingCartService shoppingCartService,
-            IOpenAuthenticationService openAuthenticationService, 
-            IBackInStockSubscriptionService backInStockSubscriptionService, 
+            IOpenAuthenticationService openAuthenticationService,
             IDownloadService downloadService,
             IWebHelper webHelper,
             ICustomerActivityService customerActivityService,
@@ -159,17 +145,11 @@ namespace Nop.Web.Controllers
             this._addressService = addressService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
-            this._orderProcessingService = orderProcessingService;
-            this._orderTotalCalculationService = orderTotalCalculationService;
             this._orderService = orderService;
-            this._currencyService = currencyService;
-            this._priceFormatter = priceFormatter;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._forumService = forumService;
             this._shoppingCartService = shoppingCartService;
             this._openAuthenticationService = openAuthenticationService;
-            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._downloadService = downloadService;
             this._webHelper = webHelper;
             this._customerActivityService = customerActivityService;
@@ -520,54 +500,6 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var model = new CustomerOrderListModel();
-            var orders = _orderService.SearchOrders(storeId: _storeContext.CurrentStore.Id,
-                customerId: customer.Id);
-            foreach (var order in orders)
-            {
-                var orderModel = new CustomerOrderListModel.OrderDetailsModel
-                {
-                    Id = order.Id,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
-                };
-                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
-
-                model.Orders.Add(orderModel);
-            }
-
-            var recurringPayments = _orderService.SearchRecurringPayments(_storeContext.CurrentStore.Id,
-                customer.Id, 0, null, 0, int.MaxValue);
-            foreach (var recurringPayment in recurringPayments)
-            {
-                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel
-                {
-                    Id = recurringPayment.Id,
-                    StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
-                    CycleInfo = string.Format("{0} {1}", recurringPayment.CycleLength, recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext)),
-                    NextPayment = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
-                    TotalCycles = recurringPayment.TotalCycles,
-                    CyclesRemaining = recurringPayment.CyclesRemaining,
-                    InitialOrderId = recurringPayment.InitialOrder.Id,
-                    CanCancel = _orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment),
-                };
-
-                model.RecurringOrders.Add(recurringPaymentModel);
-            }
-
-            return model;
-        }
-
-        [NonAction]
         protected virtual string ParseCustomCustomerAttributes(FormCollection form)
         {
             if (form == null)
@@ -648,7 +580,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Login / logout / register
+        #region Login / logout
         
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Login(bool? checkoutAsGuest)
@@ -722,6 +654,30 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        public ActionResult Logout()
+        {
+            //external authentication
+            ExternalAuthorizerHelper.RemoveParameters();
+
+            if (_workContext.OriginalCustomerIfImpersonated != null)
+            {
+                //logout impersonated customer
+                _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
+                    SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
+                //redirect back to customer details page (admin area)
+                return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
+
+            }
+
+            //standard logout 
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+
+            _authenticationService.SignOut();
+            return RedirectToRoute("HomePage");
+        }
+
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Register()
         {
@@ -736,6 +692,103 @@ namespace Nop.Web.Controllers
 
             return View(model);
         }
+
+        #endregion
+
+        #region Password recovery
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult PasswordRecovery()
+        {
+            var model = new PasswordRecoveryModel();
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PasswordRecovery")]
+        [FormValueRequired("send-email")]
+        public ActionResult PasswordRecoverySend(PasswordRecoveryModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var customer = _customerService.GetCustomerByEmail(model.Email);
+                if (customer != null && customer.Active && !customer.Deleted)
+                {
+                    var passwordRecoveryToken = Guid.NewGuid();
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
+                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
+
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
+                }
+                else
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult PasswordRecoveryConfirm(string token, string email)
+        {
+            var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                return RedirectToRoute("HomePage");
+
+            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            if (String.IsNullOrEmpty(cPrt))
+                return RedirectToRoute("HomePage");
+
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToRoute("HomePage");
+
+            var model = new PasswordRecoveryConfirmModel();
+            return View(model);
+        }
+
+        [HttpPost, ActionName("PasswordRecoveryConfirm")]
+        [FormValueRequired("set-password")]
+        public ActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
+        {
+            var customer = _customerService.GetCustomerByEmail(email);
+            if (customer == null)
+                return RedirectToRoute("HomePage");
+
+            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            if (String.IsNullOrEmpty(cPrt))
+                return RedirectToRoute("HomePage");
+
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                return RedirectToRoute("HomePage");
+
+            if (ModelState.IsValid)
+            {
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
+                    false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
+                if (response.Success)
+                {
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
+
+                    model.SuccessfullyChanged = true;
+                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
+                }
+                else
+                {
+                    model.Result = response.Errors.FirstOrDefault();
+                }
+
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        #endregion
+
+        #region Register
 
         [HttpPost]
         [CaptchaValidator]
@@ -1018,30 +1071,6 @@ namespace Nop.Web.Controllers
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
         
-        public ActionResult Logout()
-        {
-            //external authentication
-            ExternalAuthorizerHelper.RemoveParameters();
-
-            if (_workContext.OriginalCustomerIfImpersonated != null)
-            {
-                //logout impersonated customer
-                _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
-                    SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
-                //redirect back to customer details page (admin area)
-                return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
-
-            }
-
-            //standard logout 
-
-            //activity log
-            _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
-
-            _authenticationService.SignOut();
-            return RedirectToRoute("HomePage");
-        }
-
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult AccountActivation(string token, string email)
         {
@@ -1070,9 +1099,24 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region My account
+        #region My account / Info
 
-        #region Info
+        [ChildActionOnly]
+        public ActionResult CustomerNavigation(int selectedTabId = 0)
+        {
+            var model = new CustomerNavigationModel();
+            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
+            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
+            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
+            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
+                _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
+            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
+            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
+
+            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
+
+            return PartialView(model);
+        }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Info()
@@ -1261,7 +1305,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Addresses
+        #region My account / Addresses
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Addresses()
@@ -1452,98 +1496,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Orders
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Orders()
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            var customer = _workContext.CurrentCustomer;
-            var model = PrepareCustomerOrderListModel(customer);
-            return View(model);
-        }
-
-        [HttpPost, ActionName("Orders")]
-        [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
-        public ActionResult CancelRecurringPayment(FormCollection form)
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            //get recurring payment identifier
-            int recurringPaymentId = 0;
-            foreach (var formValue in form.AllKeys)
-                if (formValue.StartsWith("cancelRecurringPayment", StringComparison.InvariantCultureIgnoreCase))
-                    recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
-
-            var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
-            if (recurringPayment == null)
-            {
-                return RedirectToRoute("CustomerOrders");
-            }
-
-            var customer = _workContext.CurrentCustomer;
-            if (_orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment))
-            {
-                var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);
-
-                var model = PrepareCustomerOrderListModel(customer);
-                model.CancelRecurringPaymentErrors = errors;
-
-                return View(model);
-            }
-            else
-            {
-                return RedirectToRoute("CustomerOrders");
-            }
-        }
-
-        #endregion
-
-        #region Return request
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult ReturnRequests()
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new CustomerReturnRequestsModel();
-            var returnRequests = _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, customer.Id, 0, null, 0, int.MaxValue);
-            foreach (var returnRequest in returnRequests)
-            {
-                var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);
-                if (orderItem != null)
-                {
-                    var product = orderItem.Product;
-
-                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel
-                    {
-                        Id = returnRequest.Id,
-                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        ProductSeName = product.GetSeName(),
-                        Quantity = returnRequest.Quantity,
-                        ReturnAction = returnRequest.RequestedAction,
-                        ReturnReason = returnRequest.ReasonForReturn,
-                        Comments = returnRequest.CustomerComments,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
-                    };
-                    model.Items.Add(itemModel);
-                }
-            }
-
-            return View(model);
-        }
-
-        #endregion
-
-        #region Downloadable products
+        #region My account / Downloadable products
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult DownloadableProducts()
@@ -1586,7 +1539,6 @@ namespace Nop.Web.Controllers
             if (orderItem == null)
                 return RedirectToRoute("HomePage");
 
-
             var product = orderItem.Product;
             if (product == null || !product.HasUserAgreement)
                 return RedirectToRoute("HomePage");
@@ -1600,48 +1552,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Reward points
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult RewardPoints()
-        {
-            if (!_workContext.CurrentCustomer.IsRegistered())
-                return new HttpUnauthorizedResult();
-
-            if (!_rewardPointsSettings.Enabled)
-                return RedirectToRoute("CustomerInfo");
-
-            var customer = _workContext.CurrentCustomer;
-
-            var model = new CustomerRewardPointsModel();
-            foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
-            {
-                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
-                {
-                    Points = rph.Points,
-                    PointsBalance = rph.PointsBalance,
-                    Message = rph.Message,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                });
-            }
-            //current amount/balance
-            int rewardPointsBalance = customer.GetRewardPointsBalance();
-            decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-            decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-            model.RewardPointsBalance = rewardPointsBalance;
-            model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
-            //minimum amount/balance
-            int minimumRewardPointsBalance = _rewardPointsSettings.MinimumRewardPointsToUse;
-            decimal minimumRewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(minimumRewardPointsBalance);
-            decimal minimumRewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(minimumRewardPointsAmountBase, _workContext.WorkingCurrency);
-            model.MinimumRewardPointsBalance = minimumRewardPointsBalance;
-            model.MinimumRewardPointsAmount = _priceFormatter.FormatPrice(minimumRewardPointsAmount, true, false);
-            return View(model);
-        }
-
-        #endregion
-
-        #region Change password
+        #region My account / Change password
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ChangePassword()
@@ -1685,7 +1596,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Avatar
+        #region My account / Avatar
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Avatar()
@@ -1782,302 +1693,6 @@ namespace Nop.Web.Controllers
 
             return RedirectToRoute("CustomerAvatar");
         }
-
-        #endregion
-
-        [ChildActionOnly]
-        public ActionResult CustomerNavigation(int selectedTabId = 0)
-        {
-            var model = new CustomerNavigationModel();
-            model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
-            model.HideRewardPoints = !_rewardPointsSettings.Enabled;
-            model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
-            model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled ||
-                _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, _workContext.CurrentCustomer.Id, 0, null, 0, 1).Count == 0;
-            model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
-            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
-
-            model.SelectedTab = (CustomerNavigationEnum)selectedTabId;
-
-            return PartialView(model);
-        }
-
-        #endregion
-
-        #region Password recovery
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PasswordRecovery()
-        {
-            var model = new PasswordRecoveryModel();
-            return View(model);
-        }
-
-        [HttpPost, ActionName("PasswordRecovery")]
-        [FormValueRequired("send-email")]
-        public ActionResult PasswordRecoverySend(PasswordRecoveryModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var customer = _customerService.GetCustomerByEmail(model.Email);
-                if (customer != null && customer.Active && !customer.Deleted)
-                {
-                    var passwordRecoveryToken = Guid.NewGuid();
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
-                    _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
-
-                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
-                }
-                else
-                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
-
-                return View(model);
-            }
-
-            //If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PasswordRecoveryConfirm(string token, string email)
-        {
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null )
-                return RedirectToRoute("HomePage");
-
-            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
-                return RedirectToRoute("HomePage");
-
-            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
-            
-            var model = new PasswordRecoveryConfirmModel();
-            return View(model);
-        }
-
-        [HttpPost, ActionName("PasswordRecoveryConfirm")]
-        [FormValueRequired("set-password")]
-        public ActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
-        {
-            var customer = _customerService.GetCustomerByEmail(email);
-            if (customer == null)
-                return RedirectToRoute("HomePage");
-
-            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
-                return RedirectToRoute("HomePage");
-
-            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
-            
-            if (ModelState.IsValid)
-            {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
-                    false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
-                if (response.Success)
-                {
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
-
-                    model.SuccessfullyChanged = true;
-                    model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
-                }
-                else
-                {
-                    model.Result = response.Errors.FirstOrDefault();
-                }
-
-                return View(model);
-            }
-
-            //If we got this far, something failed, redisplay form
-            return View(model);
-        }
-
-        #endregion
-
-        #region Forum subscriptions
-
-        public ActionResult ForumSubscriptions(int? page)
-        {
-            if (!_forumSettings.AllowCustomersToManageSubscriptions)
-            {
-                return RedirectToRoute("CustomerInfo");
-            }
-
-            int pageIndex = 0;
-            if (page > 0)
-            {
-                pageIndex = page.Value - 1;
-            }
-
-            var customer = _workContext.CurrentCustomer;
-
-            var pageSize = _forumSettings.ForumSubscriptionsPageSize;
-
-            var list = _forumService.GetAllSubscriptions(customer.Id, 0, 0, pageIndex, pageSize);
-
-            var model = new CustomerForumSubscriptionsModel();
-
-            foreach (var forumSubscription in list)
-            {
-                var forumTopicId = forumSubscription.TopicId;
-                var forumId = forumSubscription.ForumId;
-                bool topicSubscription = false;
-                var title = string.Empty;
-                var slug = string.Empty;
-
-                if (forumTopicId > 0)
-                {
-                    topicSubscription = true;
-                    var forumTopic = _forumService.GetTopicById(forumTopicId);
-                    if (forumTopic != null)
-                    {
-                        title = forumTopic.Subject;
-                        slug = forumTopic.GetSeName();
-                    }
-                }
-                else
-                {
-                    var forum = _forumService.GetForumById(forumId);
-                    if (forum != null)
-                    {
-                        title = forum.Name;
-                        slug = forum.GetSeName();
-                    }
-                }
-
-                model.ForumSubscriptions.Add(new ForumSubscriptionModel
-                {
-                    Id = forumSubscription.Id,
-                    ForumTopicId = forumTopicId,
-                    ForumId = forumSubscription.ForumId,
-                    TopicSubscription = topicSubscription,
-                    Title = title,
-                    Slug = slug,
-                });
-            }
-
-            model.PagerModel = new PagerModel
-            {
-                PageSize = list.PageSize,
-                TotalRecords = list.TotalCount,
-                PageIndex = list.PageIndex,
-                ShowTotalSummary = false,
-                RouteActionName = "CustomerForumSubscriptionsPaged",
-                UseRouteLinks = true,
-                RouteValues = new ForumSubscriptionsRouteValues { page = pageIndex }
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("ForumSubscriptions")]
-        public ActionResult ForumSubscriptionsPOST(FormCollection formCollection)
-        {
-            foreach (var key in formCollection.AllKeys)
-            {
-                var value = formCollection[key];
-
-                if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var id = key.Replace("fs", "").Trim();
-                    int forumSubscriptionId;
-                    if (Int32.TryParse(id, out forumSubscriptionId))
-                    {
-                        var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
-                        if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)
-                        {
-                            _forumService.DeleteSubscription(forumSubscription);
-                        }
-                    }
-                }
-            }
-
-            return RedirectToRoute("CustomerForumSubscriptions");
-        }
-
-        #endregion
-
-        #region Back in stock subscriptions
-
-        public ActionResult BackInStockSubscriptions(int? page)
-        {
-            if (_customerSettings.HideBackInStockSubscriptionsTab)
-            {
-                return RedirectToRoute("CustomerInfo");
-            }
-
-            int pageIndex = 0;
-            if (page > 0)
-            {
-                pageIndex = page.Value - 1;
-            }
-            var pageSize = 10;
-
-            var customer = _workContext.CurrentCustomer;
-            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id,
-                _storeContext.CurrentStore.Id, pageIndex, pageSize);
-
-            var model = new CustomerBackInStockSubscriptionsModel();
-
-            foreach (var subscription in list)
-            {
-                var product = subscription.Product;
-
-                if (product != null)
-                {
-                    var subscriptionModel = new BackInStockSubscriptionModel
-                    {
-                        Id = subscription.Id,
-                        ProductId = product.Id,
-                        ProductName = product.GetLocalized(x => x.Name),
-                        SeName = product.GetSeName(),
-                    };
-                    model.Subscriptions.Add(subscriptionModel);
-                }
-            }
-
-            model.PagerModel = new PagerModel
-            {
-                PageSize = list.PageSize,
-                TotalRecords = list.TotalCount,
-                PageIndex = list.PageIndex,
-                ShowTotalSummary = false,
-                RouteActionName = "CustomerBackInStockSubscriptionsPaged",
-                UseRouteLinks = true,
-                RouteValues = new BackInStockSubscriptionsRouteValues { page = pageIndex }
-            };
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("BackInStockSubscriptions")]
-        public ActionResult BackInStockSubscriptionsPOST(FormCollection formCollection)
-        {
-            foreach (var key in formCollection.AllKeys)
-            {
-                var value = formCollection[key];
-
-                if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var id = key.Replace("biss", "").Trim();
-                    int subscriptionId;
-                    if (Int32.TryParse(id, out subscriptionId))
-                    {
-                        var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
-                        if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
-                        {
-                            _backInStockSubscriptionService.DeleteSubscription(subscription);
-                        }
-                    }
-                }
-            }
-
-            return RedirectToRoute("CustomerBackInStockSubscriptions");
-        }
-
 
         #endregion
     }

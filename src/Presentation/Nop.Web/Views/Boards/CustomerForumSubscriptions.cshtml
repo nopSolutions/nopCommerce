@@ -1,0 +1,94 @@
+﻿@model CustomerForumSubscriptionsModel
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Customer;
+@{    
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ForumSubscriptions })
+}
+<div class="page account-page forum-subscriptions-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</h1>
+    </div>
+    <div class="page-body">
+        @if (Model.ForumSubscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.ForumSubscriptions.Description")
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+
+                    $('#selectall').click(function () {
+                        $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+                    });
+
+                    $('.subscription-list .rowcheckbox').on('change', function (e) {
+                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
+                        $('#selectall').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                    });
+                });
+            </script>
+            using (Html.BeginRouteForm("CustomerForumSubscriptions", FormMethod.Post))
+            {
+            <div class="subscription-list">
+                <table class="data-table">
+                    <colgroup>
+                        <col width="1" />
+                        <col />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th class="a-center select-boxes">
+                                <input type="checkbox" id="selectall" />
+                            </th>
+                            <th class="a-center info">
+                                @T("Account.ForumSubscriptions.InfoColumn")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ForumSubscriptions.Count; i++)
+                        {
+                            var item = Model.ForumSubscriptions[i];
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="a-center select-boxes">
+                                    <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" />
+                                </td>
+                                <td class="a-left info">
+                                    @if (item.TopicSubscription)
+                                    {
+                                        @Html.RouteLink(item.Title, "TopicSlug", new { Id = item.ForumTopicId, slug = item.Slug })
+                                    }
+                                    else
+                                    {
+                                        @Html.RouteLink(item.Title, "ForumSlug", new { Id = item.ForumId, slug = item.Slug })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="pager">
+                    @Html.Pager(Model.PagerModel)
+                </div>
+                <div class="buttons">
+                    <input type="submit" value="@T("Account.ForumSubscriptions.DeleteSelected")" class="button-1 delete-selected-fs-button" />
+                </div>
+            </div>
+            }
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.ForumSubscriptions.NoSubscriptions")
+            </div>
+        }
+    </div>
+</div>

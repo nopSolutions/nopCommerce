@@ -19,6 +19,7 @@ using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
+using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
@@ -1659,7 +1660,105 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+
+        public ActionResult CustomerForumSubscriptions(int? page)
+        {
+            if (!_forumSettings.AllowCustomersToManageSubscriptions)
+            {
+                return RedirectToRoute("CustomerInfo");
+            }
+
+            int pageIndex = 0;
+            if (page > 0)
+            {
+                pageIndex = page.Value - 1;
+            }
+
+            var customer = _workContext.CurrentCustomer;
+
+            var pageSize = _forumSettings.ForumSubscriptionsPageSize;
+
+            var list = _forumService.GetAllSubscriptions(customer.Id, 0, 0, pageIndex, pageSize);
+
+            var model = new CustomerForumSubscriptionsModel();
+
+            foreach (var forumSubscription in list)
+            {
+                var forumTopicId = forumSubscription.TopicId;
+                var forumId = forumSubscription.ForumId;
+                bool topicSubscription = false;
+                var title = string.Empty;
+                var slug = string.Empty;
+
+                if (forumTopicId > 0)
+                {
+                    topicSubscription = true;
+                    var forumTopic = _forumService.GetTopicById(forumTopicId);
+                    if (forumTopic != null)
+                    {
+                        title = forumTopic.Subject;
+                        slug = forumTopic.GetSeName();
+                    }
+                }
+                else
+                {
+                    var forum = _forumService.GetForumById(forumId);
+                    if (forum != null)
+                    {
+                        title = forum.Name;
+                        slug = forum.GetSeName();
+                    }
+                }
+
+                model.ForumSubscriptions.Add(new CustomerForumSubscriptionsModel.ForumSubscriptionModel
+                {
+                    Id = forumSubscription.Id,
+                    ForumTopicId = forumTopicId,
+                    ForumId = forumSubscription.ForumId,
+                    TopicSubscription = topicSubscription,
+                    Title = title,
+                    Slug = slug,
+                });
+            }
+
+            model.PagerModel = new PagerModel
+            {
+                PageSize = list.PageSize,
+                TotalRecords = list.TotalCount,
+                PageIndex = list.PageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "CustomerForumSubscriptionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new ForumSubscriptionsRouteValues { page = pageIndex }
+            };
+
+            return View(model);
+        }
+        [HttpPost, ActionName("CustomerForumSubscriptions")]
+        public ActionResult CustomerForumSubscriptionsPOST(FormCollection formCollection)
+        {
+            foreach (var key in formCollection.AllKeys)
+            {
+                var value = formCollection[key];
+
+                if (value.Equals("on") && key.StartsWith("fs", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var id = key.Replace("fs", "").Trim();
+                    int forumSubscriptionId;
+                    if (Int32.TryParse(id, out forumSubscriptionId))
+                    {
+                        var forumSubscription = _forumService.GetSubscriptionById(forumSubscriptionId);
+                        if (forumSubscription != null && forumSubscription.CustomerId == _workContext.CurrentCustomer.Id)
+                        {
+                            _forumService.DeleteSubscription(forumSubscription);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToRoute("CustomerForumSubscriptions");
+        }
+
         #endregion
     }
-
 }

@@ -75,7 +75,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             //"~/m/6/se-name/".ShouldMapTo<CatalogController>(c => c.Manufacturer(6, null));
 
             "~/productreviews/7/".ShouldMapTo<ProductController>(c => c.ProductReviews(7));
-            "~/backinstocksubscribe/8/".ShouldMapTo<ProductController>(c => c.BackInStockSubscribePopup(8));
+            "~/backinstocksubscribe/8/".ShouldMapTo<BackInStockSubscriptionController>(c => c.SubscribePopup(8));
 
             "~/producttag/9/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
             "~/producttag/9/se-name/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
@@ -97,18 +97,18 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
 
             "~/customer/info/".ShouldMapTo<CustomerController>(c => c.Info());
             "~/customer/addresses/".ShouldMapTo<CustomerController>(c => c.Addresses());
-            "~/customer/orders/".ShouldMapTo<CustomerController>(c => c.Orders());
-            "~/customer/returnrequests/".ShouldMapTo<CustomerController>(c => c.ReturnRequests());
+            "~/order/history/".ShouldMapTo<OrderController>(c => c.CustomerOrders());
+            "~/returnrequest/history/".ShouldMapTo<ReturnRequestController>(c => c.CustomerReturnRequests());
             "~/customer/downloadableproducts/".ShouldMapTo<CustomerController>(c => c.DownloadableProducts());
-            "~/customer/backinstocksubscriptions/".ShouldMapTo<CustomerController>(c => c.BackInStockSubscriptions(null));
-            "~/customer/backinstocksubscriptions/3".ShouldMapTo<CustomerController>(c => c.BackInStockSubscriptions(3));
+            "~/backinstocksubscriptions/manage/".ShouldMapTo<BackInStockSubscriptionController>(c => c.CustomerSubscriptions(null));
+            "~/backinstocksubscriptions/manage/3".ShouldMapTo<BackInStockSubscriptionController>(c => c.CustomerSubscriptions(3));
 
-            "~/customer/rewardpoints/".ShouldMapTo<CustomerController>(c => c.RewardPoints());
+            "~/rewardpoints/history/".ShouldMapTo<OrderController>(c => c.CustomerRewardPoints());
             "~/customer/changepassword/".ShouldMapTo<CustomerController>(c => c.ChangePassword());
             "~/customer/avatar/".ShouldMapTo<CustomerController>(c => c.Avatar());
             //"~/customer/activation?token=cc74c80f-1edd-43f7-85df-a3cccc1b47b9&email=test@test.com".ShouldMapTo<CustomerController>(c => c.AccountActivation("cc74c80f-1edd-43f7-85df-a3cccc1b47b9", "test@test.com"));
-            "~/customer/forumsubscriptions".ShouldMapTo<CustomerController>(c => c.ForumSubscriptions(null));
-            "~/customer/forumsubscriptions/4".ShouldMapTo<CustomerController>(c => c.ForumSubscriptions(4));
+            "~/boards/forumsubscriptions".ShouldMapTo<BoardsController>(c => c.CustomerForumSubscriptions(null));
+            "~/boards/forumsubscriptions/4".ShouldMapTo<BoardsController>(c => c.CustomerForumSubscriptions(4));
             "~/customer/addressdelete/6".ShouldMapTo<CustomerController>(c => c.AddressDelete(6));
             "~/customer/addressedit/7".ShouldMapTo<CustomerController>(c => c.AddressEdit(7));
             "~/customer/addressadd".ShouldMapTo<CustomerController>(c => c.AddressAdd());

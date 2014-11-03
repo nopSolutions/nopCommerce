@@ -190,6 +190,7 @@
   <ItemGroup>
     <Compile Include="Controllers\BasePublicController.cs" />
     <Compile Include="Controllers\BoardsController.cs" />
+    <Compile Include="Controllers\BackInStockSubscriptionController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
@@ -291,10 +292,8 @@
     <Compile Include="Models\Common\LanguageSelectorModel.cs" />
     <Compile Include="Models\Common\SitemapModel.cs" />
     <Compile Include="Models\Customer\CustomerAttributeModel.cs" />
-    <Compile Include="Models\Customer\BackInStockSubscriptionModel.cs" />
-    <Compile Include="Models\Customer\CustomerBackInStockSubscriptionsModel.cs" />
-    <Compile Include="Models\Customer\CustomerForumSubscriptionsModel.cs" />
-    <Compile Include="Models\Customer\ForumSubscriptionModel.cs" />
+    <Compile Include="Models\Catalog\CustomerBackInStockSubscriptionsModel.cs" />
+    <Compile Include="Models\Boards\CustomerForumSubscriptionsModel.cs" />
     <Compile Include="Models\Customer\ExternalAuthenticationMethodModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
     <Compile Include="Models\Cms\RenderWidgetModel.cs" />
@@ -310,13 +309,13 @@
     <Compile Include="Models\Customer\ChangePasswordModel.cs" />
     <Compile Include="Models\Customer\PasswordRecoveryConfirmModel.cs" />
     <Compile Include="Models\Customer\PaswordRecoveryModel.cs" />
-    <Compile Include="Models\Customer\CustomerReturnRequestsModel.cs" />
+    <Compile Include="Models\Order\CustomerReturnRequestsModel.cs" />
     <Compile Include="Models\Customer\CustomerDownloadableProductsModel.cs" />
-    <Compile Include="Models\Customer\CustomerOrderListModel.cs" />
+    <Compile Include="Models\Order\CustomerOrderListModel.cs" />
     <Compile Include="Models\Customer\CustomerAvatarModel.cs" />
     <Compile Include="Models\Customer\CustomerAddressEditModel.cs" />
     <Compile Include="Models\Customer\CustomerAddressListModel.cs" />
-    <Compile Include="Models\Customer\CustomerRewardPointsModel.cs" />
+    <Compile Include="Models\Order\CustomerRewardPointsModel.cs" />
     <Compile Include="Models\Customer\CustomerNavigationModel.cs" />
     <Compile Include="Models\Customer\CustomerInfoModel.cs" />
     <Compile Include="Models\Customer\RegisterResultModel.cs" />
@@ -1945,8 +1944,8 @@
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
     <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
     <Content Include="Views\Product\_BackInStockSubscription.cshtml" />
-    <Content Include="Views\Product\BackInStockSubscribePopup.cshtml" />
-    <Content Include="Views\Customer\BackInStockSubscriptions.cshtml" />
+    <Content Include="Views\BackInStockSubscription\SubscribePopup.cshtml" />
+    <Content Include="Views\BackInStockSubscription\CustomerSubscriptions.cshtml" />
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Views\Shared\_Notifications.cshtml" />
@@ -2011,7 +2010,7 @@
     <Content Include="Views\Customer\AddressAdd.cshtml" />
     <Content Include="Views\Customer\AddressEdit.cshtml" />
     <Content Include="Views\Shared\_CreateOrUpdateAddress.cshtml" />
-    <Content Include="Views\Customer\RewardPoints.cshtml" />
+    <Content Include="Views\Order\CustomerRewardPoints.cshtml" />
     <Content Include="Views\Customer\ChangePassword.cshtml" />
     <Content Include="Views\Customer\Avatar.cshtml" />
     <Content Include="Views\Catalog\CategoryNavigation.cshtml" />
@@ -2049,11 +2048,11 @@
     <Content Include="Views\Checkout\PaymentInfo.cshtml" />
     <Content Include="Views\Checkout\Confirm.cshtml" />
     <Content Include="Views\Checkout\Completed.cshtml" />
-    <Content Include="Views\Customer\Orders.cshtml" />
+    <Content Include="Views\Order\CustomerOrders.cshtml" />
     <Content Include="Views\Customer\DownloadableProducts.cshtml" />
     <Content Include="Views\Customer\UserAgreement.cshtml" />
     <Content Include="Views\ReturnRequest\ReturnRequest.cshtml" />
-    <Content Include="Views\Customer\ReturnRequests.cshtml" />
+    <Content Include="Views\ReturnRequest\CustomerReturnRequests.cshtml" />
     <Content Include="Views\Product\RecentlyViewedProducts.cshtml" />
     <Content Include="Views\Product\RecentlyViewedProductsBlock.cshtml" />
     <Content Include="Views\Product\RecentlyAddedProducts.cshtml" />
@@ -2128,7 +2127,7 @@
     <Content Include="Views\Profile\Info.cshtml" />
     <Content Include="Views\Profile\Posts.cshtml" />
     <Content Include="Views\Common\Favicon.cshtml" />
-    <Content Include="Views\Customer\ForumSubscriptions.cshtml" />
+    <Content Include="Views\Boards\CustomerForumSubscriptions.cshtml" />
     <Content Include="Views\Order\ShipmentDetails.cshtml" />
     <Content Include="Views\Common\JavaScriptDisabledWarning.cshtml" />
     <Content Include="Views\Shared\_Root.Head.cshtml" />

@@ -1,0 +1,52 @@
+﻿@model CustomerReturnRequestsModel
+@using Nop.Web.Models.Customer
+@using Nop.Web.Models.Order
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section left
+{
+    @Html.Action("CustomerNavigation", "Customer", new { selectedTabId = CustomerNavigationEnum.ReturnRequests })
+}
+<div class="page account-page return-request-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerReturnRequests")</h1>
+    </div>
+    <div class="page-body">
+        @foreach (var item in Model.Items)
+        {
+            <div class="section request-item">
+                <div class="title">
+                    <strong>@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.Id, item.ReturnRequestStatus)</strong>
+                </div>
+                <ul class="details">
+                    <li class="product">
+                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                        x @item.Quantity
+                    </li>
+                    <li class="reason">
+                        @string.Format(T("Account.CustomerReturnRequests.Reason").Text, item.ReturnReason)
+                    </li>
+                    <li class="action">
+                        @string.Format(T("Account.CustomerReturnRequests.Action").Text, item.ReturnAction)
+                    </li>
+                    <li class="date">
+                        @string.Format(T("Account.CustomerReturnRequests.Date").Text, item.CreatedOn.ToString())
+                    </li>
+                    @if (!String.IsNullOrEmpty(item.Comments))
+                    {
+                        <li class="comments-label">
+                            @T("Account.CustomerReturnRequests.Comments")
+                        </li>
+                        <li class="comments">
+                            @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
