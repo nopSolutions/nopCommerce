@@ -267,13 +267,13 @@ namespace Nop.Services.Common
                 if (logoExists)
                 {
                     var logoFilePath = _pictureService.GetThumbLocalPath(logoPicture, 0, false);
-                    Image Logo = Image.GetInstance(logoFilePath);
-                    Logo.Alignment = GetAlignment(lang, true);
-                    Logo.ScaleToFit(65f, 65f);
+                    var logo = Image.GetInstance(logoFilePath);
+                    logo.Alignment = GetAlignment(lang, true);
+                    logo.ScaleToFit(65f, 65f);
 
                     var cellLogo = new PdfPCell();
                     cellLogo.Border = Rectangle.NO_BORDER;
-                    cellLogo.AddElement(Logo);
+                    cellLogo.AddElement(logo);
                     headerTable.AddCell(cellLogo);
                 }
                 doc.Add(headerTable); 
