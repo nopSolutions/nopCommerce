@@ -1543,7 +1543,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Downloable products
+        #region Downloadable products
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult DownloadableProducts()
@@ -2000,7 +2000,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Back in stock  subscriptions
+        #region Back in stock subscriptions
 
         public ActionResult BackInStockSubscriptions(int? page)
         {
