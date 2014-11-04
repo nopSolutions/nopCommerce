@@ -13,5 +13,9 @@ namespace Nop.Plugin.Payments.CashOnDelivery
         /// Additional fee
         /// </summary>
         public decimal AdditionalFee { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether shippable products are required in order to display this payment method during checkout
+        /// </summary>
+        public bool ShippableProductRequired { get; set; }
     }
 }

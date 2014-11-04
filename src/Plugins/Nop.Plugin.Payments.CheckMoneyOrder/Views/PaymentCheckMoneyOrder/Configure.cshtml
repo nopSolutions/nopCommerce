@@ -38,6 +38,16 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShippableProductRequired_OverrideForStore, model => model.ShippableProductRequired, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ShippableProductRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShippableProductRequired)
+                @Html.ValidationMessageFor(model => model.ShippableProductRequired)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             </td>

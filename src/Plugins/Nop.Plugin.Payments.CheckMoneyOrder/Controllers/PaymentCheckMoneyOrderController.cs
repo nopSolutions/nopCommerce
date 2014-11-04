@@ -43,6 +43,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             model.DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText;
             model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
+            model.ShippableProductRequired = checkMoneyOrderPaymentSettings.ShippableProductRequired;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -50,6 +51,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 model.DescriptionText_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.DescriptionText, storeScope);
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+                model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/Configure.cshtml", model);
@@ -71,6 +73,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             checkMoneyOrderPaymentSettings.DescriptionText = model.DescriptionText;
             checkMoneyOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
             checkMoneyOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+            checkMoneyOrderPaymentSettings.ShippableProductRequired = model.ShippableProductRequired;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -89,6 +92,11 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
                 _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            if (model.ShippableProductRequired_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(checkMoneyOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

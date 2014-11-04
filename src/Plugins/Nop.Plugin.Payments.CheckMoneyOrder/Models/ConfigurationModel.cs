@@ -20,5 +20,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
         [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage")]
         public bool AdditionalFeePercentage { get; set; }
         public bool AdditionalFeePercentage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired")]
+        public bool ShippableProductRequired { get; set; }
+        public bool ShippableProductRequired_OverrideForStore { get; set; }
     }
 }

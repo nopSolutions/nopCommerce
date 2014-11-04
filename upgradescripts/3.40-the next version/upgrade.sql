@@ -401,6 +401,24 @@ set @resources='
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.DisplayOrder.Hint">
 	<Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CashOnDelivery.ShippableProductRequired">
+    <Value>Shippable product required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CashOnDelivery.ShippableProductRequired.Hint">
+    <Value>An option indicating whether shippable products are required in order to display this payment method during checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CheckMoneyOrder.ShippableProductRequired">
+    <Value>Shippable product required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.CheckMoneyOrder.ShippableProductRequired.Hint">
+    <Value>An option indicating whether shippable products are required in order to display this payment method during checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.PurchaseOrder.ShippableProductRequired">
+    <Value>Shippable product required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint">
+    <Value>An option indicating whether shippable products are required in order to display this payment method during checkout.</Value>
+  </LocaleResource>
 </Language>
 '
 

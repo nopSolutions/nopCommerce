@@ -39,12 +39,14 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
             var model = new ConfigurationModel();
             model.AdditionalFee = purchaseOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = purchaseOrderPaymentSettings.AdditionalFeePercentage;
+            model.ShippableProductRequired = purchaseOrderPaymentSettings.ShippableProductRequired;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
                 model.AdditionalFee_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.AdditionalFee, storeScope);
                 model.AdditionalFeePercentage_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+                model.ShippableProductRequired_OverrideForStore = _settingService.SettingExists(purchaseOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
             }
 
             return View("~/Plugins/Payments.PurchaseOrder/Views/PaymentPurchaseOrder/Configure.cshtml", model);
@@ -65,6 +67,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
             //save settings
             purchaseOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
             purchaseOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
+            purchaseOrderPaymentSettings.ShippableProductRequired = model.ShippableProductRequired;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -78,6 +81,11 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
                 _settingService.SaveSetting(purchaseOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(purchaseOrderPaymentSettings, x => x.AdditionalFeePercentage, storeScope);
+
+            if (model.ShippableProductRequired_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(purchaseOrderPaymentSettings, x => x.ShippableProductRequired, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(purchaseOrderPaymentSettings, x => x.ShippableProductRequired, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

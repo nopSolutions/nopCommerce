@@ -70,6 +70,10 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             //you can put any logic here
             //for example, hide this payment method if all products in the cart are downloadable
             //or hide this payment method if current customer is from certain country
+
+            if (_purchaseOrderPaymentSettings.ShippableProductRequired && !cart.RequiresShipping())
+                return true;
+
             return false;
         }
 
@@ -209,6 +213,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint", "The additional fee.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage", "Additional fee. Use percentage");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired", "Shippable product required");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint", "An option indicating whether shippable products are required in order to display this payment method during checkout.");
 
             base.Install();
         }
@@ -224,6 +230,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint");
 
             base.Uninstall();
         }
