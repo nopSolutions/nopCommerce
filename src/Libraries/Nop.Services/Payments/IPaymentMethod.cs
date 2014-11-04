@@ -27,12 +27,19 @@ namespace Nop.Services.Payments
         void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
 
         /// <summary>
+        /// Returns a value indicating whether payment method should be hidden during checkout
+        /// </summary>
+        /// <param name="cart">Shoping cart</param>
+        /// <returns>true - hide; false - display.</returns>
+        bool HidePaymentMethod(IList<ShoppingCartItem> cart);
+
+        /// <summary>
         /// Gets additional handling fee
         /// </summary>
         /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
         decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart);
-        
+
         /// <summary>
         /// Captures payment
         /// </summary>

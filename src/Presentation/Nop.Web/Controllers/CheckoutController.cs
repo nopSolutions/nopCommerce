@@ -343,11 +343,12 @@ namespace Nop.Web.Controllers
                 filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
             }
 
-            var boundPaymentMethods = _paymentService
+            var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, filterByCountryId)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
+                .Where(pm => !pm.HidePaymentMethod(cart))
                 .ToList();
-            foreach (var pm in boundPaymentMethods)
+            foreach (var pm in paymentMethods)
             {
                 if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
