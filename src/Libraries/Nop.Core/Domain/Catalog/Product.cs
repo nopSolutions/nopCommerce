@@ -30,12 +30,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product type identifier
         /// </summary>
         public int ProductTypeId { get; set; }
-
         /// <summary>
         /// Gets or sets the parent product identifier. It's used to identify associated products (only with "grouped" products)
         /// </summary>
         public int ParentGroupedProductId { get; set; }
-
         /// <summary>
         /// Gets or sets the values indicating whether this product is visible in catalog or search results.
         /// It's used when this product is associated to some "grouped" one
@@ -47,12 +45,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }
-
         /// <summary>
         /// Gets or sets the short description
         /// </summary>
         public string ShortDescription { get; set; }
-
         /// <summary>
         /// Gets or sets the full description
         /// </summary>
@@ -82,12 +78,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the meta keywords
         /// </summary>
         public string MetaKeywords { get; set; }
-
         /// <summary>
         /// Gets or sets the meta description
         /// </summary>
         public string MetaDescription { get; set; }
-
         /// <summary>
         /// Gets or sets the meta title
         /// </summary>
@@ -97,22 +91,18 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product allows customer reviews
         /// </summary>
         public bool AllowCustomerReviews { get; set; }
-
         /// <summary>
         /// Gets or sets the rating sum (approved reviews)
         /// </summary>
         public int ApprovedRatingSum { get; set; }
-
         /// <summary>
         /// Gets or sets the rating sum (not approved reviews)
         /// </summary>
         public int NotApprovedRatingSum { get; set; }
-
         /// <summary>
         /// Gets or sets the total rating votes (approved reviews)
         /// </summary>
         public int ApprovedTotalReviews { get; set; }
-
         /// <summary>
         /// Gets or sets the total rating votes (not approved reviews)
         /// </summary>
@@ -122,7 +112,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is subject to ACL
         /// </summary>
         public bool SubjectToAcl { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
@@ -132,12 +121,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the SKU
         /// </summary>
         public string Sku { get; set; }
-
         /// <summary>
         /// Gets or sets the manufacturer part number
         /// </summary>
         public string ManufacturerPartNumber { get; set; }
-
         /// <summary>
         /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
         /// </summary>
@@ -147,7 +134,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product is gift card
         /// </summary>
         public bool IsGiftCard { get; set; }
-
         /// <summary>
         /// Gets or sets the gift card type identifier
         /// </summary>
@@ -157,12 +143,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product requires that other products are added to the cart (Product X requires Product Y)
         /// </summary>
         public bool RequireOtherProducts { get; set; }
-
         /// <summary>
         /// Gets or sets a required product identifiers (comma separated)
         /// </summary>
         public string RequiredProductIds { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether required products are automatically added to the cart
         /// </summary>
@@ -172,47 +156,38 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product is download
         /// </summary>
         public bool IsDownload { get; set; }
-
         /// <summary>
         /// Gets or sets the download identifier
         /// </summary>
         public int DownloadId { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether this downloadable product can be downloaded unlimited number of times
         /// </summary>
         public bool UnlimitedDownloads { get; set; }
-
         /// <summary>
         /// Gets or sets the maximum number of downloads
         /// </summary>
         public int MaxNumberOfDownloads { get; set; }
-
         /// <summary>
         /// Gets or sets the number of days during customers keeps access to the file.
         /// </summary>
         public int? DownloadExpirationDays { get; set; }
-
         /// <summary>
         /// Gets or sets the download activation type
         /// </summary>
         public int DownloadActivationTypeId { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the product has a sample download file
         /// </summary>
         public bool HasSampleDownload { get; set; }
-
         /// <summary>
         /// Gets or sets the sample download identifier
         /// </summary>
         public int SampleDownloadId { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the product has user agreement
         /// </summary>
         public bool HasUserAgreement { get; set; }
-
         /// <summary>
         /// Gets or sets the text of license agreement
         /// </summary>
@@ -222,17 +197,14 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product is recurring
         /// </summary>
         public bool IsRecurring { get; set; }
-
         /// <summary>
         /// Gets or sets the cycle length
         /// </summary>
         public int RecurringCycleLength { get; set; }
-
         /// <summary>
         /// Gets or sets the cycle period
         /// </summary>
         public int RecurringCyclePeriodId { get; set; }
-
         /// <summary>
         /// Gets or sets the total cycles
         /// </summary>
@@ -242,22 +214,18 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is ship enabled
         /// </summary>
         public bool IsShipEnabled { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the entity is free shipping
         /// </summary>
         public bool IsFreeShipping { get; set; }
-
         /// <summary>
         /// Gets or sets a value this product should be shipped separately (each item)
         /// </summary>
         public bool ShipSeparately { get; set; }
-
         /// <summary>
         /// Gets or sets the additional shipping charge
         /// </summary>
         public decimal AdditionalShippingCharge { get; set; }
-
         /// <summary>
         /// Gets or sets a delivery date identifier
         /// </summary>
@@ -267,7 +235,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the product is marked as tax exempt
         /// </summary>
         public bool IsTaxExempt { get; set; }
-
         /// <summary>
         /// Gets or sets the tax category identifier
         /// </summary>
@@ -277,7 +244,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating how to manage inventory
         /// </summary>
         public int ManageInventoryMethodId { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether multiple warehouses are used for this product
         /// </summary>
@@ -286,62 +252,50 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a warehouse identifier
         /// </summary>
         public int WarehouseId { get; set; }
-
         /// <summary>
         /// Gets or sets the stock quantity
         /// </summary>
         public int StockQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to display stock availability
         /// </summary>
         public bool DisplayStockAvailability { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to display stock quantity
         /// </summary>
         public bool DisplayStockQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets the minimum stock quantity
         /// </summary>
         public int MinStockQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets the low stock activity identifier
         /// </summary>
         public int LowStockActivityId { get; set; }
-
         /// <summary>
         /// Gets or sets the quantity when admin should be notified
         /// </summary>
         public int NotifyAdminForQuantityBelow { get; set; }
-
         /// <summary>
         /// Gets or sets a value backorder mode identifier
         /// </summary>
         public int BackorderModeId { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to back in stock subscriptions are allowed
         /// </summary>
         public bool AllowBackInStockSubscriptions { get; set; }
-
         /// <summary>
         /// Gets or sets the order minimum quantity
         /// </summary>
         public int OrderMinimumQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets the order maximum quantity
         /// </summary>
         public int OrderMaximumQuantity { get; set; }
-
         /// <summary>
         /// Gets or sets the comma seperated list of allowed quantities. null or empty if any quantity is allowed
         /// </summary>
         public string AllowedQuantities { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether we allow adding to the cart/wishlist only attribute combinations that exist and have stock greater than zero.
         /// This option is used only when we have "manage inventory" set to "track inventory by product attributes"
@@ -352,67 +306,54 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to disable buy (Add to cart) button
         /// </summary>
         public bool DisableBuyButton { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to disable "Add to wishlist" button
         /// </summary>
         public bool DisableWishlistButton { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether this item is available for Pre-Order
         /// </summary>
         public bool AvailableForPreOrder { get; set; }
-
         /// <summary>
         /// Gets or sets the start date and time of the product availability (for pre-order products)
         /// </summary>
         public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
         /// </summary>
         public bool CallForPrice { get; set; }
-
         /// <summary>
         /// Gets or sets the price
         /// </summary>
         public decimal Price { get; set; }
-
         /// <summary>
         /// Gets or sets the old price
         /// </summary>
         public decimal OldPrice { get; set; }
-
         /// <summary>
         /// Gets or sets the product cost
         /// </summary>
         public decimal ProductCost { get; set; }
-
         /// <summary>
         /// Gets or sets the product special price
         /// </summary>
         public decimal? SpecialPrice { get; set; }
-
         /// <summary>
         /// Gets or sets the start date and time of the special price
         /// </summary>
         public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
-
         /// <summary>
         /// Gets or sets the end date and time of the special price
         /// </summary>
         public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether a customer enters price
         /// </summary>
         public bool CustomerEntersPrice { get; set; }
-
         /// <summary>
         /// Gets or sets the minimum price entered by a customer
         /// </summary>
         public decimal MinimumCustomerEnteredPrice { get; set; }
-
         /// <summary>
         /// Gets or sets the maximum price entered by a customer
         /// </summary>
@@ -439,17 +380,14 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the weight
         /// </summary>
         public decimal Weight { get; set; }
-
         /// <summary>
         /// Gets or sets the length
         /// </summary>
         public decimal Length { get; set; }
-
         /// <summary>
         /// Gets or sets the width
         /// </summary>
         public decimal Width { get; set; }
-
         /// <summary>
         /// Gets or sets the height
         /// </summary>
@@ -459,7 +397,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available start date and time
         /// </summary>
         public DateTime? AvailableStartDateTimeUtc { get; set; }
-
         /// <summary>
         /// Gets or sets the available end date and time
         /// </summary>
@@ -471,12 +408,10 @@ namespace Nop.Core.Domain.Catalog
         /// This value is used when sorting home page products
         /// </summary>
         public int DisplayOrder { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public bool Published { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
@@ -486,7 +421,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of product creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }
-
         /// <summary>
         /// Gets or sets the date and time of product update
         /// </summary>
