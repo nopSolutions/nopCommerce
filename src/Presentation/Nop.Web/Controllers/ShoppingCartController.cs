@@ -494,6 +494,15 @@ namespace Nop.Web.Controllers
                 if (sci.Product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), sci.Product.RecurringCycleLength, sci.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
+                //rental info
+                if (sci.Product.IsRental)
+                {
+                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? sci.Product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? sci.Product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
+                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
+                        rentalStartDate, rentalEndDate);
+                }
+
                 //unit prices
                 if (sci.Product.CallForPrice)
                 {
@@ -548,6 +557,8 @@ namespace Nop.Web.Controllers
                     sci.StoreId,
                     sci.AttributesXml,
                     sci.CustomerEnteredPrice,
+                    sci.RentalStartDateUtc,
+                    sci.RentalEndDateUtc,
                     sci.Quantity,
                     false);
                 foreach (var warning in itemWarnings)
@@ -700,6 +711,15 @@ namespace Nop.Web.Controllers
                 if (sci.Product.IsRecurring)
                     cartItemModel.RecurringInfo = string.Format(_localizationService.GetResource("ShoppingCart.RecurringPeriod"), sci.Product.RecurringCycleLength, sci.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
 
+                //rental info
+                if (sci.Product.IsRental)
+                {
+                    var rentalStartDate = sci.RentalStartDateUtc.HasValue ? sci.Product.FormatRentalDate(sci.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = sci.RentalEndDateUtc.HasValue ? sci.Product.FormatRentalDate(sci.RentalEndDateUtc.Value) : "";
+                    cartItemModel.RentalInfo = string.Format(_localizationService.GetResource("ShoppingCart.Rental.FormattedDate"),
+                        rentalStartDate, rentalEndDate);
+                }
+
                 //unit prices
                 if (sci.Product.CallForPrice)
                 {
@@ -754,7 +774,10 @@ namespace Nop.Web.Controllers
                     sci.StoreId,
                     sci.AttributesXml,
                     sci.CustomerEnteredPrice,
-                    sci.Quantity, false);
+                    sci.RentalStartDateUtc,
+                    sci.RentalEndDateUtc,
+                    sci.Quantity,
+                    false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -1132,6 +1155,36 @@ namespace Nop.Web.Controllers
             return attributes;
         }
 
+        /// <summary>
+        /// Parse product rental dates on the product details page
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="form">Form</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        [NonAction]
+        protected virtual void ParseRentalDates(Product product, FormCollection form,
+            out DateTime? startDate, out DateTime? endDate)
+        {
+            startDate = null;
+            endDate = null;
+
+            string startControlId = string.Format("rental_start_date_{0}", product.Id);
+            string endControlId = string.Format("rental_end_date_{0}", product.Id);
+            var ctrlStartDate = form[startControlId];
+            var ctrlEndDate = form[endControlId];
+            try
+            {
+                //currenly we support only "mm/dd/yy" format
+                var formatProvider = new CultureInfo("en-US");
+                startDate = DateTime.Parse(ctrlStartDate, formatProvider);
+                endDate = DateTime.Parse(ctrlEndDate, formatProvider);
+            }
+            catch
+            {
+            }
+        }
+
         #endregion
 
         #region Shopping cart
@@ -1182,6 +1235,15 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            if (product.IsRental)
+            {
+                //rental products require start/end dates to be entered
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
+                });
+            }
+
             var allowedQuantities = product.ParseAllowedQuatities();
             if (allowedQuantities.Length > 0)
             {
@@ -1213,7 +1275,7 @@ namespace Nop.Web.Controllers
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, cartType,
                 product, _storeContext.CurrentStore.Id, string.Empty, 
-                decimal.Zero, quantityToValidate, false, true, false, false, false);
+                decimal.Zero, null, null, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Count > 0)
             {
                 //cannot be added to the cart
@@ -1226,9 +1288,11 @@ namespace Nop.Web.Controllers
             }
 
             //now let's try adding product to the cart (now including product attribute validation, etc)
-            addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                product, cartType, _storeContext.CurrentStore.Id,
-                string.Empty, decimal.Zero, quantity, true);
+            addToCartWarnings = _shoppingCartService.AddToCart(customer: _workContext.CurrentCustomer,
+                product: product,
+                shoppingCartType: cartType,
+                storeId: _storeContext.CurrentStore.Id,
+                quantity: quantity);
             if (addToCartWarnings.Count > 0)
             {
                 //cannot be added to the cart
@@ -1399,7 +1463,16 @@ namespace Nop.Web.Controllers
 
             #endregion
 
+            //product and gift card attributes
             string attributes = ParseProductAttributes(product, form);
+            
+            //rental attributes
+            DateTime? rentalStartDate = null;
+            DateTime? rentalEndDate = null;
+            if (product.IsRental)
+            {
+                ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
+            }
 
             //save item
             var addToCartWarnings = new List<string>();
@@ -1409,7 +1482,8 @@ namespace Nop.Web.Controllers
                 //add to the cart
                 addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                     product, cartType, _storeContext.CurrentStore.Id,
-                    attributes, customerEnteredPriceConverted, quantity, true));
+                    attributes, customerEnteredPriceConverted,
+                    rentalStartDate, rentalEndDate, quantity, true));
             }
             else
             {
@@ -1418,7 +1492,8 @@ namespace Nop.Web.Controllers
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
-                    cart, cartType, product, attributes, customerEnteredPriceConverted);
+                    cart, cartType, product, attributes, customerEnteredPriceConverted,
+                    rentalStartDate, rentalEndDate);
                 if (otherCartItemWithSameParameters != null &&
                     otherCartItemWithSameParameters.Id == updatecartitem.Id)
                 {
@@ -1427,7 +1502,8 @@ namespace Nop.Web.Controllers
                 }
                 //update existing item
                 addToCartWarnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                    updatecartitem.Id, attributes, customerEnteredPriceConverted, quantity, true));
+                    updatecartitem.Id, attributes, customerEnteredPriceConverted,
+                    rentalStartDate, rentalEndDate, quantity, true));
                 if (otherCartItemWithSameParameters != null && addToCartWarnings.Count == 0)
                 {
                     //delete the same shopping cart item
@@ -1533,6 +1609,8 @@ namespace Nop.Web.Controllers
 
             string attributeXml = ParseProductAttributes(product, form);
 
+            //we ignore rental start/end date here
+
             string sku = product.FormatSku(attributeXml, _productAttributeParser);
             string mpn = product.FormatMpn(attributeXml, _productAttributeParser);
             string gtin = product.FormatGtin(attributeXml, _productAttributeParser);
@@ -1548,7 +1626,7 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
-                    true, out discountAmount, out scDiscount);
+                    null, null, true, out discountAmount, out scDiscount);
                 decimal taxRate;
                 decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
@@ -1793,6 +1871,7 @@ namespace Nop.Web.Controllers
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                                     sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                    sci.RentalStartDateUtc, sci.RentalEndDateUtc,
                                     newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
@@ -2331,7 +2410,9 @@ namespace Nop.Web.Controllers
                             if (int.TryParse(form[formKey], out newQuantity))
                             {
                                 var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice, newQuantity, true);
+                                    sci.Id, sci.AttributesXml, sci.CustomerEnteredPrice,
+                                    sci.RentalStartDateUtc, sci.RentalEndDateUtc,
+                                    newQuantity, true);
                                 innerWarnings.Add(sci.Id, currSciWarnings);
                             }
                             break;
@@ -2398,7 +2479,8 @@ namespace Nop.Web.Controllers
                     var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.Product, ShoppingCartType.ShoppingCart,
                         _storeContext.CurrentStore.Id,
-                        sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
+                        sci.AttributesXml, sci.CustomerEnteredPrice,
+                        sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, true);
                     if (warnings.Count == 0)
                         numberOfAddedItems++;
                     if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled

@@ -34,6 +34,8 @@ namespace Nop.Plugin.Misc.FacebookShop.Models
 
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
+
+            public bool IsRental { get; set; }
         }
 
         #endregion

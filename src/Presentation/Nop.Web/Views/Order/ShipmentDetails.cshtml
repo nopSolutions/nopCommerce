@@ -147,6 +147,12 @@
                                             @Html.Raw(item.AttributeInfo)
                                         </div>
                                     }
+                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    {
+                                        <div class="rental-info">
+                                            @Html.Raw(item.RentalInfo)
+                                        </div>
+                                    }
                                 </td>
                                 <td class="a-center quantity">
                                     @item.QuantityShipped

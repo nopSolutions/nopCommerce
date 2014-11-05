@@ -151,6 +151,9 @@ namespace Nop.Services.ExportImport
                     "RecurringCycleLength",
                     "RecurringCyclePeriodId",
                     "RecurringTotalCycles",
+                    "IsRental",
+                    "RentalPriceLength",
+                    "RentalPricePeriodId",
                     "IsShipEnabled",
                     "IsFreeShipping",
                     "ShipSeparately",
@@ -249,6 +252,9 @@ namespace Nop.Services.ExportImport
                     int recurringCycleLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCycleLength")].Value);
                     int recurringCyclePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCyclePeriodId")].Value);
                     int recurringTotalCycles = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
+                    bool isRental = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRental")].Value);
+                    int rentalPriceLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPriceLength")].Value);
+                    int rentalPricePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPricePeriodId")].Value);
                     bool isShipEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
                     bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
                     bool shipSeparately = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
@@ -352,6 +358,9 @@ namespace Nop.Services.ExportImport
                     product.RecurringCycleLength = recurringCycleLength;
                     product.RecurringCyclePeriodId = recurringCyclePeriodId;
                     product.RecurringTotalCycles = recurringTotalCycles;
+                    product.IsRental = isRental;
+                    product.RentalPriceLength = rentalPriceLength;
+                    product.RentalPricePeriodId = rentalPricePeriodId;
                     product.IsShipEnabled = isShipEnabled;
                     product.IsFreeShipping = isFreeShipping;
                     product.ShipSeparately = shipSeparately;

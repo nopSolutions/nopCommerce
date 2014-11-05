@@ -2217,6 +2217,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsRecurring.Hint">
     <Value>Check if this product is a recurring product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRental">
+    <Value>Is rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRental.Hint">
+    <Value>Check if this is a rental product (price is set for some period). Please note that inventory management is not fully supported for rental products yet. It's recommended to set 'Manage inventory method' to 'Don't track inventory' now.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsShipEnabled">
     <Value>Shipping enabled</Value>
   </LocaleResource>
@@ -2402,6 +2408,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RecurringTotalCycles.Hint">
     <Value>Enter total cycles.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength">
+    <Value>Rental period length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.Hint">
+    <Value>Specify period length for rental product. Price is specified for this period.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod">
+    <Value>Rental period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod.Hint">
+    <Value>Specify period for rental product. Price is specified for this period.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.RequiredProductIds">
     <Value>Required product IDs</Value>
@@ -10881,6 +10899,18 @@
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RecurringProductCyclePeriod.Years">
     <Value>Years</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Weeks">
+    <Value>Weeks</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Months">
+    <Value>Months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Years">
+    <Value>Years</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.SpecificationAttributeType.Option">
     <Value>Option</Value>
   </LocaleResource>
@@ -11738,6 +11768,9 @@
   </LocaleResource>
   <LocaleResource Name="Order.PurchaseOrderNumber">
     <Value>Purchase Order Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Rental.FormattedDate">
+    <Value>Start date: {0}. End date: {1}.</Value>
   </LocaleResource>
   <LocaleResource Name="Order.Reorder">
     <Value>Re-order</Value>
@@ -12615,6 +12648,21 @@
   <LocaleResource Name="Products.Price.OldPrice">
     <Value>Old price</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Days">
+    <Value>{0} per {1} day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Weeks">
+    <Value>{0} per {1} week(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Months">
+    <Value>{0} per {1} month(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Years">
+    <Value>{0} per {1} year(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.RentalPrice">
+    <Value>Rental price</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Price.TaxShipping.ExclTax">
     <Value><![CDATA[excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
@@ -12647,6 +12695,12 @@
   </LocaleResource>
   <LocaleResource Name="Products.RelatedProducts">
     <Value>Related products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.RentalStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.RentalEndDate">
+    <Value>End date</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Sku">
     <Value>SKU</Value>
@@ -13097,6 +13151,21 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Remove">
     <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rent">
+    <Value>Rent</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.EnterEndDate">
+    <Value>Enter rental end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.EnterStartDate">
+    <Value>Enter rental start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.FormattedDate">
+    <Value>Start date: {0}. End date: {1}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.StartDateLessEndDate">
+    <Value>Rental start date should be less than end date</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.RequiredProductWarning">
     <Value>This product requires the following product is added to the cart: {0}</Value>

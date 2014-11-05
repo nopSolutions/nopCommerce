@@ -33,7 +33,9 @@ namespace Nop.Data.Tests.Orders
                 DownloadCount= 7,
                 IsDownloadActivated=true,
                 LicenseDownloadId= 8,
-                ItemWeight = 9.87M
+                ItemWeight = 9.87M,
+                RentalStartDateUtc = new DateTime(2010, 01, 01),
+                RentalEndDateUtc = new DateTime(2010, 01, 02)
             };
 
             var fromDb = SaveAndLoadEntity(orderItem);
@@ -53,6 +55,8 @@ namespace Nop.Data.Tests.Orders
             fromDb.IsDownloadActivated.ShouldEqual(true);
             fromDb.LicenseDownloadId.ShouldEqual(8);
             fromDb.ItemWeight.ShouldEqual(9.87M);
+            fromDb.RentalStartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.RentalEndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
 
             fromDb.Order.ShouldNotBeNull();
         }

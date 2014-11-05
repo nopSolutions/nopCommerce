@@ -684,7 +684,8 @@ namespace Nop.Services.Orders
                     {
                         var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci.ShoppingCartType,
                             sci.Product, processPaymentRequest.StoreId, sci.AttributesXml,
-                            sci.CustomerEnteredPrice, sci.Quantity, false);
+                            sci.CustomerEnteredPrice, sci.RentalStartDateUtc, sci.RentalEndDateUtc,
+                            sci.Quantity, false);
                         if (sciWarnings.Count > 0)
                         {
                             var warningsSb = new StringBuilder();
@@ -1170,6 +1171,8 @@ namespace Nop.Services.Orders
                                     IsDownloadActivated = false,
                                     LicenseDownloadId = 0,
                                     ItemWeight = itemWeight,
+                                    RentalStartDateUtc = sc.RentalStartDateUtc,
+                                    RentalEndDateUtc = sc.RentalEndDateUtc
                                 };
                                 order.OrderItems.Add(orderItem);
                                 _orderService.UpdateOrder(order);
@@ -1237,6 +1240,8 @@ namespace Nop.Services.Orders
                                     IsDownloadActivated = false,
                                     LicenseDownloadId = 0,
                                     ItemWeight = orderItem.ItemWeight,
+                                    RentalStartDateUtc = orderItem.RentalStartDateUtc,
+                                    RentalEndDateUtc = orderItem.RentalEndDateUtc
                                 };
                                 order.OrderItems.Add(newOrderItem);
                                 _orderService.UpdateOrder(order);
@@ -2660,8 +2665,10 @@ namespace Nop.Services.Orders
             foreach (var orderItem in order.OrderItems)
             {
                 _shoppingCartService.AddToCart(orderItem.Order.Customer, orderItem.Product,
-                    ShoppingCartType.ShoppingCart, orderItem.Order.StoreId, orderItem.AttributesXml,
-                    orderItem.UnitPriceExclTax, orderItem.Quantity, false);
+                    ShoppingCartType.ShoppingCart, orderItem.Order.StoreId, 
+                    orderItem.AttributesXml, orderItem.UnitPriceExclTax,
+                    orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
+                    orderItem.Quantity, false);
             }
         }
         

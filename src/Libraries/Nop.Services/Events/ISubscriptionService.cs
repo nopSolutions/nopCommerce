@@ -3,7 +3,7 @@
 namespace Nop.Services.Events
 {
     /// <summary>
-    /// Event subscrption service
+    /// Event subscription service
     /// </summary>
     public interface ISubscriptionService
     {

@@ -45,6 +45,16 @@ namespace Nop.Core.Domain.Orders
         public int Quantity { get; set; }
 
         /// <summary>
+        /// Gets or sets the rental product start date (null if it's not a rental product)
+        /// </summary>
+        public DateTime? RentalStartDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rental product end date (null if it's not a rental product)
+        /// </summary>
+        public DateTime? RentalEndDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of instance creation
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

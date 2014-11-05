@@ -419,6 +419,75 @@ set @resources='
   <LocaleResource Name="Plugins.Payment.PurchaseOrder.ShippableProductRequired.Hint">
     <Value>An option indicating whether shippable products are required in order to display this payment method during checkout.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRental">
+    <Value>Is rental</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsRental.Hint">
+    <Value>Check if this is a rental product (price is set for some period). Please note that inventory management is not fully supported for rental products yet. It''s recommended to set ''Manage inventory method'' to ''Don''t track inventory'' now.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength">
+    <Value>Rental period length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPriceLength.Hint">
+    <Value>Specify period length for rental product. Price is specified for this period.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod">
+    <Value>Rental period</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.RentalPricePeriod.Hint">
+    <Value>Specify period for rental product. Price is specified for this period.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Weeks">
+    <Value>Weeks</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Months">
+    <Value>Months</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RentalPricePeriod.Years">
+    <Value>Years</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Days">
+    <Value>{0} per {1} day(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Weeks">
+    <Value>{0} per {1} week(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Months">
+    <Value>{0} per {1} month(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.Rental.Years">
+    <Value>{0} per {1} year(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rent">
+    <Value>Rent</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Price.RentalPrice">
+    <Value>Rental price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.RentalStartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.RentalEndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.EnterEndDate">
+    <Value>Enter rental end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.EnterStartDate">
+    <Value>Enter rental start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.StartDateLessEndDate">
+    <Value>Rental start date should be less than end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.FormattedDate">
+    <Value>Start date: {0}. End date: {1}.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Rental.FormattedDate">
+    <Value>Start date: {0}. End date: {1}.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1528,5 +1597,86 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Address]') 
 BEGIN
 	ALTER TABLE [Address]
 	ADD [CustomAttributes] nvarchar(MAX) NULL
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='IsRental')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [IsRental] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [IsRental] = 0
+WHERE [IsRental] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [IsRental] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='RentalPriceLength')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [RentalPriceLength] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [RentalPriceLength] = 0
+WHERE [RentalPriceLength] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [RentalPriceLength] int NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='RentalPricePeriodId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [RentalPricePeriodId] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [RentalPricePeriodId] = 0
+WHERE [RentalPricePeriodId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [RentalPricePeriodId] int NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShoppingCartItem]') and NAME='RentalStartDateUtc')
+BEGIN
+	ALTER TABLE [ShoppingCartItem]
+	ADD [RentalStartDateUtc] datetime NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ShoppingCartItem]') and NAME='RentalEndDateUtc')
+BEGIN
+	ALTER TABLE [ShoppingCartItem]
+	ADD [RentalEndDateUtc] datetime NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='RentalStartDateUtc')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [RentalStartDateUtc] datetime NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]') and NAME='RentalEndDateUtc')
+BEGIN
+	ALTER TABLE [OrderItem]
+	ADD [RentalEndDateUtc] datetime NULL
 END
 GO

@@ -83,6 +83,11 @@
                                             <br />
                                             @Html.Raw(item.AttributeInfo)
                                         }
+                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                        {
+                                            <br />
+                                            @Html.Raw(item.RentalInfo)
+                                        }
                                         @if (item.ShipSeparately)
                                         {
                                             <br />

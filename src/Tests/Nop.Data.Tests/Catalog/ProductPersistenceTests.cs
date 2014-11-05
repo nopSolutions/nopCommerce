@@ -55,6 +55,9 @@ namespace Nop.Data.Tests.Catalog
                 RecurringCycleLength = 7,
                 RecurringCyclePeriodId = 8,
                 RecurringTotalCycles = 9,
+                IsRental = true,
+                RentalPriceLength = 9,
+                RentalPricePeriodId = 10,
                 IsShipEnabled = true,
                 IsFreeShipping = true,
                 ShipSeparately = true,
@@ -150,6 +153,9 @@ namespace Nop.Data.Tests.Catalog
             fromDb.RecurringCycleLength.ShouldEqual(7);
             fromDb.RecurringCyclePeriodId.ShouldEqual(8);
             fromDb.RecurringTotalCycles.ShouldEqual(9);
+            fromDb.IsRental.ShouldEqual(true);
+            fromDb.RentalPriceLength.ShouldEqual(9);
+            fromDb.RentalPricePeriodId.ShouldEqual(10);
             fromDb.IsShipEnabled.ShouldEqual(true);
             fromDb.IsFreeShipping.ShouldEqual(true);
             fromDb.ShipSeparately.ShouldEqual(true);

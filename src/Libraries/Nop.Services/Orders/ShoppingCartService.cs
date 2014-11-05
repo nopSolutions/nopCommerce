@@ -231,7 +231,11 @@ namespace Nop.Services.Orders
                             if (automaticallyAddRequiredProductsIfEnabled)
                             {
                                 //pass 'false' for 'automaticallyAddRequiredProductsIfEnabled' to prevent circular references
-                                var addToCartWarnings = AddToCart(customer, rp, shoppingCartType, storeId, "", decimal.Zero, 1, false);
+                                var addToCartWarnings = AddToCart(customer: customer,
+                                    product: rp, 
+                                    shoppingCartType: shoppingCartType,
+                                    storeId: storeId,
+                                    automaticallyAddRequiredProductsIfEnabled: false);
                                 if (addToCartWarnings.Count > 0)
                                 {
                                     //a product wasn't atomatically added for some reasons
@@ -597,7 +601,7 @@ namespace Nop.Services.Orders
                         var totalQty = quantity*pvaValue.Quantity;
                         var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                             shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
-                            "", decimal.Zero, totalQty, false, true, true, true, true);
+                            "", decimal.Zero, null, null, totalQty, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
                             var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
@@ -670,6 +674,44 @@ namespace Nop.Services.Orders
             return warnings;
         }
 
+        /// <summary>
+        /// Validates shopping cart item for rental products
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
+        /// <returns>Warnings</returns>
+        public virtual IList<string> GetRentalProductWarnings(Product product,
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+            
+            var warnings = new List<string>();
+
+            if (!product.IsRental)
+                return warnings;
+
+            if (!rentalStartDate.HasValue)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterStartDate"));
+                return warnings;
+            }
+            if (!rentalEndDate.HasValue)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.EnterEndDate"));
+                return warnings;
+            }
+            if (rentalStartDate.Value.CompareTo(rentalEndDate.Value) > 0)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.Rental.StartDateLessEndDate"));
+                return warnings;
+            }
+            //compare with current time?
+
+            return warnings;
+        }
+
 
         /// <summary>
         /// Validates shopping cart item
@@ -680,19 +722,24 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
         /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
+        /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
             Product product, int storeId,
             string selectedAttributes, decimal customerEnteredPrice,
-            int quantity, bool automaticallyAddRequiredProductsIfEnabled,
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
-            bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true)
+            bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true,
+            bool getRentalWarnings = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -714,6 +761,10 @@ namespace Nop.Services.Orders
             //required products
             if (getRequiredProductVariantWarnings)
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
+
+            //rental products
+            if (getRentalWarnings)
+                warnings.AddRange(GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
             
             return warnings;
         }
@@ -857,12 +908,16 @@ namespace Nop.Services.Orders
         /// <param name="product">Product</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
         /// <returns>Found shopping cart item</returns>
         public virtual ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             Product product,
             string selectedAttributes = "",
-            decimal customerEnteredPrice = decimal.Zero)
+            decimal customerEnteredPrice = decimal.Zero,
+            DateTime? rentalStartDate = null, 
+            DateTime? rentalEndDate = null)
         {
             if (shoppingCart == null)
                 throw new ArgumentNullException("shoppingCart");
@@ -910,8 +965,15 @@ namespace Nop.Services.Orders
                     if (sci.Product.CustomerEntersPrice)
                         customerEnteredPricesEqual = Math.Round(sci.CustomerEnteredPrice, 2) == Math.Round(customerEnteredPrice, 2);
 
+                    //rental products
+                    bool rentalInfoEqual = true;
+                    if (sci.Product.IsRental)
+                    {
+                        rentalInfoEqual = sci.RentalStartDateUtc == rentalStartDate && sci.RentalEndDateUtc == rentalEndDate;
+                    }
+
                     //found?
-                    if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual)
+                    if (attributesEqual && giftCardInfoSame && customerEnteredPricesEqual && rentalInfoEqual)
                         return sci;
                 }
             }
@@ -928,12 +990,16 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
-            ShoppingCartType shoppingCartType, int storeId, string selectedAttributes,
-            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductsIfEnabled)
+            ShoppingCartType shoppingCartType, int storeId, string selectedAttributes = null,
+            decimal customerEnteredPrice = decimal.Zero,
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
+            int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -973,7 +1039,8 @@ namespace Nop.Services.Orders
                 .ToList();
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
-                shoppingCartType, product, selectedAttributes, customerEnteredPrice);
+                shoppingCartType, product, selectedAttributes, customerEnteredPrice,
+                rentalStartDate, rentalEndDate);
 
             if (shoppingCartItem != null)
             {
@@ -981,7 +1048,8 @@ namespace Nop.Services.Orders
                 int newQuantity = shoppingCartItem.Quantity + quantity;
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
                     storeId, selectedAttributes, 
-                    customerEnteredPrice, newQuantity, automaticallyAddRequiredProductsIfEnabled));
+                    customerEnteredPrice, rentalStartDate, rentalEndDate,
+                    newQuantity, automaticallyAddRequiredProductsIfEnabled));
 
                 if (warnings.Count == 0)
                 {
@@ -998,7 +1066,9 @@ namespace Nop.Services.Orders
             {
                 //new shopping cart item
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, selectedAttributes, customerEnteredPrice, quantity, automaticallyAddRequiredProductsIfEnabled));
+                    storeId, selectedAttributes, customerEnteredPrice,
+                    rentalStartDate, rentalEndDate, 
+                    quantity, automaticallyAddRequiredProductsIfEnabled));
                 if (warnings.Count == 0)
                 {
                     //maximum items validation
@@ -1035,6 +1105,8 @@ namespace Nop.Services.Orders
                         AttributesXml = selectedAttributes,
                         CustomerEnteredPrice = customerEnteredPrice,
                         Quantity = quantity,
+                        RentalStartDateUtc = rentalStartDate,
+                        RentalEndDateUtc = rentalEndDate,
                         CreatedOnUtc = now,
                         UpdatedOnUtc = now
                     };
@@ -1061,12 +1133,16 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
         /// <param name="selectedAttributes">New shopping cart item attributes</param>
         /// <param name="customerEnteredPrice">New customer entered price</param>
+        /// <param name="rentalStartDate">Rental start date</param>
+        /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> UpdateShoppingCartItem(Customer customer, 
-            int shoppingCartItemId, string selectedAttributes, 
-            decimal customerEnteredPrice, int quantity, bool resetCheckoutData)
+            int shoppingCartItemId, string selectedAttributes,
+            decimal customerEnteredPrice,
+            DateTime? rentalStartDate = null, DateTime? rentalEndDate = null, 
+            int quantity = 1, bool resetCheckoutData = true)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -1086,13 +1162,16 @@ namespace Nop.Services.Orders
                     //check warnings
                     warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
                         shoppingCartItem.Product, shoppingCartItem.StoreId,
-                        selectedAttributes, customerEnteredPrice, quantity, false));
+                        selectedAttributes, customerEnteredPrice, 
+                        rentalStartDate, rentalEndDate, quantity, false));
                     if (warnings.Count == 0)
                     {
                         //if everything is OK, then update a shopping cart item
                         shoppingCartItem.Quantity = quantity;
                         shoppingCartItem.AttributesXml = selectedAttributes;
                         shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
+                        shoppingCartItem.RentalStartDateUtc = rentalStartDate;
+                        shoppingCartItem.RentalEndDateUtc = rentalEndDate;
                         shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                         _customerService.UpdateCustomer(customer);
 
@@ -1132,7 +1211,8 @@ namespace Nop.Services.Orders
             {
                 var sci = fromCart[i];
                 AddToCart(toCustomer, sci.Product, sci.ShoppingCartType, sci.StoreId, 
-                    sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, false);
+                    sci.AttributesXml, sci.CustomerEnteredPrice,
+                    sci.RentalStartDateUtc, sci.RentalEndDateUtc, sci.Quantity, false);
             }
             for (int i = 0; i < fromCart.Count; i++)
             {

@@ -81,6 +81,8 @@ namespace Nop.Web.Models.ShoppingCart
 
             public string RecurringInfo { get; set; }
 
+            public string RentalInfo { get; set; }
+
             public bool AllowItemEditing { get; set; }
 
             public IList<string> Warnings { get; set; }

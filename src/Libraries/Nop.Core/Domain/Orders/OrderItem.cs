@@ -98,6 +98,16 @@ namespace Nop.Core.Domain.Orders
         public decimal? ItemWeight { get; set; }
 
         /// <summary>
+        /// Gets or sets the rental product start date (null if it's not a rental product)
+        /// </summary>
+        public DateTime? RentalStartDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the rental product end date (null if it's not a rental product)
+        /// </summary>
+        public DateTime? RentalEndDateUtc { get; set; }
+
+        /// <summary>
         /// Gets the order
         /// </summary>
         public virtual Order Order { get; set; }

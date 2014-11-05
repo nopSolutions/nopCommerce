@@ -5,9 +5,6 @@
 @using System.Text;
 @using System.Globalization;
 @using Nop.Services.Security;
-
-
-
 @if (Model.Count > 0)
 {
     <div class="attributes">
@@ -309,7 +306,7 @@
                 }
                 else
                 {
-                    //calculate new price using java-scrpt (no AJAX)
+                    //calculate new price using java-script (no AJAX)
                     var priceVarName = string.Format("priceValForDynUpd_{0}", productId);
                     var priceVarClass = string.Format("price-val-for-dyn-upd-{0}", productId);
                     

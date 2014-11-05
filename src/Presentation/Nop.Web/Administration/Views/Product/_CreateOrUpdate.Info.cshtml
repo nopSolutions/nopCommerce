@@ -24,6 +24,7 @@
         $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.HasUserAgreement)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.IsRecurring)").click(toggleRecurring);
+        $("#@Html.FieldIdFor(model => model.IsRental)").click(toggleRental);
         $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
         $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
         $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
@@ -42,6 +43,7 @@
         toggleCustomerEntersPrice();
         toggleDownloadableProduct();
         toggleRecurring();
+        toggleRental();
         toggleShipping();
         toggleTax();
         toggleManageStock();
@@ -63,6 +65,7 @@
             $('#group-giftcard').show();
             $('#group-downloads').show();
             $('#group-recurring').show();
+            $('#group-rental').show();
             $('#group-shipping').show();
             $('#group-tax').show();
             $('#group-inventory').show();
@@ -73,6 +76,7 @@
             $('#group-giftcard').hide();
             $('#group-downloads').hide();
             $('#group-recurring').hide();
+            $('#group-rental').hide();
             $('#group-shipping').hide();
             $('#group-tax').hide();
             $('#group-inventory').hide();
@@ -190,6 +194,16 @@
         }
     }
 
+    function toggleRental() {
+        if ($('#@Html.FieldIdFor(model => model.IsRental)').is(':checked')) {
+            $('#pnlRentalPriceLength').show();
+            $('#pnlRentalPricePeriod').show();
+        } else {
+            $('#pnlRentalPriceLength').hide();
+            $('#pnlRentalPricePeriod').hide();
+        }
+    }
+
     function toggleTax() {
         if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
             $('#pnlTaxCategory').hide();
@@ -202,65 +216,65 @@
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
         if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').hide();
-            $('#pnlWarehouse').show();
-            $('#pnlMultipleWarehouses').hide();
+        $('#pnlWarehouse').show();
+        $('#pnlMultipleWarehouses').hide();
+        $('#pnlStockQuantity').hide();
+        $('#pnlDisplayStockAvailability').hide();
+        $('#pnlDisplayStockQuantity').hide();
+        $('#pnlMinStockQuantity').hide();
+        $('#pnlLowStockActivity').hide();
+        $('#pnlNotifyForQuantityBelow').hide();
+        $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlBackorders').hide();
+        $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+    } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
+        $('#pnlUseMultipleWarehouses').show();
+
+        if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
+            $('#pnlWarehouse').hide();
+            $('#pnlMultipleWarehouses').show();
             $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
-            $('#pnlMinStockQuantity').hide();
-            $('#pnlLowStockActivity').hide();
-            $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowBackInStockSubscriptions').hide();
-            $('#pnlBackorders').hide();
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
-        } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
-            $('#pnlUseMultipleWarehouses').show();
-
-            if ($('#@Html.FieldIdFor(model => model.UseMultipleWarehouses)').is(':checked')) {
-                $('#pnlWarehouse').hide();
-                $('#pnlMultipleWarehouses').show();
-                $('#pnlStockQuantity').hide();
-            } else {
-                $('#pnlWarehouse').show();
-                $('#pnlMultipleWarehouses').hide();
-                $('#pnlStockQuantity').show();
-            }
-
-            $('#pnlDisplayStockAvailability').show();
-
-            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
-                $('#pnlDisplayStockQuantity').show();
-            } else {
-                $('#pnlDisplayStockQuantity').hide();
-            }
-
-            $('#pnlMinStockQuantity').show();
-            $('#pnlLowStockActivity').show();
-            $('#pnlNotifyForQuantityBelow').show();
-            $('#pnlBackorders').show();
-            var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
-            if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
-                //no backorders
-                $('#pnlAllowBackInStockSubscriptions').show();
-            } else {
-                //backorders are enabled
-                $('#pnlAllowBackInStockSubscriptions').hide();
-            }
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
         } else {
-            $('#pnlUseMultipleWarehouses').hide();
             $('#pnlWarehouse').show();
             $('#pnlMultipleWarehouses').hide();
-            $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
-            $('#pnlMinStockQuantity').hide();
-            $('#pnlLowStockActivity').hide();
-            $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowBackInStockSubscriptions').hide();
-            $('#pnlBackorders').hide();
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
+            $('#pnlStockQuantity').show();
         }
+
+        $('#pnlDisplayStockAvailability').show();
+
+        if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+            $('#pnlDisplayStockQuantity').show();
+        } else {
+            $('#pnlDisplayStockQuantity').hide();
+        }
+
+        $('#pnlMinStockQuantity').show();
+        $('#pnlLowStockActivity').show();
+        $('#pnlNotifyForQuantityBelow').show();
+        $('#pnlBackorders').show();
+        var selectedBackorderModeId = $("#@Html.FieldIdFor(model => model.BackorderModeId)").val();
+        if (selectedBackorderModeId == @(((int) BackorderMode.NoBackorders).ToString())) {
+            //no backorders
+            $('#pnlAllowBackInStockSubscriptions').show();
+    } else {
+    //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+    }
+    $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+    } else {
+        $('#pnlUseMultipleWarehouses').hide();
+        $('#pnlWarehouse').show();
+        $('#pnlMultipleWarehouses').hide();
+        $('#pnlStockQuantity').hide();
+        $('#pnlDisplayStockAvailability').hide();
+        $('#pnlDisplayStockQuantity').hide();
+        $('#pnlMinStockQuantity').hide();
+        $('#pnlLowStockActivity').hide();
+        $('#pnlNotifyForQuantityBelow').hide();
+        $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlBackorders').hide();
+        $('#pnlAllowAddingOnlyExistingAttributeCombinations').show();
+    }
     }
 
     @{
@@ -875,6 +889,40 @@
         <td class="adminData">
             @Html.EditorFor(model => model.RecurringTotalCycles)
             @Html.ValidationMessageFor(model => model.RecurringTotalCycles)
+        </td>
+    </tr>
+</table>
+<table class="adminContent" id="group-rental">
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsRental):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsRental)
+            @Html.ValidationMessageFor(model => model.IsRental)
+        </td>
+    </tr>
+    <tr id="pnlRentalPriceLength">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.RentalPriceLength):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.RentalPriceLength)
+            @Html.ValidationMessageFor(model => model.RentalPriceLength)
+        </td>
+    </tr>
+    <tr id="pnlRentalPricePeriod">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.RentalPricePeriodId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.RentalPricePeriodId, ((RentalPricePeriod)Model.RentalPricePeriodId).ToSelectList())
+            @Html.ValidationMessageFor(model => model.RentalPricePeriodId)
         </td>
     </tr>
 </table>

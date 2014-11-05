@@ -113,6 +113,12 @@
                                     @Html.Raw(item.RecurringInfo)
                                 </div>
                             }
+                            @if (!String.IsNullOrEmpty(item.RentalInfo))
+                            {
+                                <div class="rental-info">
+                                    @Html.Raw(item.RentalInfo)
+                                </div>
+                            }
                             @if (Model.IsEditable && item.AllowItemEditing)
                             {
                                 var editCartItemUrl = Url.RouteUrl("Product", new {SeName = item.ProductSeName});

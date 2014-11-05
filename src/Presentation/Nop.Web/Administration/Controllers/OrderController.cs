@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -573,6 +574,14 @@ namespace Nop.Admin.Controllers
                 orderItemModel.AttributeInfo = orderItem.AttributeDescription;
                 if (orderItem.Product.IsRecurring)
                     orderItemModel.RecurringInfo = string.Format(_localizationService.GetResource("Admin.Orders.Products.RecurringPeriod"), orderItem.Product.RecurringCycleLength, orderItem.Product.RecurringCyclePeriod.GetLocalizedEnum(_localizationService, _workContext));
+                //rental info
+                if (orderItem.Product.IsRental)
+                {
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    orderItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                        rentalStartDate, rentalEndDate);
+                }
 
                 //return requests
                 orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, orderItem.Id, null, 0, int.MaxValue)
@@ -645,6 +654,8 @@ namespace Nop.Admin.Controllers
             {
                 model.GiftCard.GiftCardType = product.GiftCardType;
             }
+            //rental
+            model.IsRental = product.IsRental;
             return model;
         }
 
@@ -704,6 +715,14 @@ namespace Nop.Admin.Controllers
                         QuantityInAllShipments = qtyInAllShipments,
                         QuantityToAdd = maxQtyToAdd,
                     };
+                    //rental info
+                    if (orderItem.Product.IsRental)
+                    {
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                            rentalStartDate, rentalEndDate);
+                    }
 
                     model.Items.Add(shipmentItemModel);
                 }
@@ -2188,9 +2207,32 @@ namespace Nop.Admin.Controllers
 
             #endregion
 
+            #region Rental product
+
+            DateTime? rentalStartDate = null;
+            DateTime? rentalEndDate = null;
+            if (product.IsRental)
+            {
+                var ctrlStartDate = form["rental_start_date"];
+                var ctrlEndDate = form["rental_end_date"];
+                try
+                {
+                    //currenly we support only "mm/dd/yy" format
+                    var formatProvider = new CultureInfo("en-US");
+                    rentalStartDate = DateTime.Parse(ctrlStartDate, formatProvider);
+                    rentalEndDate = DateTime.Parse(ctrlEndDate, formatProvider);
+                }
+                catch
+                {
+                }
+            }
+
+            #endregion
+
             //warnings
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributes));
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributes));
+            warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
             if (warnings.Count == 0)
             {
                 //no errors
@@ -2216,7 +2258,9 @@ namespace Nop.Admin.Controllers
                     DiscountAmountExclTax = decimal.Zero,
                     DownloadCount = 0,
                     IsDownloadActivated = false,
-                    LicenseDownloadId = 0
+                    LicenseDownloadId = 0,
+                    RentalStartDateUtc = rentalStartDate,
+                    RentalEndDateUtc = rentalEndDate
                 };
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
@@ -2595,6 +2639,14 @@ namespace Nop.Admin.Controllers
                     QuantityInAllShipments = qtyInAllShipments,
                     QuantityToAdd = maxQtyToAdd,
                 };
+                //rental info
+                if (orderItem.Product.IsRental)
+                {
+                    var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                    var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                    shipmentItemModel.RentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                        rentalStartDate, rentalEndDate);
+                }
 
                 if (orderItem.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     orderItem.Product.UseMultipleWarehouses)

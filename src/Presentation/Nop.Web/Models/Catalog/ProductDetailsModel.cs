@@ -63,6 +63,11 @@ namespace Nop.Web.Models.Catalog
         public bool FreeShippingNotificationEnabled { get; set; }
         public string DeliveryDate { get; set; }
 
+
+        public bool IsRental { get; set; }
+        public DateTime? RentalStartDate { get; set; }
+        public DateTime? RentalEndDate { get; set; }
+
         public string StockAvailability { get; set; }
 
         public bool DisplayBackInStockSubscription { get; set; }
@@ -130,6 +135,9 @@ namespace Nop.Web.Models.Catalog
             public bool DisableWishlistButton { get; set; }
             public List<SelectListItem> AllowedQuantities { get; set; }
 
+            //rental
+            public bool IsRental { get; set; }
+
             //pre-order
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
@@ -160,6 +168,10 @@ namespace Nop.Web.Models.Catalog
             public int ProductId { get; set; }
 
             public bool HidePrices { get; set; }
+
+            //rental
+            public bool IsRental { get; set; }
+            public string RentalPrice { get; set; }
 
             /// <summary>
             /// A value indicating whether we should display tax/shipping info (used in Germany)

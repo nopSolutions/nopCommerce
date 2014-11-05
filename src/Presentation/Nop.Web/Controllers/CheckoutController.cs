@@ -472,6 +472,8 @@ namespace Nop.Web.Controllers
                     sci.StoreId,
                     sci.AttributesXml,
                     sci.CustomerEnteredPrice,
+                    sci.RentalStartDateUtc,
+                    sci.RentalEndDateUtc,
                     sci.Quantity,
                     false);
                 if (sciWarnings.Count > 0)

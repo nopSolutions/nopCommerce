@@ -54,6 +54,7 @@ namespace Nop.Admin.Models.Orders
             public string ProductName { get; set; }
             public string Sku { get; set; }
             public string AttributeInfo { get; set; }
+            public string RentalInfo { get; set; }
             public bool ShipSeparately { get; set; }
 
             //weight of one item (product)

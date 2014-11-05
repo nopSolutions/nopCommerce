@@ -301,5 +301,22 @@ namespace Nop.Services.Catalog
 
             return gtin;
         }
+
+        /// <summary>
+        /// Formats start/end date for rental product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="date">Date</param>
+        /// <returns>Formatted date</returns>
+        public static string FormatRentalDate(this Product product, DateTime date)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (!product.IsRental)
+                return null;
+
+            return date.ToShortDateString();
+        }
     }
 }

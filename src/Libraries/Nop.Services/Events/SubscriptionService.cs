@@ -4,7 +4,7 @@ using Nop.Core.Infrastructure;
 namespace Nop.Services.Events
 {
     /// <summary>
-    /// Event subscrption service
+    /// Event subscription service
     /// </summary>
     public class SubscriptionService : ISubscriptionService
     {

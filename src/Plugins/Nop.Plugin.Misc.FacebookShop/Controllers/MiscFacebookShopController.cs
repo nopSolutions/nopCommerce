@@ -261,6 +261,10 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                 priceModel.DisableWishlistButton = product.DisableWishlistButton ||
                                     !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
                                     !_permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //rental
+                                priceModel.IsRental = product.IsRental;
+
                                 //pre-order
                                 if (product.AvailableForPreOrder)
                                 {
@@ -325,6 +329,12 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                                     priceModel.OldPrice = null;
                                                     priceModel.Price = _priceFormatter.FormatPrice(finalPrice);
                                                 }
+                                            }
+                                            if (product.IsRental)
+                                            {
+                                                //rental product
+                                                priceModel.OldPrice = _priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
+                                                priceModel.Price = _priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
                                             }
                                         }
                                     }

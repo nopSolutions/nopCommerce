@@ -266,6 +266,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("RecurringCycleLength", null, product.RecurringCycleLength.ToString());
                 xmlWriter.WriteElementString("RecurringCyclePeriodId", null, product.RecurringCyclePeriodId.ToString());
                 xmlWriter.WriteElementString("RecurringTotalCycles", null, product.RecurringTotalCycles.ToString());
+                xmlWriter.WriteElementString("IsRental", null, product.IsRental.ToString());
+                xmlWriter.WriteElementString("RentalPriceLength", null, product.RentalPriceLength.ToString());
+                xmlWriter.WriteElementString("RentalPricePeriodId", null, product.RentalPricePeriodId.ToString());
                 xmlWriter.WriteElementString("IsShipEnabled", null, product.IsShipEnabled.ToString());
                 xmlWriter.WriteElementString("IsFreeShipping", null, product.IsFreeShipping.ToString());
                 xmlWriter.WriteElementString("ShipSeparately", null, product.ShipSeparately.ToString());
@@ -532,6 +535,9 @@ namespace Nop.Services.ExportImport
                     "RecurringCycleLength",
                     "RecurringCyclePeriodId",
                     "RecurringTotalCycles",
+                    "IsRental",
+                    "RentalPriceLength",
+                    "RentalPricePeriodId",
                     "IsShipEnabled",
                     "IsFreeShipping",
                     "ShipSeparately",
@@ -699,6 +705,15 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.RecurringTotalCycles;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.IsRental;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.RentalPriceLength;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.RentalPricePeriodId;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.IsShipEnabled;
@@ -999,6 +1014,10 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("DownloadCount", null, orderItem.DownloadCount.ToString());
                         xmlWriter.WriteElementString("IsDownloadActivated", null, orderItem.IsDownloadActivated.ToString());
                         xmlWriter.WriteElementString("LicenseDownloadId", null, orderItem.LicenseDownloadId.ToString());
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        xmlWriter.WriteElementString("RentalStartDateUtc", null, rentalStartDate);
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        xmlWriter.WriteElementString("RentalEndDateUtc", null, rentalEndDate);
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();

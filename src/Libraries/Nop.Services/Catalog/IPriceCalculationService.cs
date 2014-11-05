@@ -1,3 +1,4 @@
+using System;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -42,6 +43,28 @@ namespace Nop.Services.Catalog
             int quantity,
             out decimal discountAmount,
             out Discount appliedDiscount);
+        /// <summary>
+        /// Gets the final price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
+        /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Final price</returns>
+        decimal GetFinalPrice(Product product,
+            Customer customer,
+            decimal additionalCharge,
+            bool includeDiscounts,
+            int quantity,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate,
+            out decimal discountAmount,
+            out Discount appliedDiscount);
 
 
 
@@ -74,6 +97,8 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
+        /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
+        /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
@@ -84,6 +109,7 @@ namespace Nop.Services.Catalog
             int quantity,
             string attributesXml,
             decimal customerEnteredPrice,
+            DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
             out Discount appliedDiscount);

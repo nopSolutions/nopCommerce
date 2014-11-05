@@ -177,6 +177,15 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.RecurringTotalCycles")]
         public int RecurringTotalCycles { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsRental")]
+        public bool IsRental { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RentalPriceLength")]
+        public int RentalPriceLength { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.RentalPricePeriod")]
+        public int RentalPricePeriodId { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsShipEnabled")]
         public bool IsShipEnabled { get; set; }
 

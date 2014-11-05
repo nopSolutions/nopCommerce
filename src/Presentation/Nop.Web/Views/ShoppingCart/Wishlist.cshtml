@@ -148,6 +148,12 @@
                                             @Html.Raw(item.RecurringInfo)
                                         </div>
                                     }
+                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                    {
+                                        <div class="rental-info">
+                                            @Html.Raw(item.RentalInfo)
+                                        </div>
+                                    }
                                     @if (item.Warnings.Count > 0)
                                     {
                                         <div class="message-error">

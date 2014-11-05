@@ -1,0 +1,47 @@
+﻿@model ProductDetailsModel
+@using System.Globalization
+@using Nop.Web.Models.Catalog;
+@if (Model.IsRental)
+{
+    <div class="attributes rental-attributes">
+        <dl>
+            @{
+                string startDateControlId = string.Format("rental_start_date_{0}", Model.Id);
+                string endDateControlId = string.Format("rental_end_date_{0}", Model.Id);
+                //currenly we support only this format
+                //java-script format
+                const string datePickerFormat = "mm/dd/yy";
+                //C# format for ToString method
+                const string datePickerFormat2 = "M/dd/yyyy";
+                <dt>
+                    <label class="text-prompt">
+                        @T("Products.RentalStartDate"):
+                    </label>
+                    <span class="required">*</span>
+                </dt>
+                <dd>
+                    <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                        });
+                    </script>
+                </dd>
+                <dt>
+                    <label class="text-prompt">
+                        @T("Products.RentalEndDate"):
+                    </label>
+                    <span class="required">*</span>
+                </dt>
+                <dd>
+                    <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
+                    <script>
+                        $(document).ready(function () {
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                        });
+                    </script>
+                </dd>
+            }
+        </dl>
+    </div>
+}

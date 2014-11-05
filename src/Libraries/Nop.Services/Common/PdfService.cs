@@ -477,10 +477,22 @@ namespace Nop.Services.Common
                     string name = p.GetLocalized(x => x.Name, lang.Id);
                     pAttribTable.AddCell(new Paragraph(name, font));
                     cellProductItem.AddElement(new Paragraph(name, font));
+                    //attributes
                     if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
                     {
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         pAttribTable.AddCell(attributesParagraph);
+                    }
+                    //rental info
+                    if (orderItem.Product.IsRental)
+                    {
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                            rentalStartDate, rentalEndDate);
+
+                        var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
+                        pAttribTable.AddCell(rentalInfoParagraph);
                     }
                     productsTable.AddCell(pAttribTable);
 
@@ -1073,10 +1085,22 @@ namespace Nop.Services.Common
                     var p = orderItem.Product;
                     string name = p.GetLocalized(x => x.Name, lang.Id);
                     productAttribTable.AddCell(new Paragraph(name, font));
+                    //attributes
                     if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
                     {
                         var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderItem.AttributeDescription, true, true), attributesFont);
                         productAttribTable.AddCell(attributesParagraph);
+                    }
+                    //rental info
+                    if (orderItem.Product.IsRental)
+                    {
+                        var rentalStartDate = orderItem.RentalStartDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalStartDateUtc.Value) : "";
+                        var rentalEndDate = orderItem.RentalEndDateUtc.HasValue ? orderItem.Product.FormatRentalDate(orderItem.RentalEndDateUtc.Value) : "";
+                        var rentalInfo = string.Format(_localizationService.GetResource("Order.Rental.FormattedDate"),
+                            rentalStartDate, rentalEndDate);
+
+                        var rentalInfoParagraph = new Paragraph(rentalInfo, attributesFont);
+                        productAttribTable.AddCell(rentalInfoParagraph);
                     }
                     productsTable.AddCell(productAttribTable);
 
@@ -1161,7 +1185,10 @@ namespace Nop.Services.Common
                 {
                     //simple product
                     //render its properties such as price, weight, etc
-                    productTable.AddCell(new Paragraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode), font));
+                    var priceStr = string.Format("{0} {1}", product.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+                    if (product.IsRental)
+                        priceStr = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                    productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.Price", lang.Id), priceStr), font));
                     productTable.AddCell(new Paragraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU", lang.Id), product.Sku), font));
 
                     if (product.IsShipEnabled && product.Weight > Decimal.Zero)

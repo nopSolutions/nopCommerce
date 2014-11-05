@@ -257,6 +257,7 @@ namespace Nop.Admin.Models.Orders
 
             public string AttributeInfo { get; set; }
             public string RecurringInfo { get; set; }
+            public string RentalInfo { get; set; }
             public IList<int> ReturnRequestIds { get; set; }
             public IList<int> PurchasedGiftCardIds { get; set; }
 
@@ -378,6 +379,8 @@ namespace Nop.Admin.Models.Orders
                 public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
                 //gift card info
                 public GiftCardModel GiftCard { get; set; }
+                //rental
+                public bool IsRental { get; set; }
 
                 public List<string> Warnings { get; set; }
 

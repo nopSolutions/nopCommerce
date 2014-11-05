@@ -19,7 +19,9 @@ namespace Nop.Data.Tests.Orders
                 ShoppingCartType = ShoppingCartType.ShoppingCart,
                 AttributesXml = "AttributesXml 1",
                 CustomerEnteredPrice = 1.1M,
-                Quantity= 2,
+                Quantity = 2,
+                RentalStartDateUtc = new DateTime(2010, 01, 03),
+                RentalEndDateUtc = new DateTime(2010, 01, 04),
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
                 Customer = GetTestCustomer(),
@@ -34,6 +36,8 @@ namespace Nop.Data.Tests.Orders
             fromDb.AttributesXml.ShouldEqual("AttributesXml 1");
             fromDb.CustomerEnteredPrice.ShouldEqual(1.1M);
             fromDb.Quantity.ShouldEqual(2);
+            fromDb.RentalStartDateUtc.ShouldEqual(new DateTime(2010, 01, 03));
+            fromDb.RentalEndDateUtc.ShouldEqual(new DateTime(2010, 01, 04));
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.UpdatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
 

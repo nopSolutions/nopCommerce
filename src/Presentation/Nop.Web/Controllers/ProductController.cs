@@ -457,6 +457,14 @@ namespace Nop.Web.Controllers
 
                         //currency code
                         model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;
+
+                        //rental
+                        if (product.IsRental)
+                        {
+                            model.ProductPrice.IsRental = true;
+                            var priceStr = _priceFormatter.FormatPrice(finalPriceWithDiscount);
+                            model.ProductPrice.RentalPrice = _priceFormatter.FormatRentalProductPeriod(product, priceStr);
+                        }
                     }
                 }
             }
@@ -491,6 +499,8 @@ namespace Nop.Web.Controllers
                     product.PreOrderAvailabilityStartDateTimeUtc.Value >= DateTime.UtcNow;
                 model.AddToCart.PreOrderAvailabilityStartDateTimeUtc = product.PreOrderAvailabilityStartDateTimeUtc;
             }
+            //rental
+            model.AddToCart.IsRental = product.IsRental;
 
             //customer entered price
             model.AddToCart.CustomerEntersPrice = product.CustomerEntersPrice;
@@ -771,6 +781,21 @@ namespace Nop.Web.Controllers
             }
             #endregion
 
+            #region Rental products
+
+            if (product.IsRental)
+            {
+                model.IsRental = true;
+                //set already entered dates attributes (if we're going to update the existing shopping cart item)
+                if (updatecartitem != null)
+                {
+                    model.RentalStartDate = updatecartitem.RentalStartDateUtc;
+                    model.RentalEndDate = updatecartitem.RentalEndDateUtc;
+                }
+            }
+
+            #endregion
+            
             #region Associated products
 
             if (product.ProductType == ProductType.GroupedProduct)

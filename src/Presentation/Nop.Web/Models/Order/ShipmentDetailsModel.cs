@@ -31,6 +31,7 @@ namespace Nop.Web.Models.Order
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
             public string AttributeInfo { get; set; }
+            public string RentalInfo { get; set; }
 
             public int QuantityOrdered { get; set; }
             public int QuantityShipped { get; set; }

@@ -208,6 +208,10 @@ namespace Nop.Web.Extensions
                                 priceModel.DisableWishlistButton = product.DisableWishlistButton ||
                                     !permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
                                     !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //rental
+                                priceModel.IsRental = product.IsRental;
+
                                 //pre-order
                                 if (product.AvailableForPreOrder)
                                 {
@@ -272,6 +276,12 @@ namespace Nop.Web.Extensions
                                                     priceModel.OldPrice = null;
                                                     priceModel.Price = priceFormatter.FormatPrice(finalPrice);
                                                 }
+                                            }
+                                            if (product.IsRental)
+                                            {
+                                                //rental product
+                                                priceModel.OldPrice = priceFormatter.FormatRentalProductPeriod(product, priceModel.OldPrice);
+                                                priceModel.Price = priceFormatter.FormatRentalProductPeriod(product, priceModel.Price);
                                             }
 
 

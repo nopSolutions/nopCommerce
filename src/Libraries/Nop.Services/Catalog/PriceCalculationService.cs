@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Mapping.Catalog;
 using Nop.Services.Catalog.Cache;
 using Nop.Services.Discounts;
 
@@ -162,10 +163,10 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get variant special price (is valid)
+        /// Get product special price
         /// </summary>
         /// <param name="product">Product</param>
-        /// <returns>Special price</returns>
+        /// <returns>Special price; null if product does not have special price specified</returns>
         protected virtual decimal? GetSpecialPrice(Product product)
         {
             if (product == null)
@@ -190,6 +191,52 @@ namespace Nop.Services.Catalog
             }
 
             return product.SpecialPrice.Value;
+        }
+
+        /// <summary>
+        /// Get number of rental periods (price ratio)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="startDate">Start date</param>
+        /// <param name="endDate">End date</param>
+        /// <returns>Number of rental periods</returns>
+        protected virtual int GetRentalPeriods(Product product, DateTime startDate, DateTime endDate)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (!product.IsRental)
+                return 1;
+
+            if (startDate.CompareTo(endDate) > 0)
+                return 1;
+
+            var totalDaysToRent = (endDate - startDate).TotalDays;
+            if (totalDaysToRent <= 0)
+                totalDaysToRent = 1;
+
+            int configuredPeriodDays;
+            switch (product.RentalPricePeriod)
+            {
+                case RentalPricePeriod.Days:
+                    configuredPeriodDays = 1 * product.RentalPriceLength;
+                    break;
+                case RentalPricePeriod.Weeks:
+                    configuredPeriodDays = 7 * product.RentalPriceLength;
+                    break;
+                case RentalPricePeriod.Months:
+                    //UNDONE support months with 28, 29, 31 days
+                    configuredPeriodDays = 30 * product.RentalPriceLength;
+                    break;
+                case RentalPricePeriod.Years:
+                    configuredPeriodDays = 365 * product.RentalPriceLength;
+                    break;
+                default:
+                    throw new NopException("Not supported rental period");
+            }
+
+            var totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent/configuredPeriodDays));
+            return totalPeriods;
         }
 
         /// <summary>
@@ -277,6 +324,34 @@ namespace Nop.Services.Catalog
             out decimal discountAmount,
             out Discount appliedDiscount)
         {
+            return GetFinalPrice(product, customer,
+                additionalCharge, includeDiscounts, quantity,
+                null, null,
+                out discountAmount, out appliedDiscount);
+        }
+        /// <summary>
+        /// Gets the final price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="additionalCharge">Additional charge</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="rentalStartDate">Rental period start date (for rental products)</param>
+        /// <param name="rentalEndDate">Rental period end date (for rental products)</param>
+        /// <param name="discountAmount">Applied discount amount</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Final price</returns>
+        public virtual decimal GetFinalPrice(Product product, 
+            Customer customer,
+            decimal additionalCharge, 
+            bool includeDiscounts,
+            int quantity,
+            DateTime? rentalStartDate,
+            DateTime? rentalEndDate,
+            out decimal discountAmount,
+            out Discount appliedDiscount)
+        {
             if (product == null)
                 throw new ArgumentNullException("product");
 
@@ -291,6 +366,10 @@ namespace Nop.Services.Catalog
                 string.Join(",", customer.CustomerRoles.Where(cr => cr.Active).Select(cr => cr.Id).ToList()),
                 _storeContext.CurrentStore.Id);
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
+            //we do not cache price for rental products
+            //otherwise, it can cause memory leaks (to store all possible date period combinations)
+            if (product.IsRental)
+                cacheTime = 0;
             var cachedPrice = _cacheManager.Get(cacheKey, cacheTime, () =>
             {
                 var result = new ProductPriceForCaching();
@@ -313,6 +392,11 @@ namespace Nop.Services.Catalog
 
                 //additional charge
                 price = price + additionalCharge;
+
+                //rental products
+                if (product.IsRental)
+                    if (rentalStartDate.HasValue && rentalEndDate.HasValue)
+                        price = price*GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
 
                 if (includeDiscounts)
                 {
@@ -388,6 +472,8 @@ namespace Nop.Services.Catalog
                 shoppingCartItem.Quantity,
                 shoppingCartItem.AttributesXml,
                 shoppingCartItem.CustomerEnteredPrice,
+                shoppingCartItem.RentalStartDateUtc,
+                shoppingCartItem.RentalEndDateUtc,
                 includeDiscounts,
                 out discountAmount,
                 out appliedDiscount);
@@ -401,6 +487,8 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Product atrributes (XML format)</param>
         /// <param name="customerEnteredPrice">Customer entered price (if specified)</param>
+        /// <param name="rentalStartDate">Rental start date (null for not rental products)</param>
+        /// <param name="rentalEndDate">Rental end date (null for not rental products)</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for price computation</param>
         /// <param name="discountAmount">Applied discount amount</param>
         /// <param name="appliedDiscount">Applied discount</param>
@@ -411,6 +499,7 @@ namespace Nop.Services.Catalog
             int quantity,
             string attributesXml,
             decimal customerEnteredPrice,
+            DateTime? rentalStartDate, DateTime? rentalEndDate,
             bool includeDiscounts,
             out decimal discountAmount,
             out Discount appliedDiscount)
@@ -474,6 +563,8 @@ namespace Nop.Services.Catalog
                         attributesTotalPrice,
                         includeDiscounts,
                         qty,
+                        product.IsRental ? rentalStartDate : null,
+                        product.IsRental ? rentalEndDate : null,
                         out discountAmount, out appliedDiscount);
                 }
             }

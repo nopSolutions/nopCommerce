@@ -85,6 +85,9 @@
             dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
             @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
         }
+        <div>
+            @Html.Partial("_ProductAddRentalInfo", Model)
+        </div>
         <p>
             <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
         </p>
