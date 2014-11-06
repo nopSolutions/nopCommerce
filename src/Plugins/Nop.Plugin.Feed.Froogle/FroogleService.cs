@@ -246,7 +246,9 @@ namespace Nop.Plugin.Feed.Froogle
                         writer.WriteFullEndElement(); // g:google_product_category
 
                         //product type [product_type] - Your category of the item
-                        var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(product.Id).FirstOrDefault();
+                        var defaultProductCategory = _categoryService
+                            .GetProductCategoriesByProductId(product.Id, store.Id)
+                            .FirstOrDefault();
                         if (defaultProductCategory != null)
                         {
                             var category = defaultProductCategory.Category.GetFormattedBreadCrumb(_categoryService, separator: ">");

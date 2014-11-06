@@ -466,15 +466,26 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product category mapping collection
         /// </summary>
-        /// <param name="productId"> Product identifier</param>
+        /// <param name="productId">Product identifier</param>
         /// <param name="showHidden"> A value indicating whether to show hidden records</param>
         /// <returns> Product category mapping collection</returns>
         public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false)
         {
+            return GetProductCategoriesByProductId(productId, _storeContext.CurrentStore.Id, showHidden);
+        }
+        /// <summary>
+        /// Gets a product category mapping collection
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
+        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
+        /// <returns> Product category mapping collection</returns>
+        public virtual IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId, bool showHidden = false)
+        {
             if (productId == 0)
                 return new List<ProductCategory>();
 
-            string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            string key = string.Format(PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY, showHidden, productId, _workContext.CurrentCustomer.Id, storeId);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pc in _productCategoryRepository.Table
@@ -493,7 +504,7 @@ namespace Nop.Services.Catalog
                     {
                         //ACL (access control list) and store mapping
                         var category = pc.Category;
-                        if (_aclService.Authorize(category) && _storeMappingService.Authorize(category))
+                        if (_aclService.Authorize(category) && _storeMappingService.Authorize(category, storeId))
                             result.Add(pc);
                     }
                 }

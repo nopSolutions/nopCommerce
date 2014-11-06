@@ -91,6 +91,14 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product category mapping collection</returns>
         IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false);
+        /// <summary>
+        /// Gets a product category mapping collection
+        /// </summary>
+        /// <param name="productId">Product identifier</param>
+        /// <param name="storeId">Store identifier (used in multi-store environment). "showHidden" parameter should also be "true"</param>
+        /// <param name="showHidden"> A value indicating whether to show hidden records</param>
+        /// <returns> Product category mapping collection</returns>
+        IList<ProductCategory> GetProductCategoriesByProductId(int productId, int storeId, bool showHidden = false);
 
         /// <summary>
         /// Gets a product category mapping 
