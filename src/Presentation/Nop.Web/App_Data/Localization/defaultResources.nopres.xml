@@ -402,6 +402,9 @@
   <LocaleResource Name="Account.Login.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Email.Required">
+    <Value>Please enter your email</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Login.Fields.Password">
     <Value>Password</Value>
   </LocaleResource>

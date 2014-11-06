@@ -488,6 +488,9 @@ set @resources='
   <LocaleResource Name="Order.Rental.FormattedDate">
     <Value>Start date: {0}. End date: {1}.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.Fields.Email.Required">
+    <Value>Please enter your email</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Validators.Customer;
 
 namespace Nop.Web.Models.Customer
 {
+    [Validator(typeof(LoginValidator))]
     public partial class LoginModel : BaseNopModel
     {
         public bool CheckoutAsGuest { get; set; }

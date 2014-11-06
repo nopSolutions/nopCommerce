@@ -126,6 +126,7 @@
     <Compile Include="Public\Validators\Common\AddressValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\ContactUsValidatorTests.cs" />
     <Compile Include="Public\Validators\Customer\ChangePasswordValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\LoginValidatorTests.cs" />
     <Compile Include="Public\Validators\Customer\RegisterValidatorTests.cs" />
     <Compile Include="Public\Validators\Customer\PasswordRecoveryValidatorTests.cs" />
     <Compile Include="Public\Validators\Customer\PasswordRecoveryConfirmValidatorTests.cs" />
