@@ -174,16 +174,19 @@
                                     </li>
                                     }
                                 }
-                                @if (Model.DisplayPurchaseOrderNumber)
+                                @if (Model.CustomValues != null)
                                 {
-                                    <li class="purchase-order-number">
-                                        <span class="label">
-                                            @T("Order.PurchaseOrderNumber"):
-                                        </span>
-                                        <span class="value">
-                                            @Model.PurchaseOrderNumber
-                                        </span>
-                                    </li>
+                                    foreach (var item in Model.CustomValues)
+                                    {
+                                        <li class="custom-value">
+                                            <span class="label">
+                                                @item.Key:
+                                            </span>
+                                            <span class="value">
+                                                @(item.Value != null ? item.Value.ToString() : "")
+                                            </span>
+                                        </li>
+                                    }
                                 }
                             </ul>
                         </td>

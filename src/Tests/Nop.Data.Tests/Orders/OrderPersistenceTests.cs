@@ -66,7 +66,6 @@ namespace Nop.Data.Tests.Orders
                 CaptureTransactionId= "CaptureTransactionId1",
                 CaptureTransactionResult = "CaptureTransactionResult1",
                 SubscriptionTransactionId = "SubscriptionTransactionId1",
-                PurchaseOrderNumber= "PurchaseOrderNumber1",
                 PaidDateUtc= new DateTime(2010, 01, 01),
                 BillingAddress = GetTestBillingAddress(),
                 ShippingAddress = null,
@@ -122,7 +121,6 @@ namespace Nop.Data.Tests.Orders
             fromDb.CaptureTransactionId.ShouldEqual("CaptureTransactionId1");
             fromDb.CaptureTransactionResult.ShouldEqual("CaptureTransactionResult1");
             fromDb.SubscriptionTransactionId.ShouldEqual("SubscriptionTransactionId1");
-            fromDb.PurchaseOrderNumber.ShouldEqual("PurchaseOrderNumber1");
             fromDb.PaidDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.BillingAddress.ShouldNotBeNull();
             fromDb.BillingAddress.FirstName.ShouldEqual("FirstName 1");

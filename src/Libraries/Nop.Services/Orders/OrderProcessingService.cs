@@ -1108,7 +1108,6 @@ namespace Nop.Services.Orders
                             CaptureTransactionId = processPaymentResult.CaptureTransactionId,
                             CaptureTransactionResult = processPaymentResult.CaptureTransactionResult,
                             SubscriptionTransactionId = processPaymentResult.SubscriptionTransactionId,
-                            PurchaseOrderNumber = processPaymentRequest.PurchaseOrderNumber,
                             PaymentStatus = processPaymentResult.NewPaymentStatus,
                             PaidDateUtc = null,
                             BillingAddress = billingAddress,

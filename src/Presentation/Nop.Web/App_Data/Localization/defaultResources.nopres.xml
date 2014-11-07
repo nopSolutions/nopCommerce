@@ -8352,12 +8352,6 @@
   <LocaleResource Name="Admin.Orders.Fields.PaymentStatus.Hint">
     <Value>The status of the payment.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.PurchaseOrderNumber">
-    <Value>Purchase order number</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Fields.PurchaseOrderNumber.Hint">
-    <Value>The customer's purchase order number when using the Purchase Order payment method. You can manage payment methods from Configuration : Payment : Payment Methods</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RecurringPayment">
     <Value>Recurring payment</Value>
   </LocaleResource>
@@ -11769,9 +11763,6 @@
   <LocaleResource Name="Order.Product(s).Total">
     <Value>Total</Value>
   </LocaleResource>
-  <LocaleResource Name="Order.PurchaseOrderNumber">
-    <Value>Purchase Order Number</Value>
-  </LocaleResource>
   <LocaleResource Name="Order.Rental.FormattedDate">
     <Value>Start date: {0}. End date: {1}.</Value>
   </LocaleResource>
@@ -12140,9 +12131,6 @@
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.ProductTotal">
     <Value>Total</Value>
-  </LocaleResource>
-  <LocaleResource Name="PDFInvoice.PurchaseOrderNumber">
-    <Value>Purchase Order Number: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="PDFInvoice.RewardPoints">
     <Value>{0} reward points:</Value>

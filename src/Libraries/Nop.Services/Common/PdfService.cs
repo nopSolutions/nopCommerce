@@ -335,12 +335,16 @@ namespace Nop.Services.Common
                     billingAddress.AddCell(new Paragraph());
                 }
 
-                //purchase order number (we have to find a better way to inject this information because it's related to a certain plugin)
-                if (paymentMethod != null && paymentMethod.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
+                //custom values
+                var customValues = order.DeserializeCustomValues();
+                if (customValues != null)
                 {
-                    billingAddress.AddCell(new Paragraph(" "));
-                    billingAddress.AddCell(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.PurchaseOrderNumber", lang.Id), order.PurchaseOrderNumber), font));
-                    billingAddress.AddCell(new Paragraph());
+                    foreach (var item in customValues)
+                    {
+                        billingAddress.AddCell(new Paragraph(" "));
+                        billingAddress.AddCell(new Paragraph("   " + item.Key + ": " + item.Value, font));
+                        billingAddress.AddCell(new Paragraph());
+                    }
                 }
 
                 addressTable.AddCell(billingAddress);

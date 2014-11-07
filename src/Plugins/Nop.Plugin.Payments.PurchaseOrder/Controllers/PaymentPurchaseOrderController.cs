@@ -118,7 +118,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.PurchaseOrderNumber = form["PurchaseOrderNumber"];
+            paymentInfo.CustomValues.Add(_localizationService.GetResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber"), form["PurchaseOrderNumber"]);
             return paymentInfo;
         }
     }

@@ -491,6 +491,18 @@ set @resources='
   <LocaleResource Name="Account.Login.Fields.Email.Required">
     <Value>Please enter your email</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PurchaseOrderNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.PurchaseOrderNumber.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.PurchaseOrderNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.PurchaseOrderNumber">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1681,5 +1693,18 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[OrderItem]'
 BEGIN
 	ALTER TABLE [OrderItem]
 	ADD [RentalEndDateUtc] datetime NULL
+END
+GO
+
+
+--drop 'Purchase order' column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Order]') and NAME='PurchaseOrderNumber')
+BEGIN
+    --move existing PurchaseOrderNumber column to CUstomValuesXml
+	UPDATE [Order]
+	SET [CustomValuesXml] = N'<?xml version="1.0" encoding="utf-16"?><DictionarySerializer><item><key>PO Number</key><value>' + [PurchaseOrderNumber] + N'</value></item></DictionarySerializer>'
+	WHERE [PaymentMethodSystemName] = N'Payments.PurchaseOrder' and ([CustomValuesXml] is null or [CustomValuesXml] = N'')
+		
+	EXEC ('ALTER TABLE [Order] DROP COLUMN [PurchaseOrderNumber]')
 END
 GO

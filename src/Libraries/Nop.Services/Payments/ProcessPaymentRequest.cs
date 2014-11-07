@@ -74,11 +74,6 @@ namespace Nop.Services.Payments
         /// </summary>
         public string CreditCardCvv2 { get; set; }
 
-        /// <summary>
-        /// Gets or sets a purchase order number (required for Purchase Order payment method)
-        /// </summary>
-        public string PurchaseOrderNumber { get; set; }
-
         #endregion
 
         #region Recurring payments

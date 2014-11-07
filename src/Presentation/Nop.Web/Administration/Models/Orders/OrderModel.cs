@@ -153,9 +153,6 @@ namespace Nop.Admin.Models.Orders
         public string CardExpirationYear { get; set; }
 
         //misc payment info
-        public bool DisplayPurchaseOrderNumber { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.PurchaseOrderNumber")]
-        public string PurchaseOrderNumber { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.AuthorizationTransactionID")]
         public string AuthorizationTransactionId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.CaptureTransactionID")]

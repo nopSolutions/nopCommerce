@@ -978,7 +978,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CaptureTransactionId", null, order.CaptureTransactionId);
                 xmlWriter.WriteElementString("CaptureTransactionResult", null, order.CaptureTransactionResult);
                 xmlWriter.WriteElementString("SubscriptionTransactionId", null, order.SubscriptionTransactionId);
-                xmlWriter.WriteElementString("PurchaseOrderNumber", null, order.PurchaseOrderNumber);
                 xmlWriter.WriteElementString("PaidDateUtc", null, (order.PaidDateUtc == null) ? string.Empty : order.PaidDateUtc.Value.ToString());
                 xmlWriter.WriteElementString("ShippingMethod", null, order.ShippingMethod);
                 xmlWriter.WriteElementString("ShippingRateComputationMethodSystemName", null, order.ShippingRateComputationMethodSystemName);
@@ -1099,7 +1098,6 @@ namespace Nop.Services.ExportImport
                         "CustomerCurrencyCode",
                         "AffiliateId",
                         "PaymentMethodSystemName",
-                        "PurchaseOrderNumber",
                         "ShippingPickUpInStore",
                         "ShippingMethod",
                         "ShippingRateComputationMethodSystemName",
@@ -1218,9 +1216,6 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = order.PaymentMethodSystemName;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PurchaseOrderNumber;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.PickUpInStore;

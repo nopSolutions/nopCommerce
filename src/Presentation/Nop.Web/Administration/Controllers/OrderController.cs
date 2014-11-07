@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Orders;
@@ -406,20 +407,13 @@ namespace Nop.Admin.Controllers
             }
 
 
-            //purchase order number (we have to find a better to inject this information because it's related to a certain plugin)
-            var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
-            if (pm != null && pm.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
-            {
-                model.DisplayPurchaseOrderNumber = true;
-                model.PurchaseOrderNumber = order.PurchaseOrderNumber;
-            }
-
             //payment transaction info
             model.AuthorizationTransactionId = order.AuthorizationTransactionId;
             model.CaptureTransactionId = order.CaptureTransactionId;
             model.SubscriptionTransactionId = order.SubscriptionTransactionId;
 
             //payment method info
+            var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             model.PaymentMethod = pm != null ? pm.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
             model.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
 
@@ -504,7 +498,7 @@ namespace Nop.Admin.Controllers
                     model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
                     model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
                     model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
-
+                    
                     model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
                 }
                 model.ShippingMethod = order.ShippingMethod;

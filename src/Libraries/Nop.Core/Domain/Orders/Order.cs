@@ -300,11 +300,6 @@ namespace Nop.Core.Domain.Orders
         public string SubscriptionTransactionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the purchase order number
-        /// </summary>
-        public string PurchaseOrderNumber { get; set; }
-
-        /// <summary>
         /// Gets or sets the paid date and time
         /// </summary>
         public DateTime? PaidDateUtc { get; set; }

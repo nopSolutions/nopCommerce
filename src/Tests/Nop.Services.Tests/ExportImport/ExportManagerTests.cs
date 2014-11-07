@@ -140,7 +140,6 @@ namespace Nop.Services.Tests.ExportImport
                 CaptureTransactionId= "CaptureTransactionId1",
                 CaptureTransactionResult = "CaptureTransactionResult1",
                 SubscriptionTransactionId = "SubscriptionTransactionId1",
-                PurchaseOrderNumber= "PurchaseOrderNumber1",
                 PaidDateUtc= new DateTime(2010, 01, 01),
                 BillingAddress = GetTestBillingAddress(),
                 ShippingAddress = GetTestShippingAddress(),

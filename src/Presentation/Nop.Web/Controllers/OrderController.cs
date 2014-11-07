@@ -225,15 +225,8 @@ namespace Nop.Web.Controllers
             model.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
             model.PaymentMethodStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);
-
-            //purchase order number
-            //TODO: we have to find a better way to inject this information because it's related to a certain plugin
-            if (paymentMethod != null && paymentMethod.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
-            {
-                model.DisplayPurchaseOrderNumber = true;
-                model.PurchaseOrderNumber = order.PurchaseOrderNumber;
-            }
-
+            //custom values
+            model.CustomValues = order.DeserializeCustomValues();
 
             //order subtotal
             if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)

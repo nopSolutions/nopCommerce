@@ -553,17 +553,6 @@
             </td>
         </tr>
         }
-        if (Model.DisplayPurchaseOrderNumber)
-        {
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PurchaseOrderNumber):
-            </td>
-            <td class="adminData">
-                @Model.PurchaseOrderNumber
-            </td>
-        </tr>
-        }
         if (!String.IsNullOrEmpty(Model.AuthorizationTransactionId))
         {
         <tr>
@@ -669,7 +658,7 @@
                 @foreach (var item in Model.CustomValues)
                 {
                     <tr>
-                        <td>@item.Key</td>
+                        <td>@item.Key:</td>
                         <td>@(item.Value != null ? item.Value.ToString() : "")</td>
                     </tr>
                 }
