@@ -81,6 +81,7 @@ namespace Nop.Admin.Models.Orders
                 public string WarehouseName { get; set; }
                 public int StockQuantity { get; set; }
                 public int ReservedQuantity { get; set; }
+                public int PlannedQuantity { get; set; }
             }
             #endregion
         }

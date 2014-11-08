@@ -2658,7 +2658,8 @@ namespace Nop.Admin.Controllers
                                 WarehouseId = warehouse.Id,
                                 WarehouseName = warehouse.Name,
                                 StockQuantity = pwi.StockQuantity,
-                                ReservedQuantity = pwi.ReservedQuantity
+                                ReservedQuantity = pwi.ReservedQuantity,
+                                PlannedQuantity = _shipmentService.GetQuantityInShipments(orderItem.Product, warehouse.Id, true, true)
                             });
                         }
                     }

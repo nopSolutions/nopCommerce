@@ -503,6 +503,12 @@ set @resources='
   <LocaleResource Name="PDFInvoice.PurchaseOrderNumber">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.ChooseQty">
+    <Value>{0} ({1} qty in stock, {2} qty reserved, {3} qty planned)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
+    <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
+  </LocaleResource>
 </Language>
 '
 

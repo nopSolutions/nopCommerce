@@ -1,7 +1,12 @@
-﻿@model ShipmentModel
+﻿@using System.Text
+@model ShipmentModel
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId);
+    
+    var itemsFromMultipleWarehouses = Model.Items
+        .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
+        .ToList();
 }
 @using (Html.BeginForm())
 {
@@ -11,8 +16,8 @@
             @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="submit" id="shipment-save" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" id="shipment-save-continue" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
         </div>
     </div>    
     @Html.ValidationSummary(false)
@@ -34,6 +39,50 @@
             </td>
         </tr>
     </table>
+    if (itemsFromMultipleWarehouses.Any())
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#shipment-save').click(function () {
+                    return validateWarehouseAvailability();
+                });
+                $('#shipment-save-continue').click(function () {
+                    return validateWarehouseAvailability();
+                });
+            });
+            
+
+            function validateWarehouseAvailability() {
+                @{
+                    var sb = new StringBuilder();
+                    for (int i = 0; i <= itemsFromMultipleWarehouses.Count - 1; i++)
+                    {
+                        var item = itemsFromMultipleWarehouses[i];
+                        sb.AppendFormat("validateAvailableQuantity('{0}')", item.OrderItemId);
+                        if (i != itemsFromMultipleWarehouses.Count - 1)
+                        {
+                            sb.Append(" && ");
+                        }
+                    }
+                }
+                var valid = @(Html.Raw(sb.ToString()));
+                if (!valid) {
+                    return confirm('@T("Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough")');
+                }
+                return true;
+            }
+                
+            function validateAvailableQuantity(orderItemId) {
+                var enteredValue = parseInt($('#qtyToAdd' + orderItemId).val(), 10);
+                if (enteredValue <= 0)
+                    return true;
+                var reservedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('reserved-qty'), 10);
+                var plannedValue = parseInt($('#warehouse_' + orderItemId).find(':selected').data('planned-qty'), 10);
+                var availableToAdd = reservedValue - plannedValue;
+                return enteredValue <= availableToAdd;
+            }
+        </script>
+    }
     <table class="adminContent">
         <tr>
             <td class="adminData">
@@ -75,18 +124,13 @@
                         @foreach (var item in Model.Items)
                         {
                             <tr>
-                                <td style="width: 30%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
+                                <td style="width:30%;">
+                                    <div style="padding-left:10px;padding-right:10px;">
+                                        <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />
                                             @Html.Raw(item.AttributeInfo)
-                                        }
-                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                        {
-                                            <br />
-                                            @Html.Raw(item.RentalInfo)
                                         }
                                         @if (item.ShipSeparately)
                                         {
@@ -96,22 +140,22 @@
                                         }
                                     </div>
                                 </td>
-                                <td style="width: 10%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                <td style="width:10%;">
+                                    <div style="padding-left:10px;padding-right:10px;">
                                         @item.Sku
                                     </div>
                                 </td>
-                                <td  align="center" style="width: 20%;">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                <td align="center" style="width:20%;">
+                                    <div style="padding-left:10px;padding-right:10px;">
                                         @if (item.AllowToChooseWarehouse)
                                         {
                                             if (item.AvailableWarehouses.Count > 0)
                                             {
-                                                <select name="warehouse_@(item.OrderItemId)">
+                                                <select name="warehouse_@(item.OrderItemId)" id="warehouse_@(item.OrderItemId)">
                                                     @foreach (var warehouse in item.AvailableWarehouses)
                                                     {
-                                                        <option value="@warehouse.WarehouseId">
-                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity)
+                                                        <option value="@warehouse.WarehouseId" data-stock-qty="@warehouse.StockQuantity" data-reserved-qty="@warehouse.ReservedQuantity" data-planned-qty="@warehouse.PlannedQuantity">
+                                                            @T("Admin.Orders.Shipments.Products.Warehouse.ChooseQty", warehouse.WarehouseName, warehouse.StockQuantity, warehouse.ReservedQuantity, warehouse.PlannedQuantity)
                                                         </option>
                                                     }
                                                 </select>
@@ -136,20 +180,20 @@
                                         }
                                     </div>
                                 </td>
-                                <td align="center" style="width: 10%;">
+                                <td align="center" style="width:10%;">
                                     @item.ItemWeight
                                 </td>
-                                <td align="center" style="width: 10%;">
+                                <td align="center" style="width:10%;">
                                     @item.ItemDimensions
                                 </td>
-                                <td align="center" style="width: 5%;">
+                                <td align="center" style="width:5%;">
                                     @item.QuantityOrdered
                                 </td>
-                                <td align="center" style="width: 5%;">
+                                <td align="center" style="width:5%;">
                                     @item.QuantityInAllShipments
                                 </td>
-                                <td align="center" style="width: 20%;">
-                                     <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="adminInput" style="width:100px;" />
+                                <td align="center" style="width:20%;">
+                                    <input name="qtyToAdd@(item.OrderItemId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderItemId)" class="adminInput" style="width:100px;" />
                                 </td>
                             </tr>
                         }
