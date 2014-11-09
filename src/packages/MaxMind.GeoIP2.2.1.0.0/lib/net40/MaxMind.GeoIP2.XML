@@ -71,6 +71,13 @@
             <param name="ipAddress">The ip address.</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse"/></returns>
         </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.AnonymousIP(System.String)">
+            <summary>
+            Look up an IP address in a GeoIP2 Anonymous IP.
+            </summary>
+            <param name="ipAddress">The IP address.</param>
+            <returns>An <see cref="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse"/></returns>
+        </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.ConnectionType(System.String)">
             <summary>
             Returns an <see cref="T:MaxMind.GeoIP2.Responses.ConnectionTypeResponse"/> for the specified IP address.
@@ -785,6 +792,45 @@
         <member name="M:MaxMind.GeoIP2.Responses.CityResponse.#ctor(MaxMind.GeoIP2.Model.City,MaxMind.GeoIP2.Model.Continent,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.Location,MaxMind.GeoIP2.Model.MaxMind,MaxMind.GeoIP2.Model.Postal,MaxMind.GeoIP2.Model.Country,MaxMind.GeoIP2.Model.RepresentedCountry,System.Collections.Generic.List{MaxMind.GeoIP2.Model.Subdivision},MaxMind.GeoIP2.Model.Traits)">
             <summary>
             Constructor
+            </summary>
+        </member>
+        <member name="T:MaxMind.GeoIP2.Responses.AnonymousIPResponse">
+            <summary>
+            This class represents the GeoIP2 Anonymous IP response.
+            </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AnonymousIPResponse.#ctor">
+            <summary>
+            Constructor
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsAnonymous">
+            <summary>
+            Returns true if the IP address belongs to any sort of anonymous network.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsAnonymousVpn">
+            <summary>
+            Returns true if the IP address belongs to an anonymous VPN system.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsHostingProvider">
+            <summary>
+            Returns true if the IP address belongs to a hosting provider.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IsPublicProxy">
+            <summary>
+            Returns true if the IP address belongs to a public proxy.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Responses.AnonymousIPResponse.IPAddress">
+            <summary>
+            The IP address that the data in the model is for. If you
+            performed a "me" lookup against the web service, this will be the
+            externally routable IP address for the system the code is running
+            on. If the system is behind a NAT, this may differ from the IP
+            address locally assigned to it.
             </summary>
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.IspResponse">
