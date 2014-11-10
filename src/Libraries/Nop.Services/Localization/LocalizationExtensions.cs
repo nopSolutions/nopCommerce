@@ -139,7 +139,7 @@ namespace Nop.Services.Localization
 
             string key = settings.GetSettingKey(keySelector);
 
-            //we do not support localized settings per store (overriden store settings)
+            //we do not support localized settings per store (overridden store settings)
             var setting = settingService.GetSetting(key, storeId: 0, loadSharedValueIfNotFound: false);
             if (setting == null)
                 return null;

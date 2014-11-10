@@ -67,7 +67,7 @@ namespace Nop.Web.Infrastructure
             get
             {
                 //it should be the last route
-                //we do not set it to -int.MaxValue so it could be overriden (if required)
+                //we do not set it to -int.MaxValue so it could be overridden (if required)
                 return -1000000;
             }
         }

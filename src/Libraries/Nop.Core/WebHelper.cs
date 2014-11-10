@@ -481,7 +481,7 @@ namespace Nop.Core
                                     //two the same query parameters? theoretically it's not possible.
                                     //but MVC has some ugly implementation for checkboxes and we can have two values
                                     //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
-                                    //we do this validation just to ensure that the first one is not overriden
+                                    //we do this validation just to ensure that the first one is not overridden
                                     dictionary[strArray[0]] = strArray[1];
                                 }
                             }

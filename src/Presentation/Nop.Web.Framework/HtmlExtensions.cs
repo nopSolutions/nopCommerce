@@ -251,7 +251,7 @@ namespace Nop.Web.Framework
                 {
                     dataInputSelector = "#" + String.Join(", #", datainputIds);
                 }
-                var onClick = string.Format("checkOverridenStoreValue(this, '{0}')", dataInputSelector);
+                var onClick = string.Format("checkOverriddenStoreValue(this, '{0}')", dataInputSelector);
                 result.Append(helper.CheckBoxFor(expression, new Dictionary<string, object>
                 {
                     { "class", cssClass },

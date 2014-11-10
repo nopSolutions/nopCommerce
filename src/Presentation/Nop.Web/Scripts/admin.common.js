@@ -20,18 +20,18 @@ function showThrobber(message) {
 
 $(document).ready(function () {
     $('.multi-store-override-option').each(function (k, v) {
-        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
+        checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
 });
 
-function checkAllOverridenStoreValue(item) {
+function checkAllOverriddenStoreValue(item) {
     $('.multi-store-override-option').each(function (k, v) {
         $(v).attr('checked', item.checked);
-        checkOverridenStoreValue(v, $(v).attr('data-for-input-selector'));
+        checkOverriddenStoreValue(v, $(v).attr('data-for-input-selector'));
     });
 }
 
-function checkOverridenStoreValue(obj, selector) {
+function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);

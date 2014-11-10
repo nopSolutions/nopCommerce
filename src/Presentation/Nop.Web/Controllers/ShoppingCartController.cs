@@ -1597,7 +1597,7 @@ namespace Nop.Web.Controllers
             #endregion
         }
 
-        //handle product attribute selection event. this way we return new price, overriden gtin/sku/mpn
+        //handle product attribute selection event. this way we return new price, overridden gtin/sku/mpn
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
