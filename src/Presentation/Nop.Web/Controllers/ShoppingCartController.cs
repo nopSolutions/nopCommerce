@@ -1215,10 +1215,10 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            //products with "minimum order quantity" more than 1
-            if (product.OrderMinimumQuantity > 1)
+            //products with "minimum order quantity" more than a specified qty
+            if (product.OrderMinimumQuantity > quantity)
             {
-                //we cannot add to the cart such products from category pages with qty 1
+                //we cannot add to the cart such products from category pages
                 //it can confuse customers. That's why we redirect customers to the product details page
                 return Json(new
                 {
