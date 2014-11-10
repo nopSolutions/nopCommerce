@@ -1,9 +1,11 @@
+using Nop.Core.Domain.Localization;
+
 namespace Nop.Core.Domain.Configuration
 {
     /// <summary>
     /// Represents a setting
     /// </summary>
-    public partial class Setting : BaseEntity
+    public partial class Setting : BaseEntity, ILocalizedEntity
     {
         public Setting() { }
         

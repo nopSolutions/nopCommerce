@@ -25,6 +25,15 @@ namespace Nop.Services.Configuration
         void DeleteSetting(Setting setting);
 
         /// <summary>
+        /// Get setting by key
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <param name="loadSharedValueIfNotFound">A value indicating whether a shared (for all stores) value should be loaded if a value specific for a certain is not found</param>
+        /// <returns>Setting</returns>
+        Setting GetSetting(string key, int storeId = 0, bool loadSharedValueIfNotFound = false);
+
+        /// <summary>
         /// Get setting value by key
         /// </summary>
         /// <typeparam name="T">Type</typeparam>

@@ -17,18 +17,21 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
 
         public PaymentCheckMoneyOrderController(IWorkContext workContext,
             IStoreService storeService,
             ISettingService settingService,
             IStoreContext storeContext,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ILanguageService languageService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
+            this._languageService = languageService;
         }
         
         [AdminAuthorize]
@@ -41,6 +44,11 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
             var model = new ConfigurationModel();
             model.DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText;
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, languageId, false, false);
+            });
             model.AdditionalFee = checkMoneyOrderPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
             model.ShippableProductRequired = checkMoneyOrderPaymentSettings.ShippableProductRequired;
@@ -101,6 +109,14 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
+            //localization. no multi-store support for localization yet.
+            foreach (var localized in model.Locales)
+            {
+                checkMoneyOrderPaymentSettings.SaveLocalizedSetting(x => x.DescriptionText,
+                    localized.LanguageId,
+                    localized.DescriptionText);
+            }
+
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
@@ -113,7 +129,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = checkMoneyOrderPaymentSettings.DescriptionText
+                DescriptionText = checkMoneyOrderPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, _workContext.WorkingLanguage.Id)
             };
 
             return View("~/Plugins/Payments.CheckMoneyOrder/Views/PaymentCheckMoneyOrder/PaymentInfo.cshtml", model);

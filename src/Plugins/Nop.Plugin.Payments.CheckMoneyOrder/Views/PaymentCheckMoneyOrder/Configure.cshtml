@@ -1,12 +1,32 @@
 ﻿@{
     Layout = "";
 }
-@model Nop.Plugin.Payments.CheckMoneyOrder.Models.ConfigurationModel
+@model ConfigurationModel
+@using Nop.Plugin.Payments.CheckMoneyOrder.Models
 @using Nop.Web.Framework;
 @Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
-    <table class="adminContent">
+    @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.Locales[item].DescriptionText, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.Locales[item].DescriptionText):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Locales[item].DescriptionText, new { style = "Width: 550px; Height: 350px;" })
+                @Html.ValidationMessageFor(model => model.Locales[item].DescriptionText)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>
+    ,
+    @<table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.DescriptionText_OverrideForStore, model => model.DescriptionText, Model.ActiveStoreScopeConfiguration)
@@ -17,6 +37,12 @@
                 @Html.ValidationMessageFor(model => model.DescriptionText)
             </td>
         </tr>
+    </table>
+    ,
+//localizable settings per store (overrriden store settings) are not supported yet
+    true
+    ))
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)

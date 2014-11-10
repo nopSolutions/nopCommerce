@@ -17,18 +17,22 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
         private readonly ISettingService _settingService;
         private readonly IStoreContext _storeContext;
         private readonly ILocalizationService _localizationService;
+        private readonly ILanguageService _languageService;
+
 
         public PaymentCashOnDeliveryController(IWorkContext workContext,
             IStoreService storeService, 
             ISettingService settingService,
             IStoreContext storeContext,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService,
+            ILanguageService languageService)
         {
             this._workContext = workContext;
             this._storeService = storeService;
             this._settingService = settingService;
             this._storeContext = storeContext;
             this._localizationService = localizationService;
+            this._languageService = languageService;
         }
         
         [AdminAuthorize]
@@ -41,6 +45,11 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
 
             var model = new ConfigurationModel();
             model.DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText;
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(x => x.DescriptionText, languageId, false, false);
+            });
             model.AdditionalFee = cashOnDeliveryPaymentSettings.AdditionalFee;
             model.AdditionalFeePercentage = cashOnDeliveryPaymentSettings.AdditionalFeePercentage;
             model.ShippableProductRequired = cashOnDeliveryPaymentSettings.ShippableProductRequired;
@@ -101,6 +110,14 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
             //now clear settings cache
             _settingService.ClearCache();
 
+            //localization. no multi-store support for localization yet.
+            foreach (var localized in model.Locales)
+            {
+                cashOnDeliveryPaymentSettings.SaveLocalizedSetting(x => x.DescriptionText,
+                    localized.LanguageId,
+                    localized.DescriptionText);
+            }
+
             SuccessNotification(_localizationService.GetResource("Admin.Plugins.Saved"));
 
             return Configure();
@@ -113,7 +130,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
 
             var model = new PaymentInfoModel
             {
-                DescriptionText = cashOnDeliveryPaymentSettings.DescriptionText
+                DescriptionText = cashOnDeliveryPaymentSettings.GetLocalizedSetting(x=>x.DescriptionText, _workContext.WorkingLanguage.Id)
             };
 
             return View("~/Plugins/Payments.CashOnDelivery/Views/PaymentCashOnDelivery/PaymentInfo.cshtml", model);

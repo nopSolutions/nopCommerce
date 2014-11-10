@@ -196,6 +196,7 @@
     <Compile Include="Common\FulltextService.cs" />
     <Compile Include="Common\AddressAttributeFormatter.cs" />
     <Compile Include="Common\IAddressAttributeFormatter.cs" />
+    <Compile Include="Configuration\SettingExtensions.cs" />
     <Compile Include="Customers\ICustomerAttributeParser.cs" />
     <Compile Include="Customers\CustomerAttributeParser.cs" />
     <Compile Include="Customers\ICustomerAttributeService.cs" />

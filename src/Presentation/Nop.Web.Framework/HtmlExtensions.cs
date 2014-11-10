@@ -11,6 +11,7 @@ using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Services.Stores;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
@@ -37,15 +38,26 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(builder.ToString());
         }
 
-        public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper, string name,
-             Func<int, HelperResult> localizedTemplate,
-             Func<T, HelperResult> standardTemplate)
+        public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
+            string name,
+            Func<int, HelperResult> localizedTemplate,
+            Func<T, HelperResult> standardTemplate,
+            bool ignoreIfSeveralStores = false)
             where T : ILocalizedModel<TLocalizedModelLocal>
             where TLocalizedModelLocal : ILocalizedModelLocal
         {
             return new HelperResult(writer =>
             {
-                if (helper.ViewData.Model.Locales.Count > 1)
+                var localizationSupported = helper.ViewData.Model.Locales.Count > 1;
+                if (ignoreIfSeveralStores)
+                {
+                    var storeService = EngineContext.Current.Resolve<IStoreService>();
+                    if (storeService.GetAllStores().Count >= 2)
+                    {
+                        localizationSupported = false;
+                    }
+                }
+                if (localizationSupported)
                 {
                     var tabStrip = new StringBuilder();
                     tabStrip.AppendLine(string.Format("<div id='{0}'>", name));

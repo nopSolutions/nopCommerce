@@ -1,11 +1,18 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 {
-    public class ConfigurationModel : BaseNopModel
+    public class ConfigurationModel : BaseNopModel, ILocalizedModel<ConfigurationModel.ConfigurationLocalizedModel>
     {
+        public ConfigurationModel()
+        {
+            Locales = new List<ConfigurationLocalizedModel>();
+        }
+
         public int ActiveStoreScopeConfiguration { get; set; }
 
         [AllowHtml]
@@ -24,5 +31,21 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
         [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.ShippableProductRequired")]
         public bool ShippableProductRequired { get; set; }
         public bool ShippableProductRequired_OverrideForStore { get; set; }
+
+        public IList<ConfigurationLocalizedModel> Locales { get; set; }
+
+        #region Nested class
+
+        public partial class ConfigurationLocalizedModel : ILocalizedModelLocal
+        {
+            public int LanguageId { get; set; }
+
+            [AllowHtml]
+            [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.DescriptionText")]
+            public string DescriptionText { get; set; }
+        }
+
+        #endregion
+
     }
 }
