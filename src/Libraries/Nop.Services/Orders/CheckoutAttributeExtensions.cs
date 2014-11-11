@@ -12,7 +12,7 @@ namespace Nop.Services.Orders
     public static class CheckoutAttributeExtensions
     {
         /// <summary>
-        /// Gets a value indicating whether this checkout variant attribute should have values
+        /// Gets a value indicating whether this checkout attribute should have values
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Result</returns>

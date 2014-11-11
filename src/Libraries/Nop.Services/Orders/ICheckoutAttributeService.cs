@@ -45,7 +45,7 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Checkout variant attribute values
+        #region Checkout attribute values
 
         /// <summary>
         /// Deletes a checkout attribute value
