@@ -576,6 +576,19 @@ namespace Nop.Services.Messages
             var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
             tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
+            var sbCustomValues = new StringBuilder();
+            var customValues = order.DeserializeCustomValues();
+            if (customValues != null)
+            {
+                foreach (var item in customValues)
+                {
+                    sbCustomValues.AppendFormat("{0}: {1}", HttpUtility.HtmlEncode(item.Key), HttpUtility.HtmlEncode(item.Value != null ? item.Value.ToString() : ""));
+                    sbCustomValues.Append("<br />");
+                }
+            }
+            tokens.Add(new Token("Order.CustomValues", sbCustomValues.ToString(), true));
+            
+
 
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId, vendorId), true));
 
@@ -881,6 +894,7 @@ namespace Nop.Services.Messages
                 "%Order.ShippingCustomAttributes%",
                 "%Order.PaymentMethod%",
                 "%Order.VatNumber%", 
+                "%Order.CustomValues%", 
                 "%Order.Product(s)%",
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
