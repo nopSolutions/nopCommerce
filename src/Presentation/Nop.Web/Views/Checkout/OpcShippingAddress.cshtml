@@ -1,6 +1,23 @@
 ﻿@model CheckoutShippingAddressModel
 @using Nop.Web.Models.Checkout;
 <div class="checkout-data">
+    @if (Model.AllowPickUpInStore)
+        {
+            <div class="section pickup-in-store">
+                <p class="selector">
+                    @{
+                        var pickupInStoreName = T("Checkout.PickUpInStore").Text;
+                        if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
+                        {
+                            pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
+                        }
+                    }
+                    @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })
+                    <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
+                </p>
+                <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
+            </div>
+        }
     <div class="shipping-addresses" id="shipping-addresses-form">
         @Html.Widget("op_checkout_shipping_address_top")
         @if (Model.ExistingAddresses.Count > 0)
@@ -62,21 +79,4 @@
         </div>
         @Html.Widget("op_checkout_shipping_address_bottom")
     </div>
-    @if (Model.AllowPickUpInStore)
-    {
-        <div class="section pickup-in-store">
-            <p class="selector">
-                @{
-                    var pickupInStoreName = T("Checkout.PickUpInStore").Text;
-                    if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
-                    {
-                        pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
-                    }
-                }
-                @Html.CheckBoxFor(x => x.PickUpInStore, new { @onclick = "Shipping.togglePickUpInStore(this)" })
-                <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
-            </p>
-            <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
-        </div>
-    }
 </div>

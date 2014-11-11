@@ -14,6 +14,36 @@
     <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
         {
+            if (Model.AllowPickUpInStore)
+            {
+                <div class="section pickup-in-store">
+                    <p class="selector">
+                        @{
+                            var pickupInStoreName = T("Checkout.PickUpInStore").Text;
+                            if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
+                            {
+                                pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
+                            }
+                        }
+                        @Html.CheckBoxFor(x => x.PickUpInStore)
+                        <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
+                    </p>
+                    <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+                            togglePickUpInStore();
+                        });
+                        function togglePickUpInStore() {
+                            if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                                $('#shipping-addresses-form').hide();
+                            } else {
+                                $('#shipping-addresses-form').show();
+                            }
+                        }
+                    </script>
+                </div>
+            }
             <div class="shipping-addresses" id="shipping-addresses-form">
                 @Html.Widget("checkout_shipping_address_top")
                 @if (Model.ExistingAddresses.Count > 0)
@@ -134,38 +164,6 @@
                 </div>
                 @Html.Widget("checkout_shipping_address_bottom")
             </div>
-            if (Model.AllowPickUpInStore)
-            {
-                <div class="section pickup-in-store">
-                    <p class="selector">
-                        @{
-                            var pickupInStoreName = T("Checkout.PickUpInStore").Text;
-                            if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
-                            {
-                                pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
-                            }
-                        }
-                        @Html.CheckBoxFor(x => x.PickUpInStore)
-                        <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
-                    </p>
-                    <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
-
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
-                            togglePickUpInStore();
-                        });
-
-                        function togglePickUpInStore() {
-                            if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
-                                $('#shipping-addresses-form').hide();
-                            } else {
-                                $('#shipping-addresses-form').show();
-                            }
-                        }
-                    </script>
-                </div>
-            }
             <div class="buttons">
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
