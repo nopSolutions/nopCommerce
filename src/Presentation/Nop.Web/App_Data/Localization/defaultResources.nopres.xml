@@ -4071,6 +4071,12 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Installed">
     <Value>The plugin has been installed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode">
+    <Value>Load mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode.Hint ">
+    <Value>Search by a load mode.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Misc.BackToList">
     <Value>back to plugin list</Value>
   </LocaleResource>
@@ -11144,6 +11150,15 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Unknown">
     <Value>Unknown</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value>Installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value>Not installed</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Tax.VatNumberStatus.Valid">
     <Value>Valid</Value>

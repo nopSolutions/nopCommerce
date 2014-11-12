@@ -21,6 +21,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
@@ -199,17 +200,20 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
-            
-            return View();
+
+            var model = new PluginListModel();
+            model.AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList();
+            return View(model);
         }
 
 	    [HttpPost]
-	    public ActionResult ListSelect(DataSourceRequest command)
+        public ActionResult ListSelect(DataSourceRequest command, PluginListModel model)
 	    {
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
 	            return AccessDeniedView();
 
-	        var pluginDescriptors = _pluginFinder.GetPluginDescriptors(LoadPluginsMode.All).ToList();
+	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode).ToList();
 	        var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))

@@ -509,6 +509,21 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.Warehouse.QuantityNotEnough">
     <Value>[Reserved - Planned] quantity value of some products are less than specified quantity to be shipped. Are you sure?</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode">
+    <Value>Load mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode.Hint ">
+    <Value>Search by a load mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.InstalledOnly">
+    <Value>Installed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
+    <Value>Not installed</Value>
+  </LocaleResource>
 </Language>
 '
 

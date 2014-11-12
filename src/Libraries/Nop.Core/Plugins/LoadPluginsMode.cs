@@ -10,11 +10,11 @@ namespace Nop.Core.Plugins
         /// </summary>
         All = 0,
         /// <summary>
-        /// Radio list
+        /// Installed only
         /// </summary>
         InstalledOnly = 10,
         /// <summary>
-        /// Checkboxes
+        /// Not installed only
         /// </summary>
         NotInstalledOnly = 20
     }

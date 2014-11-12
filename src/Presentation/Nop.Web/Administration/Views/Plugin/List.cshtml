@@ -1,4 +1,5 @@
-﻿@{    
+﻿@model PluginListModel
+    @{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins").Text;
 }
@@ -24,26 +25,38 @@
             });
         });
     </script>    
+    <p>
+        <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
+        <ol>
+            <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+            <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+            <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+            <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+            <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+        </ol>
+        <p>
+            You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+        </p>
+    </p>
     <table class="adminContent">
         <tr>
-            <td>
-                <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
-                <ol>
-                    <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                    <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                    <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                    <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                    <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-                </ol>
-                <p>
-                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
-                </p>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchLoadModeId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchLoadModeId", Model.AvailableLoadModes)
             </td>
         </tr>
         <tr>
+            <td colspan="2">
+                <input type="button" id="search-plugins" class="k-button" value="@T("Admin.Common.Search")" />
+            </td>
+        </tr>
+        </table>
+    <table class="adminContent">
+        <tr>
             <td>
                 <div id="plugins-grid"></div>
-
                 <script>
                     $(document).ready(function() {
                         $("#plugins-grid").kendoGrid({
@@ -53,7 +66,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ListSelect", "Plugin"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: additionalData
                                     }
                                 },
                                 schema: {
@@ -133,6 +147,26 @@
                             return false;
                         });
                     });
+                </script>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        //search button
+                        $('#search-plugins').click(function () {
+                            //search
+                            var grid = $('#plugins-grid').data('kendoGrid');
+                            // grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
+
+                            return false;
+                        });
+                    });
+
+                    function additionalData() {
+                        return {
+                            SearchLoadModeId: $('#SearchLoadModeId').val()
+                        };
+                    }
+
                 </script>
             </td>
         </tr>
