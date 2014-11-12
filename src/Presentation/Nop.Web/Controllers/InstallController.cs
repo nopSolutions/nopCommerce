@@ -362,7 +362,7 @@ namespace Nop.Web.Controllers
                     //install plugins
                     PluginManager.MarkAllPluginsAsUninstalled();
                     var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-                    var plugins = pluginFinder.GetPlugins<IPlugin>(false)
+                    var plugins = pluginFinder.GetPlugins<IPlugin>(LoadPluginsMode.All)
                         .ToList()
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)

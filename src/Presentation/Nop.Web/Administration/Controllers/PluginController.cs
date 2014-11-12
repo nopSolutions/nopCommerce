@@ -209,7 +209,7 @@ namespace Nop.Admin.Controllers
 	        if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
 	            return AccessDeniedView();
 
-	        var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false).ToList();
+	        var pluginDescriptors = _pluginFinder.GetPluginDescriptors(LoadPluginsMode.All).ToList();
 	        var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))
@@ -227,7 +227,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -257,7 +257,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -320,7 +320,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
+            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 //No plugin found with the specified id
                 return RedirectToAction("List");
@@ -335,7 +335,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(model.SystemName, false);
+            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(model.SystemName, LoadPluginsMode.All);
             if (pluginDescriptor == null)
                 //No plugin found with the specified id
                 return RedirectToAction("List");

@@ -19,44 +19,45 @@ namespace Nop.Core.Plugins
         /// Gets plugins
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
-        /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
+        /// <param name="loadMode">Load plugins  mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugins</returns>
-        IEnumerable<T> GetPlugins<T>(bool installedOnly = true, int storeId = 0) where T : class, IPlugin;
+        IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0) where T : class, IPlugin;
 
         /// <summary>
         /// Get plugin descriptors
         /// </summary>
-        /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
+        /// <param name="loadMode">Load plugins  mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugin descriptors</returns>
-        IEnumerable<PluginDescriptor> GetPluginDescriptors(bool installedOnly = true, int storeId = 0);
+        IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0);
 
         /// <summary>
         /// Get plugin descriptors
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
+        /// <param name="loadMode">Load plugins  mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Plugin descriptors</returns>
-        IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(bool installedOnly = true, int storeId = 0) where T : class, IPlugin;
+        IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0) where T : class, IPlugin;
 
         /// <summary>
         /// Get a plugin descriptor by its system name
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
+        /// <param name="loadMode">Load plugins  mode</param>
         /// <returns>>Plugin descriptor</returns>
-        PluginDescriptor GetPluginDescriptorBySystemName(string systemName, bool installedOnly = true);
+        PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly);
 
         /// <summary>
         /// Get a plugin descriptor by its system name
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="systemName">Plugin system name</param>
-        /// <param name="installedOnly">A value indicating whether to load only installed plugins</param>
+        /// <param name="loadMode">Load plugins  mode</param>
         /// <returns>>Plugin descriptor</returns>
-        PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, bool installedOnly = true) where T : class, IPlugin;
+        PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
+            where T : class, IPlugin;
 
         /// <summary>
         /// Reload plugins
