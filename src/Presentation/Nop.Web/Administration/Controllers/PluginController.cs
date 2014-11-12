@@ -227,8 +227,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
-                    .FirstOrDefault(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
@@ -258,8 +257,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
-                    .FirstOrDefault(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
                     return RedirectToAction("List");
