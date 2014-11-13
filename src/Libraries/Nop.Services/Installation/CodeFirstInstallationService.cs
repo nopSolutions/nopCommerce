@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Nop.Core;
@@ -5453,14 +5454,17 @@ namespace Nop.Services.Installation
                 AllowBackInStockSubscriptions = false,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(product5GiftCard);
-            product5GiftCard.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                DisplayOrder = 1,
-            });
             product5GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name), true),
@@ -5492,14 +5496,17 @@ namespace Nop.Services.Installation
                 Published = true,
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 2,
+                    }
+                }
             };
             allProducts.Add(product25GiftCard);
-            product25GiftCard.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                DisplayOrder = 2,
-            });
             product25GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name), true),
@@ -5539,14 +5546,17 @@ namespace Nop.Services.Installation
                 AllowBackInStockSubscriptions = false,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 3,
+                    }
+                }
             };
             allProducts.Add(product50GiftCard);
-            product50GiftCard.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                DisplayOrder = 3,
-            });
             product50GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name), true),
@@ -5585,14 +5595,17 @@ namespace Nop.Services.Installation
                 AllowBackInStockSubscriptions = false,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 4,
+                    }
+                }
             };
             allProducts.Add(product100GiftCard);
-            product100GiftCard.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                DisplayOrder = 4,
-            });
             product100GiftCard.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name), true),
@@ -5632,57 +5645,65 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Small",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "1X",
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "2X",
+                                DisplayOrder = 3,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "3X",
+                                DisplayOrder = 4,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "4X",
+                                DisplayOrder = 5,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "5X",
+                                DisplayOrder = 6,
+                            }
+                        }
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productRockabillyPolka);
-            var pvaRockabillyPolka1 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Small",
-                DisplayOrder = 1,
-            });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "1X",
-                DisplayOrder = 2,
-            });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "2X",
-                DisplayOrder = 3,
-            });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "3X",
-                DisplayOrder = 4,
-            });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "4X",
-                DisplayOrder = 5,
-            });
-            pvaRockabillyPolka1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "5X",
-                DisplayOrder = 6,
-            });
-            productRockabillyPolka.ProductVariantAttributes.Add(pvaRockabillyPolka1);
-            productRockabillyPolka.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productRockabillyPolka.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_RockabillyPolka.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productRockabillyPolka.Name), true),
@@ -5723,41 +5744,46 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 2,
+                        Price = 19
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 5,
+                        Price = 17
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 15
+                    }
+                },
+                HasTierPrices = true,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productAcerAspireOne);
-            productAcerAspireOne.TierPrices.Add(new TierPrice
-            {
-                Quantity = 2,
-                Price = 19
-            });
-            productAcerAspireOne.TierPrices.Add(new TierPrice
-            {
-                Quantity = 5,
-                Price = 17
-            });
-            productAcerAspireOne.TierPrices.Add(new TierPrice
-            {
-                Quantity = 10,
-                Price = 15
-            });
-            productAcerAspireOne.HasTierPrices = true;
-
-            productAcerAspireOne.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                DisplayOrder = 1,
-            });
             productAcerAspireOne.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
-                DisplayOrder = 1,
-            });
+                    {
+                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
+                        DisplayOrder = 1,
+                    });
             productAcerAspireOne.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
-                DisplayOrder = 2,
-            });
+                    {
+                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
+                        DisplayOrder = 2,
+                    });
             _productRepository.Insert(productAcerAspireOne);
 
 
@@ -5792,74 +5818,84 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "8",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "9",
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "10",
+                                DisplayOrder = 3,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "11",
+                                DisplayOrder = 4,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "White/Blue",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "White/Black",
+                                DisplayOrder = 2,
+                            },
+                        }
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productAdidasShoe);
-            var pvaAdidasShoe1 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "8",
-                DisplayOrder = 1,
-            });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "9",
-                DisplayOrder = 2,
-            });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "10",
-                DisplayOrder = 3,
-            });
-            pvaAdidasShoe1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "11",
-                DisplayOrder = 4,
-            });
-            productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe1);
-            var pvaAdidasShoe2 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "White/Blue",
-                DisplayOrder = 1,
-            });
-            pvaAdidasShoe2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "White/Black",
-                DisplayOrder = 2,
-            });
-            productAdidasShoe.ProductVariantAttributes.Add(pvaAdidasShoe2);
-            productAdidasShoe.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productAdidasShoe.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
-                DisplayOrder = 1,
-            });
+                    {
+                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
+                        DisplayOrder = 1,
+                    });
             productAdidasShoe.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
-                DisplayOrder = 2,
-            });
+                    {
+                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
+                        DisplayOrder = 2,
+                    });
             _productRepository.Insert(productAdidasShoe);
 
 
@@ -5894,14 +5930,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name), true),
@@ -5941,14 +5980,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories = 
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productApcUps);
-            productApcUps.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                DisplayOrder = 1,
-            });
             productApcUps.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ApcUps.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productApcUps.Name), true),
@@ -5988,31 +6030,36 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 3,
+                        Price = 21
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 7,
+                        Price = 19
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 16
+                    }
+                },
+                HasTierPrices = true,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productArrow);
-            productArrow.TierPrices.Add(new TierPrice
-            {
-                Quantity = 3,
-                Price = 21
-            });
-            productArrow.TierPrices.Add(new TierPrice
-            {
-                Quantity = 7,
-                Price = 19
-            });
-            productArrow.TierPrices.Add(new TierPrice
-            {
-                Quantity = 10,
-                Price = 16
-            });
-            productArrow.HasTierPrices = true;
-
-            productArrow.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productArrow.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_arrow.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productArrow.Name), true),
@@ -6053,51 +6100,60 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
+                        DisplayOrder = 2,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "10.0''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
+                    }
+                }
             };
             allProducts.Add(productAsusPc1000);
-            productAsusPc1000.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                DisplayOrder = 1,
-            });
-            productAsusPc1000.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
-                DisplayOrder = 2,
-            });
             productAsusPc1000.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc1000.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc1000.Name), true),
                 DisplayOrder = 1,
-            });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "10.0''")
-            });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
-            });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-            });
-            productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
             });
             _productRepository.Insert(productAsusPc1000);
 
@@ -6133,44 +6189,53 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
+                    }
+                }
             };
             allProducts.Add(productAsusPc900);
-            productAsusPc900.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                DisplayOrder = 1,
-            });
-            productAsusPc900.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
-                DisplayOrder = 1,
-            });
             productAsusPc900.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc900.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc900.Name), true),
                 DisplayOrder = 1,
-            });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
-            });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-            });
-            productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
             });
             _productRepository.Insert(productAsusPc900);
 
@@ -6208,14 +6273,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBestGrillingRecipes);
-            productBestGrillingRecipes.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                DisplayOrder = 1,
-            });
             productBestGrillingRecipes.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestGrillingRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestGrillingRecipes.Name), true),
@@ -6256,14 +6324,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDiamondHeart);
-            productDiamondHeart.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                DisplayOrder = 1,
-            });
             productDiamondHeart.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name), true),
@@ -6303,14 +6374,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBlackBerry);
-            productBlackBerry.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
-                DisplayOrder = 1,
-            });
             productBlackBerry.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BlackBerry.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBlackBerry.Name), true),
@@ -6351,132 +6425,148 @@ namespace Nop.Services.Installation
                 Published = true,
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "2.2 GHz Intel Pentium Dual-Core E2200",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "2.5 GHz Intel Pentium Dual-Core E2200",
+                                IsPreSelected = true,
+                                PriceAdjustment = 15,
+                                DisplayOrder = 2,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "2 GB",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "4GB",
+                                PriceAdjustment = 20,
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "8GB",
+                                PriceAdjustment = 60,
+                                DisplayOrder = 3,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
+                        AttributeControlType = AttributeControlType.RadioList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "320 GB",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "400 GB",
+                                PriceAdjustment = 100,
+                                DisplayOrder = 2,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
+                        AttributeControlType = AttributeControlType.RadioList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Vista Home",
+                                PriceAdjustment = 50,
+                                IsPreSelected = true,
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Vista Premium",
+                                PriceAdjustment = 60,
+                                DisplayOrder = 2,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
+                        AttributeControlType = AttributeControlType.Checkboxes,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Microsoft Office",
+                                PriceAdjustment = 50,
+                                IsPreSelected = true,
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Acrobat Reader",
+                                PriceAdjustment = 10,
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Total Commander",
+                                PriceAdjustment = 5,
+                                DisplayOrder = 2,
+                            }
+                        }
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBuildComputer);
-            var pvaBuildComputer1 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "2.2 GHz Intel Pentium Dual-Core E2200",
-                DisplayOrder = 1,
-            });
-            pvaBuildComputer1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "2.5 GHz Intel Pentium Dual-Core E2200",
-                IsPreSelected = true,
-                PriceAdjustment = 15,
-                DisplayOrder = 2,
-            });
-            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer1);
-            var pvaBuildComputer2 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "2 GB",
-                DisplayOrder = 1,
-            });
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "4GB",
-                PriceAdjustment = 20,
-                DisplayOrder = 2,
-            });
-            pvaBuildComputer2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "8GB",
-                PriceAdjustment = 60,
-                DisplayOrder = 3,
-            });
-            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer2);
-            var pvaBuildComputer3 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
-                AttributeControlType = AttributeControlType.RadioList,
-                IsRequired = true,
-            };
-            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "320 GB",
-                DisplayOrder = 1,
-            });
-            pvaBuildComputer3.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "400 GB",
-                PriceAdjustment = 100,
-                DisplayOrder = 2,
-            });
-            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer3);
-            var pvaBuildComputer4 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
-                AttributeControlType = AttributeControlType.RadioList,
-                IsRequired = true,
-            };
-            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Vista Home",
-                PriceAdjustment = 50,
-                IsPreSelected = true,
-                DisplayOrder = 1,
-            });
-            pvaBuildComputer4.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Vista Premium",
-                PriceAdjustment = 60,
-                DisplayOrder = 2,
-            });
-            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer4);
-            var pvaBuildComputer5 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
-                AttributeControlType = AttributeControlType.Checkboxes,
-            };
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Microsoft Office",
-                PriceAdjustment = 50,
-                IsPreSelected = true,
-                DisplayOrder = 1,
-            });
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Acrobat Reader",
-                PriceAdjustment = 10,
-                DisplayOrder = 2,
-            });
-            pvaBuildComputer5.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Total Commander",
-                PriceAdjustment = 5,
-                DisplayOrder = 2,
-            });
-            productBuildComputer.ProductVariantAttributes.Add(pvaBuildComputer5);
-            productBuildComputer.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
-                DisplayOrder = 1,
-            });
             productBuildComputer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
@@ -6526,14 +6616,17 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCanonCamera);
-            productCanonCamera.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                DisplayOrder = 1,
-            });
             productCanonCamera.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name), true),
@@ -6650,14 +6743,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCanonCamcoder);
-            productCanonCamcoder.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                DisplayOrder = 1,
-            });
             productCanonCamcoder.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamcoder.Name), true),
@@ -6697,14 +6793,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCompaq);
-            productCompaq.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
-                DisplayOrder = 1,
-            });
             productCompaq.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Compaq.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCompaq.Name), true),
@@ -6746,14 +6845,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCookingForTwo);
-            productCookingForTwo.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                DisplayOrder = 1,
-            });
             productCookingForTwo.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name), true),
@@ -6793,14 +6895,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCorel);
-            productCorel.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productCorel.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Corel.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCorel.Name), true),
@@ -6840,22 +6945,27 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
+                        TextPrompt = "Enter your text:",
+                        AttributeControlType = AttributeControlType.TextBox,
+                        IsRequired = true,
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductVariantAttributes.Add(new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
-                TextPrompt = "Enter your text:",
-                AttributeControlType = AttributeControlType.TextBox,
-                IsRequired = true,
-            });
-
-            productCustomTShirt.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name), true),
@@ -6895,14 +7005,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDiamondEarrings);
-            productDiamondEarrings.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                DisplayOrder = 1,
-            });
             productDiamondEarrings.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondEarrings.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondEarrings.Name), true),
@@ -6943,14 +7056,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDiamondBracelet);
-            productDiamondBracelet.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                DisplayOrder = 1,
-            });
             productDiamondBracelet.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name), true),
@@ -6996,14 +7112,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productEatingWell);
-            productEatingWell.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                DisplayOrder = 1,
-            });
             productEatingWell.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EatingWell.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productEatingWell.Name), true),
@@ -7042,74 +7161,84 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "8",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "9",
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "10",
+                                DisplayOrder = 3,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "11",
+                                DisplayOrder = 4,
+                            }
+                        }
+                    },
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
+                        AttributeControlType = AttributeControlType.ColorSquares,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "White",
+                                IsPreSelected = true,
+                                ColorSquaresRgb = "#FFFFFF",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Black",
+                                ColorSquaresRgb = "#000000",
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Green",
+                                ColorSquaresRgb = "#1fcb1a",
+                                DisplayOrder = 3,
+                            }
+                        }
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productEtnies);
-            var pvaEtnies1 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "8",
-                DisplayOrder = 1,
-            });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "9",
-                DisplayOrder = 2,
-            });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "10",
-                DisplayOrder = 3,
-            });
-            pvaEtnies1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "11",
-                DisplayOrder = 4,
-            });
-            productEtnies.ProductVariantAttributes.Add(pvaEtnies1);
-            var pvaEtnies2 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
-                AttributeControlType = AttributeControlType.ColorSquares,
-                IsRequired = true,
-            };
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "White",
-                IsPreSelected = true,
-                ColorSquaresRgb = "#FFFFFF",
-                DisplayOrder = 1,
-            });
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Black",
-                ColorSquaresRgb = "#000000",
-                DisplayOrder = 2,
-            });
-            pvaEtnies2.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Green",
-                ColorSquaresRgb = "#1fcb1a",
-                DisplayOrder = 3,
-            });
-            productEtnies.ProductVariantAttributes.Add(pvaEtnies2);
-            productEtnies.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productEtnies.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Etnies.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEtnies.Name), true),
@@ -7149,14 +7278,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productLeatherHandbag);
-            productLeatherHandbag.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productLeatherHandbag.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name), true),
@@ -7201,19 +7333,25 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productHp506);
-            productHp506.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
-                DisplayOrder = 1,
-            });
-            productHp506.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                DisplayOrder = 1,
-            });
             productHp506.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Hp506.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHp506.Name), true),
@@ -7254,51 +7392,60 @@ namespace Nop.Services.Installation
                 ShowOnHomePage = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 2,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.1''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
+                    }
+                }
             };
             allProducts.Add(productHpPavilion1);
-            productHpPavilion1.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                DisplayOrder = 1,
-            });
-            productHpPavilion1.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                DisplayOrder = 2,
-            });
             productHpPavilion1.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion1.Name), true),
                 DisplayOrder = 1,
-            });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.1''")
-            });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
-            });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
-            });
-            productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
             });
             _productRepository.Insert(productHpPavilion1);
 
@@ -7334,19 +7481,25 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 3,
+                    }
+                }
             };
             allProducts.Add(productHpPavilion2);
-            productHpPavilion2.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
-                DisplayOrder = 1,
-            });
-            productHpPavilion2.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                DisplayOrder = 3,
-            });
             productHpPavilion2.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name), true),
@@ -7391,51 +7544,60 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 4,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "16.0''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")            
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "320 GB")
+                    }
+                }
             };
             allProducts.Add(productHpPavilion3);
-            productHpPavilion3.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                DisplayOrder = 1,
-            });
-            productHpPavilion3.ProductManufacturers.Add(new ProductManufacturer
-            {
-                Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                DisplayOrder = 4,
-            });
             productHpPavilion3.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion3.Name), true),
                 DisplayOrder = 1,
-            });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "16.0''")
-            });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")            
-            });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
-            });
-            productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "320 GB")
             });
             _productRepository.Insert(productHpPavilion3);
 
@@ -7471,45 +7633,53 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductVariantAttributes =
+                {
+                    new ProductVariantAttribute
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductVariantAttributeValues =
+                        {
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Small",
+                                DisplayOrder = 1,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Medium",
+                                DisplayOrder = 2,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Large",
+                                DisplayOrder = 3,
+                            },
+                            new ProductVariantAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "X-Large",
+                                DisplayOrder = 4,
+                            }
+                        }
+                    }
+                },
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productHat);
-            var pvaHat1 = new ProductVariantAttribute
-            {
-                ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                AttributeControlType = AttributeControlType.DropdownList,
-                IsRequired = true,
-            };
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Small",
-                DisplayOrder = 1,
-            });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Medium",
-                DisplayOrder = 2,
-            });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "Large",
-                DisplayOrder = 3,
-            });
-            pvaHat1.ProductVariantAttributeValues.Add(new ProductVariantAttributeValue
-            {
-                AttributeValueType = AttributeValueType.Simple,
-                Name = "X-Large",
-                DisplayOrder = 4,
-            });
-            productHat.ProductVariantAttributes.Add(pvaHat1);
-            productHat.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productHat.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productHat.Name), true),
@@ -7549,14 +7719,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productKensington);
-            productKensington.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                DisplayOrder = 1,
-            });
             productKensington.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name), true),
@@ -7597,31 +7770,37 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 3,
+                        Price = 40
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 6,
+                        Price = 38
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 35
+                    }
+                },
+                HasTierPrices = true,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productLeviJeans);
-            productLeviJeans.TierPrices.Add(new TierPrice
-            {
-                Quantity = 3,
-                Price = 40
-            });
-            productLeviJeans.TierPrices.Add(new TierPrice
-            {
-                Quantity = 6,
-                Price = 38
-            });
-            productLeviJeans.TierPrices.Add(new TierPrice
-            {
-                Quantity = 10,
-                Price = 35
-            });
-            productLeviJeans.HasTierPrices = true;
 
-            productLeviJeans.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productLeviJeans.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name), true),
@@ -7666,14 +7845,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBaseball);
-            productBaseball.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productBaseball.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Baseball.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBaseball.Name), true),
@@ -7713,14 +7895,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productMedalOfHonor);
-            productMedalOfHonor.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productMedalOfHonor.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name), true),
@@ -7760,14 +7945,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productMouse);
-            productMouse.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                DisplayOrder = 1,
-            });
             productMouse.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mouse.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMouse.Name), true),
@@ -7807,14 +7995,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productGolfBelt);
-            productGolfBelt.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productGolfBelt.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GolfBelt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGolfBelt.Name), true),
@@ -7854,14 +8045,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productPanasonic);
-            productPanasonic.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                DisplayOrder = 1,
-            });
             productPanasonic.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_productPanasonic.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPanasonic.Name), true),
@@ -7901,14 +8095,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productSunglasses);
-            productSunglasses.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productSunglasses.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name), true),
@@ -7948,14 +8145,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productSamsungPhone);
-            productSamsungPhone.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
-                DisplayOrder = 1,
-            });
             productSamsungPhone.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name), true),
@@ -8000,14 +8200,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productSonyCamcoder);
-            productSonyCamcoder.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                DisplayOrder = 1,
-            });
             productSonyCamcoder.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SonyCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyCamcoder.Name), true),
@@ -8048,14 +8251,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBestSkilletRecipes);
-            productBestSkilletRecipes.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                DisplayOrder = 1,
-            });
             productBestSkilletRecipes.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestSkilletRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestSkilletRecipes.Name), true),
@@ -8095,46 +8301,52 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                   new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.4''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
+                    }
+                }
             };
             allProducts.Add(productSatellite);
-            productSatellite.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                DisplayOrder = 1,
-            });
             productSatellite.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Notebooks.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSatellite.Name), true),
                 DisplayOrder = 1,
-            });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 1,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.4''")
-            });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 2,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
-            });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = true,
-                ShowOnProductPage = true,
-                DisplayOrder = 3,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-            });
-            productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute
-            {
-                AllowFiltering = false,
-                ShowOnProductPage = true,
-                DisplayOrder = 4,
-                SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
             });
             _productRepository.Insert(productSatellite);
 
@@ -8170,14 +8382,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productDenimShort);
-            productDenimShort.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                DisplayOrder = 1,
-            });
             productDenimShort.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DenimShort.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDenimShort.Name), true),
@@ -8217,14 +8432,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productEngagementRing);
-            productEngagementRing.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                DisplayOrder = 1,
-            });
             productEngagementRing.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name), true),
@@ -8269,14 +8487,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productWoW);
-            productWoW.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productWoW.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name), true),
@@ -8316,14 +8537,17 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productSoccer);
-            productSoccer.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                DisplayOrder = 1,
-            });
             productSoccer.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name), true),
@@ -8385,14 +8609,17 @@ namespace Nop.Services.Installation
                 SampleDownloadId = downloadPokerFace2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productPokerFace);
-            productPokerFace.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                DisplayOrder = 1,
-            });
             productPokerFace.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PokerFace.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPokerFace.Name), true),
@@ -8454,15 +8681,18 @@ namespace Nop.Services.Installation
                 SampleDownloadId = downloadSingleLadies2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productSingleLadies);
 
-            productSingleLadies.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                DisplayOrder = 1,
-            });
             productSingleLadies.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SingleLadies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSingleLadies.Name), true),
@@ -8512,14 +8742,17 @@ namespace Nop.Services.Installation
                 HasUserAgreement = false,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
             };
             allProducts.Add(productBattleOfLa);
-            productBattleOfLa.ProductCategories.Add(new ProductCategory
-            {
-                Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                DisplayOrder = 1,
-            });
             productBattleOfLa.ProductPictures.Add(new ProductPicture
             {
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BattleOfLA.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBattleOfLa.Name), true),

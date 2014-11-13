@@ -158,10 +158,10 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //attributes with values
-                            int pvaId;
-                            if (int.TryParse(valueStr, out pvaId))
+                            int attributeValueId;
+                            if (int.TryParse(valueStr, out attributeValueId))
                             {
-                                var attributeValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
+                                var attributeValue = _productAttributeService.GetProductVariantAttributeValueById(attributeValueId);
                                 if (attributeValue != null)
                                 {
                                     formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
