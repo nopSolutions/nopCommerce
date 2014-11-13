@@ -18,7 +18,7 @@ namespace Nop.Admin.Extensions
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string selectedAttributes = "";
+            string attributesXml = "";
             var attributes = addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
@@ -33,7 +33,7 @@ namespace Nop.Admin.Extensions
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                    attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -47,7 +47,7 @@ namespace Nop.Admin.Extensions
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        selectedAttributes = addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                        attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -62,7 +62,7 @@ namespace Nop.Admin.Extensions
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -74,7 +74,7 @@ namespace Nop.Admin.Extensions
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = addressAttributeParser.AddAddressAttribute(selectedAttributes,
+                                attributesXml = addressAttributeParser.AddAddressAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -88,7 +88,7 @@ namespace Nop.Admin.Extensions
                 }
             }
 
-            return selectedAttributes;
+            return attributesXml;
         }
     }
 }

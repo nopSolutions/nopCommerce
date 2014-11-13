@@ -195,12 +195,12 @@ namespace Nop.Services.Catalog
         /// Gets SKU, Manufacturer part number and GTIN
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <param name="sku">SKU</param>
         /// <param name="manufacturerPartNumber">Manufacturer part number</param>
         /// <param name="gtin">GTIN</param>
-        private static void GetSkuMpnGtin(this Product product, string selectedAttributes, IProductAttributeParser productAttributeParser,
+        private static void GetSkuMpnGtin(this Product product, string attributesXml, IProductAttributeParser productAttributeParser,
             out string sku, out string manufacturerPartNumber, out string gtin)
         {
             if (product == null)
@@ -219,7 +219,7 @@ namespace Nop.Services.Catalog
                 //let's find appropriate record
                 var combination = product
                     .ProductAttributeCombinations
-                    .FirstOrDefault(x => productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
+                    .FirstOrDefault(x => productAttributeParser.AreProductAttributesEqual(x.AttributesXml, attributesXml));
                 if (combination != null)
                 {
                     sku = combination.Sku;
@@ -240,10 +240,10 @@ namespace Nop.Services.Catalog
         /// Formats SKU
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>SKU</returns>
-        public static string FormatSku(this Product product, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatSku(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -252,7 +252,7 @@ namespace Nop.Services.Catalog
             string manufacturerPartNumber;
             string gtin;
 
-            product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);
 
             return sku;
@@ -262,10 +262,10 @@ namespace Nop.Services.Catalog
         /// Formats manufacturer part number
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>Manufacturer part number</returns>
-        public static string FormatMpn(this Product product, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatMpn(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -274,7 +274,7 @@ namespace Nop.Services.Catalog
             string manufacturerPartNumber;
             string gtin;
 
-            product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);
 
             return manufacturerPartNumber;
@@ -284,10 +284,10 @@ namespace Nop.Services.Catalog
         /// Formats GTIN
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes (XML format)</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeParser">Product attribute service (used when attributes are specified)</param>
         /// <returns>GTIN</returns>
-        public static string FormatGtin(this Product product, string selectedAttributes = null, IProductAttributeParser productAttributeParser = null)
+        public static string FormatGtin(this Product product, string attributesXml = null, IProductAttributeParser productAttributeParser = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -296,7 +296,7 @@ namespace Nop.Services.Catalog
             string manufacturerPartNumber;
             string gtin;
 
-            product.GetSkuMpnGtin(selectedAttributes, productAttributeParser,
+            product.GetSkuMpnGtin(attributesXml, productAttributeParser,
                 out sku, out manufacturerPartNumber, out gtin);
 
             return gtin;

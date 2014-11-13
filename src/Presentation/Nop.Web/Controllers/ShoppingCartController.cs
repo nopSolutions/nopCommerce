@@ -895,7 +895,7 @@ namespace Nop.Web.Controllers
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string selectedAttributes = "";
+            string attributesXml = "";
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
@@ -911,7 +911,7 @@ namespace Nop.Web.Controllers
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                    attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -925,7 +925,7 @@ namespace Nop.Web.Controllers
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                        attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -940,7 +940,7 @@ namespace Nop.Web.Controllers
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -952,7 +952,7 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -970,7 +970,7 @@ namespace Nop.Web.Controllers
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
                             }
                         }
@@ -982,7 +982,7 @@ namespace Nop.Web.Controllers
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                attributesXml = _checkoutAttributeParser.AddCheckoutAttribute(attributesXml,
                                            attribute, download.DownloadGuid.ToString());
                             }
                         }
@@ -993,7 +993,7 @@ namespace Nop.Web.Controllers
             }
 
             //save checkout attributes
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, selectedAttributes, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CheckoutAttributes, attributesXml, _storeContext.CurrentStore.Id);
         }
 
         /// <summary>
@@ -1005,10 +1005,9 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual string ParseProductAttributes(Product product, FormCollection form)
         {
-            string attributes = "";
+            string attributesXml = "";
 
             #region Product attributes
-            string selectedAttributes = string.Empty;
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
@@ -1024,7 +1023,7 @@ namespace Nop.Web.Controllers
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -1038,7 +1037,7 @@ namespace Nop.Web.Controllers
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -1053,7 +1052,7 @@ namespace Nop.Web.Controllers
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -1065,7 +1064,7 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -1083,7 +1082,7 @@ namespace Nop.Web.Controllers
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
                             }
                         }
@@ -1095,7 +1094,7 @@ namespace Nop.Web.Controllers
                             var download = _downloadService.GetDownloadByGuid(downloadGuid);
                             if (download != null)
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, download.DownloadGuid.ToString());
                             }
                         }
@@ -1104,7 +1103,6 @@ namespace Nop.Web.Controllers
                         break;
                 }
             }
-            attributes = selectedAttributes;
 
             #endregion
 
@@ -1146,13 +1144,13 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
             #endregion
 
-            return attributes;
+            return attributesXml;
         }
 
         /// <summary>

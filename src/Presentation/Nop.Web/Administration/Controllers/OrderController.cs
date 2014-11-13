@@ -2028,10 +2028,9 @@ namespace Nop.Admin.Controllers
             //attributes
             //warnings
             var warnings = new List<string>();
-            string attributes = "";
+            string attributesXml = "";
 
             #region Product attributes
-            string selectedAttributes = string.Empty;
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
@@ -2047,7 +2046,7 @@ namespace Nop.Admin.Controllers
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -2061,7 +2060,7 @@ namespace Nop.Admin.Controllers
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -2076,7 +2075,7 @@ namespace Nop.Admin.Controllers
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -2088,7 +2087,7 @@ namespace Nop.Admin.Controllers
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -2106,7 +2105,7 @@ namespace Nop.Admin.Controllers
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
                             }
                         }
@@ -2143,7 +2142,7 @@ namespace Nop.Admin.Controllers
                                     };
                                     _downloadService.InsertDownload(download);
                                     //save attribute
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, download.DownloadGuid.ToString());
                                 }
                             }
@@ -2153,7 +2152,6 @@ namespace Nop.Admin.Controllers
                         break;
                 }
             }
-            attributes = selectedAttributes;
 
             #endregion
 
@@ -2195,7 +2193,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-                attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                attributesXml = _productAttributeParser.AddGiftCardAttribute(attributesXml,
                     recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
             }
 
@@ -2224,15 +2222,15 @@ namespace Nop.Admin.Controllers
             #endregion
 
             //warnings
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributes));
-            warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributes));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(order.Customer, ShoppingCartType.ShoppingCart, product, quantity, attributesXml));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, product, attributesXml));
             warnings.AddRange(_shoppingCartService.GetRentalProductWarnings(product, rentalStartDate, rentalEndDate));
             if (warnings.Count == 0)
             {
                 //no errors
 
                 //attributes
-                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributes, order.Customer);
+                string attributeDescription = _productAttributeFormatter.FormatAttributes(product, attributesXml, order.Customer);
 
                 //save item
                 var orderItem = new OrderItem
@@ -2244,9 +2242,9 @@ namespace Nop.Admin.Controllers
                     UnitPriceExclTax = unitPriceExclTax,
                     PriceInclTax = priceInclTax,
                     PriceExclTax = priceExclTax,
-                    OriginalProductCost = _priceCalculationService.GetProductCost(product, attributes),
+                    OriginalProductCost = _priceCalculationService.GetProductCost(product, attributesXml),
                     AttributeDescription = attributeDescription,
-                    AttributesXml = attributes,
+                    AttributesXml = attributesXml,
                     Quantity = quantity,
                     DiscountAmountInclTax = decimal.Zero,
                     DiscountAmountExclTax = decimal.Zero,

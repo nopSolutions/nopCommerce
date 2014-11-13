@@ -3901,11 +3901,11 @@ namespace Nop.Admin.Controllers
             ViewBag.formId = formId;
 
             //attributes
-            string attributes = "";
+            string attributesXml = "";
             var warnings = new List<string>();
 
             #region Product attributes
-            string selectedAttributes = string.Empty;
+
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
@@ -3921,7 +3921,7 @@ namespace Nop.Admin.Controllers
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -3935,7 +3935,7 @@ namespace Nop.Admin.Controllers
                                 {
                                     int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
-                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -3950,7 +3950,7 @@ namespace Nop.Admin.Controllers
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -3962,7 +3962,7 @@ namespace Nop.Admin.Controllers
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -3980,7 +3980,7 @@ namespace Nop.Admin.Controllers
                             catch { }
                             if (selectedDate.HasValue)
                             {
-                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                     attribute, selectedDate.Value.ToString("D"));
                             }
                         }
@@ -4017,7 +4017,7 @@ namespace Nop.Admin.Controllers
                                     };
                                     _downloadService.InsertDownload(download);
                                     //save attribute
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
                                         attribute, download.DownloadGuid.ToString());
                                 }
                             }
@@ -4027,19 +4027,18 @@ namespace Nop.Admin.Controllers
                         break;
                 }
             }
-            attributes = selectedAttributes;
 
             #endregion
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                ShoppingCartType.ShoppingCart, product, 1, attributes));
+                ShoppingCartType.ShoppingCart, product, 1, attributesXml));
             if (warnings.Count == 0)
             {
                 //save combination
                 var combination = new ProductAttributeCombination
                 {
                     ProductId = product.Id,
-                    AttributesXml = attributes,
+                    AttributesXml = attributesXml,
                     StockQuantity = model.StockQuantity,
                     AllowOutOfStockOrders = model.AllowOutOfStockOrders,
                     Sku = model.Sku,

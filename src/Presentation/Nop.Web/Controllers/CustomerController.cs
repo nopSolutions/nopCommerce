@@ -505,7 +505,7 @@ namespace Nop.Web.Controllers
             if (form == null)
                 throw new ArgumentNullException("form");
 
-            string selectedAttributes = "";
+            string attributesXml = "";
             var attributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in attributes)
             {
@@ -520,7 +520,7 @@ namespace Nop.Web.Controllers
                             {
                                 int selectedAttributeId = int.Parse(ctrlAttributes);
                                 if (selectedAttributeId > 0)
-                                    selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                    attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                         attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -534,7 +534,7 @@ namespace Nop.Web.Controllers
                                 {
                                         int selectedAttributeId = int.Parse(item);
                                         if (selectedAttributeId > 0)
-                                            selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                            attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                                 attribute, selectedAttributeId.ToString());
                                 }
                             }
@@ -549,7 +549,7 @@ namespace Nop.Web.Controllers
                                 .Select(pvav => pvav.Id)
                                 .ToList())
                             {
-                                selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                             attribute, selectedAttributeId.ToString());
                             }
                         }
@@ -561,7 +561,7 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(ctrlAttributes))
                             {
                                 string enteredText = ctrlAttributes.Trim();
-                                selectedAttributes = _customerAttributeParser.AddCustomerAttribute(selectedAttributes,
+                                attributesXml = _customerAttributeParser.AddCustomerAttribute(attributesXml,
                                     attribute, enteredText);
                             }
                         }
@@ -575,7 +575,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return selectedAttributes;
+            return attributesXml;
         }
 
         #endregion

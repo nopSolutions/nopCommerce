@@ -267,12 +267,12 @@ namespace Nop.Services.Orders
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetStandardWarnings(Customer customer, ShoppingCartType shoppingCartType,
-            Product product, string selectedAttributes, decimal customerEnteredPrice,
+            Product product, string attributesXml, decimal customerEnteredPrice,
             int quantity)
         {
             if (customer == null)
@@ -393,7 +393,7 @@ namespace Nop.Services.Orders
                         {
                             var combination = product
                                 .ProductAttributeCombinations
-                                .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
+                                .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, attributesXml));
                             if (combination != null)
                             {
                                 //combination exists
@@ -458,13 +458,13 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product, 
             int quantity = 1,
-            string selectedAttributes = "")
+            string attributesXml = "")
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -472,7 +472,7 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var pva1Collection = _productAttributeParser.ParseProductVariantAttributes(selectedAttributes);
+            var pva1Collection = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
             foreach (var pva1 in pva1Collection)
             {
                 if (pva1.Product != null)
@@ -501,7 +501,7 @@ namespace Nop.Services.Orders
                     {
                         if (pva1.Id == pva2.Id)
                         {
-                            var pvaValuesStr = _productAttributeParser.ParseValues(selectedAttributes, pva1.Id);
+                            var pvaValuesStr = _productAttributeParser.ParseValues(attributesXml, pva1.Id);
                             foreach (string str1 in pvaValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
@@ -532,7 +532,7 @@ namespace Nop.Services.Orders
                         .Select(x => x.Id)
                         .ToArray();
 
-                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes)
+                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml)
                         .Where(x => x.ProductVariantAttributeId == pva2.Id)
                         .Select(x => x.Id)
                         .ToArray();
@@ -556,7 +556,7 @@ namespace Nop.Services.Orders
                     if (pva.AttributeControlType == AttributeControlType.TextBox ||
                         pva.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(selectedAttributes, pva.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pva.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -573,7 +573,7 @@ namespace Nop.Services.Orders
                     if (pva.AttributeControlType == AttributeControlType.TextBox ||
                         pva.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(selectedAttributes, pva.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pva.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -589,7 +589,7 @@ namespace Nop.Services.Orders
                 return warnings;
 
             //validate bundled products
-            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(selectedAttributes);
+            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
             foreach (var pvaValue in pvaValues)
             {
                 if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
@@ -628,10 +628,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
-            Product product, string selectedAttributes)
+            Product product, string attributesXml)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -646,7 +646,7 @@ namespace Nop.Services.Orders
                 string giftCardSenderName;
                 string giftCardSenderEmail;
                 string giftCardMessage;
-                _productAttributeParser.GetGiftCardAttribute(selectedAttributes,
+                _productAttributeParser.GetGiftCardAttribute(attributesXml,
                     out giftCardRecipientName, out giftCardRecipientEmail,
                     out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
@@ -720,7 +720,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -734,7 +734,7 @@ namespace Nop.Services.Orders
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
             Product product, int storeId,
-            string selectedAttributes, decimal customerEnteredPrice,
+            string attributesXml, decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
@@ -748,15 +748,15 @@ namespace Nop.Services.Orders
             
             //standard properties
             if (getStandardWarnings)
-                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, selectedAttributes, customerEnteredPrice, quantity));
+                warnings.AddRange(GetStandardWarnings(customer, shoppingCartType, product, attributesXml, customerEnteredPrice, quantity));
 
             //selected attributes
             if (getAttributesWarnings)
-                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, selectedAttributes));
+                warnings.AddRange(GetShoppingCartItemAttributeWarnings(customer, shoppingCartType, product, quantity, attributesXml));
 
             //gift cards
             if (getGiftCardWarnings)
-                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartType, product, selectedAttributes));
+                warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartType, product, attributesXml));
 
             //required products
             if (getRequiredProductVariantWarnings)
@@ -773,11 +773,11 @@ namespace Nop.Services.Orders
         /// Validates whether this shopping cart is valid
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
-        /// <param name="checkoutAttributes">Checkout attributes</param>
+        /// <param name="checkoutAttributesXml">Checkout attributes in XML format</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
-            string checkoutAttributes, bool validateCheckoutAttributes)
+            string checkoutAttributesXml, bool validateCheckoutAttributes)
         {
             var warnings = new List<string>();
 
@@ -822,7 +822,7 @@ namespace Nop.Services.Orders
             if (validateCheckoutAttributes)
             {
                 //selected attributes
-                var ca1Collection = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributes);
+                var ca1Collection = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
 
                 //existing checkout attributes
                 var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
@@ -836,7 +836,7 @@ namespace Nop.Services.Orders
                         {
                             if (ca1.Id == ca2.Id)
                             {
-                                var caValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributes, ca1.Id);
+                                var caValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca1.Id);
                                 foreach (string str1 in caValuesStr)
                                     if (!String.IsNullOrEmpty(str1.Trim()))
                                     {
@@ -867,7 +867,7 @@ namespace Nop.Services.Orders
                         if (ca.AttributeControlType == AttributeControlType.TextBox ||
                             ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributes, ca.Id);
+                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
                             var enteredText = valuesStr.FirstOrDefault();
                             int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -884,7 +884,7 @@ namespace Nop.Services.Orders
                         if (ca.AttributeControlType == AttributeControlType.TextBox ||
                             ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributes, ca.Id);
+                            var valuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca.Id);
                             var enteredText = valuesStr.FirstOrDefault();
                             int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
@@ -906,7 +906,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="product">Product</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">Price entered by a customer</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -914,7 +914,7 @@ namespace Nop.Services.Orders
         public virtual ShoppingCartItem FindShoppingCartItemInTheCart(IList<ShoppingCartItem> shoppingCart,
             ShoppingCartType shoppingCartType,
             Product product,
-            string selectedAttributes = "",
+            string attributesXml = "",
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, 
             DateTime? rentalEndDate = null)
@@ -930,7 +930,7 @@ namespace Nop.Services.Orders
                 if (sci.ProductId == product.Id)
                 {
                     //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, selectedAttributes);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml);
 
                     //gift cards
                     bool giftCardInfoSame = true;
@@ -941,7 +941,7 @@ namespace Nop.Services.Orders
                         string giftCardSenderName1;
                         string giftCardSenderEmail1;
                         string giftCardMessage1;
-                        _productAttributeParser.GetGiftCardAttribute(selectedAttributes,
+                        _productAttributeParser.GetGiftCardAttribute(attributesXml,
                             out giftCardRecipientName1, out giftCardRecipientEmail1,
                             out giftCardSenderName1, out giftCardSenderEmail1, out giftCardMessage1);
 
@@ -988,7 +988,7 @@ namespace Nop.Services.Orders
         /// <param name="product">Product</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="storeId">Store identifier</param>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
@@ -996,7 +996,7 @@ namespace Nop.Services.Orders
         /// <param name="automaticallyAddRequiredProductsIfEnabled">Automatically add required products if enabled</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> AddToCart(Customer customer, Product product,
-            ShoppingCartType shoppingCartType, int storeId, string selectedAttributes = null,
+            ShoppingCartType shoppingCartType, int storeId, string attributesXml = null,
             decimal customerEnteredPrice = decimal.Zero,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true)
@@ -1039,7 +1039,7 @@ namespace Nop.Services.Orders
                 .ToList();
 
             var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
-                shoppingCartType, product, selectedAttributes, customerEnteredPrice,
+                shoppingCartType, product, attributesXml, customerEnteredPrice,
                 rentalStartDate, rentalEndDate);
 
             if (shoppingCartItem != null)
@@ -1047,13 +1047,13 @@ namespace Nop.Services.Orders
                 //update existing shopping cart item
                 int newQuantity = shoppingCartItem.Quantity + quantity;
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, selectedAttributes, 
+                    storeId, attributesXml, 
                     customerEnteredPrice, rentalStartDate, rentalEndDate,
                     newQuantity, automaticallyAddRequiredProductsIfEnabled));
 
                 if (warnings.Count == 0)
                 {
-                    shoppingCartItem.AttributesXml = selectedAttributes;
+                    shoppingCartItem.AttributesXml = attributesXml;
                     shoppingCartItem.Quantity = newQuantity;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     _customerService.UpdateCustomer(customer);
@@ -1066,7 +1066,7 @@ namespace Nop.Services.Orders
             {
                 //new shopping cart item
                 warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartType, product,
-                    storeId, selectedAttributes, customerEnteredPrice,
+                    storeId, attributesXml, customerEnteredPrice,
                     rentalStartDate, rentalEndDate, 
                     quantity, automaticallyAddRequiredProductsIfEnabled));
                 if (warnings.Count == 0)
@@ -1102,7 +1102,7 @@ namespace Nop.Services.Orders
                         ShoppingCartType = shoppingCartType,
                         StoreId = storeId,
                         Product = product,
-                        AttributesXml = selectedAttributes,
+                        AttributesXml = attributesXml,
                         CustomerEnteredPrice = customerEnteredPrice,
                         Quantity = quantity,
                         RentalStartDateUtc = rentalStartDate,
@@ -1131,15 +1131,15 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartItemId">Shopping cart item identifier</param>
-        /// <param name="selectedAttributes">New shopping cart item attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerEnteredPrice">New customer entered price</param>
         /// <param name="rentalStartDate">Rental start date</param>
         /// <param name="rentalEndDate">Rental end date</param>
         /// <param name="quantity">New shopping cart item quantity</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> UpdateShoppingCartItem(Customer customer, 
-            int shoppingCartItemId, string selectedAttributes,
+        public virtual IList<string> UpdateShoppingCartItem(Customer customer,
+            int shoppingCartItemId, string attributesXml,
             decimal customerEnteredPrice,
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null, 
             int quantity = 1, bool resetCheckoutData = true)
@@ -1162,13 +1162,13 @@ namespace Nop.Services.Orders
                     //check warnings
                     warnings.AddRange(GetShoppingCartItemWarnings(customer, shoppingCartItem.ShoppingCartType,
                         shoppingCartItem.Product, shoppingCartItem.StoreId,
-                        selectedAttributes, customerEnteredPrice, 
+                        attributesXml, customerEnteredPrice, 
                         rentalStartDate, rentalEndDate, quantity, false));
                     if (warnings.Count == 0)
                     {
                         //if everything is OK, then update a shopping cart item
                         shoppingCartItem.Quantity = quantity;
-                        shoppingCartItem.AttributesXml = selectedAttributes;
+                        shoppingCartItem.AttributesXml = attributesXml;
                         shoppingCartItem.CustomerEnteredPrice = customerEnteredPrice;
                         shoppingCartItem.RentalStartDateUtc = rentalStartDate;
                         shoppingCartItem.RentalEndDateUtc = rentalEndDate;
