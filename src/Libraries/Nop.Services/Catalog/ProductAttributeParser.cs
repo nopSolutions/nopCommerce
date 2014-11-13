@@ -258,7 +258,9 @@ namespace Nop.Services.Catalog
                                     bool hasValue = false;
                                     foreach (string str2 in pvaValues2Str)
                                     {
-                                        if (str1.Trim().ToLower() == str2.Trim().ToLower())
+                                        //case insensitive? 
+                                        //if (str1.Trim().ToLower() == str2.Trim().ToLower())
+                                        if (str1.Trim() == str2.Trim())
                                         {
                                             hasValue = true;
                                             break;
