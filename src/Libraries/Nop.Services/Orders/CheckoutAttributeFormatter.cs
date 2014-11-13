@@ -49,25 +49,25 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributes)
+        public string FormatAttributes(string attributesXml)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(attributes, customer);
+            return FormatAttributes(attributesXml, customer);
         }
 
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributes,
+        public string FormatAttributes(string attributesXml,
             Customer customer, 
             string serapator = "<br />", 
             bool htmlEncode = true, 
@@ -76,29 +76,29 @@ namespace Nop.Services.Orders
         {
             var result = new StringBuilder();
 
-            var caCollection = _checkoutAttributeParser.ParseCheckoutAttributes(attributes);
-            for (int i = 0; i < caCollection.Count; i++)
+            var attributes = _checkoutAttributeParser.ParseCheckoutAttributes(attributesXml);
+            for (int i = 0; i < attributes.Count; i++)
             {
-                var ca = caCollection[i];
-                var valuesStr = _checkoutAttributeParser.ParseValues(attributes, ca.Id);
+                var attribute = attributes[i];
+                var valuesStr = _checkoutAttributeParser.ParseValues(attributesXml, attribute.Id);
                 for (int j = 0; j < valuesStr.Count; j++)
                 {
                     string valueStr = valuesStr[j];
-                    string caAttribute = "";
-                    if (!ca.ShouldHaveValues())
+                    string formattedAttribute = "";
+                    if (!attribute.ShouldHaveValues())
                     {
                         //no values
-                        if (ca.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = HttpUtility.HtmlEncode(attributeName);
-                            caAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
-                        else if (ca.AttributeControlType == AttributeControlType.FileUpload)
+                        else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
                             Guid downloadGuid;
@@ -125,20 +125,20 @@ namespace Nop.Services.Orders
                                     //hyperlinks aren't allowed
                                     attributeText = fileName;
                                 }
-                                var attributeName = ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = HttpUtility.HtmlEncode(attributeName);
-                                caAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
                             }
                         }
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             //encode (if required)
                             if (htmlEncode)
-                                caAttribute = HttpUtility.HtmlEncode(caAttribute);
+                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                         }
                     }
                     else
@@ -149,7 +149,7 @@ namespace Nop.Services.Orders
                             var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caId);
                             if (caValue != null)
                             {
-                                caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), caValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), caValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                 if (renderPrices)
                                 {
                                     decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue, customer);
@@ -157,21 +157,21 @@ namespace Nop.Services.Orders
                                     if (priceAdjustmentBase > 0)
                                     {
                                         string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment);
-                                        caAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                        formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                     }
                                 }
                             }
                             //encode (if required)
                             if (htmlEncode)
-                                caAttribute = HttpUtility.HtmlEncode(caAttribute);
+                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(caAttribute))
+                    if (!String.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(serapator);
-                        result.Append(caAttribute);
+                        result.Append(formattedAttribute);
                     }
                 }
             }

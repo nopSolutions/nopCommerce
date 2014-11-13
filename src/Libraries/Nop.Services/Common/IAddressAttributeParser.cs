@@ -11,39 +11,39 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets selected address attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        IList<AddressAttribute> ParseAddressAttributes(string attributes);
+        IList<AddressAttribute> ParseAddressAttributes(string attributesXml);
 
         /// <summary>
         /// Get address attribute values
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        IList<AddressAttributeValue> ParseAddressAttributeValues(string attributes);
+        IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml);
 
         /// <summary>
         /// Gets selected address attribute value
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute value</returns>
-        IList<string> ParseValues(string attributes, int addressAttributeId);
+        IList<string> ParseValues(string attributesXml, int addressAttributeId);
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="attribute">Address attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        string AddAddressAttribute(string attributes, AddressAttribute attribute, string value);
+        string AddAddressAttribute(string attributesXml, AddressAttribute attribute, string value);
 
         /// <summary>
         /// Validates address attributes
         /// </summary>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        IList<string> GetAttributeWarnings(string selectedAttributes);
+        IList<string> GetAttributeWarnings(string attributesXml);
     }
 }

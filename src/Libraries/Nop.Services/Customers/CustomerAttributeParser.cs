@@ -25,18 +25,18 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets selected customer attribute identifiers
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attribute identifiers</returns>
-        protected virtual IList<int> ParseCustomerAttributeIds(string attributes)
+        protected virtual IList<int> ParseCustomerAttributeIds(string attributesXml)
         {
             var ids = new List<int>();
-            if (String.IsNullOrEmpty(attributes))
+            if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributes);
+                xmlDoc.LoadXml(attributesXml);
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute"))
                 {
@@ -61,38 +61,38 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets selected customer attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected customer attributes</returns>
-        public virtual IList<CustomerAttribute> ParseCustomerAttributes(string attributes)
+        public virtual IList<CustomerAttribute> ParseCustomerAttributes(string attributesXml)
         {
-            var caCollection = new List<CustomerAttribute>();
-            var ids = ParseCustomerAttributeIds(attributes);
+            var result = new List<CustomerAttribute>();
+            var ids = ParseCustomerAttributeIds(attributesXml);
             foreach (int id in ids)
             {
-                var ca = _customerAttributeService.GetCustomerAttributeById(id);
-                if (ca != null)
+                var attribute = _customerAttributeService.GetCustomerAttributeById(id);
+                if (attribute != null)
                 {
-                    caCollection.Add(ca);
+                    result.Add(attribute);
                 }
             }
-            return caCollection;
+            return result;
         }
 
         /// <summary>
         /// Get customer attribute values
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Customer attribute values</returns>
-        public virtual IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributes)
+        public virtual IList<CustomerAttributeValue> ParseCustomerAttributeValues(string attributesXml)
         {
             var caValues = new List<CustomerAttributeValue>();
-            var caCollection = ParseCustomerAttributes(attributes);
+            var caCollection = ParseCustomerAttributes(attributesXml);
             foreach (var ca in caCollection)
             {
                 if (!ca.ShouldHaveValues())
                     continue;
 
-                var caValuesStr = ParseValues(attributes, ca.Id);
+                var caValuesStr = ParseValues(attributesXml, ca.Id);
                 foreach (string caValueStr in caValuesStr)
                 {
                     if (!String.IsNullOrEmpty(caValueStr))
@@ -113,16 +113,16 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Gets selected customer attribute value
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customerAttributeId">Customer attribute identifier</param>
         /// <returns>Customer attribute value</returns>
-        public virtual IList<string> ParseValues(string attributes, int customerAttributeId)
+        public virtual IList<string> ParseValues(string attributesXml, int customerAttributeId)
         {
             var selectedCustomerAttributeValues = new List<string>();
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributes);
+                xmlDoc.LoadXml(attributesXml);
 
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CustomerAttribute");
                 foreach (XmlNode node1 in nodeList1)
@@ -156,24 +156,24 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="ca">Customer attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public virtual string AddCustomerAttribute(string attributes, CustomerAttribute ca, string value)
+        public virtual string AddCustomerAttribute(string attributesXml, CustomerAttribute ca, string value)
         {
             string result = string.Empty;
             try
             {
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributes))
+                if (String.IsNullOrEmpty(attributesXml))
                 {
-                    var _element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(_element1);
+                    var element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
                 }
                 else
                 {
-                    xmlDoc.LoadXml(attributes);
+                    xmlDoc.LoadXml(attributesXml);
                 }
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
@@ -224,14 +224,14 @@ namespace Nop.Services.Customers
         /// <summary>
         /// Validates customer attributes
         /// </summary>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetAttributeWarnings(string selectedAttributes)
+        public virtual IList<string> GetAttributeWarnings(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var cva1Collection = ParseCustomerAttributes(selectedAttributes);
+            var cva1Collection = ParseCustomerAttributes(attributesXml);
 
             //validate required customer attributes (whether they're chosen/selected/entered)
             var cva2Collection = _customerAttributeService.GetAllCustomerAttributes();
@@ -245,7 +245,7 @@ namespace Nop.Services.Customers
                     {
                         if (cva1.Id == cva2.Id)
                         {
-                            var cvaValuesStr = ParseValues(selectedAttributes, cva1.Id);
+                            var cvaValuesStr = ParseValues(attributesXml, cva1.Id);
                             foreach (string str1 in cvaValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))

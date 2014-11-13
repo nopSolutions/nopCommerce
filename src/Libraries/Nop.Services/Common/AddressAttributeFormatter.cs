@@ -30,39 +30,39 @@ namespace Nop.Services.Common
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributes,
+        public string FormatAttributes(string attributesXml,
             string serapator = "<br />", 
             bool htmlEncode = true)
         {
             var result = new StringBuilder();
 
-            var aaCollection = _addressAttributeParser.ParseAddressAttributes(attributes);
-            for (int i = 0; i < aaCollection.Count; i++)
+            var attributes = _addressAttributeParser.ParseAddressAttributes(attributesXml);
+            for (int i = 0; i < attributes.Count; i++)
             {
-                var aa = aaCollection[i];
-                var valuesStr = _addressAttributeParser.ParseValues(attributes, aa.Id);
+                var attribute = attributes[i];
+                var valuesStr = _addressAttributeParser.ParseValues(attributesXml, attribute.Id);
                 for (int j = 0; j < valuesStr.Count; j++)
                 {
                     string valueStr = valuesStr[j];
-                    string aaAttribute = "";
-                    if (!aa.ShouldHaveValues())
+                    string formattedAttribute = "";
+                    if (!attribute.ShouldHaveValues())
                     {
                         //no values
-                        if (aa.AttributeControlType == AttributeControlType.MultilineTextbox)
+                        if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
                             //multiline textbox
-                            var attributeName = aa.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            var attributeName = attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = HttpUtility.HtmlEncode(attributeName);
-                            aaAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                            formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
-                        else if (aa.AttributeControlType == AttributeControlType.FileUpload)
+                        else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                         {
                             //file upload
                             //not supported for address attributes
@@ -70,10 +70,10 @@ namespace Nop.Services.Common
                         else
                         {
                             //other attributes (textbox, datepicker)
-                            aaAttribute = string.Format("{0}: {1}", aa.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                             //encode (if required)
                             if (htmlEncode)
-                                aaAttribute = HttpUtility.HtmlEncode(aaAttribute);
+                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                         }
                     }
                     else
@@ -84,19 +84,19 @@ namespace Nop.Services.Common
                             var aaValue = _addressAttributeService.GetAddressAttributeValueById(aaId);
                             if (aaValue != null)
                             {
-                                aaAttribute = string.Format("{0}: {1}", aa.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), aaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), aaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                             }
                             //encode (if required)
                             if (htmlEncode)
-                                aaAttribute = HttpUtility.HtmlEncode(aaAttribute);
+                                formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                         }
                     }
 
-                    if (!String.IsNullOrEmpty(aaAttribute))
+                    if (!String.IsNullOrEmpty(formattedAttribute))
                     {
                         if (i != 0 || j != 0)
                             result.Append(serapator);
-                        result.Append(aaAttribute);
+                        result.Append(formattedAttribute);
                     }
                 }
             }

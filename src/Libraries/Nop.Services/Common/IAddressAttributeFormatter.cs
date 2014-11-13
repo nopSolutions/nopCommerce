@@ -8,11 +8,11 @@ namespace Nop.Services.Common
         /// <summary>
         /// Formats attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        string FormatAttributes(string attributes,
+        string FormatAttributes(string attributesXml,
             string serapator = "<br />", 
             bool htmlEncode = true);
     }

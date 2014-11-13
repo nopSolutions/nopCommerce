@@ -25,18 +25,18 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets selected address attribute identifiers
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attribute identifiers</returns>
-        protected virtual IList<int> ParseAddressAttributeIds(string attributes)
+        protected virtual IList<int> ParseAddressAttributeIds(string attributesXml)
         {
             var ids = new List<int>();
-            if (String.IsNullOrEmpty(attributes))
+            if (String.IsNullOrEmpty(attributesXml))
                 return ids;
 
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributes);
+                xmlDoc.LoadXml(attributesXml);
 
                 foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/AddressAttribute"))
                 {
@@ -61,38 +61,38 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets selected address attributes
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected address attributes</returns>
-        public virtual IList<AddressAttribute> ParseAddressAttributes(string attributes)
+        public virtual IList<AddressAttribute> ParseAddressAttributes(string attributesXml)
         {
-            var caCollection = new List<AddressAttribute>();
-            var ids = ParseAddressAttributeIds(attributes);
+            var result = new List<AddressAttribute>();
+            var ids = ParseAddressAttributeIds(attributesXml);
             foreach (int id in ids)
             {
-                var ca = _addressAttributeService.GetAddressAttributeById(id);
-                if (ca != null)
+                var attribute = _addressAttributeService.GetAddressAttributeById(id);
+                if (attribute != null)
                 {
-                    caCollection.Add(ca);
+                    result.Add(attribute);
                 }
             }
-            return caCollection;
+            return result;
         }
 
         /// <summary>
         /// Get address attribute values
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Address attribute values</returns>
-        public virtual IList<AddressAttributeValue> ParseAddressAttributeValues(string attributes)
+        public virtual IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml)
         {
             var caValues = new List<AddressAttributeValue>();
-            var caCollection = ParseAddressAttributes(attributes);
+            var caCollection = ParseAddressAttributes(attributesXml);
             foreach (var ca in caCollection)
             {
                 if (!ca.ShouldHaveValues())
                     continue;
 
-                var caValuesStr = ParseValues(attributes, ca.Id);
+                var caValuesStr = ParseValues(attributesXml, ca.Id);
                 foreach (string caValueStr in caValuesStr)
                 {
                     if (!String.IsNullOrEmpty(caValueStr))
@@ -113,16 +113,16 @@ namespace Nop.Services.Common
         /// <summary>
         /// Gets selected address attribute value
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="addressAttributeId">Address attribute identifier</param>
         /// <returns>Address attribute value</returns>
-        public virtual IList<string> ParseValues(string attributes, int addressAttributeId)
+        public virtual IList<string> ParseValues(string attributesXml, int addressAttributeId)
         {
             var selectedAddressAttributeValues = new List<string>();
             try
             {
                 var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(attributes);
+                xmlDoc.LoadXml(attributesXml);
 
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
                 foreach (XmlNode node1 in nodeList1)
@@ -156,24 +156,24 @@ namespace Nop.Services.Common
         /// <summary>
         /// Adds an attribute
         /// </summary>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="attribute">Address attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public virtual string AddAddressAttribute(string attributes, AddressAttribute attribute, string value)
+        public virtual string AddAddressAttribute(string attributesXml, AddressAttribute attribute, string value)
         {
             string result = string.Empty;
             try
             {
                 var xmlDoc = new XmlDocument();
-                if (String.IsNullOrEmpty(attributes))
+                if (String.IsNullOrEmpty(attributesXml))
                 {
-                    var _element1 = xmlDoc.CreateElement("Attributes");
-                    xmlDoc.AppendChild(_element1);
+                    var element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
                 }
                 else
                 {
-                    xmlDoc.LoadXml(attributes);
+                    xmlDoc.LoadXml(attributesXml);
                 }
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
@@ -224,14 +224,14 @@ namespace Nop.Services.Common
         /// <summary>
         /// Validates address attributes
         /// </summary>
-        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Warnings</returns>
-        public virtual IList<string> GetAttributeWarnings(string selectedAttributes)
+        public virtual IList<string> GetAttributeWarnings(string attributesXml)
         {
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var cva1Collection = ParseAddressAttributes(selectedAttributes);
+            var cva1Collection = ParseAddressAttributes(attributesXml);
 
             //validate required address attributes (whether they're chosen/selected/entered)
             var cva2Collection = _addressAttributeService.GetAllAddressAttributes();
@@ -245,7 +245,7 @@ namespace Nop.Services.Common
                     {
                         if (cva1.Id == cva2.Id)
                         {
-                            var cvaValuesStr = ParseValues(selectedAttributes, cva1.Id);
+                            var cvaValuesStr = ParseValues(attributesXml, cva1.Id);
                             foreach (string str1 in cvaValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))

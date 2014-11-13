@@ -59,19 +59,19 @@ namespace Nop.Services.Catalog
         /// Formats attributes
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(Product product, string attributes)
+        public string FormatAttributes(Product product, string attributesXml)
         {
             var customer = _workContext.CurrentCustomer;
-            return FormatAttributes(product, attributes, customer);
+            return FormatAttributes(product, attributesXml, customer);
         }
         
         /// <summary>
         /// Formats attributes
         /// </summary>
         /// <param name="product">Product</param>
-        /// <param name="attributes">Attributes</param>
+        /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="customer">Customer</param>
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(Product product, string attributes,
+        public string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true)
@@ -90,29 +90,29 @@ namespace Nop.Services.Catalog
             //attributes
             if (renderProductAttributes)
             {
-                var pvaCollection = _productAttributeParser.ParseProductVariantAttributes(attributes);
-                for (int i = 0; i < pvaCollection.Count; i++)
+                var attributes = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
+                for (int i = 0; i < attributes.Count; i++)
                 {
-                    var pva = pvaCollection[i];
-                    var valuesStr = _productAttributeParser.ParseValues(attributes, pva.Id);
+                    var attribute = attributes[i];
+                    var valuesStr = _productAttributeParser.ParseValues(attributesXml, attribute.Id);
                     for (int j = 0; j < valuesStr.Count; j++)
                     {
                         string valueStr = valuesStr[j];
-                        string pvaAttribute = string.Empty;
-                        if (!pva.ShouldHaveValues())
+                        string formattedAttribute = string.Empty;
+                        if (!attribute.ShouldHaveValues())
                         {
                             //no values
-                            if (pva.AttributeControlType == AttributeControlType.MultilineTextbox)
+                            if (attribute.AttributeControlType == AttributeControlType.MultilineTextbox)
                             {
                                 //multiline textbox
-                                var attributeName = pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = HttpUtility.HtmlEncode(attributeName);
-                                pvaAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
+                                formattedAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                                 //we never encode multiline textbox input
                             }
-                            else if (pva.AttributeControlType == AttributeControlType.FileUpload)
+                            else if (attribute.AttributeControlType == AttributeControlType.FileUpload)
                             {
                                 //file upload
                                 Guid downloadGuid;
@@ -139,20 +139,20 @@ namespace Nop.Services.Catalog
                                         //hyperlinks aren't allowed
                                         attributeText = fileName;
                                     }
-                                    var attributeName = pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                    var attributeName = attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
                                     //encode (if required)
                                     if (htmlEncode)
                                         attributeName = HttpUtility.HtmlEncode(attributeName);
-                                    pvaAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                                    formattedAttribute = string.Format("{0}: {1}", attributeName, attributeText);
                                 }
                             }
                             else
                             {
                                 //other attributes (textbox, datepicker)
-                                pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                                formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
                                 //encode (if required)
                                 if (htmlEncode)
-                                    pvaAttribute = HttpUtility.HtmlEncode(pvaAttribute);
+                                    formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                             }
                         }
                         else
@@ -164,7 +164,7 @@ namespace Nop.Services.Catalog
                                 var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
                                 if (pvaValue != null)
                                 {
-                                    pvaAttribute = string.Format("{0}: {1}", pva.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), pvaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                    formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), pvaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                     
                                     if (renderPrices)
                                     {
@@ -175,12 +175,12 @@ namespace Nop.Services.Catalog
                                         if (priceAdjustmentBase > 0)
                                         {
                                             string priceAdjustmentStr = _priceFormatter.FormatPrice(priceAdjustment, false, false);
-                                            pvaAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
+                                            formattedAttribute += string.Format(" [+{0}]", priceAdjustmentStr);
                                         }
                                         else if (priceAdjustmentBase < decimal.Zero)
                                         {
                                             string priceAdjustmentStr = _priceFormatter.FormatPrice(-priceAdjustment, false, false);
-                                            pvaAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
+                                            formattedAttribute += string.Format(" [-{0}]", priceAdjustmentStr);
                                         }
                                     }
 
@@ -192,21 +192,21 @@ namespace Nop.Services.Catalog
                                         if (pvaValue.Quantity > 1)
                                         {
                                             //TODO localize resource
-                                            pvaAttribute += string.Format(" - qty {0}", pvaValue.Quantity);
+                                            formattedAttribute += string.Format(" - qty {0}", pvaValue.Quantity);
                                         }
                                     }
                                 }                               
                                 //encode (if required)
                                 if (htmlEncode)
-                                    pvaAttribute = HttpUtility.HtmlEncode(pvaAttribute);
+                                    formattedAttribute = HttpUtility.HtmlEncode(formattedAttribute);
                             }
                         }
 
-                        if (!String.IsNullOrEmpty(pvaAttribute))
+                        if (!String.IsNullOrEmpty(formattedAttribute))
                         {
                             if (i != 0 || j != 0)
                                 result.Append(serapator);
-                            result.Append(pvaAttribute);
+                            result.Append(formattedAttribute);
                         }
                     }
                 }
@@ -222,7 +222,7 @@ namespace Nop.Services.Catalog
                     string giftCardSenderName;
                     string giftCardSenderEmail;
                     string giftCardMessage;
-                    _productAttributeParser.GetGiftCardAttribute(attributes, out giftCardRecipientName, out giftCardRecipientEmail,
+                    _productAttributeParser.GetGiftCardAttribute(attributesXml, out giftCardRecipientName, out giftCardRecipientEmail,
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                     //sender
