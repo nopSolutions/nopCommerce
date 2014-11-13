@@ -81,29 +81,29 @@ namespace Nop.Services.Orders
         /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributesXml)
         {
-            var caValues = new List<CheckoutAttributeValue>();
-            var caCollection = ParseCheckoutAttributes(attributesXml);
-            foreach (var ca in caCollection)
+            var values = new List<CheckoutAttributeValue>();
+            var attributes = ParseCheckoutAttributes(attributesXml);
+            foreach (var attribute in attributes)
             {
-                if (!ca.ShouldHaveValues())
+                if (!attribute.ShouldHaveValues())
                     continue;
 
-                var caValuesStr = ParseValues(attributesXml, ca.Id);
-                foreach (string caValueStr in caValuesStr)
+                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(caValueStr))
+                    if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int caValueId;
-                        if (int.TryParse(caValueStr, out caValueId))
+                        int id;
+                        if (int.TryParse(valueStr, out id))
                         {
-                            var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caValueId);
-                            if (caValue != null)
-                                caValues.Add(caValue);
+                            var value = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
+                            if (value != null)
+                                values.Add(value);
                         }
                     }
                 }
             }
-            return caValues;
+            return values;
         }
 
         /// <summary>
@@ -235,14 +235,10 @@ namespace Nop.Services.Orders
             {
                 //find attribute IDs to remove
                 var checkoutAttributeIdsToRemove = new List<int>();
-                var caCollection = ParseCheckoutAttributes(attributesXml);
-                for (int i = 0; i < caCollection.Count; i++)
-                {
-                    var ca = caCollection[i];
+                var attributes = ParseCheckoutAttributes(attributesXml);
+                foreach (var ca in attributes)
                     if (ca.ShippableProductRequired)
                         checkoutAttributeIdsToRemove.Add(ca.Id);
-                }
-
                 //remove them from XML
                 try
                 {

@@ -3944,10 +3944,10 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                            foreach (var selectedAttributeId in pvaValues
-                                .Where(pvav => pvav.IsPreSelected)
-                                .Select(pvav => pvav.Id)
+                            var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                            foreach (var selectedAttributeId in attributeValues
+                                .Where(v => v.IsPreSelected)
+                                .Select(v => v.Id)
                                 .ToList())
                             {
                                 attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,

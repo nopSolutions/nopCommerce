@@ -472,12 +472,12 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var pva1Collection = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
-            foreach (var pva1 in pva1Collection)
+            var attributes1 = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
+            foreach (var attribute in attributes1)
             {
-                if (pva1.Product != null)
+                if (attribute.Product != null)
                 {
-                    if (pva1.Product.Id != product.Id)
+                    if (attribute.Product.Id != product.Id)
                     {
                         warnings.Add("Attribute error");
                     }
@@ -490,18 +490,18 @@ namespace Nop.Services.Orders
             }
 
             //validate required product attributes (whether they're chosen/selected/entered)
-            var pva2Collection = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var pva2 in pva2Collection)
+            var attributes2 = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+            foreach (var a2 in attributes2)
             {
-                if (pva2.IsRequired)
+                if (a2.IsRequired)
                 {
                     bool found = false;
                     //selected product attributes
-                    foreach (var pva1 in pva1Collection)
+                    foreach (var a1 in attributes1)
                     {
-                        if (pva1.Id == pva2.Id)
+                        if (a1.Id == a2.Id)
                         {
-                            var pvaValuesStr = _productAttributeParser.ParseValues(attributesXml, pva1.Id);
+                            var pvaValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
                             foreach (string str1 in pvaValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
@@ -516,24 +516,24 @@ namespace Nop.Services.Orders
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = !string.IsNullOrEmpty(pva2.TextPrompt) ?
-                            pva2.TextPrompt : 
-                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), pva2.ProductAttribute.GetLocalized(a => a.Name));
+                        var notFoundWarning = !string.IsNullOrEmpty(a2.TextPrompt) ?
+                            a2.TextPrompt : 
+                            string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.ProductAttribute.GetLocalized(a => a.Name));
                         
                         warnings.Add(notFoundWarning);
                     }
                 }
 
-                if (pva2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
+                if (a2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                 {
                     //customers cannot edit read-only attributes
-                    var allowedReadOnlyValueIds = _productAttributeService.GetProductVariantAttributeValues(pva2.Id)
+                    var allowedReadOnlyValueIds = _productAttributeService.GetProductVariantAttributeValues(a2.Id)
                         .Where(x => x.IsPreSelected)
                         .Select(x => x.Id)
                         .ToArray();
 
                     var selectedReadOnlyValueIds = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml)
-                        .Where(x => x.ProductVariantAttributeId == pva2.Id)
+                        .Where(x => x.ProductVariantAttributeId == a2.Id)
                         .Select(x => x.Id)
                         .ToArray();
 
@@ -545,7 +545,7 @@ namespace Nop.Services.Orders
             }
 
             //validation rules
-            foreach (var pva in pva2Collection)
+            foreach (var pva in attributes2)
             {
                 if (!pva.ValidationRulesAllowed())
                     continue;
@@ -589,8 +589,8 @@ namespace Nop.Services.Orders
                 return warnings;
 
             //validate bundled products
-            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-            foreach (var pvaValue in pvaValues)
+            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var pvaValue in attributeValues)
             {
                 if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 {

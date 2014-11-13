@@ -85,29 +85,29 @@ namespace Nop.Services.Common
         /// <returns>Address attribute values</returns>
         public virtual IList<AddressAttributeValue> ParseAddressAttributeValues(string attributesXml)
         {
-            var caValues = new List<AddressAttributeValue>();
-            var caCollection = ParseAddressAttributes(attributesXml);
-            foreach (var ca in caCollection)
+            var values = new List<AddressAttributeValue>();
+            var attributes = ParseAddressAttributes(attributesXml);
+            foreach (var attribute in attributes)
             {
-                if (!ca.ShouldHaveValues())
+                if (!attribute.ShouldHaveValues())
                     continue;
 
-                var caValuesStr = ParseValues(attributesXml, ca.Id);
-                foreach (string caValueStr in caValuesStr)
+                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(caValueStr))
+                    if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int caValueId;
-                        if (int.TryParse(caValueStr, out caValueId))
+                        int id;
+                        if (int.TryParse(valueStr, out id))
                         {
-                            var caValue = _addressAttributeService.GetAddressAttributeValueById(caValueId);
-                            if (caValue != null)
-                                caValues.Add(caValue);
+                            var value = _addressAttributeService.GetAddressAttributeValueById(id);
+                            if (value != null)
+                                values.Add(value);
                         }
                     }
                 }
             }
-            return caValues;
+            return values;
         }
 
         /// <summary>
@@ -231,22 +231,22 @@ namespace Nop.Services.Common
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var cva1Collection = ParseAddressAttributes(attributesXml);
+            var attributes1 = ParseAddressAttributes(attributesXml);
 
             //validate required address attributes (whether they're chosen/selected/entered)
-            var cva2Collection = _addressAttributeService.GetAllAddressAttributes();
-            foreach (var cva2 in cva2Collection)
+            var attributes2 = _addressAttributeService.GetAllAddressAttributes();
+            foreach (var a2 in attributes2)
             {
-                if (cva2.IsRequired)
+                if (a2.IsRequired)
                 {
                     bool found = false;
                     //selected address attributes
-                    foreach (var cva1 in cva1Collection)
+                    foreach (var a1 in attributes1)
                     {
-                        if (cva1.Id == cva2.Id)
+                        if (a1.Id == a2.Id)
                         {
-                            var cvaValuesStr = ParseValues(attributesXml, cva1.Id);
-                            foreach (string str1 in cvaValuesStr)
+                            var valuesStr = ParseValues(attributesXml, a1.Id);
+                            foreach (string str1 in valuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
                                 {
@@ -260,7 +260,7 @@ namespace Nop.Services.Common
                     //if not found
                     if (!found)
                     {
-                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), cva2.GetLocalized(a => a.Name));
+                        var notFoundWarning = string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name));
 
                         warnings.Add(notFoundWarning);
                     }

@@ -92,29 +92,29 @@ namespace Nop.Services.Catalog
         /// <returns>Product variant attribute values</returns>
         public virtual IList<ProductVariantAttributeValue> ParseProductVariantAttributeValues(string attributesXml)
         {
-            var pvaValues = new List<ProductVariantAttributeValue>();
-            var pvaCollection = ParseProductVariantAttributes(attributesXml);
-            foreach (var pva in pvaCollection)
+            var values = new List<ProductVariantAttributeValue>();
+            var attributes = ParseProductVariantAttributes(attributesXml);
+            foreach (var attribute in attributes)
             {
-                if (!pva.ShouldHaveValues())
+                if (!attribute.ShouldHaveValues())
                     continue;
 
-                var pvaValuesStr = ParseValues(attributesXml, pva.Id);
-                foreach (string pvaValueStr in pvaValuesStr)
+                var valuesStr = ParseValues(attributesXml, attribute.Id);
+                foreach (string valueStr in valuesStr)
                 {
-                    if (!String.IsNullOrEmpty(pvaValueStr))
+                    if (!String.IsNullOrEmpty(valueStr))
                     {
-                        int pvaValueId;
-                        if (int.TryParse(pvaValueStr, out pvaValueId))
+                        int id;
+                        if (int.TryParse(valueStr, out id))
                         {
-                            var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaValueId);
-                            if (pvaValue != null)
-                                pvaValues.Add(pvaValue);
+                            var value = _productAttributeService.GetProductVariantAttributeValueById(id);
+                            if (value != null)
+                                values.Add(value);
                         }
                     }
                 }
             }
-            return pvaValues;
+            return values;
         }
 
         /// <summary>
@@ -239,24 +239,24 @@ namespace Nop.Services.Catalog
             bool attributesEqual = true;
             if (ParseProductVariantAttributeIds(attributesXml1).Count == ParseProductVariantAttributeIds(attributesXml2).Count)
             {
-                var pva1Collection = ParseProductVariantAttributes(attributesXml1);
-                var pva2Collection = ParseProductVariantAttributes(attributesXml2);
-                foreach (var pva1 in pva1Collection)
+                var attributes1 = ParseProductVariantAttributes(attributesXml1);
+                var attributes2 = ParseProductVariantAttributes(attributesXml2);
+                foreach (var a1 in attributes1)
                 {
                     bool hasAttribute = false;
-                    foreach (var pva2 in pva2Collection)
+                    foreach (var a2 in attributes2)
                     {
-                        if (pva1.Id == pva2.Id)
+                        if (a1.Id == a2.Id)
                         {
                             hasAttribute = true;
-                            var pvaValues1Str = ParseValues(attributesXml1, pva1.Id);
-                            var pvaValues2Str = ParseValues(attributesXml2, pva2.Id);
-                            if (pvaValues1Str.Count == pvaValues2Str.Count)
+                            var values1Str = ParseValues(attributesXml1, a1.Id);
+                            var values2Str = ParseValues(attributesXml2, a2.Id);
+                            if (values1Str.Count == values2Str.Count)
                             {
-                                foreach (string str1 in pvaValues1Str)
+                                foreach (string str1 in values1Str)
                                 {
                                     bool hasValue = false;
-                                    foreach (string str2 in pvaValues2Str)
+                                    foreach (string str2 in values2Str)
                                     {
                                         //case insensitive? 
                                         //if (str1.Trim().ToLower() == str2.Trim().ToLower())
