@@ -202,7 +202,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new PluginListModel();
+            //load modes
             model.AvailableLoadModes = LoadPluginsMode.All.ToSelectList(false).ToList();
+            //groups
+            model.AvailableGroups.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "" });
+            foreach (var g in _pluginFinder.GetPluginGroups())
+                model.AvailableGroups.Add(new SelectListItem { Text = g, Value = g });
             return View(model);
         }
 
@@ -213,7 +218,7 @@ namespace Nop.Admin.Controllers
 	            return AccessDeniedView();
 
 	        var loadMode = (LoadPluginsMode) model.SearchLoadModeId;
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode).ToList();
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(loadMode, 0, model.SearchGroup).ToList();
 	        var gridModel = new DataSourceResult
             {
                 Data = pluginDescriptors.Select(x => PreparePluginModel(x, false, false))

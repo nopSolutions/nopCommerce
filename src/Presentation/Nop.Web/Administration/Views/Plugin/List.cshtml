@@ -48,6 +48,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchGroup):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchGroup", Model.AvailableGroups)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-plugins" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -163,7 +171,8 @@
 
                     function additionalData() {
                         return {
-                            SearchLoadModeId: $('#SearchLoadModeId').val()
+                            SearchLoadModeId: $('#SearchLoadModeId').val(),
+                            SearchGroup: $('#SearchGroup').val()
                         };
                     }
 

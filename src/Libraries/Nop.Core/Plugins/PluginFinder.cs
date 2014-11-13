@@ -37,9 +37,9 @@ namespace Nop.Core.Plugins
         /// Check whether the plugin is available in a certain store
         /// </summary>
         /// <param name="pluginDescriptor">Plugin descriptor to check</param>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <returns>true - available; false - no</returns>
-        protected virtual bool CheckLoadModeStore(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
+        protected virtual bool CheckLoadMode(PluginDescriptor pluginDescriptor, LoadPluginsMode loadMode)
         {
             if (pluginDescriptor == null)
                 throw new ArgumentNullException("pluginDescriptor");
@@ -59,6 +59,23 @@ namespace Nop.Core.Plugins
                 default:
                     throw new Exception("Not supported LoadPluginsMode");
             }
+        }
+
+        /// <summary>
+        /// Check whether the plugin is in a certain group
+        /// </summary>
+        /// <param name="pluginDescriptor">Plugin descriptor to check</param>
+        /// <param name="group">Group</param>
+        /// <returns>true - available; false - no</returns>
+        protected virtual bool CheckGroup(PluginDescriptor pluginDescriptor, string group)
+        {
+            if (pluginDescriptor == null)
+                throw new ArgumentNullException("pluginDescriptor");
+
+            if (String.IsNullOrEmpty(group))
+                return true;
+
+            return group.Equals(pluginDescriptor.Group, StringComparison.InvariantCultureIgnoreCase);
         }
 
         #endregion
@@ -87,63 +104,75 @@ namespace Nop.Core.Plugins
         }
 
         /// <summary>
+        /// Gets plugin groups
+        /// </summary>
+        /// <returns>Plugins groups</returns>
+        public virtual IEnumerable<string> GetPluginGroups()
+        {
+            return GetPluginDescriptors(LoadPluginsMode.All).Select(x => x.Group).Distinct().OrderBy(x => x);
+        }
+
+        /// <summary>
         /// Gets plugins
         /// </summary>
         /// <typeparam name="T">The type of plugins to get.</typeparam>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugins</returns>
-        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0) where T : class, IPlugin
+        public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
+            int storeId = 0, string group = null) where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 
             foreach (var plugin in _plugins)
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
-                    if (CheckLoadModeStore(plugin, loadMode))
-                        if (AuthenticateStore(plugin, storeId))
+                    if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
                             yield return plugin.Instance<T>();
         }
 
         /// <summary>
         /// Get plugin descriptors
         /// </summary>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
-        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0)
+        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            int storeId = 0, string group = null)
         {
             EnsurePluginsAreLoaded();
 
             foreach (var plugin in _plugins)
-                if (CheckLoadModeStore(plugin, loadMode))
-                    if (AuthenticateStore(plugin, storeId))
-                        yield return plugin;
+                if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
+                    yield return plugin;
         }
 
         /// <summary>
         /// Get plugin descriptors
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
+        /// <param name="group">Filter by plugin group; pass null to load all records</param>
         /// <returns>Plugin descriptors</returns>
-        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, int storeId = 0) 
+        public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
+            int storeId = 0, string group = null) 
             where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 
             foreach (var plugin in _plugins)
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
-                    if (CheckLoadModeStore(plugin, loadMode))
-                        if (AuthenticateStore(plugin, storeId))
-                            yield return plugin;
+                    if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
+                        yield return plugin;
         }
 
         /// <summary>
         /// Get a plugin descriptor by its system name
         /// </summary>
         /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <returns>>Plugin descriptor</returns>
         public virtual PluginDescriptor GetPluginDescriptorBySystemName(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
         {
@@ -156,7 +185,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         /// <typeparam name="T">The type of plugin to get.</typeparam>
         /// <param name="systemName">Plugin system name</param>
-        /// <param name="loadMode">Load plugins  mode</param>
+        /// <param name="loadMode">Load plugins mode</param>
         /// <returns>>Plugin descriptor</returns>
         public virtual PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly)
             where T : class, IPlugin

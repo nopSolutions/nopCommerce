@@ -524,6 +524,12 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.NotInstalledOnly">
     <Value>Not installed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Group">
+    <Value>Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Group.Hint ">
+    <Value>Search by a group.</Value>
+  </LocaleResource>
 </Language>
 '
 

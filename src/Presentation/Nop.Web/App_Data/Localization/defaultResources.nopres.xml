@@ -4065,6 +4065,12 @@
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Version">
     <Value>Version</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Group">
+    <Value>Group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Group.Hint ">
+    <Value>Search by a group.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.Info">
     <Value>Plugin Info</Value>
   </LocaleResource>
