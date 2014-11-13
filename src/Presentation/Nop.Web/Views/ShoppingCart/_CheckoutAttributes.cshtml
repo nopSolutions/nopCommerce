@@ -26,10 +26,10 @@
                             {
                                 <option value="0">---</option>
                             }
-                            @foreach (var caValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
-                                <option selected="@caValue.IsPreSelected" value="@caValue.Id">@caValue.Name
-                                    @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name
+                                    @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)
                                 </option>
                             }
                         </select>
@@ -38,11 +38,11 @@
                         case AttributeControlType.RadioList:
                             {
                         <ul class="option-list">
-                            @foreach (var caValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(caValue.Id)" type="radio" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
-                                    <label for="@(controlId)_@(caValue.Id)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
                         </ul>
@@ -52,11 +52,11 @@
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
                         <ul class="option-list">
-                            @foreach (var caValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(caValue.Id)" type="checkbox" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
-                                    <label for="@(controlId)_@(caValue.Id)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
                         </ul>
@@ -146,16 +146,16 @@
                         case AttributeControlType.ColorSquares:
                             {
                                 <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
-                                    @foreach (var caValue in attribute.Values)
+                                    @foreach (var attributeValue in attribute.Values)
                                     {
-                                        <li @(caValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                            <label for="@(controlId)_@(caValue.Id)">
-                                                <span class="color-container" title="@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)">
-                                                    <span class="color" style="background-color:@(caValue.ColorSquaresRgb);">&nbsp;</span>
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <span class="color-container" title="@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)">
+                                                    <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                                 </span>
-                                                <input id="@(controlId)_@(caValue.Id)" type="radio" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                                 @*uncomment below to display attribute value name*@
-                                                @*<span class="name">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</span>*@
+                                                @*<span class="name">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</span>*@
                                             </label>
                                         </li>
                                     }

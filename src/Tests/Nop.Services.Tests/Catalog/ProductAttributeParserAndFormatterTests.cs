@@ -222,12 +222,12 @@ namespace Nop.Services.Tests.Catalog
             //custom text
             attributes = _productAttributeParser.AddProductAttribute(attributes, pva3_1, "Some custom text goes here");
 
-            var parsed_pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributes);
-            parsed_pvaValues.Contains(pvav1_1).ShouldEqual(true);
-            parsed_pvaValues.Contains(pvav1_2).ShouldEqual(false);
-            parsed_pvaValues.Contains(pvav2_1).ShouldEqual(true);
-            parsed_pvaValues.Contains(pvav2_2).ShouldEqual(true);
-            parsed_pvaValues.Contains(pvav2_2).ShouldEqual(true);
+            var parsed_attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributes);
+            parsed_attributeValues.Contains(pvav1_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(pvav1_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(pvav2_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(pvav2_2).ShouldEqual(true);
+            parsed_attributeValues.Contains(pvav2_2).ShouldEqual(true);
 
             var parsedValues = _productAttributeParser.ParseValues(attributes, pva3_1.Id);
             parsedValues.Count.ShouldEqual(1);

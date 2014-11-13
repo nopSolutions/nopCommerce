@@ -149,10 +149,10 @@ namespace Nop.Services.Catalog
 
         
         /// <summary>
-        /// Get a price adjustment of a product variant attribute value
+        /// Get a price adjustment of a product attribute value
         /// </summary>
-        /// <param name="pvav">Product variant attribute value</param>
-        /// <returns>price adjustment</returns>
-        decimal GetProductVariantAttributeValuePriceAdjustment(ProductVariantAttributeValue pvav);
+        /// <param name="value">Product attribute value</param>
+        /// <returns>Price adjustment</returns>
+        decimal GetProductAttributeValuePriceAdjustment(ProductVariantAttributeValue value);
     }
 }

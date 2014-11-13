@@ -209,18 +209,18 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 }
 
                 //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
-                var caValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
-                foreach (var val in caValues)
+                var attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(postProcessPaymentRequest.Order.CheckoutAttributesXml);
+                foreach (var val in attributeValues)
                 {
                     var attPrice = _taxService.GetCheckoutAttributePrice(val, false, postProcessPaymentRequest.Order.Customer);
                     //round
                     var attPriceRounded = Math.Round(attPrice, 2);
                     if (attPrice > decimal.Zero) //if it has a price
                     {
-                        var ca = val.CheckoutAttribute;
-                        if (ca != null)
+                        var attribute = val.CheckoutAttribute;
+                        if (attribute != null)
                         {
-                            var attName = ca.Name; //set the name
+                            var attName = attribute.Name; //set the name
                             builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(attName)); //name
                             builder.AppendFormat("&amount_" + x + "={0}", attPriceRounded.ToString("0.00", CultureInfo.InvariantCulture)); //amount
                             builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity

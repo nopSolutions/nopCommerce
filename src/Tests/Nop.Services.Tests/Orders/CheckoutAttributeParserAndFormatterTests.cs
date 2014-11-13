@@ -178,12 +178,12 @@ namespace Nop.Services.Tests.Orders
             //custom text
             attributes = _checkoutAttributeParser.AddCheckoutAttribute(attributes, ca3, "Some custom text goes here");
 
-            var parsed_pvaValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
-            parsed_pvaValues.Contains(cav1_1).ShouldEqual(true);
-            parsed_pvaValues.Contains(cav1_2).ShouldEqual(false);
-            parsed_pvaValues.Contains(cav2_1).ShouldEqual(true);
-            parsed_pvaValues.Contains(cav2_2).ShouldEqual(true);
-            parsed_pvaValues.Contains(cav2_2).ShouldEqual(true);
+            var parsed_attributeValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(attributes);
+            parsed_attributeValues.Contains(cav1_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(cav1_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(cav2_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
+            parsed_attributeValues.Contains(cav2_2).ShouldEqual(true);
 
             var parsedValues = _checkoutAttributeParser.ParseValues(attributes, ca3.Id);
             parsedValues.Count.ShouldEqual(1);

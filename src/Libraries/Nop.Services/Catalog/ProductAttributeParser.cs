@@ -184,7 +184,7 @@ namespace Nop.Services.Catalog
                 }
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
-                XmlElement pvaElement = null;
+                XmlElement attributeElement = null;
                 //find existing
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductVariantAttribute");
                 foreach (XmlNode node1 in nodeList1)
@@ -197,7 +197,7 @@ namespace Nop.Services.Catalog
                         {
                             if (id == pva.Id)
                             {
-                                pvaElement = (XmlElement)node1;
+                                attributeElement = (XmlElement)node1;
                                 break;
                             }
                         }
@@ -205,19 +205,19 @@ namespace Nop.Services.Catalog
                 }
 
                 //create new one if not found
-                if (pvaElement == null)
+                if (attributeElement == null)
                 {
-                    pvaElement = xmlDoc.CreateElement("ProductVariantAttribute");
-                    pvaElement.SetAttribute("ID", pva.Id.ToString());
-                    rootElement.AppendChild(pvaElement);
+                    attributeElement = xmlDoc.CreateElement("ProductVariantAttribute");
+                    attributeElement.SetAttribute("ID", pva.Id.ToString());
+                    rootElement.AppendChild(attributeElement);
                 }
 
-                var pvavElement = xmlDoc.CreateElement("ProductVariantAttributeValue");
-                pvaElement.AppendChild(pvavElement);
+                var attributeValueElement = xmlDoc.CreateElement("ProductVariantAttributeValue");
+                attributeElement.AppendChild(attributeValueElement);
 
-                var pvavVElement = xmlDoc.CreateElement("Value");
-                pvavVElement.InnerText = value;
-                pvavElement.AppendChild(pvavVElement);
+                var attributeValueValueElement = xmlDoc.CreateElement("Value");
+                attributeValueValueElement.InnerText = value;
+                attributeValueElement.AppendChild(attributeValueValueElement);
 
                 result = xmlDoc.OuterXml;
             }
@@ -359,8 +359,8 @@ namespace Nop.Services.Catalog
                     if (!pva.ShouldHaveValues())
                         continue;
 
-                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(pva.Id);
-                    if (pvaValues.Count == 0)
+                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(pva.Id);
+                    if (attributeValues.Count == 0)
                         continue;
 
                     //checkboxes could have several values ticked
@@ -368,14 +368,14 @@ namespace Nop.Services.Catalog
                     if (pva.AttributeControlType == AttributeControlType.Checkboxes ||
                         pva.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                     {
-                        for (int counter = 0; counter < (1 << pvaValues.Count); ++counter)
+                        for (int counter = 0; counter < (1 << attributeValues.Count); ++counter)
                         {
                             var checkboxCombination = new List<ProductVariantAttributeValue>();
-                            for (int i = 0; i < pvaValues.Count; ++i)
+                            for (int i = 0; i < attributeValues.Count; ++i)
                             {
                                 if ((counter & (1 << i)) == 0)
                                 {
-                                    checkboxCombination.Add(pvaValues[i]);
+                                    checkboxCombination.Add(attributeValues[i]);
                                 }
                             }
 
@@ -406,9 +406,9 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //other attribute types (dropdownlist, radiobutton, color squares)
-                            foreach (var pvaValue in pvaValues)
+                            foreach (var attributeValue in attributeValues)
                             {
-                                var tmp1 = AddProductAttribute("", pva, pvaValue.Id.ToString());
+                                var tmp1 = AddProductAttribute("", pva, attributeValue.Id.ToString());
                                 attributesXml.Add(tmp1);
                             }
                         }
@@ -440,11 +440,11 @@ namespace Nop.Services.Catalog
                         else
                         {
                             //other attribute types (dropdownlist, radiobutton, color squares)
-                            foreach (var pvaValue in pvaValues)
+                            foreach (var attributeValue in attributeValues)
                             {
                                 foreach (var str1 in attributesXml)
                                 {
-                                    var tmp1 = AddProductAttribute(str1, pva, pvaValue.Id.ToString());
+                                    var tmp1 = AddProductAttribute(str1, pva, attributeValue.Id.ToString());
                                     attributesXmlTmp.Add(tmp1);
                                 }
                             }

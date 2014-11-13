@@ -349,7 +349,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new AddProductAttributeCombinationModel.ProductVariantAttributeModel
+                var attributeModel = new AddProductAttributeCombinationModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -362,20 +362,20 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                    foreach (var pvaValue in pvaValues)
+                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var pvaValueModel = new AddProductAttributeCombinationModel.ProductVariantAttributeValueModel
+                        var attributeValueModel = new AddProductAttributeCombinationModel.ProductVariantAttributeValueModel
                         {
-                            Id = pvaValue.Id,
-                            Name = pvaValue.Name,
-                            IsPreSelected = pvaValue.IsPreSelected
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
                         };
-                        pvaModel.Values.Add(pvaValueModel);
+                        attributeModel.Values.Add(attributeValueModel);
                     }
                 }
 
-                model.ProductVariantAttributes.Add(pvaModel);
+                model.ProductVariantAttributes.Add(attributeModel);
             }
         }
         
@@ -3070,7 +3070,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributesModel = productVariantAttributes
                 .Select(x =>
                 {
-                    var pvaModel = new ProductModel.ProductVariantAttributeModel
+                    var attributeModel = new ProductModel.ProductVariantAttributeModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3085,12 +3085,12 @@ namespace Nop.Admin.Controllers
 
                     if (x.ShouldHaveValues())
                     {
-                        pvaModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
-                        pvaModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
+                        attributeModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
+                        attributeModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
                     }
-                    
-                    pvaModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
-                    return pvaModel;
+
+                    attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
+                    return attributeModel;
                 })
                 .ToList();
 

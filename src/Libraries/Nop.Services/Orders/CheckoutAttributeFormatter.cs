@@ -143,16 +143,16 @@ namespace Nop.Services.Orders
                     }
                     else
                     {
-                        int caId;
-                        if (int.TryParse(valueStr, out caId))
+                        int attributeValueId;
+                        if (int.TryParse(valueStr, out attributeValueId))
                         {
-                            var caValue = _checkoutAttributeService.GetCheckoutAttributeValueById(caId);
-                            if (caValue != null)
+                            var attributeValue = _checkoutAttributeService.GetCheckoutAttributeValueById(attributeValueId);
+                            if (attributeValue != null)
                             {
-                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), caValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                formattedAttribute = string.Format("{0}: {1}", attribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                 if (renderPrices)
                                 {
-                                    decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue, customer);
+                                    decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue, customer);
                                     decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                     if (priceAdjustmentBase > 0)
                                     {

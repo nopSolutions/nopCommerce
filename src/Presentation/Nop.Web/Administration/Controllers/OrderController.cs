@@ -614,7 +614,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel
+                var attributeModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -627,20 +627,20 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                    foreach (var pvaValue in pvaValues)
+                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var pvaValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel
+                        var attributeValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel
                         {
-                            Id = pvaValue.Id,
-                            Name = pvaValue.Name,
-                            IsPreSelected = pvaValue.IsPreSelected
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
                         };
-                        pvaModel.Values.Add(pvaValueModel);
+                        attributeModel.Values.Add(attributeValueModel);
                     }
                 }
 
-                model.ProductVariantAttributes.Add(pvaModel);
+                model.ProductVariantAttributes.Add(attributeModel);
             }
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;

@@ -229,10 +229,10 @@ namespace Nop.Web.Controllers
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedCaValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                    foreach (var caValue in selectedCaValues)
+                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                    foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
-                                            if (caValue.Id == item.Id)
+                                            if (attributeValue.Id == item.Id)
                                                 item.IsPreSelected = true;
                                 }
                             }

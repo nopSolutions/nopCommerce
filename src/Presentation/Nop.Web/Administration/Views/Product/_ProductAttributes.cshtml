@@ -27,9 +27,9 @@
                             {
                                 <option value="0">---</option>
                             }
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
-                                <option selected="@pvaValue.IsPreSelected" value="@pvaValue.Id">@pvaValue.Name
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name
                                 </option>
                             }
                         </select>
@@ -39,11 +39,11 @@
                         case AttributeControlType.ColorSquares:
                             {
                         <ul class="option-list">
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
-                                    <label for="@(controlId)">@pvaValue.Name</label>
+                                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)">@attributeValue.Name</label>
                                 </li>
                             }
                         </ul>
@@ -53,11 +53,11 @@
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
                         <ul class="option-list">
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
-                                    <label for="@(controlId)">@pvaValue.Name</label>
+                                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                                    <label for="@(controlId)">@attributeValue.Name</label>
                                 </li>
                             }
                         </ul>

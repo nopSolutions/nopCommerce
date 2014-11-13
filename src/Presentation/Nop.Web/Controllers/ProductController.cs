@@ -584,7 +584,7 @@ namespace Nop.Web.Controllers
             }
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new ProductDetailsModel.ProductVariantAttributeModel
+                var attributeModel = new ProductDetailsModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
@@ -598,7 +598,7 @@ namespace Nop.Web.Controllers
                 };
                 if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
-                    pvaModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
@@ -606,40 +606,40 @@ namespace Nop.Web.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                    foreach (var pvaValue in pvaValues)
+                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var pvaValueModel = new ProductDetailsModel.ProductVariantAttributeValueModel
+                        var valueModel = new ProductDetailsModel.ProductVariantAttributeValueModel
                         {
-                            Id = pvaValue.Id,
-                            Name = pvaValue.GetLocalized(x => x.Name),
-                            ColorSquaresRgb = pvaValue.ColorSquaresRgb, //used with "Color squares" attribute type
-                            IsPreSelected = pvaValue.IsPreSelected
+                            Id = attributeValue.Id,
+                            Name = attributeValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = attributeValue.ColorSquaresRgb, //used with "Color squares" attribute type
+                            IsPreSelected = attributeValue.IsPreSelected
                         };
-                        pvaModel.Values.Add(pvaValueModel);
+                        attributeModel.Values.Add(valueModel);
 
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal taxRate;
-                            decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
-                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, out taxRate);
+                            decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                            decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, out taxRate);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                             if (priceAdjustmentBase > decimal.Zero)
-                                pvaValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
+                                valueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment, false, false);
                             else if (priceAdjustmentBase < decimal.Zero)
-                                pvaValueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
+                                valueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment, false, false);
 
-                            pvaValueModel.PriceAdjustmentValue = priceAdjustment;
+                            valueModel.PriceAdjustmentValue = priceAdjustment;
                         }
 
                         //picture
-                        var pvavPicture = _pictureService.GetPictureById(pvaValue.PictureId);
-                        if (pvavPicture != null)
+                        var valuePicture = _pictureService.GetPictureById(attributeValue.PictureId);
+                        if (valuePicture != null)
                         {
-                            pvaValueModel.PictureUrl = _pictureService.GetPictureUrl(pvavPicture, defaultPictureSize);
-                            pvaValueModel.FullSizePictureUrl = _pictureService.GetPictureUrl(pvavPicture);
-                            pvaValueModel.PictureId = pvavPicture.Id;
+                            valueModel.PictureUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize);
+                            valueModel.FullSizePictureUrl = _pictureService.GetPictureUrl(valuePicture);
+                            valueModel.PictureId = valuePicture.Id;
                         }
                     }
                 }
@@ -657,14 +657,14 @@ namespace Nop.Web.Controllers
                                 if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {
                                     //clear default selection
-                                    foreach (var item in pvaModel.Values)
+                                    foreach (var item in attributeModel.Values)
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedPvaValues = _productAttributeParser.ParseProductVariantAttributeValues(updatecartitem.AttributesXml);
-                                    foreach (var pvaValue in selectedPvaValues)
-                                        foreach (var item in pvaModel.Values)
-                                            if (pvaValue.Id == item.Id)
+                                    var selectedValues = _productAttributeParser.ParseProductVariantAttributeValues(updatecartitem.AttributesXml);
+                                    foreach (var attributeValue in selectedValues)
+                                        foreach (var item in attributeModel.Values)
+                                            if (attributeValue.Id == item.Id)
                                                 item.IsPreSelected = true;
                                 }
                             }
@@ -682,7 +682,7 @@ namespace Nop.Web.Controllers
                                 {
                                     var enteredText = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id);
                                     if (enteredText.Count > 0)
-                                        pvaModel.DefaultValue = enteredText[0];
+                                        attributeModel.DefaultValue = enteredText[0];
                                 }
                             }
                             break;
@@ -697,9 +697,9 @@ namespace Nop.Web.Controllers
                                                            DateTimeStyles.None, out selectedDate))
                                     {
                                         //successfully parsed
-                                        pvaModel.SelectedDay = selectedDate.Day;
-                                        pvaModel.SelectedMonth = selectedDate.Month;
-                                        pvaModel.SelectedYear = selectedDate.Year;
+                                        attributeModel.SelectedDay = selectedDate.Day;
+                                        attributeModel.SelectedMonth = selectedDate.Month;
+                                        attributeModel.SelectedYear = selectedDate.Year;
                                     }
                                 }
 
@@ -710,7 +710,7 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                model.ProductVariantAttributes.Add(pvaModel);
+                model.ProductVariantAttributes.Add(attributeModel);
             }
 
             #endregion 

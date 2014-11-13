@@ -524,12 +524,12 @@ namespace Nop.Services.Catalog
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-                if (pvaValues != null)
+                var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+                if (attributeValues != null)
                 {
-                    foreach (var pvaValue in pvaValues)
+                    foreach (var attributeValue in attributeValues)
                     {
-                        attributesTotalPrice += GetProductVariantAttributeValuePriceAdjustment(pvaValue);
+                        attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue);
                     }
                 }
 
@@ -657,23 +657,23 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             decimal cost = product.ProductCost;
-            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-            foreach (var pvaValue in pvaValues)
+            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var attributeValue in attributeValues)
             {
-                switch (pvaValue.AttributeValueType)
+                switch (attributeValue.AttributeValueType)
                 {
                     case AttributeValueType.Simple:
                         {
                             //simple attribute
-                            cost += pvaValue.Cost;
+                            cost += attributeValue.Cost;
                         }
                         break;
                     case AttributeValueType.AssociatedToProduct:
                         {
                             //bundled product
-                            var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
                             if (associatedProduct != null)
-                                cost += associatedProduct.ProductCost * pvaValue.Quantity;
+                                cost += associatedProduct.ProductCost * attributeValue.Quantity;
                         }
                         break;
                     default:
@@ -687,31 +687,31 @@ namespace Nop.Services.Catalog
 
 
         /// <summary>
-        /// Get a price adjustment of a product variant attribute value
+        /// Get a price adjustment of a product attribute value
         /// </summary>
-        /// <param name="pvav">Product variant attribute value</param>
-        /// <returns>price adjustment</returns>
-        public virtual decimal GetProductVariantAttributeValuePriceAdjustment(ProductVariantAttributeValue pvav)
+        /// <param name="value">Product attribute value</param>
+        /// <returns>Price adjustment</returns>
+        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductVariantAttributeValue value)
         {
-            if (pvav == null)
-                throw new ArgumentNullException("pvav");
+            if (value == null)
+                throw new ArgumentNullException("value");
 
             var adjustment = decimal.Zero;
-            switch (pvav.AttributeValueType)
+            switch (value.AttributeValueType)
             {
                 case AttributeValueType.Simple:
                     {
                         //simple attribute
-                        adjustment = pvav.PriceAdjustment;
+                        adjustment = value.PriceAdjustment;
                     }
                     break;
                 case AttributeValueType.AssociatedToProduct:
                     {
                         //bundled product
-                        var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
+                        var associatedProduct = _productService.GetProductById(value.AssociatedProductId);
                         if (associatedProduct != null)
                         {
-                            adjustment = GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, includeDiscounts: true) * pvav.Quantity;
+                            adjustment = GetFinalPrice(associatedProduct, _workContext.CurrentCustomer, includeDiscounts: true) * value.Quantity;
                         }
                     }
                     break;

@@ -1221,16 +1221,16 @@ namespace Nop.Services.Catalog
 
 
             //bundled products
-            var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-            foreach (var pvaValue in pvaValues)
+            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            foreach (var attributeValue in attributeValues)
             {
-                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 {
                     //associated product (bundle)
-                    var associatedProduct = GetProductById(pvaValue.AssociatedProductId);
+                    var associatedProduct = GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        AdjustInventory(associatedProduct, quantityToChange * pvaValue.Quantity);
+                        AdjustInventory(associatedProduct, quantityToChange * attributeValue.Quantity);
                     }
                 }
             }

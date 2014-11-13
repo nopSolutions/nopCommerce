@@ -305,7 +305,7 @@ namespace Nop.Admin.Controllers
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
             foreach (var attribute in customerAttributes)
             {
-                var caModel = new CustomerModel.CustomerAttributeModel
+                var attributeModel = new CustomerModel.CustomerAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.Name,
@@ -316,16 +316,16 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var caValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
-                    foreach (var caValue in caValues)
+                    var attributeValues = _customerAttributeService.GetCustomerAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var caValueModel = new CustomerModel.CustomerAttributeValueModel
+                        var attributeValueModel = new CustomerModel.CustomerAttributeValueModel
                         {
-                            Id = caValue.Id,
-                            Name = caValue.Name,
-                            IsPreSelected = caValue.IsPreSelected
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
                         };
-                        caModel.Values.Add(caValueModel);
+                        attributeModel.Values.Add(attributeValueModel);
                     }
                 }
 
@@ -343,14 +343,14 @@ namespace Nop.Admin.Controllers
                             if (!String.IsNullOrEmpty(selectedCustomerAttributes))
                             {
                                 //clear default selection
-                                foreach (var item in caModel.Values)
+                                foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedCaValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                foreach (var caValue in selectedCaValues)
-                                    foreach (var item in caModel.Values)
-                                        if (caValue.Id == item.Id)
+                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
                                             item.IsPreSelected = true;
                             }
                         }
@@ -368,7 +368,7 @@ namespace Nop.Admin.Controllers
                             {
                                 var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
                                 if (enteredText.Count > 0)
-                                    caModel.DefaultValue = enteredText[0];
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
                         }
                             break;
@@ -381,7 +381,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-                model.CustomerAttributes.Add(caModel);
+                model.CustomerAttributes.Add(attributeModel);
             }
         }
 

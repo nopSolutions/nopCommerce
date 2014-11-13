@@ -200,13 +200,13 @@ namespace Nop.Web.Controllers
                 Picture sciPicture = null;
 
                 //first, let's see whether a shopping cart item has some attribute values with custom pictures
-                var pvaValues = _productAttributeParser.ParseProductVariantAttributeValues(sci.AttributesXml);
-                foreach (var pvaValue in pvaValues)
+                var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(sci.AttributesXml);
+                foreach (var attributeValue in attributeValues)
                 {
-                    var pvavPicture = _pictureService.GetPictureById(pvaValue.PictureId);
-                    if (pvavPicture != null)
+                    var attributePicture = _pictureService.GetPictureById(attributeValue.PictureId);
+                    if (attributePicture != null)
                     {
-                        sciPicture = pvavPicture;
+                        sciPicture = attributePicture;
                         break;
                     }
                 }
@@ -300,7 +300,7 @@ namespace Nop.Web.Controllers
             var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !cart.RequiresShipping());
             foreach (var attribute in checkoutAttributes)
             {
-                var caModel = new ShoppingCartModel.CheckoutAttributeModel
+                var attributeModel = new ShoppingCartModel.CheckoutAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name),
@@ -311,7 +311,7 @@ namespace Nop.Web.Controllers
                 };
                 if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {
-                    caModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
+                    attributeModel.AllowedFileExtensions = attribute.ValidationFileAllowedExtensions
                         .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                         .ToList();
                 }
@@ -319,27 +319,27 @@ namespace Nop.Web.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var caValues = _checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id);
-                    foreach (var caValue in caValues)
+                    var attributeValues = _checkoutAttributeService.GetCheckoutAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var pvaValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
+                        var attributeValueModel = new ShoppingCartModel.CheckoutAttributeValueModel
                         {
-                            Id = caValue.Id,
-                            Name = caValue.GetLocalized(x => x.Name),
-                            ColorSquaresRgb = caValue.ColorSquaresRgb,
-                            IsPreSelected = caValue.IsPreSelected,
+                            Id = attributeValue.Id,
+                            Name = attributeValue.GetLocalized(x => x.Name),
+                            ColorSquaresRgb = attributeValue.ColorSquaresRgb,
+                            IsPreSelected = attributeValue.IsPreSelected,
                         };
-                        caModel.Values.Add(pvaValueModel);
+                        attributeModel.Values.Add(attributeValueModel);
 
                         //display price if allowed
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue);
+                            decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(attributeValue);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                             if (priceAdjustmentBase > decimal.Zero)
-                                pvaValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment);
+                                attributeValueModel.PriceAdjustment = "+" + _priceFormatter.FormatPrice(priceAdjustment);
                             else if (priceAdjustmentBase < decimal.Zero)
-                                pvaValueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment);
+                                attributeValueModel.PriceAdjustment = "-" + _priceFormatter.FormatPrice(-priceAdjustment);
                         }
                     }
                 }
@@ -358,14 +358,14 @@ namespace Nop.Web.Controllers
                             if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
                                 //clear default selection
-                                foreach (var item in caModel.Values)
+                                foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedCaValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
-                                foreach (var caValue in selectedCaValues)
-                                    foreach (var item in caModel.Values)
-                                        if (caValue.Id == item.Id)
+                                var selectedValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
                                             item.IsPreSelected = true;
                             }
                         }
@@ -383,7 +383,7 @@ namespace Nop.Web.Controllers
                             {
                                 var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
                                 if (enteredText.Count > 0)
-                                    caModel.DefaultValue = enteredText[0];
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
                         }
                         break;
@@ -398,9 +398,9 @@ namespace Nop.Web.Controllers
                                                        DateTimeStyles.None, out selectedDate))
                                 {
                                     //successfully parsed
-                                    caModel.SelectedDay = selectedDate.Day;
-                                    caModel.SelectedMonth = selectedDate.Month;
-                                    caModel.SelectedYear = selectedDate.Year;
+                                    attributeModel.SelectedDay = selectedDate.Day;
+                                    attributeModel.SelectedMonth = selectedDate.Month;
+                                    attributeModel.SelectedYear = selectedDate.Year;
                                 }
                             }
                             
@@ -410,7 +410,7 @@ namespace Nop.Web.Controllers
                         break;
                 }
 
-                model.CheckoutAttributes.Add(caModel);
+                model.CheckoutAttributes.Add(attributeModel);
             }
 
             #endregion 

@@ -161,16 +161,16 @@ namespace Nop.Services.Catalog
                             int pvaId;
                             if (int.TryParse(valueStr, out pvaId))
                             {
-                                var pvaValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
-                                if (pvaValue != null)
+                                var attributeValue = _productAttributeService.GetProductVariantAttributeValueById(pvaId);
+                                if (attributeValue != null)
                                 {
-                                    formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), pvaValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
+                                    formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));
                                     
                                     if (renderPrices)
                                     {
                                         decimal taxRate;
-                                        decimal pvaValuePriceAdjustment = _priceCalculationService.GetProductVariantAttributeValuePriceAdjustment(pvaValue);
-                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, pvaValuePriceAdjustment, customer, out taxRate);
+                                        decimal attributeValuePriceAdjustment = _priceCalculationService.GetProductAttributeValuePriceAdjustment(attributeValue);
+                                        decimal priceAdjustmentBase = _taxService.GetProductPrice(product, attributeValuePriceAdjustment, customer, out taxRate);
                                         decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
                                         if (priceAdjustmentBase > 0)
                                         {
@@ -185,14 +185,14 @@ namespace Nop.Services.Catalog
                                     }
 
                                     //display quantity
-                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity && 
-                                        pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                                    if (_shoppingCartSettings.RenderAssociatedAttributeValueQuantity &&
+                                        attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                                     {
                                         //render only when more than 1
-                                        if (pvaValue.Quantity > 1)
+                                        if (attributeValue.Quantity > 1)
                                         {
                                             //TODO localize resource
-                                            formattedAttribute += string.Format(" - qty {0}", pvaValue.Quantity);
+                                            formattedAttribute += string.Format(" - qty {0}", attributeValue.Quantity);
                                         }
                                     }
                                 }                               

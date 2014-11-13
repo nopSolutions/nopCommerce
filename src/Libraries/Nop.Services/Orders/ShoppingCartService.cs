@@ -501,8 +501,8 @@ namespace Nop.Services.Orders
                     {
                         if (a1.Id == a2.Id)
                         {
-                            var pvaValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
-                            foreach (string str1 in pvaValuesStr)
+                            var attributeValuesStr = _productAttributeParser.ParseValues(attributesXml, a1.Id);
+                            foreach (string str1 in attributeValuesStr)
                             {
                                 if (!String.IsNullOrEmpty(str1.Trim()))
                                 {
@@ -590,32 +590,32 @@ namespace Nop.Services.Orders
 
             //validate bundled products
             var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
-            foreach (var pvaValue in attributeValues)
+            foreach (var attributeValue in attributeValues)
             {
-                if (pvaValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 {
                     //associated product (bundle)
-                    var associatedProduct = _productService.GetProductById(pvaValue.AssociatedProductId);
+                    var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
                     {
-                        var totalQty = quantity*pvaValue.Quantity;
+                        var totalQty = quantity * attributeValue.Quantity;
                         var associatedProductWarnings = GetShoppingCartItemWarnings(customer,
                             shoppingCartType, associatedProduct, _storeContext.CurrentStore.Id,
                             "", decimal.Zero, null, null, totalQty, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
-                            var paName = pvaValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
-                            var pvavName = pvaValue.GetLocalized(a => a.Name);
+                            var attributeName = attributeValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
+                            var attributeValueName = attributeValue.GetLocalized(a => a.Name);
                             warnings.Add(
                                 string.Format(
-                                    _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), paName,
-                                    pvavName, associatedProductWarning));
+                                    _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), attributeName,
+                                    attributeValueName, associatedProductWarning));
                         }
                     }
                     else
                     {
                         warnings.Add(string.Format("Associated product cannot be loaded - {0}",
-                            pvaValue.AssociatedProductId));
+                            attributeValue.AssociatedProductId));
                     }
                 }
             }
@@ -822,22 +822,22 @@ namespace Nop.Services.Orders
             if (validateCheckoutAttributes)
             {
                 //selected attributes
-                var ca1Collection = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
+                var attributes1 = _checkoutAttributeParser.ParseCheckoutAttributes(checkoutAttributesXml);
 
                 //existing checkout attributes
-                var ca2Collection = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
-                foreach (var ca2 in ca2Collection)
+                var attributes2 = _checkoutAttributeService.GetAllCheckoutAttributes(_storeContext.CurrentStore.Id, !shoppingCart.RequiresShipping());
+                foreach (var a2 in attributes2)
                 {
-                    if (ca2.IsRequired)
+                    if (a2.IsRequired)
                     {
                         bool found = false;
                         //selected checkout attributes
-                        foreach (var ca1 in ca1Collection)
+                        foreach (var a1 in attributes1)
                         {
-                            if (ca1.Id == ca2.Id)
+                            if (a1.Id == a2.Id)
                             {
-                                var caValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, ca1.Id);
-                                foreach (string str1 in caValuesStr)
+                                var attributeValuesStr = _checkoutAttributeParser.ParseValues(checkoutAttributesXml, a1.Id);
+                                foreach (string str1 in attributeValuesStr)
                                     if (!String.IsNullOrEmpty(str1.Trim()))
                                     {
                                         found = true;
@@ -849,10 +849,10 @@ namespace Nop.Services.Orders
                         //if not found
                         if (!found)
                         {
-                            if (!string.IsNullOrEmpty(ca2.GetLocalized(a => a.TextPrompt)))
-                                warnings.Add(ca2.GetLocalized(a => a.TextPrompt));
+                            if (!string.IsNullOrEmpty(a2.GetLocalized(a => a.TextPrompt)))
+                                warnings.Add(a2.GetLocalized(a => a.TextPrompt));
                             else
-                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), ca2.GetLocalized(a => a.Name)));
+                                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.SelectAttribute"), a2.GetLocalized(a => a.Name)));
                         }
                     }
                 }
@@ -860,7 +860,7 @@ namespace Nop.Services.Orders
                 //now validation rules
 
                 //minimum length
-                foreach (var ca in ca2Collection)
+                foreach (var ca in attributes2)
                 {
                     if (ca.ValidationMinLength.HasValue)
                     {

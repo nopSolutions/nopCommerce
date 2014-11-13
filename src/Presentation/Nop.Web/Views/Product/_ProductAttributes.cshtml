@@ -38,10 +38,10 @@
                             {
                                 <option value="0">---</option>
                             }
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
-                                <option selected="@pvaValue.IsPreSelected" value="@pvaValue.Id">@pvaValue.Name
-                                    @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name
+                                    @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)
                                 </option>
                             }
                         </select>
@@ -50,11 +50,11 @@
                         case AttributeControlType.RadioList:
                             {
                         <ul class="option-list">
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
-                                    <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
                         </ul>
@@ -64,11 +64,11 @@
                         case AttributeControlType.ReadonlyCheckboxes:
                             {
                         <ul class="option-list">
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {                                    
                                 <li>
-                                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
-                                    <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                                    <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
                         </ul>
@@ -157,16 +157,16 @@
                         case AttributeControlType.ColorSquares:
                             {
                         <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
-                            @foreach (var pvaValue in attribute.Values)
+                            @foreach (var attributeValue in attribute.Values)
                             {
-                                <li @(pvaValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
-                                    <label for="@(controlId)_@(pvaValue.Id)">
-                                        <span class="color-container" title="@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)">
-                                            <span class="color" style="background-color:@(pvaValue.ColorSquaresRgb);">&nbsp;</span>
+                                <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                    <label for="@(controlId)_@(attributeValue.Id)">
+                                        <span class="color-container" title="@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)">
+                                            <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                         </span>
-                                        <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
+                                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                         @*uncomment below to display attribute value name*@
-                                        @*<span class="name">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</span>*@
+                                        @*<span class="name">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</span>*@
                                     </label>
                                 </li>
                             }
@@ -220,9 +220,9 @@
                             numberOfJsArrayItems++;
                         }
 
-                        foreach (var pvaValue in attribute.Values)
+                        foreach (var attributeValue in attribute.Values)
                         {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)attributeValue.PriceAdjustmentValue);
                             numberOfJsArrayItems++;
                         }
 
@@ -239,20 +239,20 @@
                 case AttributeControlType.RadioList:
                 case AttributeControlType.ColorSquares:
                     {
-                        foreach (var pvaValue in attribute.Values)
+                        foreach (var attributeValue in attribute.Values)
                         {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, attributeValue.Id, (float)attributeValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, priceAdjustmentFuncName);
                         }
                     }
                     break;
                 case AttributeControlType.Checkboxes:
                 case AttributeControlType.ReadonlyCheckboxes:
                     {
-                        foreach (var pvaValue in attribute.Values)
+                        foreach (var attributeValue in attribute.Values)
                         {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, pvaValue.Id, (float)pvaValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, pvaValue.Id, priceAdjustmentFuncName);
+                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, attributeValue.Id, (float)attributeValue.PriceAdjustmentValue);
+                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, priceAdjustmentFuncName);
                         }
                     }
                     break;
@@ -375,16 +375,16 @@
                             pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", "");
                             numberOfJsArrayItems++;
                         }
-                        foreach (var pvaValue in attribute.Values)
+                        foreach (var attributeValue in attribute.Values)
                         {
-                            var pictureUrl = pvaValue.PictureUrl;
+                            var pictureUrl = attributeValue.PictureUrl;
                             if (pictureSize == pictureDefaultSizePrefix)
                             {
-                                pictureUrl = pvaValue.PictureUrl;
+                                pictureUrl = attributeValue.PictureUrl;
                             }
                             else if (pictureSize == pictureFullSizePrefix)
                             {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
+                                pictureUrl = attributeValue.FullSizePictureUrl;
                             }
 
                             pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "'{0}',", pictureUrl);
@@ -404,21 +404,21 @@
             case AttributeControlType.RadioList:
             case AttributeControlType.ColorSquares:
                 {
-                    foreach (var pvaValue in attribute.Values)
+                    foreach (var attributeValue in attribute.Values)
                     {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
                         foreach (var pictureSize in pictureSizes)
                         {
-                            var pictureUrl = pvaValue.PictureUrl;
+                            var pictureUrl = attributeValue.PictureUrl;
                             if (pictureSize == pictureDefaultSizePrefix)
                             {
-                                pictureUrl = pvaValue.PictureUrl;
+                                pictureUrl = attributeValue.PictureUrl;
                             }
                             else if (pictureSize == pictureFullSizePrefix)
                             {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
+                                pictureUrl = attributeValue.FullSizePictureUrl;
                             }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, attributeValue.Id, pictureSize, pictureUrl);
                         }
                     }
                 }
@@ -426,21 +426,21 @@
             case AttributeControlType.Checkboxes:
             case AttributeControlType.ReadonlyCheckboxes:
                 {
-                    foreach (var pvaValue in attribute.Values)
+                    foreach (var attributeValue in attribute.Values)
                     {
-                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, pvaValue.Id, pictureAdjustmentFuncName, controlId, pvaValue.Id, attribute.ProductId);
+                        pictureAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}('{3}_{4}',{5});}});\n", controlId, attributeValue.Id, pictureAdjustmentFuncName, controlId, attributeValue.Id, attribute.ProductId);
                         foreach (var pictureSize in pictureSizes)
                         {
-                            var pictureUrl = pvaValue.PictureUrl;
+                            var pictureUrl = attributeValue.PictureUrl;
                             if (pictureSize == pictureDefaultSizePrefix)
                             {
-                                pictureUrl = pvaValue.PictureUrl;
+                                pictureUrl = attributeValue.PictureUrl;
                             }
                             else if (pictureSize == pictureFullSizePrefix)
                             {
-                                pictureUrl = pvaValue.FullSizePictureUrl;
+                                pictureUrl = attributeValue.FullSizePictureUrl;
                             }
-                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, pvaValue.Id, pictureSize, pictureUrl);
+                            pictureAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}_{3}'] = '{4}';\n", pictureAdjustmentTableName, controlId, attributeValue.Id, pictureSize, pictureUrl);
                         }
                     }
                 }

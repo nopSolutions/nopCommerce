@@ -177,7 +177,7 @@ namespace Nop.Services.Common
                 }
                 var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
 
-                XmlElement caElement = null;
+                XmlElement attributeElement = null;
                 //find existing
                 var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/AddressAttribute");
                 foreach (XmlNode node1 in nodeList1)
@@ -190,7 +190,7 @@ namespace Nop.Services.Common
                         {
                             if (id == attribute.Id)
                             {
-                                caElement = (XmlElement)node1;
+                                attributeElement = (XmlElement)node1;
                                 break;
                             }
                         }
@@ -198,19 +198,19 @@ namespace Nop.Services.Common
                 }
 
                 //create new one if not found
-                if (caElement == null)
+                if (attributeElement == null)
                 {
-                    caElement = xmlDoc.CreateElement("AddressAttribute");
-                    caElement.SetAttribute("ID", attribute.Id.ToString());
-                    rootElement.AppendChild(caElement);
+                    attributeElement = xmlDoc.CreateElement("AddressAttribute");
+                    attributeElement.SetAttribute("ID", attribute.Id.ToString());
+                    rootElement.AppendChild(attributeElement);
                 }
 
-                var cavElement = xmlDoc.CreateElement("AddressAttributeValue");
-                caElement.AppendChild(cavElement);
+                var attributeValueElement = xmlDoc.CreateElement("AddressAttributeValue");
+                attributeElement.AppendChild(attributeValueElement);
 
-                var cavVElement = xmlDoc.CreateElement("Value");
-                cavVElement.InnerText = value;
-                cavElement.AppendChild(cavVElement);
+                var attributeValueValueElement = xmlDoc.CreateElement("Value");
+                attributeValueValueElement.InnerText = value;
+                attributeValueElement.AppendChild(attributeValueValueElement);
 
                 result = xmlDoc.OuterXml;
             }

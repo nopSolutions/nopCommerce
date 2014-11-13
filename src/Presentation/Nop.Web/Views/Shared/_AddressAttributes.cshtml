@@ -17,9 +17,9 @@
                     {
                     <option value="0">---</option>
                     }
-                @foreach (var aaValue in attribute.Values)
+                @foreach (var attributeValue in attribute.Values)
                     {
-                    <option selected="@aaValue.IsPreSelected" value="@aaValue.Id">@aaValue.Name</option>
+                    <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name</option>
                     }
             </select>
             }
@@ -27,11 +27,11 @@
             case AttributeControlType.RadioList:
             {
             <ul class="option-list">
-                @foreach (var aaValue in attribute.Values)
+                @foreach (var attributeValue in attribute.Values)
                     {
                     <li>
-                        <input id="@(controlId)_@(aaValue.Id)" type="radio" name="@(controlId)" value="@aaValue.Id" checked="@aaValue.IsPreSelected" />
-                        <label for="@(controlId)_@(aaValue.Id)">@aaValue.Name</label>
+                        <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
                     </li>
                     }
             </ul>
@@ -41,11 +41,11 @@
             case AttributeControlType.ReadonlyCheckboxes:
             {
             <ul class="option-list">
-                @foreach (var aaValue in attribute.Values)
+                @foreach (var attributeValue in attribute.Values)
                     {
                     <li>
-                        <input id="@(controlId)_@(aaValue.Id)" type="checkbox" name="@(controlId)" value="@aaValue.Id" checked="@aaValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
-                        <label for="@(controlId)_@(aaValue.Id)">@aaValue.Name</label>
+                        <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? " disabled=\"disabled\"" : null) />
+                        <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name</label>
                     </li>
                     }
             </ul>

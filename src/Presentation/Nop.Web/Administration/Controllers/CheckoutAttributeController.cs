@@ -195,9 +195,9 @@ namespace Nop.Admin.Controllers
             {
                 Data = checkoutAttributes.Select(x =>
                 {
-                    var caModel = x.ToModel();
-                    caModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
-                    return caModel;
+                    var attributeModel = x.ToModel();
+                    attributeModel.AttributeControlTypeName = x.AttributeControlType.GetLocalizedEnum(_localizationService, _workContext);
+                    return attributeModel;
                 }),
                 Total = checkoutAttributes.Count()
             };

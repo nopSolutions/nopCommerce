@@ -588,7 +588,7 @@ namespace Nop.Admin.Extensions
             var attributes = addressAttributeService.GetAllAddressAttributes();
             foreach (var attribute in attributes)
             {
-                var aaModel = new AddressModel.AddressAttributeModel
+                var attributeModel = new AddressModel.AddressAttributeModel
                 {
                     Id = attribute.Id,
                     Name = attribute.Name,
@@ -599,16 +599,16 @@ namespace Nop.Admin.Extensions
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var aaValues = addressAttributeService.GetAddressAttributeValues(attribute.Id);
-                    foreach (var aaValue in aaValues)
+                    var attributeValues = addressAttributeService.GetAddressAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
                     {
-                        var aaValueModel = new AddressModel.AddressAttributeValueModel
+                        var attributeValueModel = new AddressModel.AddressAttributeValueModel
                         {
-                            Id = aaValue.Id,
-                            Name = aaValue.Name,
-                            IsPreSelected = aaValue.IsPreSelected
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
                         };
-                        aaModel.Values.Add(aaValueModel);
+                        attributeModel.Values.Add(attributeValueModel);
                     }
                 }
 
@@ -623,14 +623,14 @@ namespace Nop.Admin.Extensions
                             if (!String.IsNullOrEmpty(selectedAddressAttributes))
                             {
                                 //clear default selection
-                                foreach (var item in aaModel.Values)
+                                foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedAaValues = addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
-                                foreach (var aaValue in selectedAaValues)
-                                    foreach (var item in aaModel.Values)
-                                        if (aaValue.Id == item.Id)
+                                var selectedValues = addressAttributeParser.ParseAddressAttributeValues(selectedAddressAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
                                             item.IsPreSelected = true;
                             }
                         }
@@ -648,7 +648,7 @@ namespace Nop.Admin.Extensions
                             {
                                 var enteredText = addressAttributeParser.ParseValues(selectedAddressAttributes, attribute.Id);
                                 if (enteredText.Count > 0)
-                                    aaModel.DefaultValue = enteredText[0];
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
                         }
                         break;
@@ -660,7 +660,7 @@ namespace Nop.Admin.Extensions
                         break;
                 }
 
-                model.CustomAddressAttributes.Add(aaModel);
+                model.CustomAddressAttributes.Add(attributeModel);
             }
         }
 

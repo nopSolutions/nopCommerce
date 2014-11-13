@@ -406,12 +406,12 @@ namespace Nop.Services.Catalog
                 var productVariantAttributeValues = _productAttributeService.GetProductVariantAttributeValues(productVariantAttribute.Id);
                 foreach (var productVariantAttributeValue in productVariantAttributeValues)
                 {
-                    int pvavPictureId = 0;
+                    int attributeValuePictureId = 0;
                     if (originalNewPictureIdentifiers.ContainsKey(productVariantAttributeValue.PictureId))
                     {
-                        pvavPictureId = originalNewPictureIdentifiers[productVariantAttributeValue.PictureId];
+                        attributeValuePictureId = originalNewPictureIdentifiers[productVariantAttributeValue.PictureId];
                     }
-                    var pvavCopy = new ProductVariantAttributeValue
+                    var attributeValueCopy = new ProductVariantAttributeValue
                     {
                         ProductVariantAttributeId = productVariantAttributeCopy.Id,
                         AttributeValueTypeId = productVariantAttributeValue.AttributeValueTypeId,
@@ -424,19 +424,19 @@ namespace Nop.Services.Catalog
                         Quantity = productVariantAttributeValue.Quantity,
                         IsPreSelected = productVariantAttributeValue.IsPreSelected,
                         DisplayOrder = productVariantAttributeValue.DisplayOrder,
-                        PictureId = pvavPictureId,
+                        PictureId = attributeValuePictureId,
                     };
-                    _productAttributeService.InsertProductVariantAttributeValue(pvavCopy);
+                    _productAttributeService.InsertProductVariantAttributeValue(attributeValueCopy);
 
                     //save associated value (used for combinations copying)
-                    associatedAttributeValues.Add(productVariantAttributeValue.Id, pvavCopy.Id);
+                    associatedAttributeValues.Add(productVariantAttributeValue.Id, attributeValueCopy.Id);
 
                     //localization
                     foreach (var lang in languages)
                     {
                         var name = productVariantAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
                         if (!String.IsNullOrEmpty(name))
-                            _localizedEntityService.SaveLocalizedValue(pvavCopy, x => x.Name, name, lang.Id);
+                            _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
                     }
                 }
             }
@@ -446,29 +446,27 @@ namespace Nop.Services.Catalog
                 //generate new AttributesXml according to new value IDs
                 string newAttributesXml = "";
                 var parsedProductVariantAttributes = _productAttributeParser.ParseProductVariantAttributes(combination.AttributesXml);
-                foreach (var oldPva in parsedProductVariantAttributes)
+                foreach (var oldAttribute in parsedProductVariantAttributes)
                 {
-                    if (associatedAttributes.ContainsKey(oldPva.Id))
+                    if (associatedAttributes.ContainsKey(oldAttribute.Id))
                     {
-                        int newPvaId = associatedAttributes[oldPva.Id];
-                        var newPva = _productAttributeService.GetProductVariantAttributeById(newPvaId);
-                        if (newPva != null)
+                        var newAttribute = _productAttributeService.GetProductVariantAttributeById(associatedAttributes[oldAttribute.Id]);
+                        if (newAttribute != null)
                         {
-                            var oldPvaValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldPva.Id);
-                            foreach (var oldPvaValueStr in oldPvaValuesStr)
+                            var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
+                            foreach (var oldAttributeValueStr in oldAttributeValuesStr)
                             {
-                                if (newPva.ShouldHaveValues())
+                                if (newAttribute.ShouldHaveValues())
                                 {
                                     //attribute values
-                                    int oldPvaValue = int.Parse(oldPvaValueStr);
-                                    if (associatedAttributeValues.ContainsKey(oldPvaValue))
+                                    int oldAttributeValue = int.Parse(oldAttributeValueStr);
+                                    if (associatedAttributeValues.ContainsKey(oldAttributeValue))
                                     {
-                                        int newPvavId = associatedAttributeValues[oldPvaValue];
-                                        var newPvav = _productAttributeService.GetProductVariantAttributeValueById(newPvavId);
-                                        if (newPvav != null)
+                                        var newAttributeValue = _productAttributeService.GetProductVariantAttributeValueById(associatedAttributeValues[oldAttributeValue]);
+                                        if (newAttributeValue != null)
                                         {
                                             newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                                newPva, newPvav.Id.ToString());
+                                                newAttribute, newAttributeValue.Id.ToString());
                                         }
                                     }
                                 }
@@ -476,7 +474,7 @@ namespace Nop.Services.Catalog
                                 {
                                     //just a text
                                     newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
-                                        newPva, oldPvaValueStr);
+                                        newAttribute, oldAttributeValueStr);
                                 }
                             }
                         }
