@@ -26,7 +26,7 @@ namespace Nop.Core.Plugins
             if (!_arePluginsLoaded)
             {
                 var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-                foundPlugins.Sort(); //sort
+                foundPlugins.Sort();
                 _plugins = foundPlugins.ToList();
 
                 _arePluginsLoaded = true;
@@ -123,12 +123,7 @@ namespace Nop.Core.Plugins
         public virtual IEnumerable<T> GetPlugins<T>(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly, 
             int storeId = 0, string group = null) where T : class, IPlugin
         {
-            EnsurePluginsAreLoaded();
-
-            foreach (var plugin in _plugins)
-                if (typeof(T).IsAssignableFrom(plugin.PluginType))
-                    if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
-                            yield return plugin.Instance<T>();
+            return GetPluginDescriptors<T>(loadMode, storeId, group).Select(p => p.Instance<T>());
         }
 
         /// <summary>
@@ -141,11 +136,10 @@ namespace Nop.Core.Plugins
         public virtual IEnumerable<PluginDescriptor> GetPluginDescriptors(LoadPluginsMode loadMode = LoadPluginsMode.InstalledOnly,
             int storeId = 0, string group = null)
         {
+            //ensure plugins are loaded
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins)
-                if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
-                    yield return plugin;
+            return _plugins.Where(p => CheckLoadMode(p, loadMode) && AuthenticateStore(p, storeId) && CheckGroup(p, group));
         }
 
         /// <summary>
@@ -160,12 +154,8 @@ namespace Nop.Core.Plugins
             int storeId = 0, string group = null) 
             where T : class, IPlugin
         {
-            EnsurePluginsAreLoaded();
-
-            foreach (var plugin in _plugins)
-                if (typeof(T).IsAssignableFrom(plugin.PluginType))
-                    if (CheckLoadMode(plugin, loadMode) && AuthenticateStore(plugin, storeId) && CheckGroup(plugin, group))
-                        yield return plugin;
+            return GetPluginDescriptors(loadMode, storeId, group)
+                .Where(p => typeof(T).IsAssignableFrom(p.PluginType));
         }
 
         /// <summary>
