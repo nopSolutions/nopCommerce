@@ -139,7 +139,7 @@
     <Compile Include="Catalog\SpecificationAttributeOptionPersistenceTests.cs" />
     <Compile Include="Catalog\SpecificationAttributePersistenceTests.cs" />
     <Compile Include="Catalog\ProductVariantAttributeValuePersistenceTests.cs" />
-    <Compile Include="Catalog\ProductVariantAttributeCombinationPersistenceTests.cs" />
+    <Compile Include="Catalog\ProductAttributeCombinationPersistenceTests.cs" />
     <Compile Include="Catalog\ProductVariantAttributePersistenceTests.cs" />
     <Compile Include="Catalog\ProductAttributePersistenceTests.cs" />
     <Compile Include="Catalog\ProductPicturePersistenceTests.cs" />

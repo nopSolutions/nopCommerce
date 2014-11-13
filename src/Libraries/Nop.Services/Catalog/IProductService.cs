@@ -186,10 +186,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock  attribute combinations</param>
+        /// <param name="combinations">Low stock attribute combinations</param>
         void GetLowStockProducts(int vendorId,
             out IList<Product> products,
-            out IList<ProductVariantAttributeCombination> combinations);
+            out IList<ProductAttributeCombination> combinations);
 
         /// <summary>
         /// Gets a product by SKU

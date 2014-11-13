@@ -515,7 +515,7 @@ namespace Nop.Services.Catalog
 
             decimal finalPrice;
 
-            var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
             if (combination != null && combination.OverriddenPrice.HasValue)
             {
                 finalPrice = combination.OverriddenPrice.Value;

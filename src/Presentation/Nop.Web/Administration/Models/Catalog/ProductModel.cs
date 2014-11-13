@@ -863,7 +863,7 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             public string Name { get; set; }
         }
-        public partial class ProductVariantAttributeCombinationModel : BaseNopEntityModel
+        public partial class ProductAttributeCombinationModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
 

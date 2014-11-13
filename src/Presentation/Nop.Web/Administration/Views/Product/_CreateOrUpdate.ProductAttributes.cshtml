@@ -290,17 +290,17 @@ else
                         type: "json",
                         transport: {
                             read: {
-                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationList", "Product", new { productId = Model.Id }))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new { productId = Model.Id }))",
                                 type: "POST",
                                 dataType: "json"
                             },
                             update: {
-                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationUpdate", "Product"))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
                                 type: "POST",
                                 dataType: "json"
                             },
                             destroy: {
-                                url: "@Html.Raw(Url.Action("ProductVariantAttributeCombinationDelete", "Product"))",
+                                url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
                                 type: "POST",
                                 dataType: "json"
                             }

@@ -155,7 +155,7 @@
     <Compile Include="Mapping\Catalog\SpecificationAttributeOptionMap.cs" />
     <Compile Include="Mapping\Catalog\SpecificationAttributeMap.cs" />
     <Compile Include="Mapping\Catalog\ProductVariantAttributeValueMap.cs" />
-    <Compile Include="Mapping\Catalog\ProductVariantAttributeCombinationMap.cs" />
+    <Compile Include="Mapping\Catalog\ProductAttributeCombinationMap.cs" />
     <Compile Include="Mapping\Catalog\ProductVariantAttributeMap.cs" />
     <Compile Include="Mapping\Media\PictureMap.cs" />
     <Compile Include="Mapping\Catalog\ProductPictureMap.cs" />

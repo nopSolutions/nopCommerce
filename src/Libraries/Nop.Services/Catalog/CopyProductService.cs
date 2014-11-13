@@ -441,7 +441,7 @@ namespace Nop.Services.Catalog
                 }
             }
             //attribute combinations
-            foreach (var combination in _productAttributeService.GetAllProductVariantAttributeCombinations(product.Id))
+            foreach (var combination in _productAttributeService.GetAllProductAttributeCombinations(product.Id))
             {
                 //generate new AttributesXml according to new value IDs
                 string newAttributesXml = "";
@@ -482,7 +482,7 @@ namespace Nop.Services.Catalog
                         }
                     }
                 }
-                var combinationCopy = new ProductVariantAttributeCombination
+                var combinationCopy = new ProductAttributeCombination
                 {
                     ProductId = productCopy.Id,
                     AttributesXml = newAttributesXml,
@@ -494,7 +494,7 @@ namespace Nop.Services.Catalog
                     OverriddenPrice = combination.OverriddenPrice,
                     NotifyAdminForQuantityBelow = combination.NotifyAdminForQuantityBelow
                 };
-                _productAttributeService.InsertProductVariantAttributeCombination(combinationCopy);
+                _productAttributeService.InsertProductAttributeCombination(combinationCopy);
             }
 
             //tier prices

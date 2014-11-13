@@ -296,19 +296,19 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Finds a product variant attribute combination by attributes stored in XML 
+        /// Finds a product attribute combination by attributes stored in XML 
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Found product variant attribute combination</returns>
-        public virtual ProductVariantAttributeCombination FindProductVariantAttributeCombination(Product product, 
+        /// <returns>Found product attribute combination</returns>
+        public virtual ProductAttributeCombination FindProductAttributeCombination(Product product, 
             string attributesXml)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             //existing combinations
-            var combinations = _productAttributeService.GetAllProductVariantAttributeCombinations(product.Id);
+            var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
             if (combinations.Count == 0)
                 return null;
 

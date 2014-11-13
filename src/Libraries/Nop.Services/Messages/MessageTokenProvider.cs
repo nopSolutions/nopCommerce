@@ -753,7 +753,7 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
-        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductVariantAttributeCombination combination,  int languageId)
+        public virtual void AddAttributeCombinationTokens(IList<Token> tokens, ProductAttributeCombination combination,  int languageId)
         {
             //attributes
             //we cannot inject IProductAttributeFormatter into constructor because it'll cause circular references.

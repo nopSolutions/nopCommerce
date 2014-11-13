@@ -392,7 +392,7 @@ namespace Nop.Services.Orders
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
                             var combination = product
-                                .ProductVariantAttributeCombinations
+                                .ProductAttributeCombinations
                                 .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
                             if (combination != null)
                             {

@@ -20,7 +20,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
         private ICollection<ProductTag> _productTags;
         private ICollection<ProductVariantAttribute> _productVariantAttributes;
-        private ICollection<ProductVariantAttributeCombination> _productVariantAttributeCombinations;
+        private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
         private ICollection<Discount> _appliedDiscounts;
         private ICollection<ProductWarehouseInventory> _productWarehouseInventory;
@@ -635,10 +635,10 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets the product attribute combinations
         /// </summary>
-        public virtual ICollection<ProductVariantAttributeCombination> ProductVariantAttributeCombinations
+        public virtual ICollection<ProductAttributeCombination> ProductAttributeCombinations
         {
-            get { return _productVariantAttributeCombinations ?? (_productVariantAttributeCombinations = new List<ProductVariantAttributeCombination>()); }
-            protected set { _productVariantAttributeCombinations = value; }
+            get { return _productAttributeCombinations ?? (_productAttributeCombinations = new List<ProductAttributeCombination>()); }
+            protected set { _productAttributeCombinations = value; }
         }
 
         /// <summary>

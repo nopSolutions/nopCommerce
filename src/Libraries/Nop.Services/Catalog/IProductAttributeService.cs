@@ -118,39 +118,39 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Product variant attribute combinations (ProductVariantAttributeCombination)
+        #region Product attribute combinations
 
         /// <summary>
-        /// Deletes a product variant attribute combination
+        /// Deletes a product attribute combination
         /// </summary>
-        /// <param name="combination">Product variant attribute combination</param>
-        void DeleteProductVariantAttributeCombination(ProductVariantAttributeCombination combination);
+        /// <param name="combination">Product attribute combination</param>
+        void DeleteProductAttributeCombination(ProductAttributeCombination combination);
 
         /// <summary>
-        /// Gets all product variant attribute combinations
+        /// Gets all product attribute combinations
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product variant attribute combination collection</returns>
-        IList<ProductVariantAttributeCombination> GetAllProductVariantAttributeCombinations(int productId);
+        /// <returns>Product attribute combination collection</returns>
+        IList<ProductAttributeCombination> GetAllProductAttributeCombinations(int productId);
 
         /// <summary>
-        /// Gets a product variant attribute combination
+        /// Gets a product attribute combination
         /// </summary>
-        /// <param name="productVariantAttributeCombinationId">Product variant attribute combination identifier</param>
-        /// <returns>Product variant attribute combination</returns>
-        ProductVariantAttributeCombination GetProductVariantAttributeCombinationById(int productVariantAttributeCombinationId);
+        /// <param name="productAttributeCombinationId">Product attribute combination identifier</param>
+        /// <returns>Product attribute combination</returns>
+        ProductAttributeCombination GetProductAttributeCombinationById(int productAttributeCombinationId);
 
         /// <summary>
-        /// Inserts a product variant attribute combination
+        /// Inserts a product attribute combination
         /// </summary>
-        /// <param name="combination">Product variant attribute combination</param>
-        void InsertProductVariantAttributeCombination(ProductVariantAttributeCombination combination);
+        /// <param name="combination">Product attribute combination</param>
+        void InsertProductAttributeCombination(ProductAttributeCombination combination);
 
         /// <summary>
-        /// Updates a product variant attribute combination
+        /// Updates a product attribute combination
         /// </summary>
-        /// <param name="combination">Product variant attribute combination</param>
-        void UpdateProductVariantAttributeCombination(ProductVariantAttributeCombination combination);
+        /// <param name="combination">Product attribute combination</param>
+        void UpdateProductAttributeCombination(ProductAttributeCombination combination);
 
         #endregion
     }

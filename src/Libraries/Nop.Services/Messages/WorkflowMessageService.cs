@@ -1255,7 +1255,7 @@ namespace Nop.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendQuantityBelowStoreOwnerNotification(ProductVariantAttributeCombination combination, int languageId)
+        public virtual int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId)
         {
             if (combination == null)
                 throw new ArgumentNullException("combination");

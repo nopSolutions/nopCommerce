@@ -1063,10 +1063,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="products">Low stock products</param>
-        /// <param name="combinations">Low stock  attribute combinations</param>
+        /// <param name="combinations">Low stock attribute combinations</param>
         public virtual void GetLowStockProducts(int vendorId,
             out IList<Product> products, 
-            out IList<ProductVariantAttributeCombination> combinations)
+            out IList<ProductAttributeCombination> combinations)
         {
             //Track inventory for product
             var query1 = from p in _productRepository.Table
@@ -1085,12 +1085,12 @@ namespace Nop.Services.Catalog
 
             //Track inventory for product by product attributes
             var query2 = from p in _productRepository.Table
-                         from pvac in p.ProductVariantAttributeCombinations
+                         from c in p.ProductAttributeCombinations
                          where !p.Deleted &&
                          p.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
-                         pvac.StockQuantity <= 0 &&
+                         c.StockQuantity <= 0 &&
                          (vendorId == 0 || p.VendorId == vendorId)
-                         select pvac;
+                         select c;
             combinations = query2.ToList();
         }
         
@@ -1205,11 +1205,11 @@ namespace Nop.Services.Catalog
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
-                var combination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+                var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
                 if (combination != null)
                 {
                     combination.StockQuantity += quantityToChange;
-                    _productAttributeService.UpdateProductVariantAttributeCombination(combination);
+                    _productAttributeService.UpdateProductAttributeCombination(combination);
 
                     //send email notification
                     if (quantityToChange < 0 && combination.StockQuantity < combination.NotifyAdminForQuantityBelow)

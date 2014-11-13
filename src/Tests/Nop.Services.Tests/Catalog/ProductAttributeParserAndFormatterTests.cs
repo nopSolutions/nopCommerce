@@ -24,7 +24,7 @@ namespace Nop.Services.Tests.Catalog
     {
         private IRepository<ProductAttribute> _productAttributeRepo;
         private IRepository<ProductVariantAttribute> _productVariantAttributeRepo;
-        private IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepo;
+        private IRepository<ProductAttributeCombination> _productAttributeCombinationRepo;
         private IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
@@ -155,8 +155,8 @@ namespace Nop.Services.Tests.Catalog
             _productVariantAttributeRepo.Expect(x => x.GetById(pva2_1.Id)).Return(pva2_1);
             _productVariantAttributeRepo.Expect(x => x.GetById(pva3_1.Id)).Return(pva3_1);
 
-            _productVariantAttributeCombinationRepo = MockRepository.GenerateMock<IRepository<ProductVariantAttributeCombination>>();
-            _productVariantAttributeCombinationRepo.Expect(x => x.Table).Return(new List<ProductVariantAttributeCombination>().AsQueryable());
+            _productAttributeCombinationRepo = MockRepository.GenerateMock<IRepository<ProductAttributeCombination>>();
+            _productAttributeCombinationRepo.Expect(x => x.Table).Return(new List<ProductAttributeCombination>().AsQueryable());
 
             _productVariantAttributeValueRepo = MockRepository.GenerateMock<IRepository<ProductVariantAttributeValue>>();
             _productVariantAttributeValueRepo.Expect(x => x.Table).Return(new List<ProductVariantAttributeValue> { pvav1_1, pvav1_2, pvav2_1, pvav2_2 }.AsQueryable());
@@ -173,7 +173,7 @@ namespace Nop.Services.Tests.Catalog
             _productAttributeService = new ProductAttributeService(cacheManager, 
                 _productAttributeRepo,
                 _productVariantAttributeRepo,
-                _productVariantAttributeCombinationRepo,
+                _productAttributeCombinationRepo,
                 _productVariantAttributeValueRepo,
                 _eventPublisher);
 

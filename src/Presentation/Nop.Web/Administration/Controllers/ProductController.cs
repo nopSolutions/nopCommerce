@@ -335,7 +335,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, Product product)
+        protected virtual void PrepareAddProductAttributeCombinationModel(AddProductAttributeCombinationModel model, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -349,7 +349,7 @@ namespace Nop.Admin.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel
+                var pvaModel = new AddProductAttributeCombinationModel.ProductVariantAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -365,7 +365,7 @@ namespace Nop.Admin.Controllers
                     var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
                     foreach (var pvaValue in pvaValues)
                     {
-                        var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel
+                        var pvaValueModel = new AddProductAttributeCombinationModel.ProductVariantAttributeValueModel
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.Name,
@@ -2734,7 +2734,7 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
 
             IList<Product> products;
-            IList<ProductVariantAttributeCombination> combinations;
+            IList<ProductAttributeCombination> combinations;
             _productService.GetLowStockProducts(vendorId, out products, out combinations);
 
             var models = new List<LowStockProductModel>();
@@ -3749,10 +3749,10 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Product variant attribute combinations
+        #region Product attribute combinations
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeCombinationList(DataSourceRequest command, int productId)
+        public ActionResult ProductAttributeCombinationList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3765,11 +3765,11 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var productVariantAttributeCombinations = _productAttributeService.GetAllProductVariantAttributeCombinations(productId);
-            var productVariantAttributesModel = productVariantAttributeCombinations
+            var combinations = _productAttributeService.GetAllProductAttributeCombinations(productId);
+            var combinationsModel = combinations
                 .Select(x =>
                 {
-                    var pvacModel = new ProductModel.ProductVariantAttributeCombinationModel
+                    var pacModel = new ProductModel.ProductAttributeCombinationModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3787,35 +3787,35 @@ namespace Nop.Admin.Controllers
                         ShoppingCartType.ShoppingCart, x.Product, 1, x.AttributesXml);
                     for (int i = 0; i < warnings.Count; i++)
                     {
-                        pvacModel.Warnings += warnings[i];
+                        pacModel.Warnings += warnings[i];
                         if (i != warnings.Count - 1)
-                            pvacModel.Warnings += "<br />";
+                            pacModel.Warnings += "<br />";
                     }
 
-                    return pvacModel;
+                    return pacModel;
                 })
                 .ToList();
 
             var gridModel = new DataSourceResult
             {
-                Data = productVariantAttributesModel,
-                Total = productVariantAttributesModel.Count
+                Data = combinationsModel,
+                Total = combinationsModel.Count
             };
 
             return Json(gridModel);
         }
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeCombinationUpdate(ProductModel.ProductVariantAttributeCombinationModel model)
+        public ActionResult ProductAttributeCombinationUpdate(ProductModel.ProductAttributeCombinationModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(model.Id);
-            if (pvac == null)
-                throw new ArgumentException("No product variant attribute combination found with the specified id");
+            var combination = _productAttributeService.GetProductAttributeCombinationById(model.Id);
+            if (combination == null)
+                throw new ArgumentException("No product attribute combination found with the specified id");
 
-            var product = _productService.GetProductById(pvac.ProductId);
+            var product = _productService.GetProductById(combination.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3823,29 +3823,29 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            pvac.StockQuantity = model.StockQuantity;
-            pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
-            pvac.Sku = model.Sku;
-            pvac.ManufacturerPartNumber = model.ManufacturerPartNumber;
-            pvac.Gtin = model.Gtin;
-            pvac.OverriddenPrice = model.OverriddenPrice;
-            pvac.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
-            _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
+            combination.StockQuantity = model.StockQuantity;
+            combination.AllowOutOfStockOrders = model.AllowOutOfStockOrders;
+            combination.Sku = model.Sku;
+            combination.ManufacturerPartNumber = model.ManufacturerPartNumber;
+            combination.Gtin = model.Gtin;
+            combination.OverriddenPrice = model.OverriddenPrice;
+            combination.NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow;
+            _productAttributeService.UpdateProductAttributeCombination(combination);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeCombinationDelete(int id)
+        public ActionResult ProductAttributeCombinationDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvac = _productAttributeService.GetProductVariantAttributeCombinationById(id);
-            if (pvac == null)
-                throw new ArgumentException("No product variant attribute combination found with the specified id");
+            var combination = _productAttributeService.GetProductAttributeCombinationById(id);
+            if (combination == null)
+                throw new ArgumentException("No product attribute combination found with the specified id");
 
-            var product = _productService.GetProductById(pvac.ProductId);
+            var product = _productService.GetProductById(combination.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3853,7 +3853,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            _productAttributeService.DeleteProductVariantAttributeCombination(pvac);
+            _productAttributeService.DeleteProductAttributeCombination(combination);
 
             return new NullJsonResult();
         }
@@ -3875,7 +3875,7 @@ namespace Nop.Admin.Controllers
 
             ViewBag.btnId = btnId;
             ViewBag.formId = formId;
-            var model = new AddProductVariantAttributeCombinationModel();
+            var model = new AddProductAttributeCombinationModel();
             PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
@@ -3883,7 +3883,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
-            AddProductVariantAttributeCombinationModel model, FormCollection form)
+            AddProductAttributeCombinationModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -4036,7 +4036,7 @@ namespace Nop.Admin.Controllers
             if (warnings.Count == 0)
             {
                 //save combination
-                var combination = new ProductVariantAttributeCombination
+                var combination = new ProductAttributeCombination
                 {
                     ProductId = product.Id,
                     AttributesXml = attributes,
@@ -4048,7 +4048,7 @@ namespace Nop.Admin.Controllers
                     OverriddenPrice = model.OverriddenPrice,
                     NotifyAdminForQuantityBelow = model.NotifyAdminForQuantityBelow,
                 };
-                _productAttributeService.InsertProductVariantAttributeCombination(combination);
+                _productAttributeService.InsertProductAttributeCombination(combination);
 
                 ViewBag.RefreshPage = true;
                 return View(model);
@@ -4077,7 +4077,7 @@ namespace Nop.Admin.Controllers
             var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product);
             foreach (var attributesXml in allAttributesXml)
             {
-                var existingCombination = _productAttributeParser.FindProductVariantAttributeCombination(product, attributesXml);
+                var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
 
                 //already exists?
                 if (existingCombination != null)
@@ -4091,7 +4091,7 @@ namespace Nop.Admin.Controllers
                     continue;
 
                 //save combination
-                var combination = new ProductVariantAttributeCombination
+                var combination = new ProductAttributeCombination
                 {
                     ProductId = product.Id,
                     AttributesXml = attributesXml,
@@ -4103,7 +4103,7 @@ namespace Nop.Admin.Controllers
                     OverriddenPrice = null,
                     NotifyAdminForQuantityBelow = 1
                 };
-                _productAttributeService.InsertProductVariantAttributeCombination(combination);
+                _productAttributeService.InsertProductAttributeCombination(combination);
             }
             return Json(new { Success = true });
         }

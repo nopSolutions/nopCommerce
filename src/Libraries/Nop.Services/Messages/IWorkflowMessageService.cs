@@ -293,7 +293,7 @@ namespace Nop.Services.Messages
         /// <param name="combination">Attribute combination</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendQuantityBelowStoreOwnerNotification(ProductVariantAttributeCombination combination, int languageId);
+        int SendQuantityBelowStoreOwnerNotification(ProductAttributeCombination combination, int languageId);
 
         /// <summary>
         /// Sends a "new VAT sumitted" notification to a store owner

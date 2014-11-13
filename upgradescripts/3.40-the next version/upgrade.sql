@@ -1735,3 +1735,23 @@ BEGIN
 	EXEC ('ALTER TABLE [Order] DROP COLUMN [PurchaseOrderNumber]')
 END
 GO
+
+
+
+
+--rename ProductVariantAttributeCombination to ProductAttributeCombination
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ProductVariantAttributeCombination]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	EXEC sp_rename 'ProductVariantAttributeCombination', 'ProductAttributeCombination';
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM sys.objects
+           WHERE name = 'ProductVariantAttributeCombination_Product'
+           AND parent_object_id = Object_id('ProductAttributeCombination')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+BEGIN
+	EXEC sp_rename 'ProductVariantAttributeCombination_Product', 'ProductAttributeCombination_Product';
+END
+GO

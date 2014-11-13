@@ -318,7 +318,7 @@
     <Compile Include="Domain\Catalog\ProductPicture.cs" />
     <Compile Include="Domain\Catalog\ProductSpecificationAttribute.cs" />
     <Compile Include="Domain\Catalog\ProductVariantAttribute.cs" />
-    <Compile Include="Domain\Catalog\ProductVariantAttributeCombination.cs" />
+    <Compile Include="Domain\Catalog\ProductAttributeCombination.cs" />
     <Compile Include="Domain\Catalog\ProductVariantAttributeValue.cs" />
     <Compile Include="Domain\Catalog\RecurringProductCyclePeriod.cs" />
     <Compile Include="Domain\Catalog\RelatedProduct.cs" />

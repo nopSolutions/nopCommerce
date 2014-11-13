@@ -218,7 +218,7 @@ namespace Nop.Services.Catalog
 
                 //let's find appropriate record
                 var combination = product
-                    .ProductVariantAttributeCombinations
+                    .ProductAttributeCombinations
                     .FirstOrDefault(x => productAttributeParser.AreProductAttributesEqual(x.AttributesXml, selectedAttributes));
                 if (combination != null)
                 {
