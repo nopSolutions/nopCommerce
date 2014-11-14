@@ -148,13 +148,14 @@ namespace Nop.Services.Tax
             var basedOn = _taxSettings.TaxBasedOn;
             //new EU VAT rules starting January 1st 2015
             //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
-            if (DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc))
+            //EU VAT enabled?
+            if (_taxSettings.EuVatEnabled)
             {
-                //EU VAT enabled?
-                if (_taxSettings.EuVatEnabled)
+                //telecommunications, broadcasting and electronic services?
+                if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
                 {
-                    //telecommunications, broadcasting and electronic services?
-                    if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                    //January 1st 2015 passed?
+                    if (DateTime.UtcNow > new DateTime(2015, 1, 1, 0, 0, 0, DateTimeKind.Utc))
                     {
                         //Europe Union consumer?
                         if (IsEuConsumer(customer))
