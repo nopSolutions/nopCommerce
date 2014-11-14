@@ -13,6 +13,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
 using Nop.Services.Localization;
@@ -57,6 +58,10 @@ namespace Nop.Services.Tests.Orders
         private IEventPublisher _eventPublisher;
         private Store _store;
         private IProductService _productService;
+        private IGeoLookupService _geoLookupService;
+        private ICountryService _countryService;
+        private CustomerSettings _customerSettings;
+        private AddressSettings _addressSettings;
 
         [SetUp]
         public new void SetUp()
@@ -124,6 +129,11 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
+            _countryService = MockRepository.GenerateMock<ICountryService>();
+            _customerSettings = new CustomerSettings();
+            _addressSettings = new AddressSettings();
+
             //tax
             _taxSettings = new TaxSettings();
             _taxSettings.ShippingIsTaxable = true;
@@ -131,7 +141,8 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.DefaultTaxAddressId = 10;
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 

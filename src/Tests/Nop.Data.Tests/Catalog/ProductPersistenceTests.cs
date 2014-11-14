@@ -65,6 +65,7 @@ namespace Nop.Data.Tests.Catalog
                 DeliveryDateId = 5,
                 IsTaxExempt = true,
                 TaxCategoryId = 11,
+                IsTelecommunicationsOrBroadcastingOrElectronicServices = true,
                 ManageInventoryMethodId = 12,
                 UseMultipleWarehouses = true,
                 WarehouseId = 6,
@@ -163,6 +164,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.DeliveryDateId.ShouldEqual(5);
             fromDb.IsTaxExempt.ShouldEqual(true);
             fromDb.TaxCategoryId.ShouldEqual(11);
+            fromDb.IsTelecommunicationsOrBroadcastingOrElectronicServices.ShouldEqual(true);
             fromDb.ManageInventoryMethodId.ShouldEqual(12);
             fromDb.UseMultipleWarehouses.ShouldEqual(true);
             fromDb.WarehouseId.ShouldEqual(6);

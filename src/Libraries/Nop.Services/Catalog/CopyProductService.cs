@@ -177,6 +177,7 @@ namespace Nop.Services.Catalog
                 DeliveryDateId = product.DeliveryDateId,
                 IsTaxExempt = product.IsTaxExempt,
                 TaxCategoryId = product.TaxCategoryId,
+                IsTelecommunicationsOrBroadcastingOrElectronicServices = product.IsTelecommunicationsOrBroadcastingOrElectronicServices,
                 ManageInventoryMethod = product.ManageInventoryMethod,
                 UseMultipleWarehouses = product.UseMultipleWarehouses,
                 WarehouseId = product.WarehouseId,

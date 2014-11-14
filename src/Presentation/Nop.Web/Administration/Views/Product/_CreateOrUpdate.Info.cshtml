@@ -1038,6 +1038,15 @@
             @Html.ValidationMessageFor(model => model.TaxCategoryId)
         </td>
     </tr>
+    <tr id="pnlIsTelecommunicationsOrBroadcastingOrElectronicServices">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+            @Html.ValidationMessageFor(model => model.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+        </td>
+    </tr>
 </table>
 <table class="adminContent" id="group-inventory">
     <tr class="adminSeparator">

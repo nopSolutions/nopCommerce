@@ -2238,6 +2238,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsTaxExempt.Hint">
     <Value>Determines whether this product is tax exempt (tax will not be applied to this product at checkout).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices">
+    <Value>Telecommunications, broadcasting and electronic services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint ">
+    <Value>Check if it's telecommunications, broadcasting and electronic services. It's used fo tax caclulation in Europe Union.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.Length">
     <Value>Length</Value>
   </LocaleResource>

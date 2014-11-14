@@ -161,6 +161,7 @@ namespace Nop.Services.ExportImport
                     "DeliveryDateId",
                     "IsTaxExempt",
                     "TaxCategoryId",
+                    "IsTelecommunicationsOrBroadcastingOrElectronicServices",
                     "ManageInventoryMethodId",
                     "UseMultipleWarehouses",
                     "WarehouseId",
@@ -262,6 +263,7 @@ namespace Nop.Services.ExportImport
                     int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
                     bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
                     int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
+                    bool isTelecommunicationsOrBroadcastingOrElectronicServices = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTelecommunicationsOrBroadcastingOrElectronicServices")].Value);
                     int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
                     bool useMultipleWarehouses = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UseMultipleWarehouses")].Value);
                     int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
@@ -368,6 +370,7 @@ namespace Nop.Services.ExportImport
                     product.DeliveryDateId = deliveryDateId;
                     product.IsTaxExempt = isTaxExempt;
                     product.TaxCategoryId = taxCategoryId;
+                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices = isTelecommunicationsOrBroadcastingOrElectronicServices;
                     product.ManageInventoryMethodId = manageInventoryMethodId;
                     product.UseMultipleWarehouses = useMultipleWarehouses;
                     product.WarehouseId = warehouseId;

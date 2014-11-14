@@ -530,6 +530,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Group.Hint ">
     <Value>Search by a group.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices">
+    <Value>Telecommunications, broadcasting and electronic services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint ">
+    <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used fo tax caclulation in Europe Union.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1754,4 +1760,20 @@ IF EXISTS (SELECT 1
 BEGIN
 	EXEC sp_rename 'ProductVariantAttributeCombination_Product', 'ProductAttributeCombination_Product';
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='IsTelecommunicationsOrBroadcastingOrElectronicServices')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [IsTelecommunicationsOrBroadcastingOrElectronicServices] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [IsTelecommunicationsOrBroadcastingOrElectronicServices] = 0
+WHERE [IsTelecommunicationsOrBroadcastingOrElectronicServices] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [IsTelecommunicationsOrBroadcastingOrElectronicServices] bit NOT NULL
 GO

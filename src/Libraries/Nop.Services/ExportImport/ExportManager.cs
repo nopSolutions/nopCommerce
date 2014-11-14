@@ -276,6 +276,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("DeliveryDateId", null, product.DeliveryDateId.ToString());
                 xmlWriter.WriteElementString("IsTaxExempt", null, product.IsTaxExempt.ToString());
                 xmlWriter.WriteElementString("TaxCategoryId", null, product.TaxCategoryId.ToString());
+                xmlWriter.WriteElementString("IsTelecommunicationsOrBroadcastingOrElectronicServices", null, product.IsTelecommunicationsOrBroadcastingOrElectronicServices.ToString());
                 xmlWriter.WriteElementString("ManageInventoryMethodId", null, product.ManageInventoryMethodId.ToString());
                 xmlWriter.WriteElementString("UseMultipleWarehouses", null, product.UseMultipleWarehouses.ToString());
                 xmlWriter.WriteElementString("WarehouseId", null, product.WarehouseId.ToString());
@@ -545,6 +546,7 @@ namespace Nop.Services.ExportImport
                     "DeliveryDateId",
                     "IsTaxExempt",
                     "TaxCategoryId",
+                    "IsTelecommunicationsOrBroadcastingOrElectronicServices",
                     "ManageInventoryMethodId",
                     "UseMultipleWarehouses",
                     "WarehouseId",
@@ -735,6 +737,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.TaxCategoryId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.IsTelecommunicationsOrBroadcastingOrElectronicServices;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.ManageInventoryMethodId;

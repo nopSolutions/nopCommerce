@@ -10,6 +10,8 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
+using Nop.Core.Domain.Directory;
+using Nop.Services.Directory;
 
 namespace Nop.Services.Tax
 {
@@ -24,6 +26,10 @@ namespace Nop.Services.Tax
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IGeoLookupService _geoLookupService;
+        private readonly ICountryService _countryService;
+        private readonly CustomerSettings _customerSettings;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -36,20 +42,83 @@ namespace Nop.Services.Tax
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="geoLookupService">GEO lookup service</param>
+        /// <param name="countryService">Country service</param>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <param name="addressSettings">Address settings</param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             TaxSettings taxSettings,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IGeoLookupService geoLookupService,
+            ICountryService countryService,
+            CustomerSettings customerSettings,
+            AddressSettings addressSettings)
         {
-            _addressService = addressService;
-            _workContext = workContext;
-            _taxSettings = taxSettings;
-            _pluginFinder = pluginFinder;
+            this._addressService = addressService;
+            this._workContext = workContext;
+            this._taxSettings = taxSettings;
+            this._pluginFinder = pluginFinder;
+            this._geoLookupService = geoLookupService;
+            this._countryService = countryService;
+            this._customerSettings = customerSettings;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
 
         #region Utilities
+
+        /// <summary>
+        /// Get a value indicating whether a customer is consumer (a person, not a company) located in Europe Union
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <returns>Result</returns>
+        protected virtual bool IsEuConsumer(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            Country country = null;
+
+            //get country from billing address
+            if (_addressSettings.CountryEnabled && customer.BillingAddress != null)
+                country = customer.BillingAddress.Country;
+
+            //get country specified during registration?
+            if (country == null && _customerSettings.CountryEnabled)
+            {
+                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                country = _countryService.GetCountryById(countryId);
+            }
+
+            //get country by IP address
+            if (country == null)
+            {
+                var ipAddress = customer.LastIpAddress;
+                //ipAddress = _webHelper.GetCurrentIpAddress();
+                var countryIsoCode = _geoLookupService.LookupCountryIsoCode(ipAddress);
+                country = _countryService.GetCountryByTwoLetterIsoCode(countryIsoCode);
+            }
+
+            //we cannot detect country
+            if (country == null)
+                return false;
+
+            //outside EU
+            if (!country.SubjectToVat)
+                return false;
+
+            //company (business) or consumer?
+            var customerVatStatus = (VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
+            if (customerVatStatus == VatNumberStatus.Valid)
+                return false;
+
+            //TODO: use specified company name? (both address and registration one)
+
+            //consumer
+            return true;
+        }
 
         /// <summary>
         /// Create request for tax calculation
@@ -61,6 +130,9 @@ namespace Nop.Services.Tax
         protected virtual CalculateTaxRequest CreateCalculateTaxRequest(Product product, 
             int taxCategoryId, Customer customer)
         {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             var calculateTaxRequest = new CalculateTaxRequest();
             calculateTaxRequest.Customer = customer;
             if (taxCategoryId > 0)
@@ -74,21 +146,29 @@ namespace Nop.Services.Tax
             }
 
             var basedOn = _taxSettings.TaxBasedOn;
-
-            if (basedOn == TaxBasedOn.BillingAddress)
+            //new EU VAT rules starting January 1st 2015
+            //find more info at http://ec.europa.eu/taxation_customs/taxation/vat/how_vat_works/telecom/index_en.htm#new_rules
+            if (DateTime.UtcNow > new DateTime(2014, 1, 1, 0, 0, 0, DateTimeKind.Utc))
             {
-                if (customer == null || customer.BillingAddress == null)
+                //EU VAT enabled?
+                if (_taxSettings.EuVatEnabled)
                 {
-                    basedOn = TaxBasedOn.DefaultAddress;
+                    //telecommunications, broadcasting and electronic services?
+                    if (product != null && product.IsTelecommunicationsOrBroadcastingOrElectronicServices)
+                    {
+                        //Europe Union consumer?
+                        if (IsEuConsumer(customer))
+                        {
+                            //We must charge VAT in the EU country where the customer belongs (not where the business is based)
+                            basedOn = TaxBasedOn.BillingAddress;
+                        }
+                    }
                 }
             }
-            if (basedOn == TaxBasedOn.ShippingAddress)
-            {
-                if (customer == null || customer.ShippingAddress == null)
-                {
-                    basedOn = TaxBasedOn.DefaultAddress;
-                }
-            }
+            if (basedOn == TaxBasedOn.BillingAddress && customer.BillingAddress == null)
+                basedOn = TaxBasedOn.DefaultAddress;
+            if (basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
+                basedOn = TaxBasedOn.DefaultAddress;
 
             Address address = null;
 

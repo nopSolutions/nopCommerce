@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Tax;
 using Nop.Tests;
@@ -22,6 +23,10 @@ namespace Nop.Services.Tests.Tax
         private TaxSettings _taxSettings;
         private IEventPublisher _eventPublisher;
         private ITaxService _taxService;
+        private IGeoLookupService _geoLookupService;
+        private ICountryService _countryService;
+        private CustomerSettings _customerSettings;
+        private AddressSettings _addressSettings;
 
         [SetUp]
         public new void SetUp()
@@ -40,7 +45,14 @@ namespace Nop.Services.Tests.Tax
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
+            _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
+            _countryService = MockRepository.GenerateMock<ICountryService>();
+            _customerSettings = new CustomerSettings();
+            _addressSettings = new AddressSettings();
+
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService
+                , _customerSettings, _addressSettings);
         }
 
         [Test]

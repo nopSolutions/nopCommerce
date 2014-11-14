@@ -87,6 +87,11 @@ namespace Nop.Services.Tests.Orders
         private IVendorService _vendorService;
         private IPdfService _pdfService;
 
+        private IGeoLookupService _geoLookupService;
+        private ICountryService _countryService;
+        private CustomerSettings _customerSettings;
+        private AddressSettings _addressSettings;
+
         private Store _store;
 
         [SetUp]
@@ -152,7 +157,12 @@ namespace Nop.Services.Tests.Orders
             _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
             _giftCardService = MockRepository.GenerateMock<IGiftCardService>();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
-            
+
+            _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
+            _countryService = MockRepository.GenerateMock<ICountryService>();
+            _customerSettings = new CustomerSettings();
+            _addressSettings = new AddressSettings();
+
             //tax
             _taxSettings = new TaxSettings();
             _taxSettings.ShippingIsTaxable = true;
@@ -160,7 +170,8 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.DefaultTaxAddressId = 10;
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings,
+                pluginFinder, _geoLookupService, _countryService, _customerSettings, _addressSettings);
 
             _rewardPointsSettings = new RewardPointsSettings();
 

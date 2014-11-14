@@ -195,11 +195,13 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
+            if (String.IsNullOrEmpty(twoLetterIsoCode))
+                return null;
+
             var query = from c in _countryRepository.Table
                         where c.TwoLetterIsoCode == twoLetterIsoCode
                         select c;
             var country = query.FirstOrDefault();
-
             return country;
         }
 
@@ -210,6 +212,9 @@ namespace Nop.Services.Directory
         /// <returns>Country</returns>
         public virtual Country GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
+            if (String.IsNullOrEmpty(threeLetterIsoCode))
+                return null;
+
             var query = from c in _countryRepository.Table
                         where c.ThreeLetterIsoCode == threeLetterIsoCode
                         select c;
