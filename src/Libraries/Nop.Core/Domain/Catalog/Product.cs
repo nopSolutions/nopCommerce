@@ -19,7 +19,7 @@ namespace Nop.Core.Domain.Catalog
         private ICollection<ProductReview> _productReviews;
         private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
         private ICollection<ProductTag> _productTags;
-        private ICollection<ProductVariantAttribute> _productVariantAttributes;
+        private ICollection<ProductAttributeMapping> _productAttributeMappings;
         private ICollection<ProductAttributeCombination> _productAttributeCombinations;
         private ICollection<TierPrice> _tierPrices;
         private ICollection<Discount> _appliedDiscounts;
@@ -628,12 +628,12 @@ namespace Nop.Core.Domain.Catalog
         }
 
         /// <summary>
-        /// Gets or sets the product attributes
+        /// Gets or sets the product attribute mappings
         /// </summary>
-        public virtual ICollection<ProductVariantAttribute> ProductVariantAttributes
+        public virtual ICollection<ProductAttributeMapping> ProductAttributeMappings
         {
-            get { return _productVariantAttributes ?? (_productVariantAttributes = new List<ProductVariantAttribute>()); }
-            protected set { _productVariantAttributes = value; }
+            get { return _productAttributeMappings ?? (_productAttributeMappings = new List<ProductAttributeMapping>()); }
+            protected set { _productAttributeMappings = value; }
         }
 
         /// <summary>

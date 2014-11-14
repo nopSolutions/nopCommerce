@@ -75,8 +75,8 @@ namespace Nop.Web.Infrastructure.Cache
         //Product attributes
         IConsumer<EntityDeleted<ProductAttribute>>,
         //Product attributes
-        IConsumer<EntityInserted<ProductVariantAttribute>>,
-        IConsumer<EntityDeleted<ProductVariantAttribute>>,
+        IConsumer<EntityInserted<ProductAttributeMapping>>,
+        IConsumer<EntityDeleted<ProductAttributeMapping>>,
         //Topics
         IConsumer<EntityInserted<Topic>>,
         IConsumer<EntityUpdated<Topic>>,
@@ -888,11 +888,11 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
         //Product attributes
-        public void HandleEvent(EntityInserted<ProductVariantAttribute> eventMessage)
+        public void HandleEvent(EntityInserted<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }
-        public void HandleEvent(EntityDeleted<ProductVariantAttribute> eventMessage)
+        public void HandleEvent(EntityDeleted<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
         }

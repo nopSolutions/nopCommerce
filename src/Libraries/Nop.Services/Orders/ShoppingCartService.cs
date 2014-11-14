@@ -174,7 +174,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Validates required products (products which require other variant to be added to the cart)
+        /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
@@ -472,7 +472,7 @@ namespace Nop.Services.Orders
             var warnings = new List<string>();
 
             //ensure it's our attributes
-            var attributes1 = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
+            var attributes1 = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
             foreach (var attribute in attributes1)
             {
                 if (attribute.Product != null)
@@ -490,7 +490,7 @@ namespace Nop.Services.Orders
             }
 
             //validate required product attributes (whether they're chosen/selected/entered)
-            var attributes2 = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+            var attributes2 = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -527,13 +527,13 @@ namespace Nop.Services.Orders
                 if (a2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                 {
                     //customers cannot edit read-only attributes
-                    var allowedReadOnlyValueIds = _productAttributeService.GetProductVariantAttributeValues(a2.Id)
+                    var allowedReadOnlyValueIds = _productAttributeService.GetProductAttributeValues(a2.Id)
                         .Where(x => x.IsPreSelected)
                         .Select(x => x.Id)
                         .ToArray();
 
-                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml)
-                        .Where(x => x.ProductVariantAttributeId == a2.Id)
+                    var selectedReadOnlyValueIds = _productAttributeParser.ParseProductAttributeValues(attributesXml)
+                        .Where(x => x.ProductAttributeMappingId == a2.Id)
                         .Select(x => x.Id)
                         .ToArray();
 
@@ -545,41 +545,41 @@ namespace Nop.Services.Orders
             }
 
             //validation rules
-            foreach (var pva in attributes2)
+            foreach (var pam in attributes2)
             {
-                if (!pva.ValidationRulesAllowed())
+                if (!pam.ValidationRulesAllowed())
                     continue;
                 
                 //minimum length
-                if (pva.ValidationMinLength.HasValue)
+                if (pam.ValidationMinLength.HasValue)
                 {
-                    if (pva.AttributeControlType == AttributeControlType.TextBox ||
-                        pva.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    if (pam.AttributeControlType == AttributeControlType.TextBox ||
+                        pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pva.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-                        if (pva.ValidationMinLength.Value > enteredTextLength)
+                        if (pam.ValidationMinLength.Value > enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), pva.ProductAttribute.GetLocalized(a => a.Name), pva.ValidationMinLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMinimumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMinLength.Value));
                         }
                     }
                 }
 
                 //maximum length
-                if (pva.ValidationMaxLength.HasValue)
+                if (pam.ValidationMaxLength.HasValue)
                 {
-                    if (pva.AttributeControlType == AttributeControlType.TextBox ||
-                        pva.AttributeControlType == AttributeControlType.MultilineTextbox)
+                    if (pam.AttributeControlType == AttributeControlType.TextBox ||
+                        pam.AttributeControlType == AttributeControlType.MultilineTextbox)
                     {
-                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pva.Id);
+                        var valuesStr = _productAttributeParser.ParseValues(attributesXml, pam.Id);
                         var enteredText = valuesStr.FirstOrDefault();
                         int enteredTextLength = String.IsNullOrEmpty(enteredText) ? 0 : enteredText.Length;
 
-                        if (pva.ValidationMaxLength.Value < enteredTextLength)
+                        if (pam.ValidationMaxLength.Value < enteredTextLength)
                         {
-                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), pva.ProductAttribute.GetLocalized(a => a.Name), pva.ValidationMaxLength.Value));
+                            warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.TextboxMaximumLength"), pam.ProductAttribute.GetLocalized(a => a.Name), pam.ValidationMaxLength.Value));
                         }
                     }
                 }
@@ -589,7 +589,7 @@ namespace Nop.Services.Orders
                 return warnings;
 
             //validate bundled products
-            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
@@ -604,7 +604,7 @@ namespace Nop.Services.Orders
                             "", decimal.Zero, null, null, totalQty, false);
                         foreach (var associatedProductWarning in associatedProductWarnings)
                         {
-                            var attributeName = attributeValue.ProductVariantAttribute.ProductAttribute.GetLocalized(a => a.Name);
+                            var attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.GetLocalized(a => a.Name);
                             var attributeValueName = attributeValue.GetLocalized(a => a.Name);
                             warnings.Add(
                                 string.Format(
@@ -729,7 +729,7 @@ namespace Nop.Services.Orders
         /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
-        /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
+        /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
@@ -738,7 +738,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
-            bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true,
+            bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
             bool getRentalWarnings = true)
         {
             if (product == null)
@@ -759,7 +759,7 @@ namespace Nop.Services.Orders
                 warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartType, product, attributesXml));
 
             //required products
-            if (getRequiredProductVariantWarnings)
+            if (getRequiredProductWarnings)
                 warnings.AddRange(GetRequiredProductWarnings(customer, shoppingCartType, product, storeId, automaticallyAddRequiredProductsIfEnabled));
 
             //rental products

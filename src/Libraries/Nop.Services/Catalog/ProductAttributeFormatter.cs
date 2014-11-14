@@ -90,7 +90,7 @@ namespace Nop.Services.Catalog
             //attributes
             if (renderProductAttributes)
             {
-                var attributes = _productAttributeParser.ParseProductVariantAttributes(attributesXml);
+                var attributes = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
                 for (int i = 0; i < attributes.Count; i++)
                 {
                     var attribute = attributes[i];
@@ -161,7 +161,7 @@ namespace Nop.Services.Catalog
                             int attributeValueId;
                             if (int.TryParse(valueStr, out attributeValueId))
                             {
-                                var attributeValue = _productAttributeService.GetProductVariantAttributeValueById(attributeValueId);
+                                var attributeValue = _productAttributeService.GetProductAttributeValueById(attributeValueId);
                                 if (attributeValue != null)
                                 {
                                     formattedAttribute = string.Format("{0}: {1}", attribute.ProductAttribute.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), attributeValue.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id));

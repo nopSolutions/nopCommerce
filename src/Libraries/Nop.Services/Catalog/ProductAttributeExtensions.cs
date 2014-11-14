@@ -9,19 +9,19 @@ namespace Nop.Services.Catalog
     public static class ProductAttributeExtensions
     {
         /// <summary>
-        /// A value indicating whether this product variant attribute should have values
+        /// A value indicating whether this product attribute should have values
         /// </summary>
-        /// <param name="productVariantAttribute">Product variant attribute</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <returns>Result</returns>
-        public static bool ShouldHaveValues(this ProductVariantAttribute productVariantAttribute)
+        public static bool ShouldHaveValues(this ProductAttributeMapping productAttributeMapping)
         {
-            if (productVariantAttribute == null)
+            if (productAttributeMapping == null)
                 return false;
 
-            if (productVariantAttribute.AttributeControlType == AttributeControlType.TextBox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.Datepicker || 
-                productVariantAttribute.AttributeControlType == AttributeControlType.FileUpload)
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.TextBox ||
+                productAttributeMapping.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                productAttributeMapping.AttributeControlType == AttributeControlType.Datepicker ||
+                productAttributeMapping.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
 
             //other attribute controle types support values
@@ -29,18 +29,18 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// A value indicating whether this product variant attribute should can have some validation rules
+        /// A value indicating whether this product attribute should can have some validation rules
         /// </summary>
-        /// <param name="productVariantAttribute">Product variant attribute</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <returns>Result</returns>
-        public static bool ValidationRulesAllowed(this ProductVariantAttribute productVariantAttribute)
+        public static bool ValidationRulesAllowed(this ProductAttributeMapping productAttributeMapping)
         {
-            if (productVariantAttribute == null)
+            if (productAttributeMapping == null)
                 return false;
 
-            if (productVariantAttribute.AttributeControlType == AttributeControlType.TextBox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.FileUpload)
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.TextBox ||
+                productAttributeMapping.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                productAttributeMapping.AttributeControlType == AttributeControlType.FileUpload)
                 return true;
 
             //other attribute controle types does not have validation

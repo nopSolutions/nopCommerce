@@ -5646,46 +5646,46 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Small",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "1X",
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2X",
                                 DisplayOrder = 3,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "3X",
                                 DisplayOrder = 4,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "4X",
                                 DisplayOrder = 5,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "5X",
@@ -5819,34 +5819,34 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "9",
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "10",
                                 DisplayOrder = 3,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "11",
@@ -5854,20 +5854,20 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "White/Blue",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "White/Black",
@@ -6426,22 +6426,22 @@ namespace Nop.Services.Installation
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Processor"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2.2 GHz Intel Pentium Dual-Core E2200",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2.5 GHz Intel Pentium Dual-Core E2200",
@@ -6451,27 +6451,27 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "RAM"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "2 GB",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "4GB",
                                 PriceAdjustment = 20,
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8GB",
@@ -6480,20 +6480,20 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "HDD"),
                         AttributeControlType = AttributeControlType.RadioList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "320 GB",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "400 GB",
@@ -6502,14 +6502,14 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "OS"),
                         AttributeControlType = AttributeControlType.RadioList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Vista Home",
@@ -6517,7 +6517,7 @@ namespace Nop.Services.Installation
                                 IsPreSelected = true,
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Vista Premium",
@@ -6526,13 +6526,13 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Software"),
                         AttributeControlType = AttributeControlType.Checkboxes,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Microsoft Office",
@@ -6540,14 +6540,14 @@ namespace Nop.Services.Installation
                                 IsPreSelected = true,
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Acrobat Reader",
                                 PriceAdjustment = 10,
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Total Commander",
@@ -6946,9 +6946,9 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
                         TextPrompt = "Enter your text:",
@@ -7162,34 +7162,34 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "8",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "9",
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "10",
                                 DisplayOrder = 3,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "11",
@@ -7197,14 +7197,14 @@ namespace Nop.Services.Installation
                             }
                         }
                     },
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
                         AttributeControlType = AttributeControlType.ColorSquares,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "White",
@@ -7212,14 +7212,14 @@ namespace Nop.Services.Installation
                                 ColorSquaresRgb = "#FFFFFF",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Black",
                                 ColorSquaresRgb = "#000000",
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Green",
@@ -7634,34 +7634,34 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
-                ProductVariantAttributes =
+                ProductAttributeMappings =
                 {
-                    new ProductVariantAttribute
+                    new ProductAttributeMapping
                     {
                         ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
                         AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
-                        ProductVariantAttributeValues =
+                        ProductAttributeValues =
                         {
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Small",
                                 DisplayOrder = 1,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Medium",
                                 DisplayOrder = 2,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "Large",
                                 DisplayOrder = 3,
                             },
-                            new ProductVariantAttributeValue
+                            new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
                                 Name = "X-Large",

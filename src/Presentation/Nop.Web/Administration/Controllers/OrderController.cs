@@ -611,10 +611,10 @@ namespace Nop.Admin.Controllers
             };
 
             //attributes
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var attribute in productVariantAttributes)
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in attributes)
             {
-                var attributeModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel
+                var attributeModel = new OrderModel.AddOrderProductModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -627,10 +627,10 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributeValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel
+                        var attributeValueModel = new OrderModel.AddOrderProductModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
                             Name = attributeValue.Name,
@@ -640,7 +640,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-                model.ProductVariantAttributes.Add(attributeModel);
+                model.ProductAttributes.Add(attributeModel);
             }
             //gift card
             model.GiftCard.IsGiftCard = product.IsGiftCard;
@@ -2031,8 +2031,9 @@ namespace Nop.Admin.Controllers
             string attributesXml = "";
 
             #region Product attributes
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var attribute in productVariantAttributes)
+
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in attributes)
             {
                 string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
                 switch (attribute.AttributeControlType)
@@ -2069,7 +2070,7 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)

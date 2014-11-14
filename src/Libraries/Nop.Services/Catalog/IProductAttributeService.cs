@@ -46,75 +46,75 @@ namespace Nop.Services.Catalog
 
         #endregion
 
-        #region Product variant attributes mappings (ProductVariantAttribute)
+        #region Product attributes mappings
 
         /// <summary>
-        /// Deletes a product variant attribute mapping
+        /// Deletes a product attribute mapping
         /// </summary>
-        /// <param name="productVariantAttribute">Product variant attribute mapping</param>
-        void DeleteProductVariantAttribute(ProductVariantAttribute productVariantAttribute);
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
+        void DeleteProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
-        /// Gets product variant attribute mappings by product identifier
+        /// Gets product attribute mappings by product identifier
         /// </summary>
         /// <param name="productId">The product identifier</param>
-        /// <returns>Product variant attribute mapping collection</returns>
-        IList<ProductVariantAttribute> GetProductVariantAttributesByProductId(int productId);
+        /// <returns>Product attribute mapping collection</returns>
+        IList<ProductAttributeMapping> GetProductAttributeMappingsByProductId(int productId);
 
         /// <summary>
-        /// Gets a product variant attribute mapping
+        /// Gets a product attribute mapping
         /// </summary>
-        /// <param name="productVariantAttributeId">Product variant attribute mapping identifier</param>
-        /// <returns>Product variant attribute mapping</returns>
-        ProductVariantAttribute GetProductVariantAttributeById(int productVariantAttributeId);
+        /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
+        /// <returns>Product attribute mapping</returns>
+        ProductAttributeMapping GetProductAttributeMappingById(int productAttributeMappingId);
 
         /// <summary>
-        /// Inserts a product variant attribute mapping
+        /// Inserts a product attribute mapping
         /// </summary>
-        /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        void InsertProductVariantAttribute(ProductVariantAttribute productVariantAttribute);
+        /// <param name="productAttributeMapping">The product attribute mapping</param>
+        void InsertProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
-        /// Updates the product variant attribute mapping
+        /// Updates the product attribute mapping
         /// </summary>
-        /// <param name="productVariantAttribute">The product variant attribute mapping</param>
-        void UpdateProductVariantAttribute(ProductVariantAttribute productVariantAttribute);
+        /// <param name="productAttributeMapping">The product attribute mapping</param>
+        void UpdateProductAttributeMapping(ProductAttributeMapping productAttributeMapping);
 
         #endregion
 
-        #region Product variant attribute values (ProductVariantAttributeValue)
+        #region Product attribute values
 
         /// <summary>
-        /// Deletes a product variant attribute value
+        /// Deletes a product attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValue">Product variant attribute value</param>
-        void DeleteProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue);
+        /// <param name="productAttributeValue">Product attribute value</param>
+        void DeleteProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         /// <summary>
-        /// Gets product variant attribute values by product identifier
+        /// Gets product attribute values by product attribute mapping identifier
         /// </summary>
-        /// <param name="productVariantAttributeId">The product variant attribute mapping identifier</param>
-        /// <returns>Product variant attribute mapping collection</returns>
-        IList<ProductVariantAttributeValue> GetProductVariantAttributeValues(int productVariantAttributeId);
+        /// <param name="productAttributeMappingId">The product attribute mapping identifier</param>
+        /// <returns>Product attribute values</returns>
+        IList<ProductAttributeValue> GetProductAttributeValues(int productAttributeMappingId);
 
         /// <summary>
-        /// Gets a product variant attribute value
+        /// Gets a product attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValueId">Product variant attribute value identifier</param>
-        /// <returns>Product variant attribute value</returns>
-        ProductVariantAttributeValue GetProductVariantAttributeValueById(int productVariantAttributeValueId);
+        /// <param name="productAttributeValueId">Product attribute value identifier</param>
+        /// <returns>Product attribute value</returns>
+        ProductAttributeValue GetProductAttributeValueById(int productAttributeValueId);
 
         /// <summary>
-        /// Inserts a product variant attribute value
+        /// Inserts a product attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        void InsertProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue);
+        /// <param name="productAttributeValue">The product attribute value</param>
+        void InsertProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         /// <summary>
-        /// Updates the product variant attribute value
+        /// Updates the product attribute value
         /// </summary>
-        /// <param name="productVariantAttributeValue">The product variant attribute value</param>
-        void UpdateProductVariantAttributeValue(ProductVariantAttributeValue productVariantAttributeValue);
+        /// <param name="productAttributeValue">The product attribute value</param>
+        void UpdateProductAttributeValue(ProductAttributeValue productAttributeValue);
 
         #endregion
 

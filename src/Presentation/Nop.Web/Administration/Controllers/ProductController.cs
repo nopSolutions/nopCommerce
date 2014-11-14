@@ -224,11 +224,11 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        protected virtual void UpdateLocales(ProductVariantAttributeValue pvav, ProductModel.ProductVariantAttributeValueModel model)
+        protected virtual void UpdateLocales(ProductAttributeValue pav, ProductModel.ProductAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
-                _localizedEntityService.SaveLocalizedValue(pvav,
+                _localizedEntityService.SaveLocalizedValue(pav,
                                                                x => x.Name,
                                                                localized.Name,
                                                                localized.LanguageId);
@@ -346,10 +346,10 @@ namespace Nop.Admin.Controllers
             model.StockQuantity = 10000;
             model.NotifyAdminForQuantityBelow = 1;
 
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var attribute in productVariantAttributes)
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in attributes)
             {
-                var attributeModel = new AddProductAttributeCombinationModel.ProductVariantAttributeModel
+                var attributeModel = new AddProductAttributeCombinationModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductAttributeId = attribute.ProductAttributeId,
@@ -362,10 +362,10 @@ namespace Nop.Admin.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
-                        var attributeValueModel = new AddProductAttributeCombinationModel.ProductVariantAttributeValueModel
+                        var attributeValueModel = new AddProductAttributeCombinationModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
                             Name = attributeValue.Name,
@@ -375,7 +375,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-                model.ProductVariantAttributes.Add(attributeModel);
+                model.ProductAttributes.Add(attributeModel);
             }
         }
         
@@ -3050,10 +3050,10 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Product variant attributes
+        #region Product attributes
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeList(DataSourceRequest command, int productId)
+        public ActionResult ProductAttributeMappingList(DataSourceRequest command, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3066,11 +3066,11 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(productId);
-            var productVariantAttributesModel = productVariantAttributes
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(productId);
+            var attributesModel = attributes
                 .Select(x =>
                 {
-                    var attributeModel = new ProductModel.ProductVariantAttributeModel
+                    var attributeModel = new ProductModel.ProductAttributeMappingModel
                     {
                         Id = x.Id,
                         ProductId = x.ProductId,
@@ -3085,8 +3085,8 @@ namespace Nop.Admin.Controllers
 
                     if (x.ShouldHaveValues())
                     {
-                        attributeModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productVariantAttributeId = x.Id });
-                        attributeModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.ViewLink"), x.ProductVariantAttributeValues != null ? x.ProductVariantAttributeValues.Count : 0);
+                        attributeModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productAttributeMappingId = x.Id });
+                        attributeModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink"), x.ProductAttributeValues != null ? x.ProductAttributeValues.Count : 0);
                     }
 
                     attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
@@ -3096,15 +3096,15 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = productVariantAttributesModel,
-                Total = productVariantAttributesModel.Count
+                Data = attributesModel,
+                Total = attributesModel.Count
             };
 
             return Json(gridModel);
         }
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeInsert(ProductModel.ProductVariantAttributeModel model)
+        public ActionResult ProductAttributeMappingInsert(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3119,7 +3119,7 @@ namespace Nop.Admin.Controllers
                 return Content("This is not your product");
             }
 
-            var pva = new ProductVariantAttribute
+            var productAttributeMapping = new ProductAttributeMapping
             {
                 ProductId = model.ProductId,
                 ProductAttributeId = model.ProductAttributeId,
@@ -3128,22 +3128,22 @@ namespace Nop.Admin.Controllers
                 AttributeControlTypeId = model.AttributeControlTypeId,
                 DisplayOrder = model.DisplayOrder
             };
-            _productAttributeService.InsertProductVariantAttribute(pva);
+            _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeUpdate(ProductModel.ProductVariantAttributeModel model)
+        public ActionResult ProductAttributeMappingUpdate(ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(model.Id);
-            if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(model.Id);
+            if (productAttributeMapping == null)
+                throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3151,27 +3151,27 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            pva.ProductAttributeId = model.ProductAttributeId;
-            pva.TextPrompt = model.TextPrompt;
-            pva.IsRequired = model.IsRequired;
-            pva.AttributeControlTypeId = model.AttributeControlTypeId;
-            pva.DisplayOrder = model.DisplayOrder;
-            _productAttributeService.UpdateProductVariantAttribute(pva);
+            productAttributeMapping.ProductAttributeId = model.ProductAttributeId;
+            productAttributeMapping.TextPrompt = model.TextPrompt;
+            productAttributeMapping.IsRequired = model.IsRequired;
+            productAttributeMapping.AttributeControlTypeId = model.AttributeControlTypeId;
+            productAttributeMapping.DisplayOrder = model.DisplayOrder;
+            _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
             return new NullJsonResult();
         }
 
         [HttpPost]
-        public ActionResult ProductVariantAttributeDelete(int id)
+        public ActionResult ProductAttributeMappingDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(id);
-            if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(id);
+            if (productAttributeMapping == null)
+                throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var productId = pva.ProductId;
+            var productId = productAttributeMapping.ProductId;
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
@@ -3181,7 +3181,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            _productAttributeService.DeleteProductVariantAttribute(pva);
+            _productAttributeService.DeleteProductAttributeMapping(productAttributeMapping);
 
             return new NullJsonResult();
         }
@@ -3193,12 +3193,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(id);
-            if (pva == null)
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(id);
+            if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3206,33 +3206,33 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductVariantAttributeModel
+            var model = new ProductModel.ProductAttributeMappingModel
             {
                 //prepare only used properties
-                Id = pva.Id,
-                ValidationRulesAllowed = pva.ValidationRulesAllowed(),
-                AttributeControlTypeId = pva.AttributeControlTypeId,
-                ValidationMinLength = pva.ValidationMinLength,
-                ValidationMaxLength = pva.ValidationMaxLength,
-                ValidationFileAllowedExtensions = pva.ValidationFileAllowedExtensions,
-                ValidationFileMaximumSize = pva.ValidationFileMaximumSize,
-                DefaultValue = pva.DefaultValue,
+                Id = productAttributeMapping.Id,
+                ValidationRulesAllowed = productAttributeMapping.ValidationRulesAllowed(),
+                AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId,
+                ValidationMinLength = productAttributeMapping.ValidationMinLength,
+                ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
+                ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
+                ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
+                DefaultValue = productAttributeMapping.DefaultValue,
             };
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductVariantAttributeModel model)
+        public ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(model.Id);
-            if (pva == null)
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(model.Id);
+            if (productAttributeMapping == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3242,12 +3242,12 @@ namespace Nop.Admin.Controllers
             
             if (ModelState.IsValid)
             {
-                pva.ValidationMinLength = model.ValidationMinLength;
-                pva.ValidationMaxLength = model.ValidationMaxLength;
-                pva.ValidationFileAllowedExtensions = model.ValidationFileAllowedExtensions;
-                pva.ValidationFileMaximumSize = model.ValidationFileMaximumSize;
-                pva.DefaultValue = model.DefaultValue;
-                _productAttributeService.UpdateProductVariantAttribute(pva);
+                productAttributeMapping.ValidationMinLength = model.ValidationMinLength;
+                productAttributeMapping.ValidationMaxLength = model.ValidationMaxLength;
+                productAttributeMapping.ValidationFileAllowedExtensions = model.ValidationFileAllowedExtensions;
+                productAttributeMapping.ValidationFileMaximumSize = model.ValidationFileMaximumSize;
+                productAttributeMapping.DefaultValue = model.DefaultValue;
+                _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -3256,26 +3256,26 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.ValidationRulesAllowed = pva.ValidationRulesAllowed();
-            model.AttributeControlTypeId = pva.AttributeControlTypeId;
+            model.ValidationRulesAllowed = productAttributeMapping.ValidationRulesAllowed();
+            model.AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId;
             return View(model);
         }
 
         #endregion
 
-        #region Product variant attribute values
+        #region Product attribute values
 
         //list
-        public ActionResult EditAttributeValues(int productVariantAttributeId)
+        public ActionResult EditAttributeValues(int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
-            if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
+            if (productAttributeMapping == null)
+                throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3283,28 +3283,28 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductVariantAttributeValueListModel
+            var model = new ProductModel.ProductAttributeValueListModel
             {
                 ProductName = product.Name,
-                ProductId = pva.ProductId,
-                ProductVariantAttributeName = pva.ProductAttribute.Name,
-                ProductVariantAttributeId = pva.Id,
+                ProductId = productAttributeMapping.ProductId,
+                ProductAttributeName = productAttributeMapping.ProductAttribute.Name,
+                ProductAttributeMappingId = productAttributeMapping.Id,
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueList(int productVariantAttributeId, DataSourceRequest command)
+        public ActionResult ProductAttributeValueList(int productAttributeMappingId, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(productVariantAttributeId);
-            if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
+            if (productAttributeMapping == null)
+                throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3312,7 +3312,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null  && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var values = _productAttributeService.GetProductVariantAttributeValues(productVariantAttributeId);
+            var values = _productAttributeService.GetProductAttributeValues(productAttributeMappingId);
             var gridModel = new DataSourceResult
             {
                 Data = values.Select(x =>
@@ -3326,15 +3326,15 @@ namespace Nop.Admin.Controllers
                     //little hack here. Grid is rendered wrong way with <inmg> without "src" attribute
                     if (String.IsNullOrEmpty(pictureThumbnailUrl))
                         pictureThumbnailUrl = _pictureService.GetPictureUrl(null, 1, true);
-                    return new ProductModel.ProductVariantAttributeValueModel
+                    return new ProductModel.ProductAttributeValueModel
                     {
                         Id = x.Id,
-                        ProductVariantAttributeId = x.ProductVariantAttributeId,
+                        ProductAttributeMappingId = x.ProductAttributeMappingId,
                         AttributeValueTypeId = x.AttributeValueTypeId,
                         AttributeValueTypeName = x.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
                         AssociatedProductId = x.AssociatedProductId,
                         AssociatedProductName = associatedProduct != null ? associatedProduct.Name  : "",
-                        Name = x.ProductVariantAttribute.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
+                        Name = x.ProductAttributeMapping.AttributeControlType != AttributeControlType.ColorSquares ? x.Name : string.Format("{0} - {1}", x.Name, x.ColorSquaresRgb),
                         ColorSquaresRgb = x.ColorSquaresRgb,
                         PriceAdjustment = x.PriceAdjustment,
                         PriceAdjustmentStr = x.AttributeValueType == AttributeValueType.Simple ? x.PriceAdjustment.ToString("G29") : "",
@@ -3355,16 +3355,16 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-        public ActionResult ProductAttributeValueCreatePopup(int productAttributeAttributeId)
+        public ActionResult ProductAttributeValueCreatePopup(int productAttributeMappingId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(productAttributeAttributeId);
-            if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
+            if (productAttributeMapping == null)
+                throw new ArgumentException("No product attribute mapping found with the specified id");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3372,11 +3372,11 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var model = new ProductModel.ProductVariantAttributeValueModel();
-            model.ProductVariantAttributeId = productAttributeAttributeId;
+            var model = new ProductModel.ProductAttributeValueModel();
+            model.ProductAttributeMappingId = productAttributeMappingId;
 
             //color squares
-            model.DisplayColorSquaresRgb = pva.AttributeControlType == AttributeControlType.ColorSquares;
+            model.DisplayColorSquaresRgb = productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares;
             model.ColorSquaresRgb = "#000000";
 
             //default qantity for associated product
@@ -3401,17 +3401,17 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductVariantAttributeValueModel model)
+        public ActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pva = _productAttributeService.GetProductVariantAttributeById(model.ProductVariantAttributeId);
-            if (pva == null)
-                //No product variant attribute found with the specified id
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(model.ProductAttributeMappingId);
+            if (productAttributeMapping == null)
+                //No product attribute found with the specified id
                 return RedirectToAction("List", "Product");
 
-            var product = _productService.GetProductById(pva.ProductId);
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3419,7 +3419,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null&& product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            if (pva.AttributeControlType == AttributeControlType.ColorSquares)
+            if (productAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
@@ -3437,9 +3437,9 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                var pvav = new ProductVariantAttributeValue
+                var pav = new ProductAttributeValue
                 {
-                    ProductVariantAttributeId = model.ProductVariantAttributeId,
+                    ProductAttributeMappingId = model.ProductAttributeMappingId,
                     AttributeValueTypeId = model.AttributeValueTypeId,
                     AssociatedProductId = model.AssociatedProductId,
                     Name = model.Name,
@@ -3453,8 +3453,8 @@ namespace Nop.Admin.Controllers
                     PictureId = model.PictureId,
                 };
 
-                _productAttributeService.InsertProductVariantAttributeValue(pvav);
-                UpdateLocales(pvav, model);
+                _productAttributeService.InsertProductAttributeValue(pav);
+                UpdateLocales(pav, model);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -3489,12 +3489,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
-            if (pvav == null)
+            var pav = _productAttributeService.GetProductAttributeValueById(id);
+            if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
-            var product = _productService.GetProductById(pvav.ProductVariantAttribute.ProductId);
+            var product = _productService.GetProductById(pav.ProductAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3502,25 +3502,25 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            var associatedProduct = _productService.GetProductById(pvav.AssociatedProductId);
+            var associatedProduct = _productService.GetProductById(pav.AssociatedProductId);
 
-            var model = new ProductModel.ProductVariantAttributeValueModel
+            var model = new ProductModel.ProductAttributeValueModel
             {
-                ProductVariantAttributeId = pvav.ProductVariantAttributeId,
-                AttributeValueTypeId = pvav.AttributeValueTypeId,
-                AttributeValueTypeName = pvav.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
-                AssociatedProductId = pvav.AssociatedProductId,
+                ProductAttributeMappingId = pav.ProductAttributeMappingId,
+                AttributeValueTypeId = pav.AttributeValueTypeId,
+                AttributeValueTypeName = pav.AttributeValueType.GetLocalizedEnum(_localizationService, _workContext),
+                AssociatedProductId = pav.AssociatedProductId,
                 AssociatedProductName = associatedProduct != null ? associatedProduct.Name : "",
-                Name = pvav.Name,
-                ColorSquaresRgb = pvav.ColorSquaresRgb,
-                DisplayColorSquaresRgb = pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares,
-                PriceAdjustment = pvav.PriceAdjustment,
-                WeightAdjustment = pvav.WeightAdjustment,
-                Cost = pvav.Cost,
-                Quantity = pvav.Quantity,
-                IsPreSelected = pvav.IsPreSelected,
-                DisplayOrder = pvav.DisplayOrder,
-                PictureId = pvav.PictureId
+                Name = pav.Name,
+                ColorSquaresRgb = pav.ColorSquaresRgb,
+                DisplayColorSquaresRgb = pav.ProductAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares,
+                PriceAdjustment = pav.PriceAdjustment,
+                WeightAdjustment = pav.WeightAdjustment,
+                Cost = pav.Cost,
+                Quantity = pav.Quantity,
+                IsPreSelected = pav.IsPreSelected,
+                DisplayOrder = pav.DisplayOrder,
+                PictureId = pav.PictureId
             };
             if (model.DisplayColorSquaresRgb && String.IsNullOrEmpty(model.ColorSquaresRgb))
             {
@@ -3529,7 +3529,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                locale.Name = pvav.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Name = pav.GetLocalized(x => x.Name, languageId, false, false);
             });
             //pictures
             model.ProductPictureModels = _productService.GetProductPicturesByProductId(product.Id)
@@ -3547,17 +3547,17 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductModel.ProductVariantAttributeValueModel model)
+        public ActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductModel.ProductAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvav = _productAttributeService.GetProductVariantAttributeValueById(model.Id);
-            if (pvav == null)
+            var pav = _productAttributeService.GetProductAttributeValueById(model.Id);
+            if (pav == null)
                 //No attribute value found with the specified id
                 return RedirectToAction("List", "Product");
 
-            var product = _productService.GetProductById(pvav.ProductVariantAttribute.ProductId);
+            var product = _productService.GetProductById(pav.ProductAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3565,7 +3565,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List", "Product");
 
-            if (pvav.ProductVariantAttribute.AttributeControlType == AttributeControlType.ColorSquares)
+            if (pav.ProductAttributeMapping.AttributeControlType == AttributeControlType.ColorSquares)
             {
                 //ensure valid color is chosen/entered
                 if (String.IsNullOrEmpty(model.ColorSquaresRgb))
@@ -3583,20 +3583,20 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                pvav.AttributeValueTypeId = model.AttributeValueTypeId;
-                pvav.AssociatedProductId = model.AssociatedProductId;
-                pvav.Name = model.Name;
-                pvav.ColorSquaresRgb = model.ColorSquaresRgb;
-                pvav.PriceAdjustment = model.PriceAdjustment;
-                pvav.WeightAdjustment = model.WeightAdjustment;
-                pvav.Cost = model.Cost;
-                pvav.Quantity = model.Quantity;
-                pvav.IsPreSelected = model.IsPreSelected;
-                pvav.DisplayOrder = model.DisplayOrder;
-                pvav.PictureId = model.PictureId;
-                _productAttributeService.UpdateProductVariantAttributeValue(pvav);
+                pav.AttributeValueTypeId = model.AttributeValueTypeId;
+                pav.AssociatedProductId = model.AssociatedProductId;
+                pav.Name = model.Name;
+                pav.ColorSquaresRgb = model.ColorSquaresRgb;
+                pav.PriceAdjustment = model.PriceAdjustment;
+                pav.WeightAdjustment = model.WeightAdjustment;
+                pav.Cost = model.Cost;
+                pav.Quantity = model.Quantity;
+                pav.IsPreSelected = model.IsPreSelected;
+                pav.DisplayOrder = model.DisplayOrder;
+                pav.PictureId = model.PictureId;
+                _productAttributeService.UpdateProductAttributeValue(pav);
 
-                UpdateLocales(pvav, model);
+                UpdateLocales(pav, model);
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
@@ -3631,11 +3631,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
-            if (pvav == null)
-                throw new ArgumentException("No product variant attribute value found with the specified id");
+            var pav = _productAttributeService.GetProductAttributeValueById(id);
+            if (pav == null)
+                throw new ArgumentException("No product attribute value found with the specified id");
 
-            var product = _productService.GetProductById(pvav.ProductVariantAttribute.ProductId);
+            var product = _productService.GetProductById(pav.ProductAttributeMapping.ProductId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
@@ -3643,7 +3643,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            _productAttributeService.DeleteProductVariantAttributeValue(pvav);
+            _productAttributeService.DeleteProductAttributeValue(pav);
 
             return new NullJsonResult();
         }
@@ -3657,7 +3657,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
-            var model = new ProductModel.ProductVariantAttributeValueModel.AssociateProductToAttributeValueModel();
+            var model = new ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel();
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
@@ -3691,7 +3691,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         public ActionResult AssociateProductToAttributeValuePopupList(DataSourceRequest command,
-            ProductModel.ProductVariantAttributeValueModel.AssociateProductToAttributeValueModel model)
+            ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3723,7 +3723,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         [FormValueRequired("save")]
         public ActionResult AssociateProductToAttributeValuePopup(string productIdInput,
-            string productNameInput, ProductModel.ProductVariantAttributeValueModel.AssociateProductToAttributeValueModel model)
+            string productNameInput, ProductModel.ProductAttributeValueModel.AssociateProductToAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -3906,8 +3906,8 @@ namespace Nop.Admin.Controllers
 
             #region Product attributes
 
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var attribute in productVariantAttributes)
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in attributes)
             {
                 string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
                 switch (attribute.AttributeControlType)
@@ -3944,7 +3944,7 @@ namespace Nop.Admin.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)

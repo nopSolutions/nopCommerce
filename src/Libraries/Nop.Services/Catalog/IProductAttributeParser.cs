@@ -11,42 +11,42 @@ namespace Nop.Services.Catalog
         #region Product attributes
 
         /// <summary>
-        /// Gets selected product variant attribute identifiers
+        /// Gets selected product attribute maping identifiers
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product variant attribute identifiers</returns>
-        IList<int> ParseProductVariantAttributeIds(string attributesXml);
+        /// <returns>Selected product attribute mapping identifiers</returns>
+        IList<int> ParseProductAttributeMappingIds(string attributesXml);
 
         /// <summary>
-        /// Gets selected product variant attributes
+        /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product variant attributes</returns>
-        IList<ProductVariantAttribute> ParseProductVariantAttributes(string attributesXml);
+        /// <returns>Selected product attribute mappings</returns>
+        IList<ProductAttributeMapping> ParseProductAttributeMappings(string attributesXml);
 
         /// <summary>
-        /// Get product variant attribute values
+        /// Get product attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Product variant attribute values</returns>
-        IList<ProductVariantAttributeValue> ParseProductVariantAttributeValues(string attributesXml);
+        /// <returns>Product attribute values</returns>
+        IList<ProductAttributeValue> ParseProductAttributeValues(string attributesXml);
 
         /// <summary>
-        /// Gets selected product variant attribute value
+        /// Gets selected product attribute values
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="productVariantAttributeId">Product variant attribute identifier</param>
-        /// <returns>Product variant attribute value</returns>
-        IList<string> ParseValues(string attributesXml, int productVariantAttributeId);
+        /// <param name="productAttributeMappingId">Product attribute mapping identifier</param>
+        /// <returns>Product attribute values</returns>
+        IList<string> ParseValues(string attributesXml, int productAttributeMappingId);
 
         /// <summary>
         /// Adds an attribute
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
-        /// <param name="pva">Product variant attribute</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        string AddProductAttribute(string attributesXml, ProductVariantAttribute pva, string value);
+        string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value);
 
         /// <summary>
         /// Are attributes equal

@@ -266,9 +266,8 @@ namespace Nop.Services.Catalog
             }
             _productService.UpdateProduct(product);
 
-            // product pictures
-
-            //variant to store original and new picture identifiers
+            //product pictures
+            //variable to store original and new picture identifiers
             var originalNewPictureIdentifiers = new Dictionary<int, int>();
             if (copyImages)
             {
@@ -383,59 +382,59 @@ namespace Nop.Services.Catalog
             // product <-> attributes mappings
             var associatedAttributes = new Dictionary<int, int>();
             var associatedAttributeValues = new Dictionary<int, int>();
-            foreach (var productVariantAttribute in _productAttributeService.GetProductVariantAttributesByProductId(product.Id))
+            foreach (var productAttributeMapping in _productAttributeService.GetProductAttributeMappingsByProductId(product.Id))
             {
-                var productVariantAttributeCopy = new ProductVariantAttribute
+                var productAttributeMappingCopy = new ProductAttributeMapping
                 {
                     ProductId = productCopy.Id,
-                    ProductAttributeId = productVariantAttribute.ProductAttributeId,
-                    TextPrompt = productVariantAttribute.TextPrompt,
-                    IsRequired = productVariantAttribute.IsRequired,
-                    AttributeControlTypeId = productVariantAttribute.AttributeControlTypeId,
-                    DisplayOrder = productVariantAttribute.DisplayOrder,
-                    ValidationMinLength = productVariantAttribute.ValidationMinLength,
-                    ValidationMaxLength = productVariantAttribute.ValidationMaxLength,
-                    ValidationFileAllowedExtensions = productVariantAttribute.ValidationFileAllowedExtensions,
-                    ValidationFileMaximumSize = productVariantAttribute.ValidationFileMaximumSize,
-                    DefaultValue = productVariantAttribute.DefaultValue,
+                    ProductAttributeId = productAttributeMapping.ProductAttributeId,
+                    TextPrompt = productAttributeMapping.TextPrompt,
+                    IsRequired = productAttributeMapping.IsRequired,
+                    AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId,
+                    DisplayOrder = productAttributeMapping.DisplayOrder,
+                    ValidationMinLength = productAttributeMapping.ValidationMinLength,
+                    ValidationMaxLength = productAttributeMapping.ValidationMaxLength,
+                    ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
+                    ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
+                    DefaultValue = productAttributeMapping.DefaultValue,
                 };
-                _productAttributeService.InsertProductVariantAttribute(productVariantAttributeCopy);
+                _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
                 //save associated value (used for combinations copying)
-                associatedAttributes.Add(productVariantAttribute.Id, productVariantAttributeCopy.Id);
+                associatedAttributes.Add(productAttributeMapping.Id, productAttributeMappingCopy.Id);
 
-                // product variant attribute values
-                var productVariantAttributeValues = _productAttributeService.GetProductVariantAttributeValues(productVariantAttribute.Id);
-                foreach (var productVariantAttributeValue in productVariantAttributeValues)
+                // product attribute values
+                var productAttributeValues = _productAttributeService.GetProductAttributeValues(productAttributeMapping.Id);
+                foreach (var productAttributeValue in productAttributeValues)
                 {
                     int attributeValuePictureId = 0;
-                    if (originalNewPictureIdentifiers.ContainsKey(productVariantAttributeValue.PictureId))
+                    if (originalNewPictureIdentifiers.ContainsKey(productAttributeValue.PictureId))
                     {
-                        attributeValuePictureId = originalNewPictureIdentifiers[productVariantAttributeValue.PictureId];
+                        attributeValuePictureId = originalNewPictureIdentifiers[productAttributeValue.PictureId];
                     }
-                    var attributeValueCopy = new ProductVariantAttributeValue
+                    var attributeValueCopy = new ProductAttributeValue
                     {
-                        ProductVariantAttributeId = productVariantAttributeCopy.Id,
-                        AttributeValueTypeId = productVariantAttributeValue.AttributeValueTypeId,
-                        AssociatedProductId = productVariantAttributeValue.AssociatedProductId,
-                        Name = productVariantAttributeValue.Name,
-                        ColorSquaresRgb = productVariantAttributeValue.ColorSquaresRgb,
-                        PriceAdjustment = productVariantAttributeValue.PriceAdjustment,
-                        WeightAdjustment = productVariantAttributeValue.WeightAdjustment,
-                        Cost = productVariantAttributeValue.Cost,
-                        Quantity = productVariantAttributeValue.Quantity,
-                        IsPreSelected = productVariantAttributeValue.IsPreSelected,
-                        DisplayOrder = productVariantAttributeValue.DisplayOrder,
+                        ProductAttributeMappingId = productAttributeMappingCopy.Id,
+                        AttributeValueTypeId = productAttributeValue.AttributeValueTypeId,
+                        AssociatedProductId = productAttributeValue.AssociatedProductId,
+                        Name = productAttributeValue.Name,
+                        ColorSquaresRgb = productAttributeValue.ColorSquaresRgb,
+                        PriceAdjustment = productAttributeValue.PriceAdjustment,
+                        WeightAdjustment = productAttributeValue.WeightAdjustment,
+                        Cost = productAttributeValue.Cost,
+                        Quantity = productAttributeValue.Quantity,
+                        IsPreSelected = productAttributeValue.IsPreSelected,
+                        DisplayOrder = productAttributeValue.DisplayOrder,
                         PictureId = attributeValuePictureId,
                     };
-                    _productAttributeService.InsertProductVariantAttributeValue(attributeValueCopy);
+                    _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
 
                     //save associated value (used for combinations copying)
-                    associatedAttributeValues.Add(productVariantAttributeValue.Id, attributeValueCopy.Id);
+                    associatedAttributeValues.Add(productAttributeValue.Id, attributeValueCopy.Id);
 
                     //localization
                     foreach (var lang in languages)
                     {
-                        var name = productVariantAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
+                        var name = productAttributeValue.GetLocalized(x => x.Name, lang.Id, false, false);
                         if (!String.IsNullOrEmpty(name))
                             _localizedEntityService.SaveLocalizedValue(attributeValueCopy, x => x.Name, name, lang.Id);
                     }
@@ -446,12 +445,12 @@ namespace Nop.Services.Catalog
             {
                 //generate new AttributesXml according to new value IDs
                 string newAttributesXml = "";
-                var parsedProductVariantAttributes = _productAttributeParser.ParseProductVariantAttributes(combination.AttributesXml);
-                foreach (var oldAttribute in parsedProductVariantAttributes)
+                var parsedProductAttributes = _productAttributeParser.ParseProductAttributeMappings(combination.AttributesXml);
+                foreach (var oldAttribute in parsedProductAttributes)
                 {
                     if (associatedAttributes.ContainsKey(oldAttribute.Id))
                     {
-                        var newAttribute = _productAttributeService.GetProductVariantAttributeById(associatedAttributes[oldAttribute.Id]);
+                        var newAttribute = _productAttributeService.GetProductAttributeMappingById(associatedAttributes[oldAttribute.Id]);
                         if (newAttribute != null)
                         {
                             var oldAttributeValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldAttribute.Id);
@@ -463,7 +462,7 @@ namespace Nop.Services.Catalog
                                     int oldAttributeValue = int.Parse(oldAttributeValueStr);
                                     if (associatedAttributeValues.ContainsKey(oldAttributeValue))
                                     {
-                                        var newAttributeValue = _productAttributeService.GetProductVariantAttributeValueById(associatedAttributeValues[oldAttributeValue]);
+                                        var newAttributeValue = _productAttributeService.GetProductAttributeValueById(associatedAttributeValues[oldAttributeValue]);
                                         if (newAttributeValue != null)
                                         {
                                             newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,

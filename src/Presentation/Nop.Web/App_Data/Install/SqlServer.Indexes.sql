@@ -73,7 +73,7 @@ GO
 CREATE NONCLUSTERED INDEX [IX_RelatedProduct_ProductId1] ON [RelatedProduct] ([ProductId1] ASC)
 GO
 
-CREATE NONCLUSTERED INDEX [IX_ProductVariantAttributeValue_ProductVariantAttributeId] ON [ProductVariantAttributeValue] ([ProductVariantAttributeId] ASC)
+CREATE NONCLUSTERED INDEX [IX_ProductAttributeValue_ProductAttributeMappingId] ON [ProductAttributeValue] ([ProductAttributeMappingId] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_Product_ProductAttribute_Mapping_ProductId] ON [Product_ProductAttribute_Mapping] ([ProductId] ASC)

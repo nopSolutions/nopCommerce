@@ -1221,7 +1221,7 @@ namespace Nop.Services.Catalog
 
 
             //bundled products
-            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)

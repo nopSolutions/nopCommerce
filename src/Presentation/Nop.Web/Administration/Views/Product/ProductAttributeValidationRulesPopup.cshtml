@@ -2,10 +2,10 @@
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
 @using Nop.Core.Domain.Catalog
-@model ProductModel.ProductVariantAttributeModel
+@model ProductModel.ProductAttributeMappingModel
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules").Text;
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules").Text;
 
     var attributeControlType = (AttributeControlType)Model.AttributeControlTypeId;
 }
@@ -14,7 +14,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules")
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")
         </div>
     </div>
 

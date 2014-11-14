@@ -435,7 +435,7 @@ namespace Nop.Services.Shipping
             decimal attributesTotalWeight = decimal.Zero;
             if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
             {
-                var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml);
                 foreach (var attributeValue in attributeValues)
                 {
                     switch (attributeValue.AttributeValueType)
@@ -522,7 +522,7 @@ namespace Nop.Services.Shipping
                         if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                         {
                             //bundled products (associated attributes)
-                            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml)
+                            var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
                                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
                                 .ToList();
                             foreach (var attributeValue in attributeValues)
@@ -576,7 +576,7 @@ namespace Nop.Services.Shipping
                         if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                         {
                             //bundled products (associated attributes)
-                            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(shoppingCartItem.AttributesXml)
+                            var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
                                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
                                 .ToList();
                             foreach (var attributeValue in attributeValues)

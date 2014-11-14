@@ -278,7 +278,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ManageInventoryMethod, mo => mo.Ignore())
                 .ForMember(dest => dest.RecurringCyclePeriod, mo => mo.Ignore())
                 .ForMember(dest => dest.RentalPricePeriod, mo => mo.Ignore())
-                .ForMember(dest => dest.ProductVariantAttributes, mo => mo.Ignore())
+                .ForMember(dest => dest.ProductAttributeMappings, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductAttributeCombinations, mo => mo.Ignore())
                 .ForMember(dest => dest.TierPrices, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());

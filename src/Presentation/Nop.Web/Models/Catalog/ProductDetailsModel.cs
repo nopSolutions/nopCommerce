@@ -17,7 +17,7 @@ namespace Nop.Web.Models.Catalog
             GiftCard = new GiftCardModel();
             ProductPrice = new ProductPriceModel();
             AddToCart = new AddToCartModel();
-            ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+            ProductAttributes = new List<ProductAttributeModel>();
             AssociatedProducts = new List<ProductDetailsModel>();
             VendorModel = new VendorBriefInfoModel();
             Breadcrumb = new ProductBreadcrumbModel();
@@ -85,7 +85,7 @@ namespace Nop.Web.Models.Catalog
 
         public IList<ProductTagModel> ProductTags { get; set; }
 
-        public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+        public IList<ProductAttributeModel> ProductAttributes { get; set; }
 
         public IList<ProductSpecificationModel> ProductSpecifications { get; set; }
 
@@ -209,12 +209,12 @@ namespace Nop.Web.Models.Catalog
             public int Quantity { get; set; }
         }
 
-        public partial class ProductVariantAttributeModel : BaseNopEntityModel
+        public partial class ProductAttributeModel : BaseNopEntityModel
         {
-            public ProductVariantAttributeModel()
+            public ProductAttributeModel()
             {
                 AllowedFileExtensions = new List<string>();
-                Values = new List<ProductVariantAttributeValueModel>();
+                Values = new List<ProductAttributeValueModel>();
             }
 
             public int ProductId { get; set; }
@@ -253,11 +253,11 @@ namespace Nop.Web.Models.Catalog
 
             public AttributeControlType AttributeControlType { get; set; }
 
-            public IList<ProductVariantAttributeValueModel> Values { get; set; }
+            public IList<ProductAttributeValueModel> Values { get; set; }
 
         }
 
-        public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
+        public partial class ProductAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

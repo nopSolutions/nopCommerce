@@ -102,7 +102,7 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-                //applied to product variants
+                //applied to products
                 foreach (var product in discount.AppliedToProducts)
                 {
                     if (product != null && !product.Deleted)

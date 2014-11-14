@@ -23,9 +23,9 @@ namespace Nop.Services.Tests.Catalog
     public class ProductAttributeParserTests : ServiceTest
     {
         private IRepository<ProductAttribute> _productAttributeRepo;
-        private IRepository<ProductVariantAttribute> _productVariantAttributeRepo;
+        private IRepository<ProductAttributeMapping> _productAttributeMappingRepo;
         private IRepository<ProductAttributeCombination> _productAttributeCombinationRepo;
-        private IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
+        private IRepository<ProductAttributeValue> _productAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
         private IEventPublisher _eventPublisher;
@@ -42,8 +42,8 @@ namespace Nop.Services.Tests.Catalog
         private IProductAttributeFormatter _productAttributeFormatter;
 
         private ProductAttribute pa1, pa2, pa3;
-        private ProductVariantAttribute pva1_1, pva2_1, pva3_1;
-        private ProductVariantAttributeValue pvav1_1, pvav1_2, pvav2_1, pvav2_2;
+        private ProductAttributeMapping pam1_1, pam2_1, pam3_1;
+        private ProductAttributeValue pav1_1, pav1_2, pav2_1, pav2_2;
         
         [SetUp]
         public new void SetUp()
@@ -56,7 +56,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 1,
                 Name = "Color",
             };
-            pva1_1 = new ProductVariantAttribute
+            pam1_1 = new ProductAttributeMapping
             {
                 Id = 11,
                 ProductId = 1,
@@ -67,24 +67,24 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttribute = pa1,
                 ProductAttributeId = pa1.Id
             };
-            pvav1_1 = new ProductVariantAttributeValue
+            pav1_1 = new ProductAttributeValue
             {
                 Id = 11,
                 Name = "Green",
                 DisplayOrder = 1,
-                ProductVariantAttribute = pva1_1,
-                ProductVariantAttributeId = pva1_1.Id
+                ProductAttributeMapping= pam1_1,
+                ProductAttributeMappingId = pam1_1.Id
             };
-            pvav1_2 = new ProductVariantAttributeValue
+            pav1_2 = new ProductAttributeValue
             {
                 Id = 12,
                 Name = "Red",
                 DisplayOrder = 2,
-                ProductVariantAttribute = pva1_1,
-                ProductVariantAttributeId = pva1_1.Id
+                ProductAttributeMapping = pam1_1,
+                ProductAttributeMappingId = pam1_1.Id
             };
-            pva1_1.ProductVariantAttributeValues.Add(pvav1_1);
-            pva1_1.ProductVariantAttributeValues.Add(pvav1_2);
+            pam1_1.ProductAttributeValues.Add(pav1_1);
+            pam1_1.ProductAttributeValues.Add(pav1_2);
 
             //custom option (checkboxes)
             pa2 = new ProductAttribute
@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 2,
                 Name = "Some custom option",
             };
-            pva2_1 = new ProductVariantAttribute
+            pam2_1 = new ProductAttributeMapping
             {
                 Id = 21,
                 ProductId = 1,
@@ -103,24 +103,24 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttribute = pa2,
                 ProductAttributeId = pa2.Id
             };
-            pvav2_1 = new ProductVariantAttributeValue
+            pav2_1 = new ProductAttributeValue
             {
                 Id = 21,
                 Name = "Option 1",
                 DisplayOrder = 1,
-                ProductVariantAttribute = pva2_1,
-                ProductVariantAttributeId = pva2_1.Id
+                ProductAttributeMapping = pam2_1,
+                ProductAttributeMappingId = pam2_1.Id
             };
-            pvav2_2 = new ProductVariantAttributeValue
+            pav2_2 = new ProductAttributeValue
             {
                 Id = 22,
                 Name = "Option 2",
                 DisplayOrder = 2,
-                ProductVariantAttribute = pva2_1,
-                ProductVariantAttributeId = pva2_1.Id
+                ProductAttributeMapping = pam2_1,
+                ProductAttributeMappingId = pam2_1.Id
             };
-            pva2_1.ProductVariantAttributeValues.Add(pvav2_1);
-            pva2_1.ProductVariantAttributeValues.Add(pvav2_2);
+            pam2_1.ProductAttributeValues.Add(pav2_1);
+            pam2_1.ProductAttributeValues.Add(pav2_2);
 
             //custom text
             pa3 = new ProductAttribute
@@ -128,7 +128,7 @@ namespace Nop.Services.Tests.Catalog
                 Id = 3,
                 Name = "Custom text",
             };
-            pva3_1 = new ProductVariantAttribute
+            pam3_1 = new ProductAttributeMapping
             {
                 Id = 31,
                 ProductId = 1,
@@ -149,21 +149,21 @@ namespace Nop.Services.Tests.Catalog
             _productAttributeRepo.Expect(x => x.GetById(pa2.Id)).Return(pa2);
             _productAttributeRepo.Expect(x => x.GetById(pa3.Id)).Return(pa3);
 
-            _productVariantAttributeRepo = MockRepository.GenerateMock<IRepository<ProductVariantAttribute>>();
-            _productVariantAttributeRepo.Expect(x => x.Table).Return(new List<ProductVariantAttribute> { pva1_1, pva2_1, pva3_1 }.AsQueryable());
-            _productVariantAttributeRepo.Expect(x => x.GetById(pva1_1.Id)).Return(pva1_1);
-            _productVariantAttributeRepo.Expect(x => x.GetById(pva2_1.Id)).Return(pva2_1);
-            _productVariantAttributeRepo.Expect(x => x.GetById(pva3_1.Id)).Return(pva3_1);
+            _productAttributeMappingRepo = MockRepository.GenerateMock<IRepository<ProductAttributeMapping>>();
+            _productAttributeMappingRepo.Expect(x => x.Table).Return(new List<ProductAttributeMapping> { pam1_1, pam2_1, pam3_1 }.AsQueryable());
+            _productAttributeMappingRepo.Expect(x => x.GetById(pam1_1.Id)).Return(pam1_1);
+            _productAttributeMappingRepo.Expect(x => x.GetById(pam2_1.Id)).Return(pam2_1);
+            _productAttributeMappingRepo.Expect(x => x.GetById(pam3_1.Id)).Return(pam3_1);
 
             _productAttributeCombinationRepo = MockRepository.GenerateMock<IRepository<ProductAttributeCombination>>();
             _productAttributeCombinationRepo.Expect(x => x.Table).Return(new List<ProductAttributeCombination>().AsQueryable());
 
-            _productVariantAttributeValueRepo = MockRepository.GenerateMock<IRepository<ProductVariantAttributeValue>>();
-            _productVariantAttributeValueRepo.Expect(x => x.Table).Return(new List<ProductVariantAttributeValue> { pvav1_1, pvav1_2, pvav2_1, pvav2_2 }.AsQueryable());
-            _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav1_1.Id)).Return(pvav1_1);
-            _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav1_2.Id)).Return(pvav1_2);
-            _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav2_1.Id)).Return(pvav2_1);
-            _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav2_2.Id)).Return(pvav2_2);
+            _productAttributeValueRepo = MockRepository.GenerateMock<IRepository<ProductAttributeValue>>();
+            _productAttributeValueRepo.Expect(x => x.Table).Return(new List<ProductAttributeValue> { pav1_1, pav1_2, pav2_1, pav2_2 }.AsQueryable());
+            _productAttributeValueRepo.Expect(x => x.GetById(pav1_1.Id)).Return(pav1_1);
+            _productAttributeValueRepo.Expect(x => x.GetById(pav1_2.Id)).Return(pav1_2);
+            _productAttributeValueRepo.Expect(x => x.GetById(pav2_1.Id)).Return(pav2_1);
+            _productAttributeValueRepo.Expect(x => x.GetById(pav2_2.Id)).Return(pav2_2);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -172,9 +172,9 @@ namespace Nop.Services.Tests.Catalog
 
             _productAttributeService = new ProductAttributeService(cacheManager, 
                 _productAttributeRepo,
-                _productVariantAttributeRepo,
+                _productAttributeMappingRepo,
                 _productAttributeCombinationRepo,
-                _productVariantAttributeValueRepo,
+                _productAttributeValueRepo,
                 _eventPublisher);
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);
@@ -215,21 +215,21 @@ namespace Nop.Services.Tests.Catalog
         {
             string attributes = "";
             //color: green
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva1_1, pvav1_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_1.Id.ToString());
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_2.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
             //custom text
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva3_1, "Some custom text goes here");
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
 
-            var parsed_attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributes);
-            parsed_attributeValues.Contains(pvav1_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pvav1_2).ShouldEqual(false);
-            parsed_attributeValues.Contains(pvav2_1).ShouldEqual(true);
-            parsed_attributeValues.Contains(pvav2_2).ShouldEqual(true);
-            parsed_attributeValues.Contains(pvav2_2).ShouldEqual(true);
+            var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
+            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(pav2_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
+            parsed_attributeValues.Contains(pav2_2).ShouldEqual(true);
 
-            var parsedValues = _productAttributeParser.ParseValues(attributes, pva3_1.Id);
+            var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
             parsedValues.Count.ShouldEqual(1);
             parsedValues.Contains("Some custom text goes here").ShouldEqual(true);
             parsedValues.Contains("Some other custom text").ShouldEqual(false);
@@ -298,12 +298,12 @@ namespace Nop.Services.Tests.Catalog
         {
             string attributes = "";
             //color: green
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva1_1, pvav1_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
             //custom option: option 1, option 2
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_1.Id.ToString());
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva2_1, pvav2_2.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
             //custom text
-            attributes = _productAttributeParser.AddProductAttribute(attributes, pva3_1, "Some custom text goes here");
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
 
             //gift card attributes
             attributes = _productAttributeParser.AddGiftCardAttribute(attributes,

@@ -200,7 +200,7 @@ namespace Nop.Web.Controllers
                 Picture sciPicture = null;
 
                 //first, let's see whether a shopping cart item has some attribute values with custom pictures
-                var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(sci.AttributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml);
                 foreach (var attributeValue in attributeValues)
                 {
                     var attributePicture = _pictureService.GetPictureById(attributeValue.PictureId);
@@ -1008,8 +1008,8 @@ namespace Nop.Web.Controllers
             string attributesXml = "";
 
             #region Product attributes
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-            foreach (var attribute in productVariantAttributes)
+            var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            foreach (var attribute in productAttributes)
             {
                 string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
                 switch (attribute.AttributeControlType)
@@ -1046,7 +1046,7 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.ReadonlyCheckboxes:
                         {
                             //load read-only (already server-side selected) values
-                            var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                            var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                             foreach (var selectedAttributeId in attributeValues
                                 .Where(v => v.IsPreSelected)
                                 .Select(v => v.Id)
@@ -1252,7 +1252,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            if (product.ProductVariantAttributes.Count > 0)
+            if (product.ProductAttributeMappings.Count > 0)
             {
                 //product has some attributes. let a customer see them
                 return Json(new
@@ -1643,7 +1643,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult UploadFileProductAttribute(int attributeId)
         {
-            var attribute = _productAttributeService.GetProductVariantAttributeById(attributeId);
+            var attribute = _productAttributeService.GetProductAttributeMappingById(attributeId);
             if (attribute == null || attribute.AttributeControlType != AttributeControlType.FileUpload)
             {
                 return Json(new

@@ -6,13 +6,13 @@
 {
     if (Model.NumberOfAvailableProductAttributes > 0)
     {
-        <div id="productvariantattribute-edit">
+        <div id="productattribute-edit">
             <ul>
                 <li @Html.RenderSelectedTabIndex(0, 0)>
-                    @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes")
+                    @T("Admin.Catalog.Products.ProductAttributes.Attributes")
                 </li>
                 <li>
-                    @T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations")
+                    @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations")
                 </li>
             </ul>
             <div>
@@ -24,7 +24,7 @@
         </div>
         <script>
             $(document).ready(function() {
-                $("#productvariantattribute-edit").kendoTabStrip({
+                $("#productattribute-edit").kendoTabStrip({
                     animation: {
                         open: {
                             effects: "fadeIn"
@@ -36,41 +36,41 @@
     }
     else
     {
-        @T("Admin.Catalog.Products.ProductVariantAttributes.NoAttributesAvailable")
+        @T("Admin.Catalog.Products.ProductAttributes.NoAttributesAvailable")
     }
 }
 else
 {
-    @T("Admin.Catalog.Products.ProductVariantAttributes.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit")
 }
 
 
 @helper TabAttributes()
 {
-    <div id="productvariantattributes-grid"></div>
+    <div id="productattributemappings-grid"></div>
     <script>
         $(document).ready(function() {
-            $("#productvariantattributes-grid").kendoGrid({
+            $("#productattributemappings-grid").kendoGrid({
                 dataSource: {
                     type: "json",
                     transport: {
                         read: {
-                            url: "@Html.Raw(Url.Action("ProductVariantAttributeList", "Product", new { productId = Model.Id }))",
+                            url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product", new { productId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
                         },
                         create: {
-                            url: "@Html.Raw(Url.Action("ProductVariantAttributeInsert", "Product", new { productId = Model.Id }))",
+                            url: "@Html.Raw(Url.Action("ProductAttributeMappingInsert", "Product", new { productId = Model.Id }))",
                             type: "POST",
                             dataType: "json"
                         },
                         update: {
-                            url: "@Html.Raw(Url.Action("ProductVariantAttributeUpdate", "Product"))",
+                            url: "@Html.Raw(Url.Action("ProductAttributeMappingUpdate", "Product"))",
                             type: "POST",
                             dataType: "json"
                         },
                         destroy: {
-                            url: "@Html.Raw(Url.Action("ProductVariantAttributeDelete", "Product"))",
+                            url: "@Html.Raw(Url.Action("ProductAttributeMappingDelete", "Product"))",
                             type: "POST",
                             dataType: "json"
                         }
@@ -140,17 +140,17 @@ else
                 columns: [
                     {
                         field: "ProductAttributeId",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.Attribute")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.Attribute")",
                         width: 250,
                         editor: productAttributeDropDownEditor,
                         template: "#:ProductAttribute#"
                     }, {
                         field: "TextPrompt",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.TextPrompt")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.TextPrompt")",
                         width: 150
                     }, {
                         field: "IsRequired",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.IsRequired")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.IsRequired")",
                         width: 150,
                         headerAttributes: { style: "text-align:center" },
                         attributes: { style: "text-align:center" },
@@ -158,28 +158,28 @@ else
                     },
                     {
                         field: "AttributeControlTypeId",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.AttributeControlType")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.AttributeControlType")",
                         width: 250,
                         editor: attributeControlTypeDropDownEditor,
                         template: "#:AttributeControlType#"
                     },
                     {
                         field: "DisplayOrder",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Fields.DisplayOrder")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")",
                         width: 150,
                         //integer format
                         format: "{0:0}"
                     }, {
                         field: "ViewEditValuesUrl",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                         width: 150,
                         template: "# if(ViewEditValuesUrl !== null) {# <a href='#=ViewEditValuesUrl#\'>#:ViewEditValuesText#</a> #}  #"
                     },
                     {
                         field: "ValidationRulesAllowed",
-                        title: "@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules")",
+                        title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
                         width: 150,
-                        template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.ValidationRules.ViewLink")</a> #}  #"
+                        template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 300, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a> #}  #"
                     },
                     {
                         command: [
@@ -263,7 +263,7 @@ else
         $(document).ready(function () {
             $('#btnRefreshProductAttributes').click(function () {
                 //refresh grid
-                var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                var grid = $("#productattributemappings-grid").data('kendoGrid');
                 grid.dataSource.read();
                 
                 //return false to don't reload a page
@@ -275,10 +275,10 @@ else
 @helper TabAttributeCombinations()
 {
     <p>
-        <strong>@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description")</strong>
+        <strong>@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description")</strong>
     </p>
     <p>
-        @T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Description2")
+        @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Description2")
     </p>
     <div>
         <div id="attributecombinations-grid"></div>
@@ -354,38 +354,38 @@ else
                     columns: [
                         {
                             field: "AttributesXml",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Attributes")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
                             width: 400,
                             template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
                             encoded: false
                         }, {
                             field: "StockQuantity",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")",
                             width: 150,
                             //integer format
                             format: "{0:0}"
                         }, {
                             field: "AllowOutOfStockOrders",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")",
                             width: 150,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowOutOfStockOrders#.gif" />'
                         }, {
                             field: "Sku",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",
                             width: 200
                         }, {
                             field: "ManufacturerPartNumber",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")",
                             width: 200
                         }, {
                             field: "Gtin",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")",
                             width: 200
                         }, {
                             field: "OverriddenPrice",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")",
                             width: 200,
                             editor: function (container, options) {
                                 $('<input name="' + options.field + '"/>')
@@ -397,7 +397,7 @@ else
                             }
                         }, {
                             field: "NotifyAdminForQuantityBelow",
-                            title: "@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")",
+                            title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")",
                             width: 150,
                             //integer format
                             format: "{0:0}"
@@ -420,8 +420,8 @@ else
     </div>
     <div>
         <p>
-            <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
-            <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.GenerateAll")" class="k-button" />
+            <input type="submit" id="btnAddNewCombination" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCombinations", formId = "product-form" }))', 800, 600, true); return false;" class="k-button" />
+            <input type="button" id="btnGenerateAllCombinations" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.GenerateAll")" class="k-button" />
         </p>
         <input type="submit" id="btnRefreshCombinations" style="display: none" />
         <script type="text/javascript">

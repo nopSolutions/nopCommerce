@@ -524,7 +524,7 @@ namespace Nop.Services.Catalog
             {
                 //summarize price of all attributes
                 decimal attributesTotalPrice = decimal.Zero;
-                var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
                 if (attributeValues != null)
                 {
                     foreach (var attributeValue in attributeValues)
@@ -657,7 +657,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             decimal cost = product.ProductCost;
-            var attributeValues = _productAttributeParser.ParseProductVariantAttributeValues(attributesXml);
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
             foreach (var attributeValue in attributeValues)
             {
                 switch (attributeValue.AttributeValueType)
@@ -691,7 +691,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="value">Product attribute value</param>
         /// <returns>Price adjustment</returns>
-        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductVariantAttributeValue value)
+        public virtual decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value)
         {
             if (value == null)
                 throw new ArgumentNullException("value");

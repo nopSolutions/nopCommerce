@@ -125,20 +125,6 @@ namespace Nop.Services.Tests.Tax
             return 10;
         }
 
-        //[Test]
-        //public void Can_get_tax_rate_for_productVariant()
-        //{
-        //    _taxSettings.TaxBasedOn = TaxBasedOn.BillingAddress;
-
-        //    var customer = new Customer();
-        //    customer.BillingAddress = new Address();
-        //    var productVariant = new ProductVariant();
-
-        //    _taxService.GetTaxRate(productVariant, customer).ShouldEqual(GetFixedTestTaxRate());
-        //    productVariant.IsTaxExempt = true;
-        //    _taxService.GetTaxRate(productVariant, customer).ShouldEqual(0);
-        //}
-
         [Test]
         public void Can_get_productPrice_priceIncludesTax_includingTax_taxable()
         {

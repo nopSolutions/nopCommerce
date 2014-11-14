@@ -28,7 +28,7 @@ namespace Nop.Services.Orders
         int DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
 
         /// <summary>
-        /// Validates required products (products which require other variant to be added to the cart)
+        /// Validates required products (products which require some other products to be added to the cart)
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
@@ -105,7 +105,7 @@ namespace Nop.Services.Orders
         /// <param name="getStandardWarnings">A value indicating whether we should validate a product for standard properties</param>
         /// <param name="getAttributesWarnings">A value indicating whether we should validate product attributes</param>
         /// <param name="getGiftCardWarnings">A value indicating whether we should validate gift card properties</param>
-        /// <param name="getRequiredProductVariantWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
+        /// <param name="getRequiredProductWarnings">A value indicating whether we should validate required products (products which require other products to be added to the cart)</param>
         /// <param name="getRentalWarnings">A value indicating whether we should validate rental properties</param>
         /// <returns>Warnings</returns>
         IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
@@ -114,7 +114,7 @@ namespace Nop.Services.Orders
             DateTime? rentalStartDate = null, DateTime? rentalEndDate = null,
             int quantity = 1, bool automaticallyAddRequiredProductsIfEnabled = true,
             bool getStandardWarnings = true, bool getAttributesWarnings = true,
-            bool getGiftCardWarnings = true, bool getRequiredProductVariantWarnings = true,
+            bool getGiftCardWarnings = true, bool getRequiredProductWarnings = true,
             bool getRentalWarnings = true);
 
         /// <summary>

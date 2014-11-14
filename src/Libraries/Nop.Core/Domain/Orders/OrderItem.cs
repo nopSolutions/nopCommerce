@@ -72,7 +72,7 @@ namespace Nop.Core.Domain.Orders
         public string AttributeDescription { get; set; }
 
         /// <summary>
-        /// Gets or sets the product variant attributes in XML format
+        /// Gets or sets the product attributes in XML format
         /// </summary>
         public string AttributesXml { get; set; }
         

@@ -120,7 +120,7 @@
                                     @{
                                         var dataDictAttributes = new ViewDataDictionary();
                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                        @Html.Partial("_ProductAttributes", variant.ProductVariantAttributes, dataDictAttributes)                  
+                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)                  
                                     }
                                     <!--product SKU, manufacturer part number, stock info-->
                                     @Html.Partial("_SKU_Man_Stock", variant)

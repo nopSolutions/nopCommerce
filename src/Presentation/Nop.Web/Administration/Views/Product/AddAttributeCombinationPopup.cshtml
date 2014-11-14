@@ -4,7 +4,7 @@
 }
 @{
     //page title
-    ViewBag.Title = T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddTitle").Text;
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle").Text;
 }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
 @using (Html.BeginForm("AddAttributeCombinationPopup", "Product",
@@ -16,7 +16,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddTitle")
+            @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddTitle")
         </div>
         <div class="options">
             
@@ -34,7 +34,7 @@
     }
     
     <div style="border: 1px dashed #2F4F4F; padding: 15px; margin: 10px 0px 10px 0px;">
-        @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes)
+        @Html.Partial("_ProductAttributes", Model.ProductAttributes)
         <br />
         @if (Model.Warnings.Count > 0)
         {
@@ -115,7 +115,7 @@
             <tr>
                 <td colspan="2" align="left">
                     <input type="submit" id="add-attribute-combination" name="add-attribute-combination"
-                        class="k-button" value="@T("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.AddNew")" />
+                        class="k-button" value="@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.AddNew")" />
                 </td>
             </tr>
         </table>

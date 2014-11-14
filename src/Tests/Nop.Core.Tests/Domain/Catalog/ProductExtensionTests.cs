@@ -9,7 +9,7 @@ namespace Nop.Core.Tests.Domain.Catalog
     public class ProductExtensionTests
     {
         [Test]
-        public void Can_parse_required_productvariant_ids()
+        public void Can_parse_required_product_ids()
         {
             var product = new Product
             {

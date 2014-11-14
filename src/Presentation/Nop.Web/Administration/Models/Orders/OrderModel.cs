@@ -346,7 +346,7 @@ namespace Nop.Admin.Models.Orders
             {
                 public ProductDetailsModel()
                 {
-                    ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+                    ProductAttributes = new List<ProductAttributeModel>();
                     GiftCard = new GiftCardModel();
                     Warnings = new List<string>();
                 }
@@ -373,7 +373,7 @@ namespace Nop.Admin.Models.Orders
                 public decimal SubTotalExclTax { get; set; }
 
                 //product attributes
-                public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+                public IList<ProductAttributeModel> ProductAttributes { get; set; }
                 //gift card info
                 public GiftCardModel GiftCard { get; set; }
                 //rental
@@ -383,11 +383,11 @@ namespace Nop.Admin.Models.Orders
 
             }
 
-            public partial class ProductVariantAttributeModel : BaseNopEntityModel
+            public partial class ProductAttributeModel : BaseNopEntityModel
             {
-                public ProductVariantAttributeModel()
+                public ProductAttributeModel()
                 {
-                    Values = new List<ProductVariantAttributeValueModel>();
+                    Values = new List<ProductAttributeValueModel>();
                 }
 
                 public int ProductAttributeId { get; set; }
@@ -400,10 +400,10 @@ namespace Nop.Admin.Models.Orders
 
                 public AttributeControlType AttributeControlType { get; set; }
 
-                public IList<ProductVariantAttributeValueModel> Values { get; set; }
+                public IList<ProductAttributeValueModel> Values { get; set; }
             }
 
-            public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
+            public partial class ProductAttributeValueModel : BaseNopEntityModel
             {
                 public string Name { get; set; }
 

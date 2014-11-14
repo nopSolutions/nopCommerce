@@ -343,57 +343,57 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteEndElement();
 
                 xmlWriter.WriteStartElement("ProductAttributes");
-                var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-                foreach (var productVariantAttribute in productVariantAttributes)
+                var productAttributMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                foreach (var productAttributeMapping in productAttributMappings)
                 {
-                    xmlWriter.WriteStartElement("ProductVariantAttribute");
-                    xmlWriter.WriteElementString("ProductVariantAttributeId", null, productVariantAttribute.Id.ToString());
-                    xmlWriter.WriteElementString("ProductAttributeId", null, productVariantAttribute.ProductAttributeId.ToString());
-                    xmlWriter.WriteElementString("ProductAttributeName", null, productVariantAttribute.ProductAttribute.Name);
-                    xmlWriter.WriteElementString("TextPrompt", null, productVariantAttribute.TextPrompt);
-                    xmlWriter.WriteElementString("IsRequired", null, productVariantAttribute.IsRequired.ToString());
-                    xmlWriter.WriteElementString("AttributeControlTypeId", null, productVariantAttribute.AttributeControlTypeId.ToString());
-                    xmlWriter.WriteElementString("DisplayOrder", null, productVariantAttribute.DisplayOrder.ToString());
+                    xmlWriter.WriteStartElement("ProductAttributeMapping");
+                    xmlWriter.WriteElementString("ProductAttributeMappingId", null, productAttributeMapping.Id.ToString());
+                    xmlWriter.WriteElementString("ProductAttributeId", null, productAttributeMapping.ProductAttributeId.ToString());
+                    xmlWriter.WriteElementString("ProductAttributeName", null, productAttributeMapping.ProductAttribute.Name);
+                    xmlWriter.WriteElementString("TextPrompt", null, productAttributeMapping.TextPrompt);
+                    xmlWriter.WriteElementString("IsRequired", null, productAttributeMapping.IsRequired.ToString());
+                    xmlWriter.WriteElementString("AttributeControlTypeId", null, productAttributeMapping.AttributeControlTypeId.ToString());
+                    xmlWriter.WriteElementString("DisplayOrder", null, productAttributeMapping.DisplayOrder.ToString());
                     //validation rules
-                    if (productVariantAttribute.ValidationRulesAllowed())
+                    if (productAttributeMapping.ValidationRulesAllowed())
                     {
-                        if (productVariantAttribute.ValidationMinLength.HasValue)
+                        if (productAttributeMapping.ValidationMinLength.HasValue)
                         {
-                            xmlWriter.WriteElementString("ValidationMinLength", null, productVariantAttribute.ValidationMinLength.Value.ToString());
+                            xmlWriter.WriteElementString("ValidationMinLength", null, productAttributeMapping.ValidationMinLength.Value.ToString());
                         }
-                        if (productVariantAttribute.ValidationMaxLength.HasValue)
+                        if (productAttributeMapping.ValidationMaxLength.HasValue)
                         {
-                            xmlWriter.WriteElementString("ValidationMaxLength", null, productVariantAttribute.ValidationMaxLength.Value.ToString());
+                            xmlWriter.WriteElementString("ValidationMaxLength", null, productAttributeMapping.ValidationMaxLength.Value.ToString());
                         }
-                        if (String.IsNullOrEmpty(productVariantAttribute.ValidationFileAllowedExtensions))
+                        if (String.IsNullOrEmpty(productAttributeMapping.ValidationFileAllowedExtensions))
                         {
-                            xmlWriter.WriteElementString("ValidationFileAllowedExtensions", null, productVariantAttribute.ValidationFileAllowedExtensions);
+                            xmlWriter.WriteElementString("ValidationFileAllowedExtensions", null, productAttributeMapping.ValidationFileAllowedExtensions);
                         }
-                        if (productVariantAttribute.ValidationFileMaximumSize.HasValue)
+                        if (productAttributeMapping.ValidationFileMaximumSize.HasValue)
                         {
-                            xmlWriter.WriteElementString("ValidationFileMaximumSize", null, productVariantAttribute.ValidationFileMaximumSize.Value.ToString());
+                            xmlWriter.WriteElementString("ValidationFileMaximumSize", null, productAttributeMapping.ValidationFileMaximumSize.Value.ToString());
                         }
-                        xmlWriter.WriteElementString("DefaultValue", null, productVariantAttribute.DefaultValue);
+                        xmlWriter.WriteElementString("DefaultValue", null, productAttributeMapping.DefaultValue);
                     }
 
 
-                    xmlWriter.WriteStartElement("ProductVariantAttributeValues");
-                    var productVariantAttributeValues = productVariantAttribute.ProductVariantAttributeValues;
-                    foreach (var productVariantAttributeValue in productVariantAttributeValues)
+                    xmlWriter.WriteStartElement("ProductAttributeValues");
+                    var productAttributeValues = productAttributeMapping.ProductAttributeValues;
+                    foreach (var productAttributeValue in productAttributeValues)
                     {
-                        xmlWriter.WriteStartElement("ProductVariantAttributeValue");
-                        xmlWriter.WriteElementString("ProductVariantAttributeValueId", null, productVariantAttributeValue.Id.ToString());
-                        xmlWriter.WriteElementString("Name", null, productVariantAttributeValue.Name);
-                        xmlWriter.WriteElementString("AttributeValueTypeId", null, productVariantAttributeValue.AttributeValueTypeId.ToString());
-                        xmlWriter.WriteElementString("AssociatedProductId", null, productVariantAttributeValue.AssociatedProductId.ToString());
-                        xmlWriter.WriteElementString("ColorSquaresRgb", null, productVariantAttributeValue.ColorSquaresRgb);
-                        xmlWriter.WriteElementString("PriceAdjustment", null, productVariantAttributeValue.PriceAdjustment.ToString());
-                        xmlWriter.WriteElementString("WeightAdjustment", null, productVariantAttributeValue.WeightAdjustment.ToString());
-                        xmlWriter.WriteElementString("Cost", null, productVariantAttributeValue.Cost.ToString());
-                        xmlWriter.WriteElementString("Quantity", null, productVariantAttributeValue.Quantity.ToString());
-                        xmlWriter.WriteElementString("IsPreSelected", null, productVariantAttributeValue.IsPreSelected.ToString());
-                        xmlWriter.WriteElementString("DisplayOrder", null, productVariantAttributeValue.DisplayOrder.ToString());
-                        xmlWriter.WriteElementString("PictureId", null, productVariantAttributeValue.PictureId.ToString());
+                        xmlWriter.WriteStartElement("ProductAttributeValue");
+                        xmlWriter.WriteElementString("ProductAttributeValueId", null, productAttributeValue.Id.ToString());
+                        xmlWriter.WriteElementString("Name", null, productAttributeValue.Name);
+                        xmlWriter.WriteElementString("AttributeValueTypeId", null, productAttributeValue.AttributeValueTypeId.ToString());
+                        xmlWriter.WriteElementString("AssociatedProductId", null, productAttributeValue.AssociatedProductId.ToString());
+                        xmlWriter.WriteElementString("ColorSquaresRgb", null, productAttributeValue.ColorSquaresRgb);
+                        xmlWriter.WriteElementString("PriceAdjustment", null, productAttributeValue.PriceAdjustment.ToString());
+                        xmlWriter.WriteElementString("WeightAdjustment", null, productAttributeValue.WeightAdjustment.ToString());
+                        xmlWriter.WriteElementString("Cost", null, productAttributeValue.Cost.ToString());
+                        xmlWriter.WriteElementString("Quantity", null, productAttributeValue.Quantity.ToString());
+                        xmlWriter.WriteElementString("IsPreSelected", null, productAttributeValue.IsPreSelected.ToString());
+                        xmlWriter.WriteElementString("DisplayOrder", null, productAttributeValue.DisplayOrder.ToString());
+                        xmlWriter.WriteElementString("PictureId", null, productAttributeValue.PictureId.ToString());
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();

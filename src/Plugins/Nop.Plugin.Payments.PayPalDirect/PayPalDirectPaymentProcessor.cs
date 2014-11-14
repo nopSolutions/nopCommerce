@@ -171,50 +171,6 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.PaymentDetails.OrderTotal.currencyID = payPalCurrency;
             details.PaymentDetails.Custom = processPaymentRequest.OrderGuid.ToString();
             details.PaymentDetails.ButtonSource = "nopCommerceCart";
-            //pass product names and totals to PayPal
-            //if (_paypalDirectPaymentSettings.PassProductNamesAndTotals)
-            //{
-            //    //individual items
-                //var cart = customer.ShoppingCartItems
-                //    .Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                //    .LimitPerStore(processPaymentRequest.StoreId)
-                //    .ToList();
-            //    var cartItems = new PaymentDetailsItemType[cart.Count];
-            //    for (int i = 0; i < cart.Count; i++)
-            //    {
-            //        var sc = cart[i];
-            //        decimal taxRate;
-            //        var customer = processPaymentRequest.Customer;
-            //        decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc, true);
-            //        decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true);
-            //        decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
-            //        decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
-            //        //decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
-            //        //decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
-            //        cartItems[i] = new PaymentDetailsItemType()
-            //        {
-            //            Name = sc.ProductVariant.FullProductName,
-            //            Number = sc.ProductVariant.Id.ToString(),
-            //            Quantity = sc.Quantity.ToString(),
-            //            Amount = new BasicAmountType()
-            //            {
-            //                currencyID = payPalCurrency,
-            //                Value = scUnitPriceExclTax.ToString("N", new CultureInfo("en-us")),
-            //            },
-            //            Tax = new BasicAmountType()
-            //            {
-            //                currencyID = payPalCurrency,
-            //                Value = (scUnitPriceInclTax - scUnitPriceExclTax).ToString("N", new CultureInfo("en-us")),
-            //            },
-            //        };
-            //    };
-            //    details.PaymentDetails.PaymentDetailsItem = cartItems;
-            //    //other totals (undone)
-            //    details.PaymentDetails.ItemTotal = null;
-            //    details.PaymentDetails.ShippingTotal = null;
-            //    details.PaymentDetails.TaxTotal = null;
-            //    details.PaymentDetails.HandlingTotal = null;
-            //}
             //shipping
             if (customer.ShippingAddress != null)
             {

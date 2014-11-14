@@ -561,30 +561,30 @@ namespace Nop.Web.Controllers
 
             //performance optimization
             //We cache a value indicating whether a product has attributes
-            IList<ProductVariantAttribute> productVariantAttributes = null;
+            IList<ProductAttributeMapping> productAttributeMapping = null;
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_HAS_PRODUCT_ATTRIBUTES_KEY, product.Id);
             var hasProductAttributesCache = _cacheManager.Get<bool?>(cacheKey);
             if (!hasProductAttributesCache.HasValue)
             {
                 //no value in the cache yet
                 //let's load attributes and cache the result (true/false)
-                productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
-                hasProductAttributesCache = productVariantAttributes.Count > 0;
+                productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                hasProductAttributesCache = productAttributeMapping.Count > 0;
                 _cacheManager.Set(cacheKey, hasProductAttributesCache, 60);
             }
-            if (hasProductAttributesCache.Value && productVariantAttributes == null)
+            if (hasProductAttributesCache.Value && productAttributeMapping == null)
             {
                 //cache indicates that the product has attributes
                 //let's load them
-                productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductId(product.Id);
+                productAttributeMapping = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             }
-            if (productVariantAttributes == null)
+            if (productAttributeMapping == null)
             {
-                productVariantAttributes = new List<ProductVariantAttribute>();
+                productAttributeMapping = new List<ProductAttributeMapping>();
             }
-            foreach (var attribute in productVariantAttributes)
+            foreach (var attribute in productAttributeMapping)
             {
-                var attributeModel = new ProductDetailsModel.ProductVariantAttributeModel
+                var attributeModel = new ProductDetailsModel.ProductAttributeModel
                 {
                     Id = attribute.Id,
                     ProductId = product.Id,
@@ -606,10 +606,10 @@ namespace Nop.Web.Controllers
                 if (attribute.ShouldHaveValues())
                 {
                     //values
-                    var attributeValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
                     foreach (var attributeValue in attributeValues)
                     {
-                        var valueModel = new ProductDetailsModel.ProductVariantAttributeValueModel
+                        var valueModel = new ProductDetailsModel.ProductAttributeValueModel
                         {
                             Id = attributeValue.Id,
                             Name = attributeValue.GetLocalized(x => x.Name),
@@ -661,7 +661,7 @@ namespace Nop.Web.Controllers
                                         item.IsPreSelected = false;
 
                                     //select new values
-                                    var selectedValues = _productAttributeParser.ParseProductVariantAttributeValues(updatecartitem.AttributesXml);
+                                    var selectedValues = _productAttributeParser.ParseProductAttributeValues(updatecartitem.AttributesXml);
                                     foreach (var attributeValue in selectedValues)
                                         foreach (var item in attributeModel.Values)
                                             if (attributeValue.Id == item.Id)
@@ -710,7 +710,7 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                model.ProductVariantAttributes.Add(attributeModel);
+                model.ProductAttributes.Add(attributeModel);
             }
 
             #endregion 

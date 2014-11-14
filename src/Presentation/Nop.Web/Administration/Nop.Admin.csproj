@@ -359,7 +359,7 @@
     <Compile Include="Validators\Directory\CountryValidator.cs" />
     <Compile Include="Validators\Catalog\ProductReviewValidator.cs" />
     <Compile Include="Validators\Discounts\DiscountValidator.cs" />
-    <Compile Include="Validators\Catalog\ProductVariantAttributeValueModelValidator.cs" />
+    <Compile Include="Validators\Catalog\ProductAttributeValueModelValidator.cs" />
     <Compile Include="Validators\Catalog\SpecificationAttributeOptionValidator.cs" />
     <Compile Include="Validators\Catalog\SpecificationAttributeValidator.cs" />
     <Compile Include="Validators\Catalog\ProductAttributeValidator.cs" />

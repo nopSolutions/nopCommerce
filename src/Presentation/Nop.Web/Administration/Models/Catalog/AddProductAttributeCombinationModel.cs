@@ -10,33 +10,33 @@ namespace Nop.Admin.Models.Catalog
     {
         public AddProductAttributeCombinationModel()
         {
-            ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+            ProductAttributes = new List<ProductAttributeModel>();
             Warnings = new List<string>();
         }
         
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.StockQuantity")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.AllowOutOfStockOrders")]
         public bool AllowOutOfStockOrders { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Sku")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")]
         public string Sku { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.ManufacturerPartNumber")]
         public string ManufacturerPartNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.Gtin")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Gtin")]
         public string Gtin { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.OverriddenPrice")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.OverriddenPrice")]
         [UIHint("DecimalNullable")]
         public decimal? OverriddenPrice { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.ProductVariantAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
+        [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
 
-        public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+        public IList<ProductAttributeModel> ProductAttributes { get; set; }
 
         public IList<string> Warnings { get; set; }
 
@@ -44,11 +44,11 @@ namespace Nop.Admin.Models.Catalog
 
         #region Nested classes
 
-        public partial class ProductVariantAttributeModel : BaseNopEntityModel
+        public partial class ProductAttributeModel : BaseNopEntityModel
         {
-            public ProductVariantAttributeModel()
+            public ProductAttributeModel()
             {
-                Values = new List<ProductVariantAttributeValueModel>();
+                Values = new List<ProductAttributeValueModel>();
             }
 
             public int ProductAttributeId { get; set; }
@@ -61,10 +61,10 @@ namespace Nop.Admin.Models.Catalog
 
             public AttributeControlType AttributeControlType { get; set; }
 
-            public IList<ProductVariantAttributeValueModel> Values { get; set; }
+            public IList<ProductAttributeValueModel> Values { get; set; }
         }
 
-        public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
+        public partial class ProductAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

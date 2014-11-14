@@ -153,6 +153,6 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="value">Product attribute value</param>
         /// <returns>Price adjustment</returns>
-        decimal GetProductAttributeValuePriceAdjustment(ProductVariantAttributeValue value);
+        decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value);
     }
 }
