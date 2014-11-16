@@ -10,6 +10,11 @@ namespace Nop.Plugin.Feed.Froogle
         public int ProductPictureSize { get; set; }
 
         /// <summary>
+        /// A value indicating whether we should pass shipping info to Froogle
+        /// </summary>
+        public bool PassShippingInfo { get; set; }
+
+        /// <summary>
         /// Store identifier for which feed file(s) will be generated
         /// </summary>
         public int StoreId { get; set; }
@@ -17,12 +22,6 @@ namespace Nop.Plugin.Feed.Froogle
         /// Currency identifier for which feed file(s) will be generated
         /// </summary>
         public int CurrencyId { get; set; }
-
-
-        /// <summary>
-        /// A value indicating whether we should pass shipping info to Froogle
-        /// </summary>
-        public bool PassShippingInfo { get; set; }
 
         /// <summary>
         /// Default Google category

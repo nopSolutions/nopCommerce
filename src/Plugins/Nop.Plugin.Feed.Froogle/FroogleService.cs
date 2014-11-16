@@ -482,6 +482,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.General", "General");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo", "Pass shipping info");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize", "Product thumbnail image size");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName", "Product");
@@ -518,6 +520,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.General");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Generate");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName");

@@ -73,6 +73,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PassShippingInfo):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PassShippingInfo)
+                @Html.ValidationMessageFor(model => model.PassShippingInfo)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.StoreId):
             </td>
             <td class="adminData">

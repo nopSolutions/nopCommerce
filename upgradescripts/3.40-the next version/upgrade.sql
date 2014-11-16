@@ -986,6 +986,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.SaveBeforeEdit">
     <Value>You need to save the product before you can add attributes for this page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo">
+    <Value>Pass shipping info</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo.Hint">
+    <Value>Check if you want to include shipping information (weight) in generated XML file.</Value>
+  </LocaleResource>
 </Language>
 '
 

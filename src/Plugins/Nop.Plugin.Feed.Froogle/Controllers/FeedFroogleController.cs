@@ -66,8 +66,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
-            //picture
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
+            model.PassShippingInfo = _froogleSettings.PassShippingInfo;
             //stores
             model.StoreId = _froogleSettings.StoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -81,7 +81,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
             model.AvailableGoogleCategories.Add(new SelectListItem {Text = "Select a category", Value = ""});
             foreach (var gc in _googleService.GetTaxonomyList())
-                model.AvailableGoogleCategories.Add(new SelectListItem {Text = gc, Value = gc});
+                model.AvailableGoogleCategories.Add(new SelectListItem { Text = gc, Value = gc });
 
             //file paths
             foreach (var store in _storeService.GetAllStores())
@@ -110,6 +110,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
 
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
+            _froogleSettings.PassShippingInfo = model.PassShippingInfo;
             _froogleSettings.CurrencyId = model.CurrencyId;
             _froogleSettings.StoreId = model.StoreId;
             _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
