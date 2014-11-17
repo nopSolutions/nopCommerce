@@ -6567,6 +6567,15 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AllowedTokens.Hint">
     <Value>This is a list of the message tokens you can use in your emails.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload">
+    <Value>Attached static file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Hint">
+    <Value>Upload a static file you want to attach to each sent email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists">
+    <Value>Has attached file</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AvailableStores">
     <Value>Stores</Value>
   </LocaleResource>

@@ -26,6 +26,7 @@ namespace Nop.Data.Tests.Messages
                 Body = "Body",
                 AttachmentFilePath = "some file path",
                 AttachmentFileName = "some file name",
+                AttachedDownloadId = 3,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 SentTries = 5,
                 SentOnUtc = new DateTime(2010, 02, 02),
@@ -59,6 +60,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.Body.ShouldEqual("Body");
             fromDb.AttachmentFilePath.ShouldEqual("some file path");
             fromDb.AttachmentFileName.ShouldEqual("some file name");
+            fromDb.AttachedDownloadId.ShouldEqual(3);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.SentTries.ShouldEqual(5);
             fromDb.SentOnUtc.ShouldNotBeNull();

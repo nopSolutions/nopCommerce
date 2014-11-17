@@ -159,8 +159,43 @@
         </tr>
     </table>
     ))
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AttachedDownloadId):
+            </td>
+            <td class="adminData">
+                @{
+                    //Static file attachments do not support URLs yet
+                    //A store owner have to upload a file
+                    //we store a value into "ViewData" and then use it in the Download.cshtml file
+                    ViewData["nop.DownloadEditor.DisableUrl"] = true;
+                }
+                @Html.EditorFor(model => model.HasAttachedDownload) @T("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists")
+                <div id="pnlAttachedDownload">
+                    @Html.EditorFor(model => model.AttachedDownloadId)
+                    @Html.ValidationMessageFor(model => model.AttachedDownloadId)
+                </div>
+            </td>
+        </tr>
+    </table>
 
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+            toggleHasAttachedDownload();
+        });
 
+        function toggleHasAttachedDownload() {
+            if ($('#@Html.FieldIdFor(model => model.HasAttachedDownload)').is(':checked')) {
+                $('#pnlAttachedDownload').show();
+            }
+            else {
+                $('#pnlAttachedDownload').hide();
+            }
+        }
+
+    </script>
 }
 
 @helper TabStores()

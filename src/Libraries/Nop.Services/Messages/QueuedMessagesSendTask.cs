@@ -52,7 +52,8 @@ namespace Nop.Services.Messages
                        bcc, 
                        cc, 
                        queuedEmail.AttachmentFilePath,
-                       queuedEmail.AttachmentFileName);
+                       queuedEmail.AttachmentFileName,
+                       queuedEmail.AttachedDownloadId);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }

@@ -210,6 +210,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             
             var model = messageTemplate.ToModel();
+            model.HasAttachedDownload = model.AttachedDownloadId > 0;
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -245,6 +246,9 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 messageTemplate = model.ToEntity(messageTemplate);
+                //attached file
+                if (!model.HasAttachedDownload)
+                    messageTemplate.AttachedDownloadId = 0;
                 _messageTemplateService.UpdateMessageTemplate(messageTemplate);
                 //Stores
                 SaveStoreMappings(messageTemplate, model);
@@ -265,6 +269,7 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
+            model.HasAttachedDownload = model.AttachedDownloadId > 0;
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
             foreach (var ea in _emailAccountService.GetAllEmailAccounts())
@@ -315,6 +320,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new { id = model.Id });
             }
         }
+
         #endregion
     }
 }

@@ -24,10 +24,12 @@ namespace Nop.Services.Messages
         /// <param name="cc">CC addresses ist</param>
         /// <param name="attachmentFilePath">Attachment file path</param>
         /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
+        /// <param name="attachedDownloadId">Attachment download ID (another attachedment)</param>
         void SendEmail(EmailAccount emailAccount, string subject, string body,
             string fromAddress, string fromName, string toAddress, string toName,
              string replyToAddress = null, string replyToName = null,
             IEnumerable<string> bcc = null, IEnumerable<string> cc = null,
-            string attachmentFilePath = null, string attachmentFileName = null);
+            string attachmentFilePath = null, string attachmentFileName = null,
+            int attachedDownloadId = 0);
     }
 }

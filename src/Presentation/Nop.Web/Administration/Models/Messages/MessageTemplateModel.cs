@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Stores;
@@ -42,6 +43,11 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.IsActive")]
         [AllowHtml]
         public bool IsActive { get; set; }
+
+        public bool HasAttachedDownload { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload")]
+        [UIHint("Download")]
+        public int AttachedDownloadId { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Fields.EmailAccount")]
         public int EmailAccountId { get; set; }

@@ -229,17 +229,18 @@ namespace Nop.Services.Messages
         {
             if (messageTemplate == null)
                 throw new ArgumentNullException("messageTemplate");
-            
+
             var mtCopy = new MessageTemplate
-                             {
-                                 Name = messageTemplate.Name,
-                                 BccEmailAddresses = messageTemplate.BccEmailAddresses,
-                                 Subject = messageTemplate.Subject,
-                                 Body = messageTemplate.Body,
-                                 IsActive = messageTemplate.IsActive,
-                                 EmailAccountId = messageTemplate.EmailAccountId,
-                                 LimitedToStores = messageTemplate.LimitedToStores,
-                             };
+            {
+                Name = messageTemplate.Name,
+                BccEmailAddresses = messageTemplate.BccEmailAddresses,
+                Subject = messageTemplate.Subject,
+                Body = messageTemplate.Body,
+                IsActive = messageTemplate.IsActive,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
+                EmailAccountId = messageTemplate.EmailAccountId,
+                LimitedToStores = messageTemplate.LimitedToStores,
+            };
 
             InsertMessageTemplate(mtCopy);
 

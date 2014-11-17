@@ -992,6 +992,15 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo.Hint">
     <Value>Check if you want to include shipping information (weight) in generated XML file.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload">
+    <Value>Attached static file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Hint">
+    <Value>Upload a static file you want to attach to each sent email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.AttachedDownload.Exists">
+    <Value>Has attached file</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2285,3 +2294,36 @@ BEGIN
 END
 GO
 
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[MessageTemplate]') and NAME='AttachedDownloadId')
+BEGIN
+	ALTER TABLE [MessageTemplate]
+	ADD [AttachedDownloadId] int NULL
+END
+GO
+
+UPDATE [MessageTemplate]
+SET [AttachedDownloadId] = 0
+WHERE [AttachedDownloadId] IS NULL
+GO
+
+ALTER TABLE [MessageTemplate] ALTER COLUMN [AttachedDownloadId] int NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='AttachedDownloadId')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [AttachedDownloadId] int NULL
+END
+GO
+
+UPDATE [QueuedEmail]
+SET [AttachedDownloadId] = 0
+WHERE [AttachedDownloadId] IS NULL
+GO
+
+ALTER TABLE [QueuedEmail] ALTER COLUMN [AttachedDownloadId] int NOT NULL
+GO

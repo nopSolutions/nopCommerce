@@ -95,6 +95,7 @@ namespace Nop.Services.Messages
                 Body = bodyReplaced,
                 AttachmentFilePath = attachmentFilePath,
                 AttachmentFileName = attachmentFileName,
+                AttachedDownloadId = messageTemplate.AttachedDownloadId,
                 CreatedOnUtc = DateTime.UtcNow,
                 EmailAccountId = emailAccount.Id
             };

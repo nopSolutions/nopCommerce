@@ -134,6 +134,7 @@ namespace Nop.Admin.Infrastructure
             //message template
             Mapper.CreateMap<MessageTemplate, MessageTemplateModel>()
                 .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
+                .ForMember(dest => dest.HasAttachedDownload, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableEmailAccounts, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
@@ -148,12 +149,13 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SentOn, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
-                .ForMember(dest=> dest.CreatedOnUtc, dt=> dt.Ignore())
+                .ForMember(dest => dest.CreatedOnUtc, dt=> dt.Ignore())
                 .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccount, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
-                .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore());
+                .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore())
+                .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
             //campaign
             Mapper.CreateMap<Campaign, CampaignModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())

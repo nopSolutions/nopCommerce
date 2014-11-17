@@ -73,6 +73,11 @@ namespace Nop.Core.Domain.Messages
         public string AttachmentFileName { get; set; }
 
         /// <summary>
+        /// Gets or sets the download identifier of attached file
+        /// </summary>
+        public int AttachedDownloadId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of item creation in UTC
         /// </summary>
         public DateTime CreatedOnUtc { get; set; }

@@ -34,6 +34,11 @@ namespace Nop.Core.Domain.Messages
         public bool IsActive { get; set; }
 
         /// <summary>
+        /// Gets or sets the download identifier of attached file
+        /// </summary>
+        public int AttachedDownloadId { get; set; }
+
+        /// <summary>
         /// Gets or sets the used email account identifier
         /// </summary>
         public int EmailAccountId { get; set; }
