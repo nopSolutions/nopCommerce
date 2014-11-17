@@ -152,6 +152,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccount, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
+                .ForMember(dest => dest.AttachmentFilePath, mo => mo.Ignore())
                 .ForMember(dest => dest.AttachmentFileName, mo => mo.Ignore());
             //campaign
             Mapper.CreateMap<Campaign, CampaignModel>()
