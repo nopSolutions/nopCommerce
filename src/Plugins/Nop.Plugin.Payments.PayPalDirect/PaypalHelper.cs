@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Payments;
-using Nop.Plugin.Payments.PayPalDirect.PayPalSvc;
+using PayPal.PayPalAPIInterfaceService.Model;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {
@@ -73,8 +73,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             var sb = new StringBuilder();
             switch (abstractResponse.Ack)
             {
-                case AckCodeType.Success:
-                case AckCodeType.SuccessWithWarning:
+                case AckCodeType.SUCCESS:
+                case AckCodeType.SUCCESSWITHWARNING:
                     success = true;
                     break;
                 default:

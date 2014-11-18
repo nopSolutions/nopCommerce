@@ -42,6 +42,16 @@
       <Private>False</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PayPalCoreSDK">
+      <HintPath>..\..\packages\PayPalCoreSDK.1.6.0\lib\net451\PayPalCoreSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="PayPalMerchantSDK">
+      <HintPath>..\..\packages\PayPalMerchantSDK.2.13.117\lib\net20\PayPalMerchantSDK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.EnterpriseServices" />
@@ -99,11 +109,6 @@
     <Compile Include="RouteProvider.cs" />
     <Compile Include="TransactMode.cs" />
     <Compile Include="Validators\PaymentInfoValidator.cs" />
-    <Compile Include="Web References\PayPalSvc\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
@@ -141,167 +146,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Web References\PayPalSvc\AddressVerifyResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BAUpdateResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BillOutstandingAmountResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BillUserResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMButtonSearchResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMCreateButtonResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMGetButtonDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMGetInventoryResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMManageButtonStatusResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMSetInventoryResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\BMUpdateButtonResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\CoreComponentTypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\PayPalSvc\CreateBillingAgreementResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\CreateMobilePaymentResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\CreateRecurringPaymentsProfileResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoAuthorizationResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoCaptureResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoDirectPaymentResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoExpressCheckoutPaymentResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoMobileCheckoutPaymentResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoNonReferencedCreditResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoReauthorizationResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoReferenceTransactionResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoUATPAuthorizationResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoUATPExpressCheckoutPaymentResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\DoVoidResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\eBLBaseComponents.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\PayPalSvc\EnhancedDataTypes.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web References\PayPalSvc\EnterBoardingResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetAccessPermissionDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetAuthDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetBalanceResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetBillingAgreementCustomerDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetBoardingDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetExpressCheckoutDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetMobileStatusResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetPalDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetRecurringPaymentsProfileDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\GetTransactionDetailsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\ManagePendingTransactionStatusResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\ManageRecurringPaymentsProfileStatusResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\MassPayResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\PayPalSvc.wsdl" />
-    <None Include="Web References\PayPalSvc\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\PayPalSvc\RefundTransactionResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\ReverseTransactionResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\SetAccessPermissionsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\SetAuthFlowParamResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\SetCustomerBillingAgreementResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\SetExpressCheckoutResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\SetMobileCheckoutResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\TransactionSearchResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\UpdateAccessPermissionsResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\PayPalSvc\UpdateRecurringPaymentsProfileResponseType.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
     <Content Include="web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -310,22 +154,6 @@
     <Content Include="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferenceUrl Include="F:\Own\NopCommerce\nopCommerce_1.90_Source\Payment\Nop.Payment.PayPal\Web References\PayPalSvc\PayPalSvc.wsdl">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\PayPalSvc\</RelPath>
-      <UpdateFromURL>F:\Own\NopCommerce\nopCommerce_1.90_Source\Payment\Nop.Payment.PayPal\Web References\PayPalSvc\PayPalSvc.wsdl</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>Nop_Plugin_Payments_PayPalDirect_PayPalSvc_PayPalAPIInterfaceService</CachedSettingsPropName>
-    </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
