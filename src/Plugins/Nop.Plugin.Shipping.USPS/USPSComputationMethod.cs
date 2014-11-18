@@ -129,11 +129,14 @@ namespace Nop.Plugin.Shipping.USPS
             if (usedMeasureDimension == null)
                 throw new NopException("Primary dimension can't be loaded");
 
+            decimal lengthTmp, widthTmp, heightTmp;
+            _shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
 
-            int length = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalLength(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int height = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalHeight(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int width = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWidth(getShippingOptionRequest.Items) / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
-            int weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWeight(getShippingOptionRequest.Items) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
+
+            int length = Convert.ToInt32(Math.Ceiling(lengthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int height = Convert.ToInt32(Math.Ceiling(heightTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int width = Convert.ToInt32(Math.Ceiling(widthTmp / baseusedMeasureDimension.Ratio * usedMeasureDimension.Ratio));
+            int weight = Convert.ToInt32(Math.Ceiling(_shippingService.GetTotalWeight(getShippingOptionRequest) / baseusedMeasureWeight.Ratio * usedMeasureWeight.Ratio));
             
 
             if (length < 1)
@@ -160,11 +163,10 @@ namespace Nop.Plugin.Shipping.USPS
             int girth = height + height + width + width;
             //Get shopping cart sub-total.  V2 International rates require the package value to be declared.
             decimal subTotal = decimal.Zero;
-            foreach (var shoppingCartItem in getShippingOptionRequest.Items)
+            foreach (var packageItem in getShippingOptionRequest.Items)
             {
-                if (!shoppingCartItem.IsShipEnabled)
-                    continue;
-                subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem);
+                //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
+                subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
             }
 
 

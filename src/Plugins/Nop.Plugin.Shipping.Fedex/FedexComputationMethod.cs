@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Web.Routing;
 using System.Web.Services.Protocols;
 using Nop.Core;
@@ -100,7 +101,8 @@ namespace Nop.Plugin.Shipping.Fedex
             Discount orderSubTotalAppliedDiscount;
             decimal subTotalWithoutDiscountBase;
             decimal subTotalWithDiscountBase;
-            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
+            //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
+            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items.Select(x=>x.ShoppingCartItem).ToList(),
                 false, out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
                 out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
             decimal subTotalBase = subTotalWithDiscountBase;
@@ -252,10 +254,14 @@ namespace Nop.Plugin.Shipping.Fedex
 
             var usedMeasureWeight = GetUsedMeasureWeight();
             var usedMeasureDimension = GetUsedMeasureDimension();
-            int length = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalLength(getShippingOptionRequest.Items), usedMeasureDimension);
-            int height = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalHeight(getShippingOptionRequest.Items), usedMeasureDimension);
-            int width = ConvertFromPrimaryMeasureDimension(_shippingService.GetTotalWidth(getShippingOptionRequest.Items), usedMeasureDimension);
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+
+            decimal lengthTmp, widthTmp, heightTmp;
+            _shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
+
+            int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+            int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+            int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (length < 1)
                 length = 1;
             if (height < 1)
@@ -348,16 +354,22 @@ namespace Nop.Plugin.Shipping.Fedex
             var usedMeasureDimension = GetUsedMeasureDimension();
 
             var items = getShippingOptionRequest.Items;
-            var totalItems = items.GetTotalProducts();
+            var totalItems = items.Sum(x => x.GetQuantity());
             request.RequestedShipment.PackageCount = totalItems.ToString();
             request.RequestedShipment.RequestedPackageLineItems = new RequestedPackageLineItem[totalItems];
 
             int i = 0;
-            foreach (var sci in items)
+            foreach (var packageItem in items)
             {
-                int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(sci.Product.Width, usedMeasureDimension);
+                var sci = packageItem.ShoppingCartItem;
+                var qty = packageItem.GetQuantity();
+
+                decimal lengthTmp, widthTmp, heightTmp;
+                _shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
+
+                int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
                 int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
@@ -368,7 +380,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 if (weight < 1)
                     weight = 1;
 
-                for (int j = 0; j < sci.Quantity; j++)
+                for (int j = 0; j < qty; j++)
                 {
                     request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
@@ -437,10 +449,10 @@ namespace Nop.Plugin.Shipping.Fedex
             int height;
             int width;
 
-            if (getShippingOptionRequest.Items.Count == 1 && getShippingOptionRequest.Items[0].Quantity == 1)
+            if (getShippingOptionRequest.Items.Count == 1 && getShippingOptionRequest.Items[0].GetQuantity() == 1)
             {
                 totalPackagesDims = 1;
-                var product = getShippingOptionRequest.Items[0].Product;
+                var product = getShippingOptionRequest.Items[0].ShoppingCartItem.Product;
                 length = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
                 height = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
                 width = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
@@ -450,11 +462,11 @@ namespace Nop.Plugin.Shipping.Fedex
                 decimal totalVolume = 0;
                 foreach (var item in getShippingOptionRequest.Items)
                 {
-                    var product = item.Product;
+                    var product = item.ShoppingCartItem.Product;
                     int productLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
                     int productHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
                     int productWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
-                    totalVolume += item.Quantity * (productHeight * productWidth * productLength);
+                    totalVolume += item.GetQuantity() * (productHeight * productWidth * productLength);
                 }
 
                 int dimension;
@@ -490,7 +502,7 @@ namespace Nop.Plugin.Shipping.Fedex
             if (width < 1)
                 width = 1;
 
-            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest.Items), usedMeasureWeight);
+            int weight = ConvertFromPrimaryMeasureWeight(_shippingService.GetTotalWeight(getShippingOptionRequest), usedMeasureWeight);
             if (weight < 1)
                 weight = 1;
 

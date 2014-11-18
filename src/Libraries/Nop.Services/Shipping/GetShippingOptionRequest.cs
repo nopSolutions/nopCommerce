@@ -11,10 +11,16 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class GetShippingOptionRequest
     {
+        #region Ctor
+
         public GetShippingOptionRequest()
         {
-            this.Items = new List<ShoppingCartItem>();
+            this.Items = new List<PackageItem>();
         }
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets a customer
@@ -24,32 +30,69 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets or sets a shopping cart items
         /// </summary>
-        public virtual IList<ShoppingCartItem> Items { get; set; }
+        public IList<PackageItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets a shipping address (where we ship to)
         /// </summary>
-        public virtual Address ShippingAddress { get; set; }
+        public Address ShippingAddress { get; set; }
 
         /// <summary>
         /// Shipped from country
         /// </summary>
-        public virtual Country CountryFrom { get; set; }
+        public Country CountryFrom { get; set; }
         /// <summary>
         /// Shipped from state/province
         /// </summary>
-        public virtual StateProvince StateProvinceFrom { get; set; }
+        public StateProvince StateProvinceFrom { get; set; }
         /// <summary>
         /// Shipped from zip/postal code
         /// </summary>
-        public virtual string ZipPostalCodeFrom { get; set; }
+        public string ZipPostalCodeFrom { get; set; }
         /// <summary>
         /// Shipped from city
         /// </summary>
-        public virtual string CityFrom { get; set; }
+        public string CityFrom { get; set; }
         /// <summary>
         /// Shipped from address
         /// </summary>
-        public virtual string AddressFrom { get; set; }
+        public string AddressFrom { get; set; }
+
+        #endregion
+
+        #region Nested classes
+
+        public class PackageItem
+        {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="sci">Shopping cart item</param>
+            /// <param name="qty">override "sci" quantity property.</param>
+            public PackageItem(ShoppingCartItem sci, int? qty = null)
+            {
+                this.ShoppingCartItem = sci;
+                this.OverriddenQuantity = qty;
+            }
+
+            /// <summary>
+            /// Shopping cart item
+            /// </summary>
+            public ShoppingCartItem ShoppingCartItem { get; set; }
+            /// <summary>
+            /// If specified, override "Quantity" property of "ShoppingCartItem
+            /// </summary>
+            public int? OverriddenQuantity { get; set; }
+
+            public int GetQuantity()
+            {
+                if (OverriddenQuantity.HasValue)
+                    return OverriddenQuantity.Value;
+
+                return ShoppingCartItem.Quantity;
+            }
+        }
+
+        #endregion
     }
 }

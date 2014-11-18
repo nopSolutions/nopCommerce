@@ -114,13 +114,14 @@ namespace Nop.Plugin.Shipping.ByWeight
             int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
             string zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             decimal subTotal = decimal.Zero;
-            foreach (var shoppingCartItem in getShippingOptionRequest.Items)
+            foreach (var packageItem in getShippingOptionRequest.Items)
             {
-                if (shoppingCartItem.IsFreeShipping)
+                if (packageItem.ShoppingCartItem.IsFreeShipping)
                     continue;
-                subTotal += _priceCalculationService.GetSubTotal(shoppingCartItem);
+                //TODO we should use getShippingOptionRequest.Items.GetQuantity() method to get subtotal
+                subTotal += _priceCalculationService.GetSubTotal(packageItem.ShoppingCartItem);
             }
-            decimal weight = _shippingService.GetTotalWeight(getShippingOptionRequest.Items);
+            decimal weight = _shippingService.GetTotalWeight(getShippingOptionRequest);
 
             var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
             foreach (var shippingMethod in shippingMethods)

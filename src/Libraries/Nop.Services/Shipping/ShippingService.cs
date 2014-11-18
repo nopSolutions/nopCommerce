@@ -16,6 +16,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using Org.BouncyCastle.Ocsp;
 
 namespace Nop.Services.Shipping
 {
@@ -467,17 +468,20 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets shopping cart weight
         /// </summary>
-        /// <param name="cart">Cart</param>
+        /// <param name="request">Request</param>
         /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
-        /// <returns>Shopping cart weight</returns>
-        public virtual decimal GetTotalWeight(IList<ShoppingCartItem> cart, bool includeCheckoutAttributes = true)
+        /// <returns>Total weight</returns>
+        public virtual decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true)
         {
-            Customer customer = cart.GetCustomer();
+            if (request == null)
+                throw new ArgumentNullException("request");
+
+            Customer customer = request.Customer;
 
             decimal totalWeight = decimal.Zero;
             //shopping cart items
-            foreach (var shoppingCartItem in cart)
-                totalWeight += GetShoppingCartItemWeight(shoppingCartItem) * shoppingCartItem.Quantity;
+            foreach (var packageItem in request.Items)
+                totalWeight += GetShoppingCartItemWeight(packageItem.ShoppingCartItem) * packageItem.GetQuantity();
 
             //checkout attributes
             if (customer != null && includeCheckoutAttributes)
@@ -496,13 +500,16 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Get dimensions
         /// </summary>
-        /// <param name="cart">Shipping cart items</param>
+        /// <param name="request">Request</param>
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
-        public virtual void GetDimensions(IList<ShoppingCartItem> cart,
+        public virtual void GetDimensions(GetShippingOptionRequest request,
             out decimal width, out decimal length, out decimal height)
         {
+            if (request == null)
+                throw new ArgumentNullException("request");
+
             if (_shippingSettings.UseCubeRootMethod)
             {
                 //cube root of volume
@@ -510,42 +517,42 @@ namespace Nop.Services.Shipping
                 decimal maxProductWidth = 0;
                 decimal maxProductLength = 0;
                 decimal maxProductHeight = 0;
-                foreach (var shoppingCartItem in cart)
+                foreach (var packageItem in request.Items)
                 {
+                    var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = shoppingCartItem.Product;
-                    if (product != null)
+                    var qty = packageItem.GetQuantity();
+                    var productWidth = product.Width;
+                    var productLength = product.Length;
+                    var productHeight = product.Height;
+                    //attributes
+                    if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                     {
-                        var productWidth = product.Width;
-                        var productLength = product.Length;
-                        var productHeight = product.Height;
-                        //attributes
-                        if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
-                        {
-                            //bundled products (associated attributes)
-                            var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                        //bundled products (associated attributes)
+                        var attributeValues =
+                            _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
                                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
                                 .ToList();
-                            foreach (var attributeValue in attributeValues)
+                        foreach (var attributeValue in attributeValues)
+                        {
+                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
                             {
-                                var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                                if (associatedProduct != null && associatedProduct.IsShipEnabled)
-                                {
-                                    productWidth += associatedProduct.Width * attributeValue.Quantity;
-                                    productLength += associatedProduct.Length * attributeValue.Quantity;
-                                    productHeight += associatedProduct.Height * attributeValue.Quantity;
-                                }
+                                productWidth += associatedProduct.Width*attributeValue.Quantity;
+                                productLength += associatedProduct.Length*attributeValue.Quantity;
+                                productHeight += associatedProduct.Height*attributeValue.Quantity;
                             }
                         }
-
-                        totalVolume += shoppingCartItem.Quantity * productHeight * productWidth * productLength;
-
-                        if (productWidth > maxProductWidth)
-                            maxProductWidth = productWidth;
-                        if (productLength > maxProductLength)
-                            maxProductLength = productLength;
-                        if (productHeight > maxProductHeight)
-                            maxProductHeight = productHeight;
                     }
+
+                    totalVolume += qty * productHeight * productWidth * productLength;
+
+                    if (productWidth > maxProductWidth)
+                        maxProductWidth = productWidth;
+                    if (productLength > maxProductLength)
+                        maxProductLength = productLength;
+                    if (productHeight > maxProductHeight)
+                        maxProductHeight = productHeight;
                 }
                 decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
                 length = width = height = dimension;
@@ -564,71 +571,35 @@ namespace Nop.Services.Shipping
             {
                 //summarize all values (very inaccurate with multiple items)
                 width = length = height = decimal.Zero;
-                foreach (var shoppingCartItem in cart)
+                foreach (var packageItem in request.Items)
                 {
+                    var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = shoppingCartItem.Product;
-                    if (product != null)
+                    var qty = packageItem.GetQuantity();
+                    width += product.Width*qty;
+                    length += product.Length*qty;
+                    height += product.Height*qty;
+                    //attributes
+                    if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
                     {
-                        width += product.Width * shoppingCartItem.Quantity;
-                        length += product.Length * shoppingCartItem.Quantity;
-                        height += product.Height * shoppingCartItem.Quantity;
-                        //attributes
-                        if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
-                        {
-                            //bundled products (associated attributes)
-                            var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                        //bundled products (associated attributes)
+                        var attributeValues =
+                            _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
                                 .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
                                 .ToList();
-                            foreach (var attributeValue in attributeValues)
+                        foreach (var attributeValue in attributeValues)
+                        {
+                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
                             {
-                                var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                                if (associatedProduct != null && associatedProduct.IsShipEnabled)
-                                {
-                                    width += associatedProduct.Width * attributeValue.Quantity;
-                                    length += associatedProduct.Length * attributeValue.Quantity;
-                                    height += associatedProduct.Height * attributeValue.Quantity;
-                                }
+                                width += associatedProduct.Width*attributeValue.Quantity;
+                                length += associatedProduct.Length*attributeValue.Quantity;
+                                height += associatedProduct.Height*attributeValue.Quantity;
                             }
                         }
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets total width
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total width</returns>
-        public virtual decimal GetTotalWidth(IList<ShoppingCartItem> cart)
-        {
-            decimal length, width, height;
-            GetDimensions(cart, out width, out length, out height);
-            return width;
-        }
-
-        /// <summary>
-        /// Gets total length
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total length</returns>
-        public virtual decimal GetTotalLength(IList<ShoppingCartItem> cart)
-        {
-            decimal length, width, height;
-            GetDimensions(cart, out width, out length, out height);
-            return length;
-        }
-
-        /// <summary>
-        /// Gets total height
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total height</returns>
-        public virtual decimal GetTotalHeight(IList<ShoppingCartItem> cart)
-        {
-            decimal length, width, height;
-            GetDimensions(cart, out width, out length, out height);
-            return height;
         }
 
         /// <summary>
@@ -734,14 +705,14 @@ namespace Nop.Services.Shipping
                 if (requests.ContainsKey(warehouseId) && !sci.Product.ShipSeparately)
                 {
                     //add item to existing request
-                    requests[warehouseId].Items.Add(sci);
+                    requests[warehouseId].Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                 }
                 else
                 {
                     //create a new request
                     var request = new GetShippingOptionRequest();
                     //add item
-                    request.Items.Add(sci);
+                    request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //customer
                     request.Customer = cart.GetCustomer();
                     //ship to

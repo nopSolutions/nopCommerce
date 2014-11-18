@@ -147,40 +147,20 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets shopping cart weight
         /// </summary>
-        /// <param name="cart">Cart</param>
+        /// <param name="request">Request</param>
         /// <param name="includeCheckoutAttributes">A value indicating whether we should calculate weights of selected checkotu attributes</param>
-        /// <returns>Shopping cart weight</returns>
-        decimal GetTotalWeight(IList<ShoppingCartItem> cart, bool includeCheckoutAttributes = true);
+        /// <returns>Total weight</returns>
+        decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true);
 
         /// <summary>
         /// Get dimensions
         /// </summary>
-        /// <param name="cart">Shipping cart items</param>
+        /// <param name="request">Request</param>
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
-        void GetDimensions(IList<ShoppingCartItem> cart, out decimal width, out decimal length, out decimal height);
-
-        /// <summary>
-        /// Gets total width
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total width</returns>
-        decimal GetTotalWidth(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Gets total length
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total length</returns>
-        decimal GetTotalLength(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Gets total height
-        /// </summary>
-        /// <param name="cart">Shipping cart items</param>
-        /// <returns>Total height</returns>
-        decimal GetTotalHeight(IList<ShoppingCartItem> cart);
+        void GetDimensions(GetShippingOptionRequest request,
+            out decimal width, out decimal length, out decimal height);
 
         /// <summary>
         /// Get the nearest warehouse for the specified address

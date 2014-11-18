@@ -226,12 +226,14 @@ namespace Nop.Plugin.Shipping.CanadaPost
             if (usedMeasureDimension == null)
                 throw new NopException("CanadaPost shipping service. Could not load \"meter(s)\" measure dimension");
 
-            foreach (var sci in getShippingOptionRequest.Items)
+            foreach (var packageItem in getShippingOptionRequest.Items)
             {
+                var sci = packageItem.ShoppingCartItem;
                 var product = sci.Product;
+                var qty = packageItem.GetQuantity();
 
                 var item = new Item();
-                item.Quantity = sci.Quantity;
+                item.Quantity = qty;
                 //Canada Post uses kg(s)
 
                 decimal unitWeight = _shippingService.GetShoppingCartItemWeight(sci);
