@@ -115,32 +115,37 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {
-            var sci1 = new ShoppingCartItem
+            var request = new GetShippingOptionRequest()
             {
-                AttributesXml = "",
-                Quantity = 3,
-                Product = new Product
+                Items =
                 {
-                    Weight = 1.5M,
-                    Height = 2.5M,
-                    Length = 3.5M,
-                    Width = 4.5M
+                    new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                    {
+                        AttributesXml = "",
+                        Quantity = 3,
+                        Product = new Product
+                        {
+                            Weight = 1.5M,
+                            Height = 2.5M,
+                            Length = 3.5M,
+                            Width = 4.5M
+                        }
+                    }),
+                    new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                    {
+                        AttributesXml = "",
+                        Quantity = 4,
+                        Product = new Product
+                        {
+                            Weight = 11.5M,
+                            Height = 12.5M,
+                            Length = 13.5M,
+                            Width = 14.5M
+                        }
+                    })
                 }
             };
-            var sci2 = new ShoppingCartItem
-            {
-                AttributesXml = "",
-                Quantity = 4,
-                Product = new Product
-                {
-                    Weight = 11.5M,
-                    Height = 12.5M,
-                    Length = 13.5M,
-                    Width = 14.5M
-                }
-            };
-            var cart = new List<ShoppingCartItem> { sci1, sci2 };
-            _shippingService.GetTotalWeight(cart).ShouldEqual(50.5M);
+            _shippingService.GetTotalWeight(request).ShouldEqual(50.5M);
         }
     }
 }
