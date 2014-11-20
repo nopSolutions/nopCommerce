@@ -1,14 +1,14 @@
 ﻿@model PluginListModel
-    @{    
+@{    
     //page title
-    ViewBag.Title = T("Admin.Configuration.Plugins").Text;
+    ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
 {
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Plugins")
+            @T("Admin.Configuration.Plugins.Local")
         </div>
         <div class="options">
             <a href="@Url.Action("ReloadList")" class="k-button">@T("Admin.Configuration.Plugins.ReloadList")</a>

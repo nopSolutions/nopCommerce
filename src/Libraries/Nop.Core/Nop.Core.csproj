@@ -289,8 +289,13 @@
     <Compile Include="Html\ResolveLinksHelper.cs" />
     <Compile Include="Plugins\LoadPluginsMode.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\IOfficialFeedManager.cs" />
+    <Compile Include="Plugins\OfficialFeedVersion.cs" />
+    <Compile Include="Plugins\OfficialFeedPlugin.cs" />
+    <Compile Include="Plugins\OfficialFeedCategory.cs" />
     <Compile Include="Plugins\PluginExtensions.cs" />
     <Compile Include="Plugins\PluginFileParser.cs" />
+    <Compile Include="Plugins\OfficialFeedManager.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Plugins\PluginDescriptor.cs" />
     <Compile Include="Infrastructure\Singleton.cs" />

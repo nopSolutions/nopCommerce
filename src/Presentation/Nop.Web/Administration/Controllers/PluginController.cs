@@ -31,6 +31,7 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IPluginFinder _pluginFinder;
+        private readonly IOfficialFeedManager _officialFeedManager;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
@@ -47,6 +48,7 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
+            IOfficialFeedManager officialFeedManager,
             ILocalizationService localizationService,
             IWebHelper webHelper,
             IPermissionService permissionService, 
@@ -60,6 +62,7 @@ namespace Nop.Admin.Controllers
             WidgetSettings widgetSettings)
 		{
             this._pluginFinder = pluginFinder;
+            this._officialFeedManager = officialFeedManager;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
@@ -210,7 +213,6 @@ namespace Nop.Admin.Controllers
                 model.AvailableGroups.Add(new SelectListItem { Text = g, Value = g });
             return View(model);
         }
-
 	    [HttpPost]
         public ActionResult ListSelect(DataSourceRequest command, PluginListModel model)
 	    {
@@ -489,6 +491,63 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        //official feed
+        public ActionResult OfficialFeed()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            var model = new OfficialFeedListModel();
+            //versions
+            model.AvailableVersions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var version in _officialFeedManager.GetVersions())
+                model.AvailableVersions.Add(new SelectListItem{ Text = version.Name, Value = version.Id.ToString()});
+            //pre-select current version
+            //current version name and named on official site do not match. that's why we use "Contains"
+            var currentVersionItem = model.AvailableVersions.FirstOrDefault(x => x.Text.Contains(NopVersion.CurrentVersion));
+            if (currentVersionItem != null)
+            {
+                model.SearchVersionId = int.Parse(currentVersionItem.Value);
+                currentVersionItem.Selected = true;
+            }
+
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var category in _officialFeedManager.GetCategories())
+                model.AvailableCategories.Add(new SelectListItem { Text = category.Name, Value = category.Id.ToString() });
+            //prices
+            model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free"), Value = "10" });
+            model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Commercial"), Value = "20" });
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult OfficialFeedSelect(DataSourceRequest command, OfficialFeedListModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            var plugins = _officialFeedManager.GetAllPlugins(categoryId: model.SearchCategoryId,
+                versionId: model.SearchVersionId,
+                price : model.SearchPriceId,
+                searchTerm: model.SearchName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+
+            var gridModel = new DataSourceResult();
+            gridModel.Data = plugins.Select(x => new OfficialFeedListModel.ItemOverview()
+            {
+                Url = x.Url,
+                Name = x.Name,
+                CategoryName = x.Category,
+                SupportedVersions = x.SupportedVersions,
+                PictureUrl = x.PictureUrl,
+                Price = x.Price
+            });
+            gridModel.Total = plugins.TotalCount;
+
+            return Json(gridModel);
+        }
         #endregion
     }
 }
