@@ -228,9 +228,8 @@
                     data: $(this.form).serialize(),
                     dataType: 'json',
                     success: function (data) {
-                        var taxCountrystatezipGrid = $("#tax-countrystatezip-grid").data('kendoGrid');
-                        //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
-                        taxCountrystatezipGrid.dataSource.read();
+                        var grid = $("#tax-countrystatezip-grid").data('kendoGrid');
+                        grid.dataSource.read();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         alert('Failed to add record.');

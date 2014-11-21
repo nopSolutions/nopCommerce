@@ -356,8 +356,8 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    var valuesGrid = $("#checkoutattributevalues-grid").data('kendoGrid');
-                                    valuesGrid.dataSource.read();
+                                    var grid = $("#checkoutattributevalues-grid").data('kendoGrid');
+                                    grid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;

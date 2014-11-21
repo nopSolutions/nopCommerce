@@ -443,8 +443,8 @@
                             $(document).ready(function () {
                                 $('#btnRefreshProducts').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#products-grid").data('kendoGrid');
-                                    optionsGrid.dataSource.read();
+                                    var grid = $("#products-grid").data('kendoGrid');
+                                    grid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;

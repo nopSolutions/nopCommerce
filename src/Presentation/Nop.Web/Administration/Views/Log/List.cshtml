@@ -138,7 +138,7 @@
                             //search
                             var grid = $('#log-grid').data('kendoGrid');
                             grid.dataSource.page(1); //new search. Set page size to 1
-                            grid.dataSource.read();
+                            //grid.dataSource.read(); we already loaded the grid above using "page" function
                             //clear selected checkboxes
                             $('.checkboxGroups').attr('checked', false).change();
                             selectedIds = [];
@@ -169,7 +169,7 @@
                                     //reload grid
                                     var grid = $('#log-grid').data('kendoGrid');
                                     grid.dataSource.page(1); //new search. Set page size to 1
-                                    grid.dataSource.read();
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
                                     //clear selected checkboxes
                                     $('.checkboxGroups').attr('checked', false).change();
                                     selectedIds = [];

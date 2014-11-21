@@ -744,9 +744,9 @@
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
                     data: { "addRewardPointsValue": rewardPointsValue, "addRewardPointsMessage": rewardPointsMessage, "customerId": @Model.Id},
                     success: function (data) {
-                        var rewardPointsGrid = $("#customer-rewardpoints-grid").data('kendoGrid');
-                        rewardPointsGrid.dataSource.read();
-                         $('#addRewardPoints').attr('disabled', false);
+                        var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addRewardPoints').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add reward points.');

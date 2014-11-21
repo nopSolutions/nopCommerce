@@ -133,9 +133,9 @@
                     $(document).ready(function () {
                         $('#btnRefresh').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#shipping-byweight-grid").data('kendoGrid');
-                            //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
-                            optionsGrid.dataSource.read();
+                            var grid = $("#shipping-byweight-grid").data('kendoGrid');
+                            //grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

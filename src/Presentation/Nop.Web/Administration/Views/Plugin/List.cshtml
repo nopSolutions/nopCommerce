@@ -148,7 +148,6 @@
                         $('#btnRefresh').click(function () {
                             //refresh grid
                             var grid = $("#plugins-grid").data('kendoGrid');
-                            //grid.dataSource.page(1); //new search. Set page size to 1
                             grid.dataSource.read();
 
                             //return false to don't reload a page
@@ -162,7 +161,6 @@
                         $('#search-plugins').click(function () {
                             //search
                             var grid = $('#plugins-grid').data('kendoGrid');
-                            // grid.dataSource.page(1); //new search. Set page size to 1
                             grid.dataSource.read();
 
                             return false;

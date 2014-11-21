@@ -102,8 +102,6 @@
                     $('#search-templates').click(function () {
                         //search
                         var grid = $('#templates-grid').data('kendoGrid');
-                        //no paging support in this grid
-                        //grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
                     });
                 });

@@ -147,7 +147,6 @@
                     complete: function (data) {
                         //reload grid
                         var grid = $('#countries-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
                     },
                     error:function (xhr, ajaxOptions, thrownError){
@@ -174,7 +173,6 @@
                     complete: function (data) {
                         //reload grid
                         var grid = $('#countries-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
                     },
                     error:function (xhr, ajaxOptions, thrownError){

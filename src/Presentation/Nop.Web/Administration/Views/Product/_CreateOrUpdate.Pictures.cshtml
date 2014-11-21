@@ -111,8 +111,8 @@
                     url: "@(Url.Action("ProductPictureAdd", "Product"))",
                     data: { "pictureId": pictureId, "displayOrder": displayOrder, "productId": @Model.Id },
                     success: function (data) {
-                        var productpicturesGrid = $("#productpictures-grid");
-                        productpicturesGrid.data('kendoGrid').dataSource.read();
+                        var grid = $("#productpictures-grid");
+                        grid.data('kendoGrid').dataSource.read();
                         $('#addProductPicture').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){

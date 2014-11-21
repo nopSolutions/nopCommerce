@@ -116,8 +116,8 @@
                     $(document).ready(function () {
                         $('#btnRefreshAssociatedProducts').click(function () {
                             //refresh grid
-                            var optionsGrid = $("#associatedproducts-grid").data('kendoGrid');
-                            optionsGrid.dataSource.read();
+                            var grid = $("#associatedproducts-grid").data('kendoGrid');
+                            grid.dataSource.read();
 
                             //return false to don't reload a page
                             return false;

@@ -255,8 +255,8 @@
                             $(document).ready(function () {
                                 $('#btnRefresh').click(function () {
                                     //refresh grid
-                                    var optionsGrid = $("#states-grid");
-                                    optionsGrid.data('kendoGrid').dataSource.read();
+                                    var grid = $("#states-grid").data('kendoGrid');
+                                   grid.dataSource.read();
 
                                     //return false to don't reload a page
                                     return false;

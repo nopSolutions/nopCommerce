@@ -111,7 +111,6 @@
                     $('#search-topics').click(function () {
                         //search
                         var grid = $('#topics-grid').data('kendoGrid');
-                        //grid.dataSource.page(1); //new search. Set page size to 1
                         grid.dataSource.read();
                         return false;
                     });

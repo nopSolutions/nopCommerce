@@ -166,9 +166,8 @@
                 url: "@(Url.Action("OrderNoteAdd", "Order"))",
                 data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "downloadId": orderNoteDownloadId, "orderId": @Model.Id },
                 success: function (data) {
-                    var ordernotesGrid = $("#ordernotes-grid").data('kendoGrid');
-                    //grid.dataSource.page(1); //new search. Set page size to 1
-                    ordernotesGrid.dataSource.read();
+                    var grid = $("#ordernotes-grid").data('kendoGrid');
+                    grid.dataSource.read();
                     $('#addOrderNote').attr('disabled', false);
                 },
                 error:function (xhr, ajaxOptions, thrownError){

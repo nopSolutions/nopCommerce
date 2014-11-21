@@ -130,8 +130,8 @@
                 $(document).ready(function () {
                     $('#btnRefresh').click(function () {
                         //refresh grid
-                        var optionsGrid = $("#productattributevalues-grid").data('kendoGrid');
-                        optionsGrid.dataSource.read();
+                        var grid = $("#productattributevalues-grid").data('kendoGrid');
+                        grid.dataSource.read();
 
                         //return false to don't reload a page
                         return false;

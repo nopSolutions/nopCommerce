@@ -149,7 +149,7 @@
                         //search
                         var grid = $('#productreviews-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
-                        grid.dataSource.read();
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
                         //clear selected checkboxes
                         $('.checkboxGroups').attr('checked', false).change();
                         selectedIds = [];
@@ -172,7 +172,6 @@
                             complete: function (data) {
                                 //reload grid
                                 var grid = $('#productreviews-grid').data('kendoGrid');
-                                //grid.dataSource.page(1); //new search. Set page size to 1
                                 grid.dataSource.read();
                             },
                             error:function (xhr, ajaxOptions, thrownError){
@@ -199,7 +198,6 @@
                             complete: function (data) {
                                 //reload grid
                                 var grid = $('#productreviews-grid').data('kendoGrid');
-                                //grid.dataSource.page(1); //new search. Set page size to 1
                                 grid.dataSource.read();
                             },
                             error:function (xhr, ajaxOptions, thrownError){
