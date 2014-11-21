@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -190,6 +191,30 @@ namespace Nop.Admin.Controllers
             return pluginModel;
         }
 
+        [NonAction]
+        protected static string GetCategoryBreadCrumbName(OfficialFeedCategory category,
+            IList<OfficialFeedCategory> allCategories)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            var breadCrumb = new List<OfficialFeedCategory>();
+            while (category != null)
+            {
+                breadCrumb.Add(category);
+                category = allCategories.FirstOrDefault(x => x.Id == category.ParentCategoryId);
+            }
+            breadCrumb.Reverse();
+
+            var result = "";
+            for (int i = 0; i <= breadCrumb.Count - 1; i++)
+            {
+                result += breadCrumb[i].Name;
+                if (i != breadCrumb.Count - 1)
+                    result += " >> ";
+            }
+            return result;
+        }
         #endregion
 
         #region Methods
@@ -512,9 +537,10 @@ namespace Nop.Admin.Controllers
             }
 
             //categories
+            var categories = _officialFeedManager.GetCategories();
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var category in _officialFeedManager.GetCategories())
-                model.AvailableCategories.Add(new SelectListItem { Text = category.Name, Value = category.Id.ToString() });
+            foreach (var category in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = GetCategoryBreadCrumbName(category, categories), Value = category.Id.ToString() });
             //prices
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             model.AvailablePrices.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Configuration.Plugins.OfficialFeed.Price.Free"), Value = "10" });
