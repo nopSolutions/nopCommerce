@@ -210,7 +210,8 @@ namespace Nop.Services.Catalog
             manufacturerPartNumber = null;
             gtin = null;
 
-            if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
+            if (!String.IsNullOrEmpty(attributesXml) && 
+                product.ManageInventoryMethod == ManageInventoryMethod.ManageStockByAttributes)
             {
                 //manage stock by attribute combinations
                 if (productAttributeParser == null)

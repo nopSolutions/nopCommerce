@@ -743,6 +743,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ID", product.Id.ToString()));
             tokens.Add(new Token("Product.Name", product.GetLocalized(x => x.Name, languageId)));
             tokens.Add(new Token("Product.ShortDescription", product.GetLocalized(x => x.ShortDescription, languageId), true));
+            tokens.Add(new Token("Product.SKU", product.Sku));
             tokens.Add(new Token("Product.StockQuantity", product.GetTotalStockQuantity().ToString()));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
@@ -764,7 +765,10 @@ namespace Nop.Services.Messages
                 _workContext.CurrentCustomer, 
                 renderPrices: false);
 
+            
+
             tokens.Add(new Token("AttributeCombination.Formatted", attributes, true));
+            tokens.Add(new Token("AttributeCombination.SKU", combination.Product.FormatSku(combination.AttributesXml, _productAttributeParser)));
             tokens.Add(new Token("AttributeCombination.StockQuantity", combination.StockQuantity.ToString()));
             
             //event notification
@@ -939,6 +943,7 @@ namespace Nop.Services.Messages
                 "%Product.Name%",
                 "%Product.ShortDescription%", 
                 "%Product.ProductURLForCustomer%",
+                "%Product.SKU%", 
                 "%Product.StockQuantity%", 
                 "%Forums.TopicURL%",
                 "%Forums.TopicName%", 
@@ -947,6 +952,7 @@ namespace Nop.Services.Messages
                 "%Forums.ForumURL%", 
                 "%Forums.ForumName%",
                 "%AttributeCombination.Formatted%",
+                "%AttributeCombination.SKU%",
                 "%AttributeCombination.StockQuantity%",
                 "%PrivateMessage.Subject%", 
                 "%PrivateMessage.Text%",
