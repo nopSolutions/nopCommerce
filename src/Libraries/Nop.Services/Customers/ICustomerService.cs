@@ -149,11 +149,8 @@ namespace Nop.Services.Customers
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
-        /// <param name="maxNumberOfRecordsToDelete">Maximum number of customer records to delete</param>
         /// <returns>Number of deleted customers</returns>
-        int DeleteGuestCustomers(DateTime? createdFromUtc,
-            DateTime? createdToUtc, bool onlyWithoutShoppingCart,
-            int maxNumberOfRecordsToDelete);
+        int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart);
 
         #endregion
 

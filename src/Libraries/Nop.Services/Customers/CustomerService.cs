@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -15,6 +16,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Shipping;
+using Nop.Data;
 using Nop.Services.Common;
 using Nop.Services.Events;
 
@@ -62,32 +64,17 @@ namespace Nop.Services.Customers
         private readonly IRepository<ProductReview> _productReviewRepository;
         private readonly IRepository<ProductReviewHelpfulness> _productReviewHelpfulnessRepository;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
         private readonly CustomerSettings _customerSettings;
+        private readonly CommonSettings _commonSettings;
 
         #endregion
 
         #region Ctor
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="cacheManager">Cache manager</param>
-        /// <param name="customerRepository">Customer repository</param>
-        /// <param name="customerRoleRepository">Customer role repository</param>
-        /// <param name="gaRepository">Generic attribute repository</param>
-        /// <param name="orderRepository">Order repository</param>
-        /// <param name="forumPostRepository">Forum post repository</param>
-        /// <param name="forumTopicRepository">Forum topic repository</param>
-        /// <param name="blogCommentRepository">Blog commentrepository</param>
-        /// <param name="newsCommentRepository">News comment repository</param>
-        /// <param name="pollVotingRecordRepository">Poll voting record repository</param>
-        /// <param name="productReviewRepository">Product review repository</param>
-        /// <param name="productReviewHelpfulnessRepository">Product review helpfulness repository</param>
-        /// <param name="genericAttributeService">Generic attribute service</param>
-        /// <param name="eventPublisher">Event published</param>
-        /// <param name="customerSettings">Customer settings</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
@@ -101,8 +88,11 @@ namespace Nop.Services.Customers
             IRepository<ProductReview> productReviewRepository,
             IRepository<ProductReviewHelpfulness> productReviewHelpfulnessRepository,
             IGenericAttributeService genericAttributeService,
+            IDataProvider dataProvider,
+            IDbContext dbContext,
             IEventPublisher eventPublisher, 
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            CommonSettings commonSettings)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
@@ -117,8 +107,11 @@ namespace Nop.Services.Customers
             this._productReviewRepository = productReviewRepository;
             this._productReviewHelpfulnessRepository = productReviewHelpfulnessRepository;
             this._genericAttributeService = genericAttributeService;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._customerSettings = customerSettings;
+            this._commonSettings = commonSettings;
         }
 
         #endregion
@@ -576,105 +569,154 @@ namespace Nop.Services.Customers
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="onlyWithoutShoppingCart">A value indicating whether to delete customers only without shopping cart</param>
-        /// <param name="maxNumberOfRecordsToDelete">Maximum number of customer records to delete</param>
         /// <returns>Number of deleted customers</returns>
-        public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, 
-            DateTime? createdToUtc, bool onlyWithoutShoppingCart, int maxNumberOfRecordsToDelete)
+        public virtual int DeleteGuestCustomers(DateTime? createdFromUtc, DateTime? createdToUtc, bool onlyWithoutShoppingCart)
         {
-            var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
-            if (guestRole == null)
-                throw new NopException("'Guests' role could not be loaded");
-
-            var query = _customerRepository.Table;
-            if (createdFromUtc.HasValue)
-                query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
-            if (createdToUtc.HasValue)
-                query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
-            query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
-            if (onlyWithoutShoppingCart)
-                query = query.Where(c => !c.ShoppingCartItems.Any());
-            //no orders
-            query = from c in query
-                    join o in _orderRepository.Table on c.Id equals o.CustomerId into c_o
-                    from o in c_o.DefaultIfEmpty()
-                    where !c_o.Any()
-                    select c;
-            //no blog comments
-            query = from c in query
-                    join bc in _blogCommentRepository.Table on c.Id equals bc.CustomerId into c_bc
-                    from bc in c_bc.DefaultIfEmpty()
-                    where !c_bc.Any()
-                    select c;
-            //no news comments
-            query = from c in query
-                    join nc in _newsCommentRepository.Table on c.Id equals nc.CustomerId into c_nc
-                    from nc in c_nc.DefaultIfEmpty()
-                    where !c_nc.Any()
-                    select c;
-            //no product reviews
-            query = from c in query
-                    join pr in _productReviewRepository.Table on c.Id equals pr.CustomerId into c_pr
-                    from pr in c_pr.DefaultIfEmpty()
-                    where !c_pr.Any()
-                    select c;
-            //no product reviews helpfulness
-            query = from c in query
-                    join prh in _productReviewHelpfulnessRepository.Table on c.Id equals prh.CustomerId into c_prh
-                    from prh in c_prh.DefaultIfEmpty()
-                    where !c_prh.Any()
-                    select c;
-            //no poll voting
-            query = from c in query
-                    join pvr in _pollVotingRecordRepository.Table on c.Id equals pvr.CustomerId into c_pvr
-                    from pvr in c_pvr.DefaultIfEmpty()
-                    where !c_pvr.Any()
-                    select c;
-            //no forum posts 
-            query = from c in query
-                    join fp in _forumPostRepository.Table on c.Id equals fp.CustomerId into c_fp
-                    from fp in c_fp.DefaultIfEmpty()
-                    where !c_fp.Any()
-                    select c;
-            //no forum topics
-            query = from c in query
-                    join ft in _forumTopicRepository.Table on c.Id equals ft.CustomerId into c_ft
-                    from ft in c_ft.DefaultIfEmpty()
-                    where !c_ft.Any()
-                    select c;
-            //don't delete system accounts
-            query = query.Where(c => !c.IsSystemAccount);
-
-            //only distinct customers (group by ID)
-            query = from c in query
-                    group c by c.Id
-                    into cGroup
-                    orderby cGroup.Key
-                    select cGroup.FirstOrDefault();
-            query = query.OrderBy(c => c.Id);
-            var customers = new PagedList<Customer>(query, 0, maxNumberOfRecordsToDelete);
-
-
-            int numberOfDeletedCustomers = 0;
-            foreach (var c in customers)
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
-                try
-                {
-                    //delete attributes
-                    var attributes = _genericAttributeService.GetAttributesForEntity(c.Id, "Customer");
-                    foreach (var attribute in attributes)
-                        _genericAttributeService.DeleteAttribute(attribute);
+                //stored procedures are enabled and supported by the database. 
+                //It's much faster than the LINQ implementation below 
 
+                #region Stored procedure
 
-                    //delete from database
-                    _customerRepository.Delete(c);
-                    numberOfDeletedCustomers++;
-                }
-                catch (Exception exc)
-                {
-                    Debug.WriteLine(exc);
-                }
+                //prepare parameters
+                var pOnlyWithoutShoppingCart = _dataProvider.GetParameter();
+                pOnlyWithoutShoppingCart.ParameterName = "OnlyWithoutShoppingCart";
+                pOnlyWithoutShoppingCart.Value = onlyWithoutShoppingCart;
+                pOnlyWithoutShoppingCart.DbType = DbType.Boolean;
+
+                var pCreatedFromUtc = _dataProvider.GetParameter();
+                pCreatedFromUtc.ParameterName = "CreatedFromUtc";
+                pCreatedFromUtc.Value = createdFromUtc.HasValue ? (object)createdFromUtc.Value : DBNull.Value;
+                pCreatedFromUtc.DbType = DbType.DateTime;
+
+                var pCreatedToUtc = _dataProvider.GetParameter();
+                pCreatedToUtc.ParameterName = "CreatedToUtc";
+                pCreatedToUtc.Value = createdToUtc.HasValue ? (object)createdToUtc.Value : DBNull.Value;
+                pCreatedToUtc.DbType = DbType.DateTime;
+
+                var pTotalRecordsDeleted = _dataProvider.GetParameter();
+                pTotalRecordsDeleted.ParameterName = "TotalRecordsDeleted";
+                pTotalRecordsDeleted.Direction = ParameterDirection.Output;
+                pTotalRecordsDeleted.DbType = DbType.Int32;
+
+                //invoke stored procedure
+                _dbContext.ExecuteSqlCommand(
+                    "EXEC [DeleteGuests] @OnlyWithoutShoppingCart, @CreatedFromUtc, @CreatedToUtc, @TotalRecordsDeleted OUTPUT",
+                    false, null,
+                    pOnlyWithoutShoppingCart,
+                    pCreatedFromUtc,
+                    pCreatedToUtc,
+                    pTotalRecordsDeleted);
+
+                int totalRecordsDeleted = (pTotalRecordsDeleted.Value != DBNull.Value) ? Convert.ToInt32(pTotalRecordsDeleted.Value) : 0;
+                return totalRecordsDeleted;
+
+                #endregion
             }
-            return numberOfDeletedCustomers;
+            else
+            {
+                //stored procedures aren't supported. Use LINQ
+
+                #region No stored procedure
+
+                var guestRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Guests);
+                if (guestRole == null)
+                    throw new NopException("'Guests' role could not be loaded");
+
+                var query = _customerRepository.Table;
+                if (createdFromUtc.HasValue)
+                    query = query.Where(c => createdFromUtc.Value <= c.CreatedOnUtc);
+                if (createdToUtc.HasValue)
+                    query = query.Where(c => createdToUtc.Value >= c.CreatedOnUtc);
+                query = query.Where(c => c.CustomerRoles.Select(cr => cr.Id).Contains(guestRole.Id));
+                if (onlyWithoutShoppingCart)
+                    query = query.Where(c => !c.ShoppingCartItems.Any());
+                //no orders
+                query = from c in query
+                        join o in _orderRepository.Table on c.Id equals o.CustomerId into c_o
+                        from o in c_o.DefaultIfEmpty()
+                        where !c_o.Any()
+                        select c;
+                //no blog comments
+                query = from c in query
+                        join bc in _blogCommentRepository.Table on c.Id equals bc.CustomerId into c_bc
+                        from bc in c_bc.DefaultIfEmpty()
+                        where !c_bc.Any()
+                        select c;
+                //no news comments
+                query = from c in query
+                        join nc in _newsCommentRepository.Table on c.Id equals nc.CustomerId into c_nc
+                        from nc in c_nc.DefaultIfEmpty()
+                        where !c_nc.Any()
+                        select c;
+                //no product reviews
+                query = from c in query
+                        join pr in _productReviewRepository.Table on c.Id equals pr.CustomerId into c_pr
+                        from pr in c_pr.DefaultIfEmpty()
+                        where !c_pr.Any()
+                        select c;
+                //no product reviews helpfulness
+                query = from c in query
+                        join prh in _productReviewHelpfulnessRepository.Table on c.Id equals prh.CustomerId into c_prh
+                        from prh in c_prh.DefaultIfEmpty()
+                        where !c_prh.Any()
+                        select c;
+                //no poll voting
+                query = from c in query
+                        join pvr in _pollVotingRecordRepository.Table on c.Id equals pvr.CustomerId into c_pvr
+                        from pvr in c_pvr.DefaultIfEmpty()
+                        where !c_pvr.Any()
+                        select c;
+                //no forum posts 
+                query = from c in query
+                        join fp in _forumPostRepository.Table on c.Id equals fp.CustomerId into c_fp
+                        from fp in c_fp.DefaultIfEmpty()
+                        where !c_fp.Any()
+                        select c;
+                //no forum topics
+                query = from c in query
+                        join ft in _forumTopicRepository.Table on c.Id equals ft.CustomerId into c_ft
+                        from ft in c_ft.DefaultIfEmpty()
+                        where !c_ft.Any()
+                        select c;
+                //don't delete system accounts
+                query = query.Where(c => !c.IsSystemAccount);
+
+                //only distinct customers (group by ID)
+                query = from c in query
+                        group c by c.Id
+                            into cGroup
+                            orderby cGroup.Key
+                            select cGroup.FirstOrDefault();
+                query = query.OrderBy(c => c.Id);
+                var customers = query.ToList();
+
+
+                int totalRecordsDeleted = 0;
+                foreach (var c in customers)
+                {
+                    try
+                    {
+                        //delete attributes
+                        var attributes = _genericAttributeService.GetAttributesForEntity(c.Id, "Customer");
+                        foreach (var attribute in attributes)
+                            _genericAttributeService.DeleteAttribute(attribute);
+
+
+                        //delete from database
+                        _customerRepository.Delete(c);
+                        totalRecordsDeleted++;
+                    }
+                    catch (Exception exc)
+                    {
+                        Debug.WriteLine(exc);
+                    }
+                }
+                return totalRecordsDeleted;
+
+                #endregion
+            }
         }
 
         #endregion
