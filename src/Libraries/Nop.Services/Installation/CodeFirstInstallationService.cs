@@ -4793,8 +4793,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new PaymentSettings
                 {
                     ActivePaymentMethodSystemNames = new List<string> 
-                    { 
-                        "Payments.CashOnDelivery",
+                    {
                         "Payments.CheckMoneyOrder",
                         "Payments.Manual",
                         "Payments.PayInStore",

@@ -672,7 +672,6 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.ShippingAddress = address;
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-            //Pick up in store?
             if (_shippingSettings.AllowPickUpInStore)
             {
                 //set value indicating that "pick up in store" option has not been chosen
@@ -1479,10 +1478,10 @@ namespace Nop.Web.Controllers
                 //Pick up in store?
                 if (_shippingSettings.AllowPickUpInStore)
                 {
-                    var pickUpInStoreModel = new CheckoutShippingAddressModel();
-                    TryUpdateModel(pickUpInStoreModel);
+                    var model = new CheckoutShippingAddressModel();
+                    TryUpdateModel(model);
 
-                    if (pickUpInStoreModel.PickUpInStore)
+                    if (model.PickUpInStore)
                     {
                         //customer decided to pick up in store
 
