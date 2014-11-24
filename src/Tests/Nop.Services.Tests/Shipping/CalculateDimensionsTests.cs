@@ -111,6 +111,25 @@ namespace Nop.Services.Tests.Shipping
             length.ShouldEqual(0);
             width.ShouldEqual(0);
             height.ShouldEqual(0);
+
+            items = new List<GetShippingOptionRequest.PackageItem>()
+            {
+                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                    {
+                        Quantity = 2,
+                        Product = new Product
+                        {
+                            Length = 0,
+                            Width = 0,
+                            Height = 0
+                        }
+                    }),
+            };
+
+            _shippingService.GetDimensions(items, out width, out length, out height);
+            length.ShouldEqual(0);
+            width.ShouldEqual(0);
+            height.ShouldEqual(0);
         }
         
         [Test]
