@@ -83,34 +83,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureWeight(totalWeigth, this.GatewayMeasureWeight)));
             return (value < MIN_WEIGHT ? MIN_WEIGHT : value);
         }
-
-        private int GetLength(GetShippingOptionRequest getShippingOptionRequest)
-        {
-            decimal length, width, height;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
-
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(length, this.GatewayMeasureDimension)));
-            return (value < MIN_LENGTH ? MIN_LENGTH : value);
-        }
-
-        private int GetWidth(GetShippingOptionRequest getShippingOptionRequest)
-        {
-            decimal length, width, height;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
-
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(width, this.GatewayMeasureDimension)));
-            return (value < MIN_LENGTH ? MIN_LENGTH : value);
-        }
-
-        private int GetHeight(GetShippingOptionRequest getShippingOptionRequest)
-        {
-            decimal length, width, height;
-            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
-
-            int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(height, this.GatewayMeasureDimension)));
-            return (value < MIN_LENGTH ? MIN_LENGTH : value);
-        }
-
+        
         private ShippingOption RequestShippingOption(string zipPostalCodeFrom,
             string zipPostalCodeTo, string countryCode, string serviceType,
             int weight, int length, int width, int height, int quantity)
@@ -251,12 +224,14 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             string zipPostalCodeFrom = getShippingOptionRequest.ZipPostalCodeFrom;
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             int weight = GetWeight(getShippingOptionRequest);
-            int length = GetLength(getShippingOptionRequest);
-            int width = GetWidth(getShippingOptionRequest);
-            int height = GetHeight(getShippingOptionRequest);
 
-            var country = getShippingOptionRequest.ShippingAddress.Country;
 
+            decimal lengthTmp, widthTmp, heightTmp;
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
+            int length = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int width = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int height = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            
             //estimate packaging
             int totalPackagesDims = 1;
             int totalPackagesWeights = 1;
@@ -301,6 +276,12 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             }
             try
             {
+                var country = getShippingOptionRequest.ShippingAddress.Country;
+                if (country == null)
+                {
+                    response.AddError("Shipping country is not specified");
+                    return response;
+                }
                 switch (country.ThreeLetterIsoCode)
                 {
                     case "AUS":
