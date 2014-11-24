@@ -676,16 +676,18 @@ namespace Nop.Services.Shipping
                 if (!sci.IsShipEnabled)
                     continue;
 
+                var product = sci.Product;
+
                 //warehouses
                 Warehouse warehouse = null;
                 if (_shippingSettings.UseWarehouseLocation)
                 {
-                    if (sci.Product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
-                        sci.Product.UseMultipleWarehouses)
+                    if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                        product.UseMultipleWarehouses)
                     {
                         var allWarehouses = new List<Warehouse>();
                         //multiple warehouses supported
-                        foreach (var pwi in sci.Product.ProductWarehouseInventory)
+                        foreach (var pwi in product.ProductWarehouseInventory)
                         {
                             //TODO validate stock quantity when backorder is not allowed?
                             var tmpWarehouse = GetWarehouseById(pwi.WarehouseId);
@@ -697,12 +699,12 @@ namespace Nop.Services.Shipping
                     else
                     {
                         //multiple warehouses are not supported
-                        warehouse = GetWarehouseById(sci.Product.WarehouseId);
+                        warehouse = GetWarehouseById(product.WarehouseId);
                     }
                 }
                 int warehouseId = warehouse != null ? warehouse.Id : 0;
 
-                if (requests.ContainsKey(warehouseId) && !sci.Product.ShipSeparately)
+                if (requests.ContainsKey(warehouseId) && !product.ShipSeparately)
                 {
                     //add item to existing request
                     requests[warehouseId].Items.Add(new GetShippingOptionRequest.PackageItem(sci));
@@ -738,7 +740,7 @@ namespace Nop.Services.Shipping
                         request.AddressFrom = originAddress.Address1;
                     }
 
-                    if (sci.Product.ShipSeparately)
+                    if (product.ShipSeparately)
                     {
                         //ship separately
                         separateRequests.Add(request);

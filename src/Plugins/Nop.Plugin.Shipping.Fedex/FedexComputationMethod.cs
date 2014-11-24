@@ -364,12 +364,12 @@ namespace Nop.Plugin.Shipping.Fedex
                 var sci = packageItem.ShoppingCartItem;
                 var qty = packageItem.GetQuantity();
 
-                decimal lengthTmp, widthTmp, heightTmp;
-                _shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
+                //decimal lengthTmp, widthTmp, heightTmp;
+                //_shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
 
-                int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
+                int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
+                int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);
+                int width = ConvertFromPrimaryMeasureDimension(sci.Product.Width, usedMeasureDimension);
                 int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
@@ -626,8 +626,7 @@ namespace Nop.Plugin.Shipping.Fedex
 
             return amount;
         }
-
-
+        
         private bool IsPackageTooLarge(int length, int height, int width)
         {
             int total = TotalPackageSize(length, height, width);
@@ -709,8 +708,7 @@ namespace Nop.Plugin.Shipping.Fedex
             //ensure that this currency exists
             return _currencyService.GetCurrencyByCode(originCurrencyCode) ?? primaryStoreCurrency;
         }
-
-
+        
         #endregion
 
         #region Methods
