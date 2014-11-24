@@ -569,6 +569,15 @@ namespace Nop.Services.Shipping
                     var productLength = product.Length + associatedProductsLength;
                     var productHeight = product.Height + associatedProductsHeight;
 
+                    //we do not use cube root method when we have only one item with "qty" set to 1
+                    if (packageItems.Count == 1 && qty == 1)
+                    {
+                        width = productWidth;
+                        length = productLength;
+                        height = productHeight;
+                        return;
+                    }
+
                     totalVolume += qty * productHeight * productWidth * productLength;
 
                     if (productWidth > maxProductWidth)

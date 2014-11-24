@@ -114,7 +114,7 @@ namespace Nop.Services.Tests.Shipping
         }
         
         [Test]
-        public void can_calculate_with_single_item_and_qty_1()
+        public void can_calculate_with_single_item_and_qty_1_should_ignore_cubic_method()
         {
             var items = new List<GetShippingOptionRequest.PackageItem>()
             {
@@ -124,8 +124,8 @@ namespace Nop.Services.Tests.Shipping
                     Product = new Product
                     {
                         Length = 2,
-                        Width = 2,
-                        Height = 2
+                        Width = 3,
+                        Height = 4
                     }
                 })
             };
@@ -133,8 +133,32 @@ namespace Nop.Services.Tests.Shipping
             decimal length, width, height;
             _shippingService.GetDimensions(items, out width, out length, out height);
             length.ShouldEqual(2);
-            width.ShouldEqual(2);
-            height.ShouldEqual(2);
+            width.ShouldEqual(3);
+            height.ShouldEqual(4);
+        }
+
+        [Test]
+        public void can_calculate_with_single_item_and_qty_2()
+        {
+            var items = new List<GetShippingOptionRequest.PackageItem>()
+            {
+                new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
+                {
+                    Quantity = 2,
+                    Product = new Product
+                    {
+                        Length = 2,
+                        Width = 4,
+                        Height = 4
+                    }
+                })
+            };
+
+            decimal length, width, height;
+            _shippingService.GetDimensions(items, out width, out length, out height);
+            length.ShouldEqual(4);
+            width.ShouldEqual(4);
+            height.ShouldEqual(4);
         }
 
         [Test]
@@ -163,7 +187,7 @@ namespace Nop.Services.Tests.Shipping
         }
 
         [Test]
-        public void can_calculate_with_multple_items_1()
+        public void can_calculate_with_multiple_items_1()
         {
             var items = new List<GetShippingOptionRequest.PackageItem>()
             {
@@ -196,9 +220,8 @@ namespace Nop.Services.Tests.Shipping
             Math.Round(height, 2).ShouldEqual(3.78);
         }
 
-
         [Test]
-        public void can_calculate_with_multple_items_2()
+        public void can_calculate_with_multiple_items_2()
         {
             //take 8 cubes of 1x1x1 which is "packed" as 2x2x2 
             var items = new List<GetShippingOptionRequest.PackageItem>();
