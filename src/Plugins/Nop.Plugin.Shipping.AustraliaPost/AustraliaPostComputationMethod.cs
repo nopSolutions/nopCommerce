@@ -85,7 +85,10 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         }
 
         private int GetLength(GetShippingOptionRequest getShippingOptionRequest)
-        {            decimal length, width, height;            _shippingService.GetDimensions(getShippingOptionRequest, out width, out length, out height);
+        {
+            decimal length, width, height;
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
+
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(length, this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
         }
@@ -93,7 +96,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         private int GetWidth(GetShippingOptionRequest getShippingOptionRequest)
         {
             decimal length, width, height;
-            _shippingService.GetDimensions(getShippingOptionRequest, out width, out length, out height);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
 
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(width, this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);
@@ -102,7 +105,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         private int GetHeight(GetShippingOptionRequest getShippingOptionRequest)
         {
             decimal length, width, height;
-            _shippingService.GetDimensions(getShippingOptionRequest, out width, out length, out height);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out width, out length, out height);
 
             int value = Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(height, this.GatewayMeasureDimension)));
             return (value < MIN_LENGTH ? MIN_LENGTH : value);

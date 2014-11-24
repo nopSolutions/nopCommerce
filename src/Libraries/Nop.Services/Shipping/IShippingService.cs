@@ -163,13 +163,13 @@ namespace Nop.Services.Shipping
             out decimal width, out decimal length, out decimal height);
 
         /// <summary>
-        /// Get dimensions
+        /// Get total dimensions
         /// </summary>
-        /// <param name="request">Request</param>
+        /// <param name="packageItems">Package items</param>
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
-        void GetDimensions(GetShippingOptionRequest request,
+        void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
             out decimal width, out decimal length, out decimal height);
 
         /// <summary>

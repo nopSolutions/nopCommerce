@@ -256,7 +256,7 @@ namespace Nop.Plugin.Shipping.Fedex
             var usedMeasureDimension = GetUsedMeasureDimension();
 
             decimal lengthTmp, widthTmp, heightTmp;
-            _shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
+            _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
 
             int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
             int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
@@ -365,7 +365,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 var qty = packageItem.GetQuantity();
 
                 //decimal lengthTmp, widthTmp, heightTmp;
-                //_shippingService.GetDimensions(getShippingOptionRequest, out widthTmp, out lengthTmp, out heightTmp);
+                //_shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
 
                 int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
                 int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);

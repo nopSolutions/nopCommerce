@@ -533,17 +533,17 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Get dimensions
+        /// Get total dimensions
         /// </summary>
-        /// <param name="request">Request</param>
+        /// <param name="packageItems">Package items</param>
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
-        public virtual void GetDimensions(GetShippingOptionRequest request,
+        public virtual void GetDimensions(IList<GetShippingOptionRequest.PackageItem> packageItems,
             out decimal width, out decimal length, out decimal height)
         {
-            if (request == null)
-                throw new ArgumentNullException("request");
+            if (packageItems == null)
+                throw new ArgumentNullException("packageItems");
 
             if (_shippingSettings.UseCubeRootMethod)
             {
@@ -552,7 +552,7 @@ namespace Nop.Services.Shipping
                 decimal maxProductWidth = 0;
                 decimal maxProductLength = 0;
                 decimal maxProductHeight = 0;
-                foreach (var packageItem in request.Items)
+                foreach (var packageItem in packageItems)
                 {
                     var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = shoppingCartItem.Product;
@@ -595,7 +595,7 @@ namespace Nop.Services.Shipping
             {
                 //summarize all values (very inaccurate with multiple items)
                 width = length = height = decimal.Zero;
-                foreach (var packageItem in request.Items)
+                foreach (var packageItem in packageItems)
                 {
                     var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = shoppingCartItem.Product;
