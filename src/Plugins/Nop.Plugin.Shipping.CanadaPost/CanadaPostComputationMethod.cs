@@ -242,14 +242,21 @@ namespace Nop.Plugin.Shipping.CanadaPost
                 if (item.Weight == decimal.Zero)
                     item.Weight = 0.01M;
 
+                //get dimensions for qty 1
+                decimal lengthTmp, widthTmp, heightTmp;
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                                               {
+                                                   new GetShippingOptionRequest.PackageItem(sci, 1)
+                                               }, out widthTmp, out lengthTmp, out heightTmp);
+
                 //Canada Post uses centimeters                
-                item.Length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension) * 100));
+                item.Length = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension) * 100));
                 if (item.Length == decimal.Zero)
                     item.Length = 1;
-                item.Width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension) * 100));
+                item.Width = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension) * 100));
                 if (item.Width == decimal.Zero)
                     item.Width = 1;
-                item.Height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension) * 100));
+                item.Height = Convert.ToInt32(Math.Ceiling(_measureService.ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension) * 100));
                 if (item.Height == decimal.Zero)
                     item.Height = 1;
                 result.Add(item);

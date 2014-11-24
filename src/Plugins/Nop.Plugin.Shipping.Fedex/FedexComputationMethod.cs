@@ -364,12 +364,16 @@ namespace Nop.Plugin.Shipping.Fedex
                 var sci = packageItem.ShoppingCartItem;
                 var qty = packageItem.GetQuantity();
 
-                //decimal lengthTmp, widthTmp, heightTmp;
-                //_shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
+                //get dimensions for qty 1
+                decimal lengthTmp, widthTmp, heightTmp;
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                                               {
+                                                   new GetShippingOptionRequest.PackageItem(sci, 1)
+                                               }, out widthTmp, out lengthTmp, out heightTmp);
 
-                int length = ConvertFromPrimaryMeasureDimension(sci.Product.Length, usedMeasureDimension);
-                int height = ConvertFromPrimaryMeasureDimension(sci.Product.Height, usedMeasureDimension);
-                int width = ConvertFromPrimaryMeasureDimension(sci.Product.Width, usedMeasureDimension);
+                int length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                int height = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                int width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
                 int weight = ConvertFromPrimaryMeasureWeight(sci.Product.Weight, usedMeasureWeight);
                 if (length < 1)
                     length = 1;
@@ -451,21 +455,37 @@ namespace Nop.Plugin.Shipping.Fedex
 
             if (getShippingOptionRequest.Items.Count == 1 && getShippingOptionRequest.Items[0].GetQuantity() == 1)
             {
+                var sci = getShippingOptionRequest.Items[0].ShoppingCartItem;
+
+                //get dimensions for qty 1
+                decimal lengthTmp, widthTmp, heightTmp;
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                                               {
+                                                   new GetShippingOptionRequest.PackageItem(sci, 1)
+                                               }, out widthTmp, out lengthTmp, out heightTmp);
+
                 totalPackagesDims = 1;
-                var product = getShippingOptionRequest.Items[0].ShoppingCartItem.Product;
-                length = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
-                height = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
-                width = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+                length = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                height = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                width = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
             }
             else
             {
                 decimal totalVolume = 0;
                 foreach (var item in getShippingOptionRequest.Items)
                 {
-                    var product = item.ShoppingCartItem.Product;
-                    int productLength = ConvertFromPrimaryMeasureDimension(product.Length, usedMeasureDimension);
-                    int productHeight = ConvertFromPrimaryMeasureDimension(product.Height, usedMeasureDimension);
-                    int productWidth = ConvertFromPrimaryMeasureDimension(product.Width, usedMeasureDimension);
+                    var sci = item.ShoppingCartItem;
+
+                    //get dimensions for qty 1
+                    decimal lengthTmp, widthTmp, heightTmp;
+                    _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                                               {
+                                                   new GetShippingOptionRequest.PackageItem(sci, 1)
+                                               }, out widthTmp, out lengthTmp, out heightTmp);
+
+                    int productLength = ConvertFromPrimaryMeasureDimension(lengthTmp, usedMeasureDimension);
+                    int productHeight = ConvertFromPrimaryMeasureDimension(heightTmp, usedMeasureDimension);
+                    int productWidth = ConvertFromPrimaryMeasureDimension(widthTmp, usedMeasureDimension);
                     totalVolume += item.GetQuantity() * (productHeight * productWidth * productLength);
                 }
 
