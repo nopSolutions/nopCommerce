@@ -153,6 +153,16 @@ namespace Nop.Services.Shipping
         decimal GetTotalWeight(GetShippingOptionRequest request, bool includeCheckoutAttributes = true);
 
         /// <summary>
+        /// Get dimensions of associated products (for quantity 1)
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="width">Width</param>
+        /// <param name="length">Length</param>
+        /// <param name="height">Height</param>
+        void GetAssociatedProductDimensions(ShoppingCartItem shoppingCartItem,
+            out decimal width, out decimal length, out decimal height);
+
+        /// <summary>
         /// Get dimensions
         /// </summary>
         /// <param name="request">Request</param>

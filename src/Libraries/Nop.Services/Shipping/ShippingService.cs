@@ -498,6 +498,41 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
+        /// Get dimensions of associated products (for quantity 1)
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="width">Width</param>
+        /// <param name="length">Length</param>
+        /// <param name="height">Height</param>
+        public virtual void GetAssociatedProductDimensions(ShoppingCartItem shoppingCartItem,
+            out decimal width, out decimal length, out decimal height)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+            width = length = height = decimal.Zero;
+
+            //attributes
+            if (String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
+                return;
+
+            //bundled products (associated attributes)
+            var attributeValues = _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
+                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                .ToList();
+            foreach (var attributeValue in attributeValues)
+            {
+                var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
+                if (associatedProduct != null && associatedProduct.IsShipEnabled)
+                {
+                    width += associatedProduct.Width*attributeValue.Quantity;
+                    length += associatedProduct.Length * attributeValue.Quantity;
+                    height += associatedProduct.Height*attributeValue.Quantity;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get dimensions
         /// </summary>
         /// <param name="request">Request</param>
@@ -522,28 +557,17 @@ namespace Nop.Services.Shipping
                     var shoppingCartItem = packageItem.ShoppingCartItem;
                     var product = shoppingCartItem.Product;
                     var qty = packageItem.GetQuantity();
-                    var productWidth = product.Width;
-                    var productLength = product.Length;
-                    var productHeight = product.Height;
-                    //attributes
-                    if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
-                    {
-                        //bundled products (associated attributes)
-                        var attributeValues =
-                            _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
-                                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                                .ToList();
-                        foreach (var attributeValue in attributeValues)
-                        {
-                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
-                            {
-                                productWidth += associatedProduct.Width*attributeValue.Quantity;
-                                productLength += associatedProduct.Length*attributeValue.Quantity;
-                                productHeight += associatedProduct.Height*attributeValue.Quantity;
-                            }
-                        }
-                    }
+
+                    //associated products
+                    decimal associatedProductsWidth;
+                    decimal associatedProductsLength;
+                    decimal associatedProductsHeight;
+                    GetAssociatedProductDimensions(shoppingCartItem, out associatedProductsWidth,
+                        out associatedProductsLength, out associatedProductsHeight);
+
+                    var productWidth = product.Width + associatedProductsWidth;
+                    var productLength = product.Length + associatedProductsLength;
+                    var productHeight = product.Height + associatedProductsHeight;
 
                     totalVolume += qty * productHeight * productWidth * productLength;
 
@@ -579,25 +603,17 @@ namespace Nop.Services.Shipping
                     width += product.Width*qty;
                     length += product.Length*qty;
                     height += product.Height*qty;
-                    //attributes
-                    if (!String.IsNullOrEmpty(shoppingCartItem.AttributesXml))
-                    {
-                        //bundled products (associated attributes)
-                        var attributeValues =
-                            _productAttributeParser.ParseProductAttributeValues(shoppingCartItem.AttributesXml)
-                                .Where(x => x.AttributeValueType == AttributeValueType.AssociatedToProduct)
-                                .ToList();
-                        foreach (var attributeValue in attributeValues)
-                        {
-                            var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
-                            if (associatedProduct != null && associatedProduct.IsShipEnabled)
-                            {
-                                width += associatedProduct.Width*attributeValue.Quantity;
-                                length += associatedProduct.Length*attributeValue.Quantity;
-                                height += associatedProduct.Height*attributeValue.Quantity;
-                            }
-                        }
-                    }
+
+                    //associated products
+                    decimal associatedProductsWidth;
+                    decimal associatedProductsLength;
+                    decimal associatedProductsHeight;
+                    GetAssociatedProductDimensions(shoppingCartItem, out associatedProductsWidth,
+                        out associatedProductsLength, out associatedProductsHeight);
+
+                    width += associatedProductsWidth;
+                    length += associatedProductsLength;
+                    height += associatedProductsHeight;
                 }
             }
         }
