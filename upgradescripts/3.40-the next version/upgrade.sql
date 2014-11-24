@@ -534,7 +534,7 @@ set @resources='
     <Value>Telecommunications, broadcasting and electronic services</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint ">
-    <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used fo tax caclulation in Europe Union.</Value>
+    <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used for tax caclulation in Europe Union.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes">
     <Value></Value>
