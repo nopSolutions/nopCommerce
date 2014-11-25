@@ -338,10 +338,11 @@
 	height: expression(this.parentNode.clientHeight + "px");
 }
 
-#fancybox-loading.fancybox-ie6 {
+/*commented by nopCommerce team. this code cannot be minified by ASP.NET
+    #fancybox-loading.fancybox-ie6 {
 	position: absolute; margin-top: 0;
 	top: expression( (-20 + (document.documentElement.clientHeight ? document.documentElement.clientHeight/2 : document.body.clientHeight/2 ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop )) + 'px');
-}
+}*/
 
 #fancybox-loading.fancybox-ie6 div	{ background: transparent; filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='content/fancybox/fancy_loading.png', sizingMethod='scale'); }
 
