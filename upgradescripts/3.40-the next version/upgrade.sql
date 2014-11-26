@@ -1049,6 +1049,12 @@ set @resources='
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn.NotSent">
     <Value>Not sent yet</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotShipped">
+    <Value>Load not shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotShipped.Hint">
+    <Value>Load only not shipped shipments.</Value>
+  </LocaleResource>
 </Language>
 '
 

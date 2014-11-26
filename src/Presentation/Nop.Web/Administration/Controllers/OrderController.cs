@@ -2489,6 +2489,7 @@ namespace Nop.Admin.Controllers
                 warehouseId: model.WarehouseId, shippingCountryId: model.CountryId, 
                 shippingStateId: model.StateProvinceId, shippingCity: model.City,
                 trackingNumber: model.TrackingNumber, 
+                loadNotShipped: model.LoadNotShipped,
                 createdFromUtc: startDateValue, createdToUtc: endDateValue, 
                 pageIndex: command.Page - 1, pageSize: command.PageSize);
             var gridModel = new DataSourceResult

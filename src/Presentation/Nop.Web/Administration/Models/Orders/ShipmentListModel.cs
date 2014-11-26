@@ -40,6 +40,9 @@ namespace Nop.Admin.Models.Orders
         [AllowHtml]
         public string City { get; set; }
 
+        [NopResourceDisplayName("Admin.Orders.Shipments.List.LoadNotShipped")]
+        public bool LoadNotShipped { get; set; }
+
 
         [NopResourceDisplayName("Admin.Orders.Shipments.List.Warehouse")]
         public int WarehouseId { get; set; }
