@@ -4683,6 +4683,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ExternalAuthenticationSettings
                 {
                     AutoRegisterEnabled = true,
+                    ActiveAuthenticationMethodSystemNames = new List<string> {"ExternalAuth.OpenId"}
                 });
 
             settingService.SaveSetting(new RewardPointsSettings
