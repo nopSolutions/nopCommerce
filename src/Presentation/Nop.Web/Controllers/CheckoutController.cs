@@ -240,12 +240,12 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart)
+        protected virtual CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart, Address shippingAddress)
         {
             var model = new CheckoutShippingMethodModel();
 
             var getShippingOptionResponse = _shippingService
-                .GetShippingOptions(cart, _workContext.CurrentCustomer.ShippingAddress,
+                .GetShippingOptions(cart, shippingAddress,
                 "", _storeContext.CurrentStore.Id);
             if (getShippingOptionResponse.Success)
             {
@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, bool filterByCountry = true)
+        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, int filterByCountryId)
         {
             var model = new CheckoutPaymentMethodModel();
 
@@ -335,14 +335,6 @@ namespace Nop.Web.Controllers
             }
 
             //filter by country
-            int filterByCountryId = 0;
-            if (filterByCountry && _addressSettings.CountryEnabled &&
-                _workContext.CurrentCustomer.BillingAddress != null &&
-                _workContext.CurrentCustomer.BillingAddress.Country != null)
-            {
-                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
-            }
-
             var paymentMethods = _paymentService
                 .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, filterByCountryId)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
@@ -818,7 +810,7 @@ namespace Nop.Web.Controllers
             }
             
             //model
-            var model = PrepareShippingMethodModel(cart);
+            var model = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
             if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                 model.ShippingMethods.Count == 1)
@@ -925,8 +917,17 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
+            //filter by country
+            int filterByCountryId = 0;
+            if (_addressSettings.CountryEnabled &&
+                _workContext.CurrentCustomer.BillingAddress != null &&
+                _workContext.CurrentCustomer.BillingAddress.Country != null)
+            {
+                filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
+            }
+
             //model
-            var paymentMethodModel = PreparePaymentMethodModel(cart);
+            var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
 
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                 paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -1215,8 +1216,17 @@ namespace Nop.Web.Controllers
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
             if (isPaymentWorkflowRequired)
             {
+                //filter by country
+                int filterByCountryId = 0;
+                if (_addressSettings.CountryEnabled &&
+                    _workContext.CurrentCustomer.BillingAddress != null &&
+                    _workContext.CurrentCustomer.BillingAddress.Country != null)
+                {
+                    filterByCountryId = _workContext.CurrentCustomer.BillingAddress.Country.Id;
+                }
+
                 //payment is required
-                var paymentMethodModel = PreparePaymentMethodModel(cart);
+                var paymentMethodModel = PreparePaymentMethodModel(cart, filterByCountryId);
 
                 if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
                     paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
@@ -1589,7 +1599,7 @@ namespace Nop.Web.Controllers
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 
-                var shippingMethodModel = PrepareShippingMethodModel(cart);
+                var shippingMethodModel = PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
 
                 if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
                     shippingMethodModel.ShippingMethods.Count == 1)
