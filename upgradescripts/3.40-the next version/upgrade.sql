@@ -1046,6 +1046,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.SupportedVersions">
     <Value>Supported versions</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn.NotSent">
+    <Value>Not sent yet</Value>
+  </LocaleResource>
 </Language>
 '
 

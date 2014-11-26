@@ -9918,6 +9918,9 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn.Hint">
     <Value>The date/time message was sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn.NotSent">
+    <Value>Not sent yet</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentTries">
     <Value>Sent attempts</Value>
   </LocaleResource>
