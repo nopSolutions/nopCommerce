@@ -315,7 +315,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart)
+        protected virtual CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart, bool filterByCountry = true)
         {
             var model = new CheckoutPaymentMethodModel();
 
@@ -336,7 +336,7 @@ namespace Nop.Web.Controllers
 
             //filter by country
             int filterByCountryId = 0;
-            if (_addressSettings.CountryEnabled &&
+            if (filterByCountry && _addressSettings.CountryEnabled &&
                 _workContext.CurrentCustomer.BillingAddress != null &&
                 _workContext.CurrentCustomer.BillingAddress.Country != null)
             {
