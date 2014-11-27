@@ -21,5 +21,9 @@ namespace Nop.Core.Domain.Common
         /// Additional settings for rich editor
         /// </summary>
         public string RichEditorAdditionalSettings { get; set; }
+        /// <summary>
+        ///A value indicating whether to javascript is supported in rcih editor
+        /// </summary>
+        public bool RichEditorAllowJavaScript { get; set; }
     }
 }

@@ -4507,6 +4507,8 @@ namespace Nop.Services.Installation
                     DefaultGridPageSize = 15,
                     GridPageSizes = "10, 15, 20, 50, 100",
                     DisplayProductPictures = true,
+                    RichEditorAdditionalSettings = null,
+                    RichEditorAllowJavaScript = false
                 });
 
             settingService.SaveSetting(new CatalogSettings

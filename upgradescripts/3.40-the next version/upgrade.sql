@@ -2459,3 +2459,11 @@ BEGIN
 	DROP TABLE #tmp_guests
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.richeditorallowjavascript')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'adminareasettings.richeditorallowjavascript', N'false', 0)
+END
+GO
