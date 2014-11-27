@@ -5517,6 +5517,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail.Hint">
     <Value>Check to attach PDF invoice to the "order completed" email sent to a customer.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPaidEmail">
+    <Value>Attach PDF invoice ("order paid" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPaidEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order paid" email sent to a customer.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPlacedEmail">
     <Value>Attach PDF invoice ("order placed" email)</Value>
   </LocaleResource>

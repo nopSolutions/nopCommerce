@@ -80,8 +80,11 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderPaidCustomerNotification(Order order, int languageId);
+        int SendOrderPaidCustomerNotification(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null);
 
         /// <summary>
         /// Sends an order paid notification to a vendor

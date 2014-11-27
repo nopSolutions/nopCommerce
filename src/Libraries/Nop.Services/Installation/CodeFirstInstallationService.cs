@@ -4762,6 +4762,7 @@ namespace Nop.Services.Installation
                     DisableOrderCompletedPage = false,
                     AttachPdfInvoiceToOrderPlacedEmail = false,
                     AttachPdfInvoiceToOrderCompletedEmail = false,
+                    AttachPdfInvoiceToOrderPaidEmail = false,
                     ReturnRequestsEnabled = true,
                     ReturnRequestActions = new List<string> { "Repair", "Replacement", "Store Credit" },
                     ReturnRequestReasons = new List<string> { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },

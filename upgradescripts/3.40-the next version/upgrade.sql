@@ -1055,6 +1055,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.LoadNotShipped.Hint">
     <Value>Load only not shipped shipments.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPaidEmail">
+    <Value>Attach PDF invoice ("order paid" email)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPaidEmail.Hint">
+    <Value>Check to attach PDF invoice to the "order paid" email sent to a customer.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2465,5 +2471,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.riched
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'adminareasettings.richeditorallowjavascript', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.attachpdfinvoicetoorderpaidemail')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.attachpdfinvoicetoorderpaidemail', N'false', 0)
 END
 GO

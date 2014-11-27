@@ -63,6 +63,10 @@ namespace Nop.Admin.Models.Settings
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
         public bool AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderPaidEmail")]
+        public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
+        public bool AttachPdfInvoiceToOrderPaidEmail_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.AttachPdfInvoiceToOrderCompletedEmail")]
         public bool AttachPdfInvoiceToOrderCompletedEmail { get; set; }
         public bool AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore { get; set; }

@@ -195,6 +195,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPaidEmail, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPaidEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
+                @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderCompletedEmail, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderCompletedEmail):
             </td>

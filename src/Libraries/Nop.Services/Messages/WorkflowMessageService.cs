@@ -429,8 +429,11 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="order">Order instance</param>
         /// <param name="languageId">Message language identifier</param>
+        /// <param name="attachmentFilePath">Attachment file path</param>
+        /// <param name="attachmentFileName">Attachment file name. If specified, then this file name will be sent to a recipient. Otherwise, "AttachmentFilePath" name will be used.</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderPaidCustomerNotification(Order order, int languageId)
+        public virtual int SendOrderPaidCustomerNotification(Order order, int languageId,
+            string attachmentFilePath = null, string attachmentFileName = null)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -458,7 +461,9 @@ namespace Nop.Services.Messages
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
                 languageId, tokens,
-                toEmail, toName);
+                toEmail, toName,
+                attachmentFilePath,
+                attachmentFileName);
         }
 
         /// <summary>

@@ -56,10 +56,13 @@ namespace Nop.Core.Domain.Orders
         public bool DisableOrderCompletedPage { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating we should attach PDF invoice to "Order places" email
+        /// Gets or sets a value indicating we should attach PDF invoice to "Order placed" email
         /// </summary>
         public bool AttachPdfInvoiceToOrderPlacedEmail { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating we should attach PDF invoice to "Order paid" email
+        /// </summary>
+        public bool AttachPdfInvoiceToOrderPaidEmail { get; set; }
         /// <summary>
         /// Gets or sets a value indicating we should attach PDF invoice to "Order completed" email
         /// </summary>

@@ -397,8 +397,15 @@ namespace Nop.Services.Orders
             {
                 //we should not send it for free ($0 total) orders?
                 //remove this "if" statement if you want to send it in this case
+
+                var orderPaidAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
+                    _pdfService.PrintOrderToPdf(order, 0) : null;
+                var orderPaidAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPaidEmail ?
+                    "order.pdf" : null;
+                _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId,
+                    orderPaidAttachmentFilePath, orderPaidAttachmentFileName);
+
                 _workflowMessageService.SendOrderPaidStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
-                _workflowMessageService.SendOrderPaidCustomerNotification(order, order.CustomerLanguageId);
                 var vendors = GetVendorsInOrder(order);
                 foreach (var vendor in vendors)
                 {
