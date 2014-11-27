@@ -32,5 +32,14 @@ namespace Nop.Services.Orders
         {
             eventPublisher.Publish(new OrderCancelledEvent(order));
         }
+        /// <summary>
+        /// Publishes the order refunded event.
+        /// </summary>
+        /// <param name="eventPublisher">The event publisher.</param>
+        /// <param name="order">The order.</param>
+        public static void PublishOrderRefunded(this IEventPublisher eventPublisher, Order order, decimal amount)
+        {
+            eventPublisher.Publish(new OrderRefundedEvent(order, amount));
+        }
     }
 }

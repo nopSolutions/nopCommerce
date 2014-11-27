@@ -53,4 +53,29 @@ namespace Nop.Core.Domain.Orders
             get { return _order; }
         }
     }
+
+    /// <summary>
+    /// Order refunded event
+    /// </summary>
+    public class OrderRefundedEvent
+    {
+        private readonly Order _order;
+        private readonly decimal _amount;
+
+        public OrderRefundedEvent(Order order, decimal amount)
+        {
+            this._order = order;
+        }
+
+        public Order Order
+        {
+            get { return _order; }
+        }
+
+        public decimal Amount
+        {
+            get { return _amount; }
+        }
+    }
+
 }

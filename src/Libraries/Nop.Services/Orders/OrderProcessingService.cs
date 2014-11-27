@@ -2225,6 +2225,9 @@ namespace Nop.Services.Orders
 
                     //check order status
                     CheckOrderStatus(order);
+
+                    //raise event       
+                    _eventPublisher.PublishOrderRefunded(order, request.AmountToRefund);
                 }
 
             }
@@ -2318,6 +2321,9 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
+
+            //raise event       
+            _eventPublisher.PublishOrderRefunded(order, amountToRefund);
         }
 
         /// <summary>
@@ -2399,6 +2405,9 @@ namespace Nop.Services.Orders
 
                     //check order status
                     CheckOrderStatus(order);
+                    
+                    //raise event       
+                    _eventPublisher.PublishOrderRefunded(order, amountToRefund);
                 }
             }
             catch (Exception exc)
@@ -2499,6 +2508,9 @@ namespace Nop.Services.Orders
 
             //check order status
             CheckOrderStatus(order);
+
+            //raise event       
+            _eventPublisher.PublishOrderRefunded(order, amountToRefund);
         }
 
 
