@@ -294,7 +294,6 @@
     <Compile Include="Orders\CheckoutAttributeFormatter.cs" />
     <Compile Include="Orders\CheckoutAttributeParser.cs" />
     <Compile Include="Orders\CheckoutAttributeService.cs" />
-    <Compile Include="Orders\EventPublisherExtensions.cs" />
     <Compile Include="Orders\OrderExtensions.cs" />
     <Compile Include="Orders\IOrderReportService.cs" />
     <Compile Include="Orders\OrderReportService.cs" />

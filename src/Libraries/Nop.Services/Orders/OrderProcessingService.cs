@@ -390,7 +390,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             //raise event
-            _eventPublisher.PublishOrderPaid(order);
+            _eventPublisher.Publish(new OrderPaidEvent(order));
 
             //order paid email notification
             if (order.OrderTotal != decimal.Zero)
@@ -1462,7 +1462,7 @@ namespace Nop.Services.Orders
                         //scope.Complete();
 
                         //raise event       
-                        _eventPublisher.PublishOrderPlaced(order);
+                        _eventPublisher.Publish(new OrderPlacedEvent(order));
 
                         if (order.PaymentStatus == PaymentStatus.Paid)
                         {
@@ -1948,7 +1948,7 @@ namespace Nop.Services.Orders
                 _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
             }
 
-            _eventPublisher.PublishOrderCancelled(order);
+            _eventPublisher.Publish(new OrderCancelledEvent(order));
 
         }
 
@@ -2227,7 +2227,7 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //raise event       
-                    _eventPublisher.PublishOrderRefunded(order, request.AmountToRefund);
+                    _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
 
             }
@@ -2323,7 +2323,7 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //raise event       
-            _eventPublisher.PublishOrderRefunded(order, amountToRefund);
+            _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
         /// <summary>
@@ -2407,7 +2407,7 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
                     
                     //raise event       
-                    _eventPublisher.PublishOrderRefunded(order, amountToRefund);
+                    _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
             }
             catch (Exception exc)
@@ -2510,7 +2510,7 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //raise event       
-            _eventPublisher.PublishOrderRefunded(order, amountToRefund);
+            _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
 
 
