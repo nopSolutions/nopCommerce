@@ -163,37 +163,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get product special price
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>Special price; null if product does not have special price specified</returns>
-        protected virtual decimal? GetSpecialPrice(Product product)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.SpecialPrice.HasValue)
-                return null;
-
-            //check date range
-            DateTime now = DateTime.UtcNow;
-            if (product.SpecialPriceStartDateTimeUtc.HasValue)
-            {
-                DateTime startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
-                if (startDate.CompareTo(now) > 0)
-                    return null;
-            }
-            if (product.SpecialPriceEndDateTimeUtc.HasValue)
-            {
-                DateTime endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
-                if (endDate.CompareTo(now) < 0)
-                    return null;
-            }
-
-            return product.SpecialPrice.Value;
-        }
-
-        /// <summary>
         /// Get number of rental periods (price ratio)
         /// </summary>
         /// <param name="product">Product</param>
@@ -284,6 +253,9 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Methods
+
+
+
 
         /// <summary>
         /// Gets the final price
@@ -378,7 +350,7 @@ namespace Nop.Services.Catalog
                 decimal price = product.Price;
 
                 //special price
-                var specialPrice = GetSpecialPrice(product);
+                var specialPrice = product.GetSpecialPrice();
                 if (specialPrice.HasValue)
                     price = specialPrice.Value;
 

@@ -12,6 +12,38 @@ namespace Nop.Services.Catalog
     public static class ProductExtensions
     {
         /// <summary>
+        /// Get product special price
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>Special price; null if product does not have special price specified</returns>
+        public static decimal? GetSpecialPrice(this Product product)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (!product.SpecialPrice.HasValue)
+                return null;
+
+            //check date range
+            DateTime now = DateTime.UtcNow;
+            if (product.SpecialPriceStartDateTimeUtc.HasValue)
+            {
+                DateTime startDate = DateTime.SpecifyKind(product.SpecialPriceStartDateTimeUtc.Value, DateTimeKind.Utc);
+                if (startDate.CompareTo(now) > 0)
+                    return null;
+            }
+            if (product.SpecialPriceEndDateTimeUtc.HasValue)
+            {
+                DateTime endDate = DateTime.SpecifyKind(product.SpecialPriceEndDateTimeUtc.Value, DateTimeKind.Utc);
+                if (endDate.CompareTo(now) < 0)
+                    return null;
+            }
+
+            return product.SpecialPrice.Value;
+        }
+
+
+        /// <summary>
         /// Finds a related product item by specified identifiers
         /// </summary>
         /// <param name="source">Source</param>
