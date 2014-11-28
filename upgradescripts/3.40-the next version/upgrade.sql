@@ -512,7 +512,7 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.LoadMode">
     <Value>Load mode</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode.Hint ">
+  <LocaleResource Name="Admin.Configuration.Plugins.LoadMode.Hint">
     <Value>Search by a load mode.</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Plugins.LoadPluginsMode.All">
@@ -527,13 +527,13 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Group">
     <Value>Group</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.Group.Hint ">
+  <LocaleResource Name="Admin.Configuration.Plugins.Group.Hint">
     <Value>Search by a group.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices">
     <Value>Telecommunications, broadcasting and electronic services</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint ">
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint">
     <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used for tax caclulation in Europe Union.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductVariantAttributes">
@@ -1010,7 +1010,7 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Category">
     <Value>Category</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Category.Hint ">
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Category.Hint">
     <Value>Search by category.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Picture">
@@ -1028,13 +1028,13 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price">
     <Value>Price</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Free ">
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Free">e
     <Value>Free</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Hint ">
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Hint">
     <Value>Search by price.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Commercial ">
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Price.Commercial">
     <Value>Commercial</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Version">
