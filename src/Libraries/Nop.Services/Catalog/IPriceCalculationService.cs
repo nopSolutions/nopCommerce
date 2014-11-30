@@ -154,15 +154,5 @@ namespace Nop.Services.Catalog
         /// <param name="value">Product attribute value</param>
         /// <returns>Price adjustment</returns>
         decimal GetProductAttributeValuePriceAdjustment(ProductAttributeValue value);
-
-
-
-
-        /// <summary>
-        /// Round a product price or order total
-        /// </summary>
-        /// <param name="value">Value to round</param>
-        /// <returns>Rounded value</returns>
-        decimal RoundPrice(decimal value);
     }
 }

@@ -202,6 +202,7 @@ namespace Nop.Services.Catalog
             Currency targetCurrency, Language language, bool priceIncludesTax, bool showTax)
         {
             //round before rendering
+            //should we use RoundingHelper.RoundPrice here?
             price = Math.Round(price, 2);
             
             string currencyString = GetCurrencyString(price, showCurrency, targetCurrency);

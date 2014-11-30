@@ -228,10 +228,7 @@ namespace Nop.Services.Payments
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                //we cannot inject IPriceCalculationService into this service
-                //because it'll cause circular reference
-                //result = _priceCalculationService.RoundPrice(result);
-                result = Math.Round(result, 2);
+                result = RoundingHelper.RoundPrice(result);
             }
             return result;
         }
