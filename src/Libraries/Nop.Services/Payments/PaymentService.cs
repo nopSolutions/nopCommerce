@@ -17,7 +17,6 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
-        private readonly IPriceCalculationService _priceCalculationService;
         private readonly PaymentSettings _paymentSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
@@ -29,18 +28,15 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public PaymentService(IPriceCalculationService priceCalculationService,
-            PaymentSettings paymentSettings, 
+        public PaymentService(PaymentSettings paymentSettings, 
             IPluginFinder pluginFinder,
             ISettingService settingService,
             ShoppingCartSettings shoppingCartSettings)
         {
-            this._priceCalculationService = priceCalculationService;
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
@@ -231,7 +227,12 @@ namespace Nop.Services.Payments
             if (result < decimal.Zero)
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                result = _priceCalculationService.RoundPrice(result);
+            {
+                //we cannot inject IPriceCalculationService into this service
+                //because it'll cause circular reference
+                //result = _priceCalculationService.RoundPrice(result);
+                result = Math.Round(result, 2);
+            }
             return result;
         }
 
