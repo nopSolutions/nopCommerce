@@ -543,7 +543,7 @@ namespace Nop.Services.Catalog
             
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                finalPrice = Math.Round(finalPrice, 2);
+                finalPrice = RoundPrice(finalPrice);
 
             return finalPrice;
         }
@@ -694,6 +694,28 @@ namespace Nop.Services.Catalog
             return adjustment;
         }
 
+
+
+
+
+        /// <summary>
+        /// Round a product or order total
+        /// </summary>
+        /// <param name="value">Value to round</param>
+        /// <returns>Rounded value</returns>
+        public virtual decimal RoundPrice(decimal value)
+        {
+            //if (!_shoppingCartSettings.RoundPricesDuringCalculation)
+            //    return value;
+
+            //we use this method because
+            //some currencies (e.g. hungarian forint) use non-standard rules for rounding
+            //you can implement any rounding logic here (use _workContext.WorkingCurrency to get current currency)
+
+            //round
+            value = Math.Round(value, 2);
+            return value;
+        }
         #endregion
     }
 }

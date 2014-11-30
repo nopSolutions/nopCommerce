@@ -77,7 +77,6 @@ namespace Nop.Services.Tests.Orders
             var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
 
-            //price calculation service
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
@@ -108,6 +107,7 @@ namespace Nop.Services.Tests.Orders
                 _warehouseRepository,
                 _logger,
                 _productService,
+                _priceCalcService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,

@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Payments
@@ -16,6 +17,7 @@ namespace Nop.Services.Payments
     {
         #region Fields
 
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly PaymentSettings _paymentSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly ISettingService _settingService;
@@ -27,15 +29,18 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Ctor
         /// </summary>
+        /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        public PaymentService(PaymentSettings paymentSettings, 
+        public PaymentService(IPriceCalculationService priceCalculationService,
+            PaymentSettings paymentSettings, 
             IPluginFinder pluginFinder,
             ISettingService settingService,
             ShoppingCartSettings shoppingCartSettings)
         {
+            this._priceCalculationService = priceCalculationService;
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
@@ -226,7 +231,7 @@ namespace Nop.Services.Payments
             if (result < decimal.Zero)
                 result = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                result = Math.Round(result, 2);
+                result = _priceCalculationService.RoundPrice(result);
             return result;
         }
 

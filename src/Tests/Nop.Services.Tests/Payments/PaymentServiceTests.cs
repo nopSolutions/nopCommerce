@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Payments;
 using Nop.Tests;
@@ -13,6 +14,7 @@ namespace Nop.Services.Tests.Payments
     [TestFixture]
     public class PaymentServiceTests : ServiceTest
     {
+        private IPriceCalculationService _priceCalculationService;
         private PaymentSettings _paymentSettings;
         private ShoppingCartSettings _shoppingCartSettings;
         private ISettingService _settingService;
@@ -25,12 +27,15 @@ namespace Nop.Services.Tests.Payments
             _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
+            _priceCalculationService = MockRepository.GenerateMock<IPriceCalculationService>();
+
             var pluginFinder = new PluginFinder();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _settingService = MockRepository.GenerateMock<ISettingService>();
 
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
+            _paymentService = new PaymentService(_priceCalculationService, 
+                _paymentSettings, pluginFinder, _settingService, _shoppingCartSettings);
         }
 
         [Test]

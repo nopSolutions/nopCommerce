@@ -48,6 +48,7 @@ namespace Nop.Services.Shipping
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly ILogger _logger;
         private readonly IProductService _productService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IGenericAttributeService _genericAttributeService;
@@ -72,6 +73,7 @@ namespace Nop.Services.Shipping
         /// <param name="warehouseRepository">Warehouse repository</param>
         /// <param name="logger">Logger</param>
         /// <param name="productService">Product service</param>
+        /// <param name="priceCalculationService">Price calculation service</param>
         /// <param name="productAttributeParser">Product attribute parser</param>
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
@@ -88,6 +90,7 @@ namespace Nop.Services.Shipping
             IRepository<Warehouse> warehouseRepository,
             ILogger logger,
             IProductService productService,
+            IPriceCalculationService priceCalculationService,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
             IGenericAttributeService genericAttributeService,
@@ -105,6 +108,7 @@ namespace Nop.Services.Shipping
             this._warehouseRepository = warehouseRepository;
             this._logger = logger;
             this._productService = productService;
+            this._priceCalculationService = priceCalculationService;
             this._productAttributeParser = productAttributeParser;
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._genericAttributeService = genericAttributeService;
@@ -870,7 +874,7 @@ namespace Nop.Services.Shipping
                     {
                         so.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            so.Rate = Math.Round(so.Rate, 2);
+                            so.Rate = _priceCalculationService.RoundPrice(so.Rate);
                         result.ShippingOptions.Add(so);
                     }
                 }

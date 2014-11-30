@@ -139,6 +139,7 @@ namespace Nop.Services.Tests.Orders
                 _warehouseRepository,
                 _logger,
                 _productService,
+                _priceCalcService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,

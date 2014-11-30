@@ -28,6 +28,7 @@ namespace Nop.Services.Tests.Shipping
         private IRepository<DeliveryDate> _deliveryDateRepository;
         private IRepository<Warehouse> _warehouseRepository;
         private ILogger _logger;
+        private IPriceCalculationService _priceCalculationService;
         private IProductAttributeParser _productAttributeParser;
         private ICheckoutAttributeParser _checkoutAttributeParser;
         private ShippingSettings _shippingSettings;
@@ -59,6 +60,8 @@ namespace Nop.Services.Tests.Shipping
             var pluginFinder = new PluginFinder();
             _productService = MockRepository.GenerateMock<IProductService>();
 
+            _priceCalculationService = MockRepository.GenerateMock<IPriceCalculationService>();
+
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
@@ -76,6 +79,7 @@ namespace Nop.Services.Tests.Shipping
                 _warehouseRepository,
                 _logger,
                 _productService,
+                _priceCalculationService,
                 _productAttributeParser,
                 _checkoutAttributeParser,
                 _genericAttributeService,

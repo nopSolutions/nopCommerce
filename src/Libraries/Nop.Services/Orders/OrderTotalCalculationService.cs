@@ -166,7 +166,7 @@ namespace Nop.Services.Orders
                 shippingDiscountAmount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                shippingDiscountAmount = Math.Round(shippingDiscountAmount, 2);
+                shippingDiscountAmount = _priceCalculationService.RoundPrice(shippingDiscountAmount);
 
             return shippingDiscountAmount;
         }
@@ -202,7 +202,7 @@ namespace Nop.Services.Orders
                 discountAmount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                discountAmount = Math.Round(discountAmount, 2);
+                discountAmount = _priceCalculationService.RoundPrice(discountAmount);
 
             return discountAmount;
         }
@@ -329,7 +329,7 @@ namespace Nop.Services.Orders
                 subTotalWithoutDiscount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                subTotalWithoutDiscount = Math.Round(subTotalWithoutDiscount, 2);
+                subTotalWithoutDiscount = _priceCalculationService.RoundPrice(subTotalWithoutDiscount);
 
             //We calculate discount amount on order subtotal excl tax (discount first)
             //calculate discount amount ('Applied to order subtotal' discount)
@@ -357,7 +357,7 @@ namespace Nop.Services.Orders
                         discountAmountInclTax += discountTax;
                         taxValue = taxRates[taxRate] - discountTax;
                         if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                            taxValue = Math.Round(taxValue, 2);
+                            taxValue = _priceCalculationService.RoundPrice(taxValue);
                         taxRates[taxRate] = taxValue;
                     }
 
@@ -368,8 +368,8 @@ namespace Nop.Services.Orders
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
             {
-                discountAmountInclTax = Math.Round(discountAmountInclTax, 2);
-                discountAmountExclTax = Math.Round(discountAmountExclTax, 2);
+                discountAmountInclTax = _priceCalculationService.RoundPrice(discountAmountInclTax);
+                discountAmountExclTax = _priceCalculationService.RoundPrice(discountAmountExclTax);
             }
 
             if (includingTax)
@@ -387,7 +387,7 @@ namespace Nop.Services.Orders
                 subTotalWithDiscount = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                subTotalWithDiscount = Math.Round(subTotalWithDiscount, 2);
+                subTotalWithDiscount = _priceCalculationService.RoundPrice(subTotalWithDiscount);
         }
 
 
@@ -496,7 +496,7 @@ namespace Nop.Services.Orders
                 adjustedRate = decimal.Zero;
 
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                adjustedRate = Math.Round(adjustedRate, 2);
+                adjustedRate = _priceCalculationService.RoundPrice(adjustedRate);
 
             return adjustedRate;
         }
@@ -627,7 +627,7 @@ namespace Nop.Services.Orders
 
                 //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotal = Math.Round(shippingTotal.Value, 2);
+                    shippingTotal = _priceCalculationService.RoundPrice(shippingTotal.Value);
 
                 shippingTotalTaxed = _taxService.GetShippingPrice(shippingTotal.Value,
                     includingTax,
@@ -636,7 +636,7 @@ namespace Nop.Services.Orders
                 
                 //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotalTaxed = Math.Round(shippingTotalTaxed.Value, 2);
+                    shippingTotalTaxed = _priceCalculationService.RoundPrice(shippingTotalTaxed.Value);
             }
 
             return shippingTotalTaxed;
@@ -771,8 +771,8 @@ namespace Nop.Services.Orders
             if (taxTotal < decimal.Zero)
                 taxTotal = decimal.Zero;
             //round tax
-            if (_shoppingCartSettings.RoundPricesDuringCalculation) 
-                taxTotal = Math.Round(taxTotal, 2);
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                taxTotal = _priceCalculationService.RoundPrice(taxTotal);
             return taxTotal;
         }
 
@@ -885,7 +885,7 @@ namespace Nop.Services.Orders
             resultTemp += paymentMethodAdditionalFeeWithoutTax;
             resultTemp += shoppingCartTax;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = Math.Round(resultTemp, 2);
+                resultTemp = _priceCalculationService.RoundPrice(resultTemp);
 
             #region Order total discount
 
@@ -901,7 +901,7 @@ namespace Nop.Services.Orders
             if (resultTemp < decimal.Zero)
                 resultTemp = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = Math.Round(resultTemp, 2);
+                resultTemp = _priceCalculationService.RoundPrice(resultTemp);
 
             #endregion
 
@@ -939,7 +939,7 @@ namespace Nop.Services.Orders
             if (resultTemp < decimal.Zero)
                 resultTemp = decimal.Zero;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                resultTemp = Math.Round(resultTemp, 2);
+                resultTemp = _priceCalculationService.RoundPrice(resultTemp);
 
             if (!shoppingCartShipping.HasValue)
             {
@@ -980,7 +980,7 @@ namespace Nop.Services.Orders
 
             orderTotal = orderTotal - redeemedRewardPointsAmount;
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                orderTotal = Math.Round(orderTotal, 2);
+                orderTotal = _priceCalculationService.RoundPrice(orderTotal);
             return orderTotal;
         }
 
@@ -999,8 +999,8 @@ namespace Nop.Services.Orders
                 return decimal.Zero;
 
             var result = rewardPoints * _rewardPointsSettings.ExchangeRate;
-            if (_shoppingCartSettings.RoundPricesDuringCalculation) 
-                result = Math.Round(result, 2);
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                result = _priceCalculationService.RoundPrice(result);
             return result;
         }
 
