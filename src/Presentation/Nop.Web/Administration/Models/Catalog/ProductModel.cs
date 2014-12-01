@@ -26,6 +26,9 @@ namespace Nop.Admin.Models.Catalog
             AvailableTaxCategories = new List<SelectListItem>();
             AvailableDeliveryDates = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
+            AvailableCategories = new List<SelectListItem>();
+            AvailableManufacturers = new List<SelectListItem>();
+            AvailableProductAttributes = new List<SelectListItem>();
             AddPictureModel = new ProductPictureModel();
             AddSpecificationAttributeModel = new AddProductSpecificationAttributeModel();
             ProductWarehouseInventoryModels = new List<ProductWarehouseInventoryModel>();
@@ -365,14 +368,11 @@ namespace Nop.Admin.Models.Catalog
 
 
         //categories
-        public int NumberOfAvailableCategories { get; set; }
-
+        public IList<SelectListItem> AvailableCategories { get; set; }
         //manufacturers
-        public int NumberOfAvailableManufacturers { get; set; }
-
-
+        public IList<SelectListItem> AvailableManufacturers { get; set; }
         //product attributes
-        public int NumberOfAvailableProductAttributes { get; set; }
+        public IList<SelectListItem> AvailableProductAttributes { get; set; }
         
 
 

@@ -4,7 +4,7 @@
 
 @if (Model.Id > 0)
 {
-    if (Model.NumberOfAvailableCategories > 0)
+    if (Model.AvailableCategories.Count > 0)
     {
         <div id="productcategories-grid"></div>
 
@@ -129,20 +129,16 @@
                 
             //local datasource
             var allCategories = [
-                @{
-                    var categoryService = EngineContext.Current.Resolve<ICategoryService>();
-                    var allCategories = categoryService.GetAllCategories(showHidden: true);
-                }
-                @for (int i = 0; i < allCategories.Count; i++)
+                @for (int i = 0; i < Model.AvailableCategories.Count; i++)
                 {
-                    var category = allCategories[i];
+                    var categoryItem = Model.AvailableCategories[i];
                     <text>
                         {
-                            Id: @(category.Id),
-                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(category.GetFormattedBreadCrumb(allCategories))))"
+                            Id: @(categoryItem.Value),
+                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(categoryItem.Text)))"
                         }
                         </text>
-                    if (i != allCategories.Count - 1)
+                    if (i != Model.AvailableCategories.Count - 1)
                     {
                         <text>,</text>
                     }

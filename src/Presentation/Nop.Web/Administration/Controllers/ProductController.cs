@@ -474,15 +474,37 @@ namespace Nop.Admin.Controllers
                 model.UpdatedOn = _dateTimeHelper.ConvertToUserTime(product.UpdatedOnUtc, DateTimeKind.Utc);
             }
 
-            model.NumberOfAvailableProductAttributes = _productAttributeService.GetAllProductAttributes(0, 1).TotalCount;
-            model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers("",
-                pageIndex: 0,
-                pageSize: 1,
-                showHidden: true).TotalCount;
-            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(
-                pageIndex: 0,
-                pageSize: 1,
-                showHidden: true).TotalCount;
+            //little performance hack here
+            //there's no need to load attributes, categories, manufacturers when creating a new product
+            //anyway they're not used (you need to save a product before you map add them)
+            if (product != null)
+            {
+                foreach (var productAttribute in _productAttributeService.GetAllProductAttributes())
+                {
+                    model.AvailableProductAttributes.Add(new SelectListItem
+                    {
+                        Text = productAttribute.Name,
+                        Value = productAttribute.Id.ToString()
+                    });
+                }
+                foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
+                {
+                    model.AvailableManufacturers.Add(new SelectListItem
+                    {
+                        Text = manufacturer.Name,
+                        Value = manufacturer.Id.ToString()
+                    });
+                }
+                var allCategories = _categoryService.GetAllCategories(showHidden: true);
+                foreach (var category in allCategories)
+                {
+                    model.AvailableCategories.Add(new SelectListItem
+                    {
+                        Text = category.Name,
+                        Value = category.Id.ToString()
+                    });
+                }
+            }
 
             //copy product
             if (product != null)
