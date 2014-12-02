@@ -467,6 +467,143 @@ namespace Nop.Admin.Controllers
             return attributesXml;
         }
 
+        [NonAction]
+        protected virtual void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
+        {
+            if (customer != null)
+            {
+                model.Id = customer.Id;
+                if (!excludeProperties)
+                {
+                    model.Email = customer.Email;
+                    model.Username = customer.Username;
+                    model.VendorId = customer.VendorId;
+                    model.AdminComment = customer.AdminComment;
+                    model.IsTaxExempt = customer.IsTaxExempt;
+                    model.Active = customer.Active;
+                    model.AffiliateId = customer.AffiliateId;
+                    model.TimeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
+                    model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
+                    model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
+                        .GetLocalizedEnum(_localizationService, _workContext);
+                    model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
+                    model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
+                    model.LastIpAddress = customer.LastIpAddress;
+                    model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+
+                    model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+
+                    //form fields
+                    model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                    model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                    model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
+                    model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                    model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                    model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                    model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                    model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                    model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                    model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                    model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                    model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                    model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+                }
+            }
+
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
+            if (customer != null)
+            {
+                model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            }
+            else
+            {
+                model.DisplayVatNumber = false;
+            }
+
+            //vendors
+            PrepareVendorsModel(model);
+            //customer attributes
+            PrepareCustomerAttributeModel(model, customer);
+
+            model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
+            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
+            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
+            model.CityEnabled = _customerSettings.CityEnabled;
+            model.CountryEnabled = _customerSettings.CountryEnabled;
+            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
+            model.PhoneEnabled = _customerSettings.PhoneEnabled;
+            model.FaxEnabled = _customerSettings.FaxEnabled;
+
+            //countries and states
+            if (_customerSettings.CountryEnabled)
+            {
+                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
+                foreach (var c in _countryService.GetAllCountries(true))
+                {
+                    model.AvailableCountries.Add(new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == model.CountryId
+                    });
+                }
+
+                if (_customerSettings.StateProvinceEnabled)
+                {
+                    //states
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
+                    if (states.Count > 0)
+                    {
+                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
+
+                        foreach (var s in states)
+                        {
+                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                        }
+                    }
+                    else
+                    {
+                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
+
+                        model.AvailableStates.Add(new SelectListItem
+                        {
+                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
+                            Value = "0"
+                        });
+                    }
+                }
+            }
+
+            //customer roles
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            //reward points history
+            if (customer != null)
+            {
+                model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+            }
+            else
+            {
+                model.DisplayRewardPointsHistory = false;
+            }
+            model.AddRewardPointsValue = 0;
+            model.AddRewardPointsMessage = "Some comment here...";
+            //external authentication records
+            if (customer != null)
+            {
+                model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
+            }
+        }
+
         #endregion
 
         #region Customers
@@ -540,72 +677,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CustomerModel();
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
-            model.DisplayVatNumber = false;
-            //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            model.SelectedCustomerRoleIds = new int[0];
-            //vendors
-            PrepareVendorsModel(model);
-            //customer attrivutes
-            PrepareCustomerAttributeModel(model, null);
-            //form fields
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(true))
-                {
-                    model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
-                    if (states.Count > 0)
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
-                            Value = "0"
-                        });
-                    }
-                }
-            }
-
+            PrepareCustomerModel(model, null, false);
             //default value
             model.Active = true;
-
             return View(model);
         }
 
@@ -744,68 +818,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
-            model.DisplayVatNumber = false;
-            //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            //vendors
-            PrepareVendorsModel(model);
-            //customer attrivutes
-            PrepareCustomerAttributeModel(model, null);
-            //form fields
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(true))
-                {
-                    model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
-                }
-
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
-                    if (states.Count > 0)
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
-                            Value = "0"
-                        });
-                    }
-
-                }
-            }
+            PrepareCustomerModel(model, null, true);
             return View(model);
 
         }
@@ -821,114 +834,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = new CustomerModel();
-            model.Id = customer.Id;
-            model.Email = customer.Email;
-            model.Username = customer.Username;
-            //vendors
-            model.VendorId = customer.VendorId;
-            PrepareVendorsModel(model);
-            //customer attrivutes
-            PrepareCustomerAttributeModel(model, customer);
-            //other properties and form fields
-            model.AdminComment = customer.AdminComment;
-            model.IsTaxExempt = customer.IsTaxExempt;
-            model.Active = customer.Active;
-            model.AffiliateId = customer.AffiliateId;
-            model.TimeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
-                .GetLocalizedEnum(_localizationService, _workContext);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
-            model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
-            model.LastIpAddress = customer.LastIpAddress;
-            model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
-            
-            //form fields
-            model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-            model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-            model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-            model.DateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
-            model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-            model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-            model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-            model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-            model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-            model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-            model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-            model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-            model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-
-            //countries and states
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(true))
-                {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.Name,
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
-                    });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
-                    if (states.Count > 0)
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });   
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
-                            Value = "0"
-                        });
-                    }
-                }
-            }
-
-            //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
-            //reward points history
-            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
-            model.AddRewardPointsValue = 0;
-            model.AddRewardPointsMessage = "Some comment here...";
-            //external authentication records
-            model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
-
+            PrepareCustomerModel(model, customer, false);
             return View(model);
         }
 
@@ -1116,85 +1022,7 @@ namespace Nop.Admin.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = ((VatNumberStatus)customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId))
-                .GetLocalizedEnum(_localizationService, _workContext);
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc);
-            model.LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc);
-            model.LastIpAddress = model.LastIpAddress;
-            model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
-            //vendors
-            PrepareVendorsModel(model);
-            //customer attrivutes
-            PrepareCustomerAttributeModel(model, customer);
-            //form fields
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            //countries and states
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries(true))
-                {
-                    model.AvailableCountries.Add(new SelectListItem
-                    {
-                        Text = c.Name,
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
-                    });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
-                    if (states.Count > 0)
-                    {
-                        model.AvailableStates.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectState"), Value = "0" });
-
-                        foreach (var s in states)
-                        {
-                            model.AvailableStates.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                        }
-                    }
-                    else
-                    {
-                        bool anyCountrySelected = model.AvailableCountries.Any(x => x.Selected);
-
-                        model.AvailableStates.Add(new SelectListItem
-                        {
-                            Text = _localizationService.GetResource(anyCountrySelected ? "Admin.Address.OtherNonUS" : "Admin.Address.SelectState"),
-                            Value = "0"
-                        });
-                    }
-
-                }
-            }
-            //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-            //reward points history
-            model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
-            model.AddRewardPointsValue = 0;
-            model.AddRewardPointsMessage = "Some comment here...";
-            //external authentication records
-            model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
+            PrepareCustomerModel(model, customer, true);
             return View(model);
         }
         

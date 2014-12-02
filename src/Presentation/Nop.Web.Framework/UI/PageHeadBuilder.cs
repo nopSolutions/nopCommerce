@@ -80,6 +80,7 @@ namespace Nop.Web.Framework.UI
         {
             return new CssRewriteUrlTransform();
         }
+
         #endregion
 
         #region Methods
