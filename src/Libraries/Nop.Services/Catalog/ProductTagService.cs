@@ -132,7 +132,6 @@ namespace Nop.Services.Catalog
                                     ProductCount = pt.Products
                                         //published and not deleted products
                                         .Count(p => !p.Deleted && p.Published)
-                                    //UNDONE filter by store identifier if specified ( > 0 )
                                 };
 
                     var dictionary = new Dictionary<int, int>();

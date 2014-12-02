@@ -625,8 +625,6 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
 
-            //UNDONE: should we display a link to download an attached file (if exists)?
-
             //event notification
             _eventPublisher.EntityTokensAdded(orderNote, tokens);
         }

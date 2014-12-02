@@ -298,7 +298,6 @@ namespace Nop.Services.Shipping
 
             //some null validation
             var result = Convert.ToInt32(query.Sum(si => (int?)si.Quantity));
-            //UNDONE process associated products (AttributesXml)
             return result;
         }
 

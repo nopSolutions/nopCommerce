@@ -429,7 +429,6 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             //purchased product IDs
-            //UNDONE: should we add associated (bundled) products to this list?
             var purchasedProductIds = order.OrderItems.Select(oi => oi.ProductId).ToList();
 
             //list of customer roles

@@ -135,8 +135,6 @@ namespace Nop.Services.Orders
             //simply replace the following code with "return cart"
             //if you want to share shopping carts between stores
 
-            //UNDONE the same "limit per store" logic should be done in
-            //HasAllProductsDiscountRequirementRule.cs and HasOneProductDiscountRequirementRule.cs files
             return cart.Where(x => x.StoreId == storeId);
         }
     }

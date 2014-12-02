@@ -38,7 +38,6 @@ namespace Nop.Services.Helpers
             {
                 //no database created
                 if (String.IsNullOrEmpty(_config.UserAgentStringsPath))
-                    //UNDONE: maybe, throw an exception?
                     return null;
 
                 var filePath = _webHelper.MapPath(_config.UserAgentStringsPath);
@@ -63,6 +62,11 @@ namespace Nop.Services.Helpers
             try
             {
                 var uasParser = GetUasParser();
+
+                //we cannot load parser
+                if (uasParser == null)
+                    return false;
+
                 var userAgent = _httpContext.Request.UserAgent;
                 result = uasParser.IsBot(userAgent);
                 //result = context.Request.Browser.Crawler;

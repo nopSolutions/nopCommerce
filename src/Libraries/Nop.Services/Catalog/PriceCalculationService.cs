@@ -194,7 +194,6 @@ namespace Nop.Services.Catalog
                     configuredPeriodDays = 7 * product.RentalPriceLength;
                     break;
                 case RentalPricePeriod.Months:
-                    //UNDONE support months with 28, 29, 31 days
                     configuredPeriodDays = 30 * product.RentalPriceLength;
                     break;
                 case RentalPricePeriod.Years:
