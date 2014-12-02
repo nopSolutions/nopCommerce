@@ -72,10 +72,6 @@ namespace Nop.Admin.Controllers
                 {
                     model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(blogPost);
                 }
-                else
-                {
-                    model.SelectedStoreIds = new int[0];
-                }
             }
         }
 

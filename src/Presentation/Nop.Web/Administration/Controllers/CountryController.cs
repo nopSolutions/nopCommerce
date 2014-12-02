@@ -108,10 +108,6 @@ namespace Nop.Admin.Controllers
                 {
                     model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(country);
                 }
-                else
-                {
-                    model.SelectedStoreIds = new int[0];
-                }
             }
         }
 

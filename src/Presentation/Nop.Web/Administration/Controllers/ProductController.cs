@@ -258,10 +258,6 @@ namespace Nop.Admin.Controllers
                 {
                     model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(product);
                 }
-                else
-                {
-                    model.SelectedCustomerRoleIds = new int[0];
-                }
             }
         }
 
@@ -303,10 +299,6 @@ namespace Nop.Admin.Controllers
                 if (product != null)
                 {
                     model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(product);
-                }
-                else
-                {
-                    model.SelectedStoreIds = new int[0];
                 }
             }
         }

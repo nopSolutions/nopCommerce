@@ -88,10 +88,6 @@ namespace Nop.Admin.Controllers
                 {
                     model.SelectedStoreIds = _storeMappingService.GetStoresIdsWithAccess(currency);
                 }
-                else
-                {
-                    model.SelectedStoreIds = new int[0];
-                }
             }
         }
 
