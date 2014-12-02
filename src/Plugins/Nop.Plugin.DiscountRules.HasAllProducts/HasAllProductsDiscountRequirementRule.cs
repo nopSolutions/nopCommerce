@@ -6,6 +6,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.DiscountRules.HasAllProducts
 {
@@ -55,9 +56,8 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             //group products in the cart by product ID
             //it could be the same product with distinct product attributes
             //that's why we get the total quantity of this product
-            var cartQuery = from sci in request.Customer.ShoppingCartItems
-                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart &&
-                            sci.StoreId == request.Store.Id
+            var cartQuery = from sci in request.Customer.ShoppingCartItems.LimitPerStore(request.Store.Id)
+                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart
                             group sci by sci.ProductId into g
                             select new { ProductId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
             var cart = cartQuery.ToList();
