@@ -49,13 +49,10 @@ namespace Nop.Core.Plugins
                 case LoadPluginsMode.All:
                     //no filering
                     return true;
-                    break;
                 case LoadPluginsMode.InstalledOnly:
                     return pluginDescriptor.Installed;
-                    break;
                 case LoadPluginsMode.NotInstalledOnly:
                     return !pluginDescriptor.Installed;
-                    break;
                 default:
                     throw new Exception("Not supported LoadPluginsMode");
             }

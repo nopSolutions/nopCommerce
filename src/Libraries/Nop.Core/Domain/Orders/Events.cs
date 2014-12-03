@@ -65,6 +65,7 @@ namespace Nop.Core.Domain.Orders
         public OrderRefundedEvent(Order order, decimal amount)
         {
             this._order = order;
+            this._amount = amount;
         }
 
         public Order Order
