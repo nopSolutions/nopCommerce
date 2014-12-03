@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers

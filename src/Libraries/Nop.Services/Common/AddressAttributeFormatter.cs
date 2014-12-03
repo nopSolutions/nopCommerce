@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Html;
 using Nop.Services.Localization;
-using Nop.Services.Tax;
 
 namespace Nop.Services.Common
 {

@@ -14,7 +14,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         private IStateProvinceService _stateProvinceService;
 
         [SetUp]
-        public new void SetUp()
+        public new void Setup()
         {
             _stateProvinceService = MockRepository.GenerateMock<IStateProvinceService>();
         }

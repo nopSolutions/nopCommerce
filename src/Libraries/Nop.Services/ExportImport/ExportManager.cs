@@ -8,6 +8,7 @@ using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
@@ -18,7 +19,6 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Services.ExportImport
 {

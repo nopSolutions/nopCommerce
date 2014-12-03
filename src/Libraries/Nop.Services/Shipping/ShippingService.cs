@@ -16,7 +16,6 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using Org.BouncyCastle.Ocsp;
 
 namespace Nop.Services.Shipping
 {
