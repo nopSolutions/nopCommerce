@@ -1,7 +1,7 @@
 ﻿using Nop.Core.Plugins;
 using Nop.Web.Framework.Menu;
 
-namespace Nop.Web.Framework.Web
+namespace Nop.Web.Framework.Menu
 {
     public interface IAdminMenuPlugin : IPlugin
     {
