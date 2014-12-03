@@ -200,7 +200,7 @@ namespace Nop.Services.ExportImport
                     "ManufacturerIds",
                     "Picture1",
                     "Picture2",
-                    "Picture3",
+                    "Picture3"
                 };
 
 

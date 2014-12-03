@@ -585,7 +585,7 @@ namespace Nop.Services.ExportImport
                     "ManufacturerIds",
                     "Picture1",
                     "Picture2",
-                    "Picture3",
+                    "Picture3"
                 };
                 for (int i = 0; i < properties.Length; i++)
                 {
@@ -1134,7 +1134,7 @@ namespace Nop.Services.ExportImport
                         "ShippingAddress2",
                         "ShippingZipPostalCode",
                         "ShippingPhoneNumber",
-                        "ShippingFaxNumber",
+                        "ShippingFaxNumber"
                     };
                 for (int i = 0; i < properties.Length; i++)
                 {
@@ -1401,7 +1401,7 @@ namespace Nop.Services.ExportImport
                         "TimeZoneId",
                         "AvatarPictureId",
                         "ForumPostCount",
-                        "Signature",
+                        "Signature"
                     };
                 for (int i = 0; i < properties.Length; i++)
                 {

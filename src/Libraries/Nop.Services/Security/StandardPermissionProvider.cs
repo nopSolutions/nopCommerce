@@ -118,7 +118,7 @@ namespace Nop.Services.Security
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
-                PublicStoreAllowNavigation,
+                PublicStoreAllowNavigation
             };
         }
 
@@ -180,7 +180,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation,
+                        PublicStoreAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
@@ -191,7 +191,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation,
+                        PublicStoreAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
@@ -202,7 +202,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation,
+                        PublicStoreAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
@@ -213,7 +213,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
-                        PublicStoreAllowNavigation,
+                        PublicStoreAllowNavigation
                     }
                 },
                 new DefaultPermissionRecord 
@@ -223,7 +223,7 @@ namespace Nop.Services.Security
                     {
                         AccessAdminPanel,
                         ManageProducts,
-                        ManageOrders,
+                        ManageOrders
                     }
                 }
             };
