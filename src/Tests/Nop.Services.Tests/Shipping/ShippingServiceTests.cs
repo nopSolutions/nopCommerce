@@ -115,7 +115,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void Can_get_shoppingCart_totalWeight_without_attributes()
         {
-            var request = new GetShippingOptionRequest()
+            var request = new GetShippingOptionRequest
             {
                 Items =
                 {

@@ -299,7 +299,7 @@ namespace Nop.Plugin.Shipping.UPS
 
                 //get dimensions for qty 1
                 decimal lengthTmp, widthTmp, heightTmp;
-                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
@@ -358,7 +358,7 @@ namespace Nop.Plugin.Shipping.UPS
 
                 //get dimensions for qty 1
                 decimal lengthTmp, widthTmp, heightTmp;
-                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
@@ -377,7 +377,7 @@ namespace Nop.Plugin.Shipping.UPS
 
                     //get dimensions for qty 1
                     decimal lengthTmp, widthTmp, heightTmp;
-                    _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                    _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);

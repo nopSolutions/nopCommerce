@@ -25,15 +25,6 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region Ctor
-
-        /// <summary>Creates a new instance of the AppDomainTypeFinder.</summary>
-        public AppDomainTypeFinder()
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>The app domain to look for types in.</summary>

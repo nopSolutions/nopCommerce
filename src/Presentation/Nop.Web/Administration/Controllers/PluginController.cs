@@ -561,7 +561,7 @@ namespace Nop.Admin.Controllers
                 pageSize: command.PageSize);
 
             var gridModel = new DataSourceResult();
-            gridModel.Data = plugins.Select(x => new OfficialFeedListModel.ItemOverview()
+            gridModel.Data = plugins.Select(x => new OfficialFeedListModel.ItemOverview
             {
                 Url = x.Url,
                 Name = x.Name,

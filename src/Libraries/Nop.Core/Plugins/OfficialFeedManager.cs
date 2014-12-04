@@ -38,7 +38,7 @@ namespace Nop.Core.Plugins
                     var id = node.SelectNodes(@"id")[0].InnerText;
                     var parentCategoryId = node.SelectNodes(@"parentCategoryId")[0].InnerText;
                     var name = node.SelectNodes(@"name")[0].InnerText;
-                    result.Add(new OfficialFeedCategory()
+                    result.Add(new OfficialFeedCategory
                     {
                         Id = int.Parse(id),
                         ParentCategoryId = int.Parse(parentCategoryId),
@@ -75,7 +75,7 @@ namespace Nop.Core.Plugins
                 {
                     var id = node.SelectNodes(@"id")[0].InnerText;
                     var name = node.SelectNodes(@"name")[0].InnerText;
-                    result.Add(new OfficialFeedVersion()
+                    result.Add(new OfficialFeedVersion
                     {
                         Id = int.Parse(id),
                         Name = name,
@@ -128,7 +128,7 @@ namespace Nop.Core.Plugins
                     var category = node.SelectNodes(@"category")[0].InnerText;
                     var versions = node.SelectNodes(@"versions")[0].InnerText;
                     var priceValue = node.SelectNodes(@"price")[0].InnerText;
-                    list.Add(new OfficialFeedPlugin()
+                    list.Add(new OfficialFeedPlugin
                     {
                         Name = name,
                         Url = url,

@@ -2,10 +2,6 @@
 {
     public abstract class BasePlugin : IPlugin
     {
-        protected BasePlugin()
-        {
-        }
-        
         /// <summary>
         /// Gets or sets the plugin descriptor
         /// </summary>

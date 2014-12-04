@@ -92,7 +92,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void should_return_zero_with_all_zero_dimensions()
         {
-            var items = new List<GetShippingOptionRequest.PackageItem>()
+            var items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                     {
@@ -112,7 +112,7 @@ namespace Nop.Services.Tests.Shipping
             width.ShouldEqual(0);
             height.ShouldEqual(0);
 
-            items = new List<GetShippingOptionRequest.PackageItem>()
+            items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                     {
@@ -135,7 +135,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void can_calculate_with_single_item_and_qty_1_should_ignore_cubic_method()
         {
-            var items = new List<GetShippingOptionRequest.PackageItem>()
+            var items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                 {
@@ -159,7 +159,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void can_calculate_with_single_item_and_qty_2()
         {
-            var items = new List<GetShippingOptionRequest.PackageItem>()
+            var items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                 {
@@ -183,7 +183,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void can_calculate_with_cubic_item_and_multiple_qty()
         {
-            var items = new List<GetShippingOptionRequest.PackageItem>()
+            var items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                 {
@@ -208,7 +208,7 @@ namespace Nop.Services.Tests.Shipping
         [Test]
         public void can_calculate_with_multiple_items_1()
         {
-            var items = new List<GetShippingOptionRequest.PackageItem>()
+            var items = new List<GetShippingOptionRequest.PackageItem>
             {
                 new GetShippingOptionRequest.PackageItem(new ShoppingCartItem
                                 {

@@ -229,7 +229,6 @@ namespace Nop.Plugin.Shipping.CanadaPost
             foreach (var packageItem in getShippingOptionRequest.Items)
             {
                 var sci = packageItem.ShoppingCartItem;
-                var product = sci.Product;
                 var qty = packageItem.GetQuantity();
 
                 var item = new Item();
@@ -244,7 +243,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
 
                 //get dimensions for qty 1
                 decimal lengthTmp, widthTmp, heightTmp;
-                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>()
+                _shippingService.GetDimensions(new List<GetShippingOptionRequest.PackageItem>
                                                {
                                                    new GetShippingOptionRequest.PackageItem(sci, 1)
                                                }, out widthTmp, out lengthTmp, out heightTmp);
