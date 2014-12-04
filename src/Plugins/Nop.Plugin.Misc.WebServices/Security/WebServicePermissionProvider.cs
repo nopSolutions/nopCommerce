@@ -13,7 +13,7 @@ namespace Nop.Plugin.Misc.WebServices.Security
         {
             return new[] 
             {
-                AccessWebService,
+                AccessWebService
             };
         }
 

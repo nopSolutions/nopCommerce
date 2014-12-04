@@ -30,7 +30,7 @@ namespace Nop.Web.Framework.Kendoui
         private static Dictionary<string, object> SerializeModelState(ModelState modelState)
         {
             var dictionary = new Dictionary<string, object>();
-            dictionary["errors"] = modelState.Errors.Select(x => GetErrorMessage(x, modelState)).ToArray<string>();
+            dictionary["errors"] = modelState.Errors.Select(x => GetErrorMessage(x, modelState)).ToArray();
             return dictionary;
         }
 
