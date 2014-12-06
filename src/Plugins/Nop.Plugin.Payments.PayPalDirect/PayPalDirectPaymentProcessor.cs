@@ -196,6 +196,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                     var shippingAddress = new AddressType();
                     shippingAddress.Name = customer.ShippingAddress.FirstName + " " + customer.ShippingAddress.LastName;
                     shippingAddress.Street1 = customer.ShippingAddress.Address1;
+                    shippingAddress.Street2 = customer.ShippingAddress.Address2;
                     shippingAddress.CityName = customer.ShippingAddress.City;
                     shippingAddress.StateOrProvince = customer.ShippingAddress.StateProvince.Abbreviation;
                     shippingAddress.PostalCode = customer.ShippingAddress.ZipPostalCode;
