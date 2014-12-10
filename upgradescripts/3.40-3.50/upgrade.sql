@@ -1320,9 +1320,9 @@ ALTER TABLE [ShipmentItem] ALTER COLUMN [WarehouseId] int NOT NULL
 GO
 
 UPDATE [ShipmentItem]
-SET [WarehouseId] = (SELECT p.[WarehouseId] FROM [Product] p
+SET [WarehouseId] = COALESCE((SELECT p.[WarehouseId] FROM [Product] p
 INNER JOIN [OrderItem] oi ON p.[Id] = oi.[ProductId]
-WHERE [oi].[Id] = [ShipmentItem].[OrderItemId])
+WHERE [oi].[Id] = [ShipmentItem].[OrderItemId]), 0)
 GO
 
 
