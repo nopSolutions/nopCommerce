@@ -56,12 +56,12 @@
                     break;
                 case AttributeControlType.TextBox:
                     {
-                        <input name="@(controlId)" type="text" class="text-box single-line" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
+                        <input name="@(controlId)" type="text" class="text-box single-line" id="@(controlId)" value="@attribute.DefaultValue" />
                     }
                     break;
                 case AttributeControlType.MultilineTextbox:
                     {
-                        <textarea id="@(controlId)" style="Width: 250px; Height: 150px;" name="@(controlId)">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
+                        <textarea id="@(controlId)" style="Width: 250px; Height: 150px;" name="@(controlId)">@attribute.DefaultValue</textarea>
                     }
                     break;
                 case AttributeControlType.Datepicker:
