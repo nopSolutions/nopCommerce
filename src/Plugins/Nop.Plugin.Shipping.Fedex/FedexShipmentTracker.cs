@@ -73,7 +73,7 @@ namespace Nop.Plugin.Shipping.Fedex
                 request.ClientDetail.MeterNumber = _fedexSettings.MeterNumber; // Replace "XXX" with client's meter number
                 //
                 request.TransactionDetail = new TransactionDetail();
-                request.TransactionDetail.CustomerTransactionId = "***NopCommerce v5 Request using VC#***";
+                request.TransactionDetail.CustomerTransactionId = "***nopCommerce v16 Request using VC#***";
 
                 //creates the Version element with all child elements populated from the wsdl
                 request.Version = new VersionId();

@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Nop_Plugin_Shipping_Fedex_RateServiceWebReference_RateService" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://gatewaybeta.fedex.com:443/web-services/rate</Value>
+      <Value Profile="(Default)">https://wsbeta.fedex.com:443/web-services/rate</Value>
     </Setting>
   </Settings>
 </SettingsFile>

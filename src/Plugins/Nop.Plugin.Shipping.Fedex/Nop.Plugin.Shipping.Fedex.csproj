@@ -153,10 +153,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="F:\Own\NopCommerce\nopCommerce_1.90_Source\Shipping\Nop.Shipping.FedEx\Web References\RateServiceWebReference\RateServiceDefinitions.wsdl">
+    <WebReferenceUrl Include="D:\RateServiceDefinitions.wsdl">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\RateServiceWebReference\</RelPath>
-      <UpdateFromURL>F:\Own\NopCommerce\nopCommerce_1.90_Source\Shipping\Nop.Shipping.FedEx\Web References\RateServiceWebReference\RateServiceDefinitions.wsdl</UpdateFromURL>
+      <UpdateFromURL>D:\RateServiceDefinitions.wsdl</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

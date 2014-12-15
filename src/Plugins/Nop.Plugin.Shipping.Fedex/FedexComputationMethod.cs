@@ -86,7 +86,7 @@ namespace Nop.Plugin.Shipping.Fedex
             request.ClientDetail.MeterNumber = _fedexSettings.MeterNumber;
 
             request.TransactionDetail = new RateServiceWebReference.TransactionDetail();
-            request.TransactionDetail.CustomerTransactionId = "***Rate Available Services v7 Request - nopCommerce***"; // This is a reference field for the customer.  Any value can be used and will be provided in the response.
+            request.TransactionDetail.CustomerTransactionId = "***Rate Available Services v16 Request - nopCommerce***"; // This is a reference field for the customer.  Any value can be used and will be provided in the response.
 
             request.Version = new RateServiceWebReference.VersionId(); // WSDL version information, value is automatically set from wsdl            
 
@@ -184,10 +184,10 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.ShipTimestamp = shipTimestamp; // Shipping date and time
             request.RequestedShipment.ShipTimestampSpecified = true;
             request.RequestedShipment.RateRequestTypes = new RateRequestType[2];
-            request.RequestedShipment.RateRequestTypes[0] = RateRequestType.ACCOUNT;
+            request.RequestedShipment.RateRequestTypes[0] = RateRequestType.PREFERRED;
             request.RequestedShipment.RateRequestTypes[1] = RateRequestType.LIST;
-            request.RequestedShipment.PackageDetail = RequestedPackageDetailType.INDIVIDUAL_PACKAGES;
-            request.RequestedShipment.PackageDetailSpecified = true;
+            //request.RequestedShipment.PackageDetail = RequestedPackageDetailType.INDIVIDUAL_PACKAGES;
+            //request.RequestedShipment.PackageDetailSpecified = true;
         }
 
         private void SetPayment(RateRequest request)
@@ -196,7 +196,8 @@ namespace Nop.Plugin.Shipping.Fedex
             request.RequestedShipment.ShippingChargesPayment.PaymentType = PaymentType.SENDER; // Payment options are RECIPIENT, SENDER, THIRD_PARTY
             request.RequestedShipment.ShippingChargesPayment.PaymentTypeSpecified = true;
             request.RequestedShipment.ShippingChargesPayment.Payor = new Payor();
-            request.RequestedShipment.ShippingChargesPayment.Payor.AccountNumber = _fedexSettings.AccountNumber;
+            request.RequestedShipment.ShippingChargesPayment.Payor.ResponsibleParty = new Party();
+            request.RequestedShipment.ShippingChargesPayment.Payor.ResponsibleParty.AccountNumber = _fedexSettings.AccountNumber;
         }
 
         private void SetDestination(RateRequest request, GetShippingOptionRequest getShippingOptionRequest)
@@ -277,16 +278,20 @@ namespace Nop.Plugin.Shipping.Fedex
 
                 request.RequestedShipment.RequestedPackageLineItems = new RequestedPackageLineItem[1];
                 request.RequestedShipment.RequestedPackageLineItems[0] = new RequestedPackageLineItem();
-                request.RequestedShipment.RequestedPackageLineItems[0].SequenceNumber = "1"; // package sequence number            
+                request.RequestedShipment.RequestedPackageLineItems[0].SequenceNumber = "1"; // package sequence number
+                request.RequestedShipment.RequestedPackageLineItems[0].GroupPackageCount = "1";
                 request.RequestedShipment.RequestedPackageLineItems[0].Weight = new RateServiceWebReference.Weight(); // package weight
                 request.RequestedShipment.RequestedPackageLineItems[0].Weight.Units = RateServiceWebReference.WeightUnits.LB;
+                request.RequestedShipment.RequestedPackageLineItems[0].Weight.UnitsSpecified = true;
                 request.RequestedShipment.RequestedPackageLineItems[0].Weight.Value = weight;
-                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
+                request.RequestedShipment.RequestedPackageLineItems[0].Weight.ValueSpecified = true;
 
+                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Length = _fedexSettings.PassDimensions ? length.ToString() : "0";
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Width = _fedexSettings.PassDimensions ? width.ToString() : "0";
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Height = _fedexSettings.PassDimensions ? height.ToString() : "0";
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Units = RateServiceWebReference.LinearUnits.IN;
+                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.UnitsSpecified = true;
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue = new Money(); // insured value
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Amount = orderSubTotal;
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Currency = currencyCode;
@@ -330,15 +335,19 @@ namespace Nop.Plugin.Shipping.Fedex
                 {
                     request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
                     request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
+                    request.RequestedShipment.RequestedPackageLineItems[i].GroupPackageCount = "1";
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.UnitsSpecified = true;
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weight2;
-                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.ValueSpecified = true;
 
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = _fedexSettings.PassDimensions ? length2.ToString() : "0";
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Width = _fedexSettings.PassDimensions ? width2.ToString() : "0";
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Height = _fedexSettings.PassDimensions ? height2.ToString() : "0";
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = RateServiceWebReference.LinearUnits.IN;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.UnitsSpecified = true;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = orderSubTotal2;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = currencyCode;
@@ -387,16 +396,20 @@ namespace Nop.Plugin.Shipping.Fedex
                 for (int j = 0; j < qty; j++)
                 {
                     request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
-                    request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
+                    request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number                     
+                    request.RequestedShipment.RequestedPackageLineItems[i].GroupPackageCount = "1";
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.UnitsSpecified = true;
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weight;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Weight.ValueSpecified = true;
 
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = length.ToString();
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Height = height.ToString();
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Width = width.ToString();
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = RateServiceWebReference.LinearUnits.IN;
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.UnitsSpecified = true;
 
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = sci.Product.Price;
@@ -543,16 +556,20 @@ namespace Nop.Plugin.Shipping.Fedex
             for (int i = 0; i < totalPackages; i++)
             {
                 request.RequestedShipment.RequestedPackageLineItems[i] = new RequestedPackageLineItem();
-                request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number            
+                request.RequestedShipment.RequestedPackageLineItems[i].SequenceNumber = (i + 1).ToString(); // package sequence number          
+                request.RequestedShipment.RequestedPackageLineItems[i].GroupPackageCount = "1";           
                 request.RequestedShipment.RequestedPackageLineItems[i].Weight = new RateServiceWebReference.Weight(); // package weight
                 request.RequestedShipment.RequestedPackageLineItems[i].Weight.Units = RateServiceWebReference.WeightUnits.LB;
+                request.RequestedShipment.RequestedPackageLineItems[i].Weight.UnitsSpecified = true;
                 request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = weightPerPackage;
+                request.RequestedShipment.RequestedPackageLineItems[i].Weight.ValueSpecified = true;
 
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new RateServiceWebReference.Dimensions(); // package dimensions
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = length.ToString();
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Height = height.ToString();
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Width = width.ToString();
                 request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = RateServiceWebReference.LinearUnits.IN;
+                request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.UnitsSpecified = true;
                 request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                 request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = orderSubTotalPerPackage;
                 request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Currency = currencyCode;
@@ -593,13 +610,16 @@ namespace Nop.Plugin.Shipping.Fedex
                         Debug.WriteLine("*********");
 
                         // Get discounted rates if option is selected
-                        if (_fedexSettings.ApplyDiscounts & shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT)
+                        if (_fedexSettings.ApplyDiscounts &
+                            (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT_PACKAGE ||
+                            shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_ACCOUNT_SHIPMENT))
                         {
                             decimal amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
                             shippingOption.Rate = amount + _fedexSettings.AdditionalHandlingCharge;
                             break;
                         }
-                        else if (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST) // Get List Rates (not discount rates)
+                        else if (shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST_PACKAGE ||
+                            shipmentDetail.ShipmentRateDetail.RateType == ReturnedRateType.PAYOR_LIST_SHIPMENT) // Get List Rates (not discount rates)
                         {
                             decimal amount = ConvertChargeToPrimaryCurrency(shipmentDetail.ShipmentRateDetail.TotalNetCharge, requestedShipmentCurrency);
                             shippingOption.Rate = amount + _fedexSettings.AdditionalHandlingCharge;
