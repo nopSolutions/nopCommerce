@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="https://api.authorize.net/soap/v1/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="https://api.authorize.net/soap/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="https://api.authorize.net/soap/v1/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="https://api.authorize.net/soap/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="https://api.authorize.net/soap/v1/">
       <s:element name="IsAlive">
@@ -99,9 +99,24 @@
       <s:complexType name="PaymentType">
         <s:sequence>
           <s:choice minOccurs="1" maxOccurs="1">
-            <s:element minOccurs="0" maxOccurs="1" name="bankAccount" type="tns:BankAccountType" />
             <s:element minOccurs="0" maxOccurs="1" name="creditCard" type="tns:CreditCardType" />
+            <s:element minOccurs="0" maxOccurs="1" name="bankAccount" type="tns:BankAccountType" />
           </s:choice>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CreditCardType">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:CreditCardSimpleType">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CreditCardSimpleType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="cardNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="expirationDate" type="s:gYearMonth" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="BankAccountType">
@@ -137,21 +152,6 @@
           <s:enumeration value="TEL" />
         </s:restriction>
       </s:simpleType>
-      <s:complexType name="CreditCardType">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:CreditCardSimpleType">
-            <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="CreditCardSimpleType">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="cardNumber" type="s:string" />
-          <s:element minOccurs="0" maxOccurs="1" name="expirationDate" type="s:gYearMonth" />
-        </s:sequence>
-      </s:complexType>
       <s:complexType name="OrderType">
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="invoiceNumber" type="s:string" />
@@ -278,7 +278,7 @@
         <s:complexContent mixed="false">
           <s:extension base="tns:ANetApiResponseType">
             <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="status" type="tns:ARBSubscriptionStatusEnum" />
+              <s:element minOccurs="0" maxOccurs="1" name="status" type="tns:ARBSubscriptionStatusEnum" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -290,6 +290,100 @@
           <s:enumeration value="suspended" />
           <s:enumeration value="canceled" />
           <s:enumeration value="terminated" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ARBGetSubscriptionList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="merchantAuthentication" type="tns:MerchantAuthenticationType" />
+            <s:element minOccurs="0" maxOccurs="1" name="request" type="tns:ARBGetSubscriptionListRequestType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ARBGetSubscriptionListRequestType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="searchType" type="tns:ARBGetSubscriptionListSearchTypeEnum" />
+          <s:element minOccurs="0" maxOccurs="1" name="sorting" type="tns:ARBGetSubscriptionListSorting" />
+          <s:element minOccurs="0" maxOccurs="1" name="paging" type="tns:Paging" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ARBGetSubscriptionListSearchTypeEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="cardExpiringThisMonth" />
+          <s:enumeration value="subscriptionActive" />
+          <s:enumeration value="subscriptionExpiringThisMonth" />
+          <s:enumeration value="subscriptionInactive" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ARBGetSubscriptionListSorting">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="orderBy" type="tns:ARBGetSubscriptionListOrderFieldEnum" />
+          <s:element minOccurs="1" maxOccurs="1" name="orderDescending" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ARBGetSubscriptionListOrderFieldEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="id" />
+          <s:enumeration value="name" />
+          <s:enumeration value="status" />
+          <s:enumeration value="createTimeStampUTC" />
+          <s:enumeration value="lastName" />
+          <s:enumeration value="firstName" />
+          <s:enumeration value="accountNumber" />
+          <s:enumeration value="amount" />
+          <s:enumeration value="pastOccurrences" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Paging">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="limit" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="offset" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ARBGetSubscriptionListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ARBGetSubscriptionListResult" type="tns:ARBGetSubscriptionListResponseType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ARBGetSubscriptionListResponseType">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ANetApiResponseType">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="totalNumInResultSet" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="subscriptionDetails" type="tns:ArrayOfSubscriptionDetail" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfSubscriptionDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="subscriptionDetail" nillable="true" type="tns:SubscriptionDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SubscriptionDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="status" type="tns:ARBSubscriptionStatusEnum" />
+          <s:element minOccurs="1" maxOccurs="1" name="createTimeStampUTC" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="firstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="lastName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="totalOccurrences" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="pastOccurrences" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="paymentMethod" type="tns:paymentMethodEnum" />
+          <s:element minOccurs="0" maxOccurs="1" name="accountNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="invoice" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="amount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="currencyCode" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="paymentMethodEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="creditCard" />
+          <s:enumeration value="eCheck" />
+          <s:enumeration value="payPal" />
         </s:restriction>
       </s:simpleType>
       <s:element name="CreateCustomerProfile">
@@ -392,6 +486,21 @@
           <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="CreateCustomerProfileFromTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="merchantAuthentication" type="tns:MerchantAuthenticationType" />
+            <s:element minOccurs="0" maxOccurs="1" name="transId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateCustomerProfileFromTransactionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateCustomerProfileFromTransactionResult" type="tns:CreateCustomerProfileResponseType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
       <s:element name="CreateCustomerPaymentProfile">
         <s:complexType>
           <s:sequence>
@@ -507,9 +616,17 @@
       <s:complexType name="PaymentMaskedType">
         <s:sequence>
           <s:choice minOccurs="1" maxOccurs="1">
+            <s:element minOccurs="0" maxOccurs="1" name="tokenInformation" type="tns:TokenMaskedType" />
             <s:element minOccurs="0" maxOccurs="1" name="creditCard" type="tns:CreditCardMaskedType" />
             <s:element minOccurs="0" maxOccurs="1" name="bankAccount" type="tns:BankAccountMaskedType" />
           </s:choice>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TokenMaskedType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="tokenSource" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tokenNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="expirationDate" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="CreditCardMaskedType">
@@ -753,35 +870,32 @@
       <s:complexType name="ProfileTransactionType">
         <s:sequence>
           <s:choice minOccurs="1" maxOccurs="1">
-            <s:element minOccurs="0" maxOccurs="1" name="profileTransVoid" type="tns:ProfileTransVoidType" />
-            <s:element minOccurs="0" maxOccurs="1" name="profileTransRefund" type="tns:ProfileTransRefundType" />
-            <s:element minOccurs="0" maxOccurs="1" name="profileTransCaptureOnly" type="tns:ProfileTransCaptureOnlyType" />
-            <s:element minOccurs="0" maxOccurs="1" name="profileTransAuthOnly" type="tns:ProfileTransAuthOnlyType" />
             <s:element minOccurs="0" maxOccurs="1" name="profileTransAuthCapture" type="tns:ProfileTransAuthCaptureType" />
+            <s:element minOccurs="0" maxOccurs="1" name="profileTransCaptureOnly" type="tns:ProfileTransCaptureOnlyType" />
+            <s:element minOccurs="0" maxOccurs="1" name="profileTransRefund" type="tns:ProfileTransRefundType" />
+            <s:element minOccurs="0" maxOccurs="1" name="profileTransVoid" type="tns:ProfileTransVoidType" />
+            <s:element minOccurs="0" maxOccurs="1" name="profileTransAuthOnly" type="tns:ProfileTransAuthOnlyType" />
             <s:element minOccurs="0" maxOccurs="1" name="profileTransPriorAuthCapture" type="tns:ProfileTransPriorAuthCaptureType" />
           </s:choice>
         </s:sequence>
       </s:complexType>
-      <s:complexType name="ProfileTransVoidType">
-        <s:sequence>
-          <s:element minOccurs="0" maxOccurs="1" name="customerProfileId" type="s:long" />
-          <s:element minOccurs="0" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
-          <s:element minOccurs="0" maxOccurs="1" name="customerShippingAddressId" type="s:long" />
-          <s:element minOccurs="0" maxOccurs="1" name="transId" type="s:string" />
-        </s:sequence>
+      <s:complexType name="ProfileTransAuthCaptureType">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ProfileTransOrderType" />
+        </s:complexContent>
       </s:complexType>
-      <s:complexType name="ProfileTransRefundType">
+      <s:complexType name="ProfileTransOrderType">
         <s:complexContent mixed="false">
           <s:extension base="tns:ProfileTransAmountType">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="customerProfileId" type="s:long" />
-              <s:element minOccurs="0" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="customerProfileId" type="s:long" />
+              <s:element minOccurs="1" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
               <s:element minOccurs="0" maxOccurs="1" name="customerShippingAddressId" type="s:long" />
-              <s:element minOccurs="0" maxOccurs="1" name="creditCardNumberMasked" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="bankRoutingNumberMasked" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="bankAccountNumberMasked" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="order" type="tns:OrderExType" />
-              <s:element minOccurs="0" maxOccurs="1" name="transId" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="taxExempt" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="recurringBilling" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="splitTenderId" type="s:long" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -824,18 +938,18 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="ProfileTransOrderType">
+      <s:complexType name="ProfileTransRefundType">
         <s:complexContent mixed="false">
           <s:extension base="tns:ProfileTransAmountType">
             <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="customerProfileId" type="s:long" />
-              <s:element minOccurs="1" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
+              <s:element minOccurs="0" maxOccurs="1" name="customerProfileId" type="s:long" />
+              <s:element minOccurs="0" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
               <s:element minOccurs="0" maxOccurs="1" name="customerShippingAddressId" type="s:long" />
+              <s:element minOccurs="0" maxOccurs="1" name="creditCardNumberMasked" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="bankRoutingNumberMasked" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="bankAccountNumberMasked" type="s:string" />
               <s:element minOccurs="0" maxOccurs="1" name="order" type="tns:OrderExType" />
-              <s:element minOccurs="0" maxOccurs="1" name="taxExempt" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="recurringBilling" type="s:boolean" />
-              <s:element minOccurs="0" maxOccurs="1" name="cardCode" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="splitTenderId" type="s:long" />
+              <s:element minOccurs="0" maxOccurs="1" name="transId" type="s:string" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -847,11 +961,6 @@
               <s:element minOccurs="0" maxOccurs="1" name="purchaseOrderNumber" type="s:string" />
             </s:sequence>
           </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="ProfileTransAuthCaptureType">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:ProfileTransOrderType" />
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ProfileTransAuthOnlyType">
@@ -867,6 +976,14 @@
             </s:sequence>
           </s:extension>
         </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ProfileTransVoidType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="customerProfileId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="customerPaymentProfileId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="customerShippingAddressId" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="1" name="transId" type="s:string" />
+        </s:sequence>
       </s:complexType>
       <s:element name="CreateCustomerProfileTransactionResponse">
         <s:complexType>
@@ -1059,6 +1176,12 @@
           <s:element minOccurs="0" maxOccurs="1" name="shipTo" type="tns:NameAndAddressType" />
           <s:element minOccurs="0" maxOccurs="1" name="recurringBilling" type="s:boolean" />
           <s:element minOccurs="0" maxOccurs="1" name="customerIP" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="marketType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="product" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="mobileDeviceId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="subscription" type="tns:subscriptionPaymentType" />
+          <s:element minOccurs="0" maxOccurs="1" name="returnedItems" type="tns:ArrayOfReturnedItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="solution" type="tns:solutionInfo" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="ArrayOfFDSFilterType">
@@ -1079,6 +1202,8 @@
           <s:element minOccurs="0" maxOccurs="1" name="settlementTimeLocal" type="s:dateTime" />
           <s:element minOccurs="0" maxOccurs="1" name="settlementState" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="paymentMethod" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="marketType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="product" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="statistics" type="tns:ArrayOfBatchStatisticType" />
         </s:sequence>
       </s:complexType>
@@ -1133,6 +1258,32 @@
           <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="driversLicense" type="tns:DriversLicenseType" />
           <s:element minOccurs="0" maxOccurs="1" name="taxId" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="subscriptionPaymentType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="id" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="payNum" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfReturnedItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="returnedItem" nillable="true" type="tns:returnedItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="returnedItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateUTC" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateLocal" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="solutionInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="id" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
         </s:sequence>
       </s:complexType>
       <s:element name="GetSettledBatchList">
@@ -1246,6 +1397,11 @@
           <s:element minOccurs="0" maxOccurs="1" name="accountType" type="s:string" />
           <s:element minOccurs="0" maxOccurs="1" name="accountNumber" type="s:string" />
           <s:element minOccurs="1" maxOccurs="1" name="settleAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="marketType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="product" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="mobileDeviceId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="subscription" type="tns:subscriptionPaymentType" />
+          <s:element minOccurs="0" maxOccurs="1" name="hasReturnedItems" type="s:boolean" />
         </s:sequence>
       </s:complexType>
       <s:element name="GetUnsettledTransactionList">
@@ -1311,11 +1467,23 @@
   <wsdl:message name="ARBGetSubscriptionStatusSoapOut">
     <wsdl:part name="parameters" element="tns:ARBGetSubscriptionStatusResponse" />
   </wsdl:message>
+  <wsdl:message name="ARBGetSubscriptionListSoapIn">
+    <wsdl:part name="parameters" element="tns:ARBGetSubscriptionList" />
+  </wsdl:message>
+  <wsdl:message name="ARBGetSubscriptionListSoapOut">
+    <wsdl:part name="parameters" element="tns:ARBGetSubscriptionListResponse" />
+  </wsdl:message>
   <wsdl:message name="CreateCustomerProfileSoapIn">
     <wsdl:part name="parameters" element="tns:CreateCustomerProfile" />
   </wsdl:message>
   <wsdl:message name="CreateCustomerProfileSoapOut">
     <wsdl:part name="parameters" element="tns:CreateCustomerProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateCustomerProfileFromTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateCustomerProfileFromTransaction" />
+  </wsdl:message>
+  <wsdl:message name="CreateCustomerProfileFromTransactionSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateCustomerProfileFromTransactionResponse" />
   </wsdl:message>
   <wsdl:message name="CreateCustomerPaymentProfileSoapIn">
     <wsdl:part name="parameters" element="tns:CreateCustomerPaymentProfile" />
@@ -1474,10 +1642,20 @@
       <wsdl:input message="tns:ARBGetSubscriptionStatusSoapIn" />
       <wsdl:output message="tns:ARBGetSubscriptionStatusSoapOut" />
     </wsdl:operation>
+    <wsdl:operation name="ARBGetSubscriptionList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to get existing ARB subscriptions. The merchant must be signed up for the ARB service to use it.</wsdl:documentation>
+      <wsdl:input message="tns:ARBGetSubscriptionListSoapIn" />
+      <wsdl:output message="tns:ARBGetSubscriptionListSoapOut" />
+    </wsdl:operation>
     <wsdl:operation name="CreateCustomerProfile">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to create a new customer profile along with any customer payment profiles and customer shipping addresses for the customer profile. The merchant must be signed up for the CIM service to use it.</wsdl:documentation>
       <wsdl:input message="tns:CreateCustomerProfileSoapIn" />
       <wsdl:output message="tns:CreateCustomerProfileSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateCustomerProfileFromTransaction">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to create a new customer profile along with any customer payment profiles and customer shipping addresses for the customer profile, using information from a previous transaction. The merchant must be signed up for the CIM service to use it.</wsdl:documentation>
+      <wsdl:input message="tns:CreateCustomerProfileFromTransactionSoapIn" />
+      <wsdl:output message="tns:CreateCustomerProfileFromTransactionSoapOut" />
     </wsdl:operation>
     <wsdl:operation name="CreateCustomerPaymentProfile">
       <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to create a new customer payment profile for an existing customer profile. The merchant must be signed up for the CIM service to use it.</wsdl:documentation>
@@ -1641,8 +1819,26 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ARBGetSubscriptionList">
+      <soap:operation soapAction="https://api.authorize.net/soap/v1/ARBGetSubscriptionList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CreateCustomerProfile">
       <soap:operation soapAction="https://api.authorize.net/soap/v1/CreateCustomerProfile" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCustomerProfileFromTransaction">
+      <soap:operation soapAction="https://api.authorize.net/soap/v1/CreateCustomerProfileFromTransaction" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -1896,8 +2092,26 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ARBGetSubscriptionList">
+      <soap12:operation soapAction="https://api.authorize.net/soap/v1/ARBGetSubscriptionList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="CreateCustomerProfile">
       <soap12:operation soapAction="https://api.authorize.net/soap/v1/CreateCustomerProfile" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateCustomerProfileFromTransaction">
+      <soap12:operation soapAction="https://api.authorize.net/soap/v1/CreateCustomerProfileFromTransaction" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>
