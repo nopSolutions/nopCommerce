@@ -265,7 +265,7 @@ namespace Nop.Plugin.Payments.Manual
 
         #endregion
 
-        #region Properies
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported

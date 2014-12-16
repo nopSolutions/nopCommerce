@@ -709,7 +709,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
         #endregion
 
-        #region Properies
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported

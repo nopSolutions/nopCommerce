@@ -163,7 +163,7 @@ namespace Nop.Services.Tests.Payments
 
         #endregion
 
-        #region Properies
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported

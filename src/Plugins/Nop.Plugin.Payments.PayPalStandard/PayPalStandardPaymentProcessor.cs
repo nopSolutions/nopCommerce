@@ -560,7 +560,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
 
         #endregion
 
-        #region Properies
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported

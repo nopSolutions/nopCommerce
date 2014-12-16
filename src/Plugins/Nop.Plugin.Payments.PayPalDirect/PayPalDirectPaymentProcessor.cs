@@ -664,7 +664,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
         #endregion
 
-        #region Properies
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether capture is supported
