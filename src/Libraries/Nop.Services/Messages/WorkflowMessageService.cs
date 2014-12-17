@@ -1041,6 +1041,7 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddForumTopicTokens(tokens, forumTopic);
             _messageTokenProvider.AddForumTokens(tokens, forumTopic.Forum);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1088,6 +1089,7 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddForumTopicTokens(tokens, forumPost.ForumTopic,
                 friendlyForumTopicPageIndex, forumPost.Id);
             _messageTokenProvider.AddForumTokens(tokens, forumPost.ForumTopic.Forum);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1126,6 +1128,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddPrivateMessageTokens(tokens, privateMessage);
+            _messageTokenProvider.AddCustomerTokens(tokens, privateMessage.ToCustomer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1359,6 +1362,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddBlogCommentTokens(tokens, blogComment);
+            _messageTokenProvider.AddCustomerTokens(tokens, blogComment.Customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
@@ -1395,6 +1399,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddNewsCommentTokens(tokens, newsComment);
+            _messageTokenProvider.AddCustomerTokens(tokens, newsComment.Customer);
 
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
