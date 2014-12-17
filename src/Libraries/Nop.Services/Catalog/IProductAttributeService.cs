@@ -141,6 +141,13 @@ namespace Nop.Services.Catalog
         ProductAttributeCombination GetProductAttributeCombinationById(int productAttributeCombinationId);
 
         /// <summary>
+        /// Gets a product attribute combination by SKU
+        /// </summary>
+        /// <param name="sku">SKU</param>
+        /// <returns>Product attribute combination</returns>
+        ProductAttributeCombination GetProductAttributeCombinationBySku(string sku);
+
+        /// <summary>
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>

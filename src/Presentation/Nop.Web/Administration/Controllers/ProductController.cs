@@ -860,7 +860,20 @@ namespace Nop.Admin.Controllers
         public ActionResult GoToSku(ProductListModel model)
         {
             string sku = model.GoDirectlyToSku;
+
+            //try to load a product entity
             var product = _productService.GetProductBySku(sku);
+
+            //if not found, then try to load a product attribute combination
+            if (product == null)
+            {
+                var combination = _productAttributeService.GetProductAttributeCombinationBySku(sku);
+                if (combination != null)
+                {
+                    product = combination.Product;
+                }
+            }
+
             if (product != null)
                 return RedirectToAction("Edit", "Product", new { id = product.Id });
             

@@ -488,6 +488,26 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets a product attribute combination by SKU
+        /// </summary>
+        /// <param name="sku">SKU</param>
+        /// <returns>Product attribute combination</returns>
+        public virtual ProductAttributeCombination GetProductAttributeCombinationBySku(string sku)
+        {
+            if (String.IsNullOrEmpty(sku))
+                return null;
+
+            sku = sku.Trim();
+
+            var query = from pac in _productAttributeCombinationRepository.Table
+                        orderby pac.Id
+                        where pac.Sku == sku
+                        select pac;
+            var combination = query.FirstOrDefault();
+            return combination;
+        }
+        
+        /// <summary>
         /// Inserts a product attribute combination
         /// </summary>
         /// <param name="combination">Product attribute combination</param>
