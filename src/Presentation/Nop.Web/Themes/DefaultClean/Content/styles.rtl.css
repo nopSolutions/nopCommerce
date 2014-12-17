@@ -1278,7 +1278,7 @@ td.fieldname{font-size:12px;}
 .profile-page .profile-info-box{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .profile-page .profile-info-box,.profile-page .user-last-posts{font-size:12px;}
 .profile-page .profile-info-box .title{}
-.profile-page .profile-info-box .profile-stats{border-right:1px solid #F3F3F3;margin-right:200px;padding:10px;}
+.profile-page .profile-info-box .profile-stats{border-right:1px solid #F3F3F3;margin-right:200px;padding:10px;min-height:140px;}
 .profile-page .profile-info-box .profile-stats .title{margin-bottom:10px;text-transform:uppercase;}
 .profile-page .profile-info-box .profile-stats li{list-style:none outside none;padding:2px;}
 .profile-page .profile-info-box .profile-stats label{font-weight:700;}
