@@ -471,7 +471,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 subscription.billTo = new NameAndAddressType();
                 subscription.billTo.firstName = customer.BillingAddress.FirstName;
                 subscription.billTo.lastName = customer.BillingAddress.LastName;
-                subscription.billTo.address = customer.BillingAddress.Address1 + " " + customer.BillingAddress.Address2;
+                subscription.billTo.address = customer.BillingAddress.Address1;
+                //subscription.billTo.address = customer.BillingAddress.Address1 + " " + customer.BillingAddress.Address2;
                 subscription.billTo.city = customer.BillingAddress.City;
                 if (customer.BillingAddress.StateProvince != null)
                 {
@@ -484,7 +485,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                     subscription.shipTo = new NameAndAddressType();
                     subscription.shipTo.firstName = customer.ShippingAddress.FirstName;
                     subscription.shipTo.lastName = customer.ShippingAddress.LastName;
-                    subscription.shipTo.address = customer.ShippingAddress.Address1 + " " + customer.ShippingAddress.Address2;
+                    subscription.shipTo.address = customer.ShippingAddress.Address1;
+                    //subscription.shipTo.address = customer.ShippingAddress.Address1 + " " + customer.ShippingAddress.Address2;
                     subscription.shipTo.city = customer.ShippingAddress.City;
                     if (customer.ShippingAddress.StateProvince != null)
                     {
