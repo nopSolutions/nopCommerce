@@ -6,7 +6,7 @@ namespace Nop.Core.Domain.Security
     /// <summary>
     /// Represents a permission record
     /// </summary>
-    public class PermissionRecord : BaseEntity
+    public partial class PermissionRecord : BaseEntity
     {
         private ICollection<CustomerRole> _customerRoles;
 

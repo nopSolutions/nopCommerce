@@ -1,9 +1,8 @@
-﻿
-using System;
+﻿using System;
 
 namespace Nop.Core.Domain.Tasks
 {
-    public class ScheduleTask : BaseEntity
+    public partial class ScheduleTask : BaseEntity
     {
         /// <summary>
         /// Gets or sets the name

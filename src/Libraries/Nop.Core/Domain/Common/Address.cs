@@ -3,7 +3,7 @@ using Nop.Core.Domain.Directory;
 
 namespace Nop.Core.Domain.Common
 {
-    public class Address : BaseEntity, ICloneable
+    public partial class Address : BaseEntity, ICloneable
     {
         /// <summary>
         /// Gets or sets the first name
