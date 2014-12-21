@@ -159,6 +159,7 @@ namespace Nop.Web.Models.ShoppingCart
             {
                 this.BillingAddress = new AddressModel();
                 this.ShippingAddress = new AddressModel();
+                this.CustomValues= new Dictionary<string, object>();
             }
             public bool Display { get; set; }
 
@@ -170,6 +171,8 @@ namespace Nop.Web.Models.ShoppingCart
             public string ShippingMethod { get; set; }
 
             public string PaymentMethod { get; set; }
+
+            public Dictionary<string, object> CustomValues { get; set; }
         }
 		#endregion
     }

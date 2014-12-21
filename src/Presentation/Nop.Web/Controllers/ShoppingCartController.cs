@@ -40,6 +40,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using RestSharp;
 
 namespace Nop.Web.Controllers
 {
@@ -80,6 +81,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+        private readonly HttpContextBase _httpContext;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -127,6 +129,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IGenericAttributeService genericAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
+            HttpContextBase httpContext,
             MediaSettings mediaSettings,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, 
@@ -170,7 +173,8 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._genericAttributeService = genericAttributeService;
             this._addressAttributeFormatter = addressAttributeFormatter;
-            
+            this._httpContext = httpContext;
+
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
@@ -642,6 +646,13 @@ namespace Nop.Web.Controllers
                     SystemCustomerAttributeNames.SelectedPaymentMethod, _storeContext.CurrentStore.Id);
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(selectedPaymentMethodSystemName);
                 model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
+
+                //custom values
+                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+                if (processPaymentRequest != null)
+                {
+                    model.OrderReviewData.CustomValues = processPaymentRequest.CustomValues;
+                }
             }
             #endregion
         }
