@@ -7648,13 +7648,22 @@
             @param numDigits the number of digits to pack. It is always an even number
             @return the packed digits, two digits per character
         </member>
+        <member name="M:iTextSharp.text.pdf.Barcode128.GetRawText(System.String,System.Boolean,iTextSharp.text.pdf.Barcode128.Barcode128CodeSet)">
+            Converts the human readable text to the characters needed to
+            create a barcode using the specified code set.
+            @param text the text to convert
+            @param ucc <CODE>true</CODE> if it is an UCC/EAN-128. In this case
+            the character FNC1 is added
+            @param codeSet forced code set, or AUTO for optimized barcode.
+            @return the code ready to be fed to getBarsCode128Raw()
+        </member>
         <member name="M:iTextSharp.text.pdf.Barcode128.GetRawText(System.String,System.Boolean)">
             Converts the human readable text to the characters needed to
             create a barcode. Some optimization is done to get the shortest code.
             @param text the text to convert
             @param ucc <CODE>true</CODE> if it is an UCC/EAN-128. In this case
             the character FNC1 is added
-            @return the code ready to be fed to GetBarsCode128Raw()
+            @return the code ready to be fed to getBarsCode128Raw()
         </member>
         <member name="M:iTextSharp.text.pdf.Barcode128.GetBarsCode128Raw(System.String)">
             Generates the bars. The input has the actual barcodes, not
@@ -9349,6 +9358,10 @@
         </member>
         <member name="M:iTextSharp.text.pdf.BidiLine.#ctor">
             Creates new BidiLine 
+        </member>
+        <member name="M:iTextSharp.text.pdf.BidiLine.IsWordSplit">
+            Call this after processLine() to know if any word was split into several lines.
+            @return
         </member>
         <member name="M:iTextSharp.text.pdf.BidiLine.GetWidth(System.Int32,System.Int32)">
             Gets the width of a range of characters.
@@ -11319,6 +11332,10 @@
             @return returns the result of the operation. It can be <CODE>NO_MORE_TEXT</CODE>
             and/or <CODE>NO_MORE_COLUMN</CODE>
             @throws DocumentException on error
+        </member>
+        <member name="M:iTextSharp.text.pdf.ColumnText.IsWordSplit">
+            Call this after go() to know if any word was split into several lines.
+            @return
         </member>
         <member name="M:iTextSharp.text.pdf.ColumnText.ClearChunks">
             Clears the chunk array. A call to <CODE>go()</CODE> will always return
@@ -14235,6 +14252,39 @@
         <member name="F:iTextSharp.text.pdf.PdfWriter.rgbTransparencyBlending">
             Holds value of property RGBTranparency.
         </member>
+        <member name="M:iTextSharp.text.pdf.PdfWriter.CreateAnnotation(iTextSharp.text.Rectangle,iTextSharp.text.pdf.PdfName)">
+             A wrapper around PdfAnnotation constructor.
+             It is recommended to use this wrapper instead of direct constructor as this is a convenient way to override PdfAnnotation construction when needed.
+            
+             @param rect
+             @param subtype
+             @return
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfWriter.CreateAnnotation(System.Single,System.Single,System.Single,System.Single,iTextSharp.text.pdf.PdfString,iTextSharp.text.pdf.PdfString,iTextSharp.text.pdf.PdfName)">
+             A wrapper around PdfAnnotation constructor.
+             It is recommended to use this wrapper instead of direct constructor as this is a convenient way to override PdfAnnotation construction when needed.
+            
+             @param llx
+             @param lly
+             @param urx
+             @param ury
+             @param title
+             @param content
+             @param subtype
+             @return
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfWriter.CreateAnnotation(System.Single,System.Single,System.Single,System.Single,iTextSharp.text.pdf.PdfAction,iTextSharp.text.pdf.PdfName)">
+             A wrapper around PdfAnnotation constructor.
+             It is recommended to use this wrapper instead of direct constructor as this is a convenient way to override PdfAnnotation construction when needed.
+            
+             @param llx
+             @param lly
+             @param urx
+             @param ury
+             @param action
+             @param subtype
+             @return
+        </member>
         <member name="M:iTextSharp.text.pdf.PdfWriter.GetStandardStructElems">
             Gets the list of the standard structure element names (roles).
             @return
@@ -15676,6 +15726,21 @@
             @param previousChunk the chunk that appeared immediately before the current chunk
             @return true if the two chunks represent different words (i.e. should have a space between them).  False otherwise.
         </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.filterTextChunks(System.Collections.Generic.List{iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk},iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter)">
+            Filters the provided list with the provided filter
+            @param textChunks a list of all TextChunks that this strategy found during processing
+            @param filter the filter to apply.  If null, filtering will be skipped.
+            @return the filtered list
+            @since 5.3.3
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.GetResultantText(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter)">
+            Gets text that meets the specified filter
+            If multiple text extractions will be performed for the same page (i.e. for different physical regions of the page), 
+            filtering at this level is more efficient than filtering using {@link FilteredRenderListener} - but not nearly as powerful
+            because most of the RenderInfo state is not captured in {@link TextChunk}
+            @param chunkFilter the filter to to apply
+            @return the text results so far, filtered using the specified filter
+        </member>
         <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.GetResultantText">
             Returns the result so far.
             @return  a String with the resulting text.
@@ -15750,6 +15815,21 @@
         </member>
         <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.CharSpaceWidth">
             @return the width of a single space character as rendered by this chunk
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.StartLocation">
+            @return the start location of the text
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk.EndLocation">
+            @return the end location of the text
+        </member>
+        <member name="T:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter">
+            Specifies a filter for filtering {@link TextChunk} objects during text extraction 
+            @see LocationTextExtractionStrategy#getResultantText(TextChunkFilter)
+            @since 5.3.3
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.ITextChunkFilter.Accept(iTextSharp.text.pdf.parser.LocationTextExtractionStrategy.TextChunk)">
+            @param textChunk the chunk to check
+            @return true if the chunk should be allowed
         </member>
         <member name="T:iTextSharp.text.pdf.parser.MarkedContentInfo">
             Represents a Marked Content block in a PDF
@@ -16010,13 +16090,6 @@
         <member name="M:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.EndMarkedContent">
             Remove the latest marked content from the stack.  Keeps track of the BMC, BDC and EMC operators.
             @since 5.0.2
-        </member>
-        <member name="M:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.Decode(iTextSharp.text.pdf.PdfString)">
-            Decodes a PdfString (which will contain glyph ids encoded in the font's encoding)
-            based on the active font, and determine the unicode equivalent
-            @param in    the String that needs to be encoded
-            @return  the encoded String
-            @since 2.1.7
         </member>
         <member name="M:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.BeginText">
             Used to trigger beginTextBlock on the renderListener
@@ -16497,17 +16570,17 @@
             Array containing marked content info for the text.
             @since 5.0.2
         </member>
-        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.#ctor(System.String,iTextSharp.text.pdf.parser.GraphicsState,iTextSharp.text.pdf.parser.Matrix,System.Collections.ICollection)">
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.#ctor(iTextSharp.text.pdf.PdfString,iTextSharp.text.pdf.parser.GraphicsState,iTextSharp.text.pdf.parser.Matrix,System.Collections.ICollection)">
             Creates a new TextRenderInfo object
-            @param text the text that should be displayed
+            @param string the PDF string that should be displayed
             @param gs the graphics state (note: at this time, this is not immutable, so don't cache it)
             @param textMatrix the text matrix at the time of the render operation
             @param markedContentInfo the marked content sequence, if available
         </member>
-        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.#ctor(iTextSharp.text.pdf.parser.TextRenderInfo,System.Int32,System.Single)">
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.#ctor(iTextSharp.text.pdf.parser.TextRenderInfo,iTextSharp.text.pdf.PdfString,System.Single)">
             Used for creating sub-TextRenderInfos for each individual character
             @param parent the parent TextRenderInfo
-            @param charIndex the index of the character that this TextRenderInfo will represent
+            @param string the content of a TextRenderInfo
             @param horizontalOffset the unscaled horizontal offset of the character that this TextRenderInfo represents
             @since 5.3.3
         </member>
@@ -16566,15 +16639,15 @@
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.ConvertWidthFromTextSpaceToUserSpace(System.Single)">
             
-            @param width the width, in text space
-            @return the width in user space
-            @since 5.3.3
+             @param width the width, in text space
+             @return the width in user space
+             @since 5.3.3
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.ConvertHeightFromTextSpaceToUserSpace(System.Single)">
             
-            @param height the height, in text space
-            @return the height in user space
-            @since 5.3.3
+             @param height the height, in text space
+             @return the height in user space
+             @since 5.3.3
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetSingleSpaceWidth">
             @return The width, in user space units, of a single space character in the current font
@@ -16595,12 +16668,10 @@
             @since iText 5.0.1
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetFillColor">
-            Returns the current fill color.
-            @param a BaseColor
+            @return the current fill color.
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetStrokeColor">
-            Returns the current stroke color.
-            @param a BaseColor
+            @return the current stroke color.
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetUnscaledFontSpaceWidth">
             Calculates the width of a space character.  If the font does not define
@@ -16611,12 +16682,43 @@
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetStringWidth(System.String)">
             Gets the width of a String in text space units
             @param string    the string that needs measuring
+            @return          the width of a String in text space units
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetPdfStringWidth(iTextSharp.text.pdf.PdfString,System.Boolean)">
+            Gets the width of a PDF string in text space units
+            @param string        the string that needs measuring
             @return  the width of a String in text space units
         </member>
         <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetCharacterRenderInfos">
             Provides detail useful if a listener needs access to the position of each individual glyph in the text render operation
-            @return A list of {@link TextRenderInfo} objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
-            @since 5.3.3
+            @return  A list of {@link TextRenderInfo} objects that represent each glyph used in the draw operation. The next effect is if there was a separate Tj opertion for each character in the rendered string
+            @since   5.3.3
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetWidthAndWordSpacing(iTextSharp.text.pdf.PdfString,System.Boolean)">
+            Calculates width and word spacing of a single character PDF string.
+            @param string            a character to calculate width.
+            @param singleCharString  true if PDF string represents single character, false otherwise.
+            @return                  array of 2 items: first item is a character width, second item is a calculated word spacing.
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.Decode(iTextSharp.text.pdf.PdfString)">
+            Decodes a PdfString (which will contain glyph ids encoded in the font's encoding)
+            based on the active font, and determine the unicode equivalent
+            @param in	the String that needs to be encoded
+            @return	    the encoded String
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.GetCharCode(System.String)">
+             Converts a single character string to char code.
+            
+             @param string single character string to convert to.
+             @return char code.
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.TextRenderInfo.SplitString(iTextSharp.text.pdf.PdfString)">
+            Split PDF string into array of single character PDF strings.
+            @param string    PDF string to be splitted.
+            @return          splitted PDF string.
+        </member>
+        <member name="P:iTextSharp.text.pdf.parser.TextRenderInfo.PdfString">
+            @return original PDF string
         </member>
         <!-- Некорректный комментарий в формате XML для члена "T:iTextSharp.text.pdf.parser.Vector" проигнорирован -->
         <member name="F:iTextSharp.text.pdf.parser.Vector.I1">
@@ -17707,13 +17809,15 @@
              Adds a form XObject to this content.
             
              @param formXObj the form XObject
-             @param name the name of form XObject in content stream
+             @param name the name of form XObject in content stream. The name is changed, if if it already exists in page resources
              @param a an element of the transformation matrix
              @param b an element of the transformation matrix
              @param c an element of the transformation matrix
              @param d an element of the transformation matrix
              @param e an element of the transformation matrix
              @param f an element of the transformation matrix
+             
+             @return Name under which XObject was stored in resources. See <code>name</code> parameter
         </member>
         <member name="M:iTextSharp.text.pdf.PdfContentByte.AddTemplate(iTextSharp.text.pdf.PdfTemplate,iTextSharp.awt.geom.AffineTransform)">
             adds a template with the given matrix.
@@ -22167,6 +22271,10 @@
         <member name="F:iTextSharp.text.pdf.PdfName.OUTPUTINTENTS">
             A name 
         </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.OVERLAYTEXT">
+            A name
+            @since 5.5.4
+        </member>
         <member name="F:iTextSharp.text.pdf.PdfName.P">
             A name 
         </member>
@@ -22408,6 +22516,10 @@
         <member name="F:iTextSharp.text.pdf.PdfName.RECT">
             A name 
         </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.REDACT">
+            A name
+            @since 5.4.4
+        </member>
         <member name="F:iTextSharp.text.pdf.PdfName.REFERENCE">
             A name 
         </member>
@@ -22423,6 +22535,10 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.RENDITION">
             A name 
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.REPEAT">
+            A name
+            @since 5.5.4
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.RESETFORM">
             A name 
@@ -22494,6 +22610,10 @@
             @since 5.1.0
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.ROLE">
+            A name
+            @since 5.4.4
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.RO">
             A name
             @since 5.4.4
         </member>
@@ -22700,6 +22820,9 @@
             A name 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.SUBTYPE">
+            A name 
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.SUMMARY">
             A name 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.SUPPLEMENT">
@@ -24085,6 +24208,9 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfPTable.spacingAfter">
             The spacing after the table. 
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfPTable.summary">
+            A textual summary of the table's contents, in Tagged PDF. 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfPTable.extendLastRow">
             Holds value of property extendLastRow.
@@ -49599,7 +49725,7 @@
             Assembles all the elements needed to create a signature, except for the data.
             @param privKey the private key
             @param certChain the certificate chain
-            @param crlList the certificate revocation list
+            @param interfaceDigest the interface digest
             @param hashAlgorithm the hash algorithm
             @param provider the provider or <code>null</code> for the default provider
             @param hasRSAdata <CODE>true</CODE> if the sub-filter is adbe.pkcs7.sha1
@@ -49611,12 +49737,11 @@
             Use this constructor if you want to verify a signature using the sub-filter adbe.x509.rsa_sha1.
             @param contentsKey the /Contents key
             @param certsKey the /Cert key
-            @param provider the provider or <code>null</code> for the default provider
         </member>
         <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.#ctor(System.Byte[],iTextSharp.text.pdf.PdfName)">
             Use this constructor if you want to verify a signature.
             @param contentsKey the /Contents key
-            @param tsp set to true if there's a PAdES LTV time stamp.
+            @param filterSubtype the filtersubtype
             @param provider the provider or <code>null</code> for the default provider
         </member>
         <member name="F:iTextSharp.text.pdf.security.PdfPKCS7.signName">
