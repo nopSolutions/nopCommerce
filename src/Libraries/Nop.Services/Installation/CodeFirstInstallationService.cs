@@ -4781,6 +4781,7 @@ namespace Nop.Services.Installation
                     AllowPickUpInStore = true,
                     PickUpInStoreFee = decimal.Zero,
                     UseWarehouseLocation = false,
+                    NotifyCustomerAboutShippingFromMultipleLocations = false,
                     FreeShippingOverXEnabled = false,
                     FreeShippingOverXValue = decimal.Zero,
                     FreeShippingOverXIncludingTax = false,

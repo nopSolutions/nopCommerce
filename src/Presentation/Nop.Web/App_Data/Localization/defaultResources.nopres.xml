@@ -5769,6 +5769,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXValue.Hint">
     <Value>All orders with a total greater than the value of 'X' will qualify for free shipping.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
+    <Value>Notify customer about shipping from multiple locations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations.Hint">
+    <Value>Check if you want customers to be notified when shipping from multiple locations.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.PickUpInStoreFee">
     <Value>"Pick Up in Store" fee</Value>
   </LocaleResource>
@@ -10643,6 +10649,9 @@
   </LocaleResource>
   <LocaleResource Name="Checkout.ShippingMethod">
     <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShippingMethod.ShippingFromMultipleLocations">
+    <Value>Please note that your order will be shipped from multiple locations</Value>
   </LocaleResource>
   <LocaleResource Name="Checkout.ShippingOptionCouldNotBeLoaded">
     <Value>Shipping options could not be loaded</Value>

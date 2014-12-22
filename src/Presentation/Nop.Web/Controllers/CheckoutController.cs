@@ -303,6 +303,12 @@ namespace Nop.Web.Controllers
                         shippingOptionToSelect.Selected = true;
                     }
                 }
+
+                //notify about shipping from multiple locations
+                if (_shippingSettings.NotifyCustomerAboutShippingFromMultipleLocations)
+                {
+                    model.NotifyCustomerAboutShippingFromMultipleLocations = getShippingOptionResponse.ShippingFromMultipleLocations;
+                }
             }
             else
             {

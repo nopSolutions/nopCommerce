@@ -5,8 +5,14 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations">
+    <Value>Notify customer about shipping from multiple locations</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations.Hint">
+    <Value>Check if you want customers to be notified when shipping from multiple locations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShippingMethod.ShippingFromMultipleLocations">
+    <Value>Please note that your order will be shipped from multiple locations</Value>
   </LocaleResource>
 </Language>
 '
@@ -80,5 +86,15 @@ CLOSE cur_existinglanguage
 DEALLOCATE cur_existinglanguage
 
 DROP TABLE #LocaleStringResourceTmp
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.notifycustomeraboutshippingfrommultiplelocations')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'shippingsettings.notifycustomeraboutshippingfrommultiplelocations', N'false', 0)
+END
 GO
 

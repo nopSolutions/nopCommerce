@@ -14,6 +14,8 @@ namespace Nop.Web.Models.Checkout
 
         public IList<ShippingMethodModel> ShippingMethods { get; set; }
 
+        public bool NotifyCustomerAboutShippingFromMultipleLocations { get; set; }
+
         public IList<string> Warnings { get; set; }
 
         #region Nested classes

@@ -32,6 +32,11 @@ namespace Nop.Core.Domain.Shipping
         public bool UseWarehouseLocation { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers should be notified when shipping is made from multiple locations (warehouses)
+        /// </summary>
+        public bool NotifyCustomerAboutShippingFromMultipleLocations { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Free shipping over X' is enabled
         /// </summary>
         public bool FreeShippingOverXEnabled { get; set; }

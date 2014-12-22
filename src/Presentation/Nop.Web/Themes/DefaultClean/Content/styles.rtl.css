@@ -427,6 +427,7 @@ td.fieldname{font-size:12px;}
 .checkout-data .shipping-method li{text-align:right;vertical-align:text-top;padding:5px 0 0 5px;list-style:none;}
 .checkout-data .shipping-method .method-name{font-weight:700;}
 .checkout-data .shipping-method .method-description{padding:5px 0 5px 16px;}
+.checkout-data .shipping-method .multiple-locations{margin:10px;text-align:right;font-style:italic;}
 .checkout-data .shipping-method .buttons{margin:10px;text-align:right;}
 .checkout-data .shipping-method .message-error{margin:10px;text-align:right;}
 .checkout-data .use-reward-points{margin:0;padding:10px;color:#555;background:#F7F5E8;margin-bottom:10px;border:dotted 1px #d3d3d3;}

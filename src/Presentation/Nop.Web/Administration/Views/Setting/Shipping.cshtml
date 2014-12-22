@@ -78,6 +78,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore, model => model.NotifyCustomerAboutShippingFromMultipleLocations, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+                @Html.ValidationMessageFor(model => model.NotifyCustomerAboutShippingFromMultipleLocations)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.FreeShippingOverXEnabled_OverrideForStore, model => model.FreeShippingOverXEnabled, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.FreeShippingOverXEnabled):
             </td>

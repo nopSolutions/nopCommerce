@@ -19,7 +19,11 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.UseWarehouseLocation")]
         public bool UseWarehouseLocation { get; set; }
         public bool UseWarehouseLocation_OverrideForStore { get; set; }
-    
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.NotifyCustomerAboutShippingFromMultipleLocations")]
+        public bool NotifyCustomerAboutShippingFromMultipleLocations { get; set; }
+        public bool NotifyCustomerAboutShippingFromMultipleLocations_OverrideForStore { get; set; }
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled")]
         public bool FreeShippingOverXEnabled { get; set; }
         public bool FreeShippingOverXEnabled_OverrideForStore { get; set; }

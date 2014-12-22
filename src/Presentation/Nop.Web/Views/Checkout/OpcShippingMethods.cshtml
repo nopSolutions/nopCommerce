@@ -23,6 +23,12 @@
                     </li>
                 }
             </ul>
+            if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+            {
+                <div class="multiple-locations">
+                    @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                </div>
+            }
         }
         else
         {
