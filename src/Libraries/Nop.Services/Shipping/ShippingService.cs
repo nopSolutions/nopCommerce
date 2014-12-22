@@ -679,9 +679,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
+        /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
-        public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart, 
-            Address shippingAddress)
+        public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
+            Address shippingAddress, out bool shippingFromMultipleLocations)
         {
             //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
@@ -777,8 +778,15 @@ namespace Nop.Services.Shipping
                 }
             }
 
+            //multiple locations?
+            //currently we just compare warehouses
+            //but we should also consider cases when several warehouses are located in the same address
+            shippingFromMultipleLocations = requests.Select(x => x.Key).Distinct().Count() > 1;
+
+
             var result = requests.Values.ToList();
             result.AddRange(separateRequests);
+
             return result;
         }
 
@@ -800,7 +808,10 @@ namespace Nop.Services.Shipping
             var result = new GetShippingOptionResponse();
             
             //create a package
-            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress);
+            bool shippingFromMultipleLocations;
+            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, out shippingFromMultipleLocations);
+            result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
+
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId);
             //filter by system name
             if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName))

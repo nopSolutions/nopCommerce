@@ -597,7 +597,8 @@ namespace Nop.Services.Orders
                 {
                     var shippingRateComputationMethod = shippingRateComputationMethods[0];
 
-                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart, shippingAddress);
+                    bool shippingFromMultipleLocations;
+                    var shippingOptionRequests = _shippingService.CreateShippingOptionRequests(cart, shippingAddress, out shippingFromMultipleLocations);
                     decimal? fixedRate = null;
                     foreach (var shippingOptionRequest in shippingOptionRequests)
                     {

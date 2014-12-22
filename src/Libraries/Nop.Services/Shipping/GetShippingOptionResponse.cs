@@ -20,6 +20,11 @@ namespace Nop.Services.Shipping
         public IList<ShippingOption> ShippingOptions { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether shipping is done from multiple locations (warehouses)
+        /// </summary>
+        public bool ShippingFromMultipleLocations { get; set; }
+
+        /// <summary>
         /// Gets or sets an address
         /// </summary>
         public IList<string> Errors { get; set; }
