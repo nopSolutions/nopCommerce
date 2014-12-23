@@ -149,6 +149,7 @@ body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .form-actions{overflow:hidden;padding-top:1em;}
 .form-actions .k-button,.form-actions .k-button button{float:left;margin-right:10px;padding:2px 15px;}
 .k-state-active, .k-state-active:hover, .k-active-filter, .k-tabstrip .k-state-active{border-color:#c5c5c5 !important;}
+.k-grid table tr:hover > td {background:#e3e3e3 !important;}
 /* etc */
 .customer-info-tab .gender{display:inline-block;}
 .customer-info-tab ul.option-list{padding:0px;margin:0px;}
