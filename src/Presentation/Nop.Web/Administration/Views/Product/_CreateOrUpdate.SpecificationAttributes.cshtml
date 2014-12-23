@@ -162,7 +162,14 @@
                 var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
 
                 if (specificationAttributeOptionId === null) {
-                    alert('Select attribute option');
+                    //some validation
+                    if (attributeTypeId == @(((int) SpecificationAttributeType.Option).ToString())) {
+                        //option
+                        alert('Select specification attribute option');
+                    } else {
+                        //other (text, hyperlink, etc)
+                        alert('First, please create at least one specification attribute option');
+                    }
                 } else {
                     $('#addProductSpec').attr('disabled', true);
                     $.ajax({
