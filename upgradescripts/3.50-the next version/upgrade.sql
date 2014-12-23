@@ -14,6 +14,9 @@ set @resources='
   <LocaleResource Name="Checkout.ShippingMethod.ShippingFromMultipleLocations">
     <Value>Please note that your order will be shipped from multiple locations</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Details">
+    <Value>Edit page</Value>
+  </LocaleResource>
 </Language>
 '
 

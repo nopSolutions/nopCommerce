@@ -10071,6 +10071,9 @@
   <LocaleResource Name="Admin.System.SeNames.DeleteSelected">
     <Value>Delete selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SeNames.Details">
+    <Value>Edit page</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SeNames.EntityId">
     <Value>Entity ID</Value>
   </LocaleResource>

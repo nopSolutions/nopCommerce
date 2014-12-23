@@ -156,6 +156,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+
         public ActionResult Warnings()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -415,6 +416,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+
         public ActionResult Maintenance()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -426,7 +428,6 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
             return View(model);
         }
-
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
         public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
@@ -444,7 +445,6 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-abondoned-carts")]
         public ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
@@ -457,8 +457,6 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.NumberOfDeletedItems = _shoppingCartService.DeleteExpiredShoppingCartItems(olderThanDateValue);
             return View(model);
         }
-
-
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]
         public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
@@ -501,8 +499,6 @@ namespace Nop.Admin.Controllers
         }
 
 
-
-        //language
         [ChildActionOnly]
         public ActionResult LanguageSelector()
         {
@@ -528,6 +524,7 @@ namespace Nop.Admin.Controllers
             return Redirect(returnUrl);
         }
 
+
         public ActionResult ClearCache()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -539,6 +536,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
         public ActionResult RestartApplication()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -549,7 +547,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        #region Searh engine friendly names
 
         public ActionResult SeNames()
         {
@@ -559,7 +556,6 @@ namespace Nop.Admin.Controllers
             var model = new UrlRecordListModel();
             return View(model);
         }
-
         [HttpPost]
         public ActionResult SeNames(DataSourceRequest command, UrlRecordListModel model)
         {
@@ -571,6 +567,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = urlRecords.Select(x =>
                 {
+                    //language
                     string languageName;
                     if (x.LanguageId == 0)
                     {
@@ -581,6 +578,37 @@ namespace Nop.Admin.Controllers
                         var language = _languageService.GetLanguageById(x.LanguageId);
                         languageName = language != null ? language.Name : "Unknown";
                     }
+
+                    //details URL
+                    string detailsUrl = "";
+                    var entityName = x.EntityName != null ? x.EntityName.ToLowerInvariant() : "";
+                    switch (entityName)
+                    {
+                        case "blogpost":
+                            detailsUrl = Url.Action("Edit", "Blog", new { id = x.EntityId });
+                            break;
+                        case "category":
+                            detailsUrl = Url.Action("Edit", "Category", new { id = x.EntityId });
+                            break;
+                        case "manufacturer":
+                            detailsUrl = Url.Action("Edit", "Manufacturer", new { id = x.EntityId });
+                            break;
+                        case "product":
+                            detailsUrl = Url.Action("Edit", "Product", new { id = x.EntityId });
+                            break;
+                        case "newsitem":
+                            detailsUrl = Url.Action("Edit", "News", new { id = x.EntityId });
+                            break;
+                        case "topic":
+                            detailsUrl = Url.Action("Edit", "Topic", new { id = x.EntityId });
+                            break;
+                        case "vendor":
+                            detailsUrl = Url.Action("Edit", "Vendor", new { id = x.EntityId });
+                            break;
+                        default:
+                            break;
+                    }
+
                     return new UrlRecordModel
                     {
                         Id = x.Id,
@@ -589,13 +617,13 @@ namespace Nop.Admin.Controllers
                         EntityName = x.EntityName,
                         IsActive = x.IsActive,
                         Language = languageName,
+                        DetailsUrl = detailsUrl
                     };
                 }),
                 Total = urlRecords.TotalCount
             };
             return Json(gridModel);
         }
-
         [HttpPost]
         public ActionResult DeleteSelectedSeNames(ICollection<int> selectedIds)
         {
@@ -618,7 +646,6 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        #endregion
 
         [ChildActionOnly]
         public ActionResult PopularSearchTermsReport()
@@ -628,7 +655,6 @@ namespace Nop.Admin.Controllers
 
             return PartialView();
         }
-
         [HttpPost]
         public ActionResult PopularSearchTermsReport(DataSourceRequest command)
         {

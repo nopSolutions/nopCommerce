@@ -84,7 +84,8 @@
                                 width: 50
                             }, {
                                 field: "Name",
-                                title: "@T("Admin.System.SeNames.Name")"
+                                title: "@T("Admin.System.SeNames.Name")",
+                                width: 300
                             }, {
                                 field: "EntityId",
                                 title: "@T("Admin.System.SeNames.EntityId")",
@@ -92,19 +93,24 @@
                             }, {
                                 field: "EntityName",
                                 title: "@T("Admin.System.SeNames.EntityName")",
-                                width: 200
+                                width: 100
                             }, {
                                 field: "IsActive",
                                 title: "@T("Admin.System.SeNames.IsActive")",
-                                width: 100,
+                                width: 50,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
                                 template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
                             }, {
                                 field: "Language",
                                 title: "@T("Admin.System.SeNames.Language")",
-                                width: 200
-                    }]
+                                width: 100
+                            }, {
+                                field: "DetailsUrl",
+                                title: "@T("Admin.System.SeNames.Details")",
+                                width: 100,
+                                template: '# if(DetailsUrl && DetailsUrl.length > 0) {# <a href="#=DetailsUrl#">@T("Admin.System.SeNames.Details")</a> #} #'
+                            }]
                         });
                     });
                 </script>

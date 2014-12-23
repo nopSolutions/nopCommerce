@@ -21,5 +21,8 @@ namespace Nop.Admin.Models.Common
 
         [NopResourceDisplayName("Admin.System.SeNames.Language")]
         public string Language { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SeNames.Details")]
+        public string DetailsUrl { get; set; }
     }
 }
