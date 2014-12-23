@@ -6,12 +6,12 @@
     <members>
         <member name="T:Newtonsoft.Json.Bson.BsonReader">
             <summary>
-            Represents a reader that provides fast, non-cached, forward-only access to serialized Json data.
+            Represents a reader that provides fast, non-cached, forward-only access to serialized JSON data.
             </summary>
         </member>
         <member name="T:Newtonsoft.Json.JsonReader">
             <summary>
-            Represents a reader that provides fast, non-cached, forward-only access to serialized Json data.
+            Represents a reader that provides fast, non-cached, forward-only access to serialized JSON data.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonReader.#ctor">
@@ -39,9 +39,9 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonReader.ReadAsBytes">
             <summary>
-            Reads the next JSON token from the stream as a <see cref="T:Byte[]"/>.
+            Reads the next JSON token from the stream as a <see cref="T:System.Byte"/>[].
             </summary>
-            <returns>A <see cref="T:Byte[]"/> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.</returns>
+            <returns>A <see cref="T:System.Byte"/>[] or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.</returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonReader.ReadAsDecimal">
             <summary>
@@ -286,10 +286,10 @@
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonReader.ReadAsBytes">
             <summary>
-            Reads the next JSON token from the stream as a <see cref="T:Byte[]"/>.
+            Reads the next JSON token from the stream as a <see cref="T:System.Byte"/>[].
             </summary>
             <returns>
-            A <see cref="T:Byte[]"/> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
+            A <see cref="T:System.Byte"/>[] or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonReader.ReadAsDecimal">
@@ -366,7 +366,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonWriter">
             <summary>
-            Represents a writer that provides a fast, non-cached, forward-only way of generating Json data.
+            Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.#ctor">
@@ -445,6 +445,22 @@
             </summary>
             <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> to read the token from.</param>
             <param name="writeChildren">A flag indicating whether the current token's children should be written.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonWriter.WriteToken(Newtonsoft.Json.JsonToken,System.Object)">
+            <summary>
+            Writes the <see cref="T:Newtonsoft.Json.JsonToken"/> token and its value.
+            </summary>
+            <param name="token">The <see cref="T:Newtonsoft.Json.JsonToken"/> to write.</param>
+            <param name="value">
+            The value to write.
+            A value is only required for tokens that have an associated value, e.g. the <see cref="T:System.String"/> property name for <see cref="F:Newtonsoft.Json.JsonToken.PropertyName"/>.
+            A null value can be passed to the method for token's that don't have a value, e.g. <see cref="F:Newtonsoft.Json.JsonToken.StartObject"/>.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.JsonWriter.WriteToken(Newtonsoft.Json.JsonToken)">
+            <summary>
+            Writes the <see cref="T:Newtonsoft.Json.JsonToken"/> token.
+            </summary>
+            <param name="token">The <see cref="T:Newtonsoft.Json.JsonToken"/> to write.</param>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteEnd(Newtonsoft.Json.JsonToken)">
             <summary>
@@ -701,9 +717,9 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteValue(System.Byte[])">
             <summary>
-            Writes a <see cref="T:Byte[]"/> value.
+            Writes a <see cref="T:System.Byte"/>[] value.
             </summary>
-            <param name="value">The <see cref="T:Byte[]"/> value to write.</param>
+            <param name="value">The <see cref="T:System.Byte"/>[] value to write.</param>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteValue(System.Uri)">
             <summary>
@@ -983,9 +999,9 @@
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WriteValue(System.Byte[])">
             <summary>
-            Writes a <see cref="T:Byte[]"/> value.
+            Writes a <see cref="T:System.Byte"/>[] value.
             </summary>
-            <param name="value">The <see cref="T:Byte[]"/> value to write.</param>
+            <param name="value">The <see cref="T:System.Byte"/>[] value to write.</param>
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WriteValue(System.Guid)">
             <summary>
@@ -1007,7 +1023,7 @@
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WriteObjectId(System.Byte[])">
             <summary>
-            Writes a <see cref="T:Byte[]"/> value that represents a BSON object id.
+            Writes a <see cref="T:System.Byte"/>[] value that represents a BSON object id.
             </summary>
             <param name="value">The Object ID value to write.</param>
         </member>
@@ -2206,6 +2222,12 @@
             </summary>
             <returns>A collection of the ancestor tokens of this token.</returns>
         </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.AncestorsAndSelf">
+            <summary>
+            Returns a collection of tokens that contain this token, and the ancestors of this token.
+            </summary>
+            <returns>A collection of tokens that contain this token, and the ancestors of this token.</returns>
+        </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.AfterSelf">
             <summary>
             Returns a collection of the sibling tokens after this token, in document order.
@@ -2499,7 +2521,7 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.op_Explicit(Newtonsoft.Json.Linq.JToken)~System.Byte[]">
             <summary>
-            Performs an explicit conversion from <see cref="T:Newtonsoft.Json.Linq.JToken"/> to <see cref="T:System.Byte[]"/>.
+            Performs an explicit conversion from <see cref="T:Newtonsoft.Json.Linq.JToken"/> to <see cref="T:System.Byte"/>[].
             </summary>
             <param name="value">The value.</param>
             <returns>The result of the conversion.</returns>
@@ -2744,7 +2766,7 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JToken.op_Implicit(System.Byte[])~Newtonsoft.Json.Linq.JToken">
             <summary>
-            Performs an implicit conversion from <see cref="T:System.Byte[]"/> to <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            Performs an implicit conversion from <see cref="T:System.Byte"/>[] to <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
             </summary>
             <param name="value">The value to create a <see cref="T:Newtonsoft.Json.Linq.JValue"/> from.</param>
             <returns>The <see cref="T:Newtonsoft.Json.Linq.JValue"/> initialized with the specified value.</returns>
@@ -2907,6 +2929,52 @@
             Creates a new instance of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>. All child tokens are recursively cloned.
             </summary>
             <returns>A new instance of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.AddAnnotation(System.Object)">
+            <summary>
+            Adds an object to the annotation list of this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <param name="annotation">The annotation to add.</param>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.Annotation``1">
+            <summary>
+            Get the first annotation object of the specified type from this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <typeparam name="T">The type of the annotation to retrieve.</typeparam>
+            <returns>The first annotation object that matches the specified type, or <c>null</c> if no annotation is of the specified type.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.Annotation(System.Type)">
+            <summary>
+            Gets the first annotation object of the specified type from this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <param name="type">The <see cref="P:Newtonsoft.Json.Linq.JToken.Type"/> of the annotation to retrieve.</param>
+            <returns>The first annotation object that matches the specified type, or <c>null</c> if no annotation is of the specified type.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.Annotations``1">
+            <summary>
+            Gets a collection of annotations of the specified type for this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <typeparam name="T">The type of the annotations to retrieve.</typeparam>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/>  that contains the annotations for this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.Annotations(System.Type)">
+            <summary>
+            Gets a collection of annotations of the specified type for this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <param name="type">The <see cref="P:Newtonsoft.Json.Linq.JToken.Type"/> of the annotations to retrieve.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:System.Object"/> that contains the annotations that match the specified type for this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.RemoveAnnotations``1">
+            <summary>
+            Removes the annotations of the specified type from this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <typeparam name="T">The type of annotations to remove.</typeparam>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JToken.RemoveAnnotations(System.Type)">
+            <summary>
+            Removes the annotations of the specified type from this <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </summary>
+            <param name="type">The <see cref="P:Newtonsoft.Json.Linq.JToken.Type"/> of annotations to remove.</param>
         </member>
         <member name="P:Newtonsoft.Json.Linq.JToken.EqualityComparer">
             <summary>
@@ -3739,10 +3807,10 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonValidatingReader.ReadAsBytes">
             <summary>
-            Reads the next JSON token from the stream as a <see cref="T:Byte[]"/>.
+            Reads the next JSON token from the stream as a <see cref="T:System.Byte"/>[].
             </summary>
             <returns>
-            A <see cref="T:Byte[]"/> or a null reference if the next JSON token is null.
+            A <see cref="T:System.Byte"/>[] or a null reference if the next JSON token is null.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonValidatingReader.ReadAsDecimal">
@@ -4040,10 +4108,10 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonTextReader.ReadAsBytes">
             <summary>
-            Reads the next JSON token from the stream as a <see cref="T:Byte[]"/>.
+            Reads the next JSON token from the stream as a <see cref="T:System.Byte"/>[].
             </summary>
             <returns>
-            A <see cref="T:Byte[]"/> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
+            A <see cref="T:System.Byte"/>[] or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonTextReader.ReadAsDecimal">
@@ -4219,7 +4287,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonTextWriter">
             <summary>
-            Represents a writer that provides a fast, non-cached, forward-only way of generating Json data.
+            Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.#ctor(System.IO.TextWriter)">
@@ -4415,9 +4483,9 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WriteValue(System.Byte[])">
             <summary>
-            Writes a <see cref="T:Byte[]"/> value.
+            Writes a <see cref="T:System.Byte"/>[] value.
             </summary>
-            <param name="value">The <see cref="T:Byte[]"/> value to write.</param>
+            <param name="value">The <see cref="T:System.Byte"/>[] value to write.</param>
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WriteValue(System.DateTimeOffset)">
             <summary>
@@ -5464,7 +5532,15 @@
             </summary>
             <typeparam name="T">The type of the objects in source, constrained to <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</typeparam>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the ancestors of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the ancestors of every token in the source collection.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.Extensions.AncestorsAndSelf``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a collection of tokens that contains every token in the source collection, and the ancestors of every token in the source collection.
+            </summary>
+            <typeparam name="T">The type of the objects in source, constrained to <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains every token in the source collection, the ancestors of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Descendants``1(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -5472,7 +5548,15 @@
             </summary>
             <typeparam name="T">The type of the objects in source, constrained to <see cref="T:Newtonsoft.Json.Linq.JContainer"/>.</typeparam>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the descendants of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the descendants of every token in the source collection.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.Extensions.DescendantsAndSelf``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Returns a collection of tokens that contains every token in the source collection, and the descendants of every token in the source collection.
+            </summary>
+            <typeparam name="T">The type of the objects in source, constrained to <see cref="T:Newtonsoft.Json.Linq.JContainer"/>.</typeparam>
+            <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains every token in the source collection, and the descendants of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Properties(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JObject})">
             <summary>
@@ -5487,14 +5571,14 @@
             </summary>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
             <param name="key">The token key.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every node in the source collection with the given key.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every token in the source collection with the given key.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Values(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JToken})">
             <summary>
             Returns a collection of child values of every object in the source collection.
             </summary>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Values``1(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JToken},System.Object)">
             <summary>
@@ -5503,7 +5587,7 @@
             <typeparam name="U">The type to convert the values to.</typeparam>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
             <param name="key">The token key.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every node in the source collection with the given key.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every token in the source collection with the given key.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Values``1(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JToken})">
             <summary>
@@ -5511,7 +5595,7 @@
             </summary>
             <typeparam name="U">The type to convert the values to.</typeparam>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Value``1(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JToken})">
             <summary>
@@ -5536,7 +5620,7 @@
             </summary>
             <typeparam name="T">The source collection type.</typeparam>
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the values of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.Children``2(System.Collections.Generic.IEnumerable{``0})">
             <summary>
@@ -5545,7 +5629,7 @@
             <param name="source">An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:Newtonsoft.Json.Linq.JToken"/> that contains the source collection.</param>
             <typeparam name="U">The type to convert the values to.</typeparam>
             <typeparam name="T">The source collection type.</typeparam>
-            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every node in the source collection.</returns>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> that contains the converted values of every token in the source collection.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.Extensions.AsJEnumerable(System.Collections.Generic.IEnumerable{Newtonsoft.Json.Linq.JToken})">
             <summary>
@@ -5606,6 +5690,12 @@
             Returns a collection of the descendant tokens for this token in document order.
             </summary>
             <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing the descendant tokens of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Linq.JContainer.DescendantsAndSelf">
+            <summary>
+            Returns a collection of the tokens that contain this token, and all descendant tokens of this token, in document order.
+            </summary>
+            <returns>An <see cref="T:System.Collections.Generic.IEnumerable`1"/> containing this token, and all the descendant tokens of the <see cref="T:Newtonsoft.Json.Linq.JToken"/>.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JContainer.Add(System.Object)">
             <summary>
@@ -6299,7 +6389,7 @@
         </member>
         <member name="T:Newtonsoft.Json.Linq.JTokenReader">
             <summary>
-            Represents a reader that provides fast, non-cached, forward-only access to serialized Json data.
+            Represents a reader that provides fast, non-cached, forward-only access to serialized JSON data.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenReader.#ctor(Newtonsoft.Json.Linq.JToken)">
@@ -6310,10 +6400,10 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenReader.ReadAsBytes">
             <summary>
-            Reads the next JSON token from the stream as a <see cref="T:Byte[]"/>.
+            Reads the next JSON token from the stream as a <see cref="T:System.Byte"/>[].
             </summary>
             <returns>
-            A <see cref="T:Byte[]"/> or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
+            A <see cref="T:System.Byte"/>[] or a null reference if the next JSON token is null. This method will return <c>null</c> at the end of an array.
             </returns>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenReader.ReadAsDecimal">
@@ -6354,6 +6444,11 @@
             true if the next token was read successfully; false if there are no more tokens to read.
             </returns>
         </member>
+        <member name="P:Newtonsoft.Json.Linq.JTokenReader.CurrentToken">
+            <summary>
+            Gets the <see cref="T:Newtonsoft.Json.Linq.JToken"/> at the reader's current position.
+            </summary>
+        </member>
         <member name="P:Newtonsoft.Json.Linq.JTokenReader.Path">
             <summary>
             Gets the path of the current JSON token. 
@@ -6361,7 +6456,7 @@
         </member>
         <member name="T:Newtonsoft.Json.Linq.JTokenWriter">
             <summary>
-            Represents a writer that provides a fast, non-cached, forward-only way of generating Json data.
+            Represents a writer that provides a fast, non-cached, forward-only way of generating JSON data.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.#ctor(Newtonsoft.Json.Linq.JContainer)">
@@ -6540,9 +6635,9 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WriteValue(System.Byte[])">
             <summary>
-            Writes a <see cref="T:Byte[]"/> value.
+            Writes a <see cref="T:System.Byte"/>[] value.
             </summary>
-            <param name="value">The <see cref="T:Byte[]"/> value to write.</param>
+            <param name="value">The <see cref="T:System.Byte"/>[] value to write.</param>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WriteValue(System.TimeSpan)">
             <summary>
@@ -6561,6 +6656,11 @@
             Writes a <see cref="T:System.Uri"/> value.
             </summary>
             <param name="value">The <see cref="T:System.Uri"/> value to write.</param>
+        </member>
+        <member name="P:Newtonsoft.Json.Linq.JTokenWriter.CurrentToken">
+            <summary>
+            Gets the <see cref="T:Newtonsoft.Json.Linq.JToken"/> at the writer's current position.
+            </summary>
         </member>
         <member name="P:Newtonsoft.Json.Linq.JTokenWriter.Token">
             <summary>
