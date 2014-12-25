@@ -160,11 +160,11 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, model => model.StoreInformationSettings.DefaultStoreTheme, Model.ActiveStoreScopeConfiguration)
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
             </td>
             <td class="adminData">
-                <ul class="clearer" style="list-style: none;">
+                <ul class="clearer" style="list-style: none;" id="theme-selection-block">
                     @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                     {
                         <li style="float: left; width: 210px;">
