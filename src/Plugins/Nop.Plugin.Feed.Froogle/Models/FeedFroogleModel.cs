@@ -33,6 +33,9 @@ namespace Nop.Plugin.Feed.Froogle.Models
         [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfo")]
         public bool PassShippingInfo { get; set; }
 
+        [NopResourceDisplayName("Plugins.Feed.Froogle.PricesConsiderPromotions")]
+        public bool PricesConsiderPromotions { get; set; }
+
         [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
         public IList<GeneratedFileModel> GeneratedFiles { get; set; }
         

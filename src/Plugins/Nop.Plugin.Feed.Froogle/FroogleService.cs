@@ -21,6 +21,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
+using Nop.Services.Tax;
 
 namespace Nop.Plugin.Feed.Froogle
 {
@@ -29,6 +30,8 @@ namespace Nop.Plugin.Feed.Froogle
         #region Fields
 
         private readonly IGoogleService _googleService;
+        private readonly IPriceCalculationService _priceCalculationService;
+        private readonly ITaxService _taxService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
@@ -47,6 +50,8 @@ namespace Nop.Plugin.Feed.Froogle
 
         #region Ctor
         public FroogleService(IGoogleService googleService,
+            IPriceCalculationService priceCalculationService,
+            ITaxService taxService, 
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -62,6 +67,8 @@ namespace Nop.Plugin.Feed.Froogle
             GoogleProductObjectContext objectContext)
         {
             this._googleService = googleService;
+            this._priceCalculationService = priceCalculationService;
+            this._taxService = taxService;
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -342,7 +349,21 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //price [price] - Price of the item
                         var currency = GetUsedCurrency();
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(product.Price, currency);
+                        decimal finalPriceBase;
+                        if (_froogleSettings.PricesConsiderPromotions)
+                        {
+                            //calculate for the maximum quantity (in case if we have tier prices)
+                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
+                                _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+                            decimal taxRate;
+                            finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
+
+                        }
+                        else
+                        {
+                            finalPriceBase = product.Price;
+                        }
+                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, currency);
                         writer.WriteElementString("g", "price", googleBaseNamespace,
                                                   price.ToString(new CultureInfo("en-US", false).NumberFormat) + " " +
                                                   currency.CurrencyCode);
@@ -483,6 +504,7 @@ namespace Nop.Plugin.Feed.Froogle
             //settings
             var settings = new FroogleSettings
             {
+                PricesConsiderPromotions = false,
                 ProductPictureSize = 125,
                 PassShippingInfo = false,
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
@@ -504,6 +526,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo", "Pass shipping info");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions", "Prices consider promotions");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize", "Product thumbnail image size");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName", "Product");
@@ -542,6 +566,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName");

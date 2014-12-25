@@ -68,6 +68,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             var model = new FeedFroogleModel();
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
             model.PassShippingInfo = _froogleSettings.PassShippingInfo;
+            model.PricesConsiderPromotions = _froogleSettings.PricesConsiderPromotions;
             //stores
             model.StoreId = _froogleSettings.StoreId;
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -111,6 +112,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.PassShippingInfo = model.PassShippingInfo;
+            _froogleSettings.PricesConsiderPromotions = model.PricesConsiderPromotions;
             _froogleSettings.CurrencyId = model.CurrencyId;
             _froogleSettings.StoreId = model.StoreId;
             _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;

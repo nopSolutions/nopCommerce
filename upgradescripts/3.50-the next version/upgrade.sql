@@ -17,6 +17,12 @@ set @resources='
   <LocaleResource Name="Admin.System.SeNames.Details">
     <Value>Edit page</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PricesConsiderPromotions">
+    <Value>Prices consider promotions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PricesConsiderPromotions.Hint">
+    <Value>Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -101,3 +107,11 @@ BEGIN
 END
 GO
 
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.pricesconsiderpromotions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'frooglesettings.pricesconsiderpromotions', N'false', 0)
+END
+GO

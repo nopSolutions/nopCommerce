@@ -15,6 +15,11 @@ namespace Nop.Plugin.Feed.Froogle
         public bool PassShippingInfo { get; set; }
 
         /// <summary>
+        /// A value indicating whether we should calculate prices considering promotions (tier prices, discounts, special prices, etc)
+        /// </summary>
+        public bool PricesConsiderPromotions { get; set; }
+
+        /// <summary>
         /// Store identifier for which feed file(s) will be generated
         /// </summary>
         public int StoreId { get; set; }
