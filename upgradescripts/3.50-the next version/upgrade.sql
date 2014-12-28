@@ -23,6 +23,9 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.PricesConsiderPromotions.Hint">
     <Value>Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint">
+    <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used for tax calculation in Europe Union.</Value>
+  </LocaleResource>
 </Language>
 '
 
