@@ -219,6 +219,9 @@ namespace Nop.Services.Payments
         /// <returns>Additional handling fee</returns>
         public virtual decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName)
         {
+            if (String.IsNullOrEmpty(paymentMethodSystemName))
+                return decimal.Zero;
+
             var paymentMethod = LoadPaymentMethodBySystemName(paymentMethodSystemName);
             if (paymentMethod == null)
                 return decimal.Zero;
