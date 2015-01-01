@@ -953,6 +953,7 @@ td.fieldname{font-size:12px;}
 .order-list-page .order-list .order-item{}
 .order-list-page .order-list .order-item .title{font-size:13px;}
 .order-list-page .order-list .order-item .info{float:right;}
+.order-list-page .order-list .order-item .info .order-total{font-style:italic;font-weight:bold;}
 .order-list-page .order-list .order-item .buttons{float:left;}
 .return-request-list-page{}
 .return-request-list-page .request-item{}
