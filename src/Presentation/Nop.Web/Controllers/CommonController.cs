@@ -17,6 +17,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -29,6 +30,7 @@ using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
+using Nop.Services.Vendors;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
@@ -65,6 +67,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IVendorService _vendorService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -77,6 +80,7 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -102,6 +106,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
+            IVendorService vendorService,
             CustomerSettings customerSettings, 
             TaxSettings taxSettings, 
             CatalogSettings catalogSettings,
@@ -112,7 +117,8 @@ namespace Nop.Web.Controllers
             NewsSettings newsSettings,
             ForumSettings forumSettings,
             LocalizationSettings localizationSettings, 
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings,
+            VendorSettings vendorSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -134,6 +140,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
+            this._vendorService = vendorService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -146,6 +153,7 @@ namespace Nop.Web.Controllers
             this._forumSettings = forumSettings;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion
@@ -504,6 +512,99 @@ namespace Nop.Web.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.ContactUs", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
+
+                return View(model);
+            }
+
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            return View(model);
+        }
+        //contact vendor page
+        [NopHttpsRequirement(SslRequirement.No)]
+        public ActionResult ContactVendor(int vendorId)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            var model = new ContactVendorModel
+            {
+                Email = _workContext.CurrentCustomer.Email,
+                FullName = _workContext.CurrentCustomer.GetFullName(),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
+                VendorId = vendor.Id,
+                VendorName = vendor.GetLocalized(x => x.Name)
+            };
+            return View(model);
+        }
+        [HttpPost, ActionName("ContactVendor")]
+        [CaptchaValidator]
+        public ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
+        {
+            if (!_vendorSettings.AllowCustomersToContactVendors)
+                return RedirectToRoute("HomePage");
+
+            var vendor = _vendorService.GetVendorById(model.VendorId);
+            if (vendor == null || !vendor.Active || vendor.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
+
+            model.VendorName = vendor.GetLocalized(x => x.Name);
+
+            if (ModelState.IsValid)
+            {
+                string email = model.Email.Trim();
+                string fullName = model.FullName;
+                string subject = string.Format(_localizationService.GetResource("ContactVendor.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+
+                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                if (emailAccount == null)
+                    throw new Exception("No email account could be loaded");
+
+                string from;
+                string fromName;
+                string body = Core.Html.HtmlHelper.FormatText(model.Enquiry, false, true, false, false, false, false);
+                //required for some SMTP servers
+                if (_commonSettings.UseSystemEmailForContactUsForm)
+                {
+                    from = emailAccount.Email;
+                    fromName = emailAccount.DisplayName;
+                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}",
+                        Server.HtmlEncode(fullName),
+                        Server.HtmlEncode(email), body);
+                }
+                else
+                {
+                    from = email;
+                    fromName = fullName;
+                }
+                _queuedEmailService.InsertQueuedEmail(new QueuedEmail
+                {
+                    From = from,
+                    FromName = fromName,
+                    To = vendor.Email,
+                    ToName = vendor.Name,
+                    ReplyTo = email,
+                    ReplyToName = fullName,
+                    Priority = 5,
+                    Subject = subject,
+                    Body = body,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    EmailAccountId = emailAccount.Id
+                });
+
+                model.SuccessfullySent = true;
+                model.Result = _localizationService.GetResource("ContactVendor.YourEnquiryHasBeenSent");
 
                 return View(model);
             }

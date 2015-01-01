@@ -15,5 +15,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage")]
         public bool ShowVendorOnProductDetailsPage { get; set; }
         public bool ShowVendorOnProductDetailsPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors")]
+        public bool AllowCustomersToContactVendors { get; set; }
+        public bool AllowCustomersToContactVendors_OverrideForStore { get; set; }
     }
 }

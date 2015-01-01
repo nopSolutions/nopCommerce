@@ -4899,6 +4899,7 @@ namespace Nop.Services.Installation
                 DefaultVendorPageSizeOptions = "8, 4, 12",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
+                AllowCustomersToContactVendors = true
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();

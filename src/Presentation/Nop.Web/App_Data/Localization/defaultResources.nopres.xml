@@ -6048,6 +6048,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor">
     <Value>Vendor settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors">
+    <Value>Allow customers to contact vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors.Hint">
+    <Value>Check to allow customers to contact vendors.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
@@ -10854,6 +10860,45 @@
   <LocaleResource Name="ContactUs.YourEnquiryHasBeenSent">
     <Value>Your enquiry has been successfully sent to the store owner.</Value>
   </LocaleResource>
+  <LocaleResource Name="ContactVendor">
+    <Value>Contact vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email">
+    <Value>Your email</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email.Required">
+    <Value>Enter email</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.EmailSubject">
+    <Value>{0}. Contact us</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry">
+    <Value>Enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry.Hint">
+    <Value>Enter your enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry.Required">
+    <Value>Enter enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName">
+    <Value>Your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName.Hint">
+    <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName.Required">
+    <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.YourEnquiryHasBeenSent">
+    <Value>Your enquiry has been successfully sent to the vendor.</Value>
+  </LocaleResource>
   <LocaleResource Name="Content.CopyrightNotice">
     <Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
   </LocaleResource>
@@ -12056,6 +12101,9 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.ContactUs">
     <Value>Contact Us</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ContactVendor">
+    <Value>Contact Vendor - {0}</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.ForumSubscriptions">
     <Value>Forum Subscriptions</Value>

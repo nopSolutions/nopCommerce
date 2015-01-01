@@ -29,6 +29,13 @@
                 @Html.Raw(Model.Description)
             </div>
         }
+        @*contact vendor*@
+        @if (Model.AllowCustomersToContactVendors)
+        {
+            <div class="contact-vendor">
+                <input type="button" value="@T("ContactVendor")" class="button-2 contact-vendor-button" onclick="setLocation('@Url.RouteUrl("ContactVendor", new { vendorId = Model.Id })')" />
+            </div>
+        }
         <div class="product-selectors">
             @*view mode*@
             @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)

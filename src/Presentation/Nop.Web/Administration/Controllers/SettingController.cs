@@ -250,6 +250,7 @@ namespace Nop.Admin.Controllers
             {
                 model.VendorsBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.VendorsBlockItemsToDisplay, storeScope);
                 model.ShowVendorOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope);
+                model.AllowCustomersToContactVendors_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
             }
 
             return View(model);
@@ -278,6 +279,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope);
+
+            if (model.AllowCustomersToContactVendors_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

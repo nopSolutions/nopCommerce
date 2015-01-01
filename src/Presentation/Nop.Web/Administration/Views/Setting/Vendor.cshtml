@@ -38,5 +38,15 @@
                 @Html.ValidationMessageFor(model => model.ShowVendorOnProductDetailsPage)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowCustomersToContactVendors_OverrideForStore, model => model.AllowCustomersToContactVendors, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AllowCustomersToContactVendors):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowCustomersToContactVendors)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToContactVendors)
+            </td>
+        </tr>
     </table>
 }

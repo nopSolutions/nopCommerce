@@ -21,5 +21,10 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets a value indicating whether to display vendor name on the product details page
         /// </summary>
         public bool ShowVendorOnProductDetailsPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers can contact vendors
+        /// </summary>
+        public bool AllowCustomersToContactVendors { get; set; }
     }
 }

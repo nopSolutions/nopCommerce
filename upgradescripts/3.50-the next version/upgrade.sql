@@ -26,6 +26,54 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.IsTelecommunicationsOrBroadcastingOrElectronicServices.Hint">
     <Value>Check if it''s telecommunications, broadcasting and electronic services. It''s used for tax calculation in Europe Union.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors">
+    <Value>Allow customers to contact vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors.Hint">
+    <Value>Check to allow customers to contact vendors.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ContactVendor">
+    <Value>Contact Vendor - {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor">
+    <Value>Contact vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email">
+    <Value>Your email</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Email.Required">
+    <Value>Enter email</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.EmailSubject">
+    <Value>{0}. Contact us</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry">
+    <Value>Enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry.Hint">
+    <Value>Enter your enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Enquiry.Required">
+    <Value>Enter enquiry</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName">
+    <Value>Your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName.Hint">
+    <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.FullName.Required">
+    <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.YourEnquiryHasBeenSent">
+    <Value>Your enquiry has been successfully sent to the vendor.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -118,3 +166,13 @@ BEGIN
 	VALUES (N'frooglesettings.pricesconsiderpromotions', N'false', 0)
 END
 GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowcustomerstocontactvendors')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.allowcustomerstocontactvendors', N'true', 0)
+END
+GO
+

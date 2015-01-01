@@ -449,6 +449,11 @@ namespace Nop.Web.Infrastructure
                             new { ordernoteid = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
+            //contact vendor
+            routes.MapLocalizedRoute("ContactVendor",
+                            "contactvendor/{vendorId}",
+                            new { controller = "Common", action = "ContactVendor" },
+                            new[] { "Nop.Web.Controllers" });
 
             //poll vote AJAX link
             routes.MapLocalizedRoute("PollVote",

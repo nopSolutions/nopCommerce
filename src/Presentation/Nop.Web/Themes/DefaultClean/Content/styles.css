@@ -608,6 +608,7 @@ td.fieldname{font-size:12px;}
 .vendor-list-page .vendor-list li{display:inline;}
 .vendor-list-page .vendor-list li a{text-decoration:none;margin:0 2px 0 0;}
 .category-page .category-description,.manufacturer-page .manufacturer-description,.vendor-page .vendor-description{color:#555;font-size:1.1em;}
+.vendor-page .contact-vendor{margin-bottom: 10px;}
 .sub-category-grid,.manufacturer-grid{margin-left:auto;margin-right:auto;width:auto;margin-bottom:15px;zoom:1;}
 .sub-category-grid:after,.manufacturer-grid:after{content:".";display:block;clear:both;height:0;font-size:0;line-height:0;visibility:hidden;}
 .sub-category-grid a,.manufacturer-grid a{color:#555;font-size:1.2em;font-weight:700;}

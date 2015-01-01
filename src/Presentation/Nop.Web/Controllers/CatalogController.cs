@@ -983,6 +983,7 @@ namespace Nop.Web.Controllers
                 MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
                 MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
                 SeName = vendor.GetSeName(),
+                AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
             };
 
 
@@ -1033,6 +1034,7 @@ namespace Nop.Web.Controllers
                     MetaDescription = vendor.GetLocalized(x => x.MetaDescription),
                     MetaTitle = vendor.GetLocalized(x => x.MetaTitle),
                     SeName = vendor.GetSeName(),
+                    AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
                 model.Add(vendorModel);
             }
