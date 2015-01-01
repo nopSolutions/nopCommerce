@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Order
@@ -24,6 +25,7 @@ namespace Nop.Web.Models.Order
         {
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
+            public OrderStatus OrderStatusEnum { get; set; }
             public string OrderStatus { get; set; }
             public string PaymentStatus { get; set; }
             public string ShippingStatus { get; set; }
