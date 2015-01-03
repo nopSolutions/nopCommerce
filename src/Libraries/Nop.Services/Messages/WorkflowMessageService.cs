@@ -1212,6 +1212,7 @@ namespace Nop.Services.Messages
             var tokens = new List<Token>();
             _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
             _messageTokenProvider.AddProductReviewTokens(tokens, productReview);
+            _messageTokenProvider.AddCustomerTokens(tokens, productReview.Customer);
             
             //event notification
             _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
