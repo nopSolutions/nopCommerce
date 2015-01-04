@@ -176,3 +176,12 @@ BEGIN
 END
 GO
 
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'externalauthenticationsettings.requireemailvalidation')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'externalauthenticationsettings.requireemailvalidation', N'false', 0)
+END
+GO
+

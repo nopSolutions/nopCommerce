@@ -11,7 +11,7 @@ namespace Nop.Core.Domain.Shipping
         }
 
         /// <summary>
-        /// Gets or sets an system names of active shipping rate computation methods
+        /// Gets or sets system names of active shipping rate computation methods
         /// </summary>
         public List<string> ActiveShippingRateComputationMethodSystemNames { get; set; }
 

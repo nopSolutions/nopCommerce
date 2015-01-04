@@ -124,7 +124,13 @@ namespace Nop.Services.Authentication.External
                     var randomPassword = CommonHelper.GenerateRandomDigitCode(20);
 
 
-                    bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
+                    bool isApproved =
+                        //standard registration
+                        (_customerSettings.UserRegistrationType == UserRegistrationType.Standard) ||
+                        //skip email validation?
+                        (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation &&
+                         !_externalAuthenticationSettings.RequireEmailValidation);
+
                     var registrationRequest = new CustomerRegistrationRequest(currentCustomer, details.EmailAddress,
                         _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress, randomPassword, PasswordFormat.Clear, isApproved);
                     var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
@@ -151,32 +157,31 @@ namespace Nop.Services.Authentication.External
                         if (_customerSettings.NotifyNewCustomerRegistration)
                             _workflowMessageService.SendCustomerRegisteredNotificationMessage(currentCustomer, _localizationSettings.DefaultAdminLanguageId);
 
-                        switch (_customerSettings.UserRegistrationType)
+                        if (isApproved)
                         {
-                            case UserRegistrationType.EmailValidation:
-                                {
-                                    //email validation message
-                                    _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
-                                    _workflowMessageService.SendCustomerEmailValidationMessage(currentCustomer, _workContext.WorkingLanguage.Id);
+                            //standard registration
+                            //or
+                            //skip email validation
 
-                                    //result
-                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredEmailValidation);
-                                }
-                            case UserRegistrationType.AdminApproval:
-                                {
-                                    //result
-                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredAdminApproval);
-                                }
-                            case UserRegistrationType.Standard:
-                                {
-                                    //send customer welcome message
-                                    _workflowMessageService.SendCustomerWelcomeMessage(currentCustomer, _workContext.WorkingLanguage.Id);
+                            //send customer welcome message
+                            _workflowMessageService.SendCustomerWelcomeMessage(currentCustomer, _workContext.WorkingLanguage.Id);
 
-                                    //result
-                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredStandard);
-                                }
-                            default:
-                                break;
+                            //result
+                            return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredStandard);
+                        }
+                        else if (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation)
+                        {
+                            //email validation message
+                            _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                            _workflowMessageService.SendCustomerEmailValidationMessage(currentCustomer, _workContext.WorkingLanguage.Id);
+
+                            //result
+                            return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredEmailValidation);
+                        }
+                        else if (_customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval)
+                        {
+                            //result
+                            return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredAdminApproval);
                         }
                     }
                     else

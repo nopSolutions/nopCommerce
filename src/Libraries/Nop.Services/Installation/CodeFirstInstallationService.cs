@@ -4684,6 +4684,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new ExternalAuthenticationSettings
                 {
                     AutoRegisterEnabled = true,
+                    RequireEmailValidation = false
                 });
 
             settingService.SaveSetting(new RewardPointsSettings
