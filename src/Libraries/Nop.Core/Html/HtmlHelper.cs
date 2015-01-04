@@ -105,7 +105,7 @@ namespace Nop.Core.Html
 
                 if (allowBBCode)
                 {
-                    text = BBCodeHelper.FormatText(text, true, true, true, true, true, true);
+                    text = BBCodeHelper.FormatText(text, true, true, true, true, true, true, true);
                 }
 
                 if (resolveLinks)

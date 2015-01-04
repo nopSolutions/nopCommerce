@@ -13,11 +13,12 @@ var webRoot;
 
 function edToolbar(obj) {
     document.write("<div class=\"toolbar\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/bold.gif\" name=\"btnBold\" onClick=\"doAddTags('[b]','[/b]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/italic.gif\" name=\"btnItalic\" onClick=\"doAddTags('[i]','[/i]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/underline.gif\" name=\"btnUnderline\" onClick=\"doAddTags('[u]','[/u]','" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/link.gif\" name=\"btnLink\" onClick=\"doURL('" + obj + "')\">");
-    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/code.gif\" name=\"btnCode\" onClick=\"doAddTags('[code]','[/code]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/bold.gif\" title=\"Bold\" name=\"btnBold\" onClick=\"doAddTags('[b]','[/b]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/italic.gif\" title=\"Italic\" name=\"btnItalic\" onClick=\"doAddTags('[i]','[/i]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/underline.gif\" title=\"Underline\" name=\"btnUnderline\" onClick=\"doAddTags('[u]','[/u]','" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/link.gif\" title=\"Link\" name=\"btnLink\" onClick=\"doURL('" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/picture.gif\" title=\"Picture\" name=\"btnLink\" onClick=\"doImg('" + obj + "')\">");
+    document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/code.gif\" title=\"Code\" name=\"btnCode\" onClick=\"doAddTags('[code]','[/code]','" + obj + "')\">");
     document.write("</div>");
 }
 
@@ -50,6 +51,31 @@ function doURL(obj) {
             else {
                 var rep = '[url=' + url + ']' + sel + '[/url]';
             }
+
+            textarea.value = textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
+            textarea.scrollTop = scrollTop;
+            textarea.scrollLeft = scrollLeft;
+        }
+    }
+}
+
+function doImg(obj) {
+    textarea = document.getElementById(obj);
+    var url = prompt('Enter the picture URL:', 'http://');
+    var scrollTop = textarea.scrollTop;
+    var scrollLeft = textarea.scrollLeft;
+    if (url != '' && url != null) {
+        if (document.selection) {
+            textarea.focus();
+            var sel = document.selection.createRange();
+            sel.text = '[img]' + url + '[/img]';
+        }
+        else {
+            var len = textarea.value.length;
+            var start = textarea.selectionStart;
+            var end = textarea.selectionEnd;
+
+            var rep = '[img]' + url + '[/img]';
 
             textarea.value = textarea.value.substring(0, start) + rep + textarea.value.substring(end, len);
             textarea.scrollTop = scrollTop;

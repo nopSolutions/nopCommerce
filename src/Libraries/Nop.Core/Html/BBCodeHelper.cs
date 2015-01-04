@@ -16,6 +16,8 @@ namespace Nop.Core.Html
         private static readonly Regex regexUrl1 = new Regex(@"\[url\=([^\]]+)\]([^\]]+)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexUrl2 = new Regex(@"\[url\](.+?)\[/url\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex regexQuote = new Regex(@"\[quote=(.+?)\](.+?)\[/quote\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex regexImg = new Regex(@"\[img\](.+?)\[/img\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         #endregion
 
         #region Methods
@@ -29,9 +31,10 @@ namespace Nop.Core.Html
         /// <param name="replaceUrl">A value indicating whether to replace URL</param>
         /// <param name="replaceCode">A value indicating whether to replace Code</param>
         /// <param name="replaceQuote">A value indicating whether to replace Quote</param>
+        /// <param name="replaceImg">A value indicating whether to replace Img</param>
         /// <returns>Formatted text</returns>
         public static string FormatText(string text, bool replaceBold, bool replaceItalic,
-            bool replaceUnderline, bool replaceUrl, bool replaceCode, bool replaceQuote)
+            bool replaceUnderline, bool replaceUrl, bool replaceCode, bool replaceQuote, bool replaceImg)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -79,6 +82,12 @@ namespace Nop.Core.Html
                 text = CodeFormatHelper.FormatTextSimple(text);
             }
 
+            if (replaceImg)
+            {
+                // format the img tags: [img]http://www.nopCommerce.com/Content/Images/Image.jpg[/img]
+                // becomes: <img src="Content/Images/ClosedHeader.jpg"></img>
+                text = regexImg.Replace(text, "<img src=\"$1\"></img>");
+            }
             return text;
         }
 
@@ -93,6 +102,7 @@ namespace Nop.Core.Html
             str = Regex.Replace(str, @"\[/quote\]", String.Empty, RegexOptions.Compiled | RegexOptions.IgnoreCase);
             return str;
         }
+
         #endregion
     }
 }
