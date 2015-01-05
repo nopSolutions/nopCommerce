@@ -1351,10 +1351,10 @@ namespace Nop.Web.Controllers
             var ctrlEndDate = form[endControlId];
             try
             {
-                //currenly we support only "mm/dd/yy" format
-                var formatProvider = new CultureInfo("en-US");
-                startDate = DateTime.Parse(ctrlStartDate, formatProvider);
-                endDate = DateTime.Parse(ctrlEndDate, formatProvider);
+                //currenly we support only this format (as in the \Views\Product\_RentalInfo.cshtml file)
+                const string datePickerFormat = "MM/dd/yyyy";
+                startDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                endDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
             }
             catch
             {

@@ -2209,10 +2209,10 @@ namespace Nop.Admin.Controllers
                 var ctrlEndDate = form["rental_end_date"];
                 try
                 {
-                    //currenly we support only "mm/dd/yy" format
-                    var formatProvider = new CultureInfo("en-US");
-                    rentalStartDate = DateTime.Parse(ctrlStartDate, formatProvider);
-                    rentalEndDate = DateTime.Parse(ctrlEndDate, formatProvider);
+                    //currenly we support only this format (as in the \Views\Order\_ProductAddRentalInfo.cshtml file)
+                    const string datePickerFormat = "MM/dd/yyyy";
+                    rentalStartDate = DateTime.ParseExact(ctrlStartDate, datePickerFormat, CultureInfo.InvariantCulture);
+                    rentalEndDate = DateTime.ParseExact(ctrlEndDate, datePickerFormat, CultureInfo.InvariantCulture);
                 }
                 catch
                 {
