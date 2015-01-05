@@ -1259,7 +1259,7 @@ td.fieldname{font-size:12px;}
 .forum-topic-page .post-content .post-body a{color:#B80709;text-decoration:underline;}
 .forum-topic-page .post-content .post-body .posttext{}
 .forum-topic-page .post-content .post-body .posttext .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
-.forum-topic-page .post-content .post-body .posttext .user-posted-image{max-width:700px;}
+.forum-topic-page .post-content .post-body .posttext .user-posted-image{max-width:100%;height:auto;}
 .forum-topic-page .post-content .signature{border-color:#DDD;border-style:solid;border-width:1px 0 0;font-size:90%;margin:1em 8px 8px;padding:1em 0 20px;text-align:left;font-style:italic;}
 
 
