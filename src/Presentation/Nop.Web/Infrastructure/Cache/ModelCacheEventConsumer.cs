@@ -119,6 +119,9 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<ProductTemplate>>,
         IConsumer<EntityUpdated<ProductTemplate>>,
         IConsumer<EntityDeleted<ProductTemplate>>,
+        IConsumer<EntityInserted<TopicTemplate>>,
+        IConsumer<EntityUpdated<TopicTemplate>>,
+        IConsumer<EntityDeleted<TopicTemplate>>,
         //checkout attributes
         IConsumer<EntityInserted<CheckoutAttribute>>,
         IConsumer<EntityUpdated<CheckoutAttribute>>,
@@ -375,6 +378,15 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_TEMPLATE_MODEL_KEY = "Nop.pres.producttemplate-{0}";
         public const string PRODUCT_TEMPLATE_PATTERN_KEY = "Nop.pres.producttemplate";
+
+        /// <summary>
+        /// Key for TopicTemplate caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic template id
+        /// </remarks>
+        public const string TOPIC_TEMPLATE_MODEL_KEY = "Nop.pres.topictemplate-{0}";
+        public const string TOPIC_TEMPLATE_PATTERN_KEY = "Nop.pres.topictemplate";
 
         /// <summary>
         /// Key for bestsellers identifiers displayed on the home page
@@ -1076,6 +1088,18 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityInserted<TopicTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<TopicTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<TopicTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_TEMPLATE_PATTERN_KEY);
         }
 
         //checkout attributes

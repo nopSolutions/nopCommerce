@@ -45,6 +45,11 @@ namespace Nop.Core.Domain.Topics
         public string Body { get; set; }
 
         /// <summary>
+        /// Gets or sets a value of used topic template identifier
+        /// </summary>
+        public int TopicTemplateId { get; set; }
+
+        /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
         public string MetaKeywords { get; set; }
@@ -63,6 +68,5 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores
         /// </summary>
         public bool LimitedToStores { get; set; }
-
     }
 }

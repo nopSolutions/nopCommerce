@@ -7068,6 +7068,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Title.Hint">
     <Value>The title of your topic.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate">
+    <Value>Topic template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate.Hint">
+    <Value>Choose a topic template. This template defines how this topic will be displayed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.URL">
     <Value>URL</Value>
   </LocaleResource>
@@ -10219,6 +10225,24 @@
     <Value>View path</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates.Product.ViewPath.Required">
+    <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic">
+    <Value>Topic templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath">
+    <Value>View path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Required">
     <Value>View path is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Warnings">

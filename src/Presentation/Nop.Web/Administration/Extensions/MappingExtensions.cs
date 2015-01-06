@@ -1078,6 +1078,24 @@ namespace Nop.Admin.Extensions
         {
             return model.MapTo(destination);
         }
+
+
+
+        public static TopicTemplateModel ToModel(this TopicTemplate entity)
+        {
+            return entity.MapTo<TopicTemplate, TopicTemplateModel>();
+        }
+
+        public static TopicTemplate ToEntity(this TopicTemplateModel model)
+        {
+            return model.MapTo<TopicTemplateModel, TopicTemplate>();
+        }
+
+        public static TopicTemplate ToEntity(this TopicTemplateModel model, TopicTemplate destination)
+        {
+            return model.MapTo(destination);
+        }
+
         #endregion
 
     }

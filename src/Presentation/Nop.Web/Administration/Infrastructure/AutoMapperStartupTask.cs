@@ -167,6 +167,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
             //topcis
             Mapper.CreateMap<Topic, TopicModel>()
+                .ForMember(dest => dest.AvailableTopicTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Url, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
@@ -864,6 +865,10 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ProductTemplate, ProductTemplateModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ProductTemplateModel, ProductTemplate>();
+            //topic template
+            Mapper.CreateMap<TopicTemplate, TopicTemplateModel>()
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<TopicTemplateModel, TopicTemplate>();
         }
         
         public int Order

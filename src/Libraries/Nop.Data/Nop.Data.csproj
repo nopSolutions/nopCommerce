@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Mapping\Common\AddressAttributeMap.cs" />
     <Compile Include="Mapping\Common\AddressAttributeValueMap.cs" />
+    <Compile Include="Mapping\Topics\TopicTemplateMap.cs" />
     <Compile Include="QueryableExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="DataReaderExtensions.cs" />

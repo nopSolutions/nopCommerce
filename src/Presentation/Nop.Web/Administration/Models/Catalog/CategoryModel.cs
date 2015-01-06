@@ -35,7 +35,6 @@ namespace Nop.Admin.Models.Catalog
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Categories.Fields.CategoryTemplate")]
-        [AllowHtml]
         public int CategoryTemplateId { get; set; }
         public IList<SelectListItem> AvailableCategoryTemplates { get; set; }
 

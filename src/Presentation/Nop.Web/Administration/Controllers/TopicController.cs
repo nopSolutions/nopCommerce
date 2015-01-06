@@ -26,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
+        private readonly ITopicTemplateService _topicTemplateService;
 
         #endregion Fields
 
@@ -38,7 +39,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, 
             IStoreService storeService,
             IStoreMappingService storeMappingService,
-            IUrlRecordService urlRecordService)
+            IUrlRecordService urlRecordService,
+            ITopicTemplateService topicTemplateService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
@@ -48,11 +50,29 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
             this._urlRecordService = urlRecordService;
+            this._topicTemplateService = topicTemplateService;
         }
 
         #endregion
         
         #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareTemplatesModel(TopicModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var templates = _topicTemplateService.GetAllTopicTemplates();
+            foreach (var template in templates)
+            {
+                model.AvailableTopicTemplates.Add(new SelectListItem
+                {
+                    Text = template.Name,
+                    Value = template.Id.ToString()
+                });
+            }
+        }
 
         [NonAction]
         protected virtual void UpdateLocales(Topic topic, TopicModel model)
@@ -191,6 +211,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new TopicModel();
+            //templates
+            PrepareTemplatesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //locales
@@ -227,6 +249,8 @@ namespace Nop.Admin.Controllers
 
             //If we got this far, something failed, redisplay form
 
+            //templates
+            PrepareTemplatesModel(model);
             //Stores
             PrepareStoresMappingModel(model, null, true);
             return View(model);
@@ -244,6 +268,8 @@ namespace Nop.Admin.Controllers
 
             var model = topic.ToModel();
             model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
+            //templates
+            PrepareTemplatesModel(model);
             //Store
             PrepareStoresMappingModel(model, topic, false);
             //locales
@@ -304,7 +330,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
-
+            //templates
+            PrepareTemplatesModel(model);
             //Store
             PrepareStoresMappingModel(model, topic, true);
             return View(model);

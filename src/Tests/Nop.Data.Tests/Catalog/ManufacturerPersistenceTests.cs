@@ -15,6 +15,7 @@ namespace Nop.Data.Tests.Catalog
             {
                 Name = "Name",
                 Description = "Description 1",
+                ManufacturerTemplateId = 1,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
                 MetaTitle = "Meta title",
@@ -36,6 +37,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name");
             fromDb.Description.ShouldEqual("Description 1");
+            fromDb.ManufacturerTemplateId.ShouldEqual(1);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.PictureId.ShouldEqual(3);

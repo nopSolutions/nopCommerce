@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Topics
     {
         public TopicModel()
         {
+            AvailableTopicTemplates = new List<SelectListItem>();
             Locales = new List<TopicLocalizedModel>();
             AvailableStores = new List<StoreModel>();
         }
@@ -53,6 +54,10 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Body")]
         [AllowHtml]
         public string Body { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.TopicTemplate")]
+        public int TopicTemplateId { get; set; }
+        public IList<SelectListItem> AvailableTopicTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.MetaKeywords")]
         [AllowHtml]

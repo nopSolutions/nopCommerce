@@ -78,6 +78,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
+        private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
@@ -120,6 +121,7 @@ namespace Nop.Services.Installation
             IRepository<ProductTemplate> productTemplateRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
+            IRepository<TopicTemplate> topicTemplateRepository,
             IRepository<ScheduleTask> scheduleTaskRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
@@ -158,6 +160,7 @@ namespace Nop.Services.Installation
             this._productTemplateRepository = productTemplateRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
+            this._topicTemplateRepository = topicTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
@@ -4320,6 +4323,12 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallTopics()
         {
+            var defaultTopicTemplate =
+                _topicTemplateRepository.Table.FirstOrDefault(tt => tt.Name == "Default template");
+            if (defaultTopicTemplate == null)
+                throw new Exception("Topic template cannot be loaded");
+
+
             var topics = new List<Topic>
                                {
                                    new Topic
@@ -4328,7 +4337,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "About Us",
-                                           Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4336,7 +4346,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "",
-                                           Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>"
+                                           Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4344,7 +4355,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "Conditions of use",
-                                           Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4352,7 +4364,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "",
-                                           Body = "<p>Put your contact information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4360,7 +4373,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "Forums",
-                                           Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4368,7 +4382,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "Welcome to our store",
-                                           Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>"
+                                           Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4376,7 +4391,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "About login / registration",
-                                           Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4384,7 +4400,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "Privacy policy",
-                                           Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4392,7 +4409,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "",
-                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>"
+                                           Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                    new Topic
                                        {
@@ -4400,7 +4418,8 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            Title = "Shipping & Returns",
-                                           Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>"
+                                           Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                };
             topics.ForEach(t => _topicRepository.Insert(t));
@@ -9793,6 +9812,20 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallTopicTemplates()
+        {
+            var topicTemplates = new List<TopicTemplate>
+                               {
+                                   new TopicTemplate
+                                       {
+                                           Name = "Default template",
+                                           ViewPath = "TopicDetails",
+                                           DisplayOrder = 1
+                                       },
+                               };
+            topicTemplates.ForEach(tt => _topicTemplateRepository.Insert(tt));
+        }
+
         protected virtual void InstallScheduleTasks()
         {
             var tasks = new List<ScheduleTask>
@@ -9884,6 +9917,7 @@ namespace Nop.Services.Installation
             InstallEmailAccounts();
             InstallMessageTemplates();
             InstallSettings();
+            InstallTopicTemplates();
             InstallTopics();
             InstallLocaleResources();
             InstallActivityLogTypes();

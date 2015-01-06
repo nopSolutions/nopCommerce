@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -23,6 +24,7 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ICacheManager _cacheManager;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly ITopicTemplateService _topicTemplateService;
 
         #endregion
 
@@ -33,7 +35,8 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, 
             IStoreContext storeContext,
             ICacheManager cacheManager,
-            IStoreMappingService storeMappingService)
+            IStoreMappingService storeMappingService,
+            ITopicTemplateService topicTemplateService)
         {
             this._topicService = topicService;
             this._workContext = workContext;
@@ -41,6 +44,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._cacheManager = cacheManager;
             this._storeMappingService = storeMappingService;
+            this._topicTemplateService = topicTemplateService;
         }
 
         #endregion
@@ -65,6 +69,7 @@ namespace Nop.Web.Controllers
                 MetaDescription = topic.GetLocalized(x => x.MetaDescription),
                 MetaTitle = topic.GetLocalized(x => x.MetaTitle),
                 SeName = topic.GetSeName(),
+                TopicTemplateId = topic.TopicTemplateId
             };
             return model;
         }
@@ -91,7 +96,20 @@ namespace Nop.Web.Controllers
 
             if (cacheModel == null)
                 return RedirectToRoute("HomePage");
-            return View("TopicDetails", cacheModel);
+
+            //template
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, cacheModel.TopicTemplateId);
+            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            {
+                var template = _topicTemplateService.GetTopicTemplateById(cacheModel.TopicTemplateId);
+                if (template == null)
+                    template = _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
+                if (template == null)
+                    throw new Exception("No default template could be loaded");
+                return template.ViewPath;
+            });
+
+            return View(templateViewPath, cacheModel);
         }
 
         public ActionResult TopicDetailsPopup(string systemName)
@@ -109,8 +127,20 @@ namespace Nop.Web.Controllers
             if (cacheModel == null)
                 return RedirectToRoute("HomePage");
 
+            //template
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TEMPLATE_MODEL_KEY, cacheModel.TopicTemplateId);
+            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            {
+                var template = _topicTemplateService.GetTopicTemplateById(cacheModel.TopicTemplateId);
+                if (template == null)
+                    template = _topicTemplateService.GetAllTopicTemplates().FirstOrDefault();
+                if (template == null)
+                    throw new Exception("No default template could be loaded");
+                return template.ViewPath;
+            });
+
             ViewBag.IsPopup = true;
-            return View("TopicDetails", cacheModel);
+            return View(templateViewPath, cacheModel);
         }
 
         [ChildActionOnly]

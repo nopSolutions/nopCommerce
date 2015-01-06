@@ -29,8 +29,8 @@ namespace Nop.Services.Catalog
         public CategoryTemplateService(IRepository<CategoryTemplate> categoryTemplateRepository, 
             IEventPublisher eventPublisher)
         {
-            _categoryTemplateRepository = categoryTemplateRepository;
-            _eventPublisher = eventPublisher;
+            this._categoryTemplateRepository = categoryTemplateRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion

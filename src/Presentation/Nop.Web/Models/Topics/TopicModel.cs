@@ -21,5 +21,7 @@ namespace Nop.Web.Models.Topics
         public string MetaTitle { get; set; }
 
         public string SeName { get; set; }
+
+        public int TopicTemplateId { get; set; }
     }
 }

@@ -220,6 +220,7 @@
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
+    <Compile Include="Models\Templates\TopicTemplateModel.cs" />
     <Compile Include="Models\Templates\ManufacturerTemplateModel.cs" />
     <Compile Include="Models\Templates\ProductTemplateModel.cs" />
     <Compile Include="Models\Templates\CategoryTemplateModel.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Validators\Common\AddressAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
+    <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
     <Compile Include="Validators\Templates\CategoryTemplateValidator.cs" />
@@ -1248,6 +1250,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Plugin\OfficialFeed.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Template\TopicTemplates.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

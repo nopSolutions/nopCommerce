@@ -33,7 +33,6 @@ namespace Nop.Admin.Models.Catalog
         public string Description { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate")]
-        [AllowHtml]
         public int ManufacturerTemplateId { get; set; }
         public IList<SelectListItem> AvailableManufacturerTemplates { get; set; }
 

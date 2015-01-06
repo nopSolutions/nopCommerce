@@ -124,6 +124,15 @@
                 </td>
             </tr>
         }
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TopicTemplateId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
+                @Html.ValidationMessageFor(model => model.TopicTemplateId)
+            </td>
+        </tr>
     </table>
     @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
                 @<table class="adminContent">

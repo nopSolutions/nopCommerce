@@ -74,6 +74,30 @@ set @resources='
   <LocaleResource Name="ContactVendor.YourEnquiryHasBeenSent">
     <Value>Your enquiry has been successfully sent to the vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic">
+    <Value>Topic templates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath">
+    <Value>View path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Templates.Topic.ViewPath.Required">
+    <Value>View path is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate">
+    <Value>Topic template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate.Hint">
+    <Value>Choose a topic template. This template defines how this topic will be displayed.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -185,3 +209,49 @@ BEGIN
 END
 GO
 
+
+
+
+--Topic templates
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TopicTemplate]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[TopicTemplate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](400) NOT NULL,
+	[ViewPath] [nvarchar](400) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[TopicTemplate]
+		WHERE [Name] = N'Default template')
+BEGIN
+	INSERT [dbo].[TopicTemplate] ([Name], [ViewPath], [DisplayOrder])
+	VALUES (N'Default template', N'TopicDetails', 1)
+END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='TopicTemplateId')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [TopicTemplateId] int NULL
+END
+GO
+
+UPDATE [Topic]
+SET [TopicTemplateId] = 1
+WHERE [TopicTemplateId] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [TopicTemplateId] int NOT NULL
+GO
