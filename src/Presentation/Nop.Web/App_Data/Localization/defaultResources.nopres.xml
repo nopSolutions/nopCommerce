@@ -865,7 +865,7 @@
 	<Value>Required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired.Hint">
-	<Value>When an attribute is required, the address must choose an appropriate attribute value before they can continue.</Value>
+	<Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.AttributeControlType">
 	<Value>Control type</Value>

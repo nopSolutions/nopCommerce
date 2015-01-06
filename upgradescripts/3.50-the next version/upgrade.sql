@@ -98,6 +98,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.TopicTemplate.Hint">
     <Value>Choose a topic template. This template defines how this topic will be displayed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired.Hint">
+	<Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+  </LocaleResource>
 </Language>
 '
 
