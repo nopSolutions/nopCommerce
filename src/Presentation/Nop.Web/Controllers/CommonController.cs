@@ -845,7 +845,7 @@ namespace Nop.Web.Controllers
                                                    "/rewardpoints/history",
                                                    "/sendpm",
                                                    "/sentupdate",
-                                                   "/shoppingcart/productdetails_attributechange",
+                                                   "/shoppingcart/*",
                                                    "/subscribenewsletter",
                                                    "/topic/authenticate",
                                                    "/viewpm",
