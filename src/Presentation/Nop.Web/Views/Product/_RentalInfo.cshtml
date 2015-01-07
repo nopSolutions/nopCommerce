@@ -1,6 +1,9 @@
 ﻿@model ProductDetailsModel
 @using System.Globalization
-@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Services.Security
+@using Nop.Web.Models.Catalog
 @if (Model.IsRental)
 {
     <div class="attributes rental-attributes">
@@ -23,7 +26,7 @@
                     <input id="@(startDateControlId)" name="@(startDateControlId)" type="text" class="datepicker" value="@(Model.RentalStartDate.HasValue ? Model.RentalStartDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
                     <script>
                         $(document).ready(function () {
-                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            $("#@(startDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
                         });
                     </script>
                 </dd>
@@ -37,11 +40,51 @@
                     <input id="@(endDateControlId)" name="@(endDateControlId)" type="text" class="datepicker" value="@(Model.RentalEndDate.HasValue ? Model.RentalEndDate.Value.ToString(datePickerFormat2, CultureInfo.InvariantCulture) : null)" />
                     <script>
                         $(document).ready(function () {
-                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat" });
+                            $("#@(endDateControlId)").datepicker({ dateFormat: "@datePickerFormat", onSelect: onRentalDatePickerSelect });
                         });
                     </script>
                 </dd>
             }
         </dl>
+        <script>
+            function onRentalDatePickerSelect() {
+                @{
+                    //dynamic price update support
+                    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
+                    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+                    var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
+                    var productId = Model.Id;
+                    var priceVarClass = string.Format("price-value-{0}", productId);
+                    //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
+                    
+                    if (dynamicPriceUpdate && dynamicPriceUpdateAjax && !hidePrices)
+                    {
+                        <text>
+                        $.ajax({
+                            cache: false,
+                            url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
+                            data: $('#product-details-form').serialize(),
+                            type: 'post',
+                            success: function(data) {
+                                if (data.sku) {
+                                    $('#sku-@productId').text(data.sku);
+                                }
+                                if (data.mpn) {
+                                    $('#mpn-@productId').text(data.mpn);
+                                }
+                                if (data.gtin) {
+                                    $('#gtin-@productId').text(data.gtin);
+                                }
+                                if (data.price) {
+                                    $(".@(priceVarClass)").text(data.price);
+                                }
+                            }
+                        });
+                        
+                        </text>
+                    }
+                }
+            }
+        </script>
     </div>
 }

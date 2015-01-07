@@ -1785,7 +1785,13 @@ namespace Nop.Web.Controllers
 
             string attributeXml = ParseProductAttributes(product, form);
 
-            //we ignore rental start/end date here
+            //rental attributes
+            DateTime? rentalStartDate = null;
+            DateTime? rentalEndDate = null;
+            if (product.IsRental)
+            {
+                ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
+            }
 
             string sku = product.FormatSku(attributeXml, _productAttributeParser);
             string mpn = product.FormatMpn(attributeXml, _productAttributeParser);
@@ -1802,7 +1808,8 @@ namespace Nop.Web.Controllers
                     _workContext.CurrentCustomer,
                     ShoppingCartType.ShoppingCart,
                     1, attributeXml, 0,
-                    null, null, true, out discountAmount, out scDiscount);
+                    rentalStartDate, rentalEndDate,
+                    true, out discountAmount, out scDiscount);
                 decimal taxRate;
                 decimal finalPriceWithDiscountBase = _taxService.GetProductPrice(product, finalPrice, out taxRate);
                 decimal finalPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceWithDiscountBase, _workContext.WorkingCurrency);
