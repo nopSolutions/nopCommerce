@@ -419,7 +419,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", manufacturer.Id);
+                    return RedirectToAction("Edit",  new {id = manufacturer.Id});
                 }
                 return RedirectToAction("List");
             }

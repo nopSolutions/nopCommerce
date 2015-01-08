@@ -212,7 +212,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", giftCard.Id);
+                    return RedirectToAction("Edit",  new {id = giftCard.Id});
                 }
                 return RedirectToAction("List");
             }

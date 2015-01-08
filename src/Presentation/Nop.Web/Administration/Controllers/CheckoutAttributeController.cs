@@ -302,7 +302,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", checkoutAttribute.Id);
+                    return RedirectToAction("Edit", new {id = checkoutAttribute.Id});
                 }
                 return RedirectToAction("List");
             }

@@ -196,7 +196,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", addressAttribute.Id);
+                    return RedirectToAction("Edit", new {id = addressAttribute.Id});
                 }
                 return RedirectToAction("List");
             }

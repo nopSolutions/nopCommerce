@@ -176,7 +176,7 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditReturnRequest", _localizationService.GetResource("ActivityLog.EditReturnRequest"), returnRequest.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Updated"));
-                return continueEditing ? RedirectToAction("Edit", returnRequest.Id) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new { id = returnRequest.Id}) : RedirectToAction("List");
             }
 
 
@@ -202,7 +202,7 @@ namespace Nop.Admin.Controllers
             int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, orderItem, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
                 SuccessNotification(_localizationService.GetResource("Admin.ReturnRequests.Notified"));
-            return RedirectToAction("Edit", returnRequest.Id);
+            return RedirectToAction("Edit",  new {id = returnRequest.Id});
         }
 
         //delete

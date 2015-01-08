@@ -155,7 +155,7 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateProductReviewTotals(productReview.Product);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.ProductReviews.Updated"));
-                return continueEditing ? RedirectToAction("Edit", productReview.Id) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new { id = productReview.Id}) : RedirectToAction("List");
             }
 
 

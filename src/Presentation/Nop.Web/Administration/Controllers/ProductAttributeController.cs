@@ -175,7 +175,7 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditProductAttribute", _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
-                return continueEditing ? RedirectToAction("Edit", productAttribute.Id) : RedirectToAction("List");
+                return continueEditing ? RedirectToAction("Edit", new { id = productAttribute.Id}) : RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

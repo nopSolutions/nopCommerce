@@ -265,7 +265,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", messageTemplate.Id);
+                    return RedirectToAction("Edit",  new {id = messageTemplate.Id});
                 }
                 return RedirectToAction("List");
             }

@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
                     _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
 
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
-                    return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
+                    return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id}) : RedirectToAction("List");
                 }
 
                 //If we got this far, something failed, redisplay form

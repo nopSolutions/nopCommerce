@@ -1067,7 +1067,7 @@ namespace Nop.Admin.Controllers
                         //selected tab
                         SaveSelectedTabIndex();
 
-                        return RedirectToAction("Edit", customer.Id);
+                        return RedirectToAction("Edit",  new {id = customer.Id});
                     }
                     return RedirectToAction("List");
                 }
@@ -1107,7 +1107,7 @@ namespace Nop.Admin.Controllers
                         ErrorNotification(error);
             }
 
-            return RedirectToAction("Edit", customer.Id);
+            return RedirectToAction("Edit",  new {id = customer.Id});
         }
         
         [HttpPost, ActionName("Edit")]
@@ -1126,7 +1126,7 @@ namespace Nop.Admin.Controllers
                 SystemCustomerAttributeNames.VatNumberStatusId,
                 (int)VatNumberStatus.Valid);
 
-            return RedirectToAction("Edit", customer.Id);
+            return RedirectToAction("Edit",  new {id = customer.Id});
         }
 
         [HttpPost, ActionName("Edit")]
@@ -1145,7 +1145,7 @@ namespace Nop.Admin.Controllers
                 SystemCustomerAttributeNames.VatNumberStatusId,
                 (int)VatNumberStatus.Invalid);
             
-            return RedirectToAction("Edit", customer.Id);
+            return RedirectToAction("Edit",  new {id = customer.Id});
         }
 
         [HttpPost]

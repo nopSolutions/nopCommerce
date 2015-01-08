@@ -191,7 +191,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", specificationAttribute.Id);
+                    return RedirectToAction("Edit",  new {id = specificationAttribute.Id});
                 }
                 return RedirectToAction("List");
             }

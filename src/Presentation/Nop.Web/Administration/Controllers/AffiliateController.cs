@@ -249,7 +249,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", affiliate.Id);
+                    return RedirectToAction("Edit", new {id = affiliate.Id});
                 }
                 return RedirectToAction("List");
             }
