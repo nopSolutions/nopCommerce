@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkflowMessageService _workflowMessageService;
         private readonly EmailAccountSettings _emailAccountSettings;
 
         #endregion Fields
@@ -34,11 +36,15 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public MessageTemplateController(IMessageTemplateService messageTemplateService, 
-            IEmailAccountService emailAccountService, ILanguageService languageService, 
+            IEmailAccountService emailAccountService,
+            ILanguageService languageService, 
             ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, IMessageTokenProvider messageTokenProvider, 
-            IPermissionService permissionService, IStoreService storeService,
+            ILocalizationService localizationService, 
+            IMessageTokenProvider messageTokenProvider, 
+            IPermissionService permissionService,
+            IStoreService storeService,
             IStoreMappingService storeMappingService,
+            IWorkflowMessageService workflowMessageService,
             EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
@@ -50,8 +56,13 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._storeService = storeService;
             this._storeMappingService = storeMappingService;
+            this._workflowMessageService = workflowMessageService;
             this._emailAccountSettings = emailAccountSettings;
         }
+
+        #endregion
+        
+        #region Utilities
 
         private string FormatTokens(string[] tokens)
         {
@@ -66,10 +77,6 @@ namespace Nop.Admin.Controllers
 
             return sb.ToString();
         }
-
-        #endregion
-        
-        #region Utilities
 
         [NonAction]
         protected virtual void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
@@ -315,6 +322,60 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc.Message);
                 return RedirectToAction("Edit", new { id = model.Id });
             }
+        }
+
+        public ActionResult TestTemplate(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
+            if (messageTemplate == null)
+                //No message template found with the specified id
+                return RedirectToAction("List");
+
+            var model = new TestMessageTemplateModel
+            {
+                Id = messageTemplate.Id
+            };
+            var tokens = _messageTokenProvider.GetListOfAllowedTokens().Distinct().ToList();
+            //filter them to the current template
+            tokens = tokens.Where(x => messageTemplate.Body.Contains(x)).ToList();
+            model.Tokens = tokens;
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("TestTemplate")]
+        [FormValueRequired("send-test")]
+        [ValidateInput(false)]
+        public ActionResult TestTemplate(TestMessageTemplateModel model, FormCollection form)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
+                return AccessDeniedView();
+
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
+            if (messageTemplate == null)
+                //No message template found with the specified id
+                return RedirectToAction("List");
+
+            var tokens = new List<Token>();
+            foreach (var formKey in form.AllKeys)
+                if (formKey.StartsWith("token_", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var tokenKey = formKey.Substring("token_".Length).Replace("%", "");
+                    var tokenValue = form[formKey];
+                    tokens.Add(new Token(tokenKey, tokenValue));
+                }
+
+            _workflowMessageService.SendTestEmail(messageTemplate.Id, model.SendTo, tokens, 0);
+
+            if (ModelState.IsValid)
+            {
+                SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.MessageTemplates.Test.Success"));
+            }
+
+            return RedirectToAction("Edit", new {id = messageTemplate.Id});
         }
 
         #endregion

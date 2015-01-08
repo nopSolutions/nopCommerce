@@ -14,6 +14,7 @@
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
             <input type="submit" name="message-template-copy" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Copy")"  onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+            <input type="button" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
             <span id="message-template-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>

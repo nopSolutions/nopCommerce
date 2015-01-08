@@ -1450,6 +1450,32 @@ namespace Nop.Services.Messages
                 toEmail, toName);
         }
 
+        /// <summary>
+        /// Sends a test email
+        /// </summary>
+        /// <param name="messageTemplateId">Message template identifier</param>
+        /// <param name="sendToEmail">Send to email</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendTestEmail(int messageTemplateId, string sendToEmail, 
+            List<Token> tokens, int languageId)
+        {
+            var messageTemplate = _messageTemplateService.GetMessageTemplateById(messageTemplateId);
+            if (messageTemplate == null)
+                throw new ArgumentException("Template cannot be loaded");
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                sendToEmail, null);
+        }
+
         #endregion
 
         #endregion

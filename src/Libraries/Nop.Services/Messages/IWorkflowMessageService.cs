@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Blogs;
+﻿using System.Collections.Generic;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
@@ -332,6 +333,17 @@ namespace Nop.Services.Messages
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendBackInStockNotification(BackInStockSubscription subscription, int languageId);
+
+        /// <summary>
+        /// Sends a test email
+        /// </summary>
+        /// <param name="messageTemplateId">Message template identifier</param>
+        /// <param name="sendToEmail">Send to email</param>
+        /// <param name="tokens">Tokens</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendTestEmail(int messageTemplateId, string sendToEmail,
+            List<Token> tokens, int languageId);
 
         #endregion
     }

@@ -101,6 +101,36 @@ set @resources='
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired.Hint">
 	<Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
+	<Value>Test template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.BackToTemplate">
+	<Value>back to template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Send">
+	<Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo">
+	<Value>Send email to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo.Hint">
+	<Value>Send test email to ensure that everything is properly configured.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Success">
+	<Value>Email has been successfully queued.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens">
+	<Value>Tokens</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Description">
+	<Value>Please enter tokens you want to be replaced below</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Hint">
+	<Value>Enter tokens.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
+	<Value>Send test email</Value>
+  </LocaleResource>
 </Language>
 '
 
