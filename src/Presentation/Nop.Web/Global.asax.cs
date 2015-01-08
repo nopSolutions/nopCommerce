@@ -18,6 +18,7 @@ using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using StackExchange.Profiling;
+using StackExchange.Profiling.Mvc;
 
 namespace Nop.Web
 {
@@ -70,6 +71,15 @@ namespace Nop.Web
             {
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
+            }
+
+            //miniprofiler
+            if (databaseInstalled)
+            {
+                if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+                {
+                    GlobalFilters.Filters.Add(new ProfilingActionFilter());
+                }
             }
 
             //log application start
