@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Catalog;
+﻿using System;
+using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Tests;
 using NUnit.Framework;
@@ -59,7 +60,6 @@ namespace Nop.Services.Tests.Catalog
             var result = product.GetTotalStockQuantity(true);
             result.ShouldEqual(6);
         }
-
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_reserved()
         {
@@ -90,7 +90,6 @@ namespace Nop.Services.Tests.Catalog
             var result = product.GetTotalStockQuantity(true);
             result.ShouldEqual(8);
         }
-
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_without_reserved()
         {
@@ -121,7 +120,6 @@ namespace Nop.Services.Tests.Catalog
             var result = product.GetTotalStockQuantity(false);
             result.ShouldEqual(13);
         }
-
         [Test]
         public void Can_calculate_total_quantity_when_we_do_use_multiple_warehouses_with_warehouse_specified()
         {
@@ -151,6 +149,153 @@ namespace Nop.Services.Tests.Catalog
 
             var result = product.GetTotalStockQuantity(true, 1);
             result.ShouldEqual(3);
+        }
+
+        [Test]
+        public void Can_calculate_rental_periods_for_days()
+        {
+            var product = new Product
+            {
+                IsRental = true,
+                RentalPricePeriod = RentalPricePeriod.Days
+            };
+
+            //rental period length = 1 day
+            product.RentalPriceLength = 1;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //1 day
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 6)).ShouldEqual(1);
+            //2 days
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 7)).ShouldEqual(2);
+            //3 days
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 8)).ShouldEqual(3);
+
+            //rental period length = 2 days
+            product.RentalPriceLength = 2;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //1 day
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 6)).ShouldEqual(1);
+            //2 days
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 7)).ShouldEqual(1);
+            //3 days
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 8)).ShouldEqual(2);
+
+        }
+        [Test]
+        public void Can_calculate_rental_periods_for_weeks()
+        {
+            var product = new Product
+            {
+                IsRental = true,
+                RentalPricePeriod = RentalPricePeriod.Weeks
+            };
+
+            //rental period length = 1 week
+            product.RentalPriceLength = 1;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a week
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 3)).ShouldEqual(1);
+            //1 week
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 12)).ShouldEqual(1);
+            //several days but less than two weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 13)).ShouldEqual(2);
+            //2 weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 19)).ShouldEqual(2);
+            //3 weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 26)).ShouldEqual(3);
+
+            //rental period length = 2 weeks
+            product.RentalPriceLength = 2;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a week
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 3)).ShouldEqual(1);
+            //1 week
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 12)).ShouldEqual(1);
+            //several days but less than two weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 13)).ShouldEqual(1);
+            //2 weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 19)).ShouldEqual(1);
+            //3 weeks
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 26)).ShouldEqual(2);
+
+        }
+        [Test]
+        public void Can_calculate_rental_periods_for_months()
+        {
+            //this unit test won't work because currently we hard-code a month to 30 days in "GetRentalPeriods" method
+            //It's wrong
+
+            /*
+            var product = new Product
+            {
+                IsRental = true,
+                RentalPricePeriod = RentalPricePeriod.Months
+            };
+
+            //rental period length = 1 month
+            product.RentalPriceLength = 1;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a month
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 4)).ShouldEqual(1);
+            //1 month
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 5)).ShouldEqual(1);
+            //several days but less than two months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 13)).ShouldEqual(2);
+            //2 months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 5)).ShouldEqual(2);
+            //3 months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 8)).ShouldEqual(3);
+
+            //rental period length = 2 months
+            product.RentalPriceLength = 2;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a month
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 4)).ShouldEqual(1);
+            //1 month
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 5)).ShouldEqual(1);
+            //several days but less than two months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 13)).ShouldEqual(1);
+            //2 months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 5)).ShouldEqual(1);
+            //3 months
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 8)).ShouldEqual(2);
+            */
+        }
+        [Test]
+        public void Can_calculate_rental_periods_for_years()
+        {
+            var product = new Product
+            {
+                IsRental = true,
+                RentalPricePeriod = RentalPricePeriod.Years
+            };
+
+            //rental period length = 1 years
+            product.RentalPriceLength = 1;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a year
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2015, 1, 1)).ShouldEqual(1);
+            //more than one year
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2015, 3, 7)).ShouldEqual(2);
+
+            //rental period length = 2 years
+            product.RentalPriceLength = 2;
+            //the same date
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 5)).ShouldEqual(1);
+            //several days but less than a year
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2015, 1, 1)).ShouldEqual(1);
+            //more than one year
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2015, 3, 7)).ShouldEqual(1);
+            //more than two year
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2016, 3, 7)).ShouldEqual(2);
+
         }
     }
 }
