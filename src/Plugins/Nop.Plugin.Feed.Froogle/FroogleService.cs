@@ -324,7 +324,7 @@ namespace Nop.Plugin.Feed.Froogle
                         //condition [condition] - Condition or state of the item
                         writer.WriteElementString("g", "condition", googleBaseNamespace, "new");
 
-                        writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(28).ToString("yyyy-MM-dd"));
+                        writer.WriteElementString("g", "expiration_date", googleBaseNamespace, DateTime.Now.AddDays(_froogleSettings.ExpirationNumberOfDays).ToString("yyyy-MM-dd"));
 
                         #endregion
 
@@ -508,6 +508,7 @@ namespace Nop.Plugin.Feed.Froogle
                 ProductPictureSize = 125,
                 PassShippingInfo = false,
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
+                ExpirationNumberOfDays = 28
             };
             _settingService.SaveSetting(settings);
             

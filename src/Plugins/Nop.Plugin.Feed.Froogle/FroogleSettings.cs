@@ -37,5 +37,10 @@ namespace Nop.Plugin.Feed.Froogle
         /// Static Froogle file name
         /// </summary>
         public string StaticFileName { get; set; }
+
+        /// <summary>
+        /// Number of days for expiration date
+        /// </summary>
+        public int ExpirationNumberOfDays { get; set; }
     }
 }
