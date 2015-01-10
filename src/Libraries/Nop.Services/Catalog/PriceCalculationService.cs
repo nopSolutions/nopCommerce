@@ -162,51 +162,6 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get number of rental periods (price ratio)
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="startDate">Start date</param>
-        /// <param name="endDate">End date</param>
-        /// <returns>Number of rental periods</returns>
-        protected virtual int GetRentalPeriods(Product product, DateTime startDate, DateTime endDate)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-
-            if (!product.IsRental)
-                return 1;
-
-            if (startDate.CompareTo(endDate) > 0)
-                return 1;
-
-            var totalDaysToRent = (endDate - startDate).TotalDays;
-            if (totalDaysToRent <= 0)
-                totalDaysToRent = 1;
-
-            int configuredPeriodDays;
-            switch (product.RentalPricePeriod)
-            {
-                case RentalPricePeriod.Days:
-                    configuredPeriodDays = 1 * product.RentalPriceLength;
-                    break;
-                case RentalPricePeriod.Weeks:
-                    configuredPeriodDays = 7 * product.RentalPriceLength;
-                    break;
-                case RentalPricePeriod.Months:
-                    configuredPeriodDays = 30 * product.RentalPriceLength;
-                    break;
-                case RentalPricePeriod.Years:
-                    configuredPeriodDays = 365 * product.RentalPriceLength;
-                    break;
-                default:
-                    throw new NopException("Not supported rental period");
-            }
-
-            var totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent/configuredPeriodDays));
-            return totalPeriods;
-        }
-
-        /// <summary>
         /// Gets discount amount
         /// </summary>
         /// <param name="product">Product</param>
@@ -366,7 +321,7 @@ namespace Nop.Services.Catalog
                 //rental products
                 if (product.IsRental)
                     if (rentalStartDate.HasValue && rentalEndDate.HasValue)
-                        price = price*GetRentalPeriods(product, rentalStartDate.Value, rentalEndDate.Value);
+                        price = price * product.GetRentalPeriods(rentalStartDate.Value, rentalEndDate.Value);
 
                 if (includeDiscounts)
                 {
