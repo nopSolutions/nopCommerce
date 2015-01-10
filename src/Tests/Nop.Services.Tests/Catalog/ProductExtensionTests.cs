@@ -226,10 +226,6 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_calculate_rental_periods_for_months()
         {
-            //this unit test won't work because currently we hard-code a month to 30 days in "GetRentalPeriods" method
-            //It's wrong
-
-            /*
             var product = new Product
             {
                 IsRental = true,
@@ -244,12 +240,27 @@ namespace Nop.Services.Tests.Catalog
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 3, 4)).ShouldEqual(1);
             //1 month
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 5)).ShouldEqual(1);
+            //1 month and 1 day
+            product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 6)).ShouldEqual(2);
             //several days but less than two months
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 4, 13)).ShouldEqual(2);
             //2 months
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 5)).ShouldEqual(2);
             //3 months
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 8)).ShouldEqual(3);
+            //several more unit tests
+            product.GetRentalPeriods(new DateTime(1900, 1, 1), new DateTime(1900, 1, 1)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 1, 1), new DateTime(1900, 1, 2)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 1, 2), new DateTime(1900, 1, 1)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 1, 1), new DateTime(1900, 2, 1)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 2, 1), new DateTime(1900, 1, 1)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 1, 31), new DateTime(1900, 2, 1)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 8, 31), new DateTime(1900, 9, 30)).ShouldEqual(1);
+            product.GetRentalPeriods(new DateTime(1900, 8, 31), new DateTime(1900, 10, 1)).ShouldEqual(2);
+            product.GetRentalPeriods(new DateTime(1900, 1, 1), new DateTime(1901, 1, 1)).ShouldEqual(12);
+            product.GetRentalPeriods(new DateTime(1900, 1, 1), new DateTime(1911, 1, 1)).ShouldEqual(132);
+            product.GetRentalPeriods(new DateTime(1900, 8, 31), new DateTime(1901, 8, 30)).ShouldEqual(12);
+
 
             //rental period length = 2 months
             product.RentalPriceLength = 2;
@@ -265,7 +276,6 @@ namespace Nop.Services.Tests.Catalog
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 5)).ShouldEqual(1);
             //3 months
             product.GetRentalPeriods(new DateTime(2014, 3, 5), new DateTime(2014, 5, 8)).ShouldEqual(2);
-            */
         }
         [Test]
         public void Can_calculate_rental_periods_for_years()

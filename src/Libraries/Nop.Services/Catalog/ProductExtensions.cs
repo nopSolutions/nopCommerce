@@ -237,33 +237,50 @@ namespace Nop.Services.Catalog
             if (!product.IsRental)
                 return 1;
 
-            if (startDate.CompareTo(endDate) > 0)
+            if (startDate.CompareTo(endDate) >= 0)
                 return 1;
 
-            var totalDaysToRent = (endDate - startDate).TotalDays;
-            if (totalDaysToRent <= 0)
-                totalDaysToRent = 1;
-
-            int configuredPeriodDays;
+            int totalPeriods;
             switch (product.RentalPricePeriod)
             {
                 case RentalPricePeriod.Days:
-                    configuredPeriodDays = 1 * product.RentalPriceLength;
+                {
+                    var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                    int configuredPeriodDays = product.RentalPriceLength;
+                    totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent/configuredPeriodDays));
+                }
                     break;
                 case RentalPricePeriod.Weeks:
-                    configuredPeriodDays = 7 * product.RentalPriceLength;
+                    {
+                        var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                        int configuredPeriodDays = 7 * product.RentalPriceLength;
+                        totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
+                    }
                     break;
                 case RentalPricePeriod.Months:
-                    configuredPeriodDays = 30 * product.RentalPriceLength;
+                    {
+                        //Source: http://stackoverflow.com/questions/4638993/difference-in-months-between-two-dates
+                        var totalMonthsToRent = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
+                        if (startDate.AddMonths(totalMonthsToRent) < endDate)
+                        {
+                            //several days added (not full month)
+                            totalMonthsToRent++;
+                        }
+                        int configuredPeriodMonths = product.RentalPriceLength;
+                        totalPeriods = Convert.ToInt32(Math.Ceiling((double)totalMonthsToRent / configuredPeriodMonths));
+                    }
                     break;
                 case RentalPricePeriod.Years:
-                    configuredPeriodDays = 365 * product.RentalPriceLength;
+                    {
+                        var totalDaysToRent = Math.Max((endDate - startDate).TotalDays, 1);
+                        int configuredPeriodDays = 365 * product.RentalPriceLength;
+                        totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
+                    }
                     break;
                 default:
                     throw new Exception("Not supported rental period");
             }
 
-            var totalPeriods = Convert.ToInt32(Math.Ceiling(totalDaysToRent / configuredPeriodDays));
             return totalPeriods;
         }
 
