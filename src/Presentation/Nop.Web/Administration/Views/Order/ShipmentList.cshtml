@@ -17,7 +17,7 @@
             @T("Admin.Orders.Shipments.List")
         </div>
         <div class="options">
-            <a href="@Url.Action("PdfPackagingSlipAll")" class="k-button">@T("Admin.Orders.Shipments.PrintPackagingSlip.All")</a>
+            <input type="submit" name="exportpackagingslips-all" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" />
             <input type="button" id="exportpackagingslips-selected" class="k-button" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
             <input type="button" id="ship-selected" class="k-button" value="@T("Admin.Orders.Shipments.ShipSelected")" />
             <input type="button" id="deliver-selected" class="k-button" value="@T("Admin.Orders.Shipments.DeliverySelected")" />

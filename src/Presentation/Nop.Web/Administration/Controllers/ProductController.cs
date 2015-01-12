@@ -2577,18 +2577,37 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult DownloadCatalogAsPdf()
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("download-catalog-pdf")]
+        public ActionResult DownloadCatalogAsPdf(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
+            var categoryIds = new List<int> { model.SearchCategoryId };
+            //include subcategories
+            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+
+            var products = _productService.SearchProducts(
+                categoryIds: categoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                warehouseId: model.SearchWarehouseId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                showHidden: true
+            );
+
             try
             {
-                //a vendor should have access only to his products
-                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
-
-                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
-
                 byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
@@ -2604,17 +2623,38 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportXmlAll()
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportxml-all")]
+        public ActionResult ExportXmlAll(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
+            var categoryIds = new List<int> { model.SearchCategoryId };
+            //include subcategories
+            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+
+            var products = _productService.SearchProducts(
+                categoryIds: categoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                warehouseId: model.SearchWarehouseId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                showHidden: true
+            );
+
             try
             {
-                //a vendor should have access only to his products
-                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
-
-                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
                 var xml = _exportManager.ExportProductsToXml(products);
                 return new XmlDownloadResult(xml, "products.xml");
             }
@@ -2649,18 +2689,37 @@ namespace Nop.Admin.Controllers
             return new XmlDownloadResult(xml, "products.xml");
         }
 
-        public ActionResult ExportExcelAll()
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportexcel-all")]
+        public ActionResult ExportExcelAll(ProductListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null)
+            {
+                model.SearchVendorId = _workContext.CurrentVendor.Id;
+            }
+
+            var categoryIds = new List<int> { model.SearchCategoryId };
+            //include subcategories
+            if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
+                categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
+
+            var products = _productService.SearchProducts(
+                categoryIds: categoryIds,
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                warehouseId: model.SearchWarehouseId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                showHidden: true
+            );
             try
             {
-                //a vendor should have access only to his products
-                int vendorId = _workContext.CurrentVendor != null ? _workContext.CurrentVendor.Id : 0;
-
-                var products = _productService.SearchProducts(vendorId: vendorId, showHidden: true);
-                
                 byte[] bytes;
                 using (var stream = new MemoryStream())
                 {

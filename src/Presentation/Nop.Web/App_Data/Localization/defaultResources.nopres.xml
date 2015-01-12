@@ -3121,7 +3121,7 @@
     <Value>Export to Excel</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToExcel.All">
-    <Value>Export to Excel (all)</Value>
+    <Value>Export to Excel (all found)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToExcel.Selected">
     <Value>Export to Excel (selected)</Value>
@@ -3130,7 +3130,7 @@
     <Value>Export to XML</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToXml.All">
-    <Value>Export to XML (all)</Value>
+    <Value>Export to XML (all found)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToXml.Selected">
     <Value>Export to XML (selected)</Value>
@@ -8944,7 +8944,7 @@
     <Value>Print packaging slip</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
-    <Value>Print packaging slips (all)</Value>
+    <Value>Print packaging slips (all found)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
     <Value>Print packaging slips (selected)</Value>

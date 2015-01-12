@@ -960,7 +960,9 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult ExportXmlAll()
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportxml-all")]
+        public ActionResult ExportXmlAll(OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -969,10 +971,36 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+            var filterByProductId = 0;
+            var product = _productService.GetProductById(model.ProductId);
+            if (product != null && HasAccessToProduct(product))
+                filterByProductId = model.ProductId;
+
+            //load orders
+            var orders = _orderService.SearchOrders(storeId: model.StoreId,
+                vendorId: model.VendorId,
+                productId: filterByProductId,
+                warehouseId: model.WarehouseId,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                ss: shippingStatus,
+                billingEmail: model.CustomerEmail,
+                orderGuid: model.OrderGuid);
+
             try
             {
-                var orders = _orderService.SearchOrders();
-
                 var xml = _exportManager.ExportOrdersToXml(orders);
                 return new XmlDownloadResult(xml, "orders.xml");
             }
@@ -1006,7 +1034,9 @@ namespace Nop.Admin.Controllers
             return new XmlDownloadResult(xml, "orders.xml");
         }
 
-	    public ActionResult ExportExcelAll()
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportexcel-all")]
+        public ActionResult ExportExcelAll(OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1015,10 +1045,36 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null)
                 return AccessDeniedView();
 
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+            var filterByProductId = 0;
+            var product = _productService.GetProductById(model.ProductId);
+            if (product != null && HasAccessToProduct(product))
+                filterByProductId = model.ProductId;
+
+            //load orders
+            var orders = _orderService.SearchOrders(storeId: model.StoreId,
+                vendorId: model.VendorId,
+                productId: filterByProductId,
+                warehouseId: model.WarehouseId,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                ss: shippingStatus,
+                billingEmail: model.CustomerEmail,
+                orderGuid: model.OrderGuid);
+
             try
             {
-                var orders = _orderService.SearchOrders();
-                
                 byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
@@ -2485,12 +2541,16 @@ namespace Nop.Admin.Controllers
 
             //load shipments
             var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
-                warehouseId: model.WarehouseId, shippingCountryId: model.CountryId, 
-                shippingStateId: model.StateProvinceId, shippingCity: model.City,
+                warehouseId: model.WarehouseId, 
+                shippingCountryId: model.CountryId, 
+                shippingStateId: model.StateProvinceId, 
+                shippingCity: model.City,
                 trackingNumber: model.TrackingNumber, 
                 loadNotShipped: model.LoadNotShipped,
-                createdFromUtc: startDateValue, createdToUtc: endDateValue, 
-                pageIndex: command.Page - 1, pageSize: command.PageSize);
+                createdFromUtc: startDateValue, 
+                createdToUtc: endDateValue, 
+                pageIndex: command.Page - 1, 
+                pageSize: command.PageSize);
             var gridModel = new DataSourceResult
             {
                 Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
@@ -3056,17 +3116,34 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
         }
 
-        public ActionResult PdfPackagingSlipAll()
+        [HttpPost, ActionName("ShipmentList")]
+        [FormValueRequired("exportpackagingslips-all")]
+        public ActionResult PdfPackagingSlipAll(ShipmentListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
+
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             //a vendor should have access only to his products
             int vendorId = 0;
             if (_workContext.CurrentVendor != null)
                 vendorId = _workContext.CurrentVendor.Id;
 
-            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId).ToList();
+            //load shipments
+            var shipments = _shipmentService.GetAllShipments(vendorId: vendorId,
+                warehouseId: model.WarehouseId,
+                shippingCountryId: model.CountryId,
+                shippingStateId: model.StateProvinceId,
+                shippingCity: model.City,
+                trackingNumber: model.TrackingNumber,
+                loadNotShipped: model.LoadNotShipped,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue);
 
             //ensure that we at least one shipment selected
             if (shipments.Count == 0)

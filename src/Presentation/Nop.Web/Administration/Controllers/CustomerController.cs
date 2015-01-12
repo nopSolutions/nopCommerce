@@ -1797,15 +1797,35 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult ExportExcelAll()
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportexcel-all")]
+        public ActionResult ExportExcelAll(CustomerListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
+            var searchDayOfBirth = 0;
+            int searchMonthOfBirth = 0;
+            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
+                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
+            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
+                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
+
+            var customers = _customerService.GetAllCustomers(
+                customerRoleIds: model.SearchCustomerRoleIds,
+                email: model.SearchEmail,
+                username: model.SearchUsername,
+                firstName: model.SearchFirstName,
+                lastName: model.SearchLastName,
+                dayOfBirth: searchDayOfBirth,
+                monthOfBirth: searchMonthOfBirth,
+                company: model.SearchCompany,
+                phone: model.SearchPhone,
+                zipPostalCode: model.SearchZipPostalCode,
+                loadOnlyWithShoppingCart: false);
+
             try
             {
-                var customers = _customerService.GetAllCustomers();
-
                 byte[] bytes;
                 using (var stream = new MemoryStream())
                 {
@@ -1845,15 +1865,35 @@ namespace Nop.Admin.Controllers
             return File(bytes, "text/xls", "customers.xlsx");
         }
 
-        public ActionResult ExportXmlAll()
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportxml-all")]
+        public ActionResult ExportXmlAll(CustomerListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
+            var searchDayOfBirth = 0;
+            int searchMonthOfBirth = 0;
+            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
+                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
+            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
+                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
+
+            var customers = _customerService.GetAllCustomers(
+                customerRoleIds: model.SearchCustomerRoleIds,
+                email: model.SearchEmail,
+                username: model.SearchUsername,
+                firstName: model.SearchFirstName,
+                lastName: model.SearchLastName,
+                dayOfBirth: searchDayOfBirth,
+                monthOfBirth: searchMonthOfBirth,
+                company: model.SearchCompany,
+                phone: model.SearchPhone,
+                zipPostalCode: model.SearchZipPostalCode,
+                loadOnlyWithShoppingCart: false);
+
             try
             {
-                var customers = _customerService.GetAllCustomers();
-                
                 var xml = _exportManager.ExportCustomersToXml(customers);
                 return new XmlDownloadResult(xml, "customers.xml");
             }

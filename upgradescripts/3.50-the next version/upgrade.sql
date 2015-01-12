@@ -134,6 +134,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
     <Value>Search page. Page size options (comma separated)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToExcel.All">
+    <Value>Export to Excel (all found)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToXml.All">
+    <Value>Export to XML (all found)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
+    <Value>Print packaging slips (all found)</Value>
+  </LocaleResource>
 </Language>
 '
 
