@@ -131,6 +131,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
 	<Value>Send test email</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPagePageSizeOptions">
+    <Value>Search page. Page size options (comma separated)</Value>
+  </LocaleResource>
 </Language>
 '
 
