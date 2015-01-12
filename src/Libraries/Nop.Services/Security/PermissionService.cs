@@ -33,7 +33,7 @@ namespace Nop.Services.Security
 
         #region Fields
 
-        private readonly IRepository<PermissionRecord> _permissionPecordRepository;
+        private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
@@ -47,20 +47,20 @@ namespace Nop.Services.Security
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="permissionPecordRepository">Permission repository</param>
+        /// <param name="permissionRecordRepository">Permission repository</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="localizationService">Localization service</param>
         /// <param name="languageService">Language service</param>
         /// <param name="cacheManager">Cache manager</param>
-        public PermissionService(IRepository<PermissionRecord> permissionPecordRepository,
+        public PermissionService(IRepository<PermissionRecord> permissionRecordRepository,
             ICustomerService customerService,
             IWorkContext workContext,
              ILocalizationService localizationService,
             ILanguageService languageService,
             ICacheManager cacheManager)
         {
-            this._permissionPecordRepository = permissionPecordRepository;
+            this._permissionRecordRepository = permissionRecordRepository;
             this._customerService = customerService;
             this._workContext = workContext;
             this._localizationService = localizationService;
@@ -107,7 +107,7 @@ namespace Nop.Services.Security
             if (permission == null)
                 throw new ArgumentNullException("permission");
 
-            _permissionPecordRepository.Delete(permission);
+            _permissionRecordRepository.Delete(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
@@ -122,7 +122,7 @@ namespace Nop.Services.Security
             if (permissionId == 0)
                 return null;
 
-            return _permissionPecordRepository.GetById(permissionId);
+            return _permissionRecordRepository.GetById(permissionId);
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Nop.Services.Security
             if (String.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from pr in _permissionPecordRepository.Table
+            var query = from pr in _permissionRecordRepository.Table
                         where  pr.SystemName == systemName
                         orderby pr.Id
                         select pr;
@@ -150,7 +150,7 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
-            var query = from pr in _permissionPecordRepository.Table
+            var query = from pr in _permissionRecordRepository.Table
                         orderby pr.Name
                         select pr;
             var permissions = query.ToList();
@@ -166,7 +166,7 @@ namespace Nop.Services.Security
             if (permission == null)
                 throw new ArgumentNullException("permission");
 
-            _permissionPecordRepository.Insert(permission);
+            _permissionRecordRepository.Insert(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
@@ -180,7 +180,7 @@ namespace Nop.Services.Security
             if (permission == null)
                 throw new ArgumentNullException("permission");
 
-            _permissionPecordRepository.Update(permission);
+            _permissionRecordRepository.Update(permission);
 
             _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
