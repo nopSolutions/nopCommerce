@@ -1787,6 +1787,26 @@
             The <see cref="T:System.Diagnostics.TraceLevel"/> that will be used to filter the trace messages passed to the writer.
             </value>
         </member>
+        <member name="T:Newtonsoft.Json.Serialization.IAttributeProvider">
+            <summary>
+            Provides methods to get attributes.
+            </summary>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.IAttributeProvider.GetAttributes(System.Boolean)">
+            <summary>
+            Returns a collection of all of the attributes, or an empty collection if there are no attributes.
+            </summary>
+            <param name="inherit">When true, look up the hierarchy chain for the inherited custom attribute.</param>
+            <returns>A collection of <see cref="T:System.Attribute"/>s, or an empty collection.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.IAttributeProvider.GetAttributes(System.Type,System.Boolean)">
+            <summary>
+            Returns a collection of attributes, identified by type, or an empty collection if there are no attributes.
+            </summary>
+            <param name="attributeType">The type of the attributes.</param>
+            <param name="inherit">When true, look up the hierarchy chain for the inherited custom attribute.</param>
+            <returns>A collection of <see cref="T:System.Attribute"/>s, or an empty collection.</returns>
+        </member>
         <member name="T:Newtonsoft.Json.Serialization.JsonContainerContract">
             <summary>
             Contract details for a <see cref="T:System.Type"/> used by the <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
@@ -1965,6 +1985,31 @@
             <value>
             The <see cref="T:System.Diagnostics.TraceLevel"/> that will be used to filter the trace messages passed to the writer.
             </value>
+        </member>
+        <member name="T:Newtonsoft.Json.Serialization.ReflectionAttributeProvider">
+            <summary>
+            Provides methods to get attributes from a <see cref="T:System.Type"/>, <see cref="T:System.Reflection.MemberInfo"/>, <see cref="T:System.Reflection.ParameterInfo"/> or <see cref="T:System.Reflection.Assembly"/>.
+            </summary>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.ReflectionAttributeProvider.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.ReflectionAttributeProvider"/> class.
+            </summary>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.ReflectionAttributeProvider.GetAttributes(System.Boolean)">
+            <summary>
+            Returns a collection of all of the attributes, or an empty collection if there are no attributes.
+            </summary>
+            <param name="inherit">When true, look up the hierarchy chain for the inherited custom attribute.</param>
+            <returns>A collection of <see cref="T:System.Attribute"/>s, or an empty collection.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.ReflectionAttributeProvider.GetAttributes(System.Type,System.Boolean)">
+            <summary>
+            Returns a collection of attributes, identified by type, or an empty collection if there are no attributes.
+            </summary>
+            <param name="attributeType">The type of the attributes.</param>
+            <param name="inherit">When true, look up the hierarchy chain for the inherited custom attribute.</param>
+            <returns>A collection of <see cref="T:System.Attribute"/>s, or an empty collection.</returns>
         </member>
         <member name="T:Newtonsoft.Json.IJsonLineInfo">
             <summary>
@@ -8243,6 +8288,12 @@
             Gets the <see cref="T:Newtonsoft.Json.Serialization.IValueProvider"/> that will get and set the <see cref="T:Newtonsoft.Json.Serialization.JsonProperty"/> during serialization.
             </summary>
             <value>The <see cref="T:Newtonsoft.Json.Serialization.IValueProvider"/> that will get and set the <see cref="T:Newtonsoft.Json.Serialization.JsonProperty"/> during serialization.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.Serialization.JsonProperty.AttributeProvider">
+            <summary>
+            Gets or sets the <see cref="T:Newtonsoft.Json.Serialization.IAttributeProvider"/> for this property.
+            </summary>
+            <value>The <see cref="T:Newtonsoft.Json.Serialization.IAttributeProvider"/> for this property.</value>
         </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonProperty.PropertyType">
             <summary>
