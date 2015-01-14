@@ -49,6 +49,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.WarehouseId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.WarehouseId, Model.AvailableWarehouses)
+            @Html.ValidationMessageFor(model => model.WarehouseId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.CountryId):
         </td>
         <td class="adminData">

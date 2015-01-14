@@ -35,7 +35,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
 
         #region Methods
 
-        
         public virtual void DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
         {
             if (shippingByWeightRecord == null)
@@ -61,7 +60,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
         }
 
         public virtual ShippingByWeightRecord FindRecord(int shippingMethodId,
-            int storeId, int countryId, int stateProvinceId, string zip, decimal weight)
+            int storeId, int warehouseId, 
+            int countryId, int stateProvinceId, string zip, decimal weight)
         {
             if (zip == null)
                 zip = string.Empty;
@@ -82,13 +82,23 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                     if (sbw.StoreId == 0)
                         matchedByStore.Add(sbw);
 
+            //filter by warehouse
+            var matchedByWarehouse = new List<ShippingByWeightRecord>();
+            foreach (var sbw in matchedByStore)
+                if (warehouseId == sbw.WarehouseId)
+                    matchedByWarehouse.Add(sbw);
+            if (matchedByWarehouse.Count == 0)
+                foreach (var sbw in matchedByStore)
+                    if (sbw.WarehouseId == 0)
+                        matchedByWarehouse.Add(sbw);
+
             //filter by country
             var matchedByCountry = new List<ShippingByWeightRecord>();
-            foreach (var sbw in matchedByStore)
+            foreach (var sbw in matchedByWarehouse)
                 if (countryId == sbw.CountryId)
                     matchedByCountry.Add(sbw);
             if (matchedByCountry.Count == 0)
-                foreach (var sbw in matchedByStore)
+                foreach (var sbw in matchedByWarehouse)
                     if (sbw.CountryId == 0)
                         matchedByCountry.Add(sbw);
 

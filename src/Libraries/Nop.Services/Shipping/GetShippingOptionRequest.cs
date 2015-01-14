@@ -3,6 +3,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Shipping
 {
@@ -37,6 +38,10 @@ namespace Nop.Services.Shipping
         /// </summary>
         public Address ShippingAddress { get; set; }
 
+        /// <summary>
+        /// Shipped from warehouse
+        /// </summary>
+        public Warehouse WarehouseFrom { get; set; }
         /// <summary>
         /// Shipped from country
         /// </summary>

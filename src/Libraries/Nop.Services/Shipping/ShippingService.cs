@@ -750,6 +750,7 @@ namespace Nop.Services.Shipping
                     {
                         //warehouse address
                         originAddress = _addressService.GetAddressById(warehouse.AddressId);
+                        request.WarehouseFrom = warehouse;
                     }
                     if (originAddress == null)
                     {

@@ -143,6 +143,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
     <Value>Print packaging slips (all found)</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Warehouse">
+    <Value>Warehouse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Warehouse.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all warehouses.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -308,5 +314,22 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.expirati
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'frooglesettings.expirationnumberofdays', N'28', 0)
+END
+GO
+
+
+--shipping by weight plugin
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	--new [StoreId] column
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[ShippingByWeight]'') and NAME=''WarehouseId'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		ADD [WarehouseId] int NULL
+
+		exec(''UPDATE [ShippingByWeight] SET [WarehouseId] = 0'')
+		
+		EXEC (''ALTER TABLE [ShippingByWeight] ALTER COLUMN [WarehouseId] int NOT NULL'')
+	END')
 END
 GO

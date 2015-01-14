@@ -10,7 +10,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
         IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
 
         ShippingByWeightRecord FindRecord(int shippingMethodId,
-            int storeId, int countryId, int stateProvinceId, string zip, decimal weight);
+            int storeId, int warehouseId, 
+            int countryId, int stateProvinceId, string zip, decimal weight);
 
         ShippingByWeightRecord GetById(int shippingByWeightRecordId);
 

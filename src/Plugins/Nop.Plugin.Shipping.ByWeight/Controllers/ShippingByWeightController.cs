@@ -39,12 +39,18 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         private readonly MeasureSettings _measureSettings;
 
         public ShippingByWeightController(IShippingService shippingService,
-            IStoreService storeService, ICountryService countryService, IStateProvinceService stateProvinceService,
+            IStoreService storeService,
+            ICountryService countryService,
+            IStateProvinceService stateProvinceService,
             ShippingByWeightSettings shippingByWeightSettings,
-            IShippingByWeightService shippingByWeightService, ISettingService settingService,
-            ILocalizationService localizationService, IPermissionService permissionService,
-            ICurrencyService currencyService, CurrencySettings currencySettings,
-            IMeasureService measureService, MeasureSettings measureSettings)
+            IShippingByWeightService shippingByWeightService,
+            ISettingService settingService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            ICurrencyService currencyService,
+            CurrencySettings currencySettings,
+            IMeasureService measureService,
+            MeasureSettings measureSettings)
         {
             this._shippingService = shippingService;
             this._storeService = storeService;
@@ -55,7 +61,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             this._settingService = settingService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
-
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -104,6 +109,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     {
                         Id = x.Id,
                         StoreId = x.StoreId,
+                        WarehouseId = x.WarehouseId,
                         ShippingMethodId = x.ShippingMethodId,
                         CountryId = x.CountryId,
                         From = x.From,
@@ -119,6 +125,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     //store
                     var store = _storeService.GetStoreById(x.StoreId);
                     m.StoreName = (store != null) ? store.Name : "*";
+                    //warehouse
+                    var warehouse = _shippingService.GetWarehouseById(x.WarehouseId);
+                    m.WarehouseName = (warehouse != null) ? warehouse.Name : "*";
                     //country
                     var c = _countryService.GetCountryById(x.CountryId);
                     m.CountryName = (c != null) ? c.Name : "*";
@@ -189,6 +198,10 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var store in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString() });
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
+            foreach (var warehouses in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = warehouses.Name, Value = warehouses.Id.ToString() });
             //shipping methods
             foreach (var sm in shippingMethods)
                 model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString() });
@@ -211,6 +224,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var sbw = new ShippingByWeightRecord
             {
                 StoreId = model.StoreId,
+                WarehouseId = model.WarehouseId,
                 CountryId = model.CountryId,
                 StateProvinceId = model.StateProvinceId,
                 Zip = model.Zip == "*" ? null : model.Zip,
@@ -246,6 +260,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             {
                 Id = sbw.Id,
                 StoreId = sbw.StoreId,
+                WarehouseId = sbw.WarehouseId,
                 CountryId = sbw.CountryId,
                 StateProvinceId = sbw.StateProvinceId,
                 Zip = sbw.Zip,
@@ -265,6 +280,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 return Content("No shipping methods can be loaded");
 
             var selectedStore = _storeService.GetStoreById(sbw.StoreId);
+            var selectedWarehouse = _shippingService.GetWarehouseById(sbw.WarehouseId);
             var selectedShippingMethod = _shippingService.GetShippingMethodById(sbw.ShippingMethodId);
             var selectedCountry = _countryService.GetCountryById(sbw.CountryId);
             var selectedState = _stateProvinceService.GetStateProvinceById(sbw.StateProvinceId);
@@ -272,6 +288,10 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = "*", Value = "0" });
             foreach (var store in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = store.Name, Value = store.Id.ToString(), Selected = (selectedStore != null && store.Id == selectedStore.Id) });
+            //warehouses
+            model.AvailableWarehouses.Add(new SelectListItem { Text = "*", Value = "0" });
+            foreach (var warehouse in _shippingService.GetAllWarehouses())
+                model.AvailableWarehouses.Add(new SelectListItem { Text = warehouse.Name, Value = warehouse.Id.ToString(), Selected = (selectedWarehouse != null && warehouse.Id == selectedWarehouse.Id) });
             //shipping methods
             foreach (var sm in shippingMethods)
                 model.AvailableShippingMethods.Add(new SelectListItem { Text = sm.Name, Value = sm.Id.ToString(), Selected = (selectedShippingMethod != null && sm.Id == selectedShippingMethod.Id) });
@@ -300,6 +320,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 return RedirectToAction("Configure");
 
             sbw.StoreId = model.StoreId;
+            sbw.WarehouseId = model.WarehouseId;
             sbw.CountryId = model.CountryId;
             sbw.StateProvinceId = model.StateProvinceId;
             sbw.Zip = model.Zip == "*" ? null : model.Zip;

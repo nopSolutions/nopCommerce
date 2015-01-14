@@ -7,6 +7,5 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
     {
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated")]
         public bool LimitMethodsToCreated { get; set; }
-        
     }
 }
