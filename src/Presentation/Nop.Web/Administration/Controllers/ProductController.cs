@@ -2955,12 +2955,26 @@ namespace Nop.Admin.Controllers
                         if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                             continue;
 
+                        var prevStockQuantity = product.GetTotalStockQuantity();
+
                         product.Sku = pModel.Sku;
                         product.Price = pModel.Price;
                         product.OldPrice = pModel.OldPrice;
                         product.StockQuantity = pModel.StockQuantity;
                         product.Published = pModel.Published;
                         _productService.UpdateProduct(product);
+
+                        //back in stock notifications
+                        if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                            product.BackorderMode == BackorderMode.NoBackorders &&
+                            product.AllowBackInStockSubscriptions &&
+                            product.GetTotalStockQuantity() > 0 &&
+                            prevStockQuantity <= 0 &&
+                            product.Published &&
+                            !product.Deleted)
+                        {
+                            _backInStockSubscriptionService.SendNotificationsToSubscribers(product);
+                        }
                     }
                 }
             }
