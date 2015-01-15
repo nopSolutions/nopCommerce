@@ -678,21 +678,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult Register()
-        {
-            //check whether registration is allowed
-            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
-
-            var model = new RegisterModel();
-            PrepareCustomerRegisterModel(model, false);
-            //enable newsletter by default
-            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
-
-            return View(model);
-        }
-
         #endregion
 
         #region Password recovery
@@ -789,6 +774,21 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Register
+
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult Register()
+        {
+            //check whether registration is allowed
+            if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+
+            var model = new RegisterModel();
+            PrepareCustomerRegisterModel(model, false);
+            //enable newsletter by default
+            model.Newsletter = _customerSettings.NewsletterTickedByDefault;
+
+            return View(model);
+        }
 
         [HttpPost]
         [CaptchaValidator]
