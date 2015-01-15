@@ -10,7 +10,7 @@
             It is a Dictionary implementation that allows you to change the Key (the RowID, ColumnID or CellID )
             </summary>
         </member>
-        <member name="M:CellStore`1.DeleteCells(PageIndex,System.Int32,System.Int32)">
+        <member name="M:CellStore`1.DeleteCells(PageIndex,System.Int32,System.Int32,System.Boolean)">
             
         </member>
         <member name="M:CellStore`1.AddPage(ColumnIndex,System.Int32,PageIndex)">
@@ -7561,7 +7561,7 @@
             <param name="iColumnNumber">The number of the column</param>
             <returns>The letter representing the column</returns>
         </member>
-        <member name="M:OfficeOpenXml.ExcelCellBase.GetRowColFromAddress(System.String,System.Int32@,System.Int32@,System.Int32@,System.Int32@)">
+        <member name="M:OfficeOpenXml.ExcelCellBase.GetRowColFromAddress(System.String,System.Int32@,System.Int32@,System.Int32@,System.Int32@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
             <summary>
             Get the row/columns for a Cell-address
             </summary>
@@ -7570,6 +7570,11 @@
             <param name="FromColumn">Returns the from column</param>
             <param name="ToRow">Returns the to row</param>
             <param name="ToColumn">Returns the from row</param>
+            <param name="fixedFromRow">Is the from row fixed?</param>
+            <param name="fixedFromColumn">Is the from column fixed?</param>
+            <param name="fixedToRow">Is the to row fixed?</param>
+            <param name="fixedToColumn">Is the to column fixed?</param>
+            <returns></returns>
         </member>
         <member name="M:OfficeOpenXml.ExcelCellBase.GetRowColFromAddress(System.String,System.Int32@,System.Int32@)">
             <summary>
@@ -7667,7 +7672,7 @@
             <param name="cellAddress">The alphanumeric cell address</param>
             <returns>True if the cell address is valid</returns>
         </member>
-        <member name="M:OfficeOpenXml.ExcelCellBase.UpdateFormulaReferences(System.String,System.Int32,System.Int32,System.Int32,System.Int32)">
+        <member name="M:OfficeOpenXml.ExcelCellBase.UpdateFormulaReferences(System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
             Updates the Excel formula so that all the cellAddresses are incremented by the row and column increments
             if they fall after the afterRow and afterColumn.
@@ -7688,6 +7693,19 @@
             <param name="fromCol">start column</param>
             <param name="toRow">End row</param>
             <param name="toColumn">End column</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelAddressBase.#ctor(System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates an Address object
+            </summary>
+            <param name="fromRow">start row</param>
+            <param name="fromCol">start column</param>
+            <param name="toRow">End row</param>
+            <param name="toColumn">End column</param>
+            <param name="fromRowFixed">start row fixed</param>
+            <param name="fromColFixed">start column fixed</param>
+            <param name="toRowFixed">End row fixed</param>
+            <param name="toColFixed">End column fixed</param>
         </member>
         <member name="M:OfficeOpenXml.ExcelAddressBase.#ctor(System.String)">
             <summary>
@@ -7837,7 +7855,7 @@
             </summary>
             <param name="value">the value</param>
         </member>
-        <member name="M:OfficeOpenXml.ExcelRangeBase.RemoveFormuls(OfficeOpenXml.ExcelAddress)">
+        <member name="M:OfficeOpenXml.ExcelRangeBase.SetSharedFormulaID(System.Int32)">
             <summary>
             Removes a shared formula
             </summary>
@@ -8942,6 +8960,11 @@
         <member name="P:OfficeOpenXml.FormulaParsing.Excel.Functions.HiddenValuesHandlingFunction.IgnoreHiddenValues">
             <summary>
             Set to true or false to indicate whether the function should ignore hidden values.
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Excel.Functions.Math.MathHelper">
+            <summary>
+            Thanks to the guys in this thread: http://stackoverflow.com/questions/2840798/c-sharp-math-class-question
             </summary>
         </member>
         <member name="T:OfficeOpenXml.FormulaParsing.Exceptions.ExcelErrorValueException">
@@ -27830,6 +27853,13 @@
             Sharedforumlas will have an id from 0-x. Array formula ids start from 0x4000001-. 
             </summary>
             <param name="isArray">If the formula is an array formula</param>
+            <returns></returns>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.GetColumn(System.Int32)">
+            <summary>
+            Get the ExcelColumn for column (span ColumnMin and ColumnMax)
+            </summary>
+            <param name="column"></param>
             <returns></returns>
         </member>
         <member name="P:OfficeOpenXml.ExcelWorksheet.WorksheetUri">

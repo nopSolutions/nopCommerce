@@ -1,4 +1,4 @@
-EPPlus 4.0.1
+EPPlus 4.0.2
 
 Visit epplus.codeplex.com for the latest information
 
@@ -81,3 +81,10 @@ Release Candidare changes
 * Worksheet.Dimension returned an invalid range in some cases.
 * Rowheight was wrong in some cases.
 * ExcelSeries.Header had an incorrect validation check.
+
+4.0.2 Fixes
+* Fixes a whole bunch of bugs related to the cell store (Worksheet.InsertColumn, Worksheet.InsertRow, Worksheet.DeleteColumn, Worksheet.DeleteRow, Range.Copy, Range.Clear)
+* Added functions Acos, Acosh, Asinh, Atanh, Atan, CountBlank, CountIfs, Mina, Offset, Median, Hyperlink, Rept
+* Fix for reading Excel comment content from the t-element.
+* Fix to make Range.LoadFromCollection work better with inheritence
+* And alot of other smal fixes
