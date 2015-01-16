@@ -10,6 +10,10 @@ namespace Nop.Plugin.Feed.Froogle.Domain
         public int ProductId { get; set; }
         public string Taxonomy { get; set; }
 
+        /// <summary>
+        /// A value indicating whether it's custom goods (not unique identifier exists)
+        /// </summary>
+        public bool CustomGoods { get; set; }
         public string Gender { get; set; }
         public string AgeGroup { get; set; }
         public string Color { get; set; }

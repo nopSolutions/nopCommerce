@@ -149,6 +149,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Warehouse.Hint">
     <Value>If an asterisk is selected, then this shipping rate will apply to all warehouses.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.CustomGoods">
+    <Value>Custom goods (no identifier exists)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -333,3 +336,21 @@ BEGIN
 	END')
 END
 GO
+
+
+--froogle plugin
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[GoogleProduct]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	--new [StoreId] column
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id(''[GoogleProduct]'') and NAME=''CustomGoods'')
+	BEGIN
+		ALTER TABLE [GoogleProduct]
+		ADD [CustomGoods] bit NULL
+
+		exec(''UPDATE [GoogleProduct] SET [CustomGoods] = 0'')
+		
+		EXEC (''ALTER TABLE [GoogleProduct] ALTER COLUMN [CustomGoods] bit NOT NULL'')
+	END')
+END
+GO
+

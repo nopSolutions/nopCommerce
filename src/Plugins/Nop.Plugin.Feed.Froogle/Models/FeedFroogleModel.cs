@@ -66,6 +66,9 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
             [NopResourceDisplayName("Plugins.Feed.Froogle.Products.Size")]
             public string GoogleSize { get; set; }
+
+            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.CustomGoods")]
+            public bool CustomGoods { get; set; }
         }
     }
 }

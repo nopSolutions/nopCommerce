@@ -177,6 +177,9 @@
 
                     <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.Froogle.Products.Size")</label></div>
                     <div class="editor-field"><input name="GoogleSize" /></div>
+
+                    <div class="editor-label"><label for="CustomGoods">@T("Plugins.Feed.Froogle.Products.CustomGoods")</label></div>
+                    <div class="editor-field"><input name="CustomGoods" type="checkbox" /></div>
                 </script>
 
                 <div id="froogleproducts-grid"></div>
@@ -212,6 +215,7 @@
                                             AgeGroup: { editable: true, type: "string" },
                                             Color: { editable: true, type: "string" },
                                             GoogleSize: { editable: true, type: "string" },
+                                            CustomGoods: { editable: true, type: "bool" },
                                             Id: { editable: false, type: "number" }
                                         }
                                     }
@@ -256,6 +260,7 @@
                                     '<dt>@T("Plugins.Feed.Froogle.Products.AgeGroup"):</dt><dd># if(AgeGroup !== null) {# #:AgeGroup# #}  #</dd>' +
                                     '<dt>@T("Plugins.Feed.Froogle.Products.Color"):</dt><dd># if(Color !== null) {# #:Color# #}  #</dd>' +
                                     '<dt>@T("Plugins.Feed.Froogle.Products.Size"):</dt><dd># if(GoogleSize !== null) {# #:GoogleSize# #}  #</dd>' +
+                                    '<dt>@T("Plugins.Feed.Froogle.Products.CustomGoods"):</dt><dd>#:CustomGoods#</dd>' +
                                     '</dl>' +
                                     '</div>'
                             }, {

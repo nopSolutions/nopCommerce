@@ -406,6 +406,12 @@ namespace Nop.Plugin.Feed.Froogle
                             writer.WriteFullEndElement(); // g:mpn
                         }
 
+                        //identifier exists [identifier_exists] - Submit custom goods
+                        if (googleProduct != null && googleProduct.CustomGoods)
+                        {
+                            writer.WriteElementString("g", "identifier_exists", googleBaseNamespace, "FALSE");
+                        }
+
                         #endregion
 
                         #region Apparel Products
@@ -537,6 +543,7 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup", "Age group");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.CustomGoods", "Custom goods (no identifier exists)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath", "Generated file path (static)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint", "A file path of the generated Froogle file. It's static for your store and can be shared with the Froogle service.");
@@ -577,6 +584,7 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.CustomGoods");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint");

@@ -186,6 +186,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                                     gModel.AgeGroup = googleProduct.AgeGroup;
                                     gModel.Color = googleProduct.Color;
                                     gModel.GoogleSize = googleProduct.Size;
+                                    gModel.CustomGoods = googleProduct.CustomGoods;
                                 }
 
                                 return gModel;
@@ -216,6 +217,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 googleProduct.AgeGroup = model.AgeGroup;
                 googleProduct.Color = model.Color;
                 googleProduct.Size = model.GoogleSize;
+                googleProduct.CustomGoods = model.CustomGoods;
                 _googleService.UpdateGoogleProductRecord(googleProduct);
             }
             else
@@ -228,7 +230,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Gender = model.Gender,
                     AgeGroup = model.AgeGroup,
                     Color = model.Color,
-                    Size = model.GoogleSize
+                    Size = model.GoogleSize,
+                    CustomGoods = model.CustomGoods
                 };
                 _googleService.InsertGoogleProductRecord(googleProduct);
             }
