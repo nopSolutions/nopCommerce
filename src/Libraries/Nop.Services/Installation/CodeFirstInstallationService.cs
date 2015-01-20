@@ -4585,7 +4585,6 @@ namespace Nop.Services.Installation
                     ProductsByTagAllowCustomersToSelectPageSize = true,
                     ProductsByTagPageSizeOptions = "8, 4, 12",
                     MaximumBackInStockSubscriptions = 200,
-                    TopCategoryMenuSubcategoryLevelsToDisplay = 3,
                     LoadAllSideCategoryMenuSubcategories = false,
                     ManufacturersBlockItemsToDisplay = 5,
                     DisplayTaxShippingInfoFooter = false,

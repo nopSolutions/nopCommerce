@@ -152,6 +152,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.Products.CustomGoods">
     <Value>Custom goods (no identifier exists)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -354,3 +360,7 @@ BEGIN
 END
 GO
 
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'catalogsettings.topcategorymenusubcategorylevelstodisplay'
+GO

@@ -86,7 +86,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
         //just copy this method from CatalogController (removed some redundant code)
         [NonAction]
         protected IList<CategoryModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad, bool validateIncludeInTopMenu)
+            IList<int> loadSubCategoriesForIds, int level, bool validateIncludeInTopMenu)
         {
             var result = new List<CategoryModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -122,13 +122,9 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                         }
                     }
                 }
-                if (levelsToLoad <= level)
-                {
-                    loadSubCategories = false;
-                }
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad, validateIncludeInTopMenu);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, validateIncludeInTopMenu);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -412,9 +408,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
-            var model = _cacheManager.Get(cacheKey, () =>
-                PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true).ToList()
-                );
+            var model = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0, null, 0, true).ToList());
 
             return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/CategoryNavigation.cshtml", model);
         }

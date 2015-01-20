@@ -272,11 +272,6 @@ namespace Nop.Core.Domain.Catalog
         public int MaximumBackInStockSubscriptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the value indicating how many subcategory levels to display in the top menu with categories
-        /// </summary>
-        public int TopCategoryMenuSubcategoryLevelsToDisplay { get; set; }
-
-        /// <summary>
         /// Gets or sets the value indicating whether we should load all subcategories in the left menu with categories.
         /// It can be used by third-party theme developers.
         /// </summary>

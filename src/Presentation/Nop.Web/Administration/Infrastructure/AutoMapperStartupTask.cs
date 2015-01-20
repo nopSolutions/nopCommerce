@@ -735,7 +735,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.IgnoreAcl_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.IgnoreStoreLimitations_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CacheProductPrices_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ManufacturersBlockItemsToDisplay_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTaxShippingInfoFooter_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, mo => mo.Ignore())

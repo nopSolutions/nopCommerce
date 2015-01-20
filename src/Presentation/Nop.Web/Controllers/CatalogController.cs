@@ -314,12 +314,11 @@ namespace Nop.Web.Controllers
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategoriesForIds">Load subcategories only for the specified category IDs; pass null to load subcategories for all categories</param>
         /// <param name="level">Current level</param>
-        /// <param name="levelsToLoad">A value indicating how many levels to load (max)</param>
         /// <param name="validateIncludeInTopMenu">A value indicating whether we should validate "include in top menu" property</param>
         /// <returns>Category models</returns>
         [NonAction]
         protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds, int level, int levelsToLoad, bool validateIncludeInTopMenu)
+            IList<int> loadSubCategoriesForIds, int level, bool validateIncludeInTopMenu)
         {
             var result = new List<CategorySimpleModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -373,13 +372,9 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
-                if (levelsToLoad <= level)
-                {
-                    loadSubCategories = false;
-                }
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, levelsToLoad, validateIncludeInTopMenu);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1, validateIncludeInTopMenu);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -644,14 +639,14 @@ namespace Nop.Web.Controllers
             {
                 if (_catalogSettings.LoadAllSideCategoryMenuSubcategories)
                 {
-                    return PrepareCategorySimpleModels(0, null, 0, int.MaxValue, false).ToList();
+                    return PrepareCategorySimpleModels(0, null, 0, false).ToList();
                 }
 
                 var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
                 var breadCrumb = activeCategory != null 
                     ? activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService).Select(x => x.Id).ToList()
                     : new List<int>();
-                return PrepareCategorySimpleModels(0, breadCrumb, 0, int.MaxValue, false).ToList();
+                return PrepareCategorySimpleModels(0, breadCrumb, 0, false).ToList();
             });
 
             var model = new CategoryNavigationModel
@@ -672,7 +667,7 @@ namespace Nop.Web.Controllers
             string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
-                PrepareCategorySimpleModels(0, null, 0, _catalogSettings.TopCategoryMenuSubcategoryLevelsToDisplay, true)
+                PrepareCategorySimpleModels(0, null, 0, true)
                 .ToList()
             );
 

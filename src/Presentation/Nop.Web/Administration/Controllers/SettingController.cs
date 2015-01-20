@@ -1014,7 +1014,6 @@ namespace Nop.Admin.Controllers
                 model.IgnoreAcl_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreAcl, storeScope);
                 model.IgnoreStoreLimitations_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.IgnoreStoreLimitations, storeScope);
                 model.CacheProductPrices_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CacheProductPrices, storeScope);
-                model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
                 model.ManufacturersBlockItemsToDisplay_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope);
                 model.DisplayTaxShippingInfoFooter_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoFooter, storeScope);
                 model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoProductDetailsPage, storeScope);
@@ -1263,11 +1262,6 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(catalogSettings, x => x.CacheProductPrices, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.CacheProductPrices, storeScope);
-
-            if (model.TopCategoryMenuSubcategoryLevelsToDisplay_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(catalogSettings, x => x.TopCategoryMenuSubcategoryLevelsToDisplay, storeScope);
 
             if (model.ManufacturersBlockItemsToDisplay_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.ManufacturersBlockItemsToDisplay, storeScope, false);
