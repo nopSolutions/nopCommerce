@@ -146,9 +146,12 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<QueuedEmail, QueuedEmailModel>()
                 .ForMember(dest => dest.EmailAccountName, mo => mo.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
+                .ForMember(dest => dest.PriorityName, mo => mo.Ignore())
                 .ForMember(dest => dest.SentOn, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<QueuedEmailModel, QueuedEmail>()
+                .ForMember(dest => dest.Priority, dt => dt.Ignore())
+                .ForMember(dest => dest.PriorityId, dt => dt.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, dt=> dt.Ignore())
                 .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.EmailAccount, mo => mo.Ignore())

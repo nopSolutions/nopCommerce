@@ -5,11 +5,10 @@
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Priority):
+            @Html.NopLabelFor(model => model.PriorityName):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.Priority)
-            @Html.ValidationMessageFor(model => model.Priority)
+            @Html.DisplayFor(model => model.PriorityName)
         </td>
     </tr>
     <tr>

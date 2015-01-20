@@ -158,6 +158,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.TopCategoryMenuSubcategoryLevelsToDisplay.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority.Range">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.Low">
+    <Value>Low</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.High">
+    <Value>High</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -363,4 +372,14 @@ GO
 --delete setting
 DELETE FROM [Setting] 
 WHERE [name] = N'catalogsettings.topcategorymenusubcategorylevelstodisplay'
+GO
+
+
+--queued email priority
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='Priority')
+BEGIN
+	EXEC sp_rename 'QueuedEmail.Priority', 'PriorityId', 'COLUMN';
+	
+	EXEC ('UPDATE [QueuedEmail] SET [PriorityId] = 0 WHERE [PriorityId] <> 5')
+END
 GO

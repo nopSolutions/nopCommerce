@@ -59,7 +59,7 @@ namespace Nop.Plugin.SMS.Verizon
 
                 var queuedEmail = new QueuedEmail
                 {
-                    Priority = 5,
+                    Priority = QueuedEmailPriority.High,
                     From = emailAccount.Email,
                     FromName = emailAccount.DisplayName,
                     To = _verizonSettings.Email,

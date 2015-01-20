@@ -164,7 +164,7 @@ namespace Nop.Services.Messages
             else
             {
                 //load by priority
-                query = query.OrderByDescending(qe => qe.Priority).ThenBy(qe => qe.CreatedOnUtc);
+                query = query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
             }
 
             var queuedEmails = new PagedList<QueuedEmail>(query, pageIndex, pageSize);

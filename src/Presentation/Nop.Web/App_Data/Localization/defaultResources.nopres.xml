@@ -9948,9 +9948,6 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority.Hint">
     <Value>The priority of the message.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority.Range">
-    <Value>The priority must be from 0 to 999999.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.Priority.Required">
     <Value>Enter priority.</Value>
   </LocaleResource>
@@ -11210,6 +11207,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Warning">
     <Value>Warning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.Low">
+    <Value>Low</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.High">
+    <Value>High</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Orders.OrderStatus.Cancelled">
     <Value>Cancelled</Value>

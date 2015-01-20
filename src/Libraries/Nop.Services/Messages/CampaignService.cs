@@ -157,7 +157,7 @@ namespace Nop.Services.Messages
 
                 var email = new QueuedEmail
                 {
-                    Priority = 3,
+                    Priority = QueuedEmailPriority.Low,
                     From = emailAccount.Email,
                     FromName = emailAccount.DisplayName,
                     To = subscription.Email,

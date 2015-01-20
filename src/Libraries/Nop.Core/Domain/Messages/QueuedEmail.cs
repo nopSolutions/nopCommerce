@@ -10,7 +10,7 @@ namespace Nop.Core.Domain.Messages
         /// <summary>
         /// Gets or sets the priority
         /// </summary>
-        public int Priority { get; set; }
+        public int PriorityId { get; set; }
 
         /// <summary>
         /// Gets or sets the From property
@@ -101,5 +101,22 @@ namespace Nop.Core.Domain.Messages
         /// Gets the email account
         /// </summary>
         public virtual EmailAccount EmailAccount { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the priority
+        /// </summary>
+        public QueuedEmailPriority Priority
+        {
+            get
+            {
+                return (QueuedEmailPriority)this.PriorityId;
+            }
+            set
+            {
+                this.PriorityId = (int)value;
+            }
+        }
+
     }
 }

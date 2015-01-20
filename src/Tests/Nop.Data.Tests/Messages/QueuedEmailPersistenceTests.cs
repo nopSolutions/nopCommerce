@@ -13,7 +13,7 @@ namespace Nop.Data.Tests.Messages
         {
             var qe = new QueuedEmail
             {
-                Priority = 1,
+                PriorityId = 5,
                 From = "From",
                 FromName = "FromName",
                 To = "To",
@@ -47,7 +47,7 @@ namespace Nop.Data.Tests.Messages
 
             var fromDb = SaveAndLoadEntity(qe);
             fromDb.ShouldNotBeNull();
-            fromDb.Priority.ShouldEqual(1);
+            fromDb.PriorityId.ShouldEqual(5);
             fromDb.From.ShouldEqual("From");
             fromDb.FromName.ShouldEqual("FromName");
             fromDb.To.ShouldEqual("To");

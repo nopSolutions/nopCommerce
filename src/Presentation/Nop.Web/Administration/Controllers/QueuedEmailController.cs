@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
+using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -20,15 +21,19 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
 
 		public QueuedEmailController(IQueuedEmailService queuedEmailService,
-            IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IDateTimeHelper dateTimeHelper, 
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
+            IWorkContext workContext)
 		{
             this._queuedEmailService = queuedEmailService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._workContext = workContext;
 		}
 
         public ActionResult Index()
@@ -69,7 +74,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = queuedEmails.Select(x => {
                     var m = x.ToModel();
-
+                    m.PriorityName = x.Priority.GetLocalizedEnum(_localizationService, _workContext);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     if (x.SentOnUtc.HasValue)
                         m.SentOn = _dateTimeHelper.ConvertToUserTime(x.SentOnUtc.Value, DateTimeKind.Utc);
@@ -113,6 +118,7 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = email.ToModel();
+            model.PriorityName = email.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
@@ -142,6 +148,7 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.PriorityName = email.Priority.GetLocalizedEnum(_localizationService, _workContext);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
@@ -161,7 +168,7 @@ namespace Nop.Admin.Controllers
 
             var requeuedEmail = new QueuedEmail
             {
-                Priority = queuedEmail.Priority,
+                PriorityId = queuedEmail.PriorityId,
                 From = queuedEmail.From,
                 FromName = queuedEmail.FromName,
                 To = queuedEmail.To,

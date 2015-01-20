@@ -14,7 +14,7 @@ namespace Nop.Admin.Models.Messages
         public override int Id { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Priority")]
-        public int Priority { get; set; }
+        public string PriorityName { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.From")]
         [AllowHtml]

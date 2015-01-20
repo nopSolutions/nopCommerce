@@ -20,6 +20,8 @@ namespace Nop.Data.Mapping.Messages
             this.Property(qe => qe.Subject).HasMaxLength(1000);
 
 
+            this.Ignore(qe => qe.Priority);
+
             this.HasRequired(qe => qe.EmailAccount)
                 .WithMany()
                 .HasForeignKey(qe => qe.EmailAccountId).WillCascadeOnDelete(true);
