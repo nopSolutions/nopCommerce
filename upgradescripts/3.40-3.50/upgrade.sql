@@ -1988,7 +1988,7 @@ GO
 --"custom text" attribute type (if "CustomValue" column is specified)
 UPDATE [Product_SpecificationAttribute_Mapping]
 SET [AttributeTypeId] = 10
-WHERE [AttributeTypeId] IS NULL AND [CustomValue] is not null
+WHERE [AttributeTypeId] IS NULL AND ([CustomValue] is not null OR [CustomValue] = N'')
 GO
 
 UPDATE [Product_SpecificationAttribute_Mapping]
