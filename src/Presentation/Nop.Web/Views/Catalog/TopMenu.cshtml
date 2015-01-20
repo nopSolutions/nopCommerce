@@ -16,20 +16,27 @@
         }
         </a>
         @{
+            //subcategories
+            var subCategories = responsiveMobileMenu ?
+                //responsive (all categories)
+                category.SubCategories :
+                //standard design (only categories with "IncludeInTopMenu")
+                category.SubCategories.Where(x => x.IncludeInTopMenu).ToList();
+
             var levelClass = "";
             if (level == 0)
             {
                 levelClass = "firstLevel";
                 <div class="top-menu-triangle"></div>
             }
-            if (category.SubCategories.Count > 0)
+            if (subCategories.Count > 0)
             {
                 if (responsiveMobileMenu)
                 {
                     <span class="expand">&nbsp;</span>
                 }
                 <ul class="sublist @levelClass">
-                    @foreach (var subCategory in  category.SubCategories)
+                    @foreach (var subCategory in subCategories)
                     {
                         @RenderCategoryLine(subCategory, level + 1, responsiveMobileMenu)
                     }
@@ -41,8 +48,10 @@
 
 <ul class="top-menu">
     @Html.Widget("header_menu_before")
-
-    @foreach (var category in Model.Categories)
+    @{
+        var rootCategories = Model.Categories.Where(x => x.IncludeInTopMenu).ToList();
+    }
+    @foreach (var category in rootCategories)
     {
         @RenderCategoryLine(category, 0, false)
     }
@@ -50,7 +59,7 @@
     {
         <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
     }
-    @if (Model.Categories.Count == 0 && Model.Topics.Count == 0)
+    @if (rootCategories.Count == 0 && Model.Topics.Count == 0)
     {
         //no categories or topis to display? in this case let's diplay some default menu items (should we?)
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
@@ -95,18 +104,21 @@
 
 @if (supportResponsive)
 {
+    var rootCategoriesResponsive = Model.Categories.ToList();
+    var responsiveMenuTitle = rootCategoriesResponsive.Count > 0 ? T("Categories") : T("Menu");
     <div id="mob-menu-button">
         <a href="">
-            <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
-            @{
-                var responsiveMenuTitle = Model.Categories.Count > 0 ? T("Categories") : T("Menu");
-            }
+            <span class="icon">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </span>
             <span>@responsiveMenuTitle</span>
         </a>
     </div>
     <ul class="mob-top-menu">
         @Html.Widget("mob_header_menu_before")
-        @foreach (var category in Model.Categories)
+        @foreach (var category in rootCategoriesResponsive)
         {
             @RenderCategoryLine(category, 0, true)
         }
@@ -114,7 +126,7 @@
         {
             <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
         }
-        @if (Model.Categories.Count == 0 && Model.Topics.Count == 0)
+        @if (rootCategoriesResponsive.Count == 0 && Model.Topics.Count == 0)
         {
             //no categories  or topis to display? in this case let's diplay some default menu items (should we?)
             <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>

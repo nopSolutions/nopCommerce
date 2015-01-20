@@ -321,7 +321,8 @@ namespace Nop.Web.Controllers
                                 {
                                     Id = catBr.Id,
                                     Name = catBr.GetLocalized(x => x.Name),
-                                    SeName = catBr.GetSeName()
+                                    SeName = catBr.GetSeName(),
+                                    IncludeInTopMenu = catBr.IncludeInTopMenu
                                 });
                             }
                         }
