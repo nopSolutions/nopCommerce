@@ -428,8 +428,23 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            //purchased product IDs
-            var purchasedProductIds = order.OrderItems.Select(oi => oi.ProductId).ToList();
+            //purchased product identifiers
+            var purchasedProductIds = new List<int>();
+            foreach (var orderItem in order.OrderItems)
+            {
+                //standard items
+                purchasedProductIds.Add(orderItem.ProductId);
+
+                //bundled (associated) products
+                var attributeValues = _productAttributeParser.ParseProductAttributeValues(orderItem.AttributesXml);
+                foreach (var attributeValue in attributeValues)
+                {
+                    if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
+                    {
+                       purchasedProductIds.Add(attributeValue.AssociatedProductId);
+                    }
+                }
+            }
 
             //list of customer roles
             var customerRoles = _customerService
