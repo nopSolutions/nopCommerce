@@ -39,6 +39,11 @@ namespace Nop.Core.Domain.Discounts
         public decimal DiscountAmount { get; set; }
 
         /// <summary>
+        /// Gets or sets the maximum discount amount (used with "UsePercentage")
+        /// </summary>
+        public decimal? MaximumDiscountAmount { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount start date and time
         /// </summary>
         public DateTime? StartDateUtc { get; set; }

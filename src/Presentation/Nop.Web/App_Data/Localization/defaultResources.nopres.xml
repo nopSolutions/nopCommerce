@@ -9228,6 +9228,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.LimitationTimes.Times">
     <Value>times</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountAmount">
+    <Value>Maximum discount amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountAmount.Hint">
+    <Value>Maximum allowed discount amount. Leave empty to allow any discount amount. If you're using "Assigned to products" discount type, then it's applied to each product separately.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountedQuantity">
     <Value>Maximum discounted quantity</Value>
   </LocaleResource>

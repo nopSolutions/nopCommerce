@@ -35,6 +35,11 @@ namespace Nop.Admin.Models.Discounts
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountAmount")]
         public decimal DiscountAmount { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.MaximumDiscountAmount")]
+        [UIHint("DecimalNullable")]
+        public decimal? MaximumDiscountAmount { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.StartDate")]

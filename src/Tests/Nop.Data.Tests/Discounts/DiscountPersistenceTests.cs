@@ -20,6 +20,7 @@ namespace Nop.Data.Tests.Discounts
                                    UsePercentage = true,
                                    DiscountPercentage = 1.1M,
                                    DiscountAmount = 2.1M,
+                                   MaximumDiscountAmount = 3.1M,
                                    StartDateUtc = new DateTime(2010, 01, 01),
                                    EndDateUtc = new DateTime(2010, 01, 02),
                                    RequiresCouponCode = true,
@@ -36,6 +37,7 @@ namespace Nop.Data.Tests.Discounts
             fromDb.UsePercentage.ShouldEqual(true);
             fromDb.DiscountPercentage.ShouldEqual(1.1M);
             fromDb.DiscountAmount.ShouldEqual(2.1M);
+            fromDb.MaximumDiscountAmount.ShouldEqual(3.1M);
             fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.RequiresCouponCode.ShouldEqual(true);

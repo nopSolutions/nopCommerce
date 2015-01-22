@@ -17,12 +17,18 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
-
+            //calculate discount amount
             decimal result;
             if (discount.UsePercentage)
                 result = (decimal)((((float)amount) * ((float)discount.DiscountPercentage)) / 100f);
             else
                 result = discount.DiscountAmount;
+
+            //validate maximum disocunt amount
+            if (discount.UsePercentage && 
+                discount.MaximumDiscountAmount.HasValue &&
+                result > discount.MaximumDiscountAmount.Value)
+                result = discount.MaximumDiscountAmount.Value;
 
             if (result < decimal.Zero)
                 result = decimal.Zero;

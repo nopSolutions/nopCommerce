@@ -167,6 +167,12 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.High">
     <Value>High</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountAmount">
+    <Value>Maximum discount amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountAmount.Hint">
+    <Value>Maximum allowed discount amount. Leave empty to allow any discount amount. If you''re using "Assigned to products" discount type, then it''s applied to each product separately.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -381,5 +387,15 @@ BEGIN
 	EXEC sp_rename 'QueuedEmail.Priority', 'PriorityId', 'COLUMN';
 	
 	EXEC ('UPDATE [QueuedEmail] SET [PriorityId] = 0 WHERE [PriorityId] <> 5')
+END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='MaximumDiscountAmount')
+BEGIN
+	ALTER TABLE [Discount]
+	ADD [MaximumDiscountAmount] decimal(18,4) NULL
 END
 GO

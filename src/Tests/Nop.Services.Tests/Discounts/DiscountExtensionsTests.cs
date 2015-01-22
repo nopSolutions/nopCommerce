@@ -22,6 +22,7 @@ namespace Nop.Services.Tests.Discounts
             discount.DiscountPercentage = 60;
             discount.GetDiscountAmount(200).ShouldEqual(120);
         }
+
         [Test]
         public void Can_calculate_discount_amount_fixed()
         {
@@ -35,6 +36,26 @@ namespace Nop.Services.Tests.Discounts
 
             discount.DiscountAmount = 20;
             discount.GetDiscountAmount(200).ShouldEqual(20);
+        }
+
+        [Test]
+        public void Maximum_discount_amount_is_used()
+        {
+            var discount = new Discount
+            {
+                UsePercentage = true,
+                DiscountPercentage = 30,
+                MaximumDiscountAmount = 3.4M
+            };
+
+            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+
+            discount.DiscountPercentage = 60;
+            discount.GetDiscountAmount(200).ShouldEqual(3.4M);
+            discount.GetDiscountAmount(100).ShouldEqual(3.4M);
+
+            discount.DiscountPercentage = 1;
+            discount.GetDiscountAmount(200).ShouldEqual(2);
         }
     }
 }

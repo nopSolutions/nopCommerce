@@ -12,6 +12,7 @@ namespace Nop.Data.Mapping.Discounts
             this.Property(d => d.CouponCode).HasMaxLength(100);
             this.Property(d => d.DiscountPercentage).HasPrecision(18, 4);
             this.Property(d => d.DiscountAmount).HasPrecision(18, 4);
+            this.Property(d => d.MaximumDiscountAmount).HasPrecision(18, 4);
 
             this.Ignore(d => d.DiscountType);
             this.Ignore(d => d.DiscountLimitation);

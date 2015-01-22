@@ -110,8 +110,7 @@
                 if (selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesPerCustomer).ToString())) {
                     //'N Times Only' or 'N Times Per Customer'
                     $('#pnlLimitationTimes').show();
-                }
-                else {
+                } else {
                     $('#pnlLimitationTimes').hide();
                 }
             }
@@ -120,22 +119,21 @@
                 if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
                     $('#pnlDiscountPercentage').show();
                     $('#pnlDiscountAmount').hide();
-                }
-                else {
+                    $('#pnlMaximumDiscountAmount').show();
+                } else {
                     $('#pnlDiscountPercentage').hide();
                     $('#pnlDiscountAmount').show();
+                    $('#pnlMaximumDiscountAmount').hide();
                 }
             }
 
             function toggleRequiresCouponCode() {
                 if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
-                    $('#pnlCouponCode').show();
-                }
-                else {
-                    $('#pnlCouponCode').hide();
-                }
+                $('#pnlCouponCode').show();
+            } else {
+                $('#pnlCouponCode').hide();
             }
-            
+        }
     </script>
     
         
@@ -231,6 +229,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.DiscountPercentage)
                 @Html.ValidationMessageFor(model => model.DiscountPercentage)
+            </td>
+        </tr>
+        <tr id="pnlMaximumDiscountAmount">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MaximumDiscountAmount):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
+                @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
             </td>
         </tr>
         <tr>
