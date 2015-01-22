@@ -88,7 +88,7 @@
                             @if (!Model.DisableBillingAddressCheckoutStep)
                             {
                                 <p class="back-link">
-                                    <a href="#" onclick=" Checkout.back(); return false; "><small>&laquo; </small>@T("Common.Back")</a>
+                                    <a href="#" onclick="Checkout.back(); return false; "><small>&laquo; </small>@T("Common.Back")</a>
                                 </p>
                             }
                             <input type="button" class="button-1 new-address-next-step-button" title="@T("Common.Continue")" onclick="Shipping.save()" value="@T("Common.Continue")" />
