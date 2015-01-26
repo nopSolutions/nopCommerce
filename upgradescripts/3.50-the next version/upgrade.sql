@@ -399,3 +399,12 @@ BEGIN
 	ADD [MaximumDiscountAmount] decimal(18,4) NULL
 END
 GO
+
+
+
+--more indexes
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ProductAttribute_Mapping_ProductId_DisplayOrder' and object_id=object_id(N'[Product_ProductAttribute_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_ProductAttribute_Mapping_ProductId_DisplayOrder] ON [Product_ProductAttribute_Mapping] ([ProductId] ASC, [DisplayOrder] ASC)
+END
+GO
