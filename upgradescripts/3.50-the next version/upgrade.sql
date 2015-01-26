@@ -401,10 +401,17 @@ END
 GO
 
 
-
 --more indexes
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ProductAttribute_Mapping_ProductId_DisplayOrder' and object_id=object_id(N'[Product_ProductAttribute_Mapping]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_Product_ProductAttribute_Mapping_ProductId_DisplayOrder] ON [Product_ProductAttribute_Mapping] ([ProductId] ASC, [DisplayOrder] ASC)
+END
+GO
+
+
+--more indexes
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductAttributeValue_ProductAttributeMappingId_DisplayOrder' and object_id=object_id(N'[ProductAttributeValue]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductAttributeValue_ProductAttributeMappingId_DisplayOrder] ON [ProductAttributeValue] ([ProductAttributeMappingId] ASC, [DisplayOrder] ASC)
 END
 GO
