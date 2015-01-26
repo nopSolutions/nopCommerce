@@ -408,10 +408,22 @@ BEGIN
 END
 GO
 
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Product_ProductAttribute_Mapping_ProductId' and object_id=object_id(N'[Product_ProductAttribute_Mapping]'))
+BEGIN
+	DROP INDEX [IX_Product_ProductAttribute_Mapping_ProductId] ON [Product_ProductAttribute_Mapping]
+END
+GO
+
 
 --more indexes
 IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductAttributeValue_ProductAttributeMappingId_DisplayOrder' and object_id=object_id(N'[ProductAttributeValue]'))
 BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductAttributeValue_ProductAttributeMappingId_DisplayOrder] ON [ProductAttributeValue] ([ProductAttributeMappingId] ASC, [DisplayOrder] ASC)
+END
+GO
+
+IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductAttributeValue_ProductAttributeMappingId' and object_id=object_id(N'[ProductAttributeValue]'))
+BEGIN
+	DROP INDEX [IX_ProductAttributeValue_ProductAttributeMappingId] ON [ProductAttributeValue]
 END
 GO
