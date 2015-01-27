@@ -51,7 +51,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributesXml)
+        public virtual string FormatAttributes(string attributesXml)
         {
             var customer = _workContext.CurrentCustomer;
             return FormatAttributes(attributesXml, customer);
@@ -67,7 +67,7 @@ namespace Nop.Services.Orders
         /// <param name="renderPrices">A value indicating whether to render prices</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributesXml,
+        public virtual string FormatAttributes(string attributesXml,
             Customer customer, 
             string serapator = "<br />", 
             bool htmlEncode = true, 

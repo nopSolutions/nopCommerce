@@ -33,7 +33,7 @@ namespace Nop.Services.Common
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(string attributesXml,
+        public virtual string FormatAttributes(string attributesXml,
             string serapator = "<br />", 
             bool htmlEncode = true)
         {

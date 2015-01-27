@@ -61,7 +61,7 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(Product product, string attributesXml)
+        public virtual string FormatAttributes(Product product, string attributesXml)
         {
             var customer = _workContext.CurrentCustomer;
             return FormatAttributes(product, attributesXml, customer);
@@ -80,7 +80,7 @@ namespace Nop.Services.Catalog
         /// <param name="renderGiftCardAttributes">A value indicating whether to render gift card attributes</param>
         /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
-        public string FormatAttributes(Product product, string attributesXml,
+        public virtual string FormatAttributes(Product product, string attributesXml,
             Customer customer, string serapator = "<br />", bool htmlEncode = true, bool renderPrices = true,
             bool renderProductAttributes = true, bool renderGiftCardAttributes = true,
             bool allowHyperlinks = true)
