@@ -313,9 +313,7 @@ namespace Nop.Services.Catalog
                     throw new ArgumentNullException("productAttributeParser");
 
                 //let's find appropriate record
-                var combination = product
-                    .ProductAttributeCombinations
-                    .FirstOrDefault(x => productAttributeParser.AreProductAttributesEqual(x.AttributesXml, attributesXml));
+                var combination = productAttributeParser.FindProductAttributeCombination(product, attributesXml);
                 if (combination != null)
                 {
                     sku = combination.Sku;

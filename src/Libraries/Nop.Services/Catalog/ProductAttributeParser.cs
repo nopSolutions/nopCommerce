@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
 
@@ -33,7 +34,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Selected product attribute mapping identifiers</returns>
-        public virtual IList<int> ParseProductAttributeMappingIds(string attributesXml)
+        protected virtual IList<int> ParseProductAttributeMappingIds(string attributesXml)
         {
             var ids = new List<int>();
             if (String.IsNullOrEmpty(attributesXml))
@@ -233,65 +234,70 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml1">The attributes of the first product</param>
         /// <param name="attributesXml2">The attributes of the second product</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Result</returns>
-        public virtual bool AreProductAttributesEqual(string attributesXml1, string attributesXml2)
+        public virtual bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes)
         {
-            bool attributesEqual = true;
-            if (ParseProductAttributeMappingIds(attributesXml1).Count == ParseProductAttributeMappingIds(attributesXml2).Count)
+            var attributes1 = ParseProductAttributeMappings(attributesXml1);
+            if (ignoreNonCombinableAttributes)
             {
-                var attributes1 = ParseProductAttributeMappings(attributesXml1);
-                var attributes2 = ParseProductAttributeMappings(attributesXml2);
-                foreach (var a1 in attributes1)
-                {
-                    bool hasAttribute = false;
-                    foreach (var a2 in attributes2)
-                    {
-                        if (a1.Id == a2.Id)
-                        {
-                            hasAttribute = true;
-                            var values1Str = ParseValues(attributesXml1, a1.Id);
-                            var values2Str = ParseValues(attributesXml2, a2.Id);
-                            if (values1Str.Count == values2Str.Count)
-                            {
-                                foreach (string str1 in values1Str)
-                                {
-                                    bool hasValue = false;
-                                    foreach (string str2 in values2Str)
-                                    {
-                                        //case insensitive? 
-                                        //if (str1.Trim().ToLower() == str2.Trim().ToLower())
-                                        if (str1.Trim() == str2.Trim())
-                                        {
-                                            hasValue = true;
-                                            break;
-                                        }
-                                    }
+                attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
+            }
+            var attributes2 = ParseProductAttributeMappings(attributesXml2);
+            if (ignoreNonCombinableAttributes)
+            {
+                attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
+            }
+            if (attributes1.Count != attributes2.Count)
+                return false;
 
-                                    if (!hasValue)
+            bool attributesEqual = true;
+            foreach (var a1 in attributes1)
+            {
+                bool hasAttribute = false;
+                foreach (var a2 in attributes2)
+                {
+                    if (a1.Id == a2.Id)
+                    {
+                        hasAttribute = true;
+                        var values1Str = ParseValues(attributesXml1, a1.Id);
+                        var values2Str = ParseValues(attributesXml2, a2.Id);
+                        if (values1Str.Count == values2Str.Count)
+                        {
+                            foreach (string str1 in values1Str)
+                            {
+                                bool hasValue = false;
+                                foreach (string str2 in values2Str)
+                                {
+                                    //case insensitive? 
+                                    //if (str1.Trim().ToLower() == str2.Trim().ToLower())
+                                    if (str1.Trim() == str2.Trim())
                                     {
-                                        attributesEqual = false;
+                                        hasValue = true;
                                         break;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                attributesEqual = false;
-                                break;
+
+                                if (!hasValue)
+                                {
+                                    attributesEqual = false;
+                                    break;
+                                }
                             }
                         }
-                    }
-
-                    if (hasAttribute == false)
-                    {
-                        attributesEqual = false;
-                        break;
+                        else
+                        {
+                            attributesEqual = false;
+                            break;
+                        }
                     }
                 }
-            }
-            else
-            {
-                attributesEqual = false;
+
+                if (hasAttribute == false)
+                {
+                    attributesEqual = false;
+                    break;
+                }
             }
 
             return attributesEqual;
@@ -302,39 +308,35 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Found product attribute combination</returns>
-        public virtual ProductAttributeCombination FindProductAttributeCombination(Product product, 
-            string attributesXml)
+        public virtual ProductAttributeCombination FindProductAttributeCombination(Product product,
+            string attributesXml, bool ignoreNonCombinableAttributes = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            //existing combinations
             var combinations = _productAttributeService.GetAllProductAttributeCombinations(product.Id);
-            if (combinations.Count == 0)
-                return null;
-
-            foreach (var combination in combinations)
-            {
-                bool attributesEqual = AreProductAttributesEqual(combination.AttributesXml, attributesXml);
-                if (attributesEqual)
-                    return combination;
-            }
-
-            return null;
+            return combinations.FirstOrDefault(x => 
+                AreProductAttributesEqual(x.AttributesXml, attributesXml, ignoreNonCombinableAttributes));
         }
 
         /// <summary>
         /// Generate all combinations
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Attribute combinations in XML format</returns>
-        public virtual IList<string> GenerateAllCombinations(Product product)
+        public virtual IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             var allProductAttributMappings = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            if (ignoreNonCombinableAttributes)
+            {
+                allProductAttributMappings = allProductAttributMappings.Where(x => !x.IsNonCombinable()).ToList();
+            }
             var allPossibleAttributeCombinations = new List<List<ProductAttributeMapping>>();
             for (int counter = 0; counter < (1 << allProductAttributMappings.Count); ++counter)
             {

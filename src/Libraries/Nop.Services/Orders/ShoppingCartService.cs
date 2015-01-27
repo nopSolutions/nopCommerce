@@ -391,9 +391,7 @@ namespace Nop.Services.Orders
                         break;
                     case ManageInventoryMethod.ManageStockByAttributes:
                         {
-                            var combination = product
-                                .ProductAttributeCombinations
-                                .FirstOrDefault(x => _productAttributeParser.AreProductAttributesEqual(x.AttributesXml, attributesXml));
+                            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
                             if (combination != null)
                             {
                                 //combination exists
@@ -459,12 +457,14 @@ namespace Nop.Services.Orders
         /// <param name="product">Product</param>
         /// <param name="quantity">Quantity</param>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Warnings</returns>
         public virtual IList<string> GetShoppingCartItemAttributeWarnings(Customer customer, 
             ShoppingCartType shoppingCartType,
             Product product, 
             int quantity = 1,
-            string attributesXml = "")
+            string attributesXml = "",
+            bool ignoreNonCombinableAttributes = false)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -473,6 +473,10 @@ namespace Nop.Services.Orders
 
             //ensure it's our attributes
             var attributes1 = _productAttributeParser.ParseProductAttributeMappings(attributesXml);
+            if (ignoreNonCombinableAttributes)
+            {
+                attributes1 = attributes1.Where(x => !x.IsNonCombinable()).ToList();
+            }
             foreach (var attribute in attributes1)
             {
                 if (attribute.Product != null)
@@ -491,6 +495,10 @@ namespace Nop.Services.Orders
 
             //validate required product attributes (whether they're chosen/selected/entered)
             var attributes2 = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            if (ignoreNonCombinableAttributes)
+            {
+                attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
+            }
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
@@ -594,6 +602,9 @@ namespace Nop.Services.Orders
             {
                 if (attributeValue.AttributeValueType == AttributeValueType.AssociatedToProduct)
                 {
+                    if (ignoreNonCombinableAttributes && attributeValue.ProductAttributeMapping.IsNonCombinable())
+                        continue;
+
                     //associated product (bundle)
                     var associatedProduct = _productService.GetProductById(attributeValue.AssociatedProductId);
                     if (associatedProduct != null)
@@ -606,16 +617,14 @@ namespace Nop.Services.Orders
                         {
                             var attributeName = attributeValue.ProductAttributeMapping.ProductAttribute.GetLocalized(a => a.Name);
                             var attributeValueName = attributeValue.GetLocalized(a => a.Name);
-                            warnings.Add(
-                                string.Format(
-                                    _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), attributeName,
-                                    attributeValueName, associatedProductWarning));
+                            warnings.Add(string.Format(
+                                _localizationService.GetResource("ShoppingCart.AssociatedAttributeWarning"), 
+                                attributeName, attributeValueName, associatedProductWarning));
                         }
                     }
                     else
                     {
-                        warnings.Add(string.Format("Associated product cannot be loaded - {0}",
-                            attributeValue.AssociatedProductId));
+                        warnings.Add(string.Format("Associated product cannot be loaded - {0}", attributeValue.AssociatedProductId));
                     }
                 }
             }
@@ -930,7 +939,7 @@ namespace Nop.Services.Orders
                 if (sci.ProductId == product.Id)
                 {
                     //attributes
-                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml);
+                    bool attributesEqual = _productAttributeParser.AreProductAttributesEqual(sci.AttributesXml, attributesXml, false);
 
                     //gift cards
                     bool giftCardInfoSame = true;

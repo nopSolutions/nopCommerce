@@ -11,13 +11,6 @@ namespace Nop.Services.Catalog
         #region Product attributes
 
         /// <summary>
-        /// Gets selected product attribute maping identifiers
-        /// </summary>
-        /// <param name="attributesXml">Attributes in XML format</param>
-        /// <returns>Selected product attribute mapping identifiers</returns>
-        IList<int> ParseProductAttributeMappingIds(string attributesXml);
-
-        /// <summary>
         /// Gets selected product attribute mappings
         /// </summary>
         /// <param name="attributesXml">Attributes in XML format</param>
@@ -53,24 +46,27 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributesXml1">The attributes of the first product</param>
         /// <param name="attributesXml2">The attributes of the second product</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Result</returns>
-        bool AreProductAttributesEqual(string attributesXml1, string attributesXml2);
+        bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes);
 
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Found product attribute combination</returns>
         ProductAttributeCombination FindProductAttributeCombination(Product product,
-            string attributesXml);
+            string attributesXml, bool ignoreNonCombinableAttributes = true);
 
         /// <summary>
         /// Generate all combinations
         /// </summary>
         /// <param name="product">Product</param>
+        /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Attribute combinations in XML format</returns>
-        IList<string> GenerateAllCombinations(Product product);
+        IList<string> GenerateAllCombinations(Product product, bool ignoreNonCombinableAttributes = false);
 
         #endregion
 

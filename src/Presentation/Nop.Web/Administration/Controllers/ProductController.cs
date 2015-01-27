@@ -338,7 +338,10 @@ namespace Nop.Admin.Controllers
             model.StockQuantity = 10000;
             model.NotifyAdminForQuantityBelow = 1;
 
-            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                //ignore non-combinable attributes for combinations
+                .Where(x => !x.IsNonCombinable())
+                .ToList();
             foreach (var attribute in attributes)
             {
                 var attributeModel = new AddProductAttributeCombinationModel.ProductAttributeModel
@@ -3884,7 +3887,7 @@ namespace Nop.Admin.Controllers
                     };
                     //warnings
                     var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                        ShoppingCartType.ShoppingCart, x.Product, 1, x.AttributesXml);
+                        ShoppingCartType.ShoppingCart, x.Product, 1, x.AttributesXml, true);
                     for (int i = 0; i < warnings.Count; i++)
                     {
                         pacModel.Warnings += warnings[i];
@@ -4006,7 +4009,10 @@ namespace Nop.Admin.Controllers
 
             #region Product attributes
 
-            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                //ignore non-combinable attributes for combinations
+                .Where(x => !x.IsNonCombinable())
+                .ToList();
             foreach (var attribute in attributes)
             {
                 string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
@@ -4131,7 +4137,7 @@ namespace Nop.Admin.Controllers
             #endregion
 
             warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                ShoppingCartType.ShoppingCart, product, 1, attributesXml));
+                ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
             if (warnings.Count == 0)
             {
                 //save combination
@@ -4173,7 +4179,7 @@ namespace Nop.Admin.Controllers
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return Content("This is not your product");
 
-            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product);
+            var allAttributesXml = _productAttributeParser.GenerateAllCombinations(product, true);
             foreach (var attributesXml in allAttributesXml)
             {
                 var existingCombination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
@@ -4185,7 +4191,7 @@ namespace Nop.Admin.Controllers
                 //new one
                 var warnings = new List<string>();
                 warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(_workContext.CurrentCustomer,
-                    ShoppingCartType.ShoppingCart, product, 1, attributesXml));
+                    ShoppingCartType.ShoppingCart, product, 1, attributesXml, true));
                 if (warnings.Count != 0)
                     continue;
 
