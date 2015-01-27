@@ -545,8 +545,8 @@ namespace Nop.Services.Catalog
                     var discountedQuantity = appliedDiscount.MaximumDiscountedQuantity.Value;
                     var discountedSubTotal = unitPrice * discountedQuantity;
                     discountAmount = discountAmount * discountedQuantity;
-                    
-                    var notDiscountedQuantity = shoppingCartItem.Quantity - appliedDiscount.MaximumDiscountedQuantity.Value;
+
+                    var notDiscountedQuantity = shoppingCartItem.Quantity - discountedQuantity;
                     var notDiscountedUnitPrice = GetUnitPrice(shoppingCartItem, false);
                     var notDiscountedSubTotal = notDiscountedUnitPrice*notDiscountedQuantity;
 
