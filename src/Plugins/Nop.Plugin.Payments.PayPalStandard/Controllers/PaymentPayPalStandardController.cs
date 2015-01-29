@@ -281,6 +281,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     sb.AppendLine("invoice: " + invoice);
                     sb.AppendLine("payment_fee: " + payment_fee);
 
+                    var newPaymentStatus = PaypalHelper.GetPaymentStatus(payment_status, pending_reason);
+                    sb.AppendLine("New payment status: " + newPaymentStatus);
 
                     //order note
                     order.OrderNotes.Add(new OrderNote
@@ -305,12 +307,15 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     }
 
                     //mark order as paid
-                    if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                    if (newPaymentStatus == PaymentStatus.Paid)
                     {
-                        order.AuthorizationTransactionId = txn_id;
-                        _orderService.UpdateOrder(order);
+                        if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                        {
+                            order.AuthorizationTransactionId = txn_id;
+                            _orderService.UpdateOrder(order);
 
-                        _orderProcessingService.MarkOrderAsPaid(order);
+                            _orderProcessingService.MarkOrderAsPaid(order);
+                        }
                     }
                 }
 
