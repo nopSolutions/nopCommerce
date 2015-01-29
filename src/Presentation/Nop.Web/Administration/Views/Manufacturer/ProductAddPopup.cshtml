@@ -128,8 +128,9 @@
                             scrollable: false,
                             columns: [{
                                 field: "Id",
-                                title: "@T("Admin.Common.Check")",
-                                template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' />",
+                                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                headerAttributes: { style: "text-align:center" },
+                                template: "<input type='checkbox' name='SelectedProductIds' value='#=Id#' class='checkboxGroups' />",
                                 attributes: {
                                     style: "text-align:center"
                                 },
@@ -154,15 +155,26 @@
                             var grid = $('#products-grid').data('kendoGrid');
                             grid.dataSource.page(1); //new search. Set page size to 1
                             //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            //clear selected checkboxes
+                            $('.checkboxGroups').attr('checked', false).change();
                             return false;
                         });
-                    });
 
-                    $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-                        if (event.keyCode == 13) {
-                            $("#search-products").click();
-                            return false;
-                        }
+                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-products").click();
+                                return false;
+                            }
+                        });
+                        
+                        //wire up checkboxes
+                        $('#mastercheckbox').click(function() {
+                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                        });
+
+                        $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                            updateMasterCheckbox();
+                        });
                     });
 
                     function additionalData() {
@@ -174,6 +186,12 @@
                             SearchVendorId: $('#SearchVendorId').val(),
                             SearchProductTypeId: $('#SearchProductTypeId').val()
                         };
+                    }
+
+                    function updateMasterCheckbox() {
+                        var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+                        var numChkBoxesChecked = $('#products-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                     }
                 </script>
             </td>
