@@ -52,8 +52,9 @@ namespace Nop.Services.Tasks
             //in this case a probability that it'll be run is quite small (an application could be restarted)
             //we should manually run the tasks which weren't run for a long time
             var notRunTasks = scheduleTasks
+                //find tasks with "run period" more than 30 minutes
                 .Where(x => x.Seconds >= _notRunTasksInterval)
-                .Where(x => !x.LastStartUtc.HasValue || x.LastStartUtc.Value.AddSeconds(_notRunTasksInterval) < DateTime.UtcNow)
+                .Where(x => !x.LastStartUtc.HasValue || x.LastStartUtc.Value.AddSeconds(x.Seconds) < DateTime.UtcNow)
                 .ToList();
             //create a thread for the tasks which weren't run for a long time
             if (notRunTasks.Count > 0)
