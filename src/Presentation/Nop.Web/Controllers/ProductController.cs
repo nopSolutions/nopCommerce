@@ -335,7 +335,7 @@ namespace Nop.Web.Controllers
 
             #region Product tags
 
-            //do not prepare this model for the associated products. any it's not used
+            //do not prepare this model for the associated products. anyway it's not used
             if (!isAssociatedProduct)
             {
                 var productTagsCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
