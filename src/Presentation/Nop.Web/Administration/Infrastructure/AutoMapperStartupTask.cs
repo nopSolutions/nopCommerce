@@ -835,10 +835,10 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.MiniCartThumbPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumImageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MultipleThumbDirectories_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultImageQuality_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
-                .ForMember(dest => dest.DefaultImageQuality, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductThumbPerRowOnProductDetailsPage, mo => mo.Ignore())
                 .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
             Mapper.CreateMap<CustomerSettings, CustomerUserSettingsModel.CustomerSettingsModel>()

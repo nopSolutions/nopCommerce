@@ -56,5 +56,9 @@ namespace Nop.Admin.Models.Settings
         public bool MultipleThumbDirectories { get; set; }
         public bool MultipleThumbDirectories_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.DefaultImageQuality")]
+        public int DefaultImageQuality { get; set; }
+        public bool DefaultImageQuality_OverrideForStore { get; set; }
+
     }
 }

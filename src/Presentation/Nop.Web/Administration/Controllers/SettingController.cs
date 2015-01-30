@@ -1803,6 +1803,7 @@ namespace Nop.Admin.Controllers
                 model.MiniCartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope);
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
                 model.MultipleThumbDirectories_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
+                model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
             }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
@@ -1876,6 +1877,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.MultipleThumbDirectories, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
+
+            if (model.DefaultImageQuality_OverrideForStore || storeScope == 0)
+              _settingService.SaveSetting(mediaSettings, x => x.DefaultImageQuality, storeScope, false);
+            else if (storeScope > 0)
+              _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
