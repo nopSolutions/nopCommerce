@@ -177,7 +177,7 @@ set @resources='
     <Value>Default image quality (0 - 100)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
-    <Value>The image quality to be used for uploaded images. Default is 80. Max is 100.</Value>
+    <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
   </LocaleResource>
 </Language>
 '
