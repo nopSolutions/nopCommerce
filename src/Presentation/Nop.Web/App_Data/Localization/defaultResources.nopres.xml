@@ -5455,7 +5455,7 @@
     <Value>Default Image Quality (0 - 100)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
-    <Value>The image quality to be used for uploaded images.  Default is 80.  Max is 100.</Value>
+    <Value>The image quality to be used for uploaded images. Default is 80. Max is 100.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News">
     <Value>News settings</Value>

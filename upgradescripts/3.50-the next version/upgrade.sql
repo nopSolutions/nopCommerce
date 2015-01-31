@@ -173,6 +173,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.MaximumDiscountAmount.Hint">
     <Value>Maximum allowed discount amount. Leave empty to allow any discount amount. If you''re using "Assigned to products" discount type, then it''s applied to each product separately.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality">
+    <Value>Default image quality (0 - 100)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
+    <Value>The image quality to be used for uploaded images. Default is 80. Max is 100.</Value>
+  </LocaleResource>
 </Language>
 '
 
