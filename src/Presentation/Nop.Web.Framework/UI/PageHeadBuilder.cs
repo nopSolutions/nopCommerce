@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using Nop.Core.Domain.Seo;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
@@ -259,9 +261,6 @@ namespace Nop.Web.Framework.UI
                             bundle.EnableFileExtensionReplacements = false;
                             bundle.Include(partsToBundle);
                             BundleTable.Bundles.Add(bundle);
-                            //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
-                            //we think it's bad decision and should be disabled by default
-                            BundleTable.Bundles.IgnoreList.Clear();
                         }
                     }
 
@@ -355,9 +354,6 @@ namespace Nop.Web.Framework.UI
                                 bundle.Include(ptb, GetCssTranform());
                             }
                             BundleTable.Bundles.Add(bundle);
-                            //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
-                            //we think it's bad decision and should be disabled by default
-                            BundleTable.Bundles.IgnoreList.Clear();
                         }
                     }
 
