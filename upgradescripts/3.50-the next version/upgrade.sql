@@ -179,6 +179,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
     <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfSettings">
+    <Value>PDF settings</Value>
+  </LocaleResource>
 </Language>
 '
 

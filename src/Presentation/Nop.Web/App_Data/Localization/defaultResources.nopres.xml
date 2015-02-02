@@ -5287,7 +5287,7 @@
     <Value>Image file that will be displayed in PDF order invoices. A small image is recommended.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfSettings">
-    <Value>Pdf settings</Value>
+    <Value>PDF settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey">
     <Value>reCAPTCHA private key</Value>
