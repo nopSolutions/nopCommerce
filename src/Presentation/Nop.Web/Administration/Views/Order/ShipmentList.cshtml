@@ -11,6 +11,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -188,7 +189,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
@@ -303,6 +305,7 @@
                 var postData = {
                     selectedIds: selectedIds
                 };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache: false,
@@ -329,6 +332,7 @@
                 var postData = {
                     selectedIds: selectedIds
                 };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache: false,
@@ -377,7 +381,7 @@
         });
 
         function additionalData() {
-            return {
+            var data = {
                 StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                 EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
                 TrackingNumber: $('#@Html.FieldIdFor(model => model.TrackingNumber)').val(),
@@ -387,10 +391,11 @@
                 WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
                 LoadNotShipped: $('#@Html.FieldIdFor(model => model.LoadNotShipped)').is(':checked')
             };
+            addAntiForgeryToken(data);
+            return data;
         }
     
         function onDataBound(e) {
-
             $('#shipments-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
                 var currentId = $(this).val();
                 var checked = jQuery.inArray(currentId, selectedIds);
@@ -413,6 +418,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("PdfPackagingSlipSelected", "Order", FormMethod.Post, new { id = "pdf-packaging-slip-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

@@ -11,7 +11,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("OrderIncompleteReportList", "Order"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

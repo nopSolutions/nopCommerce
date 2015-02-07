@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Dimensions").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -27,22 +28,26 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("Dimensions", "Measure"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("DimensionAdd", "Measure"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("DimensionUpdate", "Measure"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("DimensionDelete", "Measure"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

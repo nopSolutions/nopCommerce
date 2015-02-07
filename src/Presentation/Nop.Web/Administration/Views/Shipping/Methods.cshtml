@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Methods").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -25,7 +26,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("Methods", "Shipping"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

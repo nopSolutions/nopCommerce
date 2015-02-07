@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Forums.Manage").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -26,7 +27,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("ForumGroupList", "Forum"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -86,7 +88,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

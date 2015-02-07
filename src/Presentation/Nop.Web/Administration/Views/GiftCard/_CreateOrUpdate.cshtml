@@ -135,21 +135,27 @@
                 @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
                 <input type="button" id="generateCouponCode" class="k-button" value="@T("Admin.GiftCards.Fields.GiftCardCouponCode.Generate")" />
                 <script type="text/javascript">
-        $(document).ready(function () {
-            $('#generateCouponCode').click(function () {
-                $.ajax({
-                    cache:false,
-                    type: "POST",
-                    url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
-                    success: function (data) {
-                         $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to generate code.');
-                    }  
-                });
-            });
-        });
+                    $(document).ready(function () {
+                        $('#generateCouponCode').click(function () {
+                            
+                            var postData = {
+                            };
+                            addAntiForgeryToken(postData);
+
+                            $.ajax({
+                                cache:false,
+                                type: "POST",
+                                url: "@(Url.Action("GenerateCouponCode", "GiftCard"))",
+                                data: postData,
+                                success: function (data) {
+                                    $('#@Html.FieldIdFor(model => model.GiftCardCouponCode)').val(data.CouponCode);
+                                },
+                                error:function (xhr, ajaxOptions, thrownError){
+                                    alert('Failed to generate code.');
+                                }  
+                            });
+                        });
+                    });
                 </script>
             </td>
         </tr>
@@ -239,7 +245,8 @@
                         read: {
                             url: "@Html.Raw(Url.Action("UsageHistoryList", "GiftCard", new { giftCardId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {

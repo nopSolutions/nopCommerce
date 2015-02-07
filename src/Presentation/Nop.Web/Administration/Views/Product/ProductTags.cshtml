@@ -7,6 +7,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-tags-form" }))
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -27,12 +28,14 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ProductTags", "Product"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("ProductTagDelete", "Product"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

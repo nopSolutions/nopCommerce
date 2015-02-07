@@ -225,7 +225,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new { orderId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
@@ -297,7 +298,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

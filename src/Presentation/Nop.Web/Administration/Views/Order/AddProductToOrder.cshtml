@@ -6,6 +6,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -137,12 +138,14 @@
                 });
 
                 function additionalData() {
-                    return {
+                    var data = {
                         SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                         SearchCategoryId: $('#SearchCategoryId').val(),
                         SearchManufacturerId: $('#SearchManufacturerId').val(),
                         SearchProductTypeId: $('#SearchProductTypeId').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
 
                 function onChange(e) {

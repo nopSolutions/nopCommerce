@@ -13,6 +13,7 @@
 </div>
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <table width="100%">
         <tr>
             <td colspan="2">

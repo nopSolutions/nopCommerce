@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -34,12 +35,14 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "ScheduleTask"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("TaskUpdate", "ScheduleTask"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

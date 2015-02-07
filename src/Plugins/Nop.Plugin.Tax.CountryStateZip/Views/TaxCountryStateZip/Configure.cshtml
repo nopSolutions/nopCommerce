@@ -23,17 +23,20 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("RatesList", "TaxCountryStateZip", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("RateUpdate", "TaxCountryStateZip", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("RateDelete", "TaxCountryStateZip", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -125,8 +128,6 @@
         </td>
     </tr>
 </table>
-<p>
-</p>
 <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
@@ -152,6 +153,7 @@
 </script>
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <table class="adminContent">
         <tr>
             <td class="adminTitle" colspan="2">
@@ -221,11 +223,15 @@
     <script type="text/javascript">
         $(function () {
             $('#addtaxrate').click(function () {
+                
+                var postData = $(this.form).serialize();
+                addAntiForgeryToken(postData);
+
                 $.ajax({
                     cache: false,
                     type: 'POST',
                     url: '@Url.RouteUrl("Plugin.Tax.CountryStateZip.AddTaxRate")',
-                    data: $(this.form).serialize(),
+                    data: postData,
                     dataType: 'json',
                     success: function (data) {
                         var grid = $("#tax-countrystatezip-grid").data('kendoGrid');

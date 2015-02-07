@@ -159,7 +159,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

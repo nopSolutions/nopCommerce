@@ -8,6 +8,7 @@
 @{
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -40,12 +41,14 @@
                                 read: {
                                     url: "@readUrl",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("CommentDelete", "Blog"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

@@ -158,23 +158,9 @@ namespace Nop.Admin.Controllers
             return View();
         }
 
-        public ActionResult ApplyRate(string currencyCode, decimal rate)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
-                return AccessDeniedView();
-
-            var currency = _currencyService.GetCurrencyByCode(currencyCode);
-            if (currency != null)
-            {
-                currency.Rate = rate;
-                currency.UpdatedOnUtc = DateTime.UtcNow;
-                _currencyService.UpdateCurrency(currency);
-            }
-            return RedirectToAction("List","Currency", new { liveRates = true });
-        }
-
         [HttpPost]
-        public ActionResult Save(FormCollection formValues)
+        [FormValueRequired("save")]
+        public ActionResult List(FormCollection formValues)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -186,7 +172,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public ActionResult ListGrid(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
@@ -205,6 +191,21 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
+        public ActionResult ApplyRate(string currencyCode, decimal rate)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
+                return AccessDeniedView();
+
+            var currency = _currencyService.GetCurrencyByCode(currencyCode);
+            if (currency != null)
+            {
+                currency.Rate = rate;
+                currency.UpdatedOnUtc = DateTime.UtcNow;
+                _currencyService.UpdateCurrency(currency);
+            }
+            return RedirectToAction("List","Currency", new { liveRates = true });
+        }
+
         public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))

@@ -14,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -87,6 +88,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult SaveGeneralSettings(ShippingByWeightListModel model)
         {
             //save settings
@@ -97,6 +99,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult RatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -167,6 +170,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult RateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -216,6 +220,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/AddPopup.cshtml", model);
         }
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult AddPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
@@ -309,6 +314,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return View("~/Plugins/Shipping.ByWeight/Views/ShippingByWeight/EditPopup.cshtml", model);
         }
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult EditPopup(string btnId, string formId, ShippingByWeightModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

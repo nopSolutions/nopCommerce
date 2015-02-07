@@ -7,6 +7,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
@@ -65,6 +66,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult Configure(int discountId, int? discountRequirementId, int customerRoleId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
@@ -97,6 +99,5 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
         }
-        
     }
 }

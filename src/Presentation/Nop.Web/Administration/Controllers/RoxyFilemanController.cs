@@ -11,12 +11,15 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 
 namespace Nop.Admin.Controllers
 {
     /// <summary>
     /// Controller for Roxy fileman (http://www.roxyfileman.com/) for TinyMCE editor
     /// </summary>
+    //do not validate request token (XSRF)
+    [AdminAntiForgery(true)]
     public class RoxyFilemanController : BaseAdminController
     {
         #region Fields

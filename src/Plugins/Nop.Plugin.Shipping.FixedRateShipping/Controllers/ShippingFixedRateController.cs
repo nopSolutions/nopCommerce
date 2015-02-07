@@ -5,6 +5,7 @@ using Nop.Plugin.Shipping.FixedRateShipping.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -66,6 +67,8 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         }
 
         [HttpPost]
+
+        [AdminAntiForgery]
         public ActionResult ShippingRateUpdate(FixedShippingRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))

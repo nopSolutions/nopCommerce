@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
+using Nop.Web.Framework;
 
 namespace Nop.Admin.Controllers
 {
@@ -41,6 +42,8 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
+        //do not validate request token (XSRF)
+        [AdminAntiForgery(true)] 
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
@@ -57,6 +60,8 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        //do not validate request token (XSRF)
+        [AdminAntiForgery(true)]
         public ActionResult AsyncUpload()
         {
             //we process it distinct ways based on a browser

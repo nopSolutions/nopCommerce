@@ -5,6 +5,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <script type="text/javascript">
         $(document).ready(function () {
             toggleShippedDate(false);

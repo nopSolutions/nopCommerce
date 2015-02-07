@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -29,7 +30,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("CountryList", "Country"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -138,6 +140,7 @@
                 var postData = {
                     selectedIds: selectedIds
                 };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache:false,
@@ -164,6 +167,7 @@
                 var postData = {
                     selectedIds: selectedIds
                 };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache:false,
@@ -233,6 +237,7 @@
 <div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "Country", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+        @Html.AntiForgeryToken()
         <table style="text-align:left;">
             <tr>
                 <td>

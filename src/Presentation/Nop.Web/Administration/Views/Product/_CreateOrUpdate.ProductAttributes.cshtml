@@ -57,22 +57,26 @@ else
                         read: {
                             url: "@Html.Raw(Url.Action("ProductAttributeMappingList", "Product", new { productId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         create: {
                             url: "@Html.Raw(Url.Action("ProductAttributeMappingInsert", "Product", new { productId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         update: {
                             url: "@Html.Raw(Url.Action("ProductAttributeMappingUpdate", "Product"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         destroy: {
                             url: "@Html.Raw(Url.Action("ProductAttributeMappingDelete", "Product"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {
@@ -288,17 +292,20 @@ else
                             read: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationList", "Product", new { productId = Model.Id }))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
                             update: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationUpdate", "Product"))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
                             destroy: {
                                 url: "@Html.Raw(Url.Action("ProductAttributeCombinationDelete", "Product"))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             }
                         },
                         schema: {
@@ -436,10 +443,16 @@ else
                 //generate combinations
                 $('#btnGenerateAllCombinations').click(function () {
                     if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        
+                        var postData = {
+                        };
+                        addAntiForgeryToken(postData);
+
                         $.ajax({
                             cache: false,
                             type: 'POST',
                             url: '@Url.Action("GenerateAllAttributeCombinations", "Product", new { productId = Model.Id })',
+                            data: postData,
                             dataType: 'json',
                             success: function(data) {
                                 //refresh grid

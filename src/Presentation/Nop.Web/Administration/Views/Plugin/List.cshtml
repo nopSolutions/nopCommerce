@@ -5,6 +5,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -168,10 +169,12 @@
                     });
 
                     function additionalData() {
-                        return {
+                        var data = {
                             SearchLoadModeId: $('#SearchLoadModeId').val(),
                             SearchGroup: $('#SearchGroup').val()
                         };
+                        addAntiForgeryToken(data);
+                        return data;
                     }
 
                 </script>

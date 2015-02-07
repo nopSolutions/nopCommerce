@@ -4,6 +4,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages.Localization").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -49,21 +50,26 @@
                                     type: "POST",
                                     dataType: "json",
                                     contentType: "application/json"
+                                    //any-forgery does not work with this contentType for some reasons
+                                    //data: addAntiForgeryToken
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new { languageId = ViewBag.LanguageId }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("ResourceUpdate", "Language"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("ResourceDelete", "Language"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 parameterMap: function(data, operation) {
                                     if (operation != "read") {

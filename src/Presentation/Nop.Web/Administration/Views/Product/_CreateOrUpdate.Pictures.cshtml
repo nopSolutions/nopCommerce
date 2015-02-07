@@ -14,17 +14,20 @@
                             read: {
                                 url: "@Html.Raw(Url.Action("ProductPictureList", "Product", new { productId = Model.Id }))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
                             update: {
                                 url:"@Html.Raw(Url.Action("ProductPictureUpdate", "Product"))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             },
                             destroy: {
                                 url: "@Html.Raw(Url.Action("ProductPictureDelete", "Product"))",
                                 type: "POST",
-                                dataType: "json"
+                                dataType: "json",
+                                data: addAntiForgeryToken
                             }
                         },
                         schema: {
@@ -93,36 +96,44 @@
         <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
     </p>
     <script type="text/javascript">
-     
+
         $(document).ready(function () {
             $('#addProductPicture').click(function () {
                 var pictureId = $("#@Html.FieldIdFor(model => model.AddPictureModel.PictureId)").val();
                 var displayOrder = $("#@Html.FieldIdFor(model => model.AddPictureModel.DisplayOrder)").val();
-                
+
                 if (pictureId == 0) {
                     alert('Upload picture first');
                     return;
                 }
 
                 $('#addProductPicture').attr('disabled', true);
+
+                var postData = {
+                    pictureId: pictureId, 
+                    displayOrder: displayOrder, 
+                    productId: @Model.Id
+                };
+                addAntiForgeryToken(postData);
+
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("ProductPictureAdd", "Product"))",
-                    data: { "pictureId": pictureId, "displayOrder": displayOrder, "productId": @Model.Id },
-                    success: function (data) {
+                    data: postData,
+                    success: function(data) {
                         var grid = $("#productpictures-grid");
                         grid.data('kendoGrid').dataSource.read();
                         $('#addProductPicture').attr('disabled', false);
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    error: function(xhr, ajaxOptions, thrownError) {
                         alert('Failed to add product picture.');
                         $('#addProductPicture').attr('disabled', false);
-                    }  
+                    }
                 });
             });
         });
-    </script>        
+    </script>     
     <table class="adminContent">
         <tr>
             <td class="adminTitle">

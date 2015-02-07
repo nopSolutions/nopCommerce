@@ -5,6 +5,7 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -26,6 +27,7 @@
 <div id="copyproduct-window" style="display:none;">
     @using (Html.BeginForm("CopyProduct", "Product"))
     {
+        @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.CopyProductModel.Id)
         <table style="text-align: left;">
             <tr>

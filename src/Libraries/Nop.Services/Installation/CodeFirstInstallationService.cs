@@ -4792,6 +4792,7 @@ namespace Nop.Services.Installation
                     ForceSslForAllPages = false,
                     EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                     AdminAreaAllowedIpAddresses = null,
+                    EnableXsrfProtectionForAdminArea = true,
                 });
 
             settingService.SaveSetting(new ShippingSettings

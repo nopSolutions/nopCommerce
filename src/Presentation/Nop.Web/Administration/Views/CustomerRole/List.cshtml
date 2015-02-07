@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
@@ -26,7 +27,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "CustomerRole"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

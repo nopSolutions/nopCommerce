@@ -16,6 +16,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -162,6 +163,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult GoogleProductList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -203,6 +205,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult GoogleProductUpdate(FeedFroogleModel.GoogleProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))

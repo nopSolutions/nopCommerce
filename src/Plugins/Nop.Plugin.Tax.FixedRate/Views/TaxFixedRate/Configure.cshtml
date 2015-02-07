@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "";
 }
+@Html.AntiForgeryToken()
 <table class="adminContent">
     <tr>
         <td>
@@ -15,12 +16,14 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("Configure", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("TaxRateUpdate", "TaxFixedRate", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", "" } }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

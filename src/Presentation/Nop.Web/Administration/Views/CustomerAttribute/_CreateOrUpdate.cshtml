@@ -137,12 +137,14 @@
                                             read: {
                                                 url: "@Html.Raw(Url.Action("ValueList", "CustomerAttribute", new { customerAttributeId = Model.Id }))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("ValueDelete", "CustomerAttribute"))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             }
                                         },
                                         schema: {

@@ -6,6 +6,7 @@
 @Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <fieldset>
         <legend><strong>@T("Plugins.Widgets.NivoSlider.Picture1")</strong></legend>
         <table class="adminContent">

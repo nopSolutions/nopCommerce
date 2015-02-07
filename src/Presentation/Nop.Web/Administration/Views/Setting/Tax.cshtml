@@ -5,70 +5,70 @@
 }
 @using (Html.BeginForm())
 {
-    
-<script type="text/javascript">
-    $(document).ready(function () {
+    @Html.AntiForgeryToken()
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
-        $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
-        $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
-        $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
+            $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
+            $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
+            $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
           
           
-        toggleTaxDisplayType();
-        toggleShipping();
-        togglePayment();
-        toggleEUVAT();
-    });
+            toggleTaxDisplayType();
+            toggleShipping();
+            togglePayment();
+            toggleEUVAT();
+        });
 
-    function toggleTaxDisplayType() {
-        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
-            $('#pnlTaxDisplayType').hide();
+        function toggleTaxDisplayType() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)').is(':checked')) {
+                $('#pnlTaxDisplayType').hide();
+            }
+            else {
+                $('#pnlTaxDisplayType').show();
+            }
         }
-        else {
-            $('#pnlTaxDisplayType').show();
-        }
-    }
 
-    function toggleShipping() {
-        if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
-            $('#pnlShippingPriceIncludesTax').show();
-            $('#pnlShippingTaxClass').show();
+        function toggleShipping() {
+            if ($('#@Html.FieldIdFor(model => model.ShippingIsTaxable)').is(':checked')) {
+                $('#pnlShippingPriceIncludesTax').show();
+                $('#pnlShippingTaxClass').show();
+            }
+            else {
+                $('#pnlShippingPriceIncludesTax').hide();
+                $('#pnlShippingTaxClass').hide();
+            }
         }
-        else {
-            $('#pnlShippingPriceIncludesTax').hide();
-            $('#pnlShippingTaxClass').hide();
-        }
-    }
 
-    function togglePayment() {
-        if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+        function togglePayment() {
+            if ($('#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)').is(':checked')) {
+                $('#pnlPaymentMethodAdditionalFeeIncludesTax').show();
+                $('#pnlPaymentMethodAdditionalFeeTaxClass').show();
+            }
+            else {
+                $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
+                $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
+            }
         }
-        else {
-            $('#pnlPaymentMethodAdditionalFeeIncludesTax').hide();
-            $('#pnlPaymentMethodAdditionalFeeTaxClass').hide();
-        }
-    }
 
-    function toggleEUVAT() {
-        if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
-            $('#pnlEuVatShopCountry').show();
-            $('#pnlEuVatAllowVATExemption').show();
-            $('#pnlEuVatAssumeValid').show();
-            $('#pnlEuVatUseWebService').show();
-            $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+        function toggleEUVAT() {
+            if ($('#@Html.FieldIdFor(model => model.EuVatEnabled)').is(':checked')) {
+                $('#pnlEuVatShopCountry').show();
+                $('#pnlEuVatAllowVATExemption').show();
+                $('#pnlEuVatAssumeValid').show();
+                $('#pnlEuVatUseWebService').show();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').show();
+            }
+            else {
+                $('#pnlEuVatShopCountry').hide();
+                $('#pnlEuVatAllowVATExemption').hide();
+                $('#pnlEuVatAssumeValid').hide();
+                $('#pnlEuVatUseWebService').hide();
+                $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
+            }
         }
-        else {
-            $('#pnlEuVatShopCountry').hide();
-            $('#pnlEuVatAllowVATExemption').hide();
-            $('#pnlEuVatAssumeValid').hide();
-            $('#pnlEuVatUseWebService').hide();
-            $('#pnlEuVatEmailAdminWhenNewVATSubmitted').hide();
-        }
-    }
-</script>
+    </script>
     
     <div class="section-header">
         <div class="title">

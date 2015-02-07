@@ -108,11 +108,17 @@
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                
+                var postData = {
+                    countryId: selectedItem,
+                    addSelectStateItem: "true"
+                };
+
                 $.ajax({
                     cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                    data: { "countryId": selectedItem, "addSelectStateItem": "true" },
+                    data: postData,
                     success: function(data) {
                         ddlStates.html('');
                         $.each(data, function(id, option) {
@@ -570,7 +576,8 @@
                         read: {
                             url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {
@@ -650,7 +657,8 @@
                         read: {
                             url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {
@@ -734,11 +742,19 @@
                 var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
                 $('#addRewardPoints').attr('disabled', true);
+                
+                var postData = {
+                    addRewardPointsValue: rewardPointsValue,
+                    addRewardPointsMessage: rewardPointsMessage,
+                    customerId: @Model.Id
+                };
+                addAntiForgeryToken(postData);
+
                 $.ajax({
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("RewardPointsHistoryAdd", "Customer"))",
-                    data: { "addRewardPointsValue": rewardPointsValue, "addRewardPointsMessage": rewardPointsMessage, "customerId": @Model.Id},
+                    data: postData,
                     success: function (data) {
                         var grid = $("#customer-rewardpoints-grid").data('kendoGrid');
                         grid.dataSource.read();
@@ -766,12 +782,14 @@
                         read: {
                             url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         destroy: {
                             url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {
@@ -854,7 +872,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.ShoppingCart }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
@@ -933,7 +952,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("GetCartList", "Customer", new { customerId = Model.Id, cartTypeId = (int)ShoppingCartType.Wishlist }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
@@ -1015,7 +1035,8 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("ListActivityLog", "Customer", new { customerId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

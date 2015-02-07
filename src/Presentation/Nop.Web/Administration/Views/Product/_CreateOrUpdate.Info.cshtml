@@ -323,11 +323,17 @@
         if (inputValue) {
             //load friendly names
             $('#required-products-check-progress').show();
+            
+            var postData = {
+                productIds: inputValue
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache: false,
                 type: 'POST',
                 url: '@Url.Action("LoadProductFriendlyNames", "Product")',
-                data: { "productIds": inputValue },
+                data: postData,
                 dataType: 'json',
                 success: function(data) {
                     $('#required-products-check-progress').hide();

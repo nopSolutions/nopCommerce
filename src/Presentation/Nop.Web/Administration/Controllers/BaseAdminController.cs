@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 
@@ -9,6 +10,7 @@ namespace Nop.Admin.Controllers
     [NopHttpsRequirement(SslRequirement.Yes)]
     [AdminValidateIpAddress]
     [AdminAuthorize]
+    [AdminAntiForgery]
     public abstract partial class BaseAdminController : BaseController
     {
         /// <summary>

@@ -149,22 +149,26 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("PollAnswers", "Poll", new { pollId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     create: {
                                         url: "@Html.Raw(Url.Action("PollAnswerAdd", "Poll", new { pollId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     update: {
                                         url:"@Html.Raw(Url.Action("PollAnswerUpdate", "Poll"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("PollAnswerDelete", "Poll"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

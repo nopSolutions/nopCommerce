@@ -9,6 +9,7 @@
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
 }
+@Html.AntiForgeryToken()
 <div class="section-title">
     <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
     @T("Admin.Dashboard")

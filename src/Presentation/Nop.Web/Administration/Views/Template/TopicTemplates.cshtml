@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.System.Templates.Topic").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
@@ -22,22 +23,26 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("TopicTemplates", "Template"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("TopicTemplateAdd", "Template"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("TopicTemplateUpdate", "Template"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("TopicTemplateDelete", "Template"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

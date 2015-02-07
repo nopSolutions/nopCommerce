@@ -9,6 +9,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
@@ -380,7 +381,7 @@
                             customerRoleIds.push($(this).val());
                         });
 
-                        return {
+                        var data = {
                             SearchCustomerRoleIds: customerRoleIds.join(","),
                             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
                             SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
@@ -392,6 +393,8 @@
                             SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
                             SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()
                         };
+                        addAntiForgeryToken(data);
+                        return data;
                     }
                 </script>
             </td>
@@ -402,6 +405,7 @@
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Customer", FormMethod.Post, new { id = "export-xml-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">
@@ -421,6 +425,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportExcelSelected", "Customer", FormMethod.Post, new { id = "export-excel-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

@@ -6,6 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -117,9 +118,11 @@
                 });
 
                 function additionalData() {
-                    return {
+                    var data = {
                         SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
             </script>
         </td>

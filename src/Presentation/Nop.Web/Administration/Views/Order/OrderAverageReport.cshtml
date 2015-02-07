@@ -12,7 +12,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("OrderAverageReportList", "Order"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

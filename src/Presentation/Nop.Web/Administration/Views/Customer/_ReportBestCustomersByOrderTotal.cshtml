@@ -125,13 +125,15 @@
                 });
 
                 function bestCustomersOrderTotalAdditionalData(e) {
-                    return {
+                    var data = {
                         StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                         EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
                         OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
                         PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
                         ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
 
             </script>

@@ -6,6 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
@@ -59,12 +60,14 @@
                                 update: {
                                     url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -164,10 +167,12 @@
     });
 
     function additionalData() {
-        return {
+        var data = {
             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
         };
+        addAntiForgeryToken(data);
+        return data;
     }
 </script>
 
@@ -175,6 +180,7 @@
 <div id="importcsv-window" style="display:none;">
     @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
+    @Html.AntiForgeryToken()
         <table style="text-align:left;">
             <tr>
                 <td>

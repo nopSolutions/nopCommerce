@@ -6,139 +6,142 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
 {
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-        @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-        @Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
+    @Html.AntiForgeryToken()
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
+            @Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
+        </div>
+        <div class="options">
+        </div>
     </div>
-    <div class="options">
-    </div>
-</div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="productattributevalues-grid"></div>
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="productattributevalues-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#productattributevalues-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId }))",
-                                    type: "POST",
-                                    dataType: "json"
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
-                                    type: "POST",
-                                    dataType: "json"
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        Product2Name: { editable: false, type: "string" },
-                                        ProductId2: { editable: false, type: "number" }
+                <script>
+                    $(document).ready(function () {
+                        $("#productattributevalues-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProductAttributeValueList", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ProductAttributeValueDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Product2Name: { editable: false, type: "string" },
+                                            ProductId2: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "AttributeValueTypeName",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")",
+                                    width: 150
+                                }, {
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")",
+                                    width: 200
+                                }, {
+                                    field: "AssociatedProductName",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")",
+                                    width: 200
+                                }, {
+                                    field: "PriceAdjustmentStr",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")",
+                                    width: 150
+                                }, {
+                                    field: "WeightAdjustmentStr",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")",
+                                    width: 150
+                                }, {
+                                    field: "IsPreSelected",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                }, {
+                                    field: "PictureThumbnailUrl",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")",
+                                    template: '<img src="#=PictureThumbnailUrl#" />',
+                                    width: 200
+                                },{
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")",
+                                    width: 100
+                                },{
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
+                                }, {
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                    title: "@T("Admin.Common.Delete")",
+                                    width: 200
                                 }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "AttributeValueTypeName",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AttributeValueType")",
-                                width: 150
-                            }, {
-                                field: "Name",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Name")",
-                                width: 200
-                            }, {
-                                field: "AssociatedProductName",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct")",
-                                width: 200
-                            }, {
-                                field: "PriceAdjustmentStr",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.PriceAdjustment")",
-                                width: 150
-                            }, {
-                                field: "WeightAdjustmentStr",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.WeightAdjustment")",
-                                width: 150
-                            }, {
-                                field: "IsPreSelected",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.IsPreSelected")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
-                            }, {
-                                field: "PictureThumbnailUrl",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture")",
-                                template: '<img src="#=PictureThumbnailUrl#" />',
-                                width: 200
-                            },{
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.DisplayOrder")",
-                                width: 100
-                            },{
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                title: "@T("Admin.Common.Delete")",
-                                width: 200
-                            }
-                        ]
+                            ]
+                        });
                     });
-                });
-            </script>
-        </td>
-    </tr>
-    <tr>
-        <td width="100%">
-            <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 500, true); return false;" class="k-button" />
-            <input type="submit" id="btnRefresh" style="display: none" />
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#btnRefresh').click(function () {
-                        //refresh grid
-                        var grid = $("#productattributevalues-grid").data('kendoGrid');
-                        grid.dataSource.read();
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 500, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var grid = $("#productattributevalues-grid").data('kendoGrid');
+                            grid.dataSource.read();
 
-                        //return false to don't reload a page
-                        return false;
+                            //return false to don't reload a page
+                            return false;
+                        });
                     });
-                });
-            </script>
-        </td>
-    </tr>
-</table>
+                </script>
+            </td>
+        </tr>
+    </table>
 }

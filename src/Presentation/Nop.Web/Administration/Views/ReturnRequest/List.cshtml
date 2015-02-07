@@ -5,6 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.ReturnRequests").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -27,7 +28,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "ReturnRequest"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

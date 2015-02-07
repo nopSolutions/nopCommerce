@@ -6,150 +6,152 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLog").Text;
 }
-@using (Html.BeginForm())
-{
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.ActivityLog.ActivityLog")
-        </div>
-        <div class="options">
-            <a href="@Url.Action("ClearAll")" class="k-button">@T("Admin.Common.Clear")</a>
-        </div>
+
+@Html.AntiForgeryToken()
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        @T("Admin.Configuration.ActivityLog.ActivityLog")
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOnFrom):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CreatedOnFrom)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOnTo):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CreatedOnTo)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ActivityLogTypeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("ActivityLogTypeId", Model.ActivityLogType)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>    
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="activityLog-grid"></div>
-                <script>
-                    $(document).ready(function () {
-                        $("#activityLog-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ListLogs", "ActivityLog"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
-                                        type: "POST",
-                                        dataType: "json"
+    <div class="options">
+        <a href="@Url.Action("ClearAll")" class="k-button">@T("Admin.Common.Clear")</a>
+    </div>
+</div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOnFrom):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CreatedOnFrom)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOnTo):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.CreatedOnTo)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ActivityLogTypeId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("ActivityLogTypeId", Model.ActivityLogType)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table> 
+<table class="adminContent">
+    <tr>
+        <td>
+            <div id="activityLog-grid"></div>
+            <script>
+                $(document).ready(function () {
+                    $("#activityLog-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("ListLogs", "ActivityLog"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                },
+                                destroy: {
+                                    url: "@Html.Raw(Url.Action("AcivityLogDelete", "ActivityLog"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        //do not implicitly specify all fields
+                                        //we do it only for fields which implicitly require it
+                                        //otherwise, they'll be formatted wrong way
+                                        CreatedOn: {type: "date" }
                                     }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            //do not implicitly specify all fields
-                                            //we do it only for fields which implicitly require it
-                                            //otherwise, they'll be formatted wrong way
-                                            CreatedOn: {type: "date" }
-                                        }
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
+                                }
                             },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
                             },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "ActivityLogTypeName",
-                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")",
-                                width: 200
-                            }, {
-                                field: "CustomerId",
-                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")",
-                                width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
-                            }, {
-                                field: "Comment",
-                                title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.System.Log.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
-                                title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }]
-                        });
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "ActivityLogTypeName",
+                            title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")",
+                            width: 200
+                        }, {
+                            field: "CustomerId",
+                            title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Customer")",
+                            width: 100,
+                            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
+                        }, {
+                            field: "Comment",
+                            title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.System.Log.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
+                            title: "@T("Admin.Common.Delete")",
+                            width: 100
+                        }]
                     });
-                </script>
-                <script type="text/javascript">
+                });
+            </script>
+            <script type="text/javascript">
 
-                    $(document).ready(function () {
+                $(document).ready(function () {
 
-                        $('#btnSearch').click(function () {
-                            var grid = $('#activityLog-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            return false;
-                        });
+                    $('#btnSearch').click(function () {
+                        var grid = $('#activityLog-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        return false;
                     });
+                });
 
-                    function additionalData() {
-                        return {
-                            CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
-                            CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                            ActivityLogTypeId: $('#ActivityLogTypeId').val()
-                        };
-                    }
-                </script>
-            </td>
-        </tr>
-    </table>
-}
+                function additionalData() {
+                    var data = {
+                        CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
+                        CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                        ActivityLogTypeId: $('#ActivityLogTypeId').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+            </script>
+        </td>
+    </tr>
+</table>

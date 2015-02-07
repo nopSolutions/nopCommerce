@@ -6,6 +6,7 @@
 @using Nop.Plugin.Shipping.UPS;
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <script type="text/javascript">
         $(document).ready(function () {
 

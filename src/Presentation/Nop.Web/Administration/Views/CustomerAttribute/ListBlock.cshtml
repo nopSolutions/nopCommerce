@@ -20,7 +20,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "CustomerAttribute"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

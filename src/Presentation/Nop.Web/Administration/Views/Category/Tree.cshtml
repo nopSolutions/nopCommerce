@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -22,7 +23,8 @@
                         read: {
                             url: "@Html.Raw(Url.Action("TreeLoadChildren", "Category"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {

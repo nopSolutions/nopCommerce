@@ -9,6 +9,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
@@ -344,7 +345,7 @@
                     });
 
                     function additionalData() {
-                        return {
+                        var data = {
                             StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                             EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
                             CustomerEmail: $('#@Html.FieldIdFor(model => model.CustomerEmail)').val(),
@@ -357,6 +358,8 @@
                             ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
                             OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
                         };
+                        addAntiForgeryToken(data);
+                        return data;
                     }
 
                     function onDataBound(e) {
@@ -396,6 +399,7 @@
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Order", FormMethod.Post, new { id = "export-xml-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">
@@ -415,6 +419,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportExcelSelected", "Order", FormMethod.Post, new { id = "export-excel-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">
@@ -434,6 +439,7 @@
 @*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("PdfInvoiceSelected", "Order", FormMethod.Post, new { id = "pdf-invoice-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

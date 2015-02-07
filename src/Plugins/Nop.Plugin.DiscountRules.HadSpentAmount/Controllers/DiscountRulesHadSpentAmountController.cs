@@ -7,6 +7,7 @@ using Nop.Plugin.DiscountRules.HadSpentAmount.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
@@ -66,6 +67,7 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult Configure(int discountId, int? discountRequirementId, decimal spentAmount)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))

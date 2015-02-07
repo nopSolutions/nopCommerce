@@ -9,6 +9,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -256,6 +257,7 @@
                 var postData = {
                     selectedIds: selectedIds
                 };
+                addAntiForgeryToken(postData);
 
                 $.ajax({
                     cache: false,
@@ -303,7 +305,7 @@
         });
 
         function additionalData() {
-            return {
+            var data = {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
                 SearchIncludeSubCategories: $('#@Html.FieldIdFor(model => model.SearchIncludeSubCategories)').is(':checked'),
@@ -313,6 +315,8 @@
                 SearchVendorId: $('#SearchVendorId').val(),
                 SearchProductTypeId: $('#SearchProductTypeId').val()
             };
+            addAntiForgeryToken(data);
+            return data;
         }
 
         function onDataBound(e) {
@@ -339,6 +343,7 @@
 <div id="importexcel-window" style="display:none;">
     @using (Html.BeginForm("ImportExcel", "Product", FormMethod.Post, new {enctype = "multipart/form-data"}))
     {
+        @Html.AntiForgeryToken()
         <table style="text-align:left;">
             <tr>
                 <td colspan="2">
@@ -382,6 +387,7 @@
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Product", FormMethod.Post, new { id = "export-xml-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name ="selectedIds" value="" />
 }
 <script type="text/javascript">
@@ -401,6 +407,7 @@
 @*export selected (Excel). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportExcelSelected", "Product", FormMethod.Post, new { id = "export-excel-selected-form" }))
 {
+    @Html.AntiForgeryToken()
     <input type="hidden" id="selectedIds" name="selectedIds" value="" />
 }
 <script type="text/javascript">

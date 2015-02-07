@@ -6,6 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -33,21 +34,26 @@
                                     type: "POST",
                                     dataType: "json",
                                     contentType: "application/json"
+                                    //any-forgery does not work with this contentType for some reasons
+                                    //data: addAntiForgeryToken
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url:"@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 parameterMap: function(data, operation) {
                                     if (operation != "read") {

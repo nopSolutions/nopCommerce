@@ -5,6 +5,7 @@
 @using Nop.Plugin.Shipping.ByWeight.Models;
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />

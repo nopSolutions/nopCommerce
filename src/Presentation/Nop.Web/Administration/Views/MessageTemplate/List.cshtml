@@ -3,6 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -107,9 +108,11 @@
                 });
 
                 function additionalData() {
-                    return {
+                    var data = {
                         SearchStoreId: $('#SearchStoreId').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
             </script>
         </td>

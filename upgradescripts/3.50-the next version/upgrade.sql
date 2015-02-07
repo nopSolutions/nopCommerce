@@ -182,6 +182,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfSettings">
     <Value>PDF settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea">
+    <Value>Enable XSRF protection for admin area</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
+    <Value>Check to enable XSRF protection for admin area</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -434,5 +440,14 @@ GO
 IF EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_ProductAttributeValue_ProductAttributeMappingId' and object_id=object_id(N'[ProductAttributeValue]'))
 BEGIN
 	DROP INDEX [IX_ProductAttributeValue_ProductAttributeMappingId] ON [ProductAttributeValue]
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.enablexsrfprotectionforadminarea')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'securitysettings.enablexsrfprotectionforadminarea', N'true', 0)
 END
 GO

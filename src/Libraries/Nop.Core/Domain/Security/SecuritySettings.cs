@@ -19,5 +19,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a list of adminn area allowed IP addresses
         /// </summary>
         public List<string> AdminAreaAllowedIpAddresses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether XSRF protection for admin area should be enabled
+        /// </summary>
+        public bool EnableXsrfProtectionForAdminArea { get; set; }
     }
 }

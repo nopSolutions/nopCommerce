@@ -39,10 +39,15 @@
         
         $(document).ready(function () {
             $('#nopcommerceNewsHideAdv').click(function () {
+                var postData = {
+                };
+                addAntiForgeryToken(postData);
+
                 $.ajax({
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
+                    data: postData,
                     success: function (data) {
                          location.reload();
                     },

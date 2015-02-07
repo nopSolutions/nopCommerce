@@ -8,6 +8,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
@@ -207,6 +208,7 @@
                             var postData = {
                                 selectedIds: selectedIds
                             };
+                            addAntiForgeryToken(postData);
 
                             $.ajax({
                                 cache:false,
@@ -258,7 +260,7 @@
                     });
 
                     function additionalData() {
-                        return {
+                        var data = {
                             SearchStartDate: $('#@Html.FieldIdFor(model => model.SearchStartDate)').val(),
                             SearchEndDate: $('#@Html.FieldIdFor(model => model.SearchEndDate)').val(),
                             SearchFromEmail: $('#@Html.FieldIdFor(model => model.SearchFromEmail)').val(),
@@ -266,6 +268,8 @@
                             SearchLoadNotSent: $('#@Html.FieldIdFor(model => model.SearchLoadNotSent)').is(':checked'),
                             SearchMaxSentTries: $('#@Html.FieldIdFor(model => model.SearchMaxSentTries)').val()
                         };
+                        addAntiForgeryToken(data);
+                        return data;
                     }
 
                     function onDataBound(e) {

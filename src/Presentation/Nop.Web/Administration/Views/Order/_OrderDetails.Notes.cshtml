@@ -14,12 +14,14 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("OrderNotesSelect", "Order", new { orderId = Model.Id }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("OrderNoteDelete", "Order", new { orderId = Model.Id }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -160,11 +162,20 @@
             }
             var orderNoteDisplayToCustomer = $("#@Html.FieldIdFor(model => model.AddOrderNoteDisplayToCustomer)").is(':checked');
             $('#addOrderNote').attr('disabled', true);
+            
+            var postData = {
+                DisplayToCustomer: orderNoteDisplayToCustomer,
+                message: orderNoteMessage, 
+                downloadId: orderNoteDownloadId, 
+                orderId: @Model.Id
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache:false,
                 type: "POST",
                 url: "@(Url.Action("OrderNoteAdd", "Order"))",
-                data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "downloadId": orderNoteDownloadId, "orderId": @Model.Id },
+                data: postData,
                 success: function (data) {
                     var grid = $("#ordernotes-grid").data('kendoGrid');
                     grid.dataSource.read();

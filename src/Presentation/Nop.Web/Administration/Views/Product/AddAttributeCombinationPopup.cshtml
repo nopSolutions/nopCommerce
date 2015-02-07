@@ -12,6 +12,7 @@
     FormMethod.Post,
     new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
     <div class="section-header">
         <div class="title">

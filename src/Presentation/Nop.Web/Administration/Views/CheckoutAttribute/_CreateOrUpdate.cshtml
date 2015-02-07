@@ -275,12 +275,14 @@
                                             read: {
                                                 url: "@Html.Raw(Url.Action("ValueList", "CheckoutAttribute", new { checkoutAttributeId = Model.Id }))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("ValueDelete", "CheckoutAttribute"))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             }
                                         },
                                         schema: {

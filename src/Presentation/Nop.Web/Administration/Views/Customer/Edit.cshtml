@@ -5,6 +5,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
@@ -27,6 +28,7 @@
 <div id="sendemail-window" style="display:none;">
     @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
     {
+        @Html.AntiForgeryToken()
         <table style="text-align:left;">
             <tr>
                 <td class="adminTitle">
@@ -77,6 +79,7 @@
 <div id="sendprivatemessage-window" style="display:none;">
     @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
     {
+    @Html.AntiForgeryToken()
     <table style="text-align: left;">
         <tr>
             <td class="adminTitle">

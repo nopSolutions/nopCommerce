@@ -4,7 +4,8 @@
     ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
 }
 @using (Html.BeginForm())
-{    
+{
+    @Html.AntiForgeryToken()
     <script type="text/javascript">
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);

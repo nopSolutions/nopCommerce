@@ -86,6 +86,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult Configure(int discountId, int? discountRequirementId, string productIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
@@ -161,6 +162,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult ProductAddPopupList(DataSourceRequest command, RequirementModel.AddProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -197,6 +199,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
+        [AdminAntiForgery]
         public ActionResult LoadProductFriendlyNames(string productIds)
         {
             var result = "";

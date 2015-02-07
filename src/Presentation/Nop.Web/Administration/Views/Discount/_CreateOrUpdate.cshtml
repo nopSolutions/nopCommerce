@@ -325,12 +325,19 @@
                //adding requirement event
                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
   
-                    var discountId = @Model.Id;
+                   var discountId = @Model.Id;
+                   
+                   var postData = {
+                       discountRequirementId: newRequirementId,
+                       discountId: discountId
+                   };
+                   addAntiForgeryToken(postData);
+
                     $.ajax({
                         cache:false,
                         type: "POST",
                         url: "@(Url.Action("GetDiscountRequirementMetaInfo", "Discount"))",
-                        data: { "discountRequirementId": newRequirementId, "discountId": discountId },
+                        data: postData,
                         success: function (result) {                            
                             discountRequirements.push({ discountRequirementId: newRequirementId, ruleName : result.ruleName, url : result.url });
                             loadExistingRequirements();
@@ -412,14 +419,21 @@
 
            //delete requirement rule
            function deleteRequirement(discountRequirementId) {           
-                var discountId = @Model.Id;                
+               var discountId = @Model.Id;
+               
+               var postData = {
+                   discountRequirementId: discountRequirementId,
+                   discountId: discountId
+               };
+               addAntiForgeryToken(postData);
+
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("DeleteDiscountRequirement", "Discount"))",
-                    data: { "discountId": discountId, "discountRequirementId": discountRequirementId },
+                    data: postData,
                     success: function (data) {
-                        removeRequirementByElement(discountRequirements, discountRequirementId)
+                        removeRequirementByElement(discountRequirements, discountRequirementId);
                         loadExistingRequirements();
                     },
                     error:function (xhr, ajaxOptions, thrownError){
@@ -506,12 +520,14 @@
                         read: {
                             url: "@Html.Raw(Url.Action("UsageHistoryList", "Discount", new { discountId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         destroy: {
                             url: "@Html.Raw(Url.Action("UsageHistoryDelete", "Discount"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {

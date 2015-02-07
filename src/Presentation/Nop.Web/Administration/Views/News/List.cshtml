@@ -6,6 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -36,87 +37,87 @@
             <div id="newsitem-grid"></div>
 
             <script>
-    $(document).ready(function () {
-        $("#newsitem-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("List", "News"))",
-                        type: "POST",
-                        dataType: "json",
-                        data: additionalData
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(defaultGridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true,
-                pageSizes: [@(gridPageSizes)]
-            },
-            editable: {
-                confirmation: false,
-                mode: "inline"
-            },
-            scrollable: false,
-            columns: [{
-                field: "Title",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")"
-            }, {
-                field: "LanguageName",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Language")",
-                width: 200,
-            }, {
-                field: "Comments",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
-                width: 100,
-                template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
-            }, {
-                field: "StartDate",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",
-                width: 200,
-                type: "date",
-                format: "{0:G}"
-            }, {
-                field: "EndDate",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.EndDate")",
-                width: 200,
-                type: "date",
-                format: "{0:G}"
-            }, {
-                field: "Published",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Published")",
-                width: 100,
-                headerAttributes: { style: "text-align:center" },
-                attributes: { style: "text-align:center" },
-                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-            }, {
-                field: "CreatedOn",
-                title: "@T("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")",
-                width: 200,
-                type: "date",
-                format: "{0:G}"
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.Edit")",
-                width: 100,
-                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-            }]
-        });
-    });
+                $(document).ready(function () {
+                    $("#newsitem-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "News"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: additionalData
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            pageSize: @(defaultGridPageSize),
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            pageSizes: [@(gridPageSizes)]
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Title",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Title")"
+                        }, {
+                            field: "LanguageName",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Language")",
+                            width: 200,
+                        }, {
+                            field: "Comments",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Comments")",
+                            width: 100,
+                            template: '<a href="Comments?filterByNewsItemId=#=Id#">@T("Admin.ContentManagement.News.NewsItems.Fields.Comments") - #=Comments# </a>'
+                        }, {
+                            field: "StartDate",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.StartDate")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "EndDate",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.EndDate")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Published",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.Published")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        }, {
+                            field: "CreatedOn",
+                            title: "@T("Admin.ContentManagement.News.NewsItems.Fields.CreatedOn")",
+                            width: 200,
+                            type: "date",
+                            format: "{0:G}"
+                        }, {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                        }]
+                    });
+                });
             </script>
             <script type="text/javascript">
 
@@ -132,9 +133,11 @@
                 });
 
                 function additionalData() {
-                    return {
+                    var data = {
                         SearchStoreId: $('#SearchStoreId').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
             </script>
         </td>

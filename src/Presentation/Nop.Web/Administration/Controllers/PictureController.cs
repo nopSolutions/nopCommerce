@@ -3,6 +3,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Media;
+using Nop.Web.Framework;
 
 namespace Nop.Admin.Controllers
 {
@@ -16,6 +17,8 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        //do not validate request token (XSRF)
+        [AdminAntiForgery(true)] 
         public ActionResult AsyncUpload()
         {
             //if (!_permissionService.Authorize(StandardPermissionProvider.UploadPictures))

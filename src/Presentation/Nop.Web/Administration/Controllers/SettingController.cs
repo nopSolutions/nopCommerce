@@ -2084,6 +2084,7 @@ namespace Nop.Admin.Controllers
                         model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
                 }
             model.SecuritySettings.ForceSslForAllPages = securitySettings.ForceSslForAllPages;
+            model.SecuritySettings.EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea;
             model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
             model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
             model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
@@ -2314,6 +2315,7 @@ namespace Nop.Admin.Controllers
                     if (!String.IsNullOrWhiteSpace(s))
                         securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
+            securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
             _settingService.SaveSetting(securitySettings);
             captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;
@@ -2540,6 +2542,9 @@ namespace Nop.Admin.Controllers
             return View();
         }
         [HttpPost]
+        //do not validate request token (XSRF)
+        //for some reasons it does not work with "filtering" support
+        [AdminAntiForgery(true)] 
         public ActionResult AllSettings(DataSourceRequest command,
             Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
         {

@@ -4,19 +4,20 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-        @T("Admin.Configuration.Currencies")
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Currencies")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="k-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
+            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+        </div>
     </div>
-    <div class="options">
-        <a href="javascript:document.CurrencySettings.submit()" class="k-button">@T("Admin.Common.Save")</a>
-        <a href="@Url.Action("List", "Currency", new { liveRates = true })" class="k-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-    </div>
-</div>
-@using (Html.BeginForm("Save", "Currency", FormMethod.Post, new { name = "CurrencySettings" }))
-{  
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -32,7 +33,7 @@
             </td>
             <td class="adminData">
                 @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
-                )
+                      )
             </td>
         </tr>
     </table>
@@ -49,9 +50,10 @@
                             type: "json",
                             transport: {
                                 read: {
-                                    url: "@Html.Raw(Url.Action("List", "Currency"))",
+                                    url: "@Html.Raw(Url.Action("ListGrid", "Currency"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

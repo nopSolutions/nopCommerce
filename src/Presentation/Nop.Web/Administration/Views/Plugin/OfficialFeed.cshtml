@@ -6,7 +6,7 @@
     //currently we support only 15 page size for this page
     var defaultGridPageSize = 15;
 }
-
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -174,12 +174,14 @@
                 });
 
                 function additionalData() {
-                    return {
+                    var data = {
                         SearchName: $('#@Html.FieldIdFor(model => model.SearchName)').val(),
                         SearchVersionId: $('#SearchVersionId').val(),
                         SearchCategoryId: $('#SearchCategoryId').val(),
                         SearchPriceId: $('#SearchPriceId').val()
                     };
+                    addAntiForgeryToken(data);
+                    return data;
                 }
 
             </script>

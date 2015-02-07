@@ -5,6 +5,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
@@ -423,6 +424,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.ForceSslForAllPages)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
             </td>
         </tr>
         <tr>

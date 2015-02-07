@@ -5,6 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Polls").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
@@ -28,7 +29,8 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("List", "Poll"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {

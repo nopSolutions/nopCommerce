@@ -8,6 +8,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
@@ -159,6 +160,7 @@
                             var postData = {
                                 selectedIds: selectedIds
                             };
+                            addAntiForgeryToken(postData);
 
                             $.ajax({
                                 cache:false,
@@ -211,12 +213,14 @@
                     });
 
                     function additionalData() {
-                        return {
+                        var data = {
                             CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                             CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
                             Message: $('#@Html.FieldIdFor(model => model.Message)').val(),
                             LogLevelId: $('#@Html.FieldIdFor(model => model.LogLevelId)').val()
                         };
+                        addAntiForgeryToken(data);
+                        return data;
                     }
 
 

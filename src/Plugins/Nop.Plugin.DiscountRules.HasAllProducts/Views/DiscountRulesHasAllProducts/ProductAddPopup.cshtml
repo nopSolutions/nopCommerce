@@ -13,6 +13,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
@@ -159,7 +160,7 @@
         });
 
         function additionalData() {
-            return {
+            var data = {
                 SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
                 SearchCategoryId: $('#SearchCategoryId').val(),
                 SearchManufacturerId: $('#SearchManufacturerId').val(),
@@ -167,6 +168,8 @@
                 SearchVendorId: $('#SearchVendorId').val(),
                 SearchProductTypeId: $('#SearchProductTypeId').val()
             };
+            addAntiForgeryToken(data);
+            return data;
         }
         
         function selectRequiredProduct(productid) {

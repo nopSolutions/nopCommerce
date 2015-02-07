@@ -1,7 +1,7 @@
 ﻿Group: Shipping rate computation
 FriendlyName: Canada Post
 SystemName: Shipping.CanadaPost
-Version: 1.11
+Version: 1.12
 SupportedVersions: 3.60
 Author: nopCommerce team
 DisplayOrder: 1

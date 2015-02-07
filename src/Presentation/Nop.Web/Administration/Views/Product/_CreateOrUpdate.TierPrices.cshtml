@@ -15,22 +15,26 @@
                         read: {
                             url: "@Html.Raw(Url.Action("TierPriceList", "Product", new { productId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         create: {
                             url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new { productId = Model.Id }))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         update: {
                             url:"@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         },
                         destroy: {
                             url: "@Html.Raw(Url.Action("TierPriceDelete", "Product"))",
                             type: "POST",
-                            dataType: "json"
+                            dataType: "json",
+                            data: addAntiForgeryToken
                         }
                     },
                     schema: {

@@ -11,6 +11,7 @@
 @using Nop.Core.Infrastructure;
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
+    @Html.AntiForgeryToken()
     <br />
     <hr />
     <br />
@@ -41,12 +42,14 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("RatesList", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("RateDelete", "ShippingByWeight", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {
@@ -169,11 +172,15 @@
                 <script type="text/javascript">
                     $(function () {
                         $('#savegeneralsettings').click(function () {
+                            
+                            var postData = $(this.form).serialize();
+                            addAntiForgeryToken(postData);
+
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
                                 url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
-                                data: $(this.form).serialize(),
+                                data: postData,
                                 dataType: 'json',
                                 success: function (data) {
                                     alert('Saved');

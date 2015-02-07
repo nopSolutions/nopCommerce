@@ -16,12 +16,14 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("CrossSellProductList", "Product", new { productId = Model.Id }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     destroy: {
                                         url: "@Html.Raw(Url.Action("CrossSellProductDelete", "Product"))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

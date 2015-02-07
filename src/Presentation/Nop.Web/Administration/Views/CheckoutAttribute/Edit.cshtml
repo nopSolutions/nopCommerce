@@ -7,6 +7,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "checkoutattribute-form" }))
 {
+    @Html.AntiForgeryToken()
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />

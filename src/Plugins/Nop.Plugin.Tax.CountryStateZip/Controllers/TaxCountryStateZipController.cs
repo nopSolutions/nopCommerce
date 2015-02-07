@@ -9,6 +9,7 @@ using Nop.Services.Directory;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
@@ -83,6 +84,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult RatesList(DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -129,6 +131,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult RateUpdate(TaxRateModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -143,6 +146,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult RateDelete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))
@@ -156,6 +160,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult AddTaxRate(TaxRateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTaxSettings))

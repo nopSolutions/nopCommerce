@@ -10,6 +10,7 @@
 @using Nop.Web.Framework.UI;
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div id="googlebase-configure">
         <ul>
             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -193,12 +194,14 @@
                                     read: {
                                         url: "@Html.Raw(Url.Action("GoogleProductList", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
                                     update: {
                                         url: "@Html.Raw(Url.Action("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } }))",
                                         type: "POST",
-                                        dataType: "json"
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
                                 },
                                 schema: {

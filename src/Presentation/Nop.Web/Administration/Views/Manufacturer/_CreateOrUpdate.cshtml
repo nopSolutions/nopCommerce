@@ -311,17 +311,20 @@
                                             read: {
                                                 url: "@Html.Raw(Url.Action("ProductList", "Manufacturer", new { manufacturerId = Model.Id }))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             },
                                             update: {
                                                 url:"@Html.Raw(Url.Action("ProductUpdate", "Manufacturer"))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             },
                                             destroy: {
                                                 url: "@Html.Raw(Url.Action("ProductDelete", "Manufacturer"))",
                                                 type: "POST",
-                                                dataType: "json"
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             }
                                         },
                                         schema: {

@@ -19,17 +19,20 @@
                                 read: {
                                     url: "@Html.Raw(Url.Action("ProductSpecAttrList", "Product", new { productId = Model.Id }))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 update: {
                                     url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 },
                                 destroy: {
                                     url: "@Html.Raw(Url.Action("ProductSpecAttrDelete", "Product"))",
                                     type: "POST",
-                                    dataType: "json"
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
                                 }
                             },
                             schema: {
@@ -172,19 +175,23 @@
                     }
                 } else {
                     $('#addProductSpec').attr('disabled', true);
+            
+                    var postData = {
+                        attributeTypeId: attributeTypeId,
+                        specificationAttributeOptionId: specificationAttributeOptionId,
+                        customValue: customValue,
+                        allowFiltering: allowFiltering,
+                        showOnProductPage: showOnProductPage,
+                        displayOrder: displayOrder,
+                        productId: @(Model.Id)
+                    };
+                    addAntiForgeryToken(postData);
+
                     $.ajax({
                         cache: false,
                         type: "POST",
                         url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                        data: {
-                            "attributeTypeId": attributeTypeId,
-                            "specificationAttributeOptionId": specificationAttributeOptionId,
-                            "customValue": customValue,
-                            "allowFiltering": allowFiltering,
-                            "showOnProductPage": showOnProductPage,
-                            "displayOrder": displayOrder,
-                            "productId": @(Model.Id)
-                        },
+                        data: postData,
                         success: function(data) {
                             var grid = $("#specificationattributes-grid").data('kendoGrid');
                             grid.dataSource.read();

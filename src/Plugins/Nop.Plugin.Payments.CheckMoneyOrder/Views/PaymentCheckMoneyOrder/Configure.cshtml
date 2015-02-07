@@ -7,6 +7,7 @@
 @Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @(Html.LocalizedEditor<ConfigurationModel, ConfigurationModel.ConfigurationLocalizedModel>("plugin-settings-localized",
     @<table class="adminContent">
         <tr>

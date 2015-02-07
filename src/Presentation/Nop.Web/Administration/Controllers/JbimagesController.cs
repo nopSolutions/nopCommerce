@@ -4,12 +4,15 @@ using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 
 namespace Nop.Admin.Controllers
 {
     /// <summary>
     /// Controller used by jbimages (JustBoil.me) plugin (TimyMCE)
     /// </summary>
+    //do not validate request token (XSRF)
+    [AdminAntiForgery(true)]
     public partial class JbimagesController : BaseAdminController
     {
         private readonly IPermissionService _permissionService;
