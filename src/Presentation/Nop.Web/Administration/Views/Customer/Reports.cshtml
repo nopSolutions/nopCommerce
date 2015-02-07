@@ -3,6 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.Reports").Text;
 }
+@Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
@@ -11,7 +12,6 @@
     <div class="options">
     </div>
 </div>
-
 <div id="customer-reports">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
