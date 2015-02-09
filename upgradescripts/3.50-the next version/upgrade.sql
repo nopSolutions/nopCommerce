@@ -188,6 +188,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
     <Value>Check to enable XSRF protection for admin area</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Profit">
+    <Value>Profit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Profit.Hint">
+    <Value>Profit of this order.</Value>
+  </LocaleResource>
 </Language>
 '
 

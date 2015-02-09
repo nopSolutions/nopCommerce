@@ -30,8 +30,9 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get order average report
         /// </summary>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
+        /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="os">Order status</param>
         /// <param name="ps">Payment status</param>
         /// <param name="ss">Shipping status</param>
@@ -40,9 +41,10 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(int storeId, int vendorId, OrderStatus? os,
-            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc,
-            DateTime? endTimeUtc, string billingEmail, bool ignoreCancelledOrders = false);
+        OrderAverageReportLine GetOrderAverageReportLine(int storeId, int vendorId, int orderId,
+            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
+            DateTime? startTimeUtc, DateTime? endTimeUtc, 
+            string billingEmail, bool ignoreCancelledOrders = false);
         
         /// <summary>
         /// Get order average report
@@ -108,8 +110,9 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Get profit report
         /// </summary>
-        /// <param name="storeId">Store identifier</param>
-        /// <param name="vendorId">Vendor identifier</param>
+        /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
+        /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -117,7 +120,7 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(int storeId, int vendorId, 
+        decimal ProfitReport(int storeId, int vendorId, int orderId,
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
             DateTime? startTimeUtc, DateTime? endTimeUtc, string billingEmail);
     }

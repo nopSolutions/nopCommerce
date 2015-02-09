@@ -8484,6 +8484,12 @@
   <LocaleResource Name="Admin.Orders.Fields.PaymentStatus.Hint">
     <Value>The status of the payment.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Profit">
+    <Value>Profit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.Profit.Hint">
+    <Value>Profit of this order.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.RecurringPayment">
     <Value>Recurring payment</Value>
   </LocaleResource>

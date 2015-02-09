@@ -88,6 +88,8 @@ namespace Nop.Admin.Models.Orders
         public string OrderTotal { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.RefundedAmount")]
         public string RefundedAmount { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Profit")]
+        public string Profit { get; set; }
 
         //edit totals
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderSubtotal")]
