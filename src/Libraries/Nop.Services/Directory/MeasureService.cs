@@ -105,7 +105,6 @@ namespace Nop.Services.Directory
             _eventPublisher.EntityDeleted(measureDimension);
         }
         
-
         /// <summary>
         /// Gets a measure dimension by identifier
         /// </summary>
@@ -192,15 +191,15 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertDimension(decimal quantity, 
+        public virtual decimal ConvertDimension(decimal value, 
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
-            decimal result = quantity;
+            decimal result = value;
             if (result != decimal.Zero && sourceMeasureDimension.Id != targetMeasureDimension.Id)
             {
                 result = ConvertToPrimaryMeasureDimension(result, sourceMeasureDimension);
@@ -214,13 +213,13 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts to primary measure dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertToPrimaryMeasureDimension(decimal quantity,
+        public virtual decimal ConvertToPrimaryMeasureDimension(decimal value,
             MeasureDimension sourceMeasureDimension)
         {
-            decimal result = quantity;
+            decimal result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (result != decimal.Zero && sourceMeasureDimension.Id != baseDimensionIn.Id)
             {
@@ -235,13 +234,13 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts from primary dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
+        public virtual decimal ConvertFromPrimaryMeasureDimension(decimal value,
             MeasureDimension targetMeasureDimension)
         {
-            decimal result = quantity;
+            decimal result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (result != decimal.Zero && targetMeasureDimension.Id != baseDimensionIn.Id)
             {
@@ -359,15 +358,15 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertWeight(decimal quantity,
+        public virtual decimal ConvertWeight(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
-            decimal result = quantity;
+            decimal result = value;
             if (result != decimal.Zero && sourceMeasureWeight.Id != targetMeasureWeight.Id)
             {
                 result = ConvertToPrimaryMeasureWeight(result, sourceMeasureWeight);
@@ -381,12 +380,12 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts to primary measure weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight)
+        public virtual decimal ConvertToPrimaryMeasureWeight(decimal value, MeasureWeight sourceMeasureWeight)
         {
-            decimal result = quantity;
+            decimal result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (result != decimal.Zero && sourceMeasureWeight.Id != baseWeightIn.Id)
             {
@@ -401,13 +400,13 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts from primary weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        public virtual decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
+        public virtual decimal ConvertFromPrimaryMeasureWeight(decimal value,
             MeasureWeight targetMeasureWeight)
         {
-            decimal result = quantity;
+            decimal result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (result != decimal.Zero && targetMeasureWeight.Id != baseWeightIn.Id)
             {

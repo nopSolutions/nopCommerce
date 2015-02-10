@@ -49,30 +49,30 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        decimal ConvertDimension(decimal quantity,
+        decimal ConvertDimension(decimal value,
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true);
 
         /// <summary>
         /// Converts to primary measure dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureDimension">Source dimension</param>
         /// <returns>Converted value</returns>
-        decimal ConvertToPrimaryMeasureDimension(decimal quantity,
+        decimal ConvertToPrimaryMeasureDimension(decimal value,
             MeasureDimension sourceMeasureDimension);
 
         /// <summary>
         /// Converts from primary dimension
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureDimension">Target dimension</param>
         /// <returns>Converted value</returns>
-        decimal ConvertFromPrimaryMeasureDimension(decimal quantity,
+        decimal ConvertFromPrimaryMeasureDimension(decimal value,
             MeasureDimension targetMeasureDimension);
         
 
@@ -117,29 +117,29 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Converts weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <param name="round">A value indicating whether a result should be rounded</param>
         /// <returns>Converted value</returns>
-        decimal ConvertWeight(decimal quantity,
+        decimal ConvertWeight(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true);
 
         /// <summary>
         /// Converts to primary measure weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="sourceMeasureWeight">Source weight</param>
         /// <returns>Converted value</returns>
-        decimal ConvertToPrimaryMeasureWeight(decimal quantity, MeasureWeight sourceMeasureWeight);
+        decimal ConvertToPrimaryMeasureWeight(decimal value, MeasureWeight sourceMeasureWeight);
 
         /// <summary>
         /// Converts from primary weight
         /// </summary>
-        /// <param name="quantity">Quantity</param>
+        /// <param name="value">Value to convert</param>
         /// <param name="targetMeasureWeight">Target weight</param>
         /// <returns>Converted value</returns>
-        decimal ConvertFromPrimaryMeasureWeight(decimal quantity,
+        decimal ConvertFromPrimaryMeasureWeight(decimal value,
             MeasureWeight targetMeasureWeight);
     }
 }
