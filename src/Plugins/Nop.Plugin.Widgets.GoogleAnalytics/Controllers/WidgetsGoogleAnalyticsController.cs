@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using System.Xml.Schema;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;
@@ -61,6 +62,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             model.TrackingScript = googleAnalyticsSettings.TrackingScript;
             model.EcommerceScript = googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
+            model.IncludingTax = googleAnalyticsSettings.IncludingTax;
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -69,6 +71,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.TrackingScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.TrackingScript, storeScope);
                 model.EcommerceScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
+                model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/WidgetsGoogleAnalytics/Configure.cshtml", model);
@@ -86,6 +89,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.TrackingScript = model.TrackingScript;
             googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
+            googleAnalyticsSettings.IncludingTax = model.IncludingTax;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -110,6 +114,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
 
+            if (model.IncludingTax_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+            
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -231,7 +240,8 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SITE}", _storeContext.CurrentStore.Url.Replace("http://", "").Replace("/", ""));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TOTAL}", order.OrderTotal.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{TAX}", order.OrderTax.ToString("0.00", usCulture));
-                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", order.OrderShippingInclTax.ToString("0.00", usCulture));
+                var orderShipping = googleAnalyticsSettings.IncludingTax ? order.OrderShippingInclTax : order.OrderShippingExclTax;
+                analyticsEcommerceScript = analyticsEcommerceScript.Replace("{SHIP}", orderShipping.ToString("0.00", usCulture));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{CITY}", order.BillingAddress == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.City));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{STATEPROVINCE}", order.BillingAddress == null || order.BillingAddress.StateProvince == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.StateProvince.Name));
                 analyticsEcommerceScript = analyticsEcommerceScript.Replace("{COUNTRY}", order.BillingAddress == null || order.BillingAddress.Country == null ? "" : FixIllegalJavaScriptChars(order.BillingAddress.Country.Name));
@@ -241,16 +251,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 {
                     string analyticsEcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
                     //get category
-                    string categ = "";
+                    string category = "";
                     var defaultProductCategory = _categoryService.GetProductCategoriesByProductId(item.ProductId).FirstOrDefault();
                     if (defaultProductCategory != null)
-                        categ = defaultProductCategory.Category.Name;
+                        category = defaultProductCategory.Category.Name;
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{ORDERID}", item.OrderId.ToString());
                     //The SKU code is a required parameter for every item that is added to the transaction
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTSKU}", FixIllegalJavaScriptChars(item.Product.FormatSku(item.AttributesXml, _productAttributeParser)));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{PRODUCTNAME}", FixIllegalJavaScriptChars(item.Product.Name));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(categ));
-                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", item.UnitPriceInclTax.ToString("0.00", usCulture));
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{CATEGORYNAME}", FixIllegalJavaScriptChars(category));
+                    var unitPrice = googleAnalyticsSettings.IncludingTax ? item.UnitPriceInclTax : item.UnitPriceExclTax;
+                    analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{UNITPRICE}", unitPrice.ToString("0.00", usCulture));
                     analyticsEcommerceDetailScript = analyticsEcommerceDetailScript.Replace("{QUANTITY}", item.Quantity.ToString());
                     sb.AppendLine(analyticsEcommerceDetailScript);
                 }

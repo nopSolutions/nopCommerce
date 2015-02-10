@@ -194,6 +194,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.Profit.Hint">
     <Value>Profit of this order.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.GoogleAnalytics.IncludingTax">
+    <Value>Include tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Widgets.GoogleAnalytics.IncludingTax.Hint">
+    <Value>Check to include tax when generating tracking code for {ECOMMERCE} part.</Value>
+  </LocaleResource>
 </Language>
 '
 
