@@ -212,6 +212,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfoDimensions">
+    <Value>Pass shipping info (dimensions)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint">
+    <Value>Check if you want to include shipping information (dimensions) in generated XML file.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -481,4 +487,13 @@ GO
 UPDATE [Setting] 
 SET [Name] = N'frooglesettings.passshippinginfoweight'
 WHERE [Name] = N'frooglesettings.passshippinginfo'
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.passshippinginfodimensions')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'frooglesettings.passshippinginfodimensions', N'false', 0)
+END
 GO

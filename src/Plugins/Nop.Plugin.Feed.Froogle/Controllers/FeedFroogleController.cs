@@ -69,6 +69,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             var model = new FeedFroogleModel();
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
             model.PassShippingInfoWeight = _froogleSettings.PassShippingInfoWeight;
+            model.PassShippingInfoDimensions = _froogleSettings.PassShippingInfoDimensions;
             model.PricesConsiderPromotions = _froogleSettings.PricesConsiderPromotions;
             //stores
             model.StoreId = _froogleSettings.StoreId;
@@ -113,6 +114,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.PassShippingInfoWeight = model.PassShippingInfoWeight;
+            _froogleSettings.PassShippingInfoDimensions = model.PassShippingInfoDimensions;
             _froogleSettings.PricesConsiderPromotions = model.PricesConsiderPromotions;
             _froogleSettings.CurrencyId = model.CurrencyId;
             _froogleSettings.StoreId = model.StoreId;

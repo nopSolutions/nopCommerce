@@ -468,7 +468,8 @@ namespace Nop.Plugin.Feed.Froogle
                         {
                             string weightName;
                             var shippingWeight = product.Weight;
-                            switch (_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword)
+                            var weightSystemName = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword;
+                            switch (weightSystemName)
                             {
                                 case "ounce":
                                     weightName = "oz";
@@ -487,6 +488,32 @@ namespace Nop.Plugin.Feed.Froogle
                                     throw new Exception("Not supported weight. Google accepts the following units: lb, oz, g, kg.");
                             }
                             writer.WriteElementString("g", "shipping_weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", shippingWeight.ToString(new CultureInfo("en-US", false).NumberFormat), weightName));
+                        }
+
+                        //shipping length [shipping_length] - Length of the item for shipping
+                        //shipping width [shipping_width] - Width of the item for shipping
+                        //shipping height [shipping_height] - Height of the item for shipping
+                        //We accept only the following units of length: in, cm
+                        if (_froogleSettings.PassShippingInfoDimensions)
+                        {
+                            string dimensionName;
+                            var length = product.Length;
+                            var width = product.Width;
+                            var height = product.Height;
+                            var dimensionSystemName = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).SystemKeyword;
+                            switch (dimensionSystemName)
+                            {
+                                case "inches":
+                                    dimensionName = "in";
+                                    break;
+                                    //TODO support other dimensions (convert to cm)
+                                default:
+                                    //unknown dimension 
+                                    throw new Exception("Not supported dimension. Google accepts the following units: in, cm.");
+                            }
+                            writer.WriteElementString("g", "shipping_length", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", length.ToString(new CultureInfo("en-US", false).NumberFormat), dimensionName));
+                            writer.WriteElementString("g", "shipping_width", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", width.ToString(new CultureInfo("en-US", false).NumberFormat), dimensionName));
+                            writer.WriteElementString("g", "shipping_height", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", height.ToString(new CultureInfo("en-US", false).NumberFormat), dimensionName));
                         }
 
                         #endregion
@@ -512,6 +539,7 @@ namespace Nop.Plugin.Feed.Froogle
                 PricesConsiderPromotions = false,
                 ProductPictureSize = 125,
                 PassShippingInfoWeight = false,
+                PassShippingInfoDimensions = false,
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
                 ExpirationNumberOfDays = 28
             };
@@ -532,6 +560,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight", "Pass shipping info (weight)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions", "Pass shipping info (dimensions)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint", "Check if you want to include shipping information (dimensions) in generated XML file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions", "Prices consider promotions");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize", "Product thumbnail image size");
@@ -573,6 +603,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");

@@ -33,6 +33,9 @@ namespace Nop.Plugin.Feed.Froogle.Models
         [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoWeight")]
         public bool PassShippingInfoWeight { get; set; }
 
+        [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoDimensions")]
+        public bool PassShippingInfoDimensions { get; set; }
+
         [NopResourceDisplayName("Plugins.Feed.Froogle.PricesConsiderPromotions")]
         public bool PricesConsiderPromotions { get; set; }
 
