@@ -200,6 +200,18 @@ set @resources='
   <LocaleResource Name="Plugins.Widgets.GoogleAnalytics.IncludingTax.Hint">
     <Value>Check to include tax when generating tracking code for {ECOMMERCE} part.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfoWeight">
+    <Value>Pass shipping info (weight)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfoWeight.Hint">
+    <Value>Check if you want to include shipping information (weight) in generated XML file.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfo.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -462,4 +474,11 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.enablexsrfprotectionforadminarea', N'true', 0)
 END
+GO
+
+
+--rename setting
+UPDATE [Setting] 
+SET [Name] = N'frooglesettings.passshippinginfoweight'
+WHERE [Name] = N'frooglesettings.passshippinginfo'
 GO

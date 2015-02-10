@@ -10,9 +10,9 @@ namespace Nop.Plugin.Feed.Froogle
         public int ProductPictureSize { get; set; }
 
         /// <summary>
-        /// A value indicating whether we should pass shipping info to Froogle
+        /// A value indicating whether we should pass shipping info (weight)
         /// </summary>
-        public bool PassShippingInfo { get; set; }
+        public bool PassShippingInfoWeight { get; set; }
 
         /// <summary>
         /// A value indicating whether we should calculate prices considering promotions (tier prices, discounts, special prices, etc)

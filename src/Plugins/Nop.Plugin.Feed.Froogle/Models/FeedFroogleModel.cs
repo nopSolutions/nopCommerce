@@ -30,8 +30,8 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public string DefaultGoogleCategory { get; set; }
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfo")]
-        public bool PassShippingInfo { get; set; }
+        [NopResourceDisplayName("Plugins.Feed.Froogle.PassShippingInfoWeight")]
+        public bool PassShippingInfoWeight { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.PricesConsiderPromotions")]
         public bool PricesConsiderPromotions { get; set; }

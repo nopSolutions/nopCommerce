@@ -464,7 +464,7 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //shipping weight [shipping_weight] - Weight of the item for shipping
                         //We accept only the following units of weight: lb, oz, g, kg.
-                        if (_froogleSettings.PassShippingInfo)
+                        if (_froogleSettings.PassShippingInfoWeight)
                         {
                             string weightName;
                             var shippingWeight = product.Weight;
@@ -484,8 +484,7 @@ namespace Nop.Plugin.Feed.Froogle
                                     break;
                                 default:
                                     //unknown weight 
-                                    weightName = "kg";
-                                    break;
+                                    throw new Exception("Not supported weight. Google accepts the following units: lb, oz, g, kg.");
                             }
                             writer.WriteElementString("g", "shipping_weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", shippingWeight.ToString(new CultureInfo("en-US", false).NumberFormat), weightName));
                         }
@@ -512,7 +511,7 @@ namespace Nop.Plugin.Feed.Froogle
             {
                 PricesConsiderPromotions = false,
                 ProductPictureSize = 125,
-                PassShippingInfo = false,
+                PassShippingInfoWeight = false,
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
                 ExpirationNumberOfDays = 28
             };
@@ -531,8 +530,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.General", "General");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo", "Pass shipping info");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight", "Pass shipping info (weight)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint", "Check if you want to include shipping information (weight) in generated XML file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions", "Prices consider promotions");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint", "Check if you want prices to be calculated with promotions (tier prices, discounts, special prices, tax, etc). But please note that it can significantly reduce time required to generate the feed file.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize", "Product thumbnail image size");
@@ -572,8 +571,8 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.General");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Generate");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfo.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PassShippingInfoWeight.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.PricesConsiderPromotions.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");
