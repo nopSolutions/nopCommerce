@@ -8,14 +8,14 @@
         <div id="newsletter-subscribe-block" class="newsletter-subscribe-block">
             <span>@T("Newsletter.Subscribe"):</span>
             <div class="newsletter-email">
-            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
-            @Html.ValidationMessageFor(x => x.NewsletterEmail)
+                @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
+                @Html.ValidationMessageFor(x => x.NewsletterEmail)
             </div>
             <div class="buttons">
                 <input type="button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
                 <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             </div>
-</div>
+        </div>
         <div id="newsletter-result-block" class="newsletter-result-block">
         </div>
     </div>
@@ -34,13 +34,13 @@
                     success: function (data) {
                         subscribeProgress.hide();
                         $("#newsletter-result-block").html(data.Result);
-                         if (data.Success) {
+                        if (data.Success) {
                             $('#newsletter-subscribe-block').hide();
                             $('#newsletter-result-block').show();
-                         }
-                         else {
+                        }
+                        else {
                             $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
-                         }
+                        }
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to subscribe.');
