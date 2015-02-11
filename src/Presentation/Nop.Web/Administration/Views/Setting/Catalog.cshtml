@@ -411,16 +411,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CompareProductsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CompareProductsEnabled)
-                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowBestsellersOnHomepage):
             </td>
@@ -587,6 +577,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.ManufacturersBlockItemsToDisplay)
                 @Html.ValidationMessageFor(model => model.ManufacturersBlockItemsToDisplay)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.CompareProductsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CompareProductsEnabled)
+                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
             </td>
         </tr>
         <tr>
