@@ -236,6 +236,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe.Hint">
     <Value>Check if you want to allow customers to display "unsubscribe" option in the newsletter block.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.General">
+    <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Performance">
+    <Value>Performance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviews">
+    <Value>Product reviews</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Search">
+    <Value>Search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProducts">
+    <Value>Compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Sharing">
+    <Value>Sharing</Value>
+  </LocaleResource>
 </Language>
 '
 

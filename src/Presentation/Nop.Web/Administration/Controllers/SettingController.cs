@@ -1300,6 +1300,10 @@ namespace Nop.Admin.Controllers
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
+
+            //selected tab
+            SaveSelectedTabIndex();
+
             return RedirectToAction("Catalog");
         }
 

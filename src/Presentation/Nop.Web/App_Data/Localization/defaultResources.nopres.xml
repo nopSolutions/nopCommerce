@@ -4251,6 +4251,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled.Hint">
     <Value>Check to show category breadcrumb.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProducts">
+    <Value>Compare products</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled">
     <Value>'Compare Products' enabled</Value>
   </LocaleResource>
@@ -4304,6 +4307,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate.Hint">
     <Value>Check if you want to enable dynamic price update on product details page in case a product has product attributes with price adjustments.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.General">
+    <Value>General</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts">
     <Value>Ignore discounts (sitewide)</Value>
@@ -4370,6 +4376,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.PageShareCode.Hint">
     <Value>A page share button code. By default, we're using AddThis service.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Performance">
+    <Value>Performance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviews">
+    <Value>Product reviews</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved">
     <Value>Product reviews must be approved</Value>
@@ -4443,6 +4455,9 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyViewedProductsNumber.Hint">
     <Value>The number of 'Recently viewed products' to display when 'Recently viewed products' option is enabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Search">
+    <Value>Search</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageAllowCustomersToSelectPageSize">
     <Value>Search page. Allow customers to select page size</Value>
   </LocaleResource>
@@ -4460,6 +4475,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SearchPageProductsPerPage.Hint">
     <Value>Set the page size for products on 'Search' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.Sharing">
+    <Value>Sharing</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowBestsellersOnHomepage">
     <Value>Show best sellers on home page</Value>
