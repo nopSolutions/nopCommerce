@@ -18,53 +18,6 @@
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
     
-    <script type="text/javascript">
-        $(document).ready(function () {
-
-            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
-            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-
-            toggleStoreClosed();
-            toggleReCaptcha();
-        });
-
-        function toggleStoreClosed() {
-            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
-                $('#pnlStoreClosedAllowForAdmins').show();
-            }
-            else {
-                $('#pnlStoreClosedAllowForAdmins').hide();
-            }
-        }
-
-        function toggleReCaptcha() {
-            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-                $('#ssCaptchaShowOnLoginPagepnl').show();
-                $('#ssCaptchaShowOnRegistrationPagepnl').show();
-                $('#ssCaptchaShowOnContactUsPagepnl').show();
-                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-                $('#ssCaptchaShowOnProductReviewPagepnl').show();
-                $('#ssReCaptchaPublicKeypnl').show();
-                $('#ssReCaptchaPrivateKeypnl').show();
-            }
-            else {
-                $('#ssCaptchaShowOnLoginPagepnl').hide();
-                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-                $('#ssCaptchaShowOnContactUsPagepnl').hide();
-                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-                $('#ssReCaptchaPublicKeypnl').hide();
-                $('#ssReCaptchaPrivateKeypnl').hide();
-            }
-        }
-    </script>
-
 
     <div id="generalsettings-edit">
         <ul>
@@ -138,6 +91,25 @@
 }
 @helper TabStoreInformationSettings()
 {
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
+
+        toggleStoreClosed();
+    });
+
+    function toggleStoreClosed() {
+        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
+            $('#pnlStoreClosedAllowForAdmins').show();
+        }
+        else {
+            $('#pnlStoreClosedAllowForAdmins').hide();
+        }
+    }
+
+    </script>
+
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -261,7 +233,6 @@
 }
 @helper TabSEOSettings()
 {
-    
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -397,6 +368,42 @@
 }
 @helper TabSecuritySettings()
 {
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+
+        toggleReCaptcha();
+    });
+
+    function toggleReCaptcha() {
+        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+            $('#ssCaptchaShowOnLoginPagepnl').show();
+            $('#ssCaptchaShowOnRegistrationPagepnl').show();
+            $('#ssCaptchaShowOnContactUsPagepnl').show();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+            $('#ssCaptchaShowOnProductReviewPagepnl').show();
+            $('#ssReCaptchaPublicKeypnl').show();
+            $('#ssReCaptchaPrivateKeypnl').show();
+        }
+        else {
+            $('#ssCaptchaShowOnLoginPagepnl').hide();
+            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+            $('#ssCaptchaShowOnContactUsPagepnl').hide();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+            $('#ssReCaptchaPublicKeypnl').hide();
+            $('#ssReCaptchaPrivateKeypnl').hide();
+        }
+    }
+    </script>
+
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
