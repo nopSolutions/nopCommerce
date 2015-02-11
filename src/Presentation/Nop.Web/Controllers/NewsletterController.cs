@@ -40,33 +40,49 @@ namespace Nop.Web.Controllers
             if (_customerSettings.HideNewsletterBlock)
                 return Content("");
 
-            return PartialView(new NewsletterBoxModel());
+            var model = new NewsletterBoxModel()
+            {
+                AllowToUnsubscribe = _customerSettings.NewsletterBlockAllowToUnsubscribe
+            };
+            return PartialView(model);
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult SubscribeNewsletter(string email)
+        public ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
             string result;
             bool success = false;
 
             if (!CommonHelper.IsValidEmail(email))
+            {
                 result = _localizationService.GetResource("Newsletter.Email.Wrong");
+            }
             else
             {
-                //subscribe/unsubscribe
                 email = email.Trim();
 
                 var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, _storeContext.CurrentStore.Id);
                 if (subscription != null)
                 {
-                    if (!subscription.Active)
+                    if (subscribe)
                     {
-                        _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
+                        if (!subscription.Active)
+                        {
+                            _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
+                        }
+                        result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
                     }
-                    result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
+                    else
+                    {
+                        if (subscription.Active)
+                        {
+                            _workflowMessageService.SendNewsLetterSubscriptionDeactivationMessage(subscription, _workContext.WorkingLanguage.Id);
+                        }
+                        result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
+                    }
                 }
-                else
+                else if (subscribe)
                 {
                     subscription = new NewsLetterSubscription
                     {
@@ -80,6 +96,10 @@ namespace Nop.Web.Controllers
                     _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
 
                     result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
+                }
+                else
+                {
+                    result = _localizationService.GetResource("Newsletter.UnsubscribeEmailSent");
                 }
                 success = true;
             }

@@ -74,6 +74,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock")]
             public bool HideNewsletterBlock { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe")]
+            public bool NewsletterBlockAllowToUnsubscribe { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage")]
             public bool StoreLastVisitedPage { get; set; }
 

@@ -4785,6 +4785,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideNewsletterBlock.Hint">
     <Value>Check if you want to hide the newsletter subscription box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
+    <Value>Newsletter box. Allow to unsubscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe.Hint">
+    <Value>Check if you want to allow customers to display "unsubscribe" option in the newsletter block.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterEnabled">
     <Value>'Newsletter' enabled</Value>
   </LocaleResource>
@@ -11895,11 +11901,14 @@
   <LocaleResource Name="News.ViewAll">
     <Value>[View News Archive]</Value>
   </LocaleResource>
-  <LocaleResource Name="Newsletter.Button">
-    <Value>Subscribe</Value>
-  </LocaleResource>
   <LocaleResource Name="Newsletter.Email.Wrong">
     <Value>Enter valid email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Subscribe">
+    <Value>Subscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Unsubscribe">
+    <Value>Unsubscribe</Value>
   </LocaleResource>
   <LocaleResource Name="Newsletter.ResultActivated">
     <Value>Your subscription has been activated.</Value>
@@ -11912,6 +11921,9 @@
   </LocaleResource>
   <LocaleResource Name="Newsletter.SubscribeEmailSent">
     <Value>Thank you for signing up! A verification email has been sent. We appreciate your interest.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.UnsubscribeEmailSent">
+    <Value>A verification email has been sent. Thank you!</Value>
   </LocaleResource>
   <LocaleResource Name="Newsletter.Title">
     <Value>Newsletter</Value>

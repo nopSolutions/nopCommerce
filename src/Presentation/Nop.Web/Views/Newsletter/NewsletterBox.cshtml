@@ -12,7 +12,11 @@
                 @Html.ValidationMessageFor(x => x.NewsletterEmail)
             </div>
             <div class="buttons">
-                <input type="button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
+                <input type="button" value="@T("Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
+                @if (Model.AllowToUnsubscribe)
+                {
+                    <input type="button" value="@T("Newsletter.Options.Unsubscribe")" id="newsletter-unsubscribe-button" class="button-1 newsletter-unsubscribe-button" />
+                }
                 <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             </div>
         </div>
@@ -20,34 +24,40 @@
         </div>
     </div>
     <script type="text/javascript">
+
+        function newsletter_subscribe(subscribe) {
+            
+            var email = $("#newsletter-email").val();
+            var subscribeProgress = $("#subscribe-loading-progress");
+            subscribeProgress.show();
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.RouteUrl("SubscribeNewsletter"))",
+                data: { "subscribe": subscribe, "email": email },
+                success: function(data) {
+                    subscribeProgress.hide();
+                    $("#newsletter-result-block").html(data.Result);
+                    if (data.Success) {
+                        $('#newsletter-subscribe-block').hide();
+                        $('#newsletter-result-block').show();
+                    } else {
+                        $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to subscribe.');
+                    subscribeProgress.hide();
+                }
+            });
+        }
+
         $(document).ready(function () {
             $('#newsletter-subscribe-button').click(function () {
-                
-                var email = $("#newsletter-email").val();
-                var subscribeProgress = $("#subscribe-loading-progress");
-                subscribeProgress.show();
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                    data: { "email": email },
-                    success: function (data) {
-                        subscribeProgress.hide();
-                        $("#newsletter-result-block").html(data.Result);
-                        if (data.Success) {
-                            $('#newsletter-subscribe-block').hide();
-                            $('#newsletter-result-block').show();
-                        }
-                        else {
-                            $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
-                        }
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to subscribe.');
-                        subscribeProgress.hide();
-                    }  
-                });                
-                return false;
+                newsletter_subscribe('true');
+            });
+            $('#newsletter-unsubscribe-button').click(function () {
+                newsletter_subscribe('false');
             });
         });
     </script>

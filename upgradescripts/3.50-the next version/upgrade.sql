@@ -218,6 +218,24 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.PassShippingInfoDimensions.Hint">
     <Value>Check if you want to include shipping information (dimensions) in generated XML file.</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Button">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Subscribe">
+    <Value>Subscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Unsubscribe">
+    <Value>Unsubscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Newsletter.UnsubscribeEmailSent">
+    <Value>A verification email has been sent. Thank you!</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe">
+    <Value>Newsletter box. Allow to unsubscribe</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NewsletterBlockAllowToUnsubscribe.Hint">
+    <Value>Check if you want to allow customers to display "unsubscribe" option in the newsletter block.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -495,5 +513,26 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.passship
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'frooglesettings.passshippinginfodimensions', N'false', 0)
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.newsletterblockallowtounsubscribe')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.newsletterblockallowtounsubscribe', N'false', 0)
+END
+GO
+
+
+--'Newsletter unsubscribe' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'NewsLetterSubscription.DeactivationMessage')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
+	VALUES (N'NewsLetterSubscription.DeactivationMessage', null, N'%Store.Name%. Subscription deactivation message.', N'<p><a href="%NewsLetterSubscription.DeactivationUrl%">Click here to unsubscribe from our newsletter.</a></p><p>If you received this email by mistake, simply delete it.</p>', 1, 0, 0, 0)
 END
 GO

@@ -4162,6 +4162,14 @@ namespace Nop.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
+                                           Name = "NewsLetterSubscription.DeactivationMessage",
+                                           Subject = "%Store.Name%. Subscription deactivation message.",
+                                           Body = "<p><a href=\"%NewsLetterSubscription.DeactivationUrl%\">Click here to unsubscribe from our newsletter.</a></p><p>If you received this email by mistake, simply delete it.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
                                            Name = "NewVATSubmitted.StoreOwnerNotification",
                                            Subject = "%Store.Name%. New VAT number is submitted.",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:<br />VAT number: %Customer.VatNumber%<br />VAT number status: %Customer.VatNumberStatus%<br />Received name: %VatValidationResult.Name%<br />Received address: %VatValidationResult.Address%</p>",
@@ -4643,6 +4651,7 @@ namespace Nop.Services.Installation
                     NewsletterEnabled = true,
                     NewsletterTickedByDefault = true,
                     HideNewsletterBlock = false,
+                    NewsletterBlockAllowToUnsubscribe = false,
                     OnlineCustomerMinutes = 20,
                     StoreLastVisitedPage = false,
                     SuffixDeletedCustomers = false,

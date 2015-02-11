@@ -111,6 +111,11 @@ namespace Nop.Core.Domain.Customers
         public bool HideNewsletterBlock { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether newsletter block should allow to unsubsribe
+        /// </summary>
+        public bool NewsletterBlockAllowToUnsubscribe { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating the number of minutes for 'online customers' module
         /// </summary>
         public int OnlineCustomerMinutes { get; set; }
