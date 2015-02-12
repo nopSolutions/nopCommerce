@@ -11,14 +11,14 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.As)").click(toggleAdvancedSearch);
+        $("#@Html.FieldIdFor(model => model.adv)").click(toggleAdvancedSearch);
 
         toggleAdvancedSearch();
     });
 
     function toggleAdvancedSearch() {
 
-        if ($('#@Html.FieldIdFor(model => model.As)').is(':checked')) {
+        if ($('#@Html.FieldIdFor(model => model.adv)').is(':checked')) {
             $('#advanced-search-block').show();
         }
         else {
@@ -36,46 +36,46 @@
             {
                 <div class="basic-search">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.Q, new { }, ":")
-                        @Html.TextBoxFor(model => model.Q, new { @class = "search-text" })
+                        @Html.LabelFor(model => model.q, new { }, ":")
+                        @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
                     </div>
                     @Html.Widget("productsearch_page_basic")
                     <div class="inputs reversed">
-                        @Html.CheckBoxFor(model => model.As)
-                        @Html.LabelFor(model => model.As)
+                        @Html.CheckBoxFor(model => model.adv)
+                        @Html.LabelFor(model => model.adv)
                     </div>
                 </div>
                 <div class="advanced-search" id="advanced-search-block">
                     @if (Model.AvailableCategories.Count > 0)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Cid, new { }, ":")
-                            @Html.DropDownListFor(model => model.Cid, Model.AvailableCategories)
+                            @Html.LabelFor(model => model.cid, new { }, ":")
+                            @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
                         </div>
                         <div class="inputs reversed">
-                            @Html.CheckBoxFor(model => model.Isc)
-                            @Html.LabelFor(model => model.Isc)
+                            @Html.CheckBoxFor(model => model.isc)
+                            @Html.LabelFor(model => model.isc)
                         </div>
                     }
                     @if (Model.AvailableManufacturers.Count > 0)
                     {
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Mid, new { }, ":")
-                            @Html.DropDownListFor(model => model.Mid, Model.AvailableManufacturers)
+                            @Html.LabelFor(model => model.mid, new { }, ":")
+                            @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
                         </div>
                     }
                     <div class="inputs">
                         <label>@T("Search.PriceRange"):</label>
                         <span class="price-range">
                             @T("Search.PriceRange.From")
-                            @Html.TextBoxFor(model => model.Pf, new { @class = "price-from" })
+                            @Html.TextBoxFor(model => model.pf, new { @class = "price-from" })
                             @T("Search.PriceRange.To")
-                            @Html.TextBoxFor(model => model.Pt, new { @class = "price-to" })
+                            @Html.TextBoxFor(model => model.pt, new { @class = "price-to" })
                         </span>
                     </div>
                     <div class="inputs reversed">
-                        @Html.CheckBoxFor(model => model.Sid)
-                        @Html.LabelFor(model => model.Sid)
+                        @Html.CheckBoxFor(model => model.sid)
+                        @Html.LabelFor(model => model.sid)
                     </div>
                     @Html.Widget("productsearch_page_advanced")
                 </div>
@@ -154,7 +154,7 @@
                 }
             }
             <div class="pager">
-                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid")
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid")
             </div>
         </div>
         @Html.Widget("productsearch_page_after_results")

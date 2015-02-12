@@ -1193,9 +1193,10 @@ namespace Nop.Web.Controllers
             if (model == null)
                 model = new SearchModel();
 
-            if (model.Q == null)
-                model.Q = "";
-            model.Q = model.Q.Trim();
+            var searchTerms = model.q;
+            if (searchTerms == null)
+                searchTerms = "";
+            searchTerms = searchTerms.Trim();
 
 
 
@@ -1251,7 +1252,7 @@ namespace Nop.Web.Controllers
                     {
                         Value = c.Id.ToString(),
                         Text = c.Breadcrumb,
-                        Selected = model.Cid == c.Id
+                        Selected = model.cid == c.Id
                     });
                 }
             }
@@ -1269,15 +1270,15 @@ namespace Nop.Web.Controllers
                     {
                         Value = m.Id.ToString(),
                         Text = m.GetLocalized(x => x.Name),
-                        Selected = model.Mid == m.Id
+                        Selected = model.mid == m.Id
                     });
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
             // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
-            if (Request.Params["Q"] != null)
+            if (Request.Params["q"] != null)
             {
-                if (model.Q.Length < _catalogSettings.ProductSearchTermMinimumLength)
+                if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
                     model.Warning = string.Format(_localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"), _catalogSettings.ProductSearchTermMinimumLength);
                 }
@@ -1288,14 +1289,14 @@ namespace Nop.Web.Controllers
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
                     bool searchInDescriptions = false;
-                    if (model.As)
+                    if (model.adv)
                     {
                         //advanced search
-                        var categoryId = model.Cid;
+                        var categoryId = model.cid;
                         if (categoryId > 0)
                         {
                             categoryIds.Add(categoryId);
-                            if (model.Isc)
+                            if (model.isc)
                             {
                                 //include subcategories
                                 categoryIds.AddRange(GetChildCategoryIds(categoryId));
@@ -1303,24 +1304,24 @@ namespace Nop.Web.Controllers
                         }
 
 
-                        manufacturerId = model.Mid;
+                        manufacturerId = model.mid;
 
                         //min price
-                        if (!string.IsNullOrEmpty(model.Pf))
+                        if (!string.IsNullOrEmpty(model.pf))
                         {
                             decimal minPrice;
-                            if (decimal.TryParse(model.Pf, out minPrice))
+                            if (decimal.TryParse(model.pf, out minPrice))
                                 minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
                         }
                         //max price
-                        if (!string.IsNullOrEmpty(model.Pt))
+                        if (!string.IsNullOrEmpty(model.pt))
                         {
                             decimal maxPrice;
-                            if (decimal.TryParse(model.Pt, out maxPrice))
+                            if (decimal.TryParse(model.pt, out maxPrice))
                                 maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
                         }
 
-                        searchInDescriptions = model.Sid;
+                        searchInDescriptions = model.sid;
                     }
                     
                     //var searchInProductTags = false;
@@ -1334,7 +1335,7 @@ namespace Nop.Web.Controllers
                         visibleIndividuallyOnly: true,
                         priceMin: minPriceConverted,
                         priceMax: maxPriceConverted,
-                        keywords:model.Q,
+                        keywords: searchTerms,
                         searchDescriptions: searchInDescriptions,
                         searchSku: searchInDescriptions,
                         searchProductTags: searchInProductTags,
@@ -1347,9 +1348,9 @@ namespace Nop.Web.Controllers
                     model.NoResults = !model.Products.Any();
 
                     //search term statistics
-                    if (!String.IsNullOrEmpty(model.Q))
+                    if (!String.IsNullOrEmpty(searchTerms))
                     {
-                        var searchTerm = _searchTermService.GetSearchTermByKeyword(model.Q, _storeContext.CurrentStore.Id);
+                        var searchTerm = _searchTermService.GetSearchTermByKeyword(searchTerms, _storeContext.CurrentStore.Id);
                         if (searchTerm != null)
                         {
                             searchTerm.Count++;
@@ -1359,7 +1360,7 @@ namespace Nop.Web.Controllers
                         {
                             searchTerm = new SearchTerm
                             {
-                                Keyword = model.Q,
+                                Keyword = searchTerms,
                                 StoreId = _storeContext.CurrentStore.Id,
                                 Count = 1
                             };
@@ -1370,7 +1371,7 @@ namespace Nop.Web.Controllers
                     //event
                     _eventPublisher.Publish(new ProductSearchEvent
                     {
-                        SearchTerm = model.Q,
+                        SearchTerm = searchTerms,
                         SearchInDescriptions = searchInDescriptions,
                         CategoryIds = categoryIds,
                         ManufacturerId = manufacturerId,
