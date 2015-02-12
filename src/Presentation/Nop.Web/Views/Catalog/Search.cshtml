@@ -111,6 +111,7 @@
                 </div>
             }
         </div>
+        @Html.Widget("productsearch_page_before_results")
         <div class="search-results">
             @if (!String.IsNullOrEmpty(Model.Warning))
             {
@@ -129,7 +130,7 @@
             {
                 if (Model.PagingFilteringContext.ViewMode == "list")
                 {
-                    @*list mode*@
+                            @*list mode*@
                     <div class="product-list">
                         @foreach (var product in Model.Products)
                         {
@@ -141,7 +142,7 @@
                 }
                 else
                 {
-                    @*grid mode*@
+                            @*grid mode*@
                     <div class="product-grid">
                         @foreach (var product in Model.Products)
                         {
@@ -156,5 +157,6 @@
                 @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid")
             </div>
         </div>
+        @Html.Widget("productsearch_page_after_results")
     </div>
 </div>
