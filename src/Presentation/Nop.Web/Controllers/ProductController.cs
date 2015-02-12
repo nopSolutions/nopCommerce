@@ -16,6 +16,7 @@ using Nop.Core.Domain.Vendors;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly VendorSettings _vendorSettings;
@@ -113,6 +115,7 @@ namespace Nop.Web.Controllers
             ICustomerActivityService customerActivityService,
             IProductAttributeParser productAttributeParser,
             IShippingService shippingService,
+            IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             CatalogSettings catalogSettings,
             VendorSettings vendorSettings,
@@ -151,6 +154,7 @@ namespace Nop.Web.Controllers
             this._customerActivityService = customerActivityService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
+            this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._vendorSettings = vendorSettings;
@@ -1236,6 +1240,9 @@ namespace Nop.Web.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("PublicStore.AddProductReview", _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
 
+                //raise event
+                if (productReview.IsApproved)
+                    _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
 
                 PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;

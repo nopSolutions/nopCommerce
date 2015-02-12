@@ -6,6 +6,7 @@ using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
@@ -23,18 +24,23 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion Fields
 
         #region Constructors
 
-        public ProductReviewController(IProductService productService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IPermissionService permissionService)
+        public ProductReviewController(IProductService productService, 
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService, 
+            IPermissionService permissionService,
+            IEventPublisher eventPublisher)
         {
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -198,10 +204,16 @@ namespace Nop.Admin.Controllers
                     var productReview = _productService.GetProductReviewById(id);
                     if (productReview != null)
                     {
+                        var previousIsApproved = productReview.IsApproved;
                         productReview.IsApproved = true;
                         _productService.UpdateProduct(productReview.Product);
                         //update product totals
                         _productService.UpdateProductReviewTotals(productReview.Product);
+
+
+                        //raise event (only if it wasn't approved before)
+                        if (!previousIsApproved)
+                            _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
                     }
                 }
             }
