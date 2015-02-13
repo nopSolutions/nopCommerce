@@ -8534,6 +8534,13 @@
             <param name="col"></param>
             <returns></returns>
         </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.ExcelDataProvider.GetDimensionEnd(System.String)">
+            <summary>
+            Returns the address of the lowest rightmost cell on the worksheet.
+            </summary>
+            <param name="worksheet"></param>
+            <returns></returns>
+        </member>
         <member name="M:OfficeOpenXml.FormulaParsing.ExcelDataProvider.Dispose">
             <summary>
             Use this method to free unmanaged resources.
@@ -9038,6 +9045,36 @@
             <param name="formula"></param>
             <returns></returns>
         </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Logging.IFormulaParserLogger">
+            <summary>
+            Used for logging during FormulaParsing
+            </summary>
+        </member>
+        <member name="T:OfficeOpenXml.FormulaParsing.Logging.LoggerFactory">
+            <summary>
+            Create loggers that can be used for logging the formula parser.
+            </summary>
+        </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.Logging.LoggerFactory.CreateTextFileLogger(System.IO.FileInfo)">
+            <summary>
+            Creates a logger that logs to a simple textfile.
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.ParsingConfiguration.AttachLogger(OfficeOpenXml.FormulaParsing.Logging.IFormulaParserLogger)">
+            <summary>
+            Attaches a logger, errors and log entries will be written to the logger during the parsing process.
+            </summary>
+            <param name="logger"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OfficeOpenXml.FormulaParsing.ParsingConfiguration.DetachLogger">
+            <summary>
+            if a logger is attached it will be removed.
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:OfficeOpenXml.FormulaParsing.ParsingContext">
             <summary>
             Parsing context
@@ -9078,6 +9115,11 @@
         <member name="P:OfficeOpenXml.FormulaParsing.ParsingContext.Scopes">
             <summary>
             Scopes, a scope represents the parsing of a cell or a value.
+            </summary>
+        </member>
+        <member name="P:OfficeOpenXml.FormulaParsing.ParsingContext.Debug">
+            <summary>
+            Returns true if a <see cref="T:OfficeOpenXml.FormulaParsing.Logging.IFormulaParserLogger"/> is attached to the parser.
             </summary>
         </member>
         <member name="T:OfficeOpenXml.FormulaParsing.ParsingScope">
@@ -27543,6 +27585,12 @@
             Calculation mode for the workbook.
             </summary>
         </member>
+        <member name="P:OfficeOpenXml.ExcelWorkbook.FullCalcOnLoad">
+            <summary>
+            Should Excel do a full calculation after the workbook has been loaded?
+            <remarks>This property is always true for both new workbooks and loaded templates(on load). If this is not the wanted behavior set this property to false.</remarks>
+            </summary>
+        </member>
         <member name="T:OfficeOpenXml.eWorkSheetHidden">
             <summary>
             Worksheet hidden enumeration
@@ -27588,6 +27636,14 @@
             <param name="sheetID">Sheet id</param>
             <param name="positionID">Position</param>
             <param name="hide">hide</param>
+        </member>
+        <member name="M:OfficeOpenXml.ExcelWorksheet.GetAttributeLength(System.Xml.XmlTextReader)">
+            <summary>
+            Get the lenth of the attributes
+            Conditional formatting attributes can be extremly long som get length of the attributes to finetune position.
+            </summary>
+            <param name="xr"></param>
+            <returns></returns>
         </member>
         <member name="M:OfficeOpenXml.ExcelWorksheet.ReadXmlReaderUntil(System.Xml.XmlTextReader,System.String,System.String)">
             <summary>
@@ -27722,7 +27778,7 @@
             Adds a value to the row of merged cells to fix for inserts or deletes
             </summary>
             <param name="row"></param>
-            <param name="rows"></param>
+            <param name="rows"></param> 
             <param name="delete"></param>
         </member>
         <member name="M:OfficeOpenXml.ExcelWorksheet.FixMergedCellsColumn(System.Int32,System.Int32,System.Boolean)">
