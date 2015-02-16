@@ -270,10 +270,10 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             if (processor.VerifyIpn(strRequest, out values))
             {
                 #region values
-                decimal total = decimal.Zero;
+                decimal mc_gross = decimal.Zero;
                 try
                 {
-                    total = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
+                    mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
                 }
                 catch { }
 
@@ -426,9 +426,22 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
                                         break;
                                     case PaymentStatus.Refunded:
                                         {
-                                            if (_orderProcessingService.CanRefundOffline(order))
+                                            var totalToRefund = Math.Abs(mc_gross);
+                                            if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.RefundOffline(order);
+                                                //refund
+                                                if (_orderProcessingService.CanRefundOffline(order))
+                                                {
+                                                    _orderProcessingService.RefundOffline(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //partial refund
+                                                if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                {
+                                                    _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                                                }
                                             }
                                         }
                                         break;

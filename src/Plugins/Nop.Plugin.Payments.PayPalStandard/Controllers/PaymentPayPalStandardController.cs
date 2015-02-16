@@ -236,10 +236,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                 Order order = _orderService.GetOrderByGuid(orderNumberGuid);
                 if (order != null)
                 {
-                    decimal total = decimal.Zero;
+                    decimal mc_gross = decimal.Zero;
                     try
                     {
-                        total = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
+                        mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
                     }
                     catch (Exception exc)
                     {
@@ -269,7 +269,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
 
                     var sb = new StringBuilder();
                     sb.AppendLine("Paypal PDT:");
-                    sb.AppendLine("total: " + total);
+                    sb.AppendLine("mc_gross: " + mc_gross);
                     sb.AppendLine("Payer status: " + payer_status);
                     sb.AppendLine("Payment status: " + payment_status);
                     sb.AppendLine("Pending reason: " + pending_reason);
@@ -298,9 +298,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     var payPalStandardPaymentSettings = _settingService.LoadSetting<PayPalStandardPaymentSettings>(storeScope);
 
                     //validate order total
-                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(total, 2).Equals(Math.Round(order.OrderTotal, 2)))
+                    if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                     {
-                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", total, order.OrderTotal);
+                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", mc_gross, order.OrderTotal);
                         _logger.Error(errorStr);
 
                         return RedirectToAction("Index", "Home", new { area = "" });
@@ -362,10 +362,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             if (processor.VerifyIpn(strRequest, out values))
             {
                 #region values
-                decimal total = decimal.Zero;
+                decimal mc_gross = decimal.Zero;
                 try
                 {
-                    total = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
+                    mc_gross = decimal.Parse(values["mc_gross"], new CultureInfo("en-US"));
                 }
                 catch { }
 
@@ -522,9 +522,22 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                         break;
                                     case PaymentStatus.Refunded:
                                         {
-                                            if (_orderProcessingService.CanRefundOffline(order))
+                                            var totalToRefund = Math.Abs(mc_gross);
+                                            if (totalToRefund > 0 && Math.Round(totalToRefund, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.RefundOffline(order);
+                                                //refund
+                                                if (_orderProcessingService.CanRefundOffline(order))
+                                                {
+                                                    _orderProcessingService.RefundOffline(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //partial refund
+                                                if (_orderProcessingService.CanPartiallyRefundOffline(order, totalToRefund))
+                                                {
+                                                    _orderProcessingService.PartiallyRefundOffline(order, totalToRefund);
+                                                }
                                             }
                                         }
                                         break;
