@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
 using Nop.Data;
+using Nop.Plugin.Tax.CountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Data
 {
@@ -55,7 +56,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         public void Uninstall()
         {
             //drop the table
-            this.DropPluginTable("TaxRate");
+            var tableName = this.GetTableName<TaxRate>();
+            //var tableName = "TaxRate";
+            this.DropPluginTable(tableName);
         }
 
         /// <summary>

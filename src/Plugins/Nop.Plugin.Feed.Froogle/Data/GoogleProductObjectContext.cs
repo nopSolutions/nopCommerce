@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
 using Nop.Data;
+using Nop.Plugin.Feed.Froogle.Domain;
 
 namespace Nop.Plugin.Feed.Froogle.Data
 {
@@ -55,7 +56,9 @@ namespace Nop.Plugin.Feed.Froogle.Data
         public void Uninstall()
         {
             //drop the table
-            this.DropPluginTable("GoogleProduct");
+            var tableName = this.GetTableName<GoogleProductRecord>();
+            //var tableName = "GoogleProduct";
+            this.DropPluginTable(tableName);
         }
 
 
