@@ -272,9 +272,6 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                 //prices
                                 if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
-                                    //calculate for the maximum quantity (in case if we have tier prices)
-                                    decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
-                                        _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
                                     if (!product.CustomerEntersPrice)
                                     {
                                         if (product.CallForPrice)
@@ -285,7 +282,12 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                                         }
                                         else
                                         {
-                                            //calculate prices
+                                            //prices
+
+                                            //calculate for the maximum quantity (in case if we have tier prices)
+                                            decimal minPossiblePrice = _priceCalculationService.GetFinalPrice(product,
+                                                _workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+
                                             decimal taxRate;
                                             decimal oldPriceBase = _taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                             decimal finalPriceBase = _taxService.GetProductPrice(product, minPossiblePrice, out taxRate);

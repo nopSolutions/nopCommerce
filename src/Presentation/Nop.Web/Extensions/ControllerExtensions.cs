@@ -223,9 +223,6 @@ namespace Nop.Web.Extensions
                                 //prices
                                 if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                 {
-                                    //calculate for the maximum quantity (in case if we have tier prices)
-                                    decimal minPossiblePrice = priceCalculationService.GetFinalPrice(product,
-                                        workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
                                     if (!product.CustomerEntersPrice)
                                     {
                                         if (product.CallForPrice)
@@ -236,7 +233,12 @@ namespace Nop.Web.Extensions
                                         }
                                         else
                                         {
-                                            //calculate prices
+                                            //prices
+
+                                            //calculate for the maximum quantity (in case if we have tier prices)
+                                            decimal minPossiblePrice = priceCalculationService.GetFinalPrice(product,
+                                                workContext.CurrentCustomer, decimal.Zero, true, int.MaxValue);
+
                                             decimal taxRate;
                                             decimal oldPriceBase = taxService.GetProductPrice(product, product.OldPrice, out taxRate);
                                             decimal finalPriceBase = taxService.GetProductPrice(product, minPossiblePrice, out taxRate);
