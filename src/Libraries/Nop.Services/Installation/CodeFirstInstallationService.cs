@@ -4802,6 +4802,7 @@ namespace Nop.Services.Installation
                     EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                     AdminAreaAllowedIpAddresses = null,
                     EnableXsrfProtectionForAdminArea = true,
+                    EnableXsrfProtectionForPublicStore = true
                 });
 
             settingService.SaveSetting(new ShippingSettings

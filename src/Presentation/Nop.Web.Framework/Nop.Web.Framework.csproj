@@ -132,6 +132,7 @@
     <Compile Include="Menu\XmlSiteMap.cs" />
     <Compile Include="Mvc\DependencyRegistrarExtensions.cs" />
     <Compile Include="Mvc\NullJsonResult.cs" />
+    <Compile Include="Security\PublicAntiForgeryAttribute.cs" />
     <Compile Include="Seo\CustomUrlRecordEntityNameRequested.cs" />
     <Compile Include="Seo\WwwRequirementAttribute.cs" />
     <Compile Include="Security\AdminAntiForgeryAttribute.cs" />

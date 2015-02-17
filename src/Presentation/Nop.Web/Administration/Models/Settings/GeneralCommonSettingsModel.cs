@@ -172,6 +172,8 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea")]
             public bool EnableXsrfProtectionForAdminArea { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore")]
+            public bool EnableXsrfProtectionForPublicStore { get; set; }
 
 
 

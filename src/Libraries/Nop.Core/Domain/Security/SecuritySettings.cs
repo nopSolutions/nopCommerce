@@ -16,7 +16,7 @@ namespace Nop.Core.Domain.Security
         public string EncryptionKey { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of adminn area allowed IP addresses
+        /// Gets or sets a list of admin area allowed IP addresses
         /// </summary>
         public List<string> AdminAreaAllowedIpAddresses { get; set; }
 
@@ -24,5 +24,9 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a value indicating whether XSRF protection for admin area should be enabled
         /// </summary>
         public bool EnableXsrfProtectionForAdminArea { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether XSRF protection for public store should be enabled
+        /// </summary>
+        public bool EnableXsrfProtectionForPublicStore { get; set; }
     }
 }

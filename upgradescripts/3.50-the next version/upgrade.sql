@@ -186,7 +186,7 @@ set @resources='
     <Value>Enable XSRF protection for admin area</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForAdminArea.Hint">
-    <Value>Check to enable XSRF protection for admin area</Value>
+    <Value>Check to enable XSRF protection for admin area.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Fields.Profit">
     <Value>Profit</Value>
@@ -253,6 +253,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.Sharing">
     <Value>Sharing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore">
+    <Value>Enable XSRF protection for public store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
+    <Value>Check to enable XSRF protection for public store.</Value>
   </LocaleResource>
 </Language>
 '
@@ -552,5 +558,13 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
 	VALUES (N'NewsLetterSubscription.DeactivationMessage', null, N'%Store.Name%. Subscription deactivation message.', N'<p><a href="%NewsLetterSubscription.DeactivationUrl%">Click here to unsubscribe from our newsletter.</a></p><p>If you received this email by mistake, simply delete it.</p>', 1, 0, 0, 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.enablexsrfprotectionforpublicstore')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'securitysettings.enablexsrfprotectionforpublicstore', N'true', 0)
 END
 GO
