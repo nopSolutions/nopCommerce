@@ -260,6 +260,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableXSRFProtectionForPublicStore.Hint">
     <Value>Check to enable XSRF protection for public store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength">
+    <Value>Search term minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength.Hint">
+    <Value>Specify minimum length of search term.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -4431,6 +4431,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts.Hint">
     <Value>Change number of visible results shown in autocomplete dropdown when searching.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength">
+    <Value>Search term minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength.Hint">
+    <Value>Specify minimum length of search term.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsEnabled">
     <Value>'Recently added products' enabled</Value>
   </LocaleResource>

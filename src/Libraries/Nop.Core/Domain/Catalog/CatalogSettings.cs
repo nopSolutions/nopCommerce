@@ -138,6 +138,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a number of products to return when using "autocomplete" feature
         /// </summary>
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to show product images in the auto complete search
         /// </summary>

@@ -630,6 +630,16 @@
                 @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ProductSearchTermMinimumLength):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductSearchTermMinimumLength)
+                @Html.ValidationMessageFor(model => model.ProductSearchTermMinimumLength)
+            </td>
+        </tr>
     </table>
 }
 @helper TabCompareProducts()

@@ -132,6 +132,10 @@ namespace Nop.Admin.Models.Settings
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
         public bool ShowProductImagesInSearchAutoComplete_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength")]
+        public int ProductSearchTermMinimumLength { get; set; }
+        public bool ProductSearchTermMinimumLength_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedEnabled")]
         public bool ProductsAlsoPurchasedEnabled { get; set; }
         public bool ProductsAlsoPurchasedEnabled_OverrideForStore { get; set; }
