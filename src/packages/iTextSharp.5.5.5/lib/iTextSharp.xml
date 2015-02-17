@@ -8125,6 +8125,9 @@
         <member name="F:iTextSharp.text.pdf.BarcodePDF417.yHeight">
             Holds value of property yHeight. 
         </member>
+        <member name="M:iTextSharp.text.pdf.BarcodePDF417.GetBarcodeSize">
+            Gets the size of the barcode grid. 
+        </member>
         <member name="P:iTextSharp.text.pdf.BarcodePDF417.MacroSegmentId">
             Sets the segment id for macro PDF417 encoding
             @param id the id (starting at 0)
@@ -8239,8 +8242,9 @@
             @param height the barcode height
             @param hints modifiers to change the way the barcode is create. They can be EncodeHintType.ERROR_CORRECTION
             and EncodeHintType.CHARACTER_SET. For EncodeHintType.ERROR_CORRECTION the values can be ErrorCorrectionLevel.L, M, Q, H.
-            For EncodeHintType.CHARACTER_SET the values are strings and can be Cp437, Shift_JIS and ISO-8859-1 to ISO-8859-16. The default value is
-            ISO-8859-1.
+            For EncodeHintType.CHARACTER_SET the values are strings and can be Cp437, Shift_JIS and ISO-8859-1 to ISO-8859-16.
+            You can also use UTF-8, but correct behaviour is not guaranteed as Unicode is not supported in QRCodes.
+            The default value is ISO-8859-1.
             @throws WriterException
         </member>
         <member name="M:iTextSharp.text.pdf.BarcodeQRCode.GetImage">
@@ -10103,6 +10107,9 @@
             Creates a new instance of DocumentFont 
         </member>
         <member name="M:iTextSharp.text.pdf.DocumentFont.#ctor(iTextSharp.text.pdf.PRIndirectReference)">
+            Creates a new instance of DocumentFont 
+        </member>
+        <member name="M:iTextSharp.text.pdf.DocumentFont.#ctor(iTextSharp.text.pdf.PRIndirectReference,iTextSharp.text.pdf.PdfDictionary)">
             Creates a new instance of DocumentFont 
         </member>
         <member name="M:iTextSharp.text.pdf.DocumentFont.GetFontDescriptor(System.Int32,System.Single)">
@@ -15864,7 +15871,7 @@
         <member name="M:iTextSharp.text.pdf.parser.RenderFilter.AllowImage(iTextSharp.text.pdf.parser.ImageRenderInfo)">
             
             @param renderInfo
-            @return true is the image render operation should be performed
+            @return true if the image render operation should be performed
         </member>
         <member name="F:iTextSharp.text.pdf.parser.MarkedContentRenderFilter.mcid">
             The MCID to match. 
@@ -16023,7 +16030,7 @@
             @since 5.0.1
         </member>
         <member name="F:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.operators">
-            A map with all supported operators operators (PDF syntax). 
+            A map with all supported operators (PDF syntax). 
         </member>
         <member name="F:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.resources">
             Resources for the content stream. 
@@ -16234,7 +16241,7 @@
             @since 5.0.2
         </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.EndMarkedContentC">
-            A content oper implementation (BMC).
+            A content oper implementation (EMC).
             @since 5.0.2
         </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.Do">
@@ -20855,10 +20862,13 @@
             A name 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.ALT">
-            A name 
+            Use ALT to specify alternate texts in Tagged PDF.
+            For alternate ICC profiles, use {@link #ALTERNATE}
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.ALTERNATE">
-            A name 
+            Use ALTERNATE only in ICC profiles. It specifies an alternative color
+            space, in case the primary one is not supported, for legacy purposes.
+            For various types of alternate texts in Tagged PDF, use {@link #ALT}
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.ALTERNATEPRESENTATION">
             A name
@@ -21929,10 +21939,13 @@
             @since 5.1.4
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.LANG">
-            A name 
+            An entry specifying the natural language, and optionally locale. Use this
+            to specify the Language attribute on a Tagged Pdf element.
+            For the content usage dictionary, use {@link #LANGUAGE}
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.LANGUAGE">
-            A name 
+            A dictionary type, strictly for use in the content usage dictionary. For
+            dictionary entries in Tagged Pdf, use {@link #LANG}
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.LAST">
             A name 
@@ -22838,7 +22851,8 @@
             A name of a base 14 type 1 font 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.T">
-            A name 
+            T is very commonly used for various dictionary entries, including title
+            entries in a Tagged PDF element dictionary, and target dictionaries.
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.TA">
             A name
@@ -22932,7 +22946,9 @@
             A name of a base 14 type 1 font 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.TITLE">
-            A name 
+            Use Title for the document's top level title (optional), and for document
+            outline dictionaries, which can store bookmarks.
+            For all other uses of a title entry, including Tagged PDF, use {@link #T}
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.TK">
             A name 
@@ -23751,6 +23767,9 @@
         <member name="F:iTextSharp.text.pdf.PdfPCell.fixedHeight">
             Holds value of property fixedHeight. 
         </member>
+        <member name="F:iTextSharp.text.pdf.PdfPCell.calculatedHeight">
+            Fixed height of the cell.
+        </member>
         <member name="F:iTextSharp.text.pdf.PdfPCell.noWrap">
             Holds value of property noWrap. 
         </member>
@@ -24208,9 +24227,6 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfPTable.spacingAfter">
             The spacing after the table. 
-        </member>
-        <member name="F:iTextSharp.text.pdf.PdfPTable.summary">
-            A textual summary of the table's contents, in Tagged PDF. 
         </member>
         <member name="F:iTextSharp.text.pdf.PdfPTable.extendLastRow">
             Holds value of property extendLastRow.
@@ -48345,6 +48361,11 @@
              This negative value also indicates the buffer is full.
             
         </member>
+        <member name="M:iTextSharp.testutils.CompareTool.SetCompareByContentErrorsLimit(System.Int32)">
+            Sets the maximum errors count which will be returned as the result of the comparison.
+            @param compareByContentMaxErrorCount the errors count.
+            @return Returns this.
+        </member>
         <member name="T:iTextSharp.text.pdf.fonts.cmaps.AbstractCMap">
             
              @author psoares
@@ -48523,7 +48544,9 @@
             @see com.itextpdf.text.pdf.languages.LanguageProcessor#isRTL()
         </member>
         <member name="T:com.itextpdf.text.pdf.languages.DevanagariLigaturizer">
-            Implementation of the IndicLigaturizer for Devanagari.
+             Implementation of the IndicLigaturizer for Devanagari.
+            
+             Warning: this is an incomplete and experimental implementation of Devanagari. This implementation should not be used in production.
         </member>
         <member name="T:iTextSharp.text.pdf.languages.IndicLigaturizer">
             Superclass for processors that can convert a String of bytes in an Indic
