@@ -4,7 +4,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Web.Framework
+namespace Nop.Web.Framework.Security
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class AdminAntiForgeryAttribute : FilterAttribute, IAuthorizationFilter

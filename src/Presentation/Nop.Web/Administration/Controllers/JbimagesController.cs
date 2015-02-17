@@ -4,7 +4,7 @@ using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Services.Security;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {

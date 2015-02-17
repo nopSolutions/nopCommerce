@@ -14,10 +14,10 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.ByWeight.Controllers
 {

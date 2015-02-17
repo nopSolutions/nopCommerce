@@ -7,8 +7,8 @@ using Nop.Plugin.DiscountRules.HadSpentAmount.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.DiscountRules.HadSpentAmount.Controllers
 {

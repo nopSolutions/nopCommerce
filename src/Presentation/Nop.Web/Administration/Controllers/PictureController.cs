@@ -3,7 +3,7 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Services.Media;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {

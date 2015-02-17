@@ -5,10 +5,10 @@ using Nop.Plugin.Shipping.FixedRateShipping.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
 {

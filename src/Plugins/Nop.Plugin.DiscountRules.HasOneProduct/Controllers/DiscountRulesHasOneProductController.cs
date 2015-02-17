@@ -16,6 +16,7 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.DiscountRules.HasOneProduct.Controllers
 {

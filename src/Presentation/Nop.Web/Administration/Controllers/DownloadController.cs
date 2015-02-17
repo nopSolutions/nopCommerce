@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
-using Nop.Web.Framework;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {

@@ -40,6 +40,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 

@@ -7,8 +7,8 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.Security;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles.Controllers
 {
