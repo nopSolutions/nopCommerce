@@ -364,6 +364,7 @@ namespace Nop.Admin.Controllers
             return Json(new { url = url, ruleName = ruleName }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public ActionResult DeleteDiscountRequirement(int discountRequirementId, int discountId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
