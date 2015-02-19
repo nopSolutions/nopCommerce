@@ -38,10 +38,6 @@ namespace Nop.Admin.Models.Settings
                 this.AvailableStoreThemes = new List<ThemeConfigurationModel>();
             }
 
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported")]
-            public bool ResponsiveDesignSupported { get; set; }
-            public bool ResponsiveDesignSupported_OverrideForStore { get; set; }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
             public bool StoreClosed { get; set; }
             public bool StoreClosed_OverrideForStore { get; set; }

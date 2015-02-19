@@ -1,10 +1,8 @@
 ﻿@model TopMenuModel
-@using Nop.Core.Domain
-@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @{
     var isRtl = this.ShouldUseRtlTheme();
-    var supportResponsive = EngineContext.Current.Resolve<StoreInformationSettings>().ResponsiveDesignSupported;
+    const bool supportResponsive = true;
 }
 @helper RenderCategoryLine(CategorySimpleModel category, int level, bool responsiveMobileMenu)
 {

@@ -1,18 +1,13 @@
 ﻿@using Nop.Core;
-@using Nop.Core.Domain
 @using Nop.Core.Infrastructure
 @using Nop.Web.Framework.Themes
 @using Nop.Web.Framework.UI
 @{
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
-    var supportResponsive = EngineContext.Current.Resolve<StoreInformationSettings>().ResponsiveDesignSupported;
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
-    
+
     //we do not support responsive for RTL yet
-    if (supportRtl)
-    {
-        supportResponsive = false;
-    }
+    var supportResponsive = !supportRtl;
     //add browser specific CSS files
     var browser = Request.Browser;
     if (browser.Browser == "IE" && browser.MajorVersion == 6)

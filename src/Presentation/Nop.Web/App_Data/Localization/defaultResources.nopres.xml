@@ -5343,12 +5343,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey.Hint">
     <Value>Enter reCAPTCHA public key (if enabled)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported">
-    <Value>Responsive design supported</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported.Hint">
-    <Value>Check to enable responsive design. Also note that your graphical theme should also support it.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
   </LocaleResource>

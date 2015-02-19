@@ -25,11 +25,6 @@ namespace Nop.Core.Domain
         public bool AllowCustomerToSelectTheme { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether responsive design supported (a graphical theme should also support it)
-        /// </summary>
-        public bool ResponsiveDesignSupported { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
         /// </summary>
         public bool DisplayMiniProfilerInPublicStore { get; set; }

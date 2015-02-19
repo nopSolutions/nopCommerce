@@ -266,6 +266,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength.Hint">
     <Value>Specify minimum length of search term.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ResponsiveDesignSupported.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -573,4 +579,9 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.enablexsrfprotectionforpublicstore', N'true', 0)
 END
+GO
+
+--Delete setting
+DELETE FROM [Setting]
+WHERE Name = N'storeinformationsettings.responsivedesignsupported'
 GO
