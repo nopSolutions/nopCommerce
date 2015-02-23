@@ -14,6 +14,8 @@ namespace Nop.Admin.Models.Messages
             Tokens = new List<string>();
         }
 
+        public int LanguageId { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.MessageTemplates.Test.Tokens")]
         public List<string> Tokens { get; set; }
 

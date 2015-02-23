@@ -324,7 +324,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult TestTemplate(int id)
+        public ActionResult TestTemplate(int id, int languageId = 0)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageTemplates))
                 return AccessDeniedView();
@@ -336,11 +336,16 @@ namespace Nop.Admin.Controllers
 
             var model = new TestMessageTemplateModel
             {
-                Id = messageTemplate.Id
+                Id = messageTemplate.Id,
+                LanguageId = languageId
             };
             var tokens = _messageTokenProvider.GetListOfAllowedTokens().Distinct().ToList();
             //filter them to the current template
-            tokens = tokens.Where(x => messageTemplate.Body.Contains(x)).ToList();
+            var subject = messageTemplate.GetLocalized(mt => mt.Subject, languageId);
+            var body = messageTemplate.GetLocalized(mt => mt.Body, languageId);
+            //subject = messageTemplate.Subject;
+            //body = messageTemplate.Body;
+            tokens = tokens.Where(x => subject.Contains(x) || body.Contains(x)).ToList();
             model.Tokens = tokens;
 
             return View(model);
@@ -368,7 +373,7 @@ namespace Nop.Admin.Controllers
                     tokens.Add(new Token(tokenKey, tokenValue));
                 }
 
-            _workflowMessageService.SendTestEmail(messageTemplate.Id, model.SendTo, tokens, 0);
+            _workflowMessageService.SendTestEmail(messageTemplate.Id, model.SendTo, tokens, model.LanguageId);
 
             if (ModelState.IsValid)
             {

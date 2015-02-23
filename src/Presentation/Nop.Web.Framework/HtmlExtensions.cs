@@ -177,8 +177,7 @@ namespace Nop.Web.Framework
                 if (resourceDisplayName != null && displayHint)
                 {
                     var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource =
-                        EngineContext.Current.Resolve<ILocalizationService>()
+                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
                         .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
 
                     result.Append(helper.Hint(hintResource).ToHtmlString());
