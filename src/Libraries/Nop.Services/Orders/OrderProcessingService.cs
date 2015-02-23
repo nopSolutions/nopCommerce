@@ -593,7 +593,7 @@ namespace Nop.Services.Orders
                 if (customer == null)
                     throw new ArgumentException("Customer is not set");
 
-                //affilites
+                //affiliate
                 int affiliateId = 0;
                 var affiliate = _affiliateService.GetAffiliateById(customer.AffiliateId);
                 if (affiliate != null && affiliate.Active && !affiliate.Deleted)
