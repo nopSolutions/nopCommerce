@@ -332,7 +332,6 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
-        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
@@ -356,7 +355,6 @@ namespace Nop.Services.Catalog
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,
-            int parentGroupedProductId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
@@ -376,7 +374,7 @@ namespace Nop.Services.Catalog
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
-                parentGroupedProductId, productType, visibleIndividuallyOnly, featuredProducts,
+                productType, visibleIndividuallyOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
                 searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
         }
@@ -393,7 +391,6 @@ namespace Nop.Services.Catalog
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
-        /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products); 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
@@ -419,7 +416,6 @@ namespace Nop.Services.Catalog
             int storeId = 0,
             int vendorId = 0,
             int warehouseId = 0,
-            int parentGroupedProductId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
             bool? featuredProducts = null,
@@ -540,11 +536,6 @@ namespace Nop.Services.Catalog
                 pWarehouseId.Value = warehouseId;
                 pWarehouseId.DbType = DbType.Int32;
 
-                var pParentGroupedProductId = _dataProvider.GetParameter();
-                pParentGroupedProductId.ParameterName = "ParentGroupedProductId";
-                pParentGroupedProductId.Value = parentGroupedProductId;
-                pParentGroupedProductId.DbType = DbType.Int32;
-
                 var pProductTypeId = _dataProvider.GetParameter();
                 pProductTypeId.ParameterName = "ProductTypeId";
                 pProductTypeId.Value = productType.HasValue ? (object)productType.Value : DBNull.Value;
@@ -664,7 +655,6 @@ namespace Nop.Services.Catalog
                     pStoreId,
                     pVendorId,
                     pWarehouseId,
-                    pParentGroupedProductId,
                     pProductTypeId,
                     pVisibleIndividuallyOnly,
                     pProductTagId,
@@ -715,10 +705,6 @@ namespace Nop.Services.Catalog
                 if (!showHidden)
                 {
                     query = query.Where(p => p.Published);
-                }
-                if (parentGroupedProductId > 0)
-                {
-                    query = query.Where(p => p.ParentGroupedProductId == parentGroupedProductId);
                 }
                 if (visibleIndividuallyOnly)
                 {
@@ -914,11 +900,6 @@ namespace Nop.Services.Catalog
                     query = 
                         query.OrderBy(p => p.ProductManufacturers.FirstOrDefault(pm => pm.ManufacturerId == manufacturerId).DisplayOrder);
                 }
-                else if (orderBy == ProductSortingEnum.Position && parentGroupedProductId > 0)
-                {
-                    //parent grouped product specified (sort associated products)
-                    query = query.OrderBy(p => p.DisplayOrder);
-                }
                 else if (orderBy == ProductSortingEnum.Position)
                 {
                     //otherwise sort by name
@@ -982,10 +963,11 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
+        /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
          /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
-            int storeId = 0, bool showHidden = false)
+            int storeId = 0, int vendorId = 0, bool showHidden = false)
         {
             var query = _productRepository.Table;
             query = query.Where(x => x.ParentGroupedProductId == parentGroupedProductId);
@@ -1003,12 +985,17 @@ namespace Nop.Services.Catalog
                     (!p.AvailableStartDateTimeUtc.HasValue || p.AvailableStartDateTimeUtc.Value < nowUtc) &&
                     (!p.AvailableEndDateTimeUtc.HasValue || p.AvailableEndDateTimeUtc.Value > nowUtc));
             }
+            //vendor filtering
+            if (vendorId > 0)
+            {
+                query = query.Where(p => p.VendorId == vendorId);
+            }
             query = query.Where(x => !x.Deleted);
             query = query.OrderBy(x => x.DisplayOrder);
 
             var products = query.ToList();
 
-            //ACLmapping
+            //ACL mapping
             if (!showHidden)
             {
                 products = products.Where(x => _aclService.Authorize(x)).ToList();

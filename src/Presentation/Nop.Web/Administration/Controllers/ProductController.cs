@@ -1965,7 +1965,7 @@ namespace Nop.Admin.Controllers
                 vendorId = _workContext.CurrentVendor.Id;
             }
 
-            var associatedProducts = _productService.SearchProducts(parentGroupedProductId: productId, 
+            var associatedProducts = _productService.GetAssociatedProducts(parentGroupedProductId: productId, 
                 vendorId: vendorId,
                 showHidden: true);
             var associatedProductsModel = associatedProducts

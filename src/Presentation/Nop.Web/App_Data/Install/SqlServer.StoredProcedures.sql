@@ -70,7 +70,6 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@StoreId			int = 0,
 	@VendorId			int = 0,
 	@WarehouseId		int = 0,
-	@ParentGroupedProductId	int = 0,
 	@ProductTypeId		int = null, --product type identifier, null - load all products
 	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
 	@ProductTagId		int = 0,
@@ -457,13 +456,6 @@ BEGIN
 			)'
 	END
 	
-	--filter by parent grouped product identifer
-	IF @ParentGroupedProductId > 0
-	BEGIN
-		SET @sql = @sql + '
-		AND p.ParentGroupedProductId = ' + CAST(@ParentGroupedProductId AS nvarchar(max))
-	END
-	
 	--filter by product type
 	IF @ProductTypeId is not null
 	BEGIN
@@ -600,13 +592,6 @@ BEGIN
 			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
 		END
 		
-		--parent grouped product specified (sort associated products)
-		IF @ParentGroupedProductId > 0
-		BEGIN
-			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
-			SET @sql_orderby = @sql_orderby + ' p.[DisplayOrder] ASC'
-		END
-		
 		--name
 		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
 		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
@@ -674,6 +659,7 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
 
 CREATE PROCEDURE [dbo].[ProductTagCountLoadAll]
 (
