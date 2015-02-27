@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Nop.Core.Domain.Discounts
+@model DiscountListModel
+@{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
@@ -15,6 +17,29 @@
         <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchDiscountCouponCode):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SearchDiscountCouponCode)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchDiscountTypeId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("SearchDiscountTypeId", Model.AvailableDiscountTypes)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="search-discounts" class="k-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table>
 <table class="adminContent">
     <tr>
         <td>
@@ -30,7 +55,7 @@
                                     url: "@Html.Raw(Url.Action("List", "Discount"))",
                                     type: "POST",
                                     dataType: "json",
-                                    data: addAntiForgeryToken
+                                    data: additionalData
                                 }
                             },
                             schema: {
@@ -86,6 +111,36 @@
                         }]
                     });
                 });
+            </script>
+
+            <script type="text/javascript">
+
+                $(document).ready(function () {
+
+                    $('#search-discounts').click(function () {
+                        var grid = $('#discounts-grid').data('kendoGrid');
+                        grid.dataSource.page(1); //new search. Set page size to 1
+                        //grid.dataSource.read(); we already loaded the grid above using "page" function
+                        return false;
+                    });
+                });
+
+                $("#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-discounts").click();
+                        return false;
+                    }
+                });
+
+                function additionalData() {
+                    var data = {
+                        SearchDiscountTypeId: $('#@Html.FieldIdFor(model => model.SearchDiscountTypeId)').val(),
+                        SearchDiscountCouponCode: $('#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+
             </script>
         </td>
     </tr>

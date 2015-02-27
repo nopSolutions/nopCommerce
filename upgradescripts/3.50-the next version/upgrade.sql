@@ -287,6 +287,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly">
     <Value>Unpublished only</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountCouponCode">
+    <Value>Coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountCouponCode.Hint">
+    <Value>Search by discount coupon code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType">
+    <Value>Discount type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType.Hint">
+    <Value>Search by discount type.</Value>
+  </LocaleResource>
 </Language>
 '
 

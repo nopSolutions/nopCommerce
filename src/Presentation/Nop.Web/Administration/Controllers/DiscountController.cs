@@ -148,16 +148,24 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            return View();
+            var model = new DiscountListModel();
+            model.AvailableDiscountTypes = DiscountType.AssignedToOrderTotal.ToSelectList(false).ToList();
+            model.AvailableDiscountTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public ActionResult List(DiscountListModel model, DataSourceRequest command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var discounts = _discountService.GetAllDiscounts(null, null, true);
+            DiscountType? discountType = null;
+            if (model.SearchDiscountTypeId > 0)
+                discountType = (DiscountType) model.SearchDiscountTypeId;
+            var couponCode = !String.IsNullOrEmpty(model.SearchDiscountCouponCode) ? model.SearchDiscountCouponCode.Trim() : null;
+            var discounts = _discountService.GetAllDiscounts(discountType, couponCode, true);
             var gridModel = new DataSourceResult
             {
                 Data = discounts.PagedForCommand(command).Select(x =>
