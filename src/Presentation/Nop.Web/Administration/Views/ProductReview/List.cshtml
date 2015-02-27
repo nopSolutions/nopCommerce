@@ -44,7 +44,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-productreviews" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -146,7 +146,7 @@
                 $(document).ready(function () {
 
                     //search button
-                    $('#btnSearch').click(function () {
+                    $('#search-productreviews').click(function () {
                         //search
                         var grid = $('#productreviews-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1

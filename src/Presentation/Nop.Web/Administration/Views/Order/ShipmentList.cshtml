@@ -91,7 +91,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-shipments" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -274,19 +274,19 @@
 
             $("#@Html.FieldIdFor(model => model.TrackingNumber)").keydown(function (event) {
                 if (event.keyCode == 13) {
-                    $("#btnSearch").click();
+                    $("#search-shipments").click();
                     return false;
                 }
             });
             $("#@Html.FieldIdFor(model => model.City)").keydown(function (event) {
                 if (event.keyCode == 13) {
-                    $("#btnSearch").click();
+                    $("#search-shipments").click();
                     return false;
                 }
             });
             
             //search button
-            $('#btnSearch').click(function () {
+            $('#search-shipments').click(function () {
                 //search
                 var grid = $('#shipments-grid').data('kendoGrid');
                 grid.dataSource.page(1); //new search. Set page size to 1

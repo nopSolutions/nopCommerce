@@ -75,7 +75,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.SalesReport.Bestsellers.RunReport")" />
+            <input type="button" id="search-salesreport" class="k-button" value="@T("Admin.SalesReport.Bestsellers.RunReport")" />
         </td>
     </tr>
 </table>
@@ -144,7 +144,7 @@
 
                 $(document).ready(function () {
 
-                    $('#btnSearch').click(function () {
+                    $('#search-salesreport').click(function () {
                         var grid = $('#salesreport-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         //grid.dataSource.read(); we already loaded the grid above using "page" function

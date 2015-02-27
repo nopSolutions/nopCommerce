@@ -43,7 +43,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="search-giftcards" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -128,7 +128,7 @@
 
                 $(document).ready(function () {
 
-                    $('#btnSearch').click(function () {
+                    $('#search-giftcards').click(function () {
                         var grid = $('#giftcards-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         //grid.dataSource.read(); we already loaded the grid above using "page" function
@@ -138,7 +138,7 @@
 
                 $("#@Html.FieldIdFor(model => model.CouponCode)").keydown(function (event) {
                     if (event.keyCode == 13) {
-                        $("#btnSearch").click();
+                        $("#search-giftcards").click();
                         return false;
                     }
                 });

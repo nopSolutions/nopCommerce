@@ -28,7 +28,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <input type="button" id="btnSearch" class="k-button" value="@T("Admin.Common.Search")" />
+            <input type="button" id="search-manufacturers" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -101,7 +101,7 @@
             <script type="text/javascript">
                 $(document).ready(function () {
                     //search button
-                    $('#btnSearch').click(function () {
+                    $('#search-manufacturers').click(function () {
                         //search
                         var grid = $('#manufacturers-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
@@ -111,7 +111,7 @@
 
                     $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
                         if (event.keyCode == 13) {
-                            $("#btnSearch").click();
+                            $("#search-manufacturers").click();
                             return false;
                         }
                     });
