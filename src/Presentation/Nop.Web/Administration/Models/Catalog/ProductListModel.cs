@@ -15,6 +15,7 @@ namespace Nop.Admin.Models.Catalog
             AvailableWarehouses = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             AvailableProductTypes = new List<SelectListItem>();
+            AvailablePublishedOptions = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
@@ -34,6 +35,8 @@ namespace Nop.Admin.Models.Catalog
         public int SearchWarehouseId { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
         public int SearchProductTypeId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.List.SearchPublished")]
+        public int SearchPublishedId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.List.GoDirectlyToSku")]
         [AllowHtml]
@@ -49,5 +52,6 @@ namespace Nop.Admin.Models.Catalog
         public IList<SelectListItem> AvailableWarehouses { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
         public IList<SelectListItem> AvailableProductTypes { get; set; }
+        public IList<SelectListItem> AvailablePublishedOptions { get; set; }
     }
 }

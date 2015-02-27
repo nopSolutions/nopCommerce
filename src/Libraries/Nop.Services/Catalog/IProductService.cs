@@ -84,6 +84,11 @@ namespace Nop.Services.Catalog
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
             int pageIndex = 0,
@@ -106,7 +111,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false);
+            bool showHidden = false,
+            bool? overridePublished = null);
 
         /// <summary>
         /// Search products
@@ -134,6 +140,11 @@ namespace Nop.Services.Catalog
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Products</returns>
         IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
@@ -158,7 +169,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null, 
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false);
+            bool showHidden = false,
+            bool? overridePublished = null);
 
 
         /// <summary>

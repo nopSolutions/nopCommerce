@@ -346,6 +346,11 @@ namespace Nop.Services.Catalog
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             int pageIndex = 0,
@@ -368,7 +373,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false)
+            bool showHidden = false,
+            bool? overridePublished = null)
         {
             IList<int> filterableSpecificationAttributeOptionIds;
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
@@ -376,7 +382,8 @@ namespace Nop.Services.Catalog
                 storeId, vendorId, warehouseId,
                 productType, visibleIndividuallyOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
-                searchProductTags, languageId, filteredSpecs, orderBy, showHidden);
+                searchProductTags, languageId, filteredSpecs, 
+                orderBy, showHidden, overridePublished);
         }
 
         /// <summary>
@@ -405,6 +412,11 @@ namespace Nop.Services.Catalog
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="overridePublished">
+        /// null - process "Published" property according to "showHidden" parameter
+        /// true - load only "Published" products
+        /// false - load only "Unpublished" products
+        /// </param>
         /// <returns>Products</returns>
         public virtual IPagedList<Product> SearchProducts(
             out IList<int> filterableSpecificationAttributeOptionIds,
@@ -429,7 +441,8 @@ namespace Nop.Services.Catalog
             int languageId = 0,
             IList<int> filteredSpecs = null,
             ProductSortingEnum orderBy = ProductSortingEnum.Position,
-            bool showHidden = false)
+            bool showHidden = false,
+            bool? overridePublished = null)
         {
             filterableSpecificationAttributeOptionIds = new List<int>();
 
@@ -630,7 +643,12 @@ namespace Nop.Services.Catalog
                 pShowHidden.ParameterName = "ShowHidden";
                 pShowHidden.Value = showHidden;
                 pShowHidden.DbType = DbType.Boolean;
-                
+
+                var pOverridePublished = _dataProvider.GetParameter();
+                pOverridePublished.ParameterName = "OverridePublished";
+                pOverridePublished.Value = overridePublished != null ? (object)overridePublished.Value : DBNull.Value;
+                pOverridePublished.DbType = DbType.Boolean;
+
                 var pLoadFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
                 pLoadFilterableSpecificationAttributeOptionIds.ParameterName = "LoadFilterableSpecificationAttributeOptionIds";
                 pLoadFilterableSpecificationAttributeOptionIds.Value = loadFilterableSpecificationAttributeOptionIds;
@@ -674,6 +692,7 @@ namespace Nop.Services.Catalog
                     pPageIndex,
                     pPageSize,
                     pShowHidden,
+                    pOverridePublished,
                     pLoadFilterableSpecificationAttributeOptionIds,
                     pFilterableSpecificationAttributeOptionIds,
                     pTotalRecords);
@@ -702,9 +721,23 @@ namespace Nop.Services.Catalog
                 //products
                 var query = _productRepository.Table;
                 query = query.Where(p => !p.Deleted);
-                if (!showHidden)
+                if (!overridePublished.HasValue)
                 {
+                    //process according to "showHidden"
+                    if (!showHidden)
+                    {
+                        query = query.Where(p => p.Published);
+                    }
+                }
+                else if (overridePublished.Value)
+                {
+                    //published only
                     query = query.Where(p => p.Published);
+                }
+                else if (!overridePublished.Value)
+                {
+                    //unpublished only
+                    query = query.Where(p => !p.Published);
                 }
                 if (visibleIndividuallyOnly)
                 {

@@ -97,6 +97,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchPublishedId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("SearchPublishedId", Model.AvailablePublishedOptions)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.GoDirectlyToSku):
             </td>
             <td class="adminData">
@@ -313,7 +321,8 @@
                 SearchStoreId: $('#SearchStoreId').val(),
                 SearchWarehouseId: $('#SearchWarehouseId').val(),
                 SearchVendorId: $('#SearchVendorId').val(),
-                SearchProductTypeId: $('#SearchProductTypeId').val()
+                SearchProductTypeId: $('#SearchProductTypeId').val(),
+                SearchPublishedId: $('#SearchPublishedId').val()
             };
             addAntiForgeryToken(data);
             return data;

@@ -802,6 +802,14 @@ namespace Nop.Admin.Controllers
             model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
             model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
 
+            //"published" property
+            //0 - all (according to "ShowHidden" parameter)
+            //1 - published only
+            //2 - unpublished only
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.All"), Value = "0" });
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.PublishedOnly"), Value = "1" });
+            model.AvailablePublishedOptions.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly"), Value = "2" });
+
             return View(model);
         }
 
@@ -822,6 +830,15 @@ namespace Nop.Admin.Controllers
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
+            //0 - all (according to "ShowHidden" parameter)
+            //1 - published only
+            //2 - unpublished only
+            bool? overridePublished = null;
+            if (model.SearchPublishedId == 1)
+                overridePublished = true;
+            else if (model.SearchPublishedId == 2)
+                overridePublished = false;
+
             var products = _productService.SearchProducts(
                 categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
@@ -832,7 +849,8 @@ namespace Nop.Admin.Controllers
                 keywords: model.SearchProductName,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
-                showHidden: true
+                showHidden: true,
+                overridePublished: overridePublished
             );
             var gridModel = new DataSourceResult();
             gridModel.Data = products.Select(x =>

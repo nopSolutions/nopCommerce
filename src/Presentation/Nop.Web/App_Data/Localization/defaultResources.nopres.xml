@@ -2622,6 +2622,21 @@
   <LocaleResource Name="Admin.Catalog.Products.List.SearchProductType.Hint">
     <Value>Search by a product type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished.Hint">
+    <Value>Search by a "Published" property.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished.PublishedOnly">
+    <Value>Published only</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchPublished.UnpublishedOnly">
+    <Value>Unpublished only</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.List.SearchStore">
     <Value>Store</Value>
   </LocaleResource>
