@@ -89,6 +89,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
+	@OverridePublished	bit = null, --null - process "Published" property according to "showHidden" parameter, true - load only "Published" products, false - load only "Unpublished" products
 	@LoadFilterableSpecificationAttributeOptionIds bit = 0, --a value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)
 	@FilterableSpecificationAttributeOptionIds nvarchar(MAX) = null OUTPUT, --the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
 	@TotalRecords		int = null OUTPUT
@@ -477,11 +478,33 @@ BEGIN
 		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
 	END
 	
+	--"Published" property
+	IF (@OverridePublished is null)
+	BEGIN
+		--process according to "showHidden"
+		IF @ShowHidden = 0
+		BEGIN
+			SET @sql = @sql + '
+			AND p.Published = 1'
+		END
+	END
+	ELSE IF (@OverridePublished = 1)
+	BEGIN
+		--published only
+		SET @sql = @sql + '
+		AND p.Published = 1'
+	END
+	ELSE IF (@OverridePublished = 0)
+	BEGIN
+		--unpublished only
+		SET @sql = @sql + '
+		AND p.Published = 0'
+	END
+	
 	--show hidden
 	IF @ShowHidden = 0
 	BEGIN
 		SET @sql = @sql + '
-		AND p.Published = 1
 		AND p.Deleted = 0
 		AND (getutcdate() BETWEEN ISNULL(p.AvailableStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.AvailableEndDateTimeUtc, ''1/1/2999''))'
 	END
