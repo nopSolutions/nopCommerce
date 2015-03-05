@@ -28,15 +28,21 @@ namespace Nop.Admin.Controllers
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
+
         #endregion
 
         #region Constructors
 
         public ShoppingCartController(ICustomerService customerService,
-            IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
-            IStoreService storeService, ITaxService taxService, 
+            IDateTimeHelper dateTimeHelper,
+            IPriceFormatter priceFormatter,
+            IStoreService storeService,
+            ITaxService taxService, 
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService, ILocalizationService localizationService)
+            IPermissionService permissionService, 
+            ILocalizationService localizationService,
+            IProductAttributeFormatter productAttributeFormatter)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -46,6 +52,7 @@ namespace Nop.Admin.Controllers
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
             this._localizationService = localizationService;
+            this._productAttributeFormatter = productAttributeFormatter;
         }
 
         #endregion
@@ -109,6 +116,7 @@ namespace Nop.Admin.Controllers
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = sci.Product.Name,
+                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)
@@ -182,6 +190,7 @@ namespace Nop.Admin.Controllers
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = sci.Product.Name,
+                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml, sci.Customer),
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)

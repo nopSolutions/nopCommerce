@@ -108,7 +108,8 @@
                             {
                                 field: "ProductName",
                                 title: "@T("Admin.CurrentCarts.Product")",
-                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>',
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
+                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #',
                                 width: 400
                             },{
                                 field: "Quantity",

@@ -69,6 +69,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPriceCalculationService _priceCalculationService;
+        private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPermissionService _permissionService;
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly EmailAccountSettings _emailAccountSettings;
@@ -111,6 +112,7 @@ namespace Nop.Admin.Controllers
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
+            IProductAttributeFormatter productAttributeFormatter,
             IPermissionService permissionService, 
             IQueuedEmailService queuedEmailService,
             EmailAccountSettings emailAccountSettings,
@@ -149,6 +151,7 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
             this._priceCalculationService = priceCalculationService;
+            this._productAttributeFormatter = productAttributeFormatter;
             this._permissionService = permissionService;
             this._queuedEmailService = queuedEmailService;
             this._emailAccountSettings = emailAccountSettings;
@@ -1750,6 +1753,7 @@ namespace Nop.Admin.Controllers
                         ProductId = sci.ProductId,
                         Quantity = sci.Quantity,
                         ProductName = sci.Product.Name,
+                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
                         UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetUnitPrice(sci), out taxRate)),
                         Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(sci.Product, _priceCalculationService.GetSubTotal(sci), out taxRate)),
                         UpdatedOn = _dateTimeHelper.ConvertToUserTime(sci.UpdatedOnUtc, DateTimeKind.Utc)

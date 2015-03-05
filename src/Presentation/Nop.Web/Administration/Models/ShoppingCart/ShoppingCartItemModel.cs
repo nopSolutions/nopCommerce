@@ -12,6 +12,7 @@ namespace Nop.Admin.Models.ShoppingCart
         public int ProductId { get; set; }
         [NopResourceDisplayName("Admin.CurrentCarts.Product")]
         public string ProductName { get; set; }
+        public string AttributeInfo { get; set; }
 
         [NopResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
         public string UnitPrice { get; set; }
