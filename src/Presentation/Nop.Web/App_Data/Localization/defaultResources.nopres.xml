@@ -10713,6 +10713,9 @@
   <LocaleResource Name="Checkout.OrEnterNewAddress">
     <Value>Or enter new address</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.PaymentError">
+    <Value>Payment error: {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Checkout.PaymentInfo">
     <Value>Payment information</Value>
   </LocaleResource>

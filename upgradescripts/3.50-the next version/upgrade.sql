@@ -299,6 +299,9 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType.Hint">
     <Value>Search by discount type.</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.PaymentError">
+    <Value>Payment error: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

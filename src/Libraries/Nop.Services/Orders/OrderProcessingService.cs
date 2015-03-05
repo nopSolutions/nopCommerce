@@ -1495,7 +1495,7 @@ namespace Nop.Services.Orders
                 else
                 {
                     foreach (var paymentError in processPaymentResult.Errors)
-                        result.AddError(string.Format("Payment error: {0}", paymentError));
+                        result.AddError(string.Format(_localizationService.GetResource("Checkout.PaymentError"), paymentError));
                 }
             }
             catch (Exception exc)
