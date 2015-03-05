@@ -1218,11 +1218,12 @@ namespace Nop.Web.Controllers
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
-                foreach (var c in _categoryService.GetAllCategories())
+                var allCategories = _categoryService.GetAllCategories();
+                foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)
                     string categoryBreadcrumb= "";
-                    var breadcrumb = c.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService);
+                    var breadcrumb = c.GetCategoryBreadCrumb(allCategories, _aclService, _storeMappingService);
                     for (int i = 0; i <= breadcrumb.Count - 1; i++)
                     {
                         categoryBreadcrumb += breadcrumb[i].GetLocalized(x => x.Name);
