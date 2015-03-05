@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 
@@ -72,33 +73,17 @@ namespace Nop.Services.Catalog
             ICategoryService categoryService,
             string separator = ">>", int languageId = 0)
         {
-            if (category == null)
-                throw new ArgumentNullException("category");
-
             string result = string.Empty;
 
-            //used to prevent circular references
-            var alreadyProcessedCategoryIds = new List<int>();
-
-            while (category != null &&  //not null
-                !category.Deleted &&  //not deleted
-                !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references
+            var breadcrumb = GetCategoryBreadCrumb(category, categoryService, null, null, true);
+            for (int i = 0; i <= breadcrumb.Count - 1; i++)
             {
-                var categoryName = category.GetLocalized(x => x.Name, languageId);
-                if (String.IsNullOrEmpty(result))
-                {
-                    result = categoryName;
-                }
-                else
-                {
-                    result = string.Format("{0} {1} {2}", categoryName, separator, result);
-                }
-
-                alreadyProcessedCategoryIds.Add(category.Id);
-
-                category = categoryService.GetCategoryById(category.ParentCategoryId);
-
+                var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
+                result = String.IsNullOrEmpty(result)
+                    ? categoryName
+                    : string.Format("{0} {1} {2}", result, separator, categoryName);
             }
+
             return result;
         }
 
@@ -115,37 +100,17 @@ namespace Nop.Services.Catalog
             IList<Category> allCategories,
             string separator = ">>", int languageId = 0)
         {
-            if (category == null)
-                throw new ArgumentNullException("category");
-
-            if (allCategories == null)
-                throw new ArgumentNullException("category");
-
             string result = string.Empty;
 
-            //used to prevent circular references 
-            var alreadyProcessedCategoryIds = new List<int>();
-
-            while (category != null && //not null 
-                   !category.Deleted && //not deleted 
-                   !alreadyProcessedCategoryIds.Contains(category.Id)) //prevent circular references 
+            var breadcrumb = GetCategoryBreadCrumb(category, allCategories, null, null, true);
+            for (int i = 0; i <= breadcrumb.Count - 1; i++)
             {
-                var categoryName = category.GetLocalized(x => x.Name, languageId);
-                if (String.IsNullOrEmpty(result))
-                {
-                    result = categoryName;
-                }
-                else
-                {
-                    result = string.Format("{0} {1} {2}", categoryName, separator, result);
-                }
-
-                alreadyProcessedCategoryIds.Add(category.Id);
-
-                category = (from c in allCategories
-                    where c.Id == category.ParentCategoryId
-                    select c).FirstOrDefault();
+                var categoryName = breadcrumb[i].GetLocalized(x => x.Name, languageId);
+                result = String.IsNullOrEmpty(result)
+                    ? categoryName
+                    : string.Format("{0} {1} {2}", result, separator, categoryName);
             }
+
             return result;
         }
 
