@@ -191,9 +191,9 @@
     <Compile Include="Themes\ThemeableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
     <Compile Include="Themes\ThemeContext.cs" />
-    <Compile Include="UI\Captcha\CaptchaSettings.cs" />
-    <Compile Include="UI\Captcha\HtmlExtensions.cs" />
-    <Compile Include="UI\Captcha\CaptchaValidatorAttribute.cs" />
+    <Compile Include="Security\Captcha\CaptchaSettings.cs" />
+    <Compile Include="Security\Captcha\HtmlExtensions.cs" />
+    <Compile Include="Security\Captcha\CaptchaValidatorAttribute.cs" />
     <Compile Include="UI\AsIsBundleOrderer.cs" />
     <Compile Include="UI\ResourceLocation.cs" />
     <Compile Include="UI\LayoutExtensions.cs" />

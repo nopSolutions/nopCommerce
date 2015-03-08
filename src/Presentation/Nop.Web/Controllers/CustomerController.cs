@@ -32,7 +32,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Honeypot;
-using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
 using WebGrease.Css.Extensions;

@@ -42,7 +42,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Themes;
-using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Controllers
 {
