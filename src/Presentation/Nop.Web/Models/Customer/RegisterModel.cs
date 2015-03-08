@@ -132,6 +132,7 @@ namespace Nop.Web.Models.Customer
         public string VatNumber { get; set; }
         public bool DisplayVatNumber { get; set; }
 
+        public bool HoneypotEnabled { get; set; }
         public bool DisplayCaptcha { get; set; }
 
         public IList<CustomerAttributeModel> CustomerAttributes { get; set; }

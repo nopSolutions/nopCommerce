@@ -5280,6 +5280,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.GooglePlusLink.Hint">
     <Value>Specify your Google+ page URL. Leave empty if you have no such page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
+    <Value>Enable honeypot</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
+    <Value>Check to enable honeypot technique for registration page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1">
     <Value>Invoice footer text (left column)</Value>
   </LocaleResource>

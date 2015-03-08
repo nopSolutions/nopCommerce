@@ -4801,7 +4801,9 @@ namespace Nop.Services.Installation
                     EncryptionKey = CommonHelper.GenerateRandomDigitCode(16),
                     AdminAreaAllowedIpAddresses = null,
                     EnableXsrfProtectionForAdminArea = true,
-                    EnableXsrfProtectionForPublicStore = true
+                    EnableXsrfProtectionForPublicStore = true,
+                    HoneypotEnabled = false,
+                    HoneypotInputName = "hpinput"
                 });
 
             settingService.SaveSetting(new ShippingSettings

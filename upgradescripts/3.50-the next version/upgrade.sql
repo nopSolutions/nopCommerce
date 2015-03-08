@@ -302,6 +302,12 @@ set @resources='
   <LocaleResource Name="Checkout.PaymentError">
     <Value>Payment error: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled">
+    <Value>Enable honeypot</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
+    <Value>Check to enable honeypot technique for registration page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1240,5 +1246,21 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.honeypotenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'securitysettings.honeypotenabled', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.honeypotinputname')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'securitysettings.honeypotinputname', N'hpinput', 0)
 END
 GO

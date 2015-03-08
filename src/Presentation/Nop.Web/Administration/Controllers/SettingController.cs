@@ -2095,6 +2095,7 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.ForceSslForAllPages = securitySettings.ForceSslForAllPages;
             model.SecuritySettings.EnableXsrfProtectionForAdminArea = securitySettings.EnableXsrfProtectionForAdminArea;
             model.SecuritySettings.EnableXsrfProtectionForPublicStore = securitySettings.EnableXsrfProtectionForPublicStore;
+            model.SecuritySettings.HoneypotEnabled = securitySettings.HoneypotEnabled;
             model.SecuritySettings.CaptchaEnabled = captchaSettings.Enabled;
             model.SecuritySettings.CaptchaShowOnLoginPage = captchaSettings.ShowOnLoginPage;
             model.SecuritySettings.CaptchaShowOnRegistrationPage = captchaSettings.ShowOnRegistrationPage;
@@ -2322,6 +2323,7 @@ namespace Nop.Admin.Controllers
             securitySettings.ForceSslForAllPages = model.SecuritySettings.ForceSslForAllPages;
             securitySettings.EnableXsrfProtectionForAdminArea = model.SecuritySettings.EnableXsrfProtectionForAdminArea;
             securitySettings.EnableXsrfProtectionForPublicStore = model.SecuritySettings.EnableXsrfProtectionForPublicStore;
+            securitySettings.HoneypotEnabled = model.SecuritySettings.HoneypotEnabled;
             _settingService.SaveSetting(securitySettings);
             captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             captchaSettings.ShowOnLoginPage = model.SecuritySettings.CaptchaShowOnLoginPage;

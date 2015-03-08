@@ -442,6 +442,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.HoneypotEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.HoneypotEnabled)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <hr />
                 <br />

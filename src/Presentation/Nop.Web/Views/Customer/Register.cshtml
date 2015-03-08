@@ -329,6 +329,10 @@
                             @Html.Raw(Html.GenerateCaptcha())
                         </div>
                     }
+                    @if (Model.HoneypotEnabled)
+                    {
+                        @Html.Raw(Html.GenerateHoneypotInput())
+                    }
                 </div>
             </div>
             @if (Model.AcceptPrivacyPolicyEnabled)

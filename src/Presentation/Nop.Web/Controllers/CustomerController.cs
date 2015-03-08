@@ -12,6 +12,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -30,6 +31,7 @@ using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Framework.Security.Honeypot;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
@@ -78,6 +80,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly SecuritySettings _securitySettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         #endregion
@@ -121,6 +124,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
+            SecuritySettings securitySettings,
             ExternalAuthenticationSettings externalAuthenticationSettings)
         {
             this._authenticationService = authenticationService;
@@ -160,6 +164,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
+            this._securitySettings = securitySettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
         }
 
@@ -450,6 +455,7 @@ namespace Nop.Web.Controllers
             model.AcceptPrivacyPolicyEnabled = _customerSettings.AcceptPrivacyPolicyEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
+            model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
             
             //countries and states
@@ -792,6 +798,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [CaptchaValidator]
+        [HoneypotValidator]
         [PublicAntiForgery]
         public ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, FormCollection form)
         {
