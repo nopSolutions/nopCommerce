@@ -800,6 +800,7 @@ namespace Nop.Web.Controllers
         [CaptchaValidator]
         [HoneypotValidator]
         [PublicAntiForgery]
+        [ValidateInput(false)]
         public ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid, FormCollection form)
         {
             //check whether registration is allowed
@@ -1141,6 +1142,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
+        [ValidateInput(false)]
         public ActionResult Info(CustomerInfoModel model, FormCollection form)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
