@@ -186,8 +186,8 @@ namespace Nop.Admin.Controllers
 
                 affiliate.Active = model.Active;
                 affiliate.AdminComment = model.AdminComment;
-                //ensure we have only valid chars
-                var friendlyUrlName = SeoExtensions.GetSeName(model.FriendlyUrlName);
+                //validate friendly URL name
+                var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.Address = model.Address.ToEntity();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
@@ -240,8 +240,8 @@ namespace Nop.Admin.Controllers
             {
                 affiliate.Active = model.Active;
                 affiliate.AdminComment = model.AdminComment;
-                //ensure we have only valid chars
-                var friendlyUrlName = SeoExtensions.GetSeName(model.FriendlyUrlName);
+                //validate friendly URL name
+                var friendlyUrlName = affiliate.ValidateFriendlyUrlName(model.FriendlyUrlName);
                 affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.Address = model.Address.ToEntity(affiliate.Address);
                 //some validation

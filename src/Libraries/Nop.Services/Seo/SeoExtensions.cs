@@ -224,7 +224,7 @@ namespace Nop.Services.Seo
             var tempSeName = seName;
             while (true)
             {
-                //check whether such slug already exists (and that is not the current product)
+                //check whether such slug already exists (and that is not the current entity)
                 var urlRecord = urlRecordService.GetBySlug(tempSeName);
                 var reserved1 = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
                 //and it's not in the list of reserved slugs
