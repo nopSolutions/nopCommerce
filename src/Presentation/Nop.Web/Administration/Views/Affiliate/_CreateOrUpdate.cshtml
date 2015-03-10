@@ -99,6 +99,15 @@
                 @Html.ValidationMessageFor(model => model.AdminComment)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FriendlyUrlName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FriendlyUrlName)
+                @Html.ValidationMessageFor(model => model.FriendlyUrlName)
+            </td>
+        </tr>
     </table>
 }
 @helper TabCustomers()

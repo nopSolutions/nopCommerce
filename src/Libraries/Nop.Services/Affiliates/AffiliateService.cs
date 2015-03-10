@@ -49,6 +49,24 @@ namespace Nop.Services.Affiliates
             
             return _affiliateRepository.GetById(affiliateId);
         }
+        
+        /// <summary>
+        /// Gets an affiliate by friendly url name
+        /// </summary>
+        /// <param name="friendlyUrlName">Friendly url name</param>
+        /// <returns>Affiliate</returns>
+        public virtual Affiliate GetAffiliateByFriendlyUrlName(string friendlyUrlName)
+        {
+            if (String.IsNullOrWhiteSpace(friendlyUrlName))
+                return null;
+
+            var query = from a in _affiliateRepository.Table
+                        orderby a.Id
+                        where a.FriendlyUrlName == friendlyUrlName
+                        select a;
+            var affiliate = query.FirstOrDefault();
+            return affiliate;
+        }
 
         /// <summary>
         /// Marks affiliate as deleted 
@@ -113,6 +131,5 @@ namespace Nop.Services.Affiliates
         }
 
         #endregion
-        
     }
 }

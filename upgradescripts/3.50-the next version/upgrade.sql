@@ -308,6 +308,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled.Hint">
     <Value>Check to enable honeypot technique for registration page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName">
+    <Value>Friendly URL name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName.Hint">
+    <Value>A friendly name for generated affiliate URL (by default affiliate ID is used). It''s more friendly for marketing purposes. Leave empty to use affiliate identifier.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1262,5 +1268,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.honeypo
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'securitysettings.honeypotinputname', N'hpinput', 0)
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Affiliate]') and NAME='FriendlyUrlName')
+BEGIN
+	ALTER TABLE [Affiliate]
+	ADD [FriendlyUrlName] nvarchar(MAX) NULL
 END
 GO

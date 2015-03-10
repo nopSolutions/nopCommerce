@@ -121,6 +121,7 @@
   <ItemGroup>
     <Compile Include="Affiliates\AffiliateService.cs" />
     <Compile Include="Affiliates\IAffiliateService.cs" />
+    <Compile Include="Affiliates\AffiliateExtensions.cs" />
     <Compile Include="Authentication\External\AuthorizeState.cs" />
     <Compile Include="Authentication\External\AuthorizationResult.cs" />
     <Compile Include="Authentication\External\ExternalAuthorizerHelper.cs" />

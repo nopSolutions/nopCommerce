@@ -7,12 +7,20 @@ namespace Nop.Core.Domain.Affiliates
     /// </summary>
     public partial class Affiliate : BaseEntity
     {
+        /// <summary>
+        /// Gets or sets the address identifier
+        /// </summary>
         public int AddressId { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment
         /// </summary>
         public string AdminComment { get; set; }
+
+        /// <summary>
+        /// Gets or sets the friendly name for generated affiliate URL (by default affiliate ID is used)
+        /// </summary>
+        public string FriendlyUrlName { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
@@ -24,6 +32,9 @@ namespace Nop.Core.Domain.Affiliates
         /// </summary>
         public bool Active { get; set; }
 
+        /// <summary>
+        /// Gets or sets the address
+        /// </summary>
         public virtual Address Address { get; set; }
     }
 }

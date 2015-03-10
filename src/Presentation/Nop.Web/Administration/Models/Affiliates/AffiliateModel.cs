@@ -23,6 +23,10 @@ namespace Nop.Admin.Models.Affiliates
         [NopResourceDisplayName("Admin.Affiliates.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
+
+        [NopResourceDisplayName("Admin.Affiliates.Fields.FriendlyUrlName")]
+        [AllowHtml]
+        public string FriendlyUrlName { get; set; }
         
         [NopResourceDisplayName("Admin.Affiliates.Fields.Active")]
         public bool Active { get; set; }

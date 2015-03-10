@@ -15,6 +15,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -74,10 +75,11 @@ namespace Nop.Admin.Controllers
             if (affiliate != null)
             {
                 model.Id = affiliate.Id;
-                model.Url = _webHelper.ModifyQueryString(_webHelper.GetStoreLocation(false), "affiliateid=" + affiliate.Id, null);
+                model.Url = affiliate.GenerateUrl(_webHelper);
                 if (!excludeProperties)
                 {
                     model.AdminComment = affiliate.AdminComment;
+                    model.FriendlyUrlName = affiliate.FriendlyUrlName;
                     model.Active = affiliate.Active;
                     model.Address = affiliate.Address.ToModel();
                 }
@@ -184,6 +186,9 @@ namespace Nop.Admin.Controllers
 
                 affiliate.Active = model.Active;
                 affiliate.AdminComment = model.AdminComment;
+                //ensure we have only valid chars
+                var friendlyUrlName = SeoExtensions.GetSeName(model.FriendlyUrlName);
+                affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.Address = model.Address.ToEntity();
                 affiliate.Address.CreatedOnUtc = DateTime.UtcNow;
                 //some validation
@@ -235,6 +240,9 @@ namespace Nop.Admin.Controllers
             {
                 affiliate.Active = model.Active;
                 affiliate.AdminComment = model.AdminComment;
+                //ensure we have only valid chars
+                var friendlyUrlName = SeoExtensions.GetSeName(model.FriendlyUrlName);
+                affiliate.FriendlyUrlName = friendlyUrlName;
                 affiliate.Address = model.Address.ToEntity(affiliate.Address);
                 //some validation
                 if (affiliate.Address.CountryId == 0)

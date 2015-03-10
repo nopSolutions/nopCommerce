@@ -1065,6 +1065,12 @@
   <LocaleResource Name="Admin.Affiliates.Fields.AdminComment.Hint">
     <Value>Admin comment. For internal use.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName">
+    <Value>Friendly URL name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName.Hint">
+    <Value>A friendly name for generated affiliate URL (by default affiliate ID is used). It's more friendly for marketing purposes. Leave empty to use affiliate identifier.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.Fields.ID">
     <Value>Affiliate identifier</Value>
   </LocaleResource>

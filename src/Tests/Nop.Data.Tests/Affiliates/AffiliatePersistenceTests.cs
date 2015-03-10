@@ -18,6 +18,8 @@ namespace Nop.Data.Tests.Affiliates
                 Deleted = true,
                 Active = true,
                 Address = GetTestAddress(),
+                AdminComment = "AdminComment 1",
+                FriendlyUrlName = "FriendlyUrlName 1"
             };
 
             var fromDb = SaveAndLoadEntity(affiliate);
@@ -26,6 +28,8 @@ namespace Nop.Data.Tests.Affiliates
             fromDb.Active.ShouldEqual(true);
             fromDb.Address.ShouldNotBeNull();
             fromDb.Address.FirstName.ShouldEqual("FirstName 1");
+            fromDb.AdminComment.ShouldEqual("AdminComment 1");
+            fromDb.FriendlyUrlName.ShouldEqual("FriendlyUrlName 1");
         }
 
         protected Address GetTestAddress()
