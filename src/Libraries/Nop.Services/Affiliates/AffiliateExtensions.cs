@@ -9,6 +9,34 @@ namespace Nop.Services.Affiliates
     public static class AffiliateExtensions
     {
         /// <summary>
+        /// Get full name
+        /// </summary>
+        /// <param name="affiliate">Affiliate</param>
+        /// <returns>Affiliate full name</returns>
+        public static string GetFullName(this Affiliate affiliate)
+        {
+            if (affiliate == null)
+                throw new ArgumentNullException("affiliate");
+
+            var firstName = affiliate.Address.FirstName;
+            var lastName = affiliate.Address.LastName;
+
+            string fullName = "";
+            if (!String.IsNullOrWhiteSpace(firstName) && !String.IsNullOrWhiteSpace(lastName))
+                fullName = string.Format("{0} {1}", firstName, lastName);
+            else
+            {
+                if (!String.IsNullOrWhiteSpace(firstName))
+                    fullName = firstName;
+
+                if (!String.IsNullOrWhiteSpace(lastName))
+                    fullName = lastName;
+            }
+            return fullName;
+        }
+
+
+        /// <summary>
         /// Generate affilaite URL
         /// </summary>
         /// <param name="affiliate">Affiliate</param>

@@ -126,7 +126,9 @@ namespace Nop.Admin.Models.Customers
         public bool Active { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
-        public int? AffiliateId { get; set; }
+        public int AffiliateId { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Affiliate")]
+        public string AffiliateName { get; set; }
 
 
 

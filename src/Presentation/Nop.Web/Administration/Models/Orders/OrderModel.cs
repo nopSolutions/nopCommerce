@@ -48,7 +48,9 @@ namespace Nop.Admin.Models.Orders
         public Dictionary<string, object> CustomValues { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
-        public int? AffiliateId { get; set; }
+        public int AffiliateId { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.Affiliate")]
+        public string AffiliateName { get; set; }
 
         //Used discounts
         [NopResourceDisplayName("Admin.Orders.Fields.UsedDiscounts")]

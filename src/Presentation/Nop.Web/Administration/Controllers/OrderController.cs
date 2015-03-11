@@ -16,6 +16,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Directory;
@@ -78,6 +79,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressAttributeParser _addressAttributeParser;
         private readonly IAddressAttributeService _addressAttributeService;
 	    private readonly IAddressAttributeFormatter _addressAttributeFormatter;
+	    private readonly IAffiliateService _affiliateService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -125,6 +127,7 @@ namespace Nop.Admin.Controllers
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
+            IAffiliateService affiliateService,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -167,6 +170,7 @@ namespace Nop.Admin.Controllers
             this._addressAttributeParser = addressAttributeParser;
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeFormatter = addressAttributeFormatter;
+            this._affiliateService = affiliateService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -272,7 +276,14 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
             model.AllowCustomersToSelectTaxDisplayType = _taxSettings.AllowCustomersToSelectTaxDisplayType;
             model.TaxDisplayType = _taxSettings.TaxDisplayType;
-            model.AffiliateId = order.AffiliateId;
+
+            var affiliate = _affiliateService.GetAffiliateById(order.AffiliateId);
+            if (affiliate != null)
+            {
+                model.AffiliateId = affiliate.Id;
+                model.AffiliateName = affiliate.GetFullName();
+            }
+
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
             //custom values
