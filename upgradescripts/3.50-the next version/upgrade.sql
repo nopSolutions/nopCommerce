@@ -314,6 +314,9 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Fields.FriendlyUrlName.Hint">
     <Value>A friendly name for generated affiliate URL (by default affiliate ID is used). It''s more friendly for marketing purposes. Leave empty to use affiliate identifier.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Remove">
+    <Value>Remove affiliate</Value>
+  </LocaleResource>
 </Language>
 '
 

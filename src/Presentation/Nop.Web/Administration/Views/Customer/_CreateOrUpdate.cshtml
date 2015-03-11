@@ -470,6 +470,7 @@
                 </td>
                 <td class="adminData">
                     <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                    <input type="submit" name="remove-affiliate" class="k-button" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
                 </td>
             </tr>
         }

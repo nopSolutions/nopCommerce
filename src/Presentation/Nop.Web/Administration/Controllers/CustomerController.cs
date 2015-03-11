@@ -1164,6 +1164,24 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit",  new {id = customer.Id});
         }
 
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("remove-affiliate")]
+        public ActionResult RemoveAffiliate(CustomerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                //No customer found with the specified id
+                return RedirectToAction("List");
+            
+            customer.AffiliateId = 0;
+            _customerService.UpdateCustomer(customer);
+
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
         [HttpPost]
         public ActionResult Delete(int id)
         {

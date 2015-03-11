@@ -7518,6 +7518,9 @@
   <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Hint">
     <Value>The affiliate who the customer is linked to.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Remove">
+    <Value>Remove affiliate</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Fields.City">
     <Value>City</Value>
   </LocaleResource>
