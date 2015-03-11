@@ -190,6 +190,7 @@
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
+    <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
     <Compile Include="Models\Catalog\AddProductAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductModel.cs" />

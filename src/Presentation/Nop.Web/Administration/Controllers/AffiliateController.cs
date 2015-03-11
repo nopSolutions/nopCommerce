@@ -138,16 +138,20 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
-            return View();
+            var model = new AffiliateListModel();
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult List(DataSourceRequest command)
+        public ActionResult List(DataSourceRequest command, AffiliateListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
-            var affiliates = _affiliateService.GetAllAffiliates(command.Page - 1, command.PageSize, true);
+            var affiliates = _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
+                model.SearchFirstName, model.SearchLastName,
+                command.Page - 1, command.PageSize, true);
+
             var gridModel = new DataSourceResult
             {
                 Data = affiliates.Select(x =>
@@ -162,7 +166,6 @@ namespace Nop.Admin.Controllers
         }
 
         //create
-
         public ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
@@ -344,6 +347,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
         #endregion
     }
 }

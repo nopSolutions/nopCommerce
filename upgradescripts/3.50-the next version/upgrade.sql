@@ -317,6 +317,24 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Affiliate.Remove">
     <Value>Remove affiliate</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchFriendlyUrlName">
+    <Value>Friendly URL name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchFriendlyUrlName.Hint">
+    <Value>Search by a friendly URL name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchFirstName">
+    <Value>First name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchFirstName.Hint">
+    <Value>Search by a first name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchLastName">
+    <Value>Last name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.SearchLastName.Hint">
+    <Value>Search by a last name.</Value>
+  </LocaleResource>
 </Language>
 '
 

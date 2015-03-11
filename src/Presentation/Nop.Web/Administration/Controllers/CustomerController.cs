@@ -691,7 +691,7 @@ namespace Nop.Admin.Controllers
 
             //load registered customers by default
             var defaultRoleIds = new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
-            var listModel = new CustomerListModel
+            var model = new CustomerListModel
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
                 DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
@@ -701,7 +701,7 @@ namespace Nop.Admin.Controllers
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
-            return View(listModel);
+            return View(model);
         }
 
         [HttpPost]

@@ -84,13 +84,25 @@ namespace Nop.Services.Affiliates
         /// <summary>
         /// Gets all affiliates
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="friendlyUrlName">Friendly URL name; null to load all records</param>
+        /// <param name="firstName">First name; null to load all records</param>
+        /// <param name="lastName">Last name; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Affiliate collection</returns>
-        public virtual IPagedList<Affiliate> GetAllAffiliates(int pageIndex, int pageSize, bool showHidden = false)
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Affiliates</returns>
+        public virtual IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
+            string firstName = null, string lastName = null,
+            int pageIndex = 0, int pageSize = int.MaxValue,
+            bool showHidden = false)
         {
             var query = _affiliateRepository.Table;
+            if (!String.IsNullOrWhiteSpace(friendlyUrlName))
+                query = query.Where(a => a.FriendlyUrlName.Contains(friendlyUrlName));
+            if (!String.IsNullOrWhiteSpace(firstName))
+                query = query.Where(a => a.Address.FirstName.Contains(firstName));
+            if (!String.IsNullOrWhiteSpace(lastName))
+                query = query.Where(a => a.Address.LastName.Contains(lastName));
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
