@@ -1086,6 +1086,24 @@
   <LocaleResource Name="Admin.Affiliates.Info">
     <Value>Affiliate info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.LoadOnlyWithOrders">
+    <Value>Load only with orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.LoadOnlyWithOrders.Hint">
+    <Value>Check to load affiliates only with orders placed (by affiliated customers).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.OrdersCreatedFromUtc">
+    <Value>Orders start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.OrdersCreatedFromUtc.Hint">
+    <Value>The start date for the order search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.OrdersCreatedToUtc">
+    <Value>Orders end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.List.OrdersCreatedToUtc.Hint">
+    <Value>The end date for the order search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Affiliates.List.SearchFirstName">
     <Value>First name</Value>
   </LocaleResource>

@@ -150,6 +150,7 @@ namespace Nop.Admin.Controllers
 
             var affiliates = _affiliateService.GetAllAffiliates(model.SearchFriendlyUrlName,
                 model.SearchFirstName, model.SearchLastName,
+                model.LoadOnlyWithOrders, model.OrdersCreatedFromUtc, model.OrdersCreatedToUtc,
                 command.Page - 1, command.PageSize, true);
 
             var gridModel = new DataSourceResult

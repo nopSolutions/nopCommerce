@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -17,5 +19,14 @@ namespace Nop.Admin.Models.Affiliates
         [NopResourceDisplayName("Admin.Affiliates.List.SearchFriendlyUrlName")]
         [AllowHtml]
         public string SearchFriendlyUrlName { get; set; }
+
+        [NopResourceDisplayName("Admin.Affiliates.List.LoadOnlyWithOrders")]
+        public bool LoadOnlyWithOrders { get; set; }
+        [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedFromUtc")]
+        [UIHint("DateNullable")]
+        public DateTime? OrdersCreatedFromUtc { get; set; }
+        [NopResourceDisplayName("Admin.Affiliates.List.OrdersCreatedToUtc")]
+        [UIHint("DateNullable")]
+        public DateTime? OrdersCreatedToUtc { get; set; }
     }
 }

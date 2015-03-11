@@ -42,11 +42,53 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LoadOnlyWithOrders):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.LoadOnlyWithOrders)
+        </td>
+    </tr>
+    <tr id="pnlOrdersCreatedFromUtc">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.OrdersCreatedFromUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.OrdersCreatedFromUtc)
+        </td>
+    </tr>
+    <tr id="pnlOrdersCreatedToUtc">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.OrdersCreatedToUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.OrdersCreatedToUtc)
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             <input type="button" id="search-affiliates" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
+
+        toggleLoadOnlyWithOrders();
+    });
+
+    function toggleLoadOnlyWithOrders() {
+        if ($('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked')) {
+            $('#pnlOrdersCreatedFromUtc').show();
+            $('#pnlOrdersCreatedToUtc').show();
+        } else {
+            $('#pnlOrdersCreatedFromUtc').hide();
+            $('#pnlOrdersCreatedToUtc').hide();
+        }
+    }
+</script>
+
 <table class="adminContent">
     <tr>
         <td>
@@ -147,7 +189,10 @@
                     var data = {
                         SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
                         SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
-                        SearchFriendlyUrlName: $('#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)').val()
+                        SearchFriendlyUrlName: $('#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)').val(),
+                        LoadOnlyWithOrders: $('#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)').is(':checked'),
+                        OrdersCreatedFromUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedFromUtc)').val(),
+                        OrdersCreatedToUtc: $('#@Html.FieldIdFor(model => model.OrdersCreatedToUtc)').val()
                     };
                     addAntiForgeryToken(data);
                     return data;

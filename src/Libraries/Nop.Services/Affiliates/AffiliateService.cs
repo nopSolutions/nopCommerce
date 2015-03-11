@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Orders;
 using Nop.Services.Events;
 
 namespace Nop.Services.Affiliates
@@ -15,6 +16,7 @@ namespace Nop.Services.Affiliates
         #region Fields
 
         private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -25,11 +27,14 @@ namespace Nop.Services.Affiliates
         /// Ctor
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
+        /// <param name="orderRepository">Order repository</param>
         /// <param name="eventPublisher">Event published</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
+            IRepository<Order> orderRepository,
             IEventPublisher eventPublisher)
         {
             this._affiliateRepository = affiliateRepository;
+            this._orderRepository = orderRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -87,12 +92,17 @@ namespace Nop.Services.Affiliates
         /// <param name="friendlyUrlName">Friendly URL name; null to load all records</param>
         /// <param name="firstName">First name; null to load all records</param>
         /// <param name="lastName">Last name; null to load all records</param>
+        /// <param name="loadOnlyWithOrders">Value indicating whether to load affiliates only with orders placed (by affiliated customers)</param>
+        /// <param name="ordersCreatedFromUtc">Orders created date from (UTC); null to load all records. It's used only with "loadOnlyWithOrders" parameter st to "true".</param>
+        /// <param name="ordersCreatedToUtc">Orders created date to (UTC); null to load all records. It's used only with "loadOnlyWithOrders" parameter st to "true".</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Affiliates</returns>
         public virtual IPagedList<Affiliate> GetAllAffiliates(string friendlyUrlName = null,
             string firstName = null, string lastName = null,
+            bool loadOnlyWithOrders = false,
+            DateTime? ordersCreatedFromUtc = null, DateTime? ordersCreatedToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false)
         {
@@ -106,6 +116,22 @@ namespace Nop.Services.Affiliates
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
+
+            if (loadOnlyWithOrders)
+            {
+                var ordersQuery = _orderRepository.Table;
+                if (ordersCreatedFromUtc.HasValue)
+                    ordersQuery = ordersQuery.Where(o => ordersCreatedFromUtc.Value <= o.CreatedOnUtc);
+                if (ordersCreatedToUtc.HasValue)
+                    ordersQuery = ordersQuery.Where(o => ordersCreatedToUtc.Value >= o.CreatedOnUtc);
+                ordersQuery = ordersQuery.Where(o => !o.Deleted);
+
+                query = from a in query
+                        join o in ordersQuery on a.Id equals o.AffiliateId into a_o
+                        where a_o.Any()
+                        select a;
+            }
+
             query = query.OrderByDescending(a => a.Id);
 
             var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
