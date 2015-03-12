@@ -5,7 +5,7 @@ using Nop.Core.Plugins;
 namespace Nop.Services.Cms
 {
     /// <summary>
-    /// Provides an interface for creating tax providers
+    /// Provides an interface for creating widgets
     /// </summary>
     public partial interface IWidgetPlugin : IPlugin
     {
