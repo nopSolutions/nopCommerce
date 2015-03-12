@@ -7,6 +7,9 @@ using Nop.Admin.Models.Affiliates;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Payments;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -16,6 +19,7 @@ using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Seo;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
@@ -288,17 +292,59 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [ChildActionOnly]
+        public ActionResult AffiliatedOrderList(int affiliateId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
+                return Content("");
+
+            if (affiliateId == 0)
+                throw new Exception("Affliate ID cannot be 0");
+
+            var model = new AffiliatedOrderListModel();
+            model.AffliateId = affiliateId;
+
+            //order statuses
+            model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            
+            //payment statuses
+            model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            
+            //shipping statuses
+            model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return PartialView(model);
+        }
         [HttpPost]
-        public ActionResult AffiliatedOrderList(int affiliateId, DataSourceRequest command)
+        public ActionResult AffiliatedOrderList(DataSourceRequest command, AffiliatedOrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
-            var affiliate = _affiliateService.GetAffiliateById(affiliateId);
+            var affiliate = _affiliateService.GetAffiliateById(model.AffliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            var orders = _orderService.SearchOrders(affiliateId: affiliate.Id,
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+            var orders = _orderService.SearchOrders(
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                ss: shippingStatus, 
+                affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
             var gridModel = new DataSourceResult
@@ -319,6 +365,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+
 
         [HttpPost]
         public ActionResult AffiliatedCustomerList(int affiliateId, DataSourceRequest command)

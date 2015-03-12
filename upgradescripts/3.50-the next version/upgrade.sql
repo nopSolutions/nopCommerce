@@ -353,6 +353,27 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.List.OrdersCreatedToUtc.Hint">
     <Value>The end date for the order search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.OrderStatus.Hint">
+    <Value>Search by a specific order status e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.PaymentStatus.Hint">
+    <Value>Search by a specific payment status e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.ShippingStatus.Hint">
+    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Affiliates.Orders.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
 </Language>
 '
 

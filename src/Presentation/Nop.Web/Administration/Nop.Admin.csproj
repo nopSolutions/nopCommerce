@@ -191,6 +191,7 @@
     <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Affiliates\AffiliateListModel.cs" />
+    <Compile Include="Models\Affiliates\AffiliatedOrderListModel.cs" />
     <Compile Include="Models\Catalog\AddProductAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\LowStockProductModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductModel.cs" />
@@ -1260,6 +1261,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\MessageTemplate\TestTemplate.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Affiliate\AffiliatedOrderList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
