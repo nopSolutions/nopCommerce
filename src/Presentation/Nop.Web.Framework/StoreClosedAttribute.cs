@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
@@ -39,27 +41,31 @@ namespace Nop.Web.Framework
             if (!storeInformationSettings.StoreClosed)
                 return;
 
-            if (//ensure it's not the Login page
-                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Login", StringComparison.InvariantCultureIgnoreCase)) &&
-                //ensure it's not the Logout page
-                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)) &&
-                //ensure it's not the method (AJAX) for accepting EU Cookie law
-                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)) &&
-                //ensure it's not the store closed page
-                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("StoreClosed", StringComparison.InvariantCultureIgnoreCase)) &&
-                //ensure it's not the change language page (request)
-                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("SetLanguage", StringComparison.InvariantCultureIgnoreCase)))
-            {
-                if (storeInformationSettings.StoreClosedAllowForAdmins && EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
-                {
-                    //do nothing - allow admin access
-                }
-                else
-                {
-                    var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");
-                    filterContext.Result = new RedirectResult(storeClosedUrl);
-                }
-            }
+            //<controller, action>
+            var allowedPages = new List<Tuple<string, string>>();
+            //login page
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CustomerController", "Login"));
+            //logout page
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CustomerController", "Logout"));
+            //store closed page
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "EuCookieLawAccept"));
+            //the method (AJAX) for accepting EU Cookie law
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "StoreClosed"));
+            //the change language page (request)
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "SetLanguage"));
+            var isPageAllowed = allowedPages.Any(
+                x => controllerName.Equals(x.Item1, StringComparison.InvariantCultureIgnoreCase) &&
+                     actionName.Equals(x.Item2, StringComparison.InvariantCultureIgnoreCase));
+            if (isPageAllowed)
+                return;
+
+            //allow admin access
+            if (storeInformationSettings.StoreClosedAllowForAdmins &&
+                EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
+                return;
+
+            var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");
+            filterContext.Result = new RedirectResult(storeClosedUrl);
         }
     }
 }
