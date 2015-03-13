@@ -53,6 +53,9 @@ namespace Nop.Web.Framework
             allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "StoreClosed"));
             //the change language page (request)
             allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "SetLanguage"));
+            //contact us page
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "ContactUs"));
+            allowedPages.Add(new Tuple<string, string>("Nop.Web.Controllers.CommonController", "ContactUsSend"));
             var isPageAllowed = allowedPages.Any(
                 x => controllerName.Equals(x.Item1, StringComparison.InvariantCultureIgnoreCase) &&
                      actionName.Equals(x.Item2, StringComparison.InvariantCultureIgnoreCase));
