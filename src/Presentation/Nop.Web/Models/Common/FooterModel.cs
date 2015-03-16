@@ -1,9 +1,15 @@
-﻿using Nop.Web.Framework.Mvc;
+﻿using System.Collections.Generic;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Common
 {
     public partial class FooterModel : BaseNopModel
     {
+        public FooterModel()
+        {
+            Topics = new List<FooterTopicModel>();
+        }
+
         public string StoreName { get; set; }
         public string FacebookLink { get; set; }
         public string TwitterLink { get; set; }
@@ -23,5 +29,21 @@ namespace Nop.Web.Models.Common
         public bool RecentlyAddedProductsEnabled { get; set; }
         public bool DisplayTaxShippingInfoFooter { get; set; }
         public int WorkingLanguageId { get; set; }
+
+        public IList<FooterTopicModel> Topics { get; set; }
+
+        #region Nested classes
+
+        public class FooterTopicModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+            public string SeName { get; set; }
+
+            public bool IncludeInFooterColumn1 { get; set; }
+            public bool IncludeInFooterColumn2 { get; set; }
+            public bool IncludeInFooterColumn3 { get; set; }
+        }
+
+        #endregion
     }
 }

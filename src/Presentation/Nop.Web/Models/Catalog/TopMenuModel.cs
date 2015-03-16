@@ -19,11 +19,13 @@ namespace Nop.Web.Models.Catalog
         public bool ForumEnabled { get; set; }
 
         #region Nested classes
+
         public class TopMenuTopicModel : BaseNopEntityModel
         {
             public string Name { get; set; }
             public string SeName { get; set; }
         }
+
         #endregion
     }
 }

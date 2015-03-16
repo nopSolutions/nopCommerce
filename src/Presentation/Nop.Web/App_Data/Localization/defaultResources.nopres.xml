@@ -7140,6 +7140,24 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body.Hint">
     <Value>The body of your topic.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1">
+    <Value>Include in footer (column 1)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1.Hint">
+    <Value>Check to include this topic in the footer (column 1). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2">
+    <Value>Include in footer (column 2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2.Hint">
+    <Value>Check to include this topic in the footer (column 2). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3">
+    <Value>Include in footer (column 3)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3.Hint">
+    <Value>Check to include this topic in the footer (column 3). Ensure that your theme supports it.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInSitemap">
     <Value>Include in sitemap</Value>
   </LocaleResource>

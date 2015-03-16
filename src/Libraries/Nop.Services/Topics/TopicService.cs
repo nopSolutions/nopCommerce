@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
@@ -15,6 +16,29 @@ namespace Nop.Services.Topics
     /// </summary>
     public partial class TopicService : ITopicService
     {
+        #region Constants
+
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : store ID
+        /// </remarks>
+        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic ID
+        /// </remarks>
+        private const string TOPICS_BY_ID_KEY = "Nop.topics.id-{0}";
+        /// <summary>
+        /// Key pattern to clear cache
+        /// </summary>
+        private const string TOPICS_PATTERN_KEY = "Nop.topics.";
+
+        #endregion
+        
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
@@ -22,6 +46,7 @@ namespace Nop.Services.Topics
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
@@ -31,13 +56,15 @@ namespace Nop.Services.Topics
             IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService,
             CatalogSettings catalogSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            ICacheManager cacheManager)
         {
             this._topicRepository = topicRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeMappingService = storeMappingService;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -69,7 +96,8 @@ namespace Nop.Services.Topics
             if (topicId == 0)
                 return null;
 
-            return _topicRepository.GetById(topicId);
+            string key = string.Format(TOPICS_BY_ID_KEY, topicId);
+            return _cacheManager.Get(key, () => _topicRepository.GetById(topicId));
         }
 
         /// <summary>
@@ -101,29 +129,33 @@ namespace Nop.Services.Topics
         /// <returns>Topics</returns>
         public virtual IList<Topic> GetAllTopics(int storeId)
         {
-            var query = _topicRepository.Table;
-            query = query.OrderBy(t => t.SystemName);
-
-            //Store mapping
-            if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+            string key = string.Format(TOPICS_ALL_KEY, storeId);
+            return _cacheManager.Get(key, () =>
             {
-                query = from t in query
-                        join sm in _storeMappingRepository.Table
-                        on new { c1 = t.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                        from sm in t_sm.DefaultIfEmpty()
-                        where !t.LimitedToStores || storeId == sm.StoreId
-                        select t;
-
-                //only distinct items (group by ID)
-                query = from t in query
-                        group t by t.Id
-                        into tGroup
-                        orderby tGroup.Key
-                        select tGroup.FirstOrDefault();
+                var query = _topicRepository.Table;
                 query = query.OrderBy(t => t.SystemName);
-            }
 
-            return query.ToList();
+                //Store mapping
+                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                {
+                    query = from t in query
+                            join sm in _storeMappingRepository.Table
+                            on new { c1 = t.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
+                            from sm in t_sm.DefaultIfEmpty()
+                            where !t.LimitedToStores || storeId == sm.StoreId
+                            select t;
+
+                    //only distinct items (group by ID)
+                    query = from t in query
+                            group t by t.Id
+                                into tGroup
+                                orderby tGroup.Key
+                                select tGroup.FirstOrDefault();
+                    query = query.OrderBy(t => t.SystemName);
+                }
+
+                return query.ToList();                            
+            });
         }
 
         /// <summary>

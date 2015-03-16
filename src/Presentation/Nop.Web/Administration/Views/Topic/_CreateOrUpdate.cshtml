@@ -113,6 +113,33 @@
                 @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeInFooterColumn1):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.IncludeInFooterColumn1)
+                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeInFooterColumn2):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.IncludeInFooterColumn2)
+                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeInFooterColumn3):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.IncludeInFooterColumn3)
+                @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
+            </td>
+        </tr>
         @if (Model.Id > 0)
         {
             <tr>

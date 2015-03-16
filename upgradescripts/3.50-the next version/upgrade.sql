@@ -374,6 +374,24 @@ set @resources='
   <LocaleResource Name="Admin.Affiliates.Orders.StartDate.Hint">
     <Value>The start date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1">
+    <Value>Include in footer (column 1)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1.Hint">
+    <Value>Check to include this topic in the footer (column 1). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2">
+    <Value>Include in footer (column 2)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn2.Hint">
+    <Value>Check to include this topic in the footer (column 2). Ensure that your theme supports it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3">
+    <Value>Include in footer (column 3)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3.Hint">
+    <Value>Check to include this topic in the footer (column 3). Ensure that your theme supports it.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1338,4 +1356,55 @@ BEGIN
 	ALTER TABLE [Affiliate]
 	ADD [FriendlyUrlName] nvarchar(MAX) NULL
 END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='IncludeInFooterColumn1')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [IncludeInFooterColumn1] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [IncludeInFooterColumn1] = 0
+WHERE [IncludeInFooterColumn1] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [IncludeInFooterColumn1] bit NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='IncludeInFooterColumn2')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [IncludeInFooterColumn2] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [IncludeInFooterColumn2] = 0
+WHERE [IncludeInFooterColumn2] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [IncludeInFooterColumn2] bit NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='IncludeInFooterColumn3')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [IncludeInFooterColumn3] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [IncludeInFooterColumn3] = 0
+WHERE [IncludeInFooterColumn3] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [IncludeInFooterColumn3] bit NOT NULL
 GO

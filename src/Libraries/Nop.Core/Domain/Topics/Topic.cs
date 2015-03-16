@@ -25,6 +25,19 @@ namespace Nop.Core.Domain.Topics
         public bool IncludeInTopMenu { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
+        /// </summary>
+        public bool IncludeInFooterColumn1 { get; set; }
+        /// <summary>
+        /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
+        /// </summary>
+        public bool IncludeInFooterColumn2 { get; set; }
+        /// <summary>
+        /// Gets or sets the value indicating whether this topic should be included in footer (column 1)
+        /// </summary>
+        public bool IncludeInFooterColumn3 { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating whether this topic is password protected
         /// </summary>
         public bool IsPasswordProtected { get; set; }

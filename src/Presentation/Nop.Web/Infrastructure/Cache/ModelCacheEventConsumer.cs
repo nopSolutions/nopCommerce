@@ -350,6 +350,14 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : current store ID
         /// </remarks>
         public const string TOPIC_TOP_MENU_MODEL_KEY = "Nop.pres.topic.topmenu-{0}-{1}";
+        /// <summary>
+        /// Key for TopMenuModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : language id
+        /// {1} : current store ID
+        /// </remarks>
+        public const string TOPIC_FOOTER_MODEL_KEY = "Nop.pres.topic.footer-{0}-{1}";
         public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
 
         /// <summary>

@@ -15,6 +15,9 @@ namespace Nop.Data.Tests.Topics
                                    SystemName = "SystemName 1",
                                    IncludeInSitemap = true,
                                    IncludeInTopMenu = true,
+                                   IncludeInFooterColumn1 = true,
+                                   IncludeInFooterColumn2 = true,
+                                   IncludeInFooterColumn3 = true,
                                    IsPasswordProtected = true,
                                    Password = "password",
                                    Title = "Title 1",
@@ -31,6 +34,9 @@ namespace Nop.Data.Tests.Topics
             fromDb.SystemName.ShouldEqual("SystemName 1");
             fromDb.IncludeInSitemap.ShouldEqual(true);
             fromDb.IncludeInTopMenu.ShouldEqual(true);
+            fromDb.IncludeInFooterColumn1.ShouldEqual(true);
+            fromDb.IncludeInFooterColumn2.ShouldEqual(true);
+            fromDb.IncludeInFooterColumn3.ShouldEqual(true);
             fromDb.IsPasswordProtected.ShouldEqual(true);
             fromDb.Password.ShouldEqual("password");
             fromDb.Title.ShouldEqual("Title 1");
