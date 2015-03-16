@@ -1,0 +1,885 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EntityFramework.SqlServerCompact</name>
+    </assembly>
+    <members>
+        <member name="T:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator">
+            <summary>
+            Provider to convert provider agnostic migration operations into SQL commands
+            that can be run against a Microsoft SQL Server Compact Edition database.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Collections.Generic.IEnumerable{System.Data.Entity.Migrations.Model.MigrationOperation},System.String)">
+            <summary>
+            Converts a set of migration operations into Microsoft SQL Server specific SQL.
+            </summary>
+            <param name="migrationOperations"> The operations to be converted. </param>
+            <param name="providerManifestToken"> Token representing the version of SQL Server being targeted (i.e. "2005", "2008"). </param>
+            <returns> A list of SQL statements to be executed to perform the migration operations. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.UpdateDatabaseOperation)">
+            <summary>
+            Generates the specified update database operation which represents applying a series of migrations.
+            The generated script is idempotent, meaning it contains conditional logic to check if individual migrations 
+            have already been applied and only apply the pending ones.
+            </summary>
+            <param name="updateDatabaseOperation">The update database operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.MigrationOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.MigrationOperation"/>.
+            Allows derived providers to handle additional operation types.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="migrationOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.CreateConnection">
+            <summary>
+            Creates an empty connection for the current provider.
+            Allows derived providers to use connection other than <see cref="T:System.Data.SqlClient.SqlConnection"/>.
+            </summary>
+            <returns> An empty connection for the current provider. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.CreateProcedureOperation)">
+            <summary>
+            Generates the specified create procedure operation.
+            </summary>
+            <param name="createProcedureOperation">The create procedure operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AlterProcedureOperation)">
+            <summary>
+            Generates the specified alter procedure operation.
+            </summary>
+            <param name="alterProcedureOperation">The alter procedure operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropProcedureOperation)">
+            <summary>
+            Generates the specified drop procedure operation.
+            </summary>
+            <param name="dropProcedureOperation">The drop procedure operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.CreateTableOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.CreateTableOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="createTableOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AlterTableOperation)">
+            <summary>
+            Override this method to generate SQL when the definition of a table or its attributes are changed.
+            The default implementation of this method does nothing.
+            </summary>
+            <param name="alterTableOperation"> The operation describing changes to the table. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.GenerateMakeSystemTable(System.Data.Entity.Migrations.Model.CreateTableOperation,System.Data.Entity.Migrations.Utilities.IndentedTextWriter)">
+            <summary>
+            Generates SQL to mark a table as a system table.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="createTableOperation"> The table to mark as a system table. </param>
+            <param name="writer"> The <see cref="T:System.Data.Entity.Migrations.Utilities.IndentedTextWriter"/> to write the generated SQL to. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AddForeignKeyOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.AddForeignKeyOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="addForeignKeyOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropForeignKeyOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.DropForeignKeyOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="dropForeignKeyOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.CreateIndexOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.CreateIndexOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="createIndexOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropIndexOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.DropIndexOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="dropIndexOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AddPrimaryKeyOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.AddPrimaryKeyOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="addPrimaryKeyOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropPrimaryKeyOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.DropPrimaryKeyOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="dropPrimaryKeyOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AddColumnOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.AddColumnOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="addColumnOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropColumnOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.DropColumnOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="dropColumnOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.AlterColumnOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.AlterColumnOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="alterColumnOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.DropTableOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.DropTableOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="dropTableOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.SqlOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.SqlOperation"/>.
+            Generated SQL should be added using the Statement or StatementBatch methods.
+            </summary>
+            <param name="sqlOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.RenameColumnOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.RenameColumnOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="renameColumnOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.RenameIndexOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.RenameIndexOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="renameIndexOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.RenameTableOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.RenameTableOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="renameTableOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.RenameProcedureOperation)">
+            <summary>
+            Generates the specified rename procedure operation.
+            </summary>
+            <param name="renameProcedureOperation">The rename procedure operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.MoveProcedureOperation)">
+            <summary>
+            Generates the specified move procedure operation.
+            </summary>
+            <param name="moveProcedureOperation">The move procedure operation.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.MoveTableOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.MoveTableOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="moveTableOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.ColumnModel,System.Data.Entity.Migrations.Utilities.IndentedTextWriter)">
+            <summary>
+            Generates SQL for the given column model. This method is called by other methods that
+            process columns and can be overridden to change the SQL generated.
+            </summary>
+            <param name="column">The column for which SQL is being generated.</param>
+            <param name="writer">The writer to which generated SQL should be written.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Migrations.Model.HistoryOperation)">
+            <summary>
+            Generates SQL for a <see cref="T:System.Data.Entity.Migrations.Model.HistoryOperation"/>.
+            Generated SQL should be added using the Statement method.
+            </summary>
+            <param name="historyOperation"> The operation to produce SQL for. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Byte[])">
+            <summary>
+            Generates SQL to specify a constant byte[] default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Boolean)">
+            <summary>
+            Generates SQL to specify a constant bool default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.DateTime)">
+            <summary>
+            Generates SQL to specify a constant DateTime default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.DateTimeOffset)">
+            <summary>
+            Generates SQL to specify a constant DateTimeOffset default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Guid)">
+            <summary>
+            Generates SQL to specify a constant Guid default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.String)">
+            <summary>
+            Generates SQL to specify a constant string default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.TimeSpan)">
+            <summary>
+            Generates SQL to specify a constant TimeSpan default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Spatial.DbGeography)">
+            <summary>
+            Generates SQL to specify a constant geogrpahy default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Data.Entity.Spatial.DbGeometry)">
+            <summary>
+            Generates SQL to specify a constant geometry default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Generate(System.Object)">
+            <summary>
+            Generates SQL to specify a constant default value being set on a column.
+            This method just generates the actual value, not the SQL to set the default value.
+            </summary>
+            <param name="defaultValue"> The value to be set. </param>
+            <returns> SQL representing the default value. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.BuildColumnType(System.Data.Entity.Migrations.Model.ColumnModel)">
+            <summary>
+            Generates SQL to specify the data type of a column.
+            This method just generates the actual type, not the SQL to create the column.
+            </summary>
+            <param name="columnModel"> The definition of the column. </param>
+            <returns> SQL representing the data type. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Name(System.String)">
+            <summary>
+            Generates a quoted name. The supplied name may or may not contain the schema.
+            </summary>
+            <param name="name"> The name to be quoted. </param>
+            <returns> The quoted name. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Quote(System.String)">
+            <summary>
+            Quotes an identifier for SQL Server.
+            </summary>
+            <param name="identifier"> The identifier to be quoted. </param>
+            <returns> The quoted identifier. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Statement(System.String,System.Boolean)">
+            <summary>
+            Adds a new Statement to be executed against the database.
+            </summary>
+            <param name="sql"> The statement to be executed. </param>
+            <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Writer">
+            <summary>
+            Gets a new <see cref="T:System.Data.Entity.Migrations.Utilities.IndentedTextWriter"/> that can be used to build SQL.
+            This is just a helper method to create a writer. Writing to the writer will
+            not cause SQL to be registered for execution. You must pass the generated
+            SQL to the Statement method.
+            </summary>
+            <returns> An empty text writer to use for SQL generation. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.Statement(System.Data.Entity.Migrations.Utilities.IndentedTextWriter)">
+            <summary>
+            Adds a new Statement to be executed against the database.
+            </summary>
+            <param name="writer"> The writer containing the SQL to be executed. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.StatementBatch(System.String,System.Boolean)">
+            <summary>
+            Breaks string into one or more statements, handling T-SQL utility statements as necessary.
+            </summary>
+            <param name="sqlBatch">The SQL to split into one ore more statements to be executed.</param>
+            <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
+        </member>
+        <member name="P:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator.GuidColumnDefault">
+            <summary>
+            Returns the column default value to use for store-generated GUID columns when
+            no default value is explicitly specified in the migration.
+            Always returns newid() for SQL Compact.
+            </summary>
+            <value>The string newid().</value>
+        </member>
+        <member name="T:System.Data.Entity.SqlServerCompact.SqlCeProviderServices">
+            <summary>
+            The ProviderServices object for the Sql CE provider
+            </summary>
+            <remarks>
+            Note that instance of this type also resolves additional provider services for Microsoft SQL Server Compact Edition
+            when this type is registered as an EF provider either using an entry in the application's config file or through
+            code-based registration in <see cref="T:System.Data.Entity.DbConfiguration"/>.
+            The services resolved are:
+            Requests for <see cref="T:System.Data.Entity.Infrastructure.IDbConnectionFactory"/> are resolved to a Singleton instance of
+            <see cref="T:System.Data.Entity.Infrastructure.SqlCeConnectionFactory"/> to create connections to SQL Compact by default.
+            Requests for <see cref="T:System.Data.Entity.Migrations.Sql.MigrationSqlGenerator"/> for the invariant name "System.Data.SqlServerCe.4.0" are
+            resolved to <see cref="T:System.Data.Entity.SqlServerCompact.SqlCeMigrationSqlGenerator"/> instances to provide default Migrations SQL
+            generation for SQL Compact.
+            </remarks>
+        </member>
+        <member name="F:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.ProviderInvariantName">
+            <summary>
+            This is the well-known string using in configuration files and code-based configuration as
+            the "provider invariant name" used to specify Microsoft SQL Server Compact Edition 4.0 for
+            ADO.NET and Entity Framework provider services.
+            </summary>
+        </member>
+        <member name="F:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.Instance">
+            <summary>
+            Singleton object;
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.DbCreateDatabaseScript(System.String,System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            API for generating script for creating schema objects from the Store Item Collection.
+            </summary>
+            <param name="providerManifestToken"> Provider manifest </param>
+            <param name="storeItemCollection"> Store items </param>
+            <returns> T-SQL script for generating schema objects. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.DbDatabaseExists(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            API for checkin whether database exists or not.
+            This will internally only check whether the file that the connection points to exists or not.
+            Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
+            </summary>
+            <param name="connection"> Connection </param>
+            <param name="timeOut"> Timeout for internal commands. </param>
+            <param name="storeItemCollection"> Item Collection. </param>
+            <returns> Bool indicating whether database exists or not. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.DbDatabaseExists(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Lazy{System.Data.Entity.Core.Metadata.Edm.StoreItemCollection})">
+            <summary>
+            API for checkin whether database exists or not.
+            This will internally only check whether the file that the connection points to exists or not.
+            Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
+            </summary>
+            <param name="connection"> Connection </param>
+            <param name="timeOut"> Timeout for internal commands. </param>
+            <param name="storeItemCollection"> Item Collection. </param>
+            <returns> Bool indicating whether database exists or not. </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.DbDeleteDatabase(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            API for deleting the database.
+            In SQLCE case, this will translate to File.Delete() call.
+            Note: Timeout and storeItemCollection parameters are ignored.
+            </summary>
+            <param name="connection"> Connection </param>
+            <param name="timeOut"> Timeout for internal commands. </param>
+            <param name="storeItemCollection"> Item Collection. </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.DbCreateDatabase(System.Data.Common.DbConnection,System.Nullable{System.Int32},System.Data.Entity.Core.Metadata.Edm.StoreItemCollection)">
+            <summary>
+            API for creating the databse and schema objects given a StoreItemCollection.
+            This will do following things:
+            1. Create a new database using SqlCeEngine.CreateDatabase().
+            2. Generate scripts for creating schema objects.
+            3. Execute the scrip generated in step2.
+            </summary>
+            <param name="connection"> Connection </param>
+            <param name="timeOut"> Timeout for internal commands </param>
+            <param name="storeItemCollection"> Store Item Collection </param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.RegisterInfoMessageHandler(System.Data.Common.DbConnection,System.Action{System.String})">
+            <summary>
+            Registers a handler to process non-error messages coming from the database provider.
+            </summary>
+            <param name="connection">The connection to receive information for.</param>
+            <param name="handler">The handler to process messages.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.CreateDbCommandDefinition(System.Data.Entity.Core.Common.DbProviderManifest,System.Data.Entity.Core.Common.CommandTrees.DbCommandTree)">
+            <summary>
+            Create a Command Definition object, given the connection and command tree
+            </summary>
+            <param name="providerManifest"> provider manifest that was determined from metadata </param>
+            <param name="commandTree"> command tree for the statement </param>
+            <returns> an executable command definition object </returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.GetDbProviderManifestToken(System.Data.Common.DbConnection)">
+            <summary>
+            Returns provider manifest token for a given connection.
+            </summary>
+            <param name="connection">Connection to find manifest token from.</param>
+            <returns>The provider manifest token for the specified connection.</returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeProviderServices.GetDbProviderManifest(System.String)">
+            <summary>
+            Returns the provider manifest by using the specified version information.
+            </summary>
+            <returns> The provider manifest by using the specified version information. </returns>
+            <param name="versionHint"> The token information associated with the provider manifest. </param>
+        </member>
+        <member name="T:System.Data.Entity.SqlServerCompact.SqlCeFunctions">
+            <summary>
+            Contains function stubs that expose SqlServerCe methods in Linq to Entities.
+            </summary>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.String,System.String)">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>The starting position of  target  if it is found in  toSearch .</returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.Byte[],System.Byte[])">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>The starting position of  target  if it is found in  toSearch .</returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.String,System.String,System.Nullable{System.Int32})">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>The starting position of  target  if it is found in  toSearch .</returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+            <param name="startLocation">The character position in  toSearch  where searching begins.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.Byte[],System.Byte[],System.Nullable{System.Int32})">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>The starting position of  target  if it is found in  toSearch .</returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+            <param name="startLocation">The character position in  toSearch  where searching begins.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.String,System.String,System.Nullable{System.Int64})">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>
+            A <see cref="T:System.Nullable`1" /> of <see cref="T:System.Int64" /> value that is the starting position of  target  if it is found in  toSearch .
+            </returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+            <param name="startLocation">The character position in  toSearch  where searching begins.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.CharIndex(System.Byte[],System.Byte[],System.Nullable{System.Int64})">
+            <summary>Returns the starting position of one expression found within another expression.</summary>
+            <returns>The starting position of  target  if it is found in  toSearch .</returns>
+            <param name="toSearch">The string expression to be searched.</param>
+            <param name="target">The string expression to be found.</param>
+            <param name="startLocation">The character position in  toSearch  at which searching begins.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.NChar(System.Nullable{System.Int32})">
+            <summary>Returns the Unicode character with the specified integer code, as defined by the Unicode standard.</summary>
+            <returns>The character that corresponds to the input character code.</returns>
+            <param name="arg">A character code.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.PatIndex(System.String,System.String)">
+            <summary>Returns the starting position of the first occurrence of a pattern in a specified expression, or zeros if the pattern is not found, on all valid text and character data types.</summary>
+            <returns>The starting character position where the string pattern was found.</returns>
+            <param name="stringPattern">A string pattern to search for.</param>
+            <param name="target">The string to search.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Replicate(System.String,System.Nullable{System.Int32})">
+            <summary>Repeats a string value a specified number of times.</summary>
+            <returns>The target string, repeated the number of times specified by  count .</returns>
+            <param name="target">A valid string.</param>
+            <param name="count">The value that specifies how many time to repeat  target .</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Space(System.Nullable{System.Int32})">
+            <summary>Returns a string of repeated spaces.</summary>
+            <returns>A string that consists of the specified number of spaces.</returns>
+            <param name="arg1">The number of spaces. If negative, a null string is returned.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Double})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The numeric input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Decimal})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Double},System.Nullable{System.Int32})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The numeric input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+            <param name="length">The total length of the string. This includes decimal point, sign, digits, and spaces. The default is 10.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Decimal},System.Nullable{System.Int32})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+            <param name="length">The total length of the string. This includes decimal point, sign, digits, and spaces. The default is 10.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The numeric input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+            <param name="length">The total length of the string. This includes decimal point, sign, digits, and spaces. The default is 10.</param>
+            <param name="decimalArg">The number of places to the right of the decimal point.  decimal  must be less than or equal to 16. If  decimal  is more than 16 then the result is truncated to sixteen places to the right of the decimal point.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.StringConvert(System.Nullable{System.Decimal},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>Returns character data converted from numeric data.</summary>
+            <returns>The input expression converted to a string.</returns>
+            <param name="number">A numeric expression.</param>
+            <param name="length">The total length of the string. This includes decimal point, sign, digits, and spaces. The default is 10.</param>
+            <param name="decimalArg">The number of places to the right of the decimal point.  decimal  must be less than or equal to 16. If  decimal  is more than 16 then the result is truncated to sixteen places to the right of the decimal point.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Stuff(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.String)">
+            <summary>Inserts a string into another string. It deletes a specified length of characters in the target string at the start position and then inserts the second string into the target string at the start position.</summary>
+            <returns>A string consisting of the two strings.</returns>
+            <param name="stringInput">The target string.</param>
+            <param name="start">The character position in  stringinput  where the replacement string is to be inserted.</param>
+            <param name="length">The number of characters to delete from  stringInput . If  length  is longer than  stringInput , deletion occurs up to the last character in  stringReplacement .</param>
+            <param name="stringReplacement">The substring to be inserted into  stringInput .</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Unicode(System.String)">
+            <summary>Returns the integer value, as defined by the Unicode standard, for the first character of the input expression.</summary>
+            <returns>The character code for the first character in the input string.</returns>
+            <param name="arg">A valid string.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Acos(System.Nullable{System.Double})">
+            <summary>A mathematical function that returns the angle, in radians, whose cosine is the specified numerical value. This angle is called the arccosine.</summary>
+            <returns>The angle, in radians, defined by the input cosine value.</returns>
+            <param name="arg1">The cosine of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Acos(System.Nullable{System.Decimal})">
+            <summary>A mathematical function that returns the angle, in radians, whose cosine is the specified numerical value. This angle is called the arccosine.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg1">The cosine of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Asin(System.Nullable{System.Double})">
+            <summary>A mathematical function that returns the angle, in radians, whose sine is the specified numerical value. This angle is called the arcsine.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg">The sine of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Asin(System.Nullable{System.Decimal})">
+            <summary>A mathematical function that returns the angle, in radians, whose sine is the specified numerical value. This angle is called the arcsine.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg">The sine of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Atan(System.Nullable{System.Double})">
+            <summary>A mathematical function that returns the angle, in radians, whose tangent is the specified numerical value. This angle is called the arctangent.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg">The tangent of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Atan(System.Nullable{System.Decimal})">
+            <summary>A mathematical function that returns the angle, in radians, whose tangent is the specified numerical value. This angle is called the arctangent.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg">The tangent of an angle.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Atan2(System.Nullable{System.Double},System.Nullable{System.Double})">
+            <summary>Returns the positive angle, in radians, between the positive x-axis and the ray from the origin through the point (x, y), where x and y are the two specified numerical values. The first parameter passed to the function is the y-value and the second parameter is the x-value.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg1">The y-coordinate of a point.</param>
+            <param name="arg2">The x-coordinate of a point.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Atan2(System.Nullable{System.Decimal},System.Nullable{System.Decimal})">
+            <summary>Returns the positive angle, in radians, between the positive x-axis and the ray from the origin through the point (x, y), where x and y are the two specified numerical values. The first parameter passed to the function is the y-value and the second parameter is the x-value.</summary>
+            <returns>An angle, measured in radians.</returns>
+            <param name="arg1">The y-coordinate of a point.</param>
+            <param name="arg2">The x-coordinate of a point.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Cos(System.Nullable{System.Double})">
+            <summary>Returns the trigonometric cosine of the specified angle, in radians, in the specified expression.</summary>
+            <returns>The trigonometric cosine of the specified angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Cos(System.Nullable{System.Decimal})">
+            <summary>Returns the trigonometric cosine of the specified angle, in radians, in the specified expression.</summary>
+            <returns>The trigonometric cosine of the specified angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Cot(System.Nullable{System.Double})">
+            <summary>A mathematical function that returns the trigonometric cotangent of the specified angle, in radians.</summary>
+            <returns>The trigonometric cotangent of the specified angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Cot(System.Nullable{System.Decimal})">
+            <summary>A mathematical function that returns the trigonometric cotangent of the specified angle, in radians.</summary>
+            <returns>The trigonometric cotangent of the specified angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Degrees(System.Nullable{System.Int32})">
+            <summary>Returns the corresponding angle in degrees for an angle specified in radians.</summary>
+            <returns>The specified angle converted to degrees.</returns>
+            <param name="arg1">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Degrees(System.Nullable{System.Int64})">
+            <summary>Returns the corresponding angle in degrees for an angle specified in radians.</summary>
+            <returns>The specified angle converted to degrees.</returns>
+            <param name="arg1">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Degrees(System.Nullable{System.Decimal})">
+            <summary>Returns the corresponding angle in degrees for an angle specified in radians.</summary>
+            <returns>The specified angle converted to degrees.</returns>
+            <param name="arg1">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Degrees(System.Nullable{System.Double})">
+            <summary>Returns the corresponding angle in degrees for an angle specified in radians.</summary>
+            <returns>The specified angle converted to degrees.</returns>
+            <param name="arg1">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Exp(System.Nullable{System.Double})">
+            <summary>Returns the exponential value of the specified float expression.</summary>
+            <returns>The constant e raised to the power of the input value.</returns>
+            <param name="arg">The input value.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Exp(System.Nullable{System.Decimal})">
+            <summary>Returns the exponential value of the specified float expression.</summary>
+            <returns>The constant e raised to the power of the input value.</returns>
+            <param name="arg">The input value.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Log(System.Nullable{System.Double})">
+            <summary>Returns the natural logarithm of the specified input value.</summary>
+            <returns>The natural logarithm of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Log(System.Nullable{System.Decimal})">
+            <summary>Returns the natural logarithm of the specified input value.</summary>
+            <returns>The natural logarithm of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Log10(System.Nullable{System.Double})">
+            <summary>Returns the base-10 logarithm of the specified input value.</summary>
+            <returns>The base-10 logarithm of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Log10(System.Nullable{System.Decimal})">
+            <summary>Returns the base-10 logarithm of the specified input value.</summary>
+            <returns>The base-10 logarithm of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Pi">
+            <summary>Returns the constant value of pi.</summary>
+            <returns>The numeric value of pi.</returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Radians(System.Nullable{System.Int32})">
+            <summary>Returns the radian measure corresponding to the specified angle in degrees.</summary>
+            <returns>The radian measure of the specified angle.</returns>
+            <param name="arg">The angle, measured in degrees</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Radians(System.Nullable{System.Int64})">
+            <summary>Returns the radian measure corresponding to the specified angle in degrees.</summary>
+            <returns>The radian measure of the specified angle.</returns>
+            <param name="arg">The angle, measured in degrees</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Radians(System.Nullable{System.Decimal})">
+            <summary>Returns the radian measure corresponding to the specified angle in degrees.</summary>
+            <returns>The radian measure of the specified angle.</returns>
+            <param name="arg">The angle, measured in degrees.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Radians(System.Nullable{System.Double})">
+            <summary>Returns the radian measure corresponding to the specified angle in degrees.</summary>
+            <returns>The radian measure of the specified angle.</returns>
+            <param name="arg">The angle, measured in degrees.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Rand">
+            <summary>Returns a pseudo-random float value from 0 through 1, exclusive.</summary>
+            <returns>The pseudo-random value.</returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Rand(System.Nullable{System.Int32})">
+            <summary>Returns a pseudo-random float value from 0 through 1, exclusive.</summary>
+            <returns>The pseudo-random value.</returns>
+            <param name="seed">The seed value. If  seed  is not specified, the SQL Server Database Engine assigns a seed value at random. For a specified seed value, the result returned is always the same.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sign(System.Nullable{System.Int32})">
+            <summary>Returns the positive (+1), zero (0), or negative (-1) sign of the specified expression.</summary>
+            <returns>The sign of the input expression.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sign(System.Nullable{System.Int64})">
+            <summary>Returns the positive (+1), zero (0), or negative (-1) sign of the specified expression.</summary>
+            <returns>The sign of the input expression.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sign(System.Nullable{System.Decimal})">
+            <summary>Returns the positive (+1), zero (0), or negative (-1) sign of the specified expression.</summary>
+            <returns>The sign of the input expression.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sign(System.Nullable{System.Double})">
+            <summary>Returns the positive (+1), zero (0), or negative (-1) sign of the specified expression.</summary>
+            <returns>The sign of the input expression.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sin(System.Nullable{System.Decimal})">
+            <summary>Returns the trigonometric sine of the specified angle.</summary>
+            <returns>The trigonometric sine of the input expression.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Sin(System.Nullable{System.Double})">
+            <summary>Returns the trigonometric sine of the specified angle.</summary>
+            <returns>The trigonometric sine of the input expression.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.SquareRoot(System.Nullable{System.Double})">
+            <summary>Returns the square root of the specified number.</summary>
+            <returns>The square root of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.SquareRoot(System.Nullable{System.Decimal})">
+            <summary>Returns the square root of the specified number.</summary>
+            <returns>The square root of the input value.</returns>
+            <param name="arg">A numeric expression.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Tan(System.Nullable{System.Double})">
+            <summary>Returns the trigonometric tangent of the input expression.</summary>
+            <returns>The tangent of the input angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.Tan(System.Nullable{System.Decimal})">
+            <summary>Returns the trigonometric tangent of the input expression.</summary>
+            <returns>The tangent of the input angle.</returns>
+            <param name="arg">An angle, measured in radians.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateAdd(System.String,System.Nullable{System.Double},System.Nullable{System.DateTime})">
+            <summary>Returns a new datetime value based on adding an interval to the specified date.</summary>
+            <returns>The new date.</returns>
+            <param name="datePartArg">The part of the date to increment. </param>
+            <param name="number">The value used to increment a date by a specified amount.</param>
+            <param name="date">The date to increment.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateAdd(System.String,System.Nullable{System.Double},System.String)">
+            <summary>Returns a new datetime value based on adding an interval to the specified date.</summary>
+            <returns>
+            A <see cref="T:System.Nullable`1" /> of <see cref="T:System.DateTime" /> value that is the new date.
+            </returns>
+            <param name="datePartArg">The part of the date to increment.</param>
+            <param name="number">The value used to increment a date by a specified amount.</param>
+            <param name="date">The date to increment.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateDiff(System.String,System.Nullable{System.DateTime},System.Nullable{System.DateTime})">
+            <summary>Returns the count of the specified datepart boundaries crossed between the specified start date and end date.</summary>
+            <returns>The number of time intervals between the two dates.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="startDate">The first date.</param>
+            <param name="endDate">The second date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateDiff(System.String,System.String,System.Nullable{System.DateTime})">
+            <summary>Returns the count of the specified datepart boundaries crossed between the specified start date and end date.</summary>
+            <returns>The number of time intervals between the two dates.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="startDate">The first date.</param>
+            <param name="endDate">The second date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateDiff(System.String,System.Nullable{System.DateTime},System.String)">
+            <summary>Returns the count of the specified datepart boundaries crossed between the specified start date and end date.</summary>
+            <returns>The number of time intervals between the two dates.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="startDate">The first date.</param>
+            <param name="endDate">The second date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateDiff(System.String,System.String,System.String)">
+            <summary>Returns the count of the specified datepart boundaries crossed between the specified start date and end date.</summary>
+            <returns>The number of time intervals between the two dates.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="startDate">The first date.</param>
+            <param name="endDate">The second date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateName(System.String,System.Nullable{System.DateTime})">
+            <summary>Returns a character string that represents the specified datepart of the specified date.</summary>
+            <returns>The specified part of the specified date.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="date">The date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DateName(System.String,System.String)">
+            <summary>Returns a character string that represents the specified datepart of the specified date.</summary>
+            <returns>The specified part of the specified date.</returns>
+            <param name="datePartArg">The part of the date to calculate the differing number of time intervals.</param>
+            <param name="date">The date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DatePart(System.String,System.Nullable{System.DateTime})">
+            <summary>Returns an integer that represents the specified datepart of the specified date.</summary>
+            <returns>The the specified datepart of the specified date.</returns>
+            <param name="datePartArg">The part of the date to return the value.</param>
+            <param name="date">The date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DatePart(System.String,System.String)">
+            <summary>Returns an integer that represents the specified datepart of the specified date.</summary>
+            <returns>The specified datepart of the specified date.</returns>
+            <param name="datePartArg">The part of the date to return the value.</param>
+            <param name="date">The date.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.GetDate">
+            <summary>Returns the current database system timestamp as a datetime value without the database time zone offset. This value is derived from the operating system of the computer on which the instance of SQL Server is running.</summary>
+            <returns>The current database timestamp.</returns>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Nullable{System.Boolean})">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Nullable{System.Double})">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Nullable{System.Decimal})">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Nullable{System.DateTime})">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.String)">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Byte[])">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for length.</param>
+        </member>
+        <member name="M:System.Data.Entity.SqlServerCompact.SqlCeFunctions.DataLength(System.Nullable{System.Guid})">
+            <summary>Returns the number of bytes used to represent any expression.</summary>
+            <returns>The number of bytes in the input value.</returns>
+            <param name="arg">The value to be examined for data length.</param>
+        </member>
+    </members>
+</doc>
