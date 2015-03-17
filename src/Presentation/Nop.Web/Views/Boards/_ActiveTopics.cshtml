@@ -1,6 +1,7 @@
 ﻿@model ActiveDiscussionsModel
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Common
 <div class="forums-table-section topics-group active-discussions">
     <div class="forums-table-section-title">
         <strong>@T("Forum.ActiveDiscussions")</strong>
@@ -15,6 +16,21 @@
             }
 
         </span>
+    </div>
+    <div class="pager upper">
+        @{
+            var pager = Html.Pager(new PagerModel
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ActiveDiscussionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new ForumActiveDiscussionsRouteValues()
+            });
+        }
+        @pager
     </div>
     <div class="forums-table-section-body">
         @if (Model.ForumTopics.Count > 0)
@@ -77,5 +93,8 @@
                 </tbody>
             </table>
         }
+    </div>
+    <div class="pager lower">
+        @pager
     </div>
 </div>

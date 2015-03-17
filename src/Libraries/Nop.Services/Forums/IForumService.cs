@@ -113,9 +113,10 @@ namespace Nop.Services.Forums
         /// Gets active forum topics
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        /// <param name="topicCount">Count of forum topics to return</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IList<ForumTopic> GetActiveTopics(int forumId, int topicCount);
+        IPagedList<ForumTopic> GetActiveTopics(int forumId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a forum topic

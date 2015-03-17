@@ -214,8 +214,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
             }
 
-            int topicLimit = _forumSettings.HomePageActiveDiscussionsTopicCount;
-            var topics = _forumService.GetActiveTopics(0, topicLimit);
+            var topics = _forumService.GetActiveTopics(0, 0, _forumSettings.HomePageActiveDiscussionsTopicCount);
             if (topics.Count == 0)
                 return Content("");
 
@@ -232,17 +231,25 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult ActiveDiscussions(int forumId = 0)
+        public ActionResult ActiveDiscussions(int forumId = 0, int page = 1)
         {
             if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
 
-            int topicLimit = _forumSettings.ActiveDiscussionsPageTopicCount;
-            var topics = _forumService.GetActiveTopics(forumId, topicLimit);
-
             var model = new ActiveDiscussionsModel();
+
+            int pageSize = 50;
+            if (_forumSettings.ActiveDiscussionsPageSize > 0)
+            {
+                pageSize = _forumSettings.ActiveDiscussionsPageSize;
+            }
+
+            var topics = _forumService.GetActiveTopics(forumId, (page - 1), pageSize);
+            model.TopicPageSize = topics.PageSize;
+            model.TopicTotalRecords = topics.TotalCount;
+            model.TopicPageIndex = topics.PageIndex;
             foreach (var topic in topics)
             {
                 var topicModel = PrepareForumTopicRowModel(topic);
@@ -266,8 +273,7 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Boards");
             }
 
-            int topicLimit = _forumSettings.ActiveDiscussionsFeedCount;
-            var topics = _forumService.GetActiveTopics(forumId, topicLimit);
+            var topics = _forumService.GetActiveTopics(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
             string url = Url.RouteUrl("ActiveDiscussionsRSS", null, "http");
 
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");

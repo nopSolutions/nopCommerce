@@ -603,9 +603,10 @@ namespace Nop.Services.Forums
         /// Gets active forum topics
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        /// <param name="count">Count of forum topics to return</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IList<ForumTopic> GetActiveTopics(int forumId, int count)
+        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId, int pageIndex, int pageSize)
         {
             var query1 = from ft in _forumTopicRepository.Table
                          where
@@ -618,8 +619,8 @@ namespace Nop.Services.Forums
                          orderby ft.LastPostTime descending
                          select ft;
 
-            var forumTopics = query2.Take(count).ToList();
-            return forumTopics;
+            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+            return topics;
         }
 
         /// <summary>

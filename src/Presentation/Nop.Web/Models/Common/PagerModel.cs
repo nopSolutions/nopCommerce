@@ -431,6 +431,14 @@ namespace Nop.Web.Models.Common
     }
 
     /// <summary>
+    /// Class that has only page for route value. Used for Active Discussions (forums) pagination
+    /// </summary>
+    public partial class ForumActiveDiscussionsRouteValues : IRouteValues
+    {
+        public int page { get; set; }
+    }
+
+    /// <summary>
     /// Class that has only page for route value. Used for (My Account) Forum Subscriptions pagination
     /// </summary>
     public partial class ForumSubscriptionsRouteValues : IRouteValues

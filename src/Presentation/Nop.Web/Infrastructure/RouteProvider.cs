@@ -513,6 +513,11 @@ namespace Nop.Web.Infrastructure
                             "boards/activediscussions",
                             new { controller = "Boards", action = "ActiveDiscussions" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ActiveDiscussionsPaged",
+                            "boards/activediscussions/page/{page}",
+                            new { controller = "Boards", action = "ActiveDiscussions", page = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ActiveDiscussionsRSS",
                             "boards/activediscussionsrss",
                             new { controller = "Boards", action = "ActiveDiscussionsRSS" },

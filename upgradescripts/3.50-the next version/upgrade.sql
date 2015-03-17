@@ -1408,3 +1408,14 @@ GO
 
 ALTER TABLE [Topic] ALTER COLUMN [IncludeInFooterColumn3] bit NOT NULL
 GO
+
+--rename setting
+UPDATE [Setting]
+SET [Name] = N'forumsettings.activediscussionspagesize'
+WHERE [Name] =  N'forumsettings.activediscussionspagetopiccount'
+GO
+
+--delete setting
+DELETE [Setting]
+WHERE [Name] =  N'forumsettings.topicpostspagelinkdisplaycount'
+GO

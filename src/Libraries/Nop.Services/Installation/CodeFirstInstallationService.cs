@@ -4917,7 +4917,7 @@ namespace Nop.Services.Installation
                     PMSubjectMaxLength = 450,
                     PMTextMaxLength = 4000,
                     HomePageActiveDiscussionsTopicCount = 5,
-                    ActiveDiscussionsPageTopicCount = 50,
+                    ActiveDiscussionsPageSize = 50,
                     ActiveDiscussionsFeedEnabled = false,
                     ActiveDiscussionsFeedCount = 25,
                     ForumFeedsEnabled = false,
