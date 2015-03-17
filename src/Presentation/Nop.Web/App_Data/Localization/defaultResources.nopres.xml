@@ -7128,6 +7128,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.EditTopicDetails">
     <Value>Edit topic details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed">
+    <Value>Accessible when store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
+    <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStores">
     <Value>Stores</Value>
   </LocaleResource>

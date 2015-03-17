@@ -44,6 +44,9 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")]
         public bool IncludeInFooterColumn3 { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed")]
+        public bool AccessibleWhenStoreClosed { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")]
         public bool IsPasswordProtected { get; set; }
 

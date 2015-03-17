@@ -392,6 +392,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3.Hint">
     <Value>Check to include this topic in the footer (column 3). Ensure that your theme supports it.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed">
+    <Value>Accessible when store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
+    <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1418,4 +1424,20 @@ GO
 --delete setting
 DELETE [Setting]
 WHERE [Name] =  N'forumsettings.topicpostspagelinkdisplaycount'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='AccessibleWhenStoreClosed')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [AccessibleWhenStoreClosed] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [AccessibleWhenStoreClosed] = 0
+WHERE [AccessibleWhenStoreClosed] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [AccessibleWhenStoreClosed] bit NOT NULL
 GO

@@ -140,6 +140,15 @@
                 @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AccessibleWhenStoreClosed):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.AccessibleWhenStoreClosed)
+                @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
+            </td>
+        </tr>
         @if (Model.Id > 0)
         {
             <tr>

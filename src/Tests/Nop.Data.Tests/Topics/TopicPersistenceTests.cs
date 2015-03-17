@@ -18,6 +18,7 @@ namespace Nop.Data.Tests.Topics
                                    IncludeInFooterColumn1 = true,
                                    IncludeInFooterColumn2 = true,
                                    IncludeInFooterColumn3 = true,
+                                   AccessibleWhenStoreClosed = true,
                                    IsPasswordProtected = true,
                                    Password = "password",
                                    Title = "Title 1",
@@ -37,6 +38,7 @@ namespace Nop.Data.Tests.Topics
             fromDb.IncludeInFooterColumn1.ShouldEqual(true);
             fromDb.IncludeInFooterColumn2.ShouldEqual(true);
             fromDb.IncludeInFooterColumn3.ShouldEqual(true);
+            fromDb.AccessibleWhenStoreClosed.ShouldEqual(true);
             fromDb.IsPasswordProtected.ShouldEqual(true);
             fromDb.Password.ShouldEqual("password");
             fromDb.Title.ShouldEqual("Title 1");

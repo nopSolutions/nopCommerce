@@ -8,6 +8,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Topics;
 
 namespace Nop.Web.Framework
 {
@@ -62,10 +63,26 @@ namespace Nop.Web.Framework
             if (isPageAllowed)
                 return;
 
+            //topics accessible when a store is closed
+            if (controllerName.Equals("Nop.Web.Controllers.TopicController", StringComparison.InvariantCultureIgnoreCase) &&
+                actionName.Equals("TopicDetails", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var topicService = EngineContext.Current.Resolve<ITopicService>();
+                var storeContext = EngineContext.Current.Resolve<IStoreContext>();
+                var allowedTopicIds = topicService.GetAllTopics(storeContext.CurrentStore.Id)
+                    .Where(t => t.AccessibleWhenStoreClosed)
+                    .Select(t => t.Id)
+                    .ToList();
+                var requestedTopicId = filterContext.RouteData.Values["topicId"] as int?;
+                if (requestedTopicId.HasValue && allowedTopicIds.Contains(requestedTopicId.Value))
+                    return;
+            }
+
             //allow admin access
             if (storeInformationSettings.StoreClosedAllowForAdmins &&
                 EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
                 return;
+
 
             var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");
             filterContext.Result = new RedirectResult(storeClosedUrl);
