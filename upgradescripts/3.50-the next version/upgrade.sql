@@ -398,6 +398,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
     <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderNotes">
+    <Value>Order notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderNotes.Hint">
+    <Value>Search in order notes. Leave empty to load all orders.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -48,6 +48,10 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.List.Product")]
         public int ProductId { get; set; }
 
+        [NopResourceDisplayName("Admin.Orders.List.OrderNotes")]
+        [AllowHtml]
+        public string OrderNotes { get; set; }
+
         [NopResourceDisplayName("Admin.Orders.List.OrderGuid")]
         [AllowHtml]
         public string OrderGuid { get; set; }

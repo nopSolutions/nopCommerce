@@ -125,11 +125,12 @@ namespace Nop.Services.Orders
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
+        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId, int vendorId, int orderId,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            DateTime? startTimeUtc, DateTime? endTimeUtc,
-            string billingEmail, bool ignoreCancelledOrders = false)
+        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0, int orderId = 0,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
+            string billingEmail = null, bool ignoreCancelledOrders = false, string orderNotes = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -172,7 +173,9 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
             if (!String.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-
+            if (!String.IsNullOrEmpty(orderNotes))
+                query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
+            
 			var item = (from oq in query
 						group oq by 1 into result
 						select new
@@ -462,11 +465,12 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId, int vendorId, int orderId,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
-            DateTime? startTimeUtc, DateTime? endTimeUtc,
-            string billingEmail)
+        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int orderId = 0,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
+            string billingEmail = null, string orderNotes = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -481,6 +485,8 @@ namespace Nop.Services.Orders
                 shippingStatusId = (int)ss.Value;
             //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
+            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
@@ -494,12 +500,22 @@ namespace Nop.Services.Orders
                               (vendorId == 0 || orderItem.Product.VendorId == vendorId) &&
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
-                              (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
+                              (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
+                              (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
                         select orderItem;
 
             var productCost = Convert.ToDecimal(query.Sum(orderItem => (decimal?)orderItem.OriginalProductCost * orderItem.Quantity));
 
-            var reportSummary = GetOrderAverageReportLine(storeId, vendorId, orderId, os, ps, ss, startTimeUtc, endTimeUtc, billingEmail);
+            var reportSummary = GetOrderAverageReportLine(
+                storeId: storeId,
+                vendorId:vendorId, 
+                orderId: orderId,
+                os: os, ps: ps, 
+                ss: ss,
+                startTimeUtc: startTimeUtc,
+                endTimeUtc: endTimeUtc,
+                billingEmail: billingEmail,
+                orderNotes: orderNotes);
             var profit = reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost;
             return profit;
         }

@@ -388,7 +388,7 @@ namespace Nop.Admin.Controllers
             //profit (hide for vendors)
             if (_workContext.CurrentVendor == null)
             {
-                var profit = _orderReportService.ProfitReport(0, 0, order.Id, null, null, null, null, null, null);
+                var profit = _orderReportService.ProfitReport(orderId: order.Id);
                 model.Profit = _priceFormatter.FormatPrice(profit, true, false);
             }
 
@@ -885,6 +885,7 @@ namespace Nop.Admin.Controllers
                 ps: paymentStatus, 
                 ss: shippingStatus, 
                 billingEmail: model.CustomerEmail,
+                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid,
                 pageIndex: command.Page - 1, 
                 pageSize: command.PageSize);
@@ -910,14 +911,27 @@ namespace Nop.Admin.Controllers
             };
 
             //summary report
-            var reportSummary = _orderReportService.GetOrderAverageReportLine(model.StoreId,
-                model.VendorId, 0, 
-                orderStatus,  paymentStatus, shippingStatus, 
-                startDateValue, endDateValue, model.CustomerEmail);
-            var profit = _orderReportService.ProfitReport(model.StoreId, 
-                model.VendorId, 0, 
-                orderStatus, paymentStatus, shippingStatus, 
-                startDateValue, endDateValue, model.CustomerEmail);
+            var reportSummary = _orderReportService.GetOrderAverageReportLine(
+                storeId: model.StoreId,
+                vendorId: model.VendorId,
+                orderId: 0,
+                os: orderStatus,
+                ps: paymentStatus,
+                ss: shippingStatus,
+                startTimeUtc: startDateValue,
+                endTimeUtc: endDateValue,
+                billingEmail: model.CustomerEmail,
+                orderNotes: model.OrderNotes);
+            var profit = _orderReportService.ProfitReport(
+                storeId: model.StoreId, 
+                vendorId: model.VendorId,
+                os: orderStatus,
+                ps: paymentStatus, 
+                ss: shippingStatus, 
+                startTimeUtc: startDateValue, 
+                endTimeUtc: endDateValue,
+                billingEmail: model.CustomerEmail,
+                orderNotes: model.OrderNotes);
             var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (primaryStoreCurrency == null)
                 throw new Exception("Cannot load primary store currency");
@@ -1016,7 +1030,8 @@ namespace Nop.Admin.Controllers
                 os: orderStatus,
                 ps: paymentStatus,
                 ss: shippingStatus,
-                billingEmail: model.CustomerEmail,
+                billingEmail: model.CustomerEmail, 
+                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid);
 
             try
@@ -1091,6 +1106,7 @@ namespace Nop.Admin.Controllers
                 ps: paymentStatus,
                 ss: shippingStatus,
                 billingEmail: model.CustomerEmail,
+                orderNotes: model.OrderNotes,
                 orderGuid: model.OrderGuid);
 
             try
@@ -3659,7 +3675,7 @@ namespace Nop.Admin.Controllers
 
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(0, 0, 0, null, PaymentStatus.Pending, null, null, null, null, true);
+            var psPending = _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -3668,7 +3684,7 @@ namespace Nop.Admin.Controllers
                 ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(0, 0, 0, null, null, ShippingStatus.NotYetShipped, null, null, null, true);
+            var ssPending = _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -3677,7 +3693,7 @@ namespace Nop.Admin.Controllers
                 ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(0, 0, 0, OrderStatus.Pending, null, null, null, null, null, true);
+            var osPending = _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),

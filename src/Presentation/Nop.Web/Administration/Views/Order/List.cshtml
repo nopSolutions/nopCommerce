@@ -137,6 +137,14 @@
                 </script>
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.OrderNotes):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.OrderNotes)
+            </td>
+        </tr>
        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderGuid):
@@ -316,6 +324,13 @@
                                 return false;
                             }
                         });
+
+                        $("#@Html.FieldIdFor(model => model.OrderNotes)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-orders").click();
+                                return false;
+                            }
+                        });
                         
                         $('#mastercheckbox').click(function () {
                             $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
@@ -356,6 +371,7 @@
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
                             ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
+                            OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val(),
                             OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()
                         };
                         addAntiForgeryToken(data);

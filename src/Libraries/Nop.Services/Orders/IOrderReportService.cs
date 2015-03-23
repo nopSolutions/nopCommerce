@@ -40,11 +40,12 @@ namespace Nop.Services.Orders
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
+        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        OrderAverageReportLine GetOrderAverageReportLine(int storeId, int vendorId, int orderId,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
-            DateTime? startTimeUtc, DateTime? endTimeUtc, 
-            string billingEmail, bool ignoreCancelledOrders = false);
+        OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0, int orderId = 0,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
+            string billingEmail = null, bool ignoreCancelledOrders = false, string orderNotes = null);
         
         /// <summary>
         /// Get order average report
@@ -119,9 +120,11 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        decimal ProfitReport(int storeId, int vendorId, int orderId,
-            OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
-            DateTime? startTimeUtc, DateTime? endTimeUtc, string billingEmail);
+        decimal ProfitReport(int storeId = 0, int vendorId = 0, int orderId = 0,
+            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
+            string billingEmail = null, string orderNotes = null);
     }
 }
