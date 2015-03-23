@@ -37,7 +37,7 @@ namespace Nop.Services.Common
 
         
         /// <summary>
-        /// Print product collection to PDF
+        /// Print products to PDF
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>

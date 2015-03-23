@@ -90,7 +90,7 @@ namespace Nop.Services.Orders
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product collection</returns>
+        /// <returns>Products</returns>
         int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
             int recordsToReturn = 5, bool showHidden = false);
 

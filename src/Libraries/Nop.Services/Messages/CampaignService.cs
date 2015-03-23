@@ -109,7 +109,7 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all campaigns
         /// </summary>
-        /// <returns>Campaign collection</returns>
+        /// <returns>Campaigns</returns>
         public virtual IList<Campaign> GetAllCampaigns()
         {
 

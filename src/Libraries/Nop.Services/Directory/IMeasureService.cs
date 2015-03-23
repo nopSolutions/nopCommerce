@@ -31,7 +31,7 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure dimensions
         /// </summary>
-        /// <returns>Measure dimension collection</returns>
+        /// <returns>Measure dimensions</returns>
         IList<MeasureDimension> GetAllMeasureDimensions();
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure weights
         /// </summary>
-        /// <returns>Measure weight collection</returns>
+        /// <returns>Measure weights</returns>
         IList<MeasureWeight> GetAllMeasureWeights();
 
         /// <summary>

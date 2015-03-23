@@ -117,7 +117,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="excludeShippableAttributes">A value indicating whether we should exlude shippable attributes</param>
-        /// <returns>Checkout attribute collection</returns>
+        /// <returns>Checkout attributes</returns>
         public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(int storeId = 0, bool excludeShippableAttributes = false)
         {
             string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes);
@@ -217,7 +217,7 @@ namespace Nop.Services.Orders
         /// Gets checkout attribute values by checkout attribute identifier
         /// </summary>
         /// <param name="checkoutAttributeId">The checkout attribute identifier</param>
-        /// <returns>Checkout attribute value collection</returns>
+        /// <returns>Checkout attribute values</returns>
         public virtual IList<CheckoutAttributeValue> GetCheckoutAttributeValues(int checkoutAttributeId)
         {
             string key = string.Format(CHECKOUTATTRIBUTEVALUES_ALL_KEY, checkoutAttributeId);

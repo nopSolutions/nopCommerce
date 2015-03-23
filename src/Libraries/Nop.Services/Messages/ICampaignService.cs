@@ -33,7 +33,7 @@ namespace Nop.Services.Messages
         /// <summary>
         /// Gets all campaigns
         /// </summary>
-        /// <returns>Campaign collection</returns>
+        /// <returns>Campaigns</returns>
         IList<Campaign> GetAllCampaigns();
         
         /// <summary>

@@ -165,7 +165,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountType">Discount type; null to load all discount</param>
         /// <param name="couponCode">Coupon code to find (exact match)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discount collection</returns>
+        /// <returns>Discounts</returns>
         public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, string couponCode = "", bool showHidden = false)
         {
             //we load all discounts, and filter them by passed "discountType" parameter later

@@ -32,7 +32,7 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Gets all activity log type items
         /// </summary>
-        /// <returns>Activity log type collection</returns>
+        /// <returns>Activity log type items</returns>
         IList<ActivityLogType> GetAllActivityTypes();
         
         /// <summary>
@@ -77,7 +77,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Activity log collection</returns>
+        /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
             DateTime? createdOnTo, int? customerId,
             int activityLogTypeId, int pageIndex, int pageSize);

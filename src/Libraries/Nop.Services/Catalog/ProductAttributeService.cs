@@ -155,7 +155,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Product attribute collection</returns>
+        /// <returns>Product attributes</returns>
         public virtual IPagedList<ProductAttribute> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
@@ -455,7 +455,7 @@ namespace Nop.Services.Catalog
         /// Gets all product attribute combinations
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product attribute combination collection</returns>
+        /// <returns>Product attribute combinations</returns>
         public virtual IList<ProductAttributeCombination> GetAllProductAttributeCombinations(int productId)
         {
             if (productId == 0)

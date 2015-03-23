@@ -94,7 +94,7 @@ namespace Nop.Services.Directory
         /// Gets all countries
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountries(bool showHidden = false)
         {
             string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
@@ -134,7 +134,7 @@ namespace Nop.Services.Directory
         /// Gets all countries that allow billing
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountriesForBilling(bool showHidden = false)
         {
             return GetAllCountries(showHidden).Where(c => c.AllowsBilling).ToList();
@@ -144,7 +144,7 @@ namespace Nop.Services.Directory
         /// Gets all countries that allow shipping
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         public virtual IList<Country> GetAllCountriesForShipping(bool showHidden = false)
         {
             return GetAllCountries(showHidden).Where(c => c.AllowsShipping).ToList();

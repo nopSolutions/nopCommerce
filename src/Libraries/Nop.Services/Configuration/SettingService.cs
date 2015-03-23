@@ -74,7 +74,7 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets all settings
         /// </summary>
-        /// <returns>Setting collection</returns>
+        /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<SettingForCaching>> GetAllSettingsCached()
         {
             //cache
@@ -296,7 +296,7 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets all settings
         /// </summary>
-        /// <returns>Setting collection</returns>
+        /// <returns>Settings</returns>
         public virtual IList<Setting> GetAllSettings()
         {
             var query = from s in _settingRepository.Table

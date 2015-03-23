@@ -139,7 +139,7 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure dimensions
         /// </summary>
-        /// <returns>Measure dimension collection</returns>
+        /// <returns>Measure dimensions</returns>
         public virtual IList<MeasureDimension> GetAllMeasureDimensions()
         {
             string key = MEASUREDIMENSIONS_ALL_KEY;
@@ -307,7 +307,7 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all measure weights
         /// </summary>
-        /// <returns>Measure weight collection</returns>
+        /// <returns>Measure weights</returns>
         public virtual IList<MeasureWeight> GetAllMeasureWeights()
         {
             string key = MEASUREWEIGHTS_ALL_KEY;

@@ -196,7 +196,7 @@ namespace Nop.Services.Shipping
         /// Gets all shipping methods
         /// </summary>
         /// <param name="filterByCountryId">The country indentifier to filter by</param>
-        /// <returns>Shipping method collection</returns>
+        /// <returns>Shipping methods</returns>
         public virtual IList<ShippingMethod> GetAllShippingMethods(int? filterByCountryId = null)
         {
             if (filterByCountryId.HasValue && filterByCountryId.Value > 0)

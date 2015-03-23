@@ -34,7 +34,7 @@ namespace Nop.Services.Customers
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Customer collection</returns>
+        /// <returns>Customers</returns>
         IPagedList<Customer> GetAllCustomers(DateTime? createdFromUtc = null,
             DateTime? createdToUtc = null, int affiliateId = 0, int vendorId = 0,
             int[] customerRoleIds = null, string email = null, string username = null,
@@ -58,7 +58,7 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Customer collection</returns>
+        /// <returns>Customers</returns>
         IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
             int[] customerRoleIds, int pageIndex, int pageSize);
 
@@ -180,7 +180,7 @@ namespace Nop.Services.Customers
         /// Gets all customer roles
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer role collection</returns>
+        /// <returns>Customer roles</returns>
         IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false);
 
         /// <summary>

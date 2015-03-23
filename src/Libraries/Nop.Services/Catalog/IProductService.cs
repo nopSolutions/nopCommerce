@@ -23,7 +23,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
-        /// <returns>Product collection</returns>
+        /// <returns>Products</returns>
         IList<Product> GetAllProductsDisplayedOnHomePage();
         
         /// <summary>
@@ -272,11 +272,11 @@ namespace Nop.Services.Catalog
         void DeleteRelatedProduct(RelatedProduct relatedProduct);
 
         /// <summary>
-        /// Gets a related product collection by product identifier
+        /// Gets related products by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Related product collection</returns>
+        /// <returns>Related products</returns>
         IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>
@@ -309,11 +309,11 @@ namespace Nop.Services.Catalog
         void DeleteCrossSellProduct(CrossSellProduct crossSellProduct);
 
         /// <summary>
-        /// Gets a cross-sell product collection by product identifier
+        /// Gets cross-sell products by product identifier
         /// </summary>
         /// <param name="productId1">The first product identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Cross-sell product collection</returns>
+        /// <returns>Cross-sell products</returns>
         IList<CrossSellProduct> GetCrossSellProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>

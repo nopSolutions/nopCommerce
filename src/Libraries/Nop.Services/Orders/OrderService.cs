@@ -155,7 +155,7 @@ namespace Nop.Services.Orders
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Order collection</returns>
+        /// <returns>Orders</returns>
         public virtual IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
@@ -341,7 +341,7 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Order shipment status; null to load all records</param>
         /// <param name="loadDownloableProductsOnly">Value indicating whether to load downloadable products only</param>
-        /// <returns>Order collection</returns>
+        /// <returns>Orders</returns>
         public virtual IList<OrderItem> GetAllOrderItems(int? orderId,
             int? customerId, DateTime? createdFromUtc, DateTime? createdToUtc, 
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
@@ -496,7 +496,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Recurring payment collection</returns>
+        /// <returns>Recurring payments</returns>
         public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int storeId, 
             int customerId, int initialOrderId, OrderStatus? initialOrderStatus, 
             int pageIndex, int pageSize, bool showHidden = false)

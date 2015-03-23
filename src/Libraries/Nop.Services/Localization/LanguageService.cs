@@ -116,7 +116,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Language collection</returns>
+        /// <returns>Languages</returns>
         public virtual IList<Language> GetAllLanguages(bool showHidden = false, int storeId = 0)
         {
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);

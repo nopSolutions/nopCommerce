@@ -86,7 +86,7 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
-        /// <returns>Store collection</returns>
+        /// <returns>Stores</returns>
         public virtual IList<Store> GetAllStores()
         {
             string key = STORES_ALL_KEY;

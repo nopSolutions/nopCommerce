@@ -45,7 +45,7 @@ namespace Nop.Services.Logging
         /// <param name="logLevel">Log level; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <returns>Log item collection</returns>
+        /// <returns>Log item items</returns>
         public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
             string message, LogLevel? logLevel, int pageIndex, int pageSize)
         {

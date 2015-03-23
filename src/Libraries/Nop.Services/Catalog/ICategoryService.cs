@@ -31,7 +31,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Category collection</returns>
+        /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false);
 

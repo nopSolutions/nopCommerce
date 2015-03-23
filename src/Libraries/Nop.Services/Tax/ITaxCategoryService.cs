@@ -17,7 +17,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets all tax categories
         /// </summary>
-        /// <returns>Tax category collection</returns>
+        /// <returns>Tax categories</returns>
         IList<TaxCategory> GetAllTaxCategories();
 
         /// <summary>

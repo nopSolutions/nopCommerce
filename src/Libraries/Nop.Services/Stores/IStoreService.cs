@@ -17,7 +17,7 @@ namespace Nop.Services.Stores
         /// <summary>
         /// Gets all stores
         /// </summary>
-        /// <returns>Store collection</returns>
+        /// <returns>Stores</returns>
         IList<Store> GetAllStores();
 
         /// <summary>

@@ -18,21 +18,21 @@ namespace Nop.Services.Directory
         /// Gets all countries
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         IList<Country> GetAllCountries(bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         IList<Country> GetAllCountriesForBilling(bool showHidden = false);
 
         /// <summary>
         /// Gets all countries that allow shipping
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Country collection</returns>
+        /// <returns>Countries</returns>
         IList<Country> GetAllCountriesForShipping(bool showHidden = false);
 
         /// <summary>

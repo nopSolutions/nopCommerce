@@ -70,14 +70,14 @@ namespace Nop.Services.Polls
         }
         
         /// <summary>
-        /// Gets poll collection
+        /// Gets polls
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <param name="loadShownOnHomePageOnly">Retrieve only shown on home page polls</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Poll collection</returns>
+        /// <returns>Polls</returns>
         public virtual IPagedList<Poll> GetPolls(int languageId, bool loadShownOnHomePageOnly,
             int pageIndex, int pageSize, bool showHidden = false)
         {

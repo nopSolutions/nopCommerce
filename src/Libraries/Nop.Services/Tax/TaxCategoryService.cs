@@ -82,7 +82,7 @@ namespace Nop.Services.Tax
         /// <summary>
         /// Gets all tax categories
         /// </summary>
-        /// <returns>Tax category collection</returns>
+        /// <returns>Tax categories</returns>
         public virtual IList<TaxCategory> GetAllTaxCategories()
         {
             string key = string.Format(TAXCATEGORIES_ALL_KEY);
