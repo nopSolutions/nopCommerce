@@ -2616,6 +2616,15 @@ namespace Nop.Admin.Controllers
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
+            //0 - all (according to "ShowHidden" parameter)
+            //1 - published only
+            //2 - unpublished only
+            bool? overridePublished = null;
+            if (model.SearchPublishedId == 1)
+                overridePublished = true;
+            else if (model.SearchPublishedId == 2)
+                overridePublished = false;
+
             var products = _productService.SearchProducts(
                 categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
@@ -2624,7 +2633,8 @@ namespace Nop.Admin.Controllers
                 warehouseId: model.SearchWarehouseId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
-                showHidden: true
+                showHidden: true,
+                overridePublished: overridePublished
             );
 
             try
@@ -2663,6 +2673,15 @@ namespace Nop.Admin.Controllers
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
+            //0 - all (according to "ShowHidden" parameter)
+            //1 - published only
+            //2 - unpublished only
+            bool? overridePublished = null;
+            if (model.SearchPublishedId == 1)
+                overridePublished = true;
+            else if (model.SearchPublishedId == 2)
+                overridePublished = false;
+
             var products = _productService.SearchProducts(
                 categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
@@ -2671,7 +2690,8 @@ namespace Nop.Admin.Controllers
                 warehouseId: model.SearchWarehouseId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
-                showHidden: true
+                showHidden: true,
+                overridePublished: overridePublished
             );
 
             try
@@ -2729,6 +2749,15 @@ namespace Nop.Admin.Controllers
             if (model.SearchIncludeSubCategories && model.SearchCategoryId > 0)
                 categoryIds.AddRange(GetChildCategoryIds(model.SearchCategoryId));
 
+            //0 - all (according to "ShowHidden" parameter)
+            //1 - published only
+            //2 - unpublished only
+            bool? overridePublished = null;
+            if (model.SearchPublishedId == 1)
+                overridePublished = true;
+            else if (model.SearchPublishedId == 2)
+                overridePublished = false;
+
             var products = _productService.SearchProducts(
                 categoryIds: categoryIds,
                 manufacturerId: model.SearchManufacturerId,
@@ -2737,7 +2766,8 @@ namespace Nop.Admin.Controllers
                 warehouseId: model.SearchWarehouseId,
                 productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
                 keywords: model.SearchProductName,
-                showHidden: true
+                showHidden: true,
+                overridePublished: overridePublished
             );
             try
             {
