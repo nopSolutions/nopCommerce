@@ -86,6 +86,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
+        private readonly IWorkflowMessageService _workflowMessageService;
 
         #endregion
 
@@ -129,7 +130,8 @@ namespace Nop.Admin.Controllers
             IAddressAttributeParser addressAttributeParser,
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
-            IAffiliateService affiliateService)
+            IAffiliateService affiliateService,
+            IWorkflowMessageService workflowMessageService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -170,6 +172,7 @@ namespace Nop.Admin.Controllers
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._affiliateService = affiliateService;
+            this._workflowMessageService = workflowMessageService;
         }
 
         #endregion
@@ -616,6 +619,13 @@ namespace Nop.Admin.Controllers
             {
                 model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
             }
+            //sending of welcome message:
+            //1. "admin approval" registration method
+            //2. already created customer
+            //3. registered
+            model.AllowSendingOfWelcomeMessage = _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval &&
+                customer != null &&
+                customer.IsRegistered();
         }
 
         [NonAction]
@@ -1243,6 +1253,25 @@ namespace Nop.Admin.Controllers
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
 
             return RedirectToAction("Index", "Home", new { area = "" });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("send-welcome-message")]
+        public ActionResult SendWelcomeMessage(CustomerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                //No customer found with the specified id
+                return RedirectToAction("List");
+
+            _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
+
+            return RedirectToAction("Edit", new { id = customer.Id });
         }
 
         public ActionResult SendEmail(CustomerModel model)

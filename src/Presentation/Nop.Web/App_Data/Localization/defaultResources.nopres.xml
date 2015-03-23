@@ -7983,6 +7983,12 @@
   <LocaleResource Name="Admin.Customers.Customers.SendPM.Subject.Hint">
     <Value>Enter the subject of PM.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage">
+    <Value>Send welcome message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
+    <Value>Welcome email has been successfully sent.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Updated">
     <Value>The customer has been updated successfully.</Value>
   </LocaleResource>

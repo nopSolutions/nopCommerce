@@ -404,6 +404,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.OrderNotes.Hint">
     <Value>Search in order notes. Leave empty to load all orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage">
+    <Value>Send welcome message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage">
+    <Value>Send welcome message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
+    <Value>Welcome email has been successfully sent.</Value>
+  </LocaleResource>
 </Language>
 '
 

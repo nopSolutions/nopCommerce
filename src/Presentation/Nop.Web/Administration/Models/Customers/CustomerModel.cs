@@ -199,6 +199,8 @@ namespace Nop.Admin.Models.Customers
         public SendEmailModel SendEmail { get; set; }
         //send PM model
         public SendPmModel SendPm { get; set; }
+        //send welcome message
+        public bool AllowSendingOfWelcomeMessage { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }

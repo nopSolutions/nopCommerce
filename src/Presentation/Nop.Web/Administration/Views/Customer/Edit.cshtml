@@ -17,6 +17,10 @@
             <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
             <input type="button" id="sendemail" class="k-button" value="@T("Admin.Customers.Customers.SendEmail")" />
             <input type="button" id="sendprivatemessage" class="k-button" value="@T("Admin.Customers.Customers.SendPM")" />
+            @if (Model.AllowSendingOfWelcomeMessage)
+            {
+                <input type="submit" name="send-welcome-message" class="k-button" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" />
+            }
             <span id="customer-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
