@@ -768,7 +768,6 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductListModel();
-            model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             //a vendor should have access only to his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
@@ -863,11 +862,10 @@ namespace Nop.Admin.Controllers
                 //also it improves performance
                 productModel.FullDescription = "";
 
-                if (_adminAreaSettings.DisplayProductPictures)
-                {
-                    var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
-                    productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
-                }
+                //picture
+                var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
+                productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
+
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
                 return productModel;
             });

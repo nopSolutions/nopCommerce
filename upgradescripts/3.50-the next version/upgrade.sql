@@ -1456,3 +1456,9 @@ GO
 
 ALTER TABLE [Topic] ALTER COLUMN [AccessibleWhenStoreClosed] bit NOT NULL
 GO
+
+
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'adminareasettings.displayproductpictures'
+GO

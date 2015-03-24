@@ -42,8 +42,6 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string GoDirectlyToSku { get; set; }
 
-        public bool DisplayProductPictures { get; set; }
-
         public bool IsLoggedInAsVendor { get; set; }
 
         public IList<SelectListItem> AvailableCategories { get; set; }

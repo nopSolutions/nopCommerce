@@ -169,16 +169,13 @@
                                     attributes: { style: "text-align:center" },
                                     template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                                     width: 50
-                                },  
-                                @if (Model.DisplayProductPictures)
+                                },
                                 {
-                                    <text>{
-                                field: "PictureThumbnailUrl",
-                                title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
-                                template: '<img src="#=PictureThumbnailUrl#" />',
-                            width: 200
-                        },</text>
-                                }
+                                    field: "PictureThumbnailUrl",
+                                    title: "@T("Admin.Catalog.Products.Fields.PictureThumbnailUrl")",
+                                    template: '<img src="#=PictureThumbnailUrl#" />',
+                                    width: 100
+                                },
                                 {
                                     field: "Name",
                                     title: "@T("Admin.Catalog.Products.Fields.Name")",
