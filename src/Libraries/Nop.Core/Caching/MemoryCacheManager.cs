@@ -10,6 +10,9 @@ namespace Nop.Core.Caching
     /// </summary>
     public partial class MemoryCacheManager : ICacheManager
     {
+        /// <summary>
+        /// Cache object
+        /// </summary>
         protected ObjectCache Cache
         {
             get

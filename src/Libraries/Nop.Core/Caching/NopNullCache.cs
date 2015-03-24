@@ -1,7 +1,7 @@
 namespace Nop.Core.Caching
 {
     /// <summary>
-    /// Represents a NopNullCache
+    /// Represents a NopNullCache (caches nothing)
     /// </summary>
     public partial class NopNullCache : ICacheManager
     {

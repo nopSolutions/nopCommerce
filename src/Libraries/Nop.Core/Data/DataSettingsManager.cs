@@ -5,6 +5,9 @@ using System.Web.Hosting;
 
 namespace Nop.Core.Data
 {
+    /// <summary>
+    /// Manager of data settings (connection string)
+    /// </summary>
     public partial class DataSettingsManager
     {
         protected const char separator = ':';
@@ -29,6 +32,11 @@ namespace Nop.Core.Data
             return Path.Combine(baseDirectory, path);
         }
 
+        /// <summary>
+        /// Parse settings
+        /// </summary>
+        /// <param name="text">Text of settings file</param>
+        /// <returns>Parsed data settings</returns>
         protected virtual DataSettings ParseSettings(string text)
         {
             var shellSettings = new DataSettings();
@@ -72,6 +80,11 @@ namespace Nop.Core.Data
             return shellSettings;
         }
 
+        /// <summary>
+        /// Convert data settings to string representation
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        /// <returns>Text</returns>
         protected virtual string ComposeSettings(DataSettings settings)
         {
             if (settings == null)
@@ -105,6 +118,10 @@ namespace Nop.Core.Data
             return new DataSettings();
         }
 
+        /// <summary>
+        /// Save settings to a file
+        /// </summary>
+        /// <param name="settings"></param>
         public virtual void SaveSettings(DataSettings settings)
         {
             if (settings == null)
