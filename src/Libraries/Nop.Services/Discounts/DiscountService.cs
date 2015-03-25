@@ -410,8 +410,9 @@ namespace Nop.Services.Discounts
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>
-        public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId,
-            int? customerId, int? orderId, int pageIndex, int pageSize)
+        public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId = null,
+            int? customerId = null, int? orderId = null, 
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _discountUsageHistoryRepository.Table;
             if (discountId.HasValue && discountId.Value > 0)

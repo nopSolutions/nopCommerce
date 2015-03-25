@@ -406,7 +406,8 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        public virtual IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             if (categoryId == 0)
                 return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);

@@ -62,7 +62,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
         IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId,
-            int pageIndex, int pageSize, bool showHidden = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets a product manufacturer mapping collection

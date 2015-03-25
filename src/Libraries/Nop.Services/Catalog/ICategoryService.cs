@@ -82,7 +82,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
         IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId,
-            int pageIndex, int pageSize, bool showHidden = false);
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets a product category mapping collection

@@ -135,8 +135,9 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Log item items</returns>
-        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
-            string message, LogLevel? logLevel, int pageIndex, int pageSize)
+        public virtual IPagedList<Log> GetAllLogs(DateTime? fromUtc = null, DateTime? toUtc = null,
+            string message = "", LogLevel? logLevel = null, 
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _logRepository.Table;
             if (fromUtc.HasValue)

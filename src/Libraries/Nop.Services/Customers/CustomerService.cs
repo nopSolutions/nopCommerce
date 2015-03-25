@@ -306,7 +306,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         public virtual IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            int[] customerRoleIds, int pageIndex, int pageSize)
+            int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
             query = query.Where(c => lastActivityFromUtc <= c.LastActivityDateUtc);

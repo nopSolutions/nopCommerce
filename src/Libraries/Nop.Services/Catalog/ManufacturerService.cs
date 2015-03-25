@@ -264,7 +264,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer collection</returns>
         public virtual IPagedList<ProductManufacturer> GetProductManufacturersByManufacturerId(int manufacturerId,
-            int pageIndex, int pageSize, bool showHidden = false)
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             if (manufacturerId == 0)
                 return new PagedList<ProductManufacturer>(new List<ProductManufacturer>(), pageIndex, pageSize);

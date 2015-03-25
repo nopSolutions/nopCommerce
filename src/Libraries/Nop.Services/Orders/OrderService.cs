@@ -497,9 +497,9 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payments</returns>
-        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int storeId, 
-            int customerId, int initialOrderId, OrderStatus? initialOrderStatus, 
-            int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int storeId = 0,
+            int customerId = 0, int initialOrderId = 0, OrderStatus? initialOrderStatus = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             int? initialOrderStatusId = null;
             if (initialOrderStatus.HasValue)
@@ -569,8 +569,9 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId, int customerId,
-            int orderItemId, ReturnRequestStatus? rs, int pageIndex, int pageSize)
+        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
+            int orderItemId = 0, ReturnRequestStatus? rs = null,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _returnRequestRepository.Table;
             if (storeId > 0)

@@ -81,8 +81,8 @@ namespace Nop.Services.News
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
-        public virtual IPagedList<NewsItem> GetAllNews(int languageId, int storeId,
-            int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<NewsItem> GetAllNews(int languageId = 0, int storeId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _newsItemRepository.Table;
             if (languageId > 0)

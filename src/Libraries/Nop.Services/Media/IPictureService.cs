@@ -92,7 +92,7 @@ namespace Nop.Services.Media
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        IPagedList<Picture> GetPictures(int pageIndex, int pageSize);
+        IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets pictures by product identifier

@@ -104,9 +104,9 @@ namespace Nop.Services.Orders
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
-        IPagedList<Product> ProductsNeverSold(int vendorId, 
-            DateTime? createdFromUtc, DateTime? createdToUtc,
-            int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<Product> ProductsNeverSold(int vendorId = 0,
+            DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Get profit report

@@ -23,7 +23,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId, int pageIndex, int pageSize);
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Gets all subscriptions
@@ -34,7 +34,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
         IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
-            int storeId, int pageIndex, int pageSize);
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets all subscriptions

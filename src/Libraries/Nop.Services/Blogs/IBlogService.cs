@@ -34,8 +34,9 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPosts(int storeId, int languageId,
-            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<BlogPost> GetAllBlogPosts(int storeId = 0, int languageId = 0,
+            DateTime? dateFrom = null, DateTime? dateTo = null, 
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets all blog posts
@@ -47,8 +48,9 @@ namespace Nop.Services.Blogs
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId, int languageId, string tag, 
-            int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<BlogPost> GetAllBlogPostsByTag(int storeId = 0,
+            int languageId = 0, string tag = "",
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         /// <summary>
         /// Gets all blog post tags

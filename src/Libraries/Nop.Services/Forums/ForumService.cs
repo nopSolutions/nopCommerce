@@ -564,9 +564,9 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetAllTopics(int forumId,
-            int customerId, string keywords, ForumSearchType searchType,
-            int limitDays, int pageIndex, int pageSize)
+        public virtual IPagedList<ForumTopic> GetAllTopics(int forumId = 0,
+            int customerId = 0, string keywords = "", ForumSearchType searchType = ForumSearchType.All,
+            int limitDays = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             DateTime? limitDate = null;
             if (limitDays > 0)
@@ -606,7 +606,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId, int pageIndex, int pageSize)
+        public virtual IPagedList<ForumTopic> GetActiveTopics(int forumId = 0, 
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query1 = from ft in _forumTopicRepository.Table
                          where
@@ -796,8 +797,9 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Posts</returns>
-        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId,
-            int customerId, string keywords, int pageIndex, int pageSize)
+        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0,
+            int customerId = 0, string keywords = "", 
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             return GetAllPosts(forumTopicId, customerId, keywords, true,
                 pageIndex, pageSize);
@@ -813,8 +815,9 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Posts</returns>
-        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId, int customerId,
-            string keywords, bool ascSort, int pageIndex, int pageSize)
+        public virtual IPagedList<ForumPost> GetAllPosts(int forumTopicId = 0, int customerId = 0,
+            string keywords = "", bool ascSort = false, 
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _forumPostRepository.Table;
             if (forumTopicId > 0)
@@ -967,7 +970,7 @@ namespace Nop.Services.Forums
         /// <returns>Private messages</returns>
         public virtual IPagedList<PrivateMessage> GetAllPrivateMessages(int storeId, int fromCustomerId,
             int toCustomerId, bool? isRead, bool? isDeletedByAuthor, bool? isDeletedByRecipient,
-            string keywords, int pageIndex, int pageSize)
+            string keywords, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _forumPrivateMessageRepository.Table;
             if (storeId > 0)
@@ -1088,8 +1091,8 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum subscriptions</returns>
-        public virtual IPagedList<ForumSubscription> GetAllSubscriptions(int customerId, int forumId,
-            int topicId, int pageIndex, int pageSize)
+        public virtual IPagedList<ForumSubscription> GetAllSubscriptions(int customerId = 0, int forumId = 0,
+            int topicId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var fsQuery = from fs in _forumSubscriptionRepository.Table
                           join c in _customerRepository.Table on fs.CustomerId equals c.Id

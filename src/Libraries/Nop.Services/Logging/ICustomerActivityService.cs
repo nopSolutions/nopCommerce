@@ -78,9 +78,9 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
-            DateTime? createdOnTo, int? customerId,
-            int activityLogTypeId, int pageIndex, int pageSize);
+        IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue);
         
         /// <summary>
         /// Gets an activity log item

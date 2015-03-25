@@ -68,7 +68,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByCustomerId(int customerId,
-            int storeId, int pageIndex, int pageSize)
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //customer
@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
         /// <param name="pageSize">Page size</param>
         /// <returns>Subscriptions</returns>
         public virtual IPagedList<BackInStockSubscription> GetAllSubscriptionsByProductId(int productId,
-            int storeId, int pageIndex, int pageSize)
+            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _backInStockSubscriptionRepository.Table;
             //product

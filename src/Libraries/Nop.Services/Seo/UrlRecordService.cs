@@ -249,7 +249,7 @@ namespace Nop.Services.Seo
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>URL records</returns>
-        public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug, int pageIndex, int pageSize)
+        public virtual IPagedList<UrlRecord> GetAllUrlRecords(string slug = "", int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _urlRecordRepository.Table;
             if (!String.IsNullOrWhiteSpace(slug))

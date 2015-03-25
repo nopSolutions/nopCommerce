@@ -78,8 +78,8 @@ namespace Nop.Services.Polls
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Polls</returns>
-        public virtual IPagedList<Poll> GetPolls(int languageId, bool loadShownOnHomePageOnly,
-            int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<Poll> GetPolls(int languageId = 0, bool loadShownOnHomePageOnly = false,
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _pollRepository.Table;
             if (!showHidden)

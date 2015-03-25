@@ -581,7 +581,7 @@ namespace Nop.Services.Media
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        public virtual IPagedList<Picture> GetPictures(int pageIndex, int pageSize)
+        public virtual IPagedList<Picture> GetPictures(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from p in _pictureRepository.Table
                        orderby p.Id descending

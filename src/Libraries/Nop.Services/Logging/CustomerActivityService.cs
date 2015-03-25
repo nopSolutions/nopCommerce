@@ -254,9 +254,9 @@ namespace Nop.Services.Logging
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log items</returns>
-        public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
-            DateTime? createdOnTo, int? customerId, int activityLogTypeId,
-            int pageIndex, int pageSize)
+        public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
+            DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _activityLogRepository.Table;
             if (createdOnFrom.HasValue)

@@ -60,7 +60,7 @@ namespace Nop.Services.Customers
         /// <param name="pageSize">Page size</param>
         /// <returns>Customers</returns>
         IPagedList<Customer> GetOnlineCustomers(DateTime lastActivityFromUtc,
-            int[] customerRoleIds, int pageIndex, int pageSize);
+            int[] customerRoleIds, int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Delete a customer

@@ -139,7 +139,7 @@ namespace Nop.Services.Messages
         public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
             bool loadNotSentItemsOnly, int maxSendTries,
-            bool loadNewest, int pageIndex, int pageSize)
+            bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             fromEmail = (fromEmail ?? String.Empty).Trim();
             toEmail = (toEmail ?? String.Empty).Trim();
