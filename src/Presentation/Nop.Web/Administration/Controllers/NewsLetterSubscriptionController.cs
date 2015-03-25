@@ -129,7 +129,7 @@ namespace Nop.Admin.Controllers
 			string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
 			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, 0, int.MaxValue, true);
+                model.StoreId, showHidden: true);
 		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 
 			return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);

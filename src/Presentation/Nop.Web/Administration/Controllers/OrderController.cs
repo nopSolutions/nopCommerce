@@ -375,7 +375,7 @@ namespace Nop.Admin.Controllers
                 model.RefundedAmount = _priceFormatter.FormatPrice(order.RefundedAmount, true, false);
 
             //used discounts
-            var duh = _discountService.GetAllDiscountUsageHistory(null, null, order.Id, 0, int.MaxValue);
+            var duh = _discountService.GetAllDiscountUsageHistory(orderId: order.Id);
             foreach (var d in duh)
             {
                 model.UsedDiscounts.Add(new OrderModel.UsedDiscountModel
@@ -449,7 +449,7 @@ namespace Nop.Admin.Controllers
             model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
 
             //recurring payment record
-            var recurringPayment = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue, true).FirstOrDefault();
+            var recurringPayment = _orderService.SearchRecurringPayments(initialOrderId: order.Id, showHidden: true).FirstOrDefault();
             if (recurringPayment != null)
             {
                 model.RecurringPaymentId = recurringPayment.Id;
@@ -595,7 +595,7 @@ namespace Nop.Admin.Controllers
                 }
 
                 //return requests
-                orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, 0, orderItem.Id, null, 0, int.MaxValue)
+                orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(orderItemId: orderItem.Id)
                     .Select(rr => rr.Id).ToList();
                 //gift cards
                 orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)

@@ -229,8 +229,7 @@ namespace Nop.Web.Controllers
                 return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId,
-                null, null, 0, int.MaxValue);
+            var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
                 string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
@@ -359,7 +358,7 @@ namespace Nop.Web.Controllers
                 var model = new List<BlogPostYearModel>();
 
                 var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, 
-                    _workContext.WorkingLanguage.Id, null, null, 0, int.MaxValue);
+                    _workContext.WorkingLanguage.Id);
                 if (blogPosts.Count > 0)
                 {
                     var months = new SortedDictionary<DateTime, int>();

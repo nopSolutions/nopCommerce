@@ -181,7 +181,7 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             int result = 0;
-            var subscriptions = GetAllSubscriptionsByProductId(product.Id, 0, 0, int.MaxValue);
+            var subscriptions = GetAllSubscriptionsByProductId(product.Id);
             foreach (var subscription in subscriptions)
             {
                 //ensure that customer is registered (simple and fast way)

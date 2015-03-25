@@ -1359,7 +1359,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, 0, int.MaxValue, true);
+            var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, showHidden: true);
             if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
             {
                 var productCategory = new ProductCategory
@@ -1499,7 +1499,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, 0, int.MaxValue, true);
+            var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, showHidden: true);
             if (existingProductmanufacturers.FindProductManufacturer(productId, manufacturerId) == null)
             {
                 var productManufacturer = new ProductManufacturer

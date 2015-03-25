@@ -142,7 +142,7 @@ namespace Nop.Web.Controllers
             }
 
             var recurringPayments = _orderService.SearchRecurringPayments(_storeContext.CurrentStore.Id,
-                _workContext.CurrentCustomer.Id, 0, null, 0, int.MaxValue);
+                _workContext.CurrentCustomer.Id);
             foreach (var recurringPayment in recurringPayments)
             {
                 var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel

@@ -214,7 +214,7 @@ namespace Nop.Web.Controllers
                 return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id, 0, int.MaxValue);
+            var newsItems = _newsService.GetAllNews(languageId, _storeContext.CurrentStore.Id);
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, "http");

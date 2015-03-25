@@ -760,7 +760,7 @@ namespace Nop.Services.Media
                     _settingService.SetSetting("Media.Images.StoreInDB", value);
 
                     //update all picture objects
-                    var pictures = this.GetPictures(0, int.MaxValue);
+                    var pictures = this.GetPictures();
                     foreach (var picture in pictures)
                     {
                         var pictureBinary = LoadPictureBinary(picture, !value);

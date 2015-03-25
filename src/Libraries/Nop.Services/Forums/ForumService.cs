@@ -652,7 +652,7 @@ namespace Nop.Services.Forums
             if (sendNotifications)
             {
                 var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(0, forum.Id, 0, 0, int.MaxValue);
+                var subscriptions = GetAllSubscriptions(forumId: forum.Id);
                 var languageId = _workContext.WorkingLanguage.Id;
 
                 foreach (var subscription in subscriptions)
@@ -879,8 +879,7 @@ namespace Nop.Services.Forums
             if (sendNotifications)
             {
                 var forum = forumTopic.Forum;
-                var subscriptions = GetAllSubscriptions(0, 0,
-                    forumTopic.Id, 0, int.MaxValue);
+                var subscriptions = GetAllSubscriptions(topicId: forumTopic.Id);
 
                 var languageId = _workContext.WorkingLanguage.Id;
 
@@ -1437,8 +1436,7 @@ namespace Nop.Services.Forums
         public virtual int CalculateTopicPageIndex(int forumTopicId, int pageSize, int postId)
         {
             int pageIndex = 0;
-            var forumPosts = GetAllPosts(forumTopicId, 0,
-                string.Empty, true, 0, int.MaxValue);
+            var forumPosts = GetAllPosts(forumTopicId: forumTopicId, ascSort: true);
 
             for (int i = 0; i < forumPosts.TotalCount; i++)
             {

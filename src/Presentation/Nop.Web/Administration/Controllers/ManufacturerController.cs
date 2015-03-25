@@ -615,7 +615,7 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(model.ManufacturerId, 0, int.MaxValue, true);
+                        var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(model.ManufacturerId, showHidden: true);
                         if (existingProductmanufacturers.FindProductManufacturer(id, model.ManufacturerId) == null)
                         {
                             _manufacturerService.InsertProductManufacturer(

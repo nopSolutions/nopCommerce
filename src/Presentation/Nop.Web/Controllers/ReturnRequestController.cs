@@ -151,7 +151,7 @@ namespace Nop.Web.Controllers
             var model = new CustomerReturnRequestsModel();
 
             var returnRequests = _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
-                _workContext.CurrentCustomer.Id, 0, null, 0, int.MaxValue);
+                _workContext.CurrentCustomer.Id);
             foreach (var returnRequest in returnRequests)
             {
                 var orderItem = _orderService.GetOrderItemById(returnRequest.OrderItemId);

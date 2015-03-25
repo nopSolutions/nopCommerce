@@ -723,7 +723,7 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, 0, int.MaxValue, true);
+                        var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, showHidden: true);
                         if (existingProductCategories.FindProductCategory(id, model.CategoryId) == null)
                         {
                             _categoryService.InsertProductCategory(

@@ -1544,7 +1544,7 @@ namespace Nop.Services.Orders
                 ReduceRewardPoints(order);
 
                 //cancel recurring payments
-                var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
+                var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
                 foreach (var rp in recurringPayments)
                 {
                     var errors = CancelRecurringPayment(rp);
@@ -1943,7 +1943,7 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //cancel recurring payments
-            var recurringPayments = _orderService.SearchRecurringPayments(0, 0, order.Id, null, 0, int.MaxValue);
+            var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);
             foreach (var rp in recurringPayments)
             {
                 var errors = CancelRecurringPayment(rp);

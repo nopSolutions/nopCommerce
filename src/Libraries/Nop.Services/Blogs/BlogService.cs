@@ -141,8 +141,8 @@ namespace Nop.Services.Blogs
         {
             tag = tag.Trim();
 
-            //we laod all records and only then filter them by tag
-            var blogPostsAll = GetAllBlogPosts(storeId, languageId, null, null, 0, int.MaxValue, showHidden);
+            //we load all records and only then filter them by tag
+            var blogPostsAll = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
             var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
@@ -167,7 +167,7 @@ namespace Nop.Services.Blogs
         {
             var blogPostTags = new List<BlogPostTag>();
 
-            var blogPosts = GetAllBlogPosts(storeId, languageId, null, null, 0, int.MaxValue, showHidden);
+            var blogPosts = GetAllBlogPosts(storeId: storeId, languageId: languageId, showHidden: showHidden);
             foreach (var blogPost in blogPosts)
             {
                 var tags = blogPost.ParseTags();
