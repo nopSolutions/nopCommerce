@@ -238,28 +238,23 @@ namespace Nop.Services.Tax
             //active tax provider
             var activeTaxProvider = LoadActiveTaxProvider();
             if (activeTaxProvider == null)
-            {
-                //throw new NopException("Active tax provider cannot be loaded. Please select at least one in admin area.");
                 return;
-            }
-
-            //tax exempt
-            if (IsTaxExempt(product, customer))
-            {
-                isTaxable = false;
-            }
 
             //tax request
             var calculateTaxRequest = CreateCalculateTaxRequest(product, taxCategoryId, customer);
 
-            //make EU VAT exempt validation (the European Union Value Added Tax)
-            if (_taxSettings.EuVatEnabled)
+            //tax exempt
+            if (IsTaxExempt(product, calculateTaxRequest.Customer))
             {
-                if (IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
-                {
-                    //VAT is not chargeable
-                    isTaxable = false;
-                }
+                isTaxable = false;
+            }
+            //make EU VAT exempt validation (the European Union Value Added Tax)
+            if (isTaxable && 
+                _taxSettings.EuVatEnabled &&
+                IsVatExempt(calculateTaxRequest.Address, calculateTaxRequest.Customer))
+            {
+                //VAT is not chargeable
+                isTaxable = false;
             }
 
             //get tax rate
