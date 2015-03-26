@@ -455,28 +455,36 @@ namespace Nop.Web.Controllers
             }
 
 
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+
 
 
 
             //category breadcrumb
-            model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
-            if (model.DisplayCategoryBreadcrumb)
+            if (_catalogSettings.CategoryBreadcrumbEnabled)
             {
-                foreach (var catBr in category.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService))
-                {
-                    model.CategoryBreadcrumb.Add(new CategoryModel
+                model.DisplayCategoryBreadcrumb = true;
+
+                string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
+                    categoryId,
+                    string.Join(",", customerRolesIds),
+                    _storeContext.CurrentStore.Id,
+                    _workContext.WorkingLanguage.Id);
+                model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
+                    category
+                    .GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService)
+                    .Select(catBr => new CategoryModel
                     {
                         Id = catBr.Id,
                         Name = catBr.GetLocalized(x => x.Name),
                         SeName = catBr.GetSeName()
-                    });
-                }
+                    })
+                    .ToList()
+                );
             }
 
 
-
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
 
 
 
