@@ -47,5 +47,21 @@ namespace Nop.Data
         /// <param name="parameters">The parameters to apply to the command string.</param>
         /// <returns>The result returned by the database after executing the command.</returns>
         int ExecuteSqlCommand(string sql, bool doNotEnsureTransaction = false, int? timeout = null, params object[] parameters);
+
+        /// <summary>
+        /// Detach an entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        void Detach(object entity);
+
+        /// <summary>
+        /// Gets or sets a value indicating whether proxy creation setting is enabled (used in EF)
+        /// </summary>
+        bool ProxyCreationEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether auto detect changes setting is enabled (used in EF)
+        /// </summary>
+        bool AutoDetectChangesEnabled { get; set; }
     }
 }

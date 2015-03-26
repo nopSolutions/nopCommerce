@@ -71,7 +71,6 @@ namespace Nop.Data
                         msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
 
                 var fail = new Exception(msg, dbEx);
-                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -101,7 +100,6 @@ namespace Nop.Data
                         msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
 
                 var fail = new Exception(msg, dbEx);
-                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -128,7 +126,32 @@ namespace Nop.Data
                         msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
 
                 var fail = new Exception(msg, dbEx);
-                //Debug.WriteLine(fail.Message, fail);
+                throw fail;
+            }
+        }
+
+        /// <summary>
+        /// Update entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        public virtual void Update(IEnumerable<T> entities)
+        {
+            try
+            {
+                if (entities == null)
+                    throw new ArgumentNullException("entities");
+
+                this._context.SaveChanges();
+            }
+            catch (DbEntityValidationException dbEx)
+            {
+                var msg = string.Empty;
+
+                foreach (var validationErrors in dbEx.EntityValidationErrors)
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                        msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
+
+                var fail = new Exception(msg, dbEx);
                 throw fail;
             }
         }
@@ -157,7 +180,6 @@ namespace Nop.Data
                         msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
 
                 var fail = new Exception(msg, dbEx);
-                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -187,7 +209,6 @@ namespace Nop.Data
                         msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
 
                 var fail = new Exception(msg, dbEx);
-                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }

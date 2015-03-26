@@ -34,6 +34,12 @@ namespace Nop.Core.Data
         void Update(T entity);
 
         /// <summary>
+        /// Update entities
+        /// </summary>
+        /// <param name="entities">Entities</param>
+        void Update(IEnumerable<T> entities);
+
+        /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>

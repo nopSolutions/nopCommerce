@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Data;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
 using Nop.Services.Logging;
@@ -35,6 +36,7 @@ namespace Nop.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly ILogger _logger;
+        private readonly IDbContext _dbContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
 
@@ -50,12 +52,16 @@ namespace Nop.Services.Media
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="logger">Logger</param>
+        /// <param name="dbContext">Database context</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
-            ISettingService settingService, IWebHelper webHelper,
-            ILogger logger, IEventPublisher eventPublisher,
+            ISettingService settingService, 
+            IWebHelper webHelper,
+            ILogger logger,
+            IDbContext dbContext,
+            IEventPublisher eventPublisher,
             MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
@@ -63,6 +69,7 @@ namespace Nop.Services.Media
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._logger = logger;
+            this._dbContext = dbContext;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
         }
@@ -683,7 +690,7 @@ namespace Nop.Services.Media
             if (seoFilename != picture.SeoFilename)
                 DeletePictureThumbs(picture);
 
-            picture.PictureBinary = (this.StoreInDb ? pictureBinary : new byte[0]);
+            picture.PictureBinary = this.StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
             picture.IsNew = isNew;
@@ -754,30 +761,68 @@ namespace Nop.Services.Media
             set
             {
                 //check whether it's a new value
-                if (this.StoreInDb != value)
+                if (this.StoreInDb == value)
+                    return;
+
+                //save the new setting value
+                _settingService.SetSetting("Media.Images.StoreInDB", value);
+
+                int pageIndex = 0;
+                const int pageSize = 400;
+                var originalProxyCreationEnabled = _dbContext.ProxyCreationEnabled;
+                try
                 {
-                    //save the new setting value
-                    _settingService.SetSetting("Media.Images.StoreInDB", value);
+                    //we set this property for performance optimization
+                    //it could be critical if you we have several thousand pictures
+                    _dbContext.ProxyCreationEnabled = false;
 
-                    //update all picture objects
-                    var pictures = this.GetPictures();
-                    foreach (var picture in pictures)
+                    while (true)
                     {
-                        var pictureBinary = LoadPictureBinary(picture, !value);
+                        var pictures = this.GetPictures(pageIndex, pageSize);
+                        pageIndex++;
 
-                        //delete from file system
-                        if (value)
-                            DeletePictureOnFileSystem(picture);
+                        //all pictures converted?
+                        if (pictures.Count == 0)
+                            break;
 
-                        //just update a picture (all required logic is in UpdatePicture method)
-                        UpdatePicture(picture.Id,
-                                      pictureBinary,
-                                      picture.MimeType,
-                                      picture.SeoFilename,
-                                      true,
-                                      false);
-                        //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown when "moving" pictures
+                        foreach (var picture in pictures)
+                        {
+                            var pictureBinary = LoadPictureBinary(picture, !value);
+
+                            //we used the code below before. but it's too slow
+                            //let's do it manually (uncommented code) - copy some logic from "UpdatePicture" method
+                            /*just update a picture (all required logic is in "UpdatePicture" method)
+                            we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown when "moving" pictures
+                            UpdatePicture(picture.Id,
+                                          pictureBinary,
+                                          picture.MimeType,
+                                          picture.SeoFilename,
+                                          true,
+                                          false);*/
+                            if (value)
+                                //delete from file system. now it's in the database
+                                DeletePictureOnFileSystem(picture);
+                            else
+                                //now on file system
+                                SavePictureInFile(picture.Id, pictureBinary, picture.MimeType);
+                            //update appropriate properties
+                            picture.PictureBinary = value ? pictureBinary : new byte[0];
+                            picture.IsNew = true;
+                            //raise event?
+                            //_eventPublisher.EntityUpdated(picture);
+                        }
+                        //save all at once
+                        _pictureRepository.Update(pictures);
+                        //detach them in order to release memory
+                        foreach (var picture in pictures)
+                        {
+                            _dbContext.Detach(picture);
+                        }
                     }
+                }
+                finally
+                {
+                    _dbContext.ProxyCreationEnabled = originalProxyCreationEnabled;
                 }
             }
         }

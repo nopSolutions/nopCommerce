@@ -13,12 +13,17 @@ namespace Nop.Plugin.Shipping.ByWeight.Data
     /// </summary>
     public class ShippingByWeightObjectContext : DbContext, IDbContext
     {
+        #region Ctor
+
         public ShippingByWeightObjectContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
+        #endregion
+
+        #region Utilities
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -28,6 +33,10 @@ namespace Nop.Plugin.Shipping.ByWeight.Data
             //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
          base.OnModelCreating(modelBuilder);
         }
+
+        #endregion
+
+        #region Methods
 
         public string CreateDatabaseScript()
         {
@@ -97,5 +106,53 @@ namespace Nop.Plugin.Shipping.ByWeight.Data
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Detach an entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        public void Detach(object entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether proxy creation setting is enabled (used in EF)
+        /// </summary>
+        public virtual bool ProxyCreationEnabled
+        {
+            get
+            {
+                return this.Configuration.ProxyCreationEnabled;
+            }
+            set
+            {
+                this.Configuration.ProxyCreationEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether auto detect changes setting is enabled (used in EF)
+        /// </summary>
+        public virtual bool AutoDetectChangesEnabled
+        {
+            get
+            {
+                return this.Configuration.AutoDetectChangesEnabled;
+            }
+            set
+            {
+                this.Configuration.AutoDetectChangesEnabled = value;
+            }
+        }
+
+        #endregion
     }
 }

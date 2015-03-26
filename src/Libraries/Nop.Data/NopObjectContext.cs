@@ -51,7 +51,6 @@ namespace Nop.Data
             base.OnModelCreating(modelBuilder);
         }
 
-
         /// <summary>
         /// Attach an entity to the context or return an already attached entity (if it was already attached)
         /// </summary>
@@ -188,6 +187,52 @@ namespace Nop.Data
 
             //return result
             return result;
+        }
+
+        /// <summary>
+        /// Detach an entity
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        public void Detach(object entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            ((IObjectContextAdapter)this).ObjectContext.Detach(entity);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets a value indicating whether proxy creation setting is enabled (used in EF)
+        /// </summary>
+        public virtual bool ProxyCreationEnabled
+        {
+            get
+            {
+                return this.Configuration.ProxyCreationEnabled;
+            }
+            set
+            {
+                this.Configuration.ProxyCreationEnabled = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether auto detect changes setting is enabled (used in EF)
+        /// </summary>
+        public virtual bool AutoDetectChangesEnabled
+        {
+            get
+            {
+                return this.Configuration.AutoDetectChangesEnabled;
+            }
+            set
+            {
+                this.Configuration.AutoDetectChangesEnabled = value;
+            }
         }
 
         #endregion
