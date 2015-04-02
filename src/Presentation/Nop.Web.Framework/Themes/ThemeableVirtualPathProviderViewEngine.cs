@@ -64,7 +64,39 @@ namespace Nop.Web.Framework.Themes
             return null;
         }
 
-        protected virtual ViewEngineResult FindThemeableView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+
+        protected virtual string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
+        {
+            return string.Format(CultureInfo.InvariantCulture, ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}:{5}", new object[] { base.GetType().AssemblyQualifiedName, prefix, name, controllerName, areaName, theme });
+        }
+
+        //protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
+        //{
+        //    return BuildManager.GetObjectFactory(virtualPath, false) != null;
+        //}
+
+        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        {
+            string[] strArray;
+            if (controllerContext == null)
+            {
+                throw new ArgumentNullException("controllerContext");
+            }
+            if (string.IsNullOrEmpty(partialViewName))
+            {
+                throw new ArgumentException("Partial view name cannot be null or empty.", "partialViewName");
+            }
+            var theme = GetCurrentTheme();
+            string requiredString = controllerContext.RouteData.GetRequiredString("controller");
+            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, out strArray);
+            if (string.IsNullOrEmpty(str2))
+            {
+                return new ViewEngineResult(strArray);
+            }
+            return new ViewEngineResult(this.CreatePartialView(controllerContext, str2), this);
+        }
+
+        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             string[] strArray;
             string[] strArray2;
@@ -89,52 +121,6 @@ namespace Nop.Web.Framework.Themes
                 strArray2 = new string[0];
             }
             return new ViewEngineResult(strArray.Union(strArray2));
-
-        }
-
-        protected virtual ViewEngineResult FindThemeablePartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
-        {
-            string[] strArray;
-            if (controllerContext == null)
-            {
-                throw new ArgumentNullException("controllerContext");
-            }
-            if (string.IsNullOrEmpty(partialViewName))
-            {
-                throw new ArgumentException("Partial view name cannot be null or empty.", "partialViewName");
-            }
-            var theme = GetCurrentTheme();
-            string requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, out strArray);
-            if (string.IsNullOrEmpty(str2))
-            {
-                return new ViewEngineResult(strArray);
-            }
-            return new ViewEngineResult(this.CreatePartialView(controllerContext, str2), this);
-
-        }
-
-        protected virtual string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
-        {
-            return string.Format(CultureInfo.InvariantCulture, ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}:{5}", new object[] { base.GetType().AssemblyQualifiedName, prefix, name, controllerName, areaName, theme });
-        }
-
-        //protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
-        //{
-        //    return BuildManager.GetObjectFactory(virtualPath, false) != null;
-        //}
-
-        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
-        {
-            ViewEngineResult result = FindThemeablePartialView(controllerContext, partialViewName, useCache);
-            return result;
-        }
-
-        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
-        {
-            ViewEngineResult result = FindThemeableView(controllerContext, viewName, masterName, useCache);
-            return result;
-
         }
 
         protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
