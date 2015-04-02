@@ -2754,6 +2754,18 @@
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.DisplayOrder.Hint">
     <Value>Display order of the picture. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute">
+    <Value>Alt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint">
+    <Value>Override "alt" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint">
+    <Value>Override "title" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.Picture">
     <Value>Picture</Value>
   </LocaleResource>

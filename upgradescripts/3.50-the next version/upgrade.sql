@@ -416,6 +416,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute">
+    <Value>Alt</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute.Hint">
+    <Value>Override "alt" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute">
+    <Value>Title</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute.Hint">
+    <Value>Override "title" attribute for "img" HTML element. If empty, then a default rule will be used (e.g. product name).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1464,4 +1476,20 @@ GO
 --delete setting
 DELETE FROM [Setting] 
 WHERE [name] = N'adminareasettings.displayproductpictures'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Picture]') and NAME='TitleAttribute')
+BEGIN
+	ALTER TABLE [Picture]
+	ADD [TitleAttribute] nvarchar(MAX) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Picture]') and NAME='AltAttribute')
+BEGIN
+	ALTER TABLE [Picture]
+	ADD [AltAttribute] nvarchar(MAX) NULL
+END
 GO

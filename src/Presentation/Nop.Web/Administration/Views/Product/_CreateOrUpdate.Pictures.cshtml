@@ -38,7 +38,9 @@
                                 id: "Id",
                                 fields: {
                                     PictureUrl: {editable: false, type: "string" },
-                                    DisplayOrder: {editable: true, type: "number" }
+                                    DisplayOrder: {editable: true, type: "number" },
+                                    OverrideAltAttribute: {editable: true, type: "string" },
+                                    OverrideTitleAttribute: {editable: true, type: "string" }
                                 }
                             }
                         },
@@ -79,6 +81,14 @@
                         format: "{0:0}",
                         width: 150
                     }, {
+                        field: "OverrideAltAttribute",
+                        title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")",
+                        width: 200
+                    }, {
+                        field: "OverrideTitleAttribute",
+                        title: "@T("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")",
+                        width: 200
+                    }, {
                         command: [{
                             name: "edit",
                             text: "@T("Admin.Common.Edit")"
@@ -100,6 +110,8 @@
         $(document).ready(function () {
             $('#addProductPicture').click(function () {
                 var pictureId = $("#@Html.FieldIdFor(model => model.AddPictureModel.PictureId)").val();
+                var overrideAltAttribute = $("#@Html.FieldIdFor(model => model.AddPictureModel.OverrideAltAttribute)").val();
+                var overrideTitleAttribute = $("#@Html.FieldIdFor(model => model.AddPictureModel.OverrideTitleAttribute)").val();
                 var displayOrder = $("#@Html.FieldIdFor(model => model.AddPictureModel.DisplayOrder)").val();
 
                 if (pictureId == 0) {
@@ -110,8 +122,10 @@
                 $('#addProductPicture').attr('disabled', true);
 
                 var postData = {
-                    pictureId: pictureId, 
-                    displayOrder: displayOrder, 
+                    pictureId: pictureId,
+                    displayOrder: displayOrder,
+                    overrideAltAttribute: overrideAltAttribute,
+                    overrideTitleAttribute: overrideTitleAttribute,
                     productId: @Model.Id
                 };
                 addAntiForgeryToken(postData);
@@ -142,6 +156,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.AddPictureModel.PictureId)
                 @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.OverrideAltAttribute):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.OverrideAltAttribute)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.OverrideAltAttribute)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.OverrideTitleAttribute):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.OverrideTitleAttribute)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.OverrideTitleAttribute)
             </td>
         </tr>
         <tr>

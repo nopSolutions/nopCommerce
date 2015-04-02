@@ -108,10 +108,14 @@ namespace Nop.Services.Media
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="altAttribute">"alt" attribute for "img" HTML element</param>
+        /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, bool isNew, bool validateBinary = true);
+        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, 
+            string altAttribute = null, string titleAttribute = null,
+            bool isNew = true, bool validateBinary = true);
 
         /// <summary>
         /// Updates the picture
@@ -120,10 +124,14 @@ namespace Nop.Services.Media
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="altAttribute">"alt" attribute for "img" HTML element</param>
+        /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, string seoFilename, bool isNew, bool validateBinary = true);
+        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+            string seoFilename, string altAttribute = null, string titleAttribute = null,
+            bool isNew = true, bool validateBinary = true);
 
         /// <summary>
         /// Updates a SEO filename of a picture

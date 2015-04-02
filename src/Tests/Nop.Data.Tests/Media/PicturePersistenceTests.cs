@@ -15,6 +15,8 @@ namespace Nop.Data.Tests.Media
                 PictureBinary = new byte[] { 1, 2, 3 },
                 MimeType = "image/pjpeg",
                 SeoFilename = "seo filename 1",
+                AltAttribute = "AltAttribute 1",
+                TitleAttribute = "TitleAttribute 1",
                 IsNew = true
             };
 
@@ -23,6 +25,8 @@ namespace Nop.Data.Tests.Media
             fromDb.PictureBinary.ShouldEqual(new byte[] { 1, 2, 3 });
             fromDb.MimeType.ShouldEqual("image/pjpeg");
             fromDb.SeoFilename.ShouldEqual("seo filename 1");
+            fromDb.AltAttribute.ShouldEqual("AltAttribute 1");
+            fromDb.TitleAttribute.ShouldEqual("TitleAttribute 1");
             fromDb.IsNew.ShouldEqual(true);
         }
     }

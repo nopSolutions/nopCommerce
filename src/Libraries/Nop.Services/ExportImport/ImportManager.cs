@@ -498,7 +498,7 @@ namespace Nop.Services.ExportImport
                         {
                             product.ProductPictures.Add(new ProductPicture
                             {
-                                Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name), true),
+                                Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name)),
                                 DisplayOrder = 1,
                             });
                             _productService.UpdateProduct(product);

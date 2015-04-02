@@ -482,6 +482,14 @@ namespace Nop.Admin.Models.Catalog
 
             [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideAltAttribute")]
+            [AllowHtml]
+            public string OverrideAltAttribute { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.Pictures.Fields.OverrideTitleAttribute")]
+            [AllowHtml]
+            public string OverrideTitleAttribute { get; set; }
         }
         
         public partial class ProductCategoryModel : BaseNopEntityModel

@@ -460,7 +460,9 @@ namespace Nop.Services.Media
                 picture = UpdatePicture(picture.Id, 
                     pictureBinary, 
                     picture.MimeType, 
-                    picture.SeoFilename, 
+                    picture.SeoFilename,
+                    picture.AltAttribute,
+                    picture.TitleAttribute,
                     false, 
                     false);
             }
@@ -629,11 +631,14 @@ namespace Nop.Services.Media
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="altAttribute">"alt" attribute for "img" HTML element</param>
+        /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
         public virtual Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
-            bool isNew, bool validateBinary = true)
+            string altAttribute = null, string titleAttribute = null,
+            bool isNew = true, bool validateBinary = true)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -648,6 +653,8 @@ namespace Nop.Services.Media
                                   PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
                                   MimeType = mimeType,
                                   SeoFilename = seoFilename,
+                                  AltAttribute = altAttribute,
+                                  TitleAttribute = titleAttribute,
                                   IsNew = isNew,
                               };
             _pictureRepository.Insert(picture);
@@ -668,11 +675,14 @@ namespace Nop.Services.Media
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
+        /// <param name="altAttribute">"alt" attribute for "img" HTML element</param>
+        /// <param name="titleAttribute">"title" attribute for "img" HTML element</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
         public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
-            string seoFilename, bool isNew, bool validateBinary = true)
+            string seoFilename, string altAttribute = null, string titleAttribute = null,
+            bool isNew = true, bool validateBinary = true)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
@@ -693,6 +703,8 @@ namespace Nop.Services.Media
             picture.PictureBinary = this.StoreInDb ? pictureBinary : new byte[0];
             picture.MimeType = mimeType;
             picture.SeoFilename = seoFilename;
+            picture.AltAttribute = altAttribute;
+            picture.TitleAttribute = titleAttribute;
             picture.IsNew = isNew;
 
             _pictureRepository.Update(picture);
@@ -722,7 +734,14 @@ namespace Nop.Services.Media
             if (seoFilename != picture.SeoFilename)
             {
                 //update picture
-                picture = UpdatePicture(picture.Id, LoadPictureBinary(picture), picture.MimeType, seoFilename, true, false);
+                picture = UpdatePicture(picture.Id, 
+                    LoadPictureBinary(picture), 
+                    picture.MimeType, 
+                    seoFilename,
+                    picture.AltAttribute,
+                    picture.TitleAttribute,
+                    true, 
+                    false);
             }
             return picture;
         }

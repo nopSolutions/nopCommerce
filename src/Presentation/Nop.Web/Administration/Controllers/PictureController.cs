@@ -85,7 +85,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var picture = _pictureService.InsertPicture(fileBinary, contentType, null, true);
+            var picture = _pictureService.InsertPicture(fileBinary, contentType, null);
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true, pictureId = picture.Id,

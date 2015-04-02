@@ -366,10 +366,17 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
                     model.DefaultPictureModel = new PictureModel
                         {
                             ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
-                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
-                            Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
-                            AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name)
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(picture)
                         };
+                    //"title" attribute
+                    model.DefaultPictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                        picture.TitleAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+                    //"alt" attribute
+                    model.DefaultPictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                        picture.AltAttribute :
+                        string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+                        
                     #endregion
                 }
 

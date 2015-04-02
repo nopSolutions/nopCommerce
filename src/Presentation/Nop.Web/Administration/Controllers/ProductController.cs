@@ -2158,7 +2158,10 @@ namespace Nop.Admin.Controllers
 
         #region Product pictures
 
-        public ActionResult ProductPictureAdd(int pictureId, int displayOrder, int productId)
+        [ValidateInput(false)]
+        public ActionResult ProductPictureAdd(int pictureId, int displayOrder, 
+            string overrideAltAttribute, string overrideTitleAttribute,
+            int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
@@ -2169,10 +2172,14 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(productId);
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
-
+            
             //a vendor should have access only to his products
             if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
                 return RedirectToAction("List");
+            
+            var picture = _pictureService.GetPictureById(pictureId);
+            if (picture == null)
+                throw new ArgumentException("No picture found with the specified id");
 
             _productService.InsertProductPicture(new ProductPicture
             {
@@ -2180,6 +2187,9 @@ namespace Nop.Admin.Controllers
                 ProductId = productId,
                 DisplayOrder = displayOrder,
             });
+
+            _pictureService.UpdatePicture(picture.Id, picture.PictureBinary, picture.MimeType,
+                picture.SeoFilename, overrideAltAttribute, overrideTitleAttribute);
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
 
@@ -2204,14 +2214,23 @@ namespace Nop.Admin.Controllers
 
             var productPictures = _productService.GetProductPicturesByProductId(productId);
             var productPicturesModel = productPictures
-                .Select(x => new ProductModel.ProductPictureModel
-                {
-                    Id = x.Id,
-                    ProductId = x.ProductId,
-                    PictureId = x.PictureId,
-                    PictureUrl = _pictureService.GetPictureUrl(x.PictureId),
-                    DisplayOrder = x.DisplayOrder
-                })
+                .Select(x =>
+                        {
+                            var picture = _pictureService.GetPictureById(x.PictureId);
+                            if (picture == null)
+                                throw new Exception("Picture cannot be loaded");
+                            var m = new ProductModel.ProductPictureModel
+                                    {
+                                        Id = x.Id,
+                                        ProductId = x.ProductId,
+                                        PictureId = x.PictureId,
+                                        PictureUrl = _pictureService.GetPictureUrl(picture),
+                                        OverrideAltAttribute = picture.AltAttribute,
+                                        OverrideTitleAttribute = picture.TitleAttribute,
+                                        DisplayOrder = x.DisplayOrder
+                                    };
+                            return m;
+                        })
                 .ToList();
 
             var gridModel = new DataSourceResult
@@ -2246,6 +2265,13 @@ namespace Nop.Admin.Controllers
             productPicture.DisplayOrder = model.DisplayOrder;
             _productService.UpdateProductPicture(productPicture);
 
+            var picture = _pictureService.GetPictureById(productPicture.PictureId);
+            if (picture == null)
+                throw new ArgumentException("No picture found with the specified id");
+
+            _pictureService.UpdatePicture(picture.Id, picture.PictureBinary, picture.MimeType,
+                picture.SeoFilename, model.OverrideAltAttribute, model.OverrideTitleAttribute);
+
             return new NullJsonResult();
         }
 
@@ -2272,7 +2298,10 @@ namespace Nop.Admin.Controllers
             }
             var pictureId = productPicture.PictureId;
             _productService.DeleteProductPicture(productPicture);
+
             var picture = _pictureService.GetPictureById(pictureId);
+            if (picture == null)
+                throw new ArgumentException("No picture found with the specified id");
             _pictureService.DeletePicture(picture);
 
             return new NullJsonResult();

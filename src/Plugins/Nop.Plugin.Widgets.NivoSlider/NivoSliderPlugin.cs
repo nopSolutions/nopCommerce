@@ -80,18 +80,15 @@ namespace Nop.Plugin.Widgets.NivoSlider
             //settings
             var settings = new NivoSliderSettings
             {
-                Picture1Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), "image/pjpeg", "banner_1", true).Id,
+                Picture1Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner1.jpg"), "image/pjpeg", "banner_1").Id,
                 Text1 = "",
                 Link1 = _webHelper.GetStoreLocation(false),
-                Picture2Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner2.jpg"), "image/pjpeg", "banner_2", true).Id,
+                Picture2Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner2.jpg"), "image/pjpeg", "banner_2").Id,
                 Text2 = "",
                 Link2 = _webHelper.GetStoreLocation(false),
-                Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner3.jpg"), "image/pjpeg", "banner_3", true).Id,
+                Picture3Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner3.jpg"), "image/pjpeg", "banner_3").Id,
                 Text3 = "",
                 Link3 = _webHelper.GetStoreLocation(false),
-                //Picture4Id = _pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "banner4.jpg"), "image/pjpeg", "banner_4", true).Id,
-                //Text4 = "",
-                //Link4 = _webHelper.GetStoreLocation(false),
             };
             _settingService.SaveSetting(settings);
 

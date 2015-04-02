@@ -278,7 +278,8 @@ namespace Nop.Services.Catalog
                         _pictureService.LoadPictureBinary(picture),
                         picture.MimeType,
                         _pictureService.GetPictureSeName(newName),
-                        true);
+                        picture.AltAttribute,
+                        picture.TitleAttribute);
                     _productService.InsertProductPicture(new ProductPicture
                     {
                         ProductId = productCopy.Id,

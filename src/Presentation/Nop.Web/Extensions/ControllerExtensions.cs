@@ -328,10 +328,17 @@ namespace Nop.Web.Extensions
                         var pictureModel = new PictureModel
                         {
                             ImageUrl = pictureService.GetPictureUrl(picture, pictureSize),
-                            FullSizeImageUrl = pictureService.GetPictureUrl(picture),
-                            Title = string.Format(localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
-                            AlternateText = string.Format(localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name)
+                            FullSizeImageUrl = pictureService.GetPictureUrl(picture)
                         };
+                        //"title" attribute
+                        pictureModel.Title = (picture != null && !string.IsNullOrEmpty(picture.TitleAttribute)) ?
+                            picture.TitleAttribute :
+                            string.Format(localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+                        //"alt" attribute
+                        pictureModel.AlternateText = (picture != null && !string.IsNullOrEmpty(picture.AltAttribute)) ?
+                            picture.AltAttribute :
+                            string.Format(localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+                        
                         return pictureModel;
                     });
 
