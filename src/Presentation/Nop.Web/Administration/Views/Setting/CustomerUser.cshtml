@@ -243,6 +243,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.PasswordMinLength):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.PasswordMinLength)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordMinLength)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock):
             </td>
             <td class="adminData">

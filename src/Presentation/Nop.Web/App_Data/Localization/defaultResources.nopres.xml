@@ -4911,6 +4911,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.NotifyNewCustomerRegistration.Hint">
     <Value>Notify the store owner when a new customer is registered.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
+    <Value>Password minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
+    <Value>Specify password minimum length.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled">
     <Value>'Phone number' enabled</Value>
   </LocaleResource>

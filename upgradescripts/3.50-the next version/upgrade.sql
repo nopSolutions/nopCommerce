@@ -407,11 +407,14 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage">
     <Value>Send welcome message</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage">
-    <Value>Send welcome message</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendWelcomeMessage.Success">
     <Value>Welcome email has been successfully sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength">
+    <Value>Password minimum length</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
+    <Value>Specify password minimum length.</Value>
   </LocaleResource>
 </Language>
 '
