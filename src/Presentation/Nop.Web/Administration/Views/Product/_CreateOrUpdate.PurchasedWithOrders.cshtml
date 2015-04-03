@@ -76,13 +76,13 @@
                 width: 200,
                 type: "date",
                 format: "{0:G}"
+            },
+            {
+                field: "Id",
+                title: "@T("Admin.Common.View")",
+                width: 200,
+                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
             }]
-        },
-        {
-            field: "Id",
-            title: "@T("Admin.Common.View")",
-            width: 200,
-            template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
         });
     });
 </script>
