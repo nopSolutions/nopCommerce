@@ -16,6 +16,7 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
+        private readonly IProductService _productService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -27,11 +28,15 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ProductAttributeController(IProductAttributeService productAttributeService,
-            ILanguageService languageService, ILocalizedEntityService localizedEntityService,
-            ILocalizationService localizationService, ICustomerActivityService customerActivityService,
+        public ProductAttributeController(IProductService productService,
+            IProductAttributeService productAttributeService,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService,
+            ILocalizationService localizationService,
+            ICustomerActivityService customerActivityService,
             IPermissionService permissionService)
         {
+            this._productService = productService;
             this._productAttributeService = productAttributeService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
@@ -175,7 +180,13 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("EditProductAttribute", _localizationService.GetResource("ActivityLog.EditProductAttribute"), productAttribute.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Updated"));
-                return continueEditing ? RedirectToAction("Edit", new { id = productAttribute.Id}) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabIndex();
+
+                    return RedirectToAction("Edit", new { id = productAttribute.Id });
+                }
             }
 
             //If we got this far, something failed, redisplay form
@@ -201,6 +212,33 @@ namespace Nop.Admin.Controllers
 
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Attributes.ProductAttributes.Deleted"));
             return RedirectToAction("List");
+        }
+
+        [HttpPost]
+        public ActionResult UsedByProducts(DataSourceRequest command, int productAttributeId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var orders = _productService.GetProductsByProductAtributeId(
+                productAttributeId: productAttributeId,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = orders.Select(x =>
+                {
+                    return new ProductAttributeModel.UsedByProductModel
+                    {
+                        Id = x.Id,
+                        ProductName = x.Name,
+                        Published = x.Published
+                    };
+                }),
+                Total = orders.TotalCount
+            };
+
+            return Json(gridModel);
         }
 
         #endregion

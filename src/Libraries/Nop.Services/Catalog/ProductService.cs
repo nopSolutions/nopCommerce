@@ -992,12 +992,31 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Gets products by product attribute
+        /// </summary>
+        /// <param name="productAttributeId">Product attribute identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        public virtual IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
+            int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = _productRepository.Table;
+            query = query.Where(x => x.ProductAttributeMappings.Any(y => y.ProductAttributeId == productAttributeId));
+            query = query.Where(x => !x.Deleted);
+            query = query.OrderBy(x => x.Name);
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
+            return products;
+        }
+
+        /// <summary>
         /// Gets associated products
         /// </summary>
         /// <param name="parentGroupedProductId">Parent product identifier (used with grouped products)</param>
         /// <param name="storeId">Store identifier; 0 to load all records</param>
         /// <param name="vendorId">Vendor identifier; 0 to load all records</param>
-         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         public virtual IList<Product> GetAssociatedProducts(int parentGroupedProductId,
             int storeId = 0, int vendorId = 0, bool showHidden = false)

@@ -172,6 +172,15 @@ namespace Nop.Services.Catalog
             bool showHidden = false,
             bool? overridePublished = null);
 
+        /// <summary>
+        /// Gets products by product attribute
+        /// </summary>
+        /// <param name="productAttributeId">Product attribute identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Products</returns>
+        IPagedList<Product> GetProductsByProductAtributeId(int productAttributeId,
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Gets associated products

@@ -16,7 +16,6 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<ProductAttributeLocalizedModel>();
         }
 
-        
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -29,6 +28,14 @@ namespace Nop.Admin.Models.Catalog
 
         public IList<ProductAttributeLocalizedModel> Locales { get; set; }
 
+
+        public partial class UsedByProductModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")]
+            public string ProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")]
+            public bool Published { get; set; }
+        }
     }
 
     public partial class ProductAttributeLocalizedModel : ILocalizedModelLocal

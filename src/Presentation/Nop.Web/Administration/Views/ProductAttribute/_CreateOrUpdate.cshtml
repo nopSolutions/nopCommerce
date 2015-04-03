@@ -1,8 +1,59 @@
 ﻿@model ProductAttributeModel
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
+
+<div id="product-attribute-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ProductAttributes.Info")
+        </li>
+        @if (Model.Id > 0)
+        {
+        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
+        </li>
+        }
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+    @if (Model.Id > 0)
+    {
+        <div>
+            @TabUsedByProducts()
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function() {
+        $("#product-attribute-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+    {
+    @(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
     @<table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -49,4 +100,72 @@
             </td>
         </tr>
     </table>
-))
+    ))
+}
+@helper TabUsedByProducts()
+{
+        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <p>
+        @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
+    </p>
+    <div id="used-by-products-grid"></div>
+    <script>
+        $(document).ready(function () {
+            $("#used-by-products-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors"
+                    },
+                    error: function(e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    pageSize: @(defaultGridPageSize),
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "ProductName",
+                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
+                    width: 400
+                }, {
+                    field: "Published",
+                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
+                    width: 100,
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" },
+                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                },
+                {
+                    field: "Id",
+                    title: "@T("Admin.Common.View")",
+                    width: 100,
+                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                }]
+            });
+        });
+    </script>
+}
