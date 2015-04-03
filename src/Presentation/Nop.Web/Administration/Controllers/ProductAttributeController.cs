@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
@@ -9,6 +10,7 @@ using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -65,10 +67,24 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-        
+
+        [NonAction]
+        protected virtual void UpdateLocales(PredefinedProductAttributeValue ppav, PredefinedProductAttributeValueModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(ppav,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
         #endregion
         
         #region Methods
+
+        #region Attribute list / create / edit / delete
 
         //list
         public ActionResult Index()
@@ -214,6 +230,11 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        #endregion
+
+        #region Used by products
+
+        //used by products
         [HttpPost]
         public ActionResult UsedByProducts(DataSourceRequest command, int productAttributeId)
         {
@@ -240,6 +261,174 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
+        
+        #endregion
+
+        #region Predefined values
+
+        [HttpPost]
+        public ActionResult PredefinedProductAttributeValueList(int productAttributeId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var values = _productAttributeService.GetPredefinedProductAttributeValues(productAttributeId);
+            var gridModel = new DataSourceResult
+            {
+                Data = values.Select(x =>
+                {
+                    return new PredefinedProductAttributeValueModel
+                    {
+                        Id = x.Id,
+                        ProductAttributeId = x.ProductAttributeId,
+                        Name = x.Name,
+                        PriceAdjustment = x.PriceAdjustment,
+                        PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
+                        WeightAdjustment = x.WeightAdjustment,
+                        WeightAdjustmentStr = x.WeightAdjustment.ToString("G29"),
+                        Cost = x.Cost,
+                        IsPreSelected = x.IsPreSelected,
+                        DisplayOrder = x.DisplayOrder
+                    };
+                }),
+                Total = values.Count()
+            };
+
+            return Json(gridModel);
+        }
+
+        //create
+        public ActionResult PredefinedProductAttributeValueCreatePopup(int productAttributeId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var productAttribute = _productAttributeService.GetProductAttributeById(productAttributeId);
+            if (productAttribute == null)
+                throw new ArgumentException("No product attribute found with the specified id");
+
+            var model = new PredefinedProductAttributeValueModel();
+            model.ProductAttributeId = productAttributeId;
+
+            //locales
+            AddLocales(_languageService, model.Locales);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult PredefinedProductAttributeValueCreatePopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var productAttribute = _productAttributeService.GetProductAttributeById(model.ProductAttributeId);
+            if (productAttribute == null)
+                throw new ArgumentException("No product attribute found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                var ppav = new PredefinedProductAttributeValue
+                {
+                    ProductAttributeId = model.ProductAttributeId,
+                    Name = model.Name,
+                    PriceAdjustment = model.PriceAdjustment,
+                    WeightAdjustment = model.WeightAdjustment,
+                    Cost = model.Cost,
+                    IsPreSelected = model.IsPreSelected,
+                    DisplayOrder = model.DisplayOrder
+                };
+
+                _productAttributeService.InsertPredefinedProductAttributeValue(ppav);
+                UpdateLocales(ppav, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //edit
+        public ActionResult PredefinedProductAttributeValueEditPopup(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(id);
+            if (ppav == null)
+                throw new ArgumentException("No product attribute value found with the specified id");
+
+            var model = new PredefinedProductAttributeValueModel
+            {
+                ProductAttributeId = ppav.ProductAttributeId,
+                Name = ppav.Name,
+                PriceAdjustment = ppav.PriceAdjustment,
+                WeightAdjustment = ppav.WeightAdjustment,
+                Cost = ppav.Cost,
+                IsPreSelected = ppav.IsPreSelected,
+                DisplayOrder = ppav.DisplayOrder
+            };
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = ppav.GetLocalized(x => x.Name, languageId, false, false);
+            });
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult PredefinedProductAttributeValueEditPopup(string btnId, string formId, PredefinedProductAttributeValueModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(model.Id);
+            if (ppav == null)
+                throw new ArgumentException("No product attribute value found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                ppav.Name = model.Name;
+                ppav.PriceAdjustment = model.PriceAdjustment;
+                ppav.WeightAdjustment = model.WeightAdjustment;
+                ppav.Cost = model.Cost;
+                ppav.IsPreSelected = model.IsPreSelected;
+                ppav.DisplayOrder = model.DisplayOrder;
+                _productAttributeService.UpdatePredefinedProductAttributeValue(ppav);
+
+                UpdateLocales(ppav, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        //delete
+        [HttpPost]
+        public ActionResult PredefinedProductAttributeValueDelete(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageAttributes))
+                return AccessDeniedView();
+
+            var ppav = _productAttributeService.GetPredefinedProductAttributeValueById(id);
+            if (ppav == null)
+                throw new ArgumentException("No predefined product attribute value found with the specified id");
+
+            _productAttributeService.DeletePredefinedProductAttributeValue(ppav);
+
+            return new NullJsonResult();
+        }
+
+        #endregion
 
         #endregion
     }

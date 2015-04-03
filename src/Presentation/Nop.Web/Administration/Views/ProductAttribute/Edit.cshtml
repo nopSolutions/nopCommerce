@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes.EditAttributeDetails").Text;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="section-header">

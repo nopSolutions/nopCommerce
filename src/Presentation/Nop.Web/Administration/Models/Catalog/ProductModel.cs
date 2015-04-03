@@ -728,8 +728,8 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Fields.DisplayOrder")]
             public int DisplayOrder { get; set; }
 
-            public string ViewEditValuesUrl { get; set; }
-            public string ViewEditValuesText { get; set; }
+            public bool ShouldHaveValues { get; set; }
+            public int TotalValues { get; set; }
 
             //validation fields
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")]

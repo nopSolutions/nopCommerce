@@ -330,6 +330,7 @@
     <Compile Include="Models\Settings\TaxSettingsModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\Catalog\PredefinedProductAttributeValueModelValidator.cs" />
     <Compile Include="Validators\Common\AddressAttributeValidator.cs" />
     <Compile Include="Validators\Common\AddressAttributeValueValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
@@ -1264,6 +1265,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Affiliate\AffiliatedOrderList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductAttribute\_CreateOrUpdatePredefinedProductAttributeValue.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductAttribute\PredefinedProductAttributeValueEditPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductAttribute\PredefinedProductAttributeValueCreatePopup.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

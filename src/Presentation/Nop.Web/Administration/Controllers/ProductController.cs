@@ -3261,10 +3261,11 @@ namespace Nop.Admin.Controllers
                         DisplayOrder = x.DisplayOrder
                     };
 
+
                     if (x.ShouldHaveValues())
                     {
-                        attributeModel.ViewEditValuesUrl = Url.Action("EditAttributeValues", "Product", new { productAttributeMappingId = x.Id });
-                        attributeModel.ViewEditValuesText = string.Format(_localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink"), x.ProductAttributeValues != null ? x.ProductAttributeValues.Count : 0);
+                        attributeModel.ShouldHaveValues = true;
+                        attributeModel.TotalValues = x.ProductAttributeValues.Count;
                     }
 
                     attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
@@ -3297,6 +3298,7 @@ namespace Nop.Admin.Controllers
                 return Content("This is not your product");
             }
 
+            //insert mapping
             var productAttributeMapping = new ProductAttributeMapping
             {
                 ProductId = model.ProductId,
@@ -3307,6 +3309,33 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = model.DisplayOrder
             };
             _productAttributeService.InsertProductAttributeMapping(productAttributeMapping);
+
+            //predefined values
+            var predefinedValues = _productAttributeService.GetPredefinedProductAttributeValues(model.ProductAttributeId);
+            foreach (var predefinedValue in predefinedValues)
+            {
+                var pav = new ProductAttributeValue
+                {
+                    ProductAttributeMappingId = productAttributeMapping.Id,
+                    AttributeValueType = AttributeValueType.Simple,
+                    Name = predefinedValue.Name,
+                    PriceAdjustment = predefinedValue.PriceAdjustment,
+                    WeightAdjustment = predefinedValue.WeightAdjustment,
+                    Cost = predefinedValue.Cost,
+                    IsPreSelected = predefinedValue.IsPreSelected,
+                    DisplayOrder = predefinedValue.DisplayOrder
+                };
+                _productAttributeService.InsertProductAttributeValue(pav);
+                //locales
+                var languages = _languageService.GetAllLanguages(true);
+                //localization
+                foreach (var lang in languages)
+                {
+                    var name = predefinedValue.GetLocalized(x => x.Name, lang.Id, false, false);
+                    if (!String.IsNullOrEmpty(name))
+                        _localizedEntityService.SaveLocalizedValue(pav, x => x.Name, name, lang.Id);
+                }
+            }
 
             return new NullJsonResult();
         }

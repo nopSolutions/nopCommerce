@@ -1,4 +1,3 @@
-
 using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog

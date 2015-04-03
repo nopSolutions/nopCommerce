@@ -90,6 +90,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductAttributeMapping> _productAttributeMappingRepository;
         private readonly IRepository<ProductAttributeCombination> _productAttributeCombinationRepository;
         private readonly IRepository<ProductAttributeValue> _productAttributeValueRepository;
+        private readonly IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
@@ -106,20 +107,22 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeMappingRepository">Product attribute mapping repository</param>
         /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
         /// <param name="productAttributeValueRepository">Product attribute value repository</param>
+        /// <param name="predefinedProductAttributeValueRepository">Predefined product attribute value repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ProductAttributeService(ICacheManager cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductAttributeMapping> productAttributeMappingRepository,
             IRepository<ProductAttributeCombination> productAttributeCombinationRepository,
             IRepository<ProductAttributeValue> productAttributeValueRepository,
-            IEventPublisher eventPublisher
-            )
+            IRepository<PredefinedProductAttributeValue> predefinedProductAttributeValueRepository,
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._productAttributeRepository = productAttributeRepository;
             this._productAttributeMappingRepository = productAttributeMappingRepository;
             this._productAttributeCombinationRepository = productAttributeCombinationRepository;
             this._productAttributeValueRepository = productAttributeValueRepository;
+            this._predefinedProductAttributeValueRepository = predefinedProductAttributeValueRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -424,6 +427,101 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productAttributeValue);
+        }
+
+        #endregion
+
+        #region Predefined product attribute values
+
+        /// <summary>
+        /// Deletes a predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">Predefined product attribute value</param>
+        public virtual void DeletePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        {
+            if (ppav == null)
+                throw new ArgumentNullException("ppav");
+
+            _predefinedProductAttributeValueRepository.Delete(ppav);
+
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(ppav);
+        }
+
+        /// <summary>
+        /// Gets predefined product attribute values by product attribute identifier
+        /// </summary>
+        /// <param name="productAttributeId">The product attribute identifier</param>
+        /// <returns>Product attribute mapping collection</returns>
+        public virtual IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId)
+        {
+            var query = from ppav in _predefinedProductAttributeValueRepository.Table
+                        orderby ppav.DisplayOrder
+                        where ppav.ProductAttributeId == productAttributeId
+                        select ppav;
+            var values = query.ToList();
+            return values;
+        }
+
+        /// <summary>
+        /// Gets a predefined product attribute value
+        /// </summary>
+        /// <param name="id">Predefined product attribute value identifier</param>
+        /// <returns>Predefined product attribute value</returns>
+        public virtual PredefinedProductAttributeValue GetPredefinedProductAttributeValueById(int id)
+        {
+            if (id == 0)
+                return null;
+
+            return _predefinedProductAttributeValueRepository.GetById(id);
+        }
+
+        /// <summary>
+        /// Inserts a predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">The predefined product attribute value</param>
+        public virtual void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        {
+            if (ppav == null)
+                throw new ArgumentNullException("ppav");
+
+            _predefinedProductAttributeValueRepository.Insert(ppav);
+
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(ppav);
+        }
+
+        /// <summary>
+        /// Updates the predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">The predefined product attribute value</param>
+        public virtual void UpdatePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav)
+        {
+            if (ppav == null)
+                throw new ArgumentNullException("ppav");
+
+            _predefinedProductAttributeValueRepository.Update(ppav);
+
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(ppav);
         }
 
         #endregion

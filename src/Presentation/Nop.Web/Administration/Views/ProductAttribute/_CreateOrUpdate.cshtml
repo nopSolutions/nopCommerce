@@ -13,6 +13,9 @@
             @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
         </li>
         }
+        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
+        </li>
     </ul>
     <div>
         @TabInfo()
@@ -23,6 +26,9 @@
             @TabUsedByProducts()
         </div>
     }
+    <div>
+        @TabPredefinedValues()
+    </div>
 </div>
 <script>
     $(document).ready(function() {
@@ -168,4 +174,132 @@
             });
         });
     </script>
+}
+@helper TabPredefinedValues()
+{
+    if (Model.Id > 0)
+    {
+        <p>
+            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
+        </p>
+        <table class="adminContent">
+            <tr>
+                <td>
+                    <div id="productattributevalues-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#productattributevalues-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute", new { productAttributeId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueDelete", "ProductAttribute"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Product2Name: { editable: false, type: "string" },
+                                                ProductId2: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name")",
+                                        width: 200
+                                    }, {
+                                        field: "PriceAdjustmentStr",
+                                        title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")",
+                                        width: 150
+                                    }, {
+                                        field: "WeightAdjustmentStr",
+                                        title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment")",
+                                        width: 150
+                                    }, {
+                                        field: "IsPreSelected",
+                                        title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
+                                    }, {
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        title: "@T("Admin.Common.Delete")",
+                                        width: 200
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 500, true); return false; " class="k-button" />
+                    <input type="submit" id="btnRefresh" style="display:none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefresh').click(function() {
+                                //refresh grid
+                                var grid = $("#productattributevalues-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
+    }
 }

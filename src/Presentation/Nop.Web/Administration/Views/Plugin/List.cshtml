@@ -131,7 +131,7 @@
                                 }, {
                                     field: "Installed",
                                     title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                    template: '# if(Installed) {# <a href="@Url.Content("~/Admin/Plugin/Uninstall/")?systemName=#=SystemName#" class="plugin-button uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")<a/> #} else {#  <a href="@Url.Content("~/Admin/Plugin/Install/")?systemName=#=SystemName#" class="plugin-button install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")<a/> #} #',
+                                    template: '# if(Installed) {# <a href="@Url.Content("~/Admin/Plugin/Uninstall/")?systemName=#=SystemName#" class="plugin-button uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</a> #} else {#  <a href="@Url.Content("~/Admin/Plugin/Install/")?systemName=#=SystemName#" class="plugin-button install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</a> #} #',
                                     headerAttributes: {style: "text-align:center" },
                                     attributes: { style: "text-align:center" }
                                 }

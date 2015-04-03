@@ -26,6 +26,7 @@ namespace Nop.Services.Tests.Catalog
         private IRepository<ProductAttributeMapping> _productAttributeMappingRepo;
         private IRepository<ProductAttributeCombination> _productAttributeCombinationRepo;
         private IRepository<ProductAttributeValue> _productAttributeValueRepo;
+        private IRepository<PredefinedProductAttributeValue> _predefinedProductAttributeValueRepo;
         private IProductAttributeService _productAttributeService;
         private IProductAttributeParser _productAttributeParser;
         private IEventPublisher _eventPublisher;
@@ -165,6 +166,8 @@ namespace Nop.Services.Tests.Catalog
             _productAttributeValueRepo.Expect(x => x.GetById(pav2_1.Id)).Return(pav2_1);
             _productAttributeValueRepo.Expect(x => x.GetById(pav2_2.Id)).Return(pav2_2);
 
+            _predefinedProductAttributeValueRepo = MockRepository.GenerateMock<IRepository<PredefinedProductAttributeValue>>();
+
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
@@ -175,6 +178,7 @@ namespace Nop.Services.Tests.Catalog
                 _productAttributeMappingRepo,
                 _productAttributeCombinationRepo,
                 _productAttributeValueRepo,
+                _predefinedProductAttributeValueRepo,
                 _eventPublisher);
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);

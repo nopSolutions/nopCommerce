@@ -1,7 +1,6 @@
 ﻿@model ProductModel
 
 @using Nop.Core.Domain.Catalog
-@using Nop.Services.Catalog
 @if (Model.Id > 0)
 {
     if (Model.AvailableProductAttributes.Count > 0)
@@ -94,8 +93,8 @@ else
                                 AttributeControlTypeId: { editable: true, type: "number" },
                                 //ProductId: { editable: false, type: "number" },
                                 DisplayOrder: { editable: true, type: "number" },
-                                ViewEditValuesUrl: { editable: false, type: "string" },
-                                ViewEditValuesText: { editable: false, type: "string" },
+                                ShouldHaveValues: { editable: false, type: "boolean" },
+                                TotalValues: { editable: false, type: "number" },
                                 ValidationRulesAllowed: { editable: false, type: "boolean" },
                                 Id: { editable: false, type: "number" }
                             }
@@ -174,10 +173,10 @@ else
                         //integer format
                         format: "{0:0}"
                     }, {
-                        field: "ViewEditValuesUrl",
+                        field: "ShouldHaveValues",
                         title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                         width: 150,
-                        template: "# if(ViewEditValuesUrl !== null) {# <a href='#=ViewEditValuesUrl#\'>#:ViewEditValuesText#</a> #}  #"
+                        template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
                     },
                     {
                         field: "ValidationRulesAllowed",

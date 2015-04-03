@@ -118,6 +118,42 @@ namespace Nop.Services.Catalog
 
         #endregion
 
+        #region Predefined product attribute values
+
+        /// <summary>
+        /// Deletes a predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">Predefined product attribute value</param>
+        void DeletePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav);
+
+        /// <summary>
+        /// Gets predefined product attribute values by product attribute identifier
+        /// </summary>
+        /// <param name="productAttributeId">The product attribute identifier</param>
+        /// <returns>Product attribute mapping collection</returns>
+        IList<PredefinedProductAttributeValue> GetPredefinedProductAttributeValues(int productAttributeId);
+
+        /// <summary>
+        /// Gets a predefined product attribute value
+        /// </summary>
+        /// <param name="id">Predefined product attribute value identifier</param>
+        /// <returns>Predefined product attribute value</returns>
+        PredefinedProductAttributeValue GetPredefinedProductAttributeValueById(int id);
+
+        /// <summary>
+        /// Inserts a predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">The predefined product attribute value</param>
+        void InsertPredefinedProductAttributeValue(PredefinedProductAttributeValue ppav);
+
+        /// <summary>
+        /// Updates the predefined product attribute value
+        /// </summary>
+        /// <param name="ppav">The predefined product attribute value</param>
+        void UpdatePredefinedProductAttributeValue(PredefinedProductAttributeValue ppav);
+
+        #endregion
+
         #region Product attribute combinations
 
         /// <summary>

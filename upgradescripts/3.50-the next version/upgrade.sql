@@ -443,6 +443,66 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues">
+    <Value>Predefined values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew">
+    <Value>Add a new value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.EditValueDetails">
+    <Value>Edit value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Cost">
+    <Value>Cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Cost.Hint">
+    <Value>The attribute value cost is the cost of all the different components which make up this value. This may be either the purchase price if the components are bought from outside suppliers, or the combined cost of materials and manufacturing processes if the component is made in-house.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder.Hint">
+    <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected">
+    <Value>Is pre-selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.IsPreSelected.Hint">
+    <Value>Determines whether this attribute value is pre selected for the customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Hint">
+    <Value>The attribute value name e.g. ''Blue'' for Color attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment">
+    <Value>Price adjustment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment.Hint">
+    <Value>The price adjustment applied when choosing this attribute value e.g. ''10'' to add 10 dollars.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment">
+    <Value>Weight adjustment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.WeightAdjustment.Hint">
+    <Value>The weight adjustment applied when choosing this attribute value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint">
+    <Value>Predefined (default) values are helpful for a store owner when creating new products. Then when you add the attribute to a product, you don''t have to create the values again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit">
+    <Value>You need to save the product attribute before you can add values for this page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink">
+    <Value>View/Edit values</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues">
+    <Value>Total: </Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1507,4 +1567,37 @@ BEGIN
 	ALTER TABLE [Picture]
 	ADD [AltAttribute] nvarchar(MAX) NULL
 END
+GO
+
+--New table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[PredefinedProductAttributeValue]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[PredefinedProductAttributeValue](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProductAttributeId] [int] NOT NULL,
+	[Name] [nvarchar](400) NOT NULL,
+	[PriceAdjustment] [decimal](18,4) NOT NULL,
+	[WeightAdjustment] [decimal](18,4) NOT NULL,
+	[Cost] [decimal](18,4) NOT NULL,
+	[IsPreSelected] [bit] NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'PredefinedProductAttributeValue_ProductAttribute'
+           AND parent_object_id = Object_id('PredefinedProductAttributeValue')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.PredefinedProductAttributeValue
+DROP CONSTRAINT PredefinedProductAttributeValue_ProductAttribute
+GO
+ALTER TABLE [dbo].[PredefinedProductAttributeValue]  WITH CHECK ADD  CONSTRAINT [PredefinedProductAttributeValue_ProductAttribute] FOREIGN KEY([ProductAttributeId])
+REFERENCES [dbo].[ProductAttribute] ([Id])
+ON DELETE CASCADE
 GO
