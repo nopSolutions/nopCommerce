@@ -34,17 +34,23 @@ namespace Nop.Admin.Controllers
         private readonly IProductService _productService;
         private readonly CurrencySettings _currencySettings;
         private readonly IPermissionService _permissionService;
+        private readonly IWorkContext _workContext;
 
         #endregion
 
         #region Constructors
 
         public DiscountController(IDiscountService discountService, 
-            ILocalizationService localizationService, ICurrencyService currencyService,
-            ICategoryService categoryService, IProductService productService,
-            IWebHelper webHelper, IDateTimeHelper dateTimeHelper,
-            ICustomerActivityService customerActivityService, CurrencySettings currencySettings,
-            IPermissionService permissionService)
+            ILocalizationService localizationService,
+            ICurrencyService currencyService,
+            ICategoryService categoryService,
+            IProductService productService,
+            IWebHelper webHelper, 
+            IDateTimeHelper dateTimeHelper,
+            ICustomerActivityService customerActivityService, 
+            CurrencySettings currencySettings,
+            IPermissionService permissionService,
+            IWorkContext workContext)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -56,6 +62,7 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
             this._permissionService = permissionService;
+            this._workContext = workContext;
         }
 
         #endregion
@@ -171,6 +178,7 @@ namespace Nop.Admin.Controllers
                 Data = discounts.PagedForCommand(command).Select(x =>
                 {
                     var discountModel = x.ToModel();
+                    discountModel.DiscountTypeName = x.DiscountType.GetLocalizedEnum(_localizationService, _workContext);
                     discountModel.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
                     return discountModel;
                 }),
