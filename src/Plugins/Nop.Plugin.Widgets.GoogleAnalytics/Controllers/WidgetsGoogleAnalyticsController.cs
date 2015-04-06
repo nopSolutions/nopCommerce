@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using System.Xml.Schema;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Plugin.Widgets.GoogleAnalytics.Models;

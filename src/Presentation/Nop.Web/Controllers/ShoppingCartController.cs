@@ -40,7 +40,6 @@ using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
-using RestSharp;
 
 namespace Nop.Web.Controllers
 {

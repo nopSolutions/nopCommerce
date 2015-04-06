@@ -7,8 +7,6 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using Nop.Core.Domain.Seo;
-using Nop.Core.Infrastructure;
-using Nop.Services.Logging;
 using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI

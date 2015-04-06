@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Localization;
-using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 

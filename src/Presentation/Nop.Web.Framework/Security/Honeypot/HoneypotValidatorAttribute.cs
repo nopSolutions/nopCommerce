@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;

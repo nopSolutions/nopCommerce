@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 
