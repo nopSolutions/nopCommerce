@@ -15,7 +15,6 @@ namespace Nop.Admin.Models.Discounts
         public DiscountModel()
         {
             AppliedToCategoryModels = new List<AppliedToCategoryModel>();
-            AppliedToProductModels = new List<AppliedToProductModel>();
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
@@ -73,9 +72,6 @@ namespace Nop.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToCategories")]
         public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToProducts")]
-        public IList<AppliedToProductModel> AppliedToProductModels { get; set; }
-
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
@@ -117,6 +113,41 @@ namespace Nop.Admin.Models.Discounts
             public int ProductId { get; set; }
 
             public string ProductName { get; set; }
+        }
+        public partial class AddProductToDiscountModel : BaseNopModel
+        {
+            public AddProductToDiscountModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+                AvailableStores = new List<SelectListItem>();
+                AvailableVendors = new List<SelectListItem>();
+                AvailableProductTypes = new List<SelectListItem>();
+            }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchStore")]
+            public int SearchStoreId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchVendor")]
+            public int SearchVendorId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductType")]
+            public int SearchProductTypeId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+            public IList<SelectListItem> AvailableStores { get; set; }
+            public IList<SelectListItem> AvailableVendors { get; set; }
+            public IList<SelectListItem> AvailableProductTypes { get; set; }
+
+            public int DiscountId { get; set; }
+
+            public int[] SelectedProductIds { get; set; }
         }
         #endregion
     }

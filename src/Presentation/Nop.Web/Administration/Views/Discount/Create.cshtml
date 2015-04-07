@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.Discounts.AddNew").Text;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "discount-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="section-header">

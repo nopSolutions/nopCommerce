@@ -9414,6 +9414,18 @@
   <LocaleResource Name="Admin.Promotions.Discounts.AddNew">
     <Value>Add a new discount</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts">
+    <Value>Applied to products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add products for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.AddNew">
+    <Value>Add a new product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.BackToList">
     <Value>back to discount list</Value>
   </LocaleResource>
@@ -9431,15 +9443,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords">
     <Value>No categories selected</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProducts">
-    <Value>Assigned to products</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProducts.Hint">
-    <Value>A list of products to which the discount is to be applied. You can assign this discount on a product details page.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProducts.NoRecords">
-    <Value>No products selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode">
     <Value>Coupon code</Value>

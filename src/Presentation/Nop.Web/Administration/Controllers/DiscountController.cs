@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Discounts;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -13,6 +15,8 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Services.Stores;
+using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -35,6 +39,9 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IPermissionService _permissionService;
         private readonly IWorkContext _workContext;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IStoreService _storeService;
+        private readonly IVendorService _vendorService;
 
         #endregion
 
@@ -50,7 +57,10 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService, 
             CurrencySettings currencySettings,
             IPermissionService permissionService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IManufacturerService manufacturerService,
+            IStoreService storeService,
+            IVendorService vendorService)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -63,6 +73,9 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._permissionService = permissionService;
             this._workContext = workContext;
+            this._manufacturerService = manufacturerService;
+            this._storeService = storeService;
+            this._vendorService = vendorService;
         }
 
         #endregion
@@ -106,20 +119,6 @@ namespace Nop.Admin.Controllers
                             CategoryId = category.Id,
                             Name = category.Name
                         });
-                    }
-                }
-
-                //applied to products
-                foreach (var product in discount.AppliedToProducts)
-                {
-                    if (product != null && !product.Deleted)
-                    {
-                        var appliedToProductModel = new DiscountModel.AppliedToProductModel
-                        {
-                            ProductId = product.Id,
-                            ProductName = product.Name
-                        };
-                        model.AppliedToProductModels.Add(appliedToProductModel);
                     }
                 }
 
@@ -397,6 +396,148 @@ namespace Nop.Admin.Controllers
             _discountService.DeleteDiscountRequirement(discountRequirement);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Applied to products
+
+        [HttpPost]
+        public ActionResult ProductList(DataSourceRequest command, int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var products = discount.AppliedToProducts;
+            var gridModel = new DataSourceResult
+            {
+                Data = products.Select(x => new DiscountModel.AppliedToProductModel
+                {
+                    ProductId = x.Id,
+                    ProductName = x.Name
+                }),
+                Total = products.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public ActionResult ProductDelete(int discountId, int productId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new Exception("No product found with the specified id");
+            
+            //remove discount
+            if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                product.AppliedDiscounts.Remove(discount);
+
+            _productService.UpdateProduct(product);
+            _productService.UpdateHasDiscountsApplied(product);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult ProductAddPopup(int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var model = new DiscountModel.AddProductToDiscountModel();
+            //categories
+            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var categories = _categoryService.GetAllCategories(showHidden: true);
+            foreach (var c in categories)
+                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(showHidden: true))
+                model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
+
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var v in _vendorService.GetAllVendors(showHidden: true))
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
+
+            //product types
+            model.AvailableProductTypes = ProductType.SimpleProduct.ToSelectList(false).ToList();
+            model.AvailableProductTypes.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAddPopupList(DataSourceRequest command, DiscountModel.AddProductToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var gridModel = new DataSourceResult();
+            var products = _productService.SearchProducts(
+                categoryIds: new List<int> { model.SearchCategoryId },
+                manufacturerId: model.SearchManufacturerId,
+                storeId: model.SearchStoreId,
+                vendorId: model.SearchVendorId,
+                productType: model.SearchProductTypeId > 0 ? (ProductType?)model.SearchProductTypeId : null,
+                keywords: model.SearchProductName,
+                pageIndex: command.Page - 1,
+                pageSize: command.PageSize,
+                showHidden: true
+                );
+            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Total = products.TotalCount;
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult ProductAddPopup(string btnId, string formId, DiscountModel.AddProductToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(model.DiscountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            if (model.SelectedProductIds != null)
+            {
+                foreach (int id in model.SelectedProductIds)
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                    {
+                        if (product.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            product.AppliedDiscounts.Add(discount);
+
+                        _productService.UpdateProduct(product);
+                        _productService.UpdateHasDiscountsApplied(product);
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
         }
 
         #endregion
