@@ -551,6 +551,24 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.Hint">
     <Value>Search by a specific status e.g. Active.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly">
+    <Value>Not active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.Activated.All">
+    <Value>All</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.Activated.ActivatedOnly">
+    <Value>Activated</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.GiftCards.List.Activated.DeactivatedOnly">
+    <Value>Deactivated</Value>
+  </LocaleResource>
 </Language>
 '
 

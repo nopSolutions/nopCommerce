@@ -78,20 +78,19 @@ namespace Nop.Admin.Controllers
 
             var model = new GiftCardListModel();
             model.ActivatedList.Add(new SelectListItem
-                {
-                    Value = "0",
-                    Selected = true,
-                    Text = "All"
-                });
+            {
+                Value = "0",
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.All")
+            });
             model.ActivatedList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = "Activated"
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.ActivatedOnly")
             });
             model.ActivatedList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = "Deactivated"
+                Text = _localizationService.GetResource("Admin.GiftCards.List.Activated.DeactivatedOnly")
             });
             return View(model);
         }

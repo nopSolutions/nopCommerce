@@ -64,18 +64,17 @@ namespace Nop.Admin.Controllers
             model.ActiveList.Add(new SelectListItem
             {
                 Value = "0",
-                Selected = true,
-                Text = "All"
+                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.All")
             });
             model.ActiveList.Add(new SelectListItem
             {
                 Value = "1",
-                Text = "Yes"
+                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.ActiveOnly")
             });
             model.ActiveList.Add(new SelectListItem
             {
                 Value = "2",
-                Text = "No"
+                Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
 			return View(model);
 		}
