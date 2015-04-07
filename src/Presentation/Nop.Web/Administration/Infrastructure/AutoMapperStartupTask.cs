@@ -541,7 +541,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToCategoryModels, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())

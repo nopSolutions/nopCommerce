@@ -109,19 +109,6 @@ namespace Nop.Admin.Controllers
 
             if (discount != null)
             {
-                //applied to categories
-                foreach (var category in discount.AppliedToCategories)
-                {
-                    if (category != null && !category.Deleted)
-                    {
-                        model.AppliedToCategoryModels.Add(new DiscountModel.AppliedToCategoryModel
-                        {
-                            CategoryId = category.Id,
-                            Name = category.Name
-                        });
-                    }
-                }
-
                 //requirements
                 foreach (var dr in discount.DiscountRequirements.OrderBy(dr=>dr.Id))
                 {
@@ -530,6 +517,121 @@ namespace Nop.Admin.Controllers
 
                         _productService.UpdateProduct(product);
                         _productService.UpdateHasDiscountsApplied(product);
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
+        }
+
+        #endregion
+
+        #region Applied to categories
+
+        [HttpPost]
+        public ActionResult CategoryList(DataSourceRequest command, int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var categories = discount.AppliedToCategories;
+            var gridModel = new DataSourceResult
+            {
+                Data = categories.Select(x => new DiscountModel.AppliedToCategoryModel
+                {
+                    CategoryId = x.Id,
+                    CategoryName = x.GetFormattedBreadCrumb(_categoryService)
+                }),
+                Total = categories.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public ActionResult CategoryDelete(int discountId, int categoryId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var category = _categoryService.GetCategoryById(categoryId);
+            if (category == null)
+                throw new Exception("No category found with the specified id");
+
+            //remove discount
+            if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                category.AppliedDiscounts.Remove(discount);
+
+            _categoryService.UpdateCategory(category);
+            _categoryService.UpdateHasDiscountsApplied(category);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult CategoryAddPopup(int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var model = new DiscountModel.AddCategoryToDiscountModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CategoryAddPopupList(DataSourceRequest command, DiscountModel.AddCategoryToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
+                command.Page - 1, command.PageSize, true);
+            var gridModel = new DataSourceResult
+            {
+                Data = categories.Select(x =>
+                {
+                    var categoryModel = x.ToModel();
+                    categoryModel.Breadcrumb = x.GetFormattedBreadCrumb(_categoryService);
+                    return categoryModel;
+                }),
+                Total = categories.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult CategoryAddPopup(string btnId, string formId, DiscountModel.AddCategoryToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(model.DiscountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            if (model.SelectedCategoryIds != null)
+            {
+                foreach (int id in model.SelectedCategoryIds)
+                {
+                    var category = _categoryService.GetCategoryById(id);
+                    if (category != null)
+                    {
+                        if (category.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            category.AppliedDiscounts.Add(discount);
+
+                        _categoryService.UpdateCategory(category);
+                        _categoryService.UpdateHasDiscountsApplied(category);
                     }
                 }
             }

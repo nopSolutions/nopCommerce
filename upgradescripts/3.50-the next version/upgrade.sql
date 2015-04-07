@@ -524,6 +524,27 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts.AddNew">
     <Value>Add a new product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories">
+    <Value>Applied to categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add categories for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories.Category">
+    <Value>Category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories.AddNew">
+    <Value>Add a new category</Value>
+  </LocaleResource>
 </Language>
 '
 

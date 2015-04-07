@@ -14,7 +14,6 @@ namespace Nop.Admin.Models.Discounts
     {
         public DiscountModel()
         {
-            AppliedToCategoryModels = new List<AppliedToCategoryModel>();
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
@@ -69,10 +68,6 @@ namespace Nop.Admin.Models.Discounts
         public int? MaximumDiscountedQuantity { get; set; }
 
 
-        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToCategories")]
-        public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }
-
-
         [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
 
@@ -105,7 +100,17 @@ namespace Nop.Admin.Models.Discounts
         {
             public int CategoryId { get; set; }
 
-            public string Name { get; set; }
+            public string CategoryName { get; set; }
+        }
+        public partial class AddCategoryToDiscountModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
+            [AllowHtml]
+            public string SearchCategoryName { get; set; }
+
+            public int DiscountId { get; set; }
+
+            public int[] SelectedCategoryIds { get; set; }
         }
 
         public partial class AppliedToProductModel : BaseNopModel
@@ -149,6 +154,7 @@ namespace Nop.Admin.Models.Discounts
 
             public int[] SelectedProductIds { get; set; }
         }
+
         #endregion
     }
 }

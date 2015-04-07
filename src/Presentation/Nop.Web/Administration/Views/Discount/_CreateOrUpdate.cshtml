@@ -21,9 +21,12 @@
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex()) id="tab-applied-to-products">
             @T("Admin.Promotions.Discounts.AppliedToProducts")
         </li>
+        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-applied-to-categories">
+            @T("Admin.Promotions.Discounts.AppliedToCategories")
+        </li>
         @if (Model.Id > 0)
         {
-            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
                 @T("Admin.Promotions.Discounts.History")
             </li>
         }
@@ -36,6 +39,9 @@
     </div>
     <div>
         @TabAppliedToProducts()
+    </div>
+    <div>
+        @TabAppliedToCategories()
     </div>
     @if (Model.Id > 0)
     {
@@ -93,17 +99,17 @@
             function toggleDiscountType() {
                 var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
                 if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
-                    $('#pnlAppliedToCategories').show();
+                    $('#tab-applied-to-categories').show();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').show();
                 }
                 else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
-                    $('#pnlAppliedToCategories').hide();
+                    $('#tab-applied-to-categories').hide();
                     $('#tab-applied-to-products').show();
                     $('#pnlMaximumDiscountedQuantity').show();
                 }
                 else {
-                    $('#pnlAppliedToCategories').hide();
+                    $('#tab-applied-to-categories').hide();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').hide();
                 }
@@ -156,30 +162,6 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
                 @Html.ValidationMessageFor(model => model.DiscountTypeId)
-            </td>
-        </tr>
-        <tr id="pnlAppliedToCategories">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AppliedToCategoryModels):
-            </td>
-            <td class="adminData">
-                @if (Model.AppliedToCategoryModels.Count > 0)
-                {
-                    for (int i = 0; i < Model.AppliedToCategoryModels.Count; i++)
-                    {
-                        var categoryId = Model.AppliedToCategoryModels[i].CategoryId;
-                        var categoryName = Model.AppliedToCategoryModels[i].Name;
-                        <a href="@Url.Action("Edit", "Category", new { id = categoryId })">@categoryName</a>
-                        if (i != Model.AppliedToCategoryModels.Count - 1)
-                        {
-                            <text>, </text>
-                        }
-                    }
-                }
-                else
-                {
-                    @T("Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords")
-                }
             </td>
         </tr>
         <tr>
@@ -523,11 +505,6 @@
                                             }
                                         }
                                     },
-                                    requestEnd: function(e) {
-                                        if(e.type=="update") {
-                                            this.read();
-                                        }
-                                    },
                                     error: function(e) {
                                         display_kendoui_grid_error(e);
                                         // Cancel the changes
@@ -591,6 +568,112 @@
     else
     {
         @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+    }
+}
+@helper TabAppliedToCategories()
+{
+    if (Model.Id > 0)
+    {
+        <table class="adminContent">
+            <tr>
+                <td>
+
+                    <div id="categories-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#categories-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CategoryList", "Discount", new { discountId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new { discountId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "CategoryId",
+                                            fields: {
+                                                CategoryName: {editable: false, type: "string" },
+                                                CategoryId: {editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "CategoryName",
+                                    title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
+                                },  {
+                                    field: "CategoryId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 150,
+                                    template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [{
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }],
+                                    width: 150
+                                }]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form" }))', 800, 800, true); return false;" class="k-button" />
+                    <input type="submit" id="btnRefreshCategories" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshCategories').click(function () {
+                                //refresh grid
+                                var grid = $("#categories-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
     }
 }
 @helper TabHistory()
