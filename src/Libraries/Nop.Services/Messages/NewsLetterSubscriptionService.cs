@@ -171,27 +171,20 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="email">Email to search or string. Empty to load all records.</param>
         /// <param name="storeId">Store identifier. 0 to load all records.</param>
-        /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
+        /// <param name="isActive">Value indicating whether subscriber record should be active or not; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entities</returns>
         public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email = null,
-            int storeId = 0, int pageIndex = 0, int pageSize = int.MaxValue,
-            bool showHidden = false)
+            int storeId = 0, bool? isActive = null, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _subscriptionRepository.Table;
             if (!String.IsNullOrEmpty(email))
-            {
                 query = query.Where(nls => nls.Email.Contains(email));
-            }
             if (storeId > 0)
-            {
                 query = query.Where(nls => nls.StoreId == storeId);
-            }
-            if (!showHidden)
-            {
-                query = query.Where(nls => nls.Active);
-            }
+            if (isActive.HasValue)
+                query = query.Where(gc => gc.Active == isActive.Value);
             query = query.OrderBy(nls => nls.Email);
 
             var newsletterSubscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);

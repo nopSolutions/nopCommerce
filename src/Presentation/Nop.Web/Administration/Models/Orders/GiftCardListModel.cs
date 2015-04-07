@@ -22,7 +22,6 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
         public int ActivatedId { get; set; }
-
         [NopResourceDisplayName("Admin.GiftCards.List.Activated")]
         public IList<SelectListItem> ActivatedList { get; set; }
     }

@@ -28,6 +28,14 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ActiveId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("ActiveId", Model.ActiveList)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.StoreId):
         </td>
         <td class="adminData">
@@ -168,6 +176,7 @@
 
     function additionalData() {
         var data = {
+            ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
             SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
         };

@@ -280,7 +280,8 @@ namespace Nop.Admin.Controllers
                 //subscribers of certain store?
                 var store = _storeService.GetStoreById(campaign.StoreId);
                 var storeId = store != null ? store.Id : 0;
-                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId);
+                var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(storeId: storeId,
+                    isActive: true);
                 var totalEmailsSent = _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
                 SuccessNotification(string.Format(_localizationService.GetResource("Admin.Promotions.Campaigns.MassEmailSentToCustomers"), totalEmailsSent), false);
                 return View(model);

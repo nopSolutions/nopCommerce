@@ -10,6 +10,7 @@ namespace Nop.Admin.Models.Messages
         public NewsLetterSubscriptionListModel()
         {
             AvailableStores = new List<SelectListItem>();
+            ActiveList = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchEmail")]
@@ -19,5 +20,10 @@ namespace Nop.Admin.Models.Messages
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchStore")]
         public int StoreId { get; set; }
         public IList<SelectListItem> AvailableStores { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive")]
+        public int ActiveId { get; set; }
+        [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive")]
+        public IList<SelectListItem> ActiveList { get; set; }
     }
 }

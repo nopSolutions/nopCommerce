@@ -545,6 +545,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories.AddNew">
     <Value>Add a new category</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive">
+    <Value>Active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.Hint">
+    <Value>Search by a specific status e.g. Active.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -59,7 +59,24 @@ namespace Nop.Admin.Controllers
             model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var s in _storeService.GetAllStores())
                 model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
-            
+
+            //active
+            model.ActiveList.Add(new SelectListItem
+            {
+                Value = "0",
+                Selected = true,
+                Text = "All"
+            });
+            model.ActiveList.Add(new SelectListItem
+            {
+                Value = "1",
+                Text = "Yes"
+            });
+            model.ActiveList.Add(new SelectListItem
+            {
+                Value = "2",
+                Text = "No"
+            });
 			return View(model);
 		}
 
@@ -69,8 +86,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 
-                model.StoreId, command.Page - 1, command.PageSize, true);
+            bool? isActive = null;
+            if (model.ActiveId == 1)
+                isActive = true;
+            else if (model.ActiveId == 2)
+                isActive = false;
+
+            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
+                model.StoreId, isActive, command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -126,12 +149,18 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-			string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            bool? isActive = null;
+            if (model.ActiveId == 1)
+                isActive = true;
+            else if (model.ActiveId == 2)
+                isActive = false;
 
 			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, showHidden: true);
+                model.StoreId, isActive);
+
 		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 
+            string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 			return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
 		}
 
