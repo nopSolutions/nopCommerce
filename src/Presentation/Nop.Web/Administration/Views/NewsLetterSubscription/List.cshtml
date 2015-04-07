@@ -6,184 +6,187 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
-@Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
-        @T("Admin.Promotions.NewsLetterSubscriptions")
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
+            @T("Admin.Promotions.NewsLetterSubscriptions")
+        </div>
+        <div class="options">
+            <input type="submit" name="exportcsv" class="k-button" value="@T("Admin.Common.ExportToCsv")" />
+            <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
+        </div>
     </div>
-    <div class="options">
-        <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Common.ExportToCsv")</a>
-        <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
-    </div>
-</div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchEmail):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchEmail)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ActiveId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("ActiveId", Model.ActiveList)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StoreId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("StoreId", Model.AvailableStores)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-subscriptions" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="newsletter-subscriptions-grid"></div>
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchEmail)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ActiveId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("ActiveId", Model.ActiveList)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("StoreId", Model.AvailableStores)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" id="search-subscriptions" class="k-button" value="@T("Admin.Common.Search")" />
+            </td>
+        </tr>
+    </table>
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="newsletter-subscriptions-grid"></div>
 
-            <script>
-                $(document).ready(function() {
-                    $("#newsletter-subscriptions-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                },
-                                update: {
-                                    url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        Email: { editable: true, type: "string" },
-                                        Active: { editable: true, type: "boolean" },
-                                        StoreName: { editable: false, type: "string" },
-                                        CreatedOn: { editable: false, type: "date" }
+                <script>
+                    $(document).ready(function() {
+                        $("#newsletter-subscriptions-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
-                                }
-                            },
-                            requestEnd: function(e) {
-                                if (e.type == "update") {
-                                    this.read();
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "Email",
-                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")",
-                                width: 300
-                            }, {
-                                field: "Active",
-                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
-                            }, {
-                                field: "StoreName",
-                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
-                                width: 300
-                            },{
-                                field: "CreatedOn",
-                                title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                command: [
-                                    {
-                                        name: "edit",
-                                        text: "@T("Admin.Common.Edit")"
-                                    }, {
-                                        name: "destroy",
-                                        text: "@T("Admin.Common.Delete")"
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Email: { editable: true, type: "string" },
+                                            Active: { editable: true, type: "boolean" },
+                                            StoreName: { editable: false, type: "string" },
+                                            CreatedOn: { editable: false, type: "date" }
+                                        }
                                     }
-                                ],
-                                width: 200
-                            }
-                        ]
+                                },
+                                requestEnd: function(e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "Email",
+                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")",
+                                    width: 300
+                                }, {
+                                    field: "Active",
+                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                }, {
+                                    field: "StoreName",
+                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
+                                    width: 300
+                                }, {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    command: [
+                                        {
+                                            name: "edit",
+                                            text: "@T("Admin.Common.Edit")"
+                                        }, {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 200
+                                }
+                            ]
+                        });
                     });
-                });
-            </script>
-        </td>
-    </tr>
-</table>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#search-subscriptions').click(function () {
-            var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
-            grid.dataSource.page(1); //new search. Set page size to 1
-            //grid.dataSource.read(); we already loaded the grid above using "page" function
-            return false;
-        });
-
-        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
-            if (event.keyCode == 13) {
-                $("#search-subscriptions").click();
+                </script>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#search-subscriptions').click(function() {
+                var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
+                grid.dataSource.page(1); //new search. Set page size to 1
+                //grid.dataSource.read(); we already loaded the grid above using "page" function
                 return false;
-            }
-        });
-    });
+            });
 
-    function additionalData() {
-        var data = {
-            ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
-            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
-        };
-        addAntiForgeryToken(data);
-        return data;
-    }
-</script>
+            $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
+                if (event.keyCode == 13) {
+                    $("#search-subscriptions").click();
+                    return false;
+                }
+            });
+        });
+
+        function additionalData() {
+            var data = {
+                ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
+                StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
+            };
+            addAntiForgeryToken(data);
+            return data;
+        }
+    </script>
+}
 
 @*import emails form*@
 <div id="importcsv-window" style="display:none;">

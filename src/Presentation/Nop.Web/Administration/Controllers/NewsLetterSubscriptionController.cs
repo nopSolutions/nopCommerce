@@ -11,6 +11,7 @@ using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Services.Stores;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 
@@ -143,6 +144,8 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("exportcsv")]
 		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
