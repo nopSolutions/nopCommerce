@@ -9823,7 +9823,7 @@
     <Value>Quantity</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Hint">
-    <Value>Chosen information.</Value>
+    <Value>Entered quantity.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn">
     <Value>Reason for return</Value>

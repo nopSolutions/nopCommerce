@@ -575,6 +575,9 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountName.Hint">
     <Value>Search by discount name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Hint">
+    <Value>Entered quantity.</Value>
+  </LocaleResource>
 </Language>
 '
 
