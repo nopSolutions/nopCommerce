@@ -569,6 +569,12 @@ set @resources='
   <LocaleResource Name="Admin.GiftCards.List.Activated.DeactivatedOnly">
     <Value>Deactivated</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountName">
+    <Value>Discount name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountName.Hint">
+    <Value>Search by discount name.</Value>
+  </LocaleResource>
 </Language>
 '
 

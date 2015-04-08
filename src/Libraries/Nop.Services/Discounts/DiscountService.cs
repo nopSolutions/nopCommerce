@@ -27,8 +27,9 @@ namespace Nop.Services.Discounts
         /// <remarks>
         /// {0} : show hidden records?
         /// {1} : coupon code
+        /// {2} : discount name
         /// </remarks>
-        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
+        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}-{2}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -164,14 +165,16 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountType">Discount type; null to load all discount</param>
         /// <param name="couponCode">Coupon code to find (exact match)</param>
+        /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, string couponCode = "", bool showHidden = false)
+        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType,
+            string couponCode = "", string discountName = "", bool showHidden = false)
         {
             //we load all discounts, and filter them by passed "discountType" parameter later
             //we do it because we know that this method is invoked several times per HTTP request with distinct "discountType" parameter
             //that's why let's access the database only once
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode);
+            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountName);
             var result = _cacheManager.Get(key, () =>
             {
                 var query = _discountRepository.Table;
@@ -185,17 +188,21 @@ namespace Nop.Services.Discounts
                         && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
                         );
                 }
-                if (!String.IsNullOrWhiteSpace(couponCode))
+                if (!String.IsNullOrEmpty(couponCode))
                 {
-                    couponCode = couponCode.Trim();
-
                     query = query.Where(d => d.CouponCode == couponCode);
+                }
+                if (!String.IsNullOrEmpty(discountName))
+                {
+                    query = query.Where(d => d.Name.Contains(discountName));
                 }
                 query = query.OrderBy(d => d.Name);
                 
                 var discounts = query.ToList();
                 return discounts;
             });
+            //we know that this method is usually inkoved multiple times
+            //that's why we filter discounts by type on the application layer
             if (discountType.HasValue)
             {
                 result = result.Where(d => d.DiscountType == discountType.Value).ToList();
@@ -289,7 +296,7 @@ namespace Nop.Services.Discounts
             if (String.IsNullOrWhiteSpace(couponCode))
                 return null;
 
-            var discount = GetAllDiscounts(null, couponCode, showHidden).FirstOrDefault();
+            var discount = GetAllDiscounts(null, couponCode, null, showHidden).FirstOrDefault();
             return discount;
         }
 

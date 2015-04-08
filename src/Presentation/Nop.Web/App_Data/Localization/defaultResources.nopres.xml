@@ -9570,6 +9570,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountCouponCode.Hint">
     <Value>Search by discount coupon code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountName">
+    <Value>Discount name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountName.Hint">
+    <Value>Search by discount name.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.List.SearchDiscountType">
     <Value>Discount type</Value>
   </LocaleResource>

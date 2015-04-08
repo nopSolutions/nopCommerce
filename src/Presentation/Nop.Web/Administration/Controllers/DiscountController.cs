@@ -157,8 +157,11 @@ namespace Nop.Admin.Controllers
             DiscountType? discountType = null;
             if (model.SearchDiscountTypeId > 0)
                 discountType = (DiscountType) model.SearchDiscountTypeId;
-            var couponCode = !String.IsNullOrEmpty(model.SearchDiscountCouponCode) ? model.SearchDiscountCouponCode.Trim() : null;
-            var discounts = _discountService.GetAllDiscounts(discountType, couponCode, true);
+            var discounts = _discountService.GetAllDiscounts(discountType,
+                model.SearchDiscountCouponCode,
+                model.SearchDiscountName,
+                true);
+
             var gridModel = new DataSourceResult
             {
                 Data = discounts.PagedForCommand(command).Select(x =>

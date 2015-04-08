@@ -28,9 +28,11 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <param name="discountType">Discount type; null to load all discount</param>
         /// <param name="couponCode">Coupon code to find (exact match)</param>
+        /// <param name="discountName">Discount name</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discounts</returns>
-        IList<Discount> GetAllDiscounts(DiscountType? discountType, string couponCode = "", bool showHidden = false);
+        IList<Discount> GetAllDiscounts(DiscountType? discountType,
+            string couponCode = "", string discountName = "", bool showHidden = false);
 
         /// <summary>
         /// Inserts a discount

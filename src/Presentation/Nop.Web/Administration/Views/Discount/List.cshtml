@@ -19,6 +19,14 @@
 <table width="100%">
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchDiscountName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SearchDiscountName)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.SearchDiscountCouponCode):
         </td>
         <td class="adminData">
@@ -128,6 +136,13 @@
                     });
                 });
 
+                $("#@Html.FieldIdFor(model => model.SearchDiscountName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-discounts").click();
+                        return false;
+                    }
+                });
+
                 $("#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)").keydown(function (event) {
                     if (event.keyCode == 13) {
                         $("#search-discounts").click();
@@ -138,13 +153,14 @@
                 function additionalData() {
                     var data = {
                         SearchDiscountTypeId: $('#@Html.FieldIdFor(model => model.SearchDiscountTypeId)').val(),
-                        SearchDiscountCouponCode: $('#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)').val()
+                        SearchDiscountCouponCode: $('#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)').val(),
+                        SearchDiscountName: $('#@Html.FieldIdFor(model => model.SearchDiscountName)').val()
                     };
                     addAntiForgeryToken(data);
                     return data;
                 }
 
-            </script>
+</script>
         </td>
     </tr>
 </table>

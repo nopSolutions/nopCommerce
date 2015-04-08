@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
 
             //discounts
             model.AvailableDiscounts = _discountService
-                .GetAllDiscounts(DiscountType.AssignedToSkus, null, true)
+                .GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true)
                 .Select(d => d.ToModel())
                 .ToList();
             if (!excludeProperties && product != null)
@@ -952,7 +952,7 @@ namespace Nop.Admin.Controllers
                 //warehouses
                 SaveProductWarehouseInventory(product, model);
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -1057,7 +1057,7 @@ namespace Nop.Admin.Controllers
                 //picture seo names
                 UpdatePictureSeoNames(product);
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, showHidden: true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
