@@ -462,7 +462,7 @@ namespace Nop.Web.Controllers
 
 
         //contact us page
-        [NopHttpsRequirement(SslRequirement.No)]
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ContactUs()
         {
             var model = new ContactUsModel
@@ -540,7 +540,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         //contact vendor page
-        [NopHttpsRequirement(SslRequirement.No)]
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ContactVendor(int vendorId)
         {
             if (!_vendorSettings.AllowCustomersToContactVendors)

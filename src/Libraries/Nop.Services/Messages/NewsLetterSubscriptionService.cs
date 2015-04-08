@@ -17,7 +17,9 @@ namespace Nop.Services.Messages
         private readonly IDbContext _context;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
-        public NewsLetterSubscriptionService(IDbContext context, IRepository<NewsLetterSubscription> subscriptionRepository, IEventPublisher eventPublisher)
+        public NewsLetterSubscriptionService(IDbContext context, 
+            IRepository<NewsLetterSubscription> subscriptionRepository, 
+            IEventPublisher eventPublisher)
         {
             _context = context;
             _subscriptionRepository = subscriptionRepository;
@@ -68,7 +70,7 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            NewsLetterSubscription originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
+            var originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
