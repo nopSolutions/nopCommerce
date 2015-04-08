@@ -13,22 +13,6 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ProductName):
-        </td>
-        <td class="adminData">
-            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Quantity):
-        </td>
-        <td class="adminData">
-            @Model.Quantity
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
             @Html.NopLabelFor(model => model.OrderId):
         </td>
         <td class="adminData">
@@ -41,6 +25,23 @@
         </td>
         <td class="adminData">
             @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ProductName):
+        </td>
+        <td class="adminData">
+            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Quantity):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Quantity)
+            @Html.ValidationMessageFor(model => model.Quantity)
         </td>
     </tr>
     <tr>

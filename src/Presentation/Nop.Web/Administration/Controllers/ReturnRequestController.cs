@@ -164,6 +164,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                returnRequest.Quantity = model.Quantity;
                 returnRequest.ReasonForReturn = model.ReasonForReturn;
                 returnRequest.RequestedAction = model.RequestedAction;
                 returnRequest.CustomerComments = model.CustomerComments;
