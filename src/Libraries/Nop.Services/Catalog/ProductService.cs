@@ -457,7 +457,7 @@ namespace Nop.Services.Catalog
                 else
                 {
                     //ensure that we have at least two published languages
-                    var totalPublishedLanguages = _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id).Count;
+                    var totalPublishedLanguages = _languageService.GetAllLanguages().Count;
                     searchLocalizedValue = totalPublishedLanguages >= 2;
                 }
             }
