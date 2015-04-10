@@ -2,14 +2,11 @@
 
 namespace Nop.Web.Framework.Menu
 {
+    /// <summary>
+    /// Interface for plugins which have some items in the admin area menu
+    /// </summary>
     public interface IAdminMenuPlugin : IPlugin
     {
-        /// <summary>
-        /// Authenticate a user (can he see this plugin menu item?)
-        /// </summary>
-        /// <returns></returns>
-        bool Authenticate();
-
         /// <summary>
         /// Build menu item
         /// </summary>

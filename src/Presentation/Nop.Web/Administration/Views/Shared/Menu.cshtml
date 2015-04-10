@@ -63,7 +63,6 @@
     @{
         var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
             .GetPlugins<IAdminMenuPlugin>()
-            .Where(x => x.Authenticate())
             .ToList();
 
         var pluginMenuItems = new List<Nop.Web.Framework.Menu.SiteMapNode>();
