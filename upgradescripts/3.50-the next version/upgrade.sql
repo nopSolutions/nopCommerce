@@ -1676,3 +1676,16 @@ ALTER TABLE [dbo].[PredefinedProductAttributeValue]  WITH CHECK ADD  CONSTRAINT 
 REFERENCES [dbo].[ProductAttribute] ([Id])
 ON DELETE CASCADE
 GO
+
+--rename some properties in attributes (XML)
+UPDATE [ShoppingCartItem] 
+SET AttributesXml = REPLACE(AttributesXml, 'ProductVariantAttribute', 'ProductAttribute')
+GO
+
+UPDATE [OrderItem] 
+SET AttributesXml = REPLACE(AttributesXml, 'ProductVariantAttribute', 'ProductAttribute')
+GO
+
+UPDATE [ProductAttributeCombination] 
+SET AttributesXml = REPLACE(AttributesXml, 'ProductVariantAttribute', 'ProductAttribute')
+GO

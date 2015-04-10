@@ -45,7 +45,7 @@ namespace Nop.Services.Catalog
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(attributesXml);
 
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductVariantAttribute");
+                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
@@ -132,7 +132,7 @@ namespace Nop.Services.Catalog
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(attributesXml);
 
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductVariantAttribute");
+                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
@@ -143,7 +143,7 @@ namespace Nop.Services.Catalog
                         {
                             if (id == productAttributeMappingId)
                             {
-                                var nodeList2 = node1.SelectNodes(@"ProductVariantAttributeValue/Value");
+                                var nodeList2 = node1.SelectNodes(@"ProductAttributeValue/Value");
                                 foreach (XmlNode node2 in nodeList2)
                                 {
                                     string value = node2.InnerText.Trim();
@@ -187,7 +187,7 @@ namespace Nop.Services.Catalog
 
                 XmlElement attributeElement = null;
                 //find existing
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductVariantAttribute");
+                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
                 foreach (XmlNode node1 in nodeList1)
                 {
                     if (node1.Attributes != null && node1.Attributes["ID"] != null)
@@ -208,12 +208,12 @@ namespace Nop.Services.Catalog
                 //create new one if not found
                 if (attributeElement == null)
                 {
-                    attributeElement = xmlDoc.CreateElement("ProductVariantAttribute");
+                    attributeElement = xmlDoc.CreateElement("ProductAttribute");
                     attributeElement.SetAttribute("ID", productAttributeMapping.Id.ToString());
                     rootElement.AppendChild(attributeElement);
                 }
 
-                var attributeValueElement = xmlDoc.CreateElement("ProductVariantAttributeValue");
+                var attributeValueElement = xmlDoc.CreateElement("ProductAttributeValue");
                 attributeElement.AppendChild(attributeValueElement);
 
                 var attributeValueValueElement = xmlDoc.CreateElement("Value");
