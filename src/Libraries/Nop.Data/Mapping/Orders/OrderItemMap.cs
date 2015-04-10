@@ -8,8 +8,6 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("OrderItem");
             this.HasKey(orderItem => orderItem.Id);
-            this.Property(orderItem => orderItem.AttributeDescription);
-            this.Property(orderItem => orderItem.AttributesXml);
 
             this.Property(orderItem => orderItem.UnitPriceInclTax).HasPrecision(18, 4);
             this.Property(orderItem => orderItem.UnitPriceExclTax).HasPrecision(18, 4);
