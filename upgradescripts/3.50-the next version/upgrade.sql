@@ -578,6 +578,9 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.Quantity.Hint">
     <Value>Entered quantity.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
 </Language>
 '
 

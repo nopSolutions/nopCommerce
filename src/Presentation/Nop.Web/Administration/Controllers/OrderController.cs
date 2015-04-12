@@ -80,6 +80,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
 	    private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 	    private readonly IAffiliateService _affiliateService;
+	    private readonly IPictureService _pictureService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -128,6 +129,7 @@ namespace Nop.Admin.Controllers
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
+            IPictureService pictureService,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -171,6 +173,7 @@ namespace Nop.Admin.Controllers
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._affiliateService = affiliateService;
+            this._pictureService = pictureService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -526,6 +529,7 @@ namespace Nop.Admin.Controllers
             #endregion
 
             #region Products
+
             model.CheckoutAttributeInfo = order.CheckoutAttributeDescription;
             bool hasDownloadableItems = false;
             var products = order.OrderItems;
@@ -553,6 +557,10 @@ namespace Nop.Admin.Controllers
                     DownloadActivationType = orderItem.Product.DownloadActivationType,
                     IsDownloadActivated = orderItem.IsDownloadActivated
                 };
+                //picture
+                var orderItemPicture = orderItem.Product.GetProductPicture(orderItem.AttributesXml, _pictureService, _productAttributeParser);
+                orderItemModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(orderItemPicture, 75, true);
+
                 //license file
                 if (orderItem.LicenseDownloadId.HasValue)
                 {

@@ -200,32 +200,7 @@ namespace Nop.Web.Controllers
                 3, () =>
             {
                 //shopping cart item picture
-                Picture sciPicture = null;
-
-                //first, let's see whether a shopping cart item has some attribute values with custom pictures
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(sci.AttributesXml);
-                foreach (var attributeValue in attributeValues)
-                {
-                    var attributePicture = _pictureService.GetPictureById(attributeValue.PictureId);
-                    if (attributePicture != null)
-                    {
-                        sciPicture = attributePicture;
-                        break;
-                    }
-                }
-
-                //now let's load the default product picture
-                var product = sci.Product;
-                if (sciPicture == null)
-                {
-                    sciPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
-                }
-
-                //let's check whether this product has some parent "grouped" product
-                if (sciPicture == null && !product.VisibleIndividually && product.ParentGroupedProductId > 0)
-                {
-                    sciPicture = _pictureService.GetPicturesByProductId(product.ParentGroupedProductId, 1).FirstOrDefault();
-                }
+                var sciPicture = sci.Product.GetProductPicture(sci.AttributesXml, _pictureService, _productAttributeParser);
                 return new PictureModel
                 {
                     ImageUrl = _pictureService.GetPictureUrl(sciPicture, pictureSize, showDefaultPicture),

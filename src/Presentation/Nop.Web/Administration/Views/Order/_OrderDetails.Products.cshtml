@@ -41,6 +41,7 @@
             }
             <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
                 <col />
+                <col />
                 @if (Model.HasDownloadableProducts)
                 {
                     <col />
@@ -55,6 +56,9 @@
                 }
                 <thead>
                     <tr class="headerstyle">
+                        <th align="center">
+                            @T("Admin.Orders.Products.Picture")
+                        </th>
                         <th align="center">
                             @T("Admin.Orders.Products.ProductName")
                         </th>
@@ -88,6 +92,9 @@
                     @foreach (var item in Model.Items)
                     {
                         <tr>
+                            <td align="center" style="width: 10%;">
+                                <img src="@item.PictureThumbnailUrl" alt="" title="" />
+                            </td>
                             <td style="width: 25%;">
                                 <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
                                     <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>

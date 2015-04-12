@@ -9054,6 +9054,9 @@
   <LocaleResource Name="Admin.Orders.Products.License.UploadFile">
     <Value>Upload license file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products.Price">
     <Value>Price</Value>
   </LocaleResource>

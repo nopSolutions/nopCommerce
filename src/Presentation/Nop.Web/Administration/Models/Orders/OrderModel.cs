@@ -239,6 +239,8 @@ namespace Nop.Admin.Models.Orders
             public string VendorName { get; set; }
             public string Sku { get; set; }
 
+            public string PictureThumbnailUrl { get; set; }
+
             public string UnitPriceInclTax { get; set; }
             public string UnitPriceExclTax { get; set; }
             public decimal UnitPriceInclTaxValue { get; set; }
