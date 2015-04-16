@@ -581,6 +581,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.Picture">
     <Value>Picture</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
+    <Value>Order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.Order">
+    <Value>Order ID</Value>
+  </LocaleResource>
 </Language>
 '
 

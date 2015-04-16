@@ -274,20 +274,20 @@
                 },
                 scrollable: false,
                 columns: [{
-                    field: "UsedValue",
-                    title: "@T("Admin.GiftCards.History.UsedValue")",
-                    width: 200
+                    field: "CreatedOn",
+                    title: "@T("Admin.GiftCards.History.CreatedOn")",
+                    width: 200,
+                    type: "date",
+                    format: "{0:G}"
                 }, {
                     field: "OrderId",
                     title: "@T("Admin.GiftCards.History.Order")",
                     width: 200,
                     template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
                 }, {
-                    field: "CreatedOn",
-                    title: "@T("Admin.GiftCards.History.CreatedOn")",
-                    width: 200,
-                    type: "date",
-                    format: "{0:G}"
+                    field: "UsedValue",
+                    title: "@T("Admin.GiftCards.History.UsedValue")",
+                    width: 200
                 }]
             });
         });

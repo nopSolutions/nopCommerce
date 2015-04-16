@@ -92,6 +92,9 @@ namespace Nop.Admin.Models.Discounts
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.Order")]
             public int OrderId { get; set; }
 
+            [NopResourceDisplayName("Admin.Promotions.Discounts.History.OrderTotal")]
+            public string OrderTotal { get; set; }
+
             [NopResourceDisplayName("Admin.Promotions.Discounts.History.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }

@@ -14,6 +14,7 @@ using Nop.Services.Discounts;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Services.Vendors;
@@ -42,6 +43,8 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
+        private readonly IOrderService _orderService;
+        private readonly IPriceFormatter _priceFormatter;
 
         #endregion
 
@@ -60,7 +63,9 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext,
             IManufacturerService manufacturerService,
             IStoreService storeService,
-            IVendorService vendorService)
+            IVendorService vendorService,
+            IOrderService orderService,
+            IPriceFormatter priceFormatter)
         {
             this._discountService = discountService;
             this._localizationService = localizationService;
@@ -76,6 +81,8 @@ namespace Nop.Admin.Controllers
             this._manufacturerService = manufacturerService;
             this._storeService = storeService;
             this._vendorService = vendorService;
+            this._orderService = orderService;
+            this._priceFormatter = priceFormatter;
         }
 
         #endregion
@@ -663,12 +670,17 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new DataSourceResult
             {
-                Data = duh.Select(x => new DiscountModel.DiscountUsageHistoryModel
-                {
-                    Id = x.Id,
-                    DiscountId = x.DiscountId,
-                    OrderId = x.OrderId,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                Data = duh.Select(x => {
+                    var order = _orderService.GetOrderById(x.OrderId);
+                    var duhModel = new DiscountModel.DiscountUsageHistoryModel
+                    {
+                        Id = x.Id,
+                        DiscountId = x.DiscountId,
+                        OrderId = x.OrderId,
+                        OrderTotal = order != null ? _priceFormatter.FormatPrice(order.OrderTotal, true, false) : "",
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                    return duhModel;
                 }),
                 Total = duh.TotalCount
             };

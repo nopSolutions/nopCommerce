@@ -9562,7 +9562,10 @@
     <Value>Used</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.History.Order">
-    <Value>Order</Value>
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.History.OrderTotal">
+    <Value>Order total</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Info">
     <Value>Discount info</Value>

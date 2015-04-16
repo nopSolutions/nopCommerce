@@ -736,17 +736,21 @@
                 },
                 scrollable: false,
                 columns: [{
-                    field: "OrderId",
-                    title: "@T("Admin.Promotions.Discounts.History.Order")",
-                    width: 200,
-                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
-                }, {
                     field: "CreatedOn",
                     title: "@T("Admin.Promotions.Discounts.History.CreatedOn")",
                     width: 200,
                     type: "date",
                     format: "{0:G}"
                 }, {
+                    field: "OrderId",
+                    title: "@T("Admin.Promotions.Discounts.History.Order")",
+                    width: 200,
+                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                }, {
+                    field: "OrderTotal",
+                    title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
+                    width: 200
+                },{
                     command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
                     title: "@T("Admin.Common.Delete")",
                     width: 100

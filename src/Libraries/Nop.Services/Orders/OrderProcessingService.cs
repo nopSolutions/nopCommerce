@@ -1441,7 +1441,7 @@ namespace Nop.Services.Orders
                         //this order is placed by a store administrator impersonating a customer
                         order.OrderNotes.Add(new OrderNote
                         {
-                            Note = string.Format( "Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
+                            Note = string.Format("Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
                                 _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
                             DisplayToCustomer = false,
                             CreatedOnUtc = DateTime.UtcNow
@@ -1622,7 +1622,6 @@ namespace Nop.Services.Orders
             //now delete an order
             _orderService.DeleteOrder(order);
         }
-
 
         /// <summary>
         /// Process next recurring psayment
