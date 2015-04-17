@@ -19,11 +19,11 @@
             <input type="button" id="sendprivatemessage" class="k-button" value="@T("Admin.Customers.Customers.SendPM")" />
             @if (Model.AllowSendingOfWelcomeMessage)
             {
-                <input type="submit" name="send-welcome-message" class="k-button" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" />
+                <input type="submit" name="send-welcome-message" class="k-button" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
-                <input type="submit" name="resend-activation-message" class="k-button" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" />
+                <input type="submit" name="resend-activation-message" class="k-button" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
             <span id="customer-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
