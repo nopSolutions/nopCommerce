@@ -619,13 +619,22 @@ namespace Nop.Admin.Controllers
             {
                 model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
             }
-            //sending of welcome message:
+            //sending of the welcome message:
             //1. "admin approval" registration method
             //2. already created customer
             //3. registered
             model.AllowSendingOfWelcomeMessage = _customerSettings.UserRegistrationType == UserRegistrationType.AdminApproval &&
                 customer != null &&
                 customer.IsRegistered();
+            //sending of the activation message
+            //1. "email validation" registration method
+            //2. already created customer
+            //3. registered
+            //4. not active
+            model.AllowReSendingOfActivationMessage = _customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation &&
+                customer != null &&
+                customer.IsRegistered() &&
+                !customer.Active;
         }
 
         [NonAction]
@@ -1270,6 +1279,27 @@ namespace Nop.Admin.Controllers
             _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendWelcomeMessage.Success"));
+
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("resend-activation-message")]
+        public ActionResult ReSendActivationMessage(CustomerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                //No customer found with the specified id
+                return RedirectToAction("List");
+
+            //email validation message
+            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+            _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.ReSendActivationMessage.Success"));
 
             return RedirectToAction("Edit", new { id = customer.Id });
         }

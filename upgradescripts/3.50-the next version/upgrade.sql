@@ -587,6 +587,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.History.Order">
     <Value>Order ID</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage">
+    <Value>Re-send activation message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage.Success">
+    <Value>Activation email has been successfully sent.</Value>
+  </LocaleResource>
 </Language>
 '
 

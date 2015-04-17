@@ -21,6 +21,10 @@
             {
                 <input type="submit" name="send-welcome-message" class="k-button" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" />
             }
+            @if (Model.AllowReSendingOfActivationMessage)
+            {
+                <input type="submit" name="resend-activation-message" class="k-button" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" />
+            }
             <span id="customer-delete" class="k-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>

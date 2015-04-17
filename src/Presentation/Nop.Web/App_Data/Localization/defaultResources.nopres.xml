@@ -8004,6 +8004,12 @@
   <LocaleResource Name="Admin.Customers.Customers.PasswordChanged">
     <Value>The password has been changed successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage">
+    <Value>Re-send activation message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage.Success">
+    <Value>Activation email has been successfully sent.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints">
     <Value>Reward points</Value>
   </LocaleResource>
