@@ -374,13 +374,14 @@ namespace Nop.Services.Localization
         /// <param name="plugin">Plugin</param>
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
+        /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
         public static void AddOrUpdatePluginLocaleResource(this BasePlugin plugin,
-            string resourceName, string resourceValue)
+            string resourceName, string resourceValue, string languageCulture = null)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
             var languageService = EngineContext.Current.Resolve<ILanguageService>();
              AddOrUpdatePluginLocaleResource(plugin, localizationService,
-                 languageService, resourceName, resourceValue);
+                 languageService, resourceName, resourceValue, languageCulture);
         }
         /// <summary>
         /// Add a locale resource (if new) or update an existing one
@@ -390,9 +391,10 @@ namespace Nop.Services.Localization
         /// <param name="languageService">Language service</param>
         /// <param name="resourceName">Resource name</param>
         /// <param name="resourceValue">Resource value</param>
+        /// <param name="languageCulture">Language culture code. If null or empty, then a resource will be added for all languages</param>
         public static void AddOrUpdatePluginLocaleResource(this BasePlugin plugin, 
             ILocalizationService localizationService, ILanguageService languageService, 
-            string resourceName, string resourceValue)
+            string resourceName, string resourceValue, string languageCulture = null)
         {
             //actually plugin instance is not required
             if (plugin == null)
@@ -404,6 +406,9 @@ namespace Nop.Services.Localization
             
             foreach (var lang in languageService.GetAllLanguages(true))
             {
+                if (!String.IsNullOrEmpty(languageCulture) && !languageCulture.Equals(lang.LanguageCulture))
+                    continue;
+
                 var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
                 if (lsr == null)
                 {
