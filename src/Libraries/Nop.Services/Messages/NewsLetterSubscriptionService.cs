@@ -13,9 +13,15 @@ namespace Nop.Services.Messages
     /// </summary>
     public class NewsLetterSubscriptionService : INewsLetterSubscriptionService
     {
+        #region Fields
+
         private readonly IEventPublisher _eventPublisher;
         private readonly IDbContext _context;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+
+        #endregion
+
+        #region Ctor
 
         public NewsLetterSubscriptionService(IDbContext context, 
             IRepository<NewsLetterSubscription> subscriptionRepository, 
@@ -25,6 +31,34 @@ namespace Nop.Services.Messages
             _subscriptionRepository = subscriptionRepository;
             _eventPublisher = eventPublisher;
         }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Publishes the subscription event.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
+        {
+            if (publishSubscriptionEvents)
+            {
+                if (isSubscribe)
+                {
+                    _eventPublisher.PublishNewsletterSubscribe(email);
+                }
+                else
+                {
+                    _eventPublisher.PublishNewsletterUnsubscribe(email);
+                }
+            }
+        }
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Inserts a newsletter subscription
@@ -193,25 +227,6 @@ namespace Nop.Services.Messages
             return newsletterSubscriptions;
         }
 
-        /// <summary>
-        /// Publishes the subscription event.
-        /// </summary>
-        /// <param name="email">The email.</param>
-        /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
-        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
-        {
-            if (publishSubscriptionEvents)
-            {
-                if (isSubscribe)
-                {
-                    _eventPublisher.PublishNewsletterSubscribe(email);
-                }
-                else
-                {
-                    _eventPublisher.PublishNewsletterUnsubscribe(email);
-                }
-            }
-        }
+        #endregion
     }
 }
