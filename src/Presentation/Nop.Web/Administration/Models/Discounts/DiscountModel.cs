@@ -27,6 +27,10 @@ namespace Nop.Admin.Models.Discounts
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.DiscountType")]
         public string DiscountTypeName { get; set; }
 
+        //used for the list page
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.TimesUsed")]
+        public int TimesUsed { get; set; }
+
         [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.UsePercentage")]
         public bool UsePercentage { get; set; }
 

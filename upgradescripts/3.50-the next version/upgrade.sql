@@ -593,6 +593,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.ReSendActivationMessage.Success">
     <Value>Activation email has been successfully sent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.TimesUsed">
+    <Value>Times used</Value>
+  </LocaleResource>
 </Language>
 '
 

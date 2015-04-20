@@ -9555,6 +9555,9 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.StartDate.Hint">
     <Value>The start of the discount period in Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.TimesUsed">
+    <Value>Times used</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.UsePercentage">
     <Value>Use percentage</Value>
   </LocaleResource>
