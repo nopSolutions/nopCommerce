@@ -240,11 +240,7 @@ namespace Nop.Web.Controllers
 
             var model = new ActiveDiscussionsModel();
 
-            int pageSize = 50;
-            if (_forumSettings.ActiveDiscussionsPageSize > 0)
-            {
-                pageSize = _forumSettings.ActiveDiscussionsPageSize;
-            }
+            int pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize: 50;
 
             var topics = _forumService.GetActiveTopics(forumId, (page - 1), pageSize);
             model.TopicPageSize = topics.PageSize;
@@ -336,11 +332,7 @@ namespace Nop.Web.Controllers
                 model.SeName = forum.GetSeName();
                 model.Description = forum.Description;
 
-                int pageSize = 10;
-                if (_forumSettings.TopicsPageSize > 0)
-                {
-                    pageSize = _forumSettings.TopicsPageSize;
-                }
+                int pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize: 10;
 
                 //subscription                
                 if (_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
@@ -1215,9 +1207,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    int pageSize = 10;
-                    if (_forumSettings.PostsPageSize > 0)
-                        pageSize = _forumSettings.PostsPageSize;
+                    int pageSize =_forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
 
                     int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
@@ -1385,11 +1375,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    int pageSize = 10;
-                    if (_forumSettings.PostsPageSize > 0)
-                    {
-                        pageSize = _forumSettings.PostsPageSize;
-                    }
+                    int pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
                     int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
                     if (pageIndex > 1)
