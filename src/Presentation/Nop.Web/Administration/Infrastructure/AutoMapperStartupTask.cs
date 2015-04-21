@@ -537,6 +537,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AddressAttributeValues, mo => mo.Ignore());
             //discounts
             Mapper.CreateMap<Discount, DiscountModel>()
+                .ForMember(dest => dest.DiscountTypeName, mo => mo.Ignore())
+                .ForMember(dest => dest.TimesUsed, mo => mo.Ignore())
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
