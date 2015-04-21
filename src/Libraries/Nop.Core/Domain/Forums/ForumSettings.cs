@@ -70,6 +70,11 @@ namespace Nop.Core.Domain.Forums
         public int SearchResultsPageSize { get; set; }
 
         /// <summary>
+        /// Gets or sets the page size for the Active Discussions page
+        /// </summary>
+        public int ActiveDiscussionsPageSize { get; set; }
+
+        /// <summary>
         /// Gets or sets the page size for latest customer posts
         /// </summary>
         public int LatestCustomerPostsPageSize { get; set; }
@@ -128,11 +133,6 @@ namespace Nop.Core.Domain.Forums
         /// Gets or sets the number of items to display for Active Discussions on forums home page
         /// </summary>
         public int HomePageActiveDiscussionsTopicCount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the page size for the Active Discussions page
-        /// </summary>
-        public int ActiveDiscussionsPageSize { get; set; }
 
         /// <summary>
         /// Gets or sets the number of items to display for Active Discussions RSS Feed

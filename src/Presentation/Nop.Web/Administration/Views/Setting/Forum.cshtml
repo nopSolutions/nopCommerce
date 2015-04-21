@@ -130,6 +130,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ActiveDiscussionsPageSize_OverrideForStore, model => model.ActiveDiscussionsPageSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ActiveDiscussionsPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ActiveDiscussionsPageSize)
+                @Html.ValidationMessageFor(model => model.ActiveDiscussionsPageSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ForumEditor_OverrideForStore, model => model.ForumEditor, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ForumEditor):
             </td>

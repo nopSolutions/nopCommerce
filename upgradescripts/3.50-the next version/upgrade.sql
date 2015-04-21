@@ -602,6 +602,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm.Hint">
     <Value>Check to use your system email as "From" field when sending emails from contact us page. Otherwise, customer email will be used (please note that some email services do not allow it).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize">
+    <Value>Active discussions page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize.Hint">
+    <Value>Set the page size for active discussions page e.g. ''10'' results per page.</Value>
+  </LocaleResource>
 </Language>
 '
 

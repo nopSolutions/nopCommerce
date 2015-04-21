@@ -639,6 +639,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ForumFeedsEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ForumFeedCount_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.SearchResultsPageSize_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.ActiveDiscussionsPageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ForumSettingsModel, ForumSettings>()
                 .ForMember(dest => dest.TopicSubjectMaxLength, mo => mo.Ignore())
@@ -650,7 +651,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PMSubjectMaxLength, mo => mo.Ignore())
                 .ForMember(dest => dest.PMTextMaxLength, mo => mo.Ignore())
                 .ForMember(dest => dest.HomePageActiveDiscussionsTopicCount, mo => mo.Ignore())
-                .ForMember(dest => dest.ActiveDiscussionsPageSize, mo => mo.Ignore())
                 .ForMember(dest => dest.ForumSearchTermMinimumLength, mo => mo.Ignore());
             Mapper.CreateMap<BlogSettings, BlogSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

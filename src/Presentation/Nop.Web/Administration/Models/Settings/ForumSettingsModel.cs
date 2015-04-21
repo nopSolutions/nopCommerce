@@ -89,5 +89,10 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.SearchResultsPageSize")]
         public int SearchResultsPageSize { get; set; }
         public bool SearchResultsPageSize_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize")]
+        public int ActiveDiscussionsPageSize { get; set; }
+        public bool ActiveDiscussionsPageSize_OverrideForStore { get; set; }
+
     }
 }

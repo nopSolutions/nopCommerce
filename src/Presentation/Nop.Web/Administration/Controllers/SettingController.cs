@@ -331,6 +331,7 @@ namespace Nop.Admin.Controllers
                 model.ForumFeedsEnabled_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedsEnabled, storeScope);
                 model.ForumFeedCount_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ForumFeedCount, storeScope);
                 model.SearchResultsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.SearchResultsPageSize, storeScope);
+                model.ActiveDiscussionsPageSize_OverrideForStore = _settingService.SettingExists(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
             }
             model.ForumEditorValues = forumSettings.ForumEditor.ToSelectList();
 
@@ -450,6 +451,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(forumSettings, x => x.SearchResultsPageSize, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(forumSettings, x => x.SearchResultsPageSize, storeScope);
+
+            if (model.ActiveDiscussionsPageSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(forumSettings, x => x.ActiveDiscussionsPageSize, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();

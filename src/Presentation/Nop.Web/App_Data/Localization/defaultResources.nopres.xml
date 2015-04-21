@@ -5106,6 +5106,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsFeedEnabled.Hint">
     <Value>Enables RSS feed for Active Discussions topics.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize">
+    <Value>Active discussions page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize.Hint">
+    <Value>Set the page size for active discussions page e.g. '10' results per page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowCustomersToDeletePosts">
     <Value>Allow customers to delete posts</Value>
   </LocaleResource>
