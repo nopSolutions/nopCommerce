@@ -596,6 +596,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.TimesUsed">
     <Value>Times used</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm">
+    <Value>Contact us page. Use system email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm.Hint">
+    <Value>Check to use your system email as "From" field when sending emails from contact us page. Otherwise, customer email will be used (please note that some email services do not allow it).</Value>
+  </LocaleResource>
 </Language>
 '
 

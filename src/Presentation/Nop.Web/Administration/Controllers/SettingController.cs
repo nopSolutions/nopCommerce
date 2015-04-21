@@ -2008,6 +2008,7 @@ namespace Nop.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             //store information
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
+            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = storeInformationSettings.StoreClosedAllowForAdmins;
             //themes
@@ -2032,6 +2033,8 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
             model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
             model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
+            //contact us. use system email
+            model.StoreInformationSettings.UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm;
             //override settings
             if (storeScope > 0)
             {
@@ -2044,6 +2047,7 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
                 model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
+                model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
             }
 
             //seo settings
@@ -2133,7 +2137,6 @@ namespace Nop.Admin.Controllers
             model.LocalizationSettings.LoadAllUrlRecordsOnStartup = localizationSettings.LoadAllUrlRecordsOnStartup;
 
             //full-text support
-            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             model.FullTextSettings.Supported = _fulltextService.IsFullTextSupported();
             model.FullTextSettings.Enabled = commonSettings.UseFullTextSearch;
             model.FullTextSettings.SearchMode = (int)commonSettings.FullTextMode;
@@ -2155,6 +2158,7 @@ namespace Nop.Admin.Controllers
 
             //store information settings
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
+            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
@@ -2166,6 +2170,8 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
             storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
+            //contact us. use system email
+            commonSettings.UseSystemEmailForContactUsForm = model.StoreInformationSettings.UseSystemEmailForContactUsForm;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -2215,6 +2221,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope);
+
+            if (model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();
@@ -2396,7 +2407,6 @@ namespace Nop.Admin.Controllers
             _settingService.SaveSetting(localizationSettings);
 
             //full-text
-            var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             commonSettings.FullTextMode = (FulltextSearchMode)model.FullTextSettings.SearchMode;
             _settingService.SaveSetting(commonSettings);
 

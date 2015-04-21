@@ -219,6 +219,16 @@
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSEOSettings()

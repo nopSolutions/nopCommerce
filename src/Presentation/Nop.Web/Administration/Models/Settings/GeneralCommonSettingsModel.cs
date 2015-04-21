@@ -59,7 +59,7 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning")]
             public bool DisplayEuCookieLawWarning { get; set; }
             public bool DisplayEuCookieLawWarning_OverrideForStore { get; set; }
-
+            
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.FacebookLink")]
             public string FacebookLink { get; set; }
             public bool FacebookLink_OverrideForStore { get; set; }
@@ -75,6 +75,10 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GooglePlusLink")]
             public string GooglePlusLink { get; set; }
             public bool GooglePlusLink_OverrideForStore { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm")]
+            public bool UseSystemEmailForContactUsForm { get; set; }
+            public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }
             
             #region Nested classes
 
