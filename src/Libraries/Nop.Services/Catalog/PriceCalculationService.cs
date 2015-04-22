@@ -100,23 +100,19 @@ namespace Nop.Services.Catalog
             if (_discountService.GetAllDiscounts(DiscountType.AssignedToCategories).Any())
             {
                 var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                if (productCategories != null)
+                foreach (var productCategory in productCategories)
                 {
-                    foreach (var productCategory in productCategories)
+                    var category = productCategory.Category;
+                    if (category.HasDiscountsApplied)
                     {
-                        var category = productCategory.Category;
-
-                        if (category.HasDiscountsApplied)
+                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                        var categoryDiscounts = category.AppliedDiscounts;
+                        foreach (var discount in categoryDiscounts)
                         {
-                            //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                            var categoryDiscounts = category.AppliedDiscounts;
-                            foreach (var discount in categoryDiscounts)
-                            {
-                                if (_discountService.IsDiscountValid(discount, customer) &&
-                                    discount.DiscountType == DiscountType.AssignedToCategories &&
-                                    !allowedDiscounts.ContainsDiscount(discount))
-                                    allowedDiscounts.Add(discount);
-                            }
+                            if (_discountService.IsDiscountValid(discount, customer) &&
+                                discount.DiscountType == DiscountType.AssignedToCategories &&
+                                !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
                         }
                     }
                 }
