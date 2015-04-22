@@ -516,6 +516,9 @@
   <LocaleResource Name="Account.PasswordRecovery.Tooltip">
     <Value>Please enter your email address below. You will receive a link to reset your password.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.WrongToken">
+    <Value>Wrong password recovery token</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Preferences">
     <Value>Preferences</Value>
   </LocaleResource>

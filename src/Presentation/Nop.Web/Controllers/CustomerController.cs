@@ -739,7 +739,10 @@ namespace Nop.Web.Controllers
 
             //validate token
             if (!customer.IsPasswordRecoveryTokenValid(token))
-                return RedirectToRoute("HomePage");
+            {
+                model.DisablePasswordChanging = true;
+                model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
+            }
 
             //validate token expiration date
             if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
@@ -761,7 +764,10 @@ namespace Nop.Web.Controllers
 
             //validate token
             if (!customer.IsPasswordRecoveryTokenValid(token))
-                return RedirectToRoute("HomePage");
+            {
+                model.DisablePasswordChanging = true;
+                model.Result = _localizationService.GetResource("Account.PasswordRecovery.WrongToken");
+            }
 
             //validate token expiration date
             if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))

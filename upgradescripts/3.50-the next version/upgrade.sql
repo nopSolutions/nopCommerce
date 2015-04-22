@@ -617,6 +617,9 @@ set @resources='
   <LocaleResource Name="Account.PasswordRecovery.LinkExpired">
     <Value>Your password recovery link is expired</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.WrongToken">
+    <Value>Wrong password recovery token</Value>
+  </LocaleResource>
 </Language>
 '
 
