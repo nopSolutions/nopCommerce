@@ -36,6 +36,11 @@ namespace Nop.Core.Domain.Customers
         public int PasswordMinLength { get; set; }
 
         /// <summary>
+        /// Gets or sets a number of days for password recovery link. Set to 0 if it doesn't expire.
+        /// </summary>
+        public int PasswordRecoveryLinkDaysValid { get; set; }
+
+        /// <summary>
         /// User registration type
         /// </summary>
         public UserRegistrationType UserRegistrationType { get; set; }

@@ -252,6 +252,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.PasswordRecoveryLinkDaysValid)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock):
             </td>
             <td class="adminData">

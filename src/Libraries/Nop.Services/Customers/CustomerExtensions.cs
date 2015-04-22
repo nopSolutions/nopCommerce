@@ -37,7 +37,6 @@ namespace Nop.Services.Customers
             }
             return fullName;
         }
-
         /// <summary>
         /// Formats the customer name
         /// </summary>
@@ -83,8 +82,6 @@ namespace Nop.Services.Customers
         }
 
 
-        #region Gift cards
-
         /// <summary>
         /// Gets coupon codes
         /// </summary>
@@ -92,6 +89,9 @@ namespace Nop.Services.Customers
         /// <returns>Coupon codes</returns>
         public static string[] ParseAppliedGiftCardCouponCodes(this Customer customer)
         {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             var existingGiftCartCouponCodes = customer.GetAttribute<string>(SystemCustomerAttributeNames.GiftCardCouponCodes,
                 genericAttributeService);
@@ -121,7 +121,6 @@ namespace Nop.Services.Customers
             }
             return couponCodes.ToArray();
         }
-
         /// <summary>
         /// Adds a coupon code
         /// </summary>
@@ -130,6 +129,9 @@ namespace Nop.Services.Customers
         /// <returns>New coupon codes document</returns>
         public static void ApplyGiftCardCouponCode(this Customer customer, string couponCode)
         {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
             string result = string.Empty;
             try
@@ -185,7 +187,6 @@ namespace Nop.Services.Customers
             //apply new value
             genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.GiftCardCouponCodes, result);
         }
-
         /// <summary>
         /// Removes a coupon code
         /// </summary>
@@ -194,6 +195,9 @@ namespace Nop.Services.Customers
         /// <returns>New coupon codes document</returns>
         public static void RemoveGiftCardCouponCode(this Customer customer, string couponCode)
         {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             //get applied coupon codes
             var existingCouponCodes = customer.ParseAppliedGiftCardCouponCodes();
 
@@ -207,6 +211,53 @@ namespace Nop.Services.Customers
                     customer.ApplyGiftCardCouponCode(existingCouponCode);
         }
 
-        #endregion
+        /// <summary>
+        /// Check whether password recovery token is valid
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="token">Token to validate</param>
+        /// <returns>Result</returns>
+        public static bool IsPasswordRecoveryTokenValid(this Customer customer, string token)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
+            if (String.IsNullOrEmpty(cPrt))
+                return false;
+
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Check whether password recovery link is expired
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="customerSettings">Customer settings</param>
+        /// <returns>Result</returns>
+        public static bool IsPasswordRecoveryLinkExpired(this Customer customer, CustomerSettings customerSettings)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (customerSettings == null)
+                throw new ArgumentNullException("customerSettings");
+
+            if (customerSettings.PasswordRecoveryLinkDaysValid == 0)
+                return false;
+            
+            var geneatedDate = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated);
+            if (!geneatedDate.HasValue)
+                return false;
+
+            var daysPassed = (DateTime.UtcNow - geneatedDate.Value).TotalDays;
+            if (daysPassed > customerSettings.PasswordRecoveryLinkDaysValid)
+                return true;
+
+            return false;
+        }
     }
 }

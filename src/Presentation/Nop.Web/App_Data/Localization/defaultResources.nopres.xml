@@ -486,6 +486,9 @@
   <LocaleResource Name="Account.PasswordRecovery.EmailNotFound">
     <Value>Email not found.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.LinkExpired">
+    <Value>Your password recovery link is expired</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.PasswordRecovery.NewPassword">
     <Value>New password</Value>
   </LocaleResource>
@@ -5000,6 +5003,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordMinLength.Hint">
     <Value>Specify password minimum length.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
+    <Value>Password recovery link. Days valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid.Hint">
+    <Value>Enter number of days for password recovery link. Set to 0 if it doesn't expire..</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled">
     <Value>'Phone number' enabled</Value>

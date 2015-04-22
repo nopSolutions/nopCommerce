@@ -4621,6 +4621,7 @@ namespace Nop.Services.Installation
                     DefaultPasswordFormat = PasswordFormat.Hashed,
                     HashedPasswordFormat = "SHA1",
                     PasswordMinLength = 6,
+                    PasswordRecoveryLinkDaysValid = 7,
                     UserRegistrationType = UserRegistrationType.Standard,
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,

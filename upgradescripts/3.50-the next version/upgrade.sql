@@ -608,6 +608,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Forums.ActiveDiscussionsPageSize.Hint">
     <Value>Set the page size for active discussions page e.g. ''10'' results per page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid">
+    <Value>Password recovery link. Days valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PasswordRecoveryLinkDaysValid.Hint">
+    <Value>Enter number of days for password recovery link. Set to 0 if it doesn''t expire..</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.LinkExpired">
+    <Value>Your password recovery link is expired</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1731,3 +1740,10 @@ BEGIN
 END
 GO
 
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.passwordrecoverylinkdaysvalid')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.passwordrecoverylinkdaysvalid', N'7', 0)
+END
+GO

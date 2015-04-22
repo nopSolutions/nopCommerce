@@ -20,7 +20,7 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.PasswordRecovery.ConfirmNewPassword")]
         public string ConfirmNewPassword { get; set; }
 
-        public bool SuccessfullyChanged { get; set; }
+        public bool DisablePasswordChanging { get; set; }
         public string Result { get; set; }
     }
 }

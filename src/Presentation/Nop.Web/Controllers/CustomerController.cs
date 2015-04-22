@@ -704,14 +704,21 @@ namespace Nop.Web.Controllers
                 var customer = _customerService.GetCustomerByEmail(model.Email);
                 if (customer != null && customer.Active && !customer.Deleted)
                 {
+                    //save token and current date
                     var passwordRecoveryToken = Guid.NewGuid();
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
+                    DateTime? generatedDateTime = DateTime.UtcNow;
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryTokenDateGenerated, generatedDateTime);
+
+                    //send email
                     _workflowMessageService.SendCustomerPasswordRecoveryMessage(customer, _workContext.WorkingLanguage.Id);
 
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailHasBeenSent");
                 }
                 else
+                {
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.EmailNotFound");
+                }
 
                 return View(model);
             }
@@ -728,14 +735,19 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
-                return RedirectToRoute("HomePage");
-
-            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
-
             var model = new PasswordRecoveryConfirmModel();
+
+            //validate token
+            if (!customer.IsPasswordRecoveryTokenValid(token))
+                return RedirectToRoute("HomePage");
+
+            //validate token expiration date
+            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            {
+                model.DisablePasswordChanging = true;
+                model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
+            }
+
             return View(model);
         }
 
@@ -747,12 +759,17 @@ namespace Nop.Web.Controllers
             if (customer == null)
                 return RedirectToRoute("HomePage");
 
-            var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
-            if (String.IsNullOrEmpty(cPrt))
+            //validate token
+            if (!customer.IsPasswordRecoveryTokenValid(token))
                 return RedirectToRoute("HomePage");
 
-            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToRoute("HomePage");
+            //validate token expiration date
+            if (customer.IsPasswordRecoveryLinkExpired(_customerSettings))
+            {
+                model.DisablePasswordChanging = true;
+                model.Result = _localizationService.GetResource("Account.PasswordRecovery.LinkExpired");
+                return View(model);
+            }
 
             if (ModelState.IsValid)
             {
@@ -762,7 +779,7 @@ namespace Nop.Web.Controllers
                 {
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");
 
-                    model.SuccessfullyChanged = true;
+                    model.DisablePasswordChanging = true;
                     model.Result = _localizationService.GetResource("Account.PasswordRecovery.PasswordHasBeenChanged");
                 }
                 else
