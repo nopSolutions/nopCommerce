@@ -1719,3 +1719,15 @@ GO
 UPDATE [ProductAttributeCombination] 
 SET AttributesXml = REPLACE(AttributesXml, 'ProductVariantAttribute', 'ProductAttribute')
 GO
+
+
+--more SQL indexes
+ALTER TABLE [Customer] ALTER COLUMN [SystemName] nvarchar(400) NULL
+GO
+
+IF NOT EXISTS (SELECT 1 from sys.indexes WHERE [NAME]=N'IX_Customer_SystemName' and object_id=object_id(N'[Customer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_SystemName] ON [Customer] ([SystemName] ASC)
+END
+GO
+
