@@ -221,6 +221,12 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertCurrency(decimal amount, Currency sourceCurrencyCode, Currency targetCurrencyCode)
         {
+            if (targetCurrencyCode == null)
+                throw new ArgumentNullException("sourceCurrencyCode");
+
+            if (targetCurrencyCode == null)
+                throw new ArgumentNullException("sourceCurrencyCode");
+
             decimal result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
                 return result;
@@ -240,8 +246,14 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertToPrimaryExchangeRateCurrency(decimal amount, Currency sourceCurrencyCode)
         {
-            decimal result = amount;
+            if (sourceCurrencyCode == null)
+                throw new ArgumentNullException("sourceCurrencyCode");
+
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            if (primaryExchangeRateCurrency == null)
+                throw new Exception("Primary exchange rate currency cannot be loaded");
+
+            decimal result = amount; 
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
                 decimal exchangeRate = sourceCurrencyCode.Rate;
@@ -260,8 +272,14 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertFromPrimaryExchangeRateCurrency(decimal amount, Currency targetCurrencyCode)
         {
-            decimal result = amount;
+            if (targetCurrencyCode == null)
+                throw new ArgumentNullException("targetCurrencyCode");
+
             var primaryExchangeRateCurrency = GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
+            if (primaryExchangeRateCurrency == null)
+                throw new Exception("Primary exchange rate currency cannot be loaded");
+
+            decimal result = amount;
             if (result != decimal.Zero && targetCurrencyCode.Id != primaryExchangeRateCurrency.Id)
             {
                 decimal exchangeRate = targetCurrencyCode.Rate;
@@ -280,8 +298,14 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertToPrimaryStoreCurrency(decimal amount, Currency sourceCurrencyCode)
         {
-            decimal result = amount;
+            if (sourceCurrencyCode == null)
+                throw new ArgumentNullException("sourceCurrencyCode");
+
             var primaryStoreCurrency = GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+            if (primaryStoreCurrency == null)
+                throw new Exception("Primary store currency cannot be loaded");
+
+            decimal result = amount;
             if (result != decimal.Zero && sourceCurrencyCode.Id != primaryStoreCurrency.Id)
             {
                 decimal exchangeRate = sourceCurrencyCode.Rate;
