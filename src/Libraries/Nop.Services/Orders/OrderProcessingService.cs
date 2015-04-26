@@ -1474,7 +1474,7 @@ namespace Nop.Services.Orders
                     }
 
                     var orderPlacedAttachmentFilePath = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
-                        _pdfService.PrintOrderToPdf(order, 0) : null;
+                        _pdfService.PrintOrderToPdf(order, order.CustomerLanguageId) : null;
                     var orderPlacedAttachmentFileName = _orderSettings.AttachPdfInvoiceToOrderPlacedEmail ?
                         "order.pdf" : null;
                     int orderPlacedCustomerNotificationQueuedEmailId = _workflowMessageService
