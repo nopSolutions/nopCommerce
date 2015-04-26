@@ -1646,13 +1646,14 @@ namespace Nop.Services.ExportImport
             if (subscriptions == null)
                 throw new ArgumentNullException("subscriptions");
 
+            const string separator = ",";
             var sb = new StringBuilder();
             foreach (var subscription in subscriptions)
             {
                 sb.Append(subscription.Email);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(subscription.Active);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(subscription.StoreId);
                 sb.Append(Environment.NewLine);  //new line
             }
@@ -1669,17 +1670,18 @@ namespace Nop.Services.ExportImport
             if (states == null)
                 throw new ArgumentNullException("states");
 
+            const string separator = ",";
             var sb = new StringBuilder();
             foreach (var state in states)
             {
                 sb.Append(state.Country.TwoLetterIsoCode);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(state.Name);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(state.Abbreviation);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(state.Published);
-                sb.Append(",");
+                sb.Append(separator);
                 sb.Append(state.DisplayOrder);
                 sb.Append(Environment.NewLine);  //new line
             }
