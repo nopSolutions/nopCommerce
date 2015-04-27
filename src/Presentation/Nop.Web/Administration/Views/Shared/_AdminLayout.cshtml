@@ -95,16 +95,16 @@
                             @if (canManageMaintenance)
                             {
                                 <span class="separator">|</span>
-                                @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                                <a href="@Url.Action("ClearCache", "Common")">@T("Admin.Header.ClearCache")</a>
                                 <span class="separator">|</span>
-                                @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
+                                <a href="@Url.Action("RestartApplication", "Common")" id="restart-application">@T("Admin.Header.RestartApplication")</a>
                             }
                         </div>
                         <div class="login-info">
                             @if (currentCustomer != null && currentCustomer.IsRegistered())
                             {
                                 @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                                <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
+                                <text>, </text> <a href="@Url.Action("Logout", "Customer", new { area = "" }, null)">@T("Admin.Header.Logout")</a>
                             }
                         </div>
                         <div class="version">
