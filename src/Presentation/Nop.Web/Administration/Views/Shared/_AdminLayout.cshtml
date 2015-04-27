@@ -53,6 +53,8 @@
     {
         Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
     }
+
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
@@ -95,9 +97,9 @@
                             @if (canManageMaintenance)
                             {
                                 <span class="separator">|</span>
-                                <a href="@Url.Action("ClearCache", "Common")">@T("Admin.Header.ClearCache")</a>
+                                <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common"), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">@T("Admin.Header.ClearCache")</a>
                                 <span class="separator">|</span>
-                                <a href="@Url.Action("RestartApplication", "Common")" id="restart-application">@T("Admin.Header.RestartApplication")</a>
+    <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common"), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" id="restart-application">@T("Admin.Header.RestartApplication")</a>
                             }
                         </div>
                         <div class="login-info">

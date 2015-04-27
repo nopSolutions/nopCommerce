@@ -525,7 +525,7 @@ namespace Nop.Admin.Controllers
         }
 
 
-        public ActionResult ClearCache()
+        public ActionResult ClearCache(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
@@ -533,18 +533,31 @@ namespace Nop.Admin.Controllers
             var cacheManager = new MemoryCacheManager();
             cacheManager.Clear();
 
-            return RedirectToAction("Index", "Home");
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Home");
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("Index", "Home");
+            return Redirect(returnUrl);
         }
 
 
-        public ActionResult RestartApplication()
+        public ActionResult RestartApplication(string returnUrl = "")
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
                 return AccessDeniedView();
 
             //restart application
             _webHelper.RestartAppDomain();
-            return RedirectToAction("Index", "Home");
+
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Home");
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("Index", "Home");
+            return Redirect(returnUrl);
         }
 
 
