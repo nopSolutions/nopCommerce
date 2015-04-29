@@ -218,54 +218,51 @@ namespace Nop.Web.Controllers
                 }
 
                 //set already selected attributes
-                if (customer != null)
+                var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                switch (attribute.AttributeControlType)
                 {
-                    var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
-                    switch (attribute.AttributeControlType)
-                    {
-                        case AttributeControlType.DropdownList:
-                        case AttributeControlType.RadioList:
-                        case AttributeControlType.Checkboxes:
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    //clear default selection
-                                    foreach (var item in attributeModel.Values)
-                                        item.IsPreSelected = false;
+                                //clear default selection
+                                foreach (var item in attributeModel.Values)
+                                    item.IsPreSelected = false;
 
-                                    //select new values
-                                    var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
-                                    foreach (var attributeValue in selectedValues)
-                                        foreach (var item in attributeModel.Values)
-                                            if (attributeValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                //select new values
+                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                foreach (var attributeValue in selectedValues)
+                                    foreach (var item in attributeModel.Values)
+                                        if (attributeValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
-                        case AttributeControlType.ReadonlyCheckboxes:
+                        }
+                        break;
+                    case AttributeControlType.ReadonlyCheckboxes:
+                        {
+                            //do nothing
+                            //values are already pre-set
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
                             {
-                                //do nothing
-                                //values are already pre-set
+                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                if (enteredText.Count > 0)
+                                    attributeModel.DefaultValue = enteredText[0];
                             }
-                            break;
-                        case AttributeControlType.TextBox:
-                        case AttributeControlType.MultilineTextbox:
-                            {
-                                if (!String.IsNullOrEmpty(selectedCustomerAttributes))
-                                {
-                                    var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
-                                    if (enteredText.Count > 0)
-                                        attributeModel.DefaultValue = enteredText[0];
-                                }
-                            }
-                            break;
-                        case AttributeControlType.ColorSquares:
-                        case AttributeControlType.Datepicker:
-                        case AttributeControlType.FileUpload:
-                        default:
-                            //not supported attribute control types
-                            break;
-                    }
+                        }
+                        break;
+                    case AttributeControlType.ColorSquares:
+                    case AttributeControlType.Datepicker:
+                    case AttributeControlType.FileUpload:
+                    default:
+                        //not supported attribute control types
+                        break;
                 }
 
                 result.Add(attributeModel);
@@ -501,7 +498,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(null);
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer);
             customAttributes.ForEach(model.CustomerAttributes.Add);
         }
 
@@ -840,18 +837,25 @@ namespace Nop.Web.Controllers
             }
             var customer = _workContext.CurrentCustomer;
 
+            //custom customer attributes
+            var customerAttributes = ParseCustomCustomerAttributes(form);
+            var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
+            if (customerAttributeWarnings.Count > 0)
+            {
+                //in case of errors we save attributes
+                //this way we can re-fill the form after page refresh
+                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                //process errors
+                foreach (var error in customerAttributeWarnings)
+                {
+                    ModelState.AddModelError("", error);
+                }
+            }
+
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage && !captchaValid)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
-            }
-
-            //custom customer attributes
-            var customerAttributes = ParseCustomCustomerAttributes(form);
-            var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
-            foreach (var error in customerAttributeWarnings)
-            {
-                ModelState.AddModelError("", error);
             }
 
             if (ModelState.IsValid)

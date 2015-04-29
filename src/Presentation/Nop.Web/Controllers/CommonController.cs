@@ -806,6 +806,7 @@ namespace Nop.Web.Controllers
             return Json(new { stored = true });
         }
 
+        //robots.txt file
         public ActionResult RobotsTextFile()
         {
             var disallowPaths = new List<string>

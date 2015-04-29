@@ -125,6 +125,7 @@ namespace Nop.Core
                 {
                     //but in some cases server use other HTTP header
                     //in these cases an administrator can specify a custom Forwarded HTTP header
+                    //e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc
                     forwardedHttpHeader = ConfigurationManager.AppSettings["ForwardedHTTPheader"];
                 }
                     
