@@ -620,6 +620,9 @@ set @resources='
   <LocaleResource Name="Account.PasswordRecovery.WrongToken">
     <Value>Wrong password recovery token</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.Order.Product(s).License">
+    <Value>Download license</Value>
+  </LocaleResource>
 </Language>
 '
 

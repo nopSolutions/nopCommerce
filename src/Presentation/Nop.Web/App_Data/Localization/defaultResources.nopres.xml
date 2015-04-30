@@ -12150,6 +12150,9 @@
   <LocaleResource Name="Messages.Order.Product(s).Download">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Messages.Order.Product(s).License">
+    <Value>Download license</Value>
+  </LocaleResource>
   <LocaleResource Name="Messages.Order.Product(s).Name">
     <Value>Name</Value>
   </LocaleResource>

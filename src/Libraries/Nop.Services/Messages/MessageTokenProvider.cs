@@ -149,9 +149,17 @@ namespace Nop.Services.Messages
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                     string downloadUrl = string.Format("{0}download/getdownload/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
                     string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Product(s).Download", languageId));
-                    sb.AppendLine("&nbsp;&nbsp;(");
+                    sb.AppendLine("<br />");
                     sb.AppendLine(downloadLink);
-                    sb.AppendLine(")");
+                }
+                //add download link
+                if (_downloadService.IsLicenseDownloadAllowed(orderItem))
+                {
+                    //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
+                    string licenseUrl = string.Format("{0}download/getlicense/{1}", GetStoreUrl(order.StoreId), orderItem.OrderItemGuid);
+                    string licenseLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", licenseUrl, _localizationService.GetResource("Messages.Order.Product(s).License", languageId));
+                    sb.AppendLine("<br />");
+                    sb.AppendLine(licenseLink);
                 }
                 //attributes
                 if (!String.IsNullOrEmpty(orderItem.AttributeDescription))
