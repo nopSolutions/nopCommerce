@@ -1656,7 +1656,7 @@ namespace Nop.Web.Controllers
                     rentalStartDate, rentalEndDate, quantity, true));
                 if (otherCartItemWithSameParameters != null && addToCartWarnings.Count == 0)
                 {
-                    //delete the same shopping cart item
+                    //delete the same shopping cart item (the other one)
                     _shoppingCartService.DeleteShoppingCartItem(otherCartItemWithSameParameters);
                 }
             }

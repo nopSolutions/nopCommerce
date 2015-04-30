@@ -1504,6 +1504,16 @@ namespace Nop.Admin.Controllers
             {
                 order.OrderStatusId = model.OrderStatusId;
                 _orderService.UpdateOrder(order);
+
+                //add a note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = string.Format("Order status has been edited. New status: {0}", order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext)),
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+
                 model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 return View(model);
@@ -1654,6 +1664,15 @@ namespace Nop.Admin.Controllers
                 _orderService.UpdateOrder(order);
             }
 
+            //add a note
+            order.OrderNotes.Add(new OrderNote
+            {
+                Note = "Credit card info has been edited",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
+
             PrepareOrderDetailsModel(model, order);
             return View(model);
         }
@@ -1688,6 +1707,15 @@ namespace Nop.Admin.Controllers
             order.OrderTotal = model.OrderTotalValue;
             _orderService.UpdateOrder(order);
 
+            //add a note
+            order.OrderNotes.Add(new OrderNote
+            {
+                Note = "Order totals have been edited",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
+
             PrepareOrderDetailsModel(model, order);
             return View(model);
         }
@@ -1709,6 +1737,15 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             order.ShippingMethod = model.ShippingMethod;
+            _orderService.UpdateOrder(order);
+
+            //add a note
+            order.OrderNotes.Add(new OrderNote
+            {
+                Note = "Shipping method has been edited",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
             _orderService.UpdateOrder(order);
 
             PrepareOrderDetailsModel(model, order);
@@ -1780,6 +1817,15 @@ namespace Nop.Admin.Controllers
                 _orderService.DeleteOrderItem(orderItem);
             }
 
+            //add a note
+            order.OrderNotes.Add(new OrderNote
+            {
+                Note = "Order item has been edited",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
+
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
 
@@ -1835,6 +1881,16 @@ namespace Nop.Admin.Controllers
             else
             {
                 _orderService.DeleteOrderItem(orderItem);
+
+                //add a note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = "Order item has been deleted",
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+
 
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
@@ -2357,6 +2413,15 @@ namespace Nop.Admin.Controllers
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
 
+                //add a note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = "A new order item has been added",
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+
                 //gift cards
                 if (product.IsGiftCard)
                 {
@@ -2493,6 +2558,15 @@ namespace Nop.Admin.Controllers
                 address = model.Address.ToEntity(address);
                 address.CustomAttributes = customAttributes;
                 _addressService.UpdateAddress(address);
+
+                //add a note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = "Address has been edited",
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
@@ -2904,6 +2978,15 @@ namespace Nop.Admin.Controllers
                 shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
 
+                //add a note
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = "A shipment has been added",
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
                            ? RedirectToAction("ShipmentDetails", new {id = shipment.Id})
@@ -2958,6 +3041,16 @@ namespace Nop.Admin.Controllers
 
             var orderId = shipment.OrderId;
             _shipmentService.DeleteShipment(shipment);
+
+            var order = shipment.Order;
+            //add a note
+            order.OrderNotes.Add(new OrderNote
+            {
+                Note = "A shipment has been deleted",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
             return RedirectToAction("Edit", new { id = orderId });
