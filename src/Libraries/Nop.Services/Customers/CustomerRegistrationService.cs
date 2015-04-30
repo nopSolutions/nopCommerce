@@ -229,12 +229,12 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="request">Request</param>
         /// <returns>Result</returns>
-        public virtual PasswordChangeResult ChangePassword(ChangePasswordRequest request)
+        public virtual ChangePasswordResult ChangePassword(ChangePasswordRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            var result = new PasswordChangeResult();
+            var result = new ChangePasswordResult();
             if (String.IsNullOrWhiteSpace(request.Email))
             {
                 result.AddError(_localizationService.GetResource("Account.ChangePassword.Errors.EmailIsNotProvided"));
@@ -324,6 +324,9 @@ namespace Nop.Services.Customers
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
+
+            if (newEmail == null)
+                throw new NopException("Email cannot be null");
 
             newEmail = newEmail.Trim();
             string oldEmail = customer.Email;

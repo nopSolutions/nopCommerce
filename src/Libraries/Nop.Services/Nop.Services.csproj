@@ -342,7 +342,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Customers\ChangePasswordRequest.cs" />
-    <Compile Include="Customers\PasswordChangeResult.cs" />
+    <Compile Include="Customers\ChangePasswordResult.cs" />
     <Compile Include="Security\IAclService.cs" />
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />

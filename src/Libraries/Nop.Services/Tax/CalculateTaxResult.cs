@@ -7,6 +7,9 @@ namespace Nop.Services.Tax
     /// </summary>
     public partial class CalculateTaxResult
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public CalculateTaxResult()
         {
             this.Errors = new List<string>();
@@ -22,6 +25,9 @@ namespace Nop.Services.Tax
         /// </summary>
         public IList<string> Errors { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether request has been completed successfully
+        /// </summary>
         public bool Success
         {
             get 
@@ -30,6 +36,10 @@ namespace Nop.Services.Tax
             }
         }
 
+        /// <summary>
+        /// Add error
+        /// </summary>
+        /// <param name="error">Error</param>
         public void AddError(string error)
         {
             this.Errors.Add(error);

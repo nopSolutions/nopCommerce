@@ -9,24 +9,36 @@ namespace Nop.Services.Payments
     public partial class VoidPaymentResult
     {
         private PaymentStatus _newPaymentStatus = PaymentStatus.Pending;
-        public IList<string> Errors { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public VoidPaymentResult() 
         {
             this.Errors = new List<string>();
         }
 
+        /// <summary>
+        /// Gets a value indicating whether request has been completed successfully
+        /// </summary>
         public bool Success
         {
             get { return (this.Errors.Count == 0); }
         }
 
+        /// <summary>
+        /// Add error
+        /// </summary>
+        /// <param name="error">Error</param>
         public void AddError(string error) 
         {
             this.Errors.Add(error);
         }
 
-        #region Properties
+        /// <summary>
+        /// Errors
+        /// </summary>
+        public IList<string> Errors { get; set; }
 
         /// <summary>
         /// Gets or sets a payment status after processing
@@ -42,7 +54,5 @@ namespace Nop.Services.Payments
                 _newPaymentStatus = value;
             }
         }
-
-        #endregion
     }
 }

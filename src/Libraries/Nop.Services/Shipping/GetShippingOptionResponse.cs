@@ -8,6 +8,9 @@ namespace Nop.Services.Shipping
     /// </summary>
     public partial class GetShippingOptionResponse
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
         public GetShippingOptionResponse()
         {
             this.Errors = new List<string>();
@@ -29,6 +32,9 @@ namespace Nop.Services.Shipping
         /// </summary>
         public IList<string> Errors { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether request has been completed successfully
+        /// </summary>
         public bool Success
         {
             get 
@@ -37,6 +43,10 @@ namespace Nop.Services.Shipping
             }
         }
 
+        /// <summary>
+        /// Add error
+        /// </summary>
+        /// <param name="error">Error</param>
         public void AddError(string error)
         {
             this.Errors.Add(error);

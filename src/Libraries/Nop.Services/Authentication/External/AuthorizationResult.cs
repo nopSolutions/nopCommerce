@@ -9,24 +9,41 @@ namespace Nop.Services.Authentication.External
     /// </summary>
     public partial class AuthorizationResult
     {
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="status"></param>
         public AuthorizationResult(OpenAuthenticationStatus status)
         {
             this.Errors = new List<string>();
             Status = status;
         }
 
+        /// <summary>
+        /// Add error
+        /// </summary>
+        /// <param name="error">Error</param>
         public void AddError(string error)
         {
             this.Errors.Add(error);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether request has been completed successfully
+        /// </summary>
         public bool Success
         {
             get { return this.Errors.Count == 0; }
         }
 
+        /// <summary>
+        /// Status
+        /// </summary>
         public OpenAuthenticationStatus Status { get; private set; }
 
+        /// <summary>
+        /// Errors
+        /// </summary>
         public IList<string> Errors { get; set; }
     }
 }
