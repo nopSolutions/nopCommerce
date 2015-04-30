@@ -185,9 +185,19 @@ namespace Nop.Web.Controllers
             _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
         }
 
+        /// <summary>
+        /// Prepare custom customer attribute models
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="overrideAttributesXml">When specified we do not use attributes of a customer</param>
+        /// <returns>A list of customer attribute models</returns>
         [NonAction]
-        protected virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer)
+        protected virtual IList<CustomerAttributeModel> PrepareCustomCustomerAttributes(Customer customer,
+            string overrideAttributesXml = "")
         {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             var result = new List<CustomerAttributeModel>();
 
             var customerAttributes = _customerAttributeService.GetAllCustomerAttributes();
@@ -218,21 +228,23 @@ namespace Nop.Web.Controllers
                 }
 
                 //set already selected attributes
-                var selectedCustomerAttributes = customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
+                var selectedAttributesXml = !String.IsNullOrEmpty(overrideAttributesXml) ?
+                    overrideAttributesXml : 
+                    customer.GetAttribute<string>(SystemCustomerAttributeNames.CustomCustomerAttributes, _genericAttributeService);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:
                     case AttributeControlType.RadioList:
                     case AttributeControlType.Checkboxes:
                         {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                            if (!String.IsNullOrEmpty(selectedAttributesXml))
                             {
                                 //clear default selection
                                 foreach (var item in attributeModel.Values)
                                     item.IsPreSelected = false;
 
                                 //select new values
-                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedCustomerAttributes);
+                                var selectedValues = _customerAttributeParser.ParseCustomerAttributeValues(selectedAttributesXml);
                                 foreach (var attributeValue in selectedValues)
                                     foreach (var item in attributeModel.Values)
                                         if (attributeValue.Id == item.Id)
@@ -249,9 +261,9 @@ namespace Nop.Web.Controllers
                     case AttributeControlType.TextBox:
                     case AttributeControlType.MultilineTextbox:
                         {
-                            if (!String.IsNullOrEmpty(selectedCustomerAttributes))
+                            if (!String.IsNullOrEmpty(selectedAttributesXml))
                             {
-                                var enteredText = _customerAttributeParser.ParseValues(selectedCustomerAttributes, attribute.Id);
+                                var enteredText = _customerAttributeParser.ParseValues(selectedAttributesXml, attribute.Id);
                                 if (enteredText.Count > 0)
                                     attributeModel.DefaultValue = enteredText[0];
                             }
@@ -273,7 +285,8 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
+        protected virtual void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer,
+            bool excludeProperties, string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -412,12 +425,13 @@ namespace Nop.Web.Controllers
             }
 
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(customer);
+            var customAttributes = PrepareCustomCustomerAttributes(customer, overrideCustomCustomerAttributesXml);
             customAttributes.ForEach(model.CustomerAttributes.Add);
         }
 
         [NonAction]
-        protected virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties)
+        protected virtual void PrepareCustomerRegisterModel(RegisterModel model, bool excludeProperties,
+            string overrideCustomCustomerAttributesXml = "")
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -498,7 +512,7 @@ namespace Nop.Web.Controllers
             }
 
             //custom customer attributes
-            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer);
+            var customAttributes = PrepareCustomCustomerAttributes(_workContext.CurrentCustomer, overrideCustomCustomerAttributesXml);
             customAttributes.ForEach(model.CustomerAttributes.Add);
         }
 
@@ -838,18 +852,11 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             //custom customer attributes
-            var customerAttributes = ParseCustomCustomerAttributes(form);
-            var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
-            if (customerAttributeWarnings.Count > 0)
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            foreach (var error in customerAttributeWarnings)
             {
-                //in case of errors we save attributes
-                //this way we can re-fill the form after page refresh
-                _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
-                //process errors
-                foreach (var error in customerAttributeWarnings)
-                {
-                    ModelState.AddModelError("", error);
-                }
+                ModelState.AddModelError("", error);
             }
 
             //validate CAPTCHA
@@ -962,7 +969,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //save customer attributes
-                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
                     
                     //login customer now
                     if (isApproved)
@@ -1046,7 +1053,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            PrepareCustomerRegisterModel(model, true);
+            PrepareCustomerRegisterModel(model, true, customerAttributesXml);
             return View(model);
         }
 
@@ -1177,16 +1184,16 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
+            //custom customer attributes
+            var customerAttributesXml = ParseCustomCustomerAttributes(form);
+            var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributesXml);
+            foreach (var error in customerAttributeWarnings)
+            {
+                ModelState.AddModelError("", error);
+            }
+
             try
             {
-                //custom customer attributes
-                var customerAttributes = ParseCustomCustomerAttributes(form);
-                var customerAttributeWarnings = _customerAttributeParser.GetAttributeWarnings(customerAttributes);
-                foreach (var error in customerAttributeWarnings)
-                {
-                    ModelState.AddModelError("", error);
-                }
-
                 if (ModelState.IsValid)
                 {
                     //username 
@@ -1306,7 +1313,7 @@ namespace Nop.Web.Controllers
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
 
                     //save customer attributes
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
+                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributesXml);
 
                     return RedirectToRoute("CustomerInfo");
                 }
@@ -1318,7 +1325,7 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            PrepareCustomerInfoModel(model, customer, true);
+            PrepareCustomerInfoModel(model, customer, true, customerAttributesXml);
             return View(model);
         }
 
