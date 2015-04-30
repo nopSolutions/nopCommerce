@@ -353,7 +353,7 @@ namespace Nop.Services.Seo
                     //new record
                     var urlRecord = new UrlRecord
                     {
-                        EntityId = entity.Id,
+                        EntityId = entityId,
                         EntityName = entityName,
                         Slug = slug,
                         LanguageId = languageId,
@@ -372,13 +372,8 @@ namespace Nop.Services.Seo
 
             if (activeUrlRecord != null && !string.IsNullOrWhiteSpace(slug))
             {
-                //is it the same slug as in active URL record?
-                if (activeUrlRecord.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    //yes. do nothing
-                    //P.S. wrote this way for more source code readability
-                }
-                else
+                //it should not be the same slug as in active URL record
+                if (!activeUrlRecord.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase))
                 {
                     //find in non-active records with the specified slug
                     var nonActiveRecordWithSpecifiedSlug = allUrlRecords
@@ -400,7 +395,7 @@ namespace Nop.Services.Seo
                         //to ensure that URLs will work fine
                         var urlRecord = new UrlRecord
                         {
-                            EntityId = entity.Id,
+                            EntityId = entityId,
                             EntityName = entityName,
                             Slug = slug,
                             LanguageId = languageId,
