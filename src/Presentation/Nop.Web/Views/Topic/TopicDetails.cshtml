@@ -51,8 +51,8 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {
-                            $('#ph-title .page-title h1').html(data.Title);
-                            if ($('#ph-title .page-title h1').text().length == 0) {
+                            $('#ph-topic #ph-title h1').html(data.Title);
+                            if ($('#ph-topic #ph-title h1').text().length == 0) {
                                 $('#ph-title').hide();
                             }
                             $('#ph-topic .page-body').html(data.Body);

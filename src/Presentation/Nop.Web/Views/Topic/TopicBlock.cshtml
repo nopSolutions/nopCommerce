@@ -15,8 +15,8 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {
-                            $('#ph-title-@Model.Id .topic-block-title h2').html(data.Title);
-                            if ($('#ph-title-@Model.Id .topic-block-title h2').text().length == 0) {
+                            $('#ph-topic-@Model.Id #ph-title-@Model.Id h2').html(data.Title);
+                            if ($('#ph-topic-@Model.Id #ph-title-@Model.Id h2').text().length == 0) {
                                 $('#ph-title-@Model.Id').hide();
                             }
                             $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
