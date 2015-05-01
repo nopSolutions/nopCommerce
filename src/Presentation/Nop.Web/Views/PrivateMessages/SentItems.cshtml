@@ -20,59 +20,59 @@
     {
         using (Html.BeginRouteForm("PrivateMessagesSent", FormMethod.Post))
         {
-            
-            
-        <table class="data-table" id="pm-sent-table">
-            <colgroup>
-                <col width="5%" />
-                <col />
-                <col />
-                <col />
-            </colgroup>
-            <thead>
-                <tr>
-                    <th class="a-center select-boxes">
-                        <input type="checkbox" id="selectall-sent" />
-                    </th>
-                    <th class="a-center to">
-                        @T("PrivateMessages.Inbox.ToColumn")
-                    </th>
-                    <th class="a-center subject">
-                        @T("PrivateMessages.Inbox.SubjectColumn")
-                    </th>
-                    <th class="a-center date">
-                        @T("PrivateMessages.Inbox.DateColumn")
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.Messages.Count; i++)
-                {
-                    var item = Model.Messages[i];
-                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                        <td class="a-center select-boxes">
-                            <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
-                        </td>
-                        <td class="a-left to">
-                            @if (item.AllowViewingToProfile)
-                            {
-                                @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
-                            }
-                            else
-                            {
-                                @item.CustomerToName
-                            }
-                        </td>
-                        <td class="a-left subject">
-                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
-                        </td>
-                        <td class="a-left date">
-                            @item.CreatedOn
-                        </td>
+        <div class="table-wrapper">
+            <table class="data-table" id="pm-sent-table">
+                <colgroup>
+                    <col width="1" />
+                    <col />
+                    <col />
+                    <col width="1" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="select">
+                            <input type="checkbox" id="selectall-sent" />
+                        </th>
+                        <th class="to">
+                            @T("PrivateMessages.Inbox.ToColumn")
+                        </th>
+                        <th class="subject">
+                            @T("PrivateMessages.Inbox.SubjectColumn")
+                        </th>
+                        <th class="date">
+                            @T("PrivateMessages.Inbox.DateColumn")
+                        </th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Messages.Count; i++)
+                    {
+                        var item = Model.Messages[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td class="select">
+                                <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
+                            </td>
+                            <td class="to">
+                                @if (item.AllowViewingToProfile)
+                                {
+                                    @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
+                                }
+                                else
+                                {
+                                    @item.CustomerToName
+                                }
+                            </td>
+                            <td class="subject">
+                                @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
+                            </td>
+                            <td class="date">
+                                @item.CreatedOn
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
         <div class="pager">
             @Html.Pager(Model.PagerModel)
         </div>

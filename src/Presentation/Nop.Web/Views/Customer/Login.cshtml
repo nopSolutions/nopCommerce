@@ -3,7 +3,7 @@
 @using Nop.Core;
 @using Nop.Core.Infrastructure;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
@@ -53,31 +53,33 @@
                     </div>
                 </div>
             }
-            <div class="returning-wrapper">
-                <div class="title">
-                    <strong>@T("Account.Login.ReturningCustomer")</strong>
-                </div>
-                <div class="form-fields">
-                    @using (Html.BeginForm())
+            <div class="returning-wrapper fieldset">
+                @using (Html.BeginForm())
+                {
+                    var validationSummary = Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text);
+                    <div class="title">
+                        <strong>@T("Account.Login.ReturningCustomer")</strong>
+                    </div>
+                    if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
                     {
-                        <div class="message-error">
-                            @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
-                        </div>
-                        if (Model.UsernamesEnabled)
+                        <div class="message-error">@validationSummary</div>
+                    }
+                    <div class="form-fields">
+                        @if (Model.UsernamesEnabled)
                         {
-                        <div class="inputs">
-                            @Html.LabelFor(m => m.Username, new { }, ":") 
-                            @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
-                            @Html.ValidationMessageFor(m => m.Username)
-                        </div>
+                            <div class="inputs">
+                                @Html.LabelFor(m => m.Username, new { }, ":")
+                                @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
+                                @Html.ValidationMessageFor(m => m.Username)
+                            </div>
                         }
                         else
                         {
-                        <div class="inputs">
-                            @Html.LabelFor(m => m.Email, new { }, ":")
-                            @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
-                            @Html.ValidationMessageFor(m => m.Email)
-                        </div>
+                            <div class="inputs">
+                                @Html.LabelFor(m => m.Email, new { }, ":")
+                                @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
+                                @Html.ValidationMessageFor(m => m.Email)
+                            </div>
                         }
                         <div class="inputs">
                             @Html.LabelFor(m => m.Password, new { }, ":")
@@ -91,18 +93,17 @@
                                 @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
                             </span>
                         </div>
-                        if (Model.DisplayCaptcha)
+                        @if (Model.DisplayCaptcha)
                         {
-                        <div class="captcha-box">
-                            @Html.Raw(Html.GenerateCaptcha())
-                        </div>
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
                         }
-                        <div class="buttons">
-                            <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
-                        </div>
-                       
-                    }
-                </div>
+                    </div>
+                    <div class="buttons">
+                        <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                    </div>
+                }
             </div>
         </div>
         <div class="external-authentication">

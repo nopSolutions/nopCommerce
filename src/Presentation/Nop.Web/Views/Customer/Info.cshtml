@@ -49,9 +49,11 @@
         @using (Html.BeginForm())
         {
             @Html.AntiForgeryToken()
-            <div class="message-error">
-                @Html.ValidationSummary(true)
-            </div>
+            var validationSummary = Html.ValidationSummary(true);
+            if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div> 
+            }
             <div class="fieldset">
                 <div class="title">
                     <strong>@T("Account.YourPersonalDetails")</strong>
@@ -62,12 +64,14 @@
                         <div class="inputs">
                             <label>@T("Account.Fields.Gender"):</label>
                             <div class="gender">
-                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male"})
-                                <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
-                            </div>
-                            <div class="gender">
-                                @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
-                                <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                <span class="male">
+                                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male"})
+                                    <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </span>
+                                <span class="female">
+                                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
+                                    <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </span>
                             </div>
                         </div>
                     }
@@ -85,7 +89,7 @@
                     </div>
                     @if (Model.DateOfBirthEnabled)
                     {
-                        <div class="inputs">
+                        <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
                             @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
                                         Html.FieldNameFor(x => x.DateOfBirthMonth),
@@ -340,48 +344,50 @@
                     @if (Model.AssociatedExternalAuthRecords.Count > 0)
                     {
                         //existing associated external records
-                        <table class="data-table">
-                            <colgroup>
-                                <col />
-                                <col />
-                                <col />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th class="a-center auth-method-name">
-                                        @T("Account.AssociatedExternalAuth.AuthMethodName")
-                                    </th>
-                                    <th class="a-center email">
-                                        @T("Account.AssociatedExternalAuth.Email")
-                                    </th>
-                                    <th class="a-center external-id">
-                                        @T("Account.AssociatedExternalAuth.ExternalIdentifier")
-                                    </th>
-                                    <th class="a-center remove">
-                                        @T("Account.AssociatedExternalAuth.Remove")
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.AssociatedExternalAuthRecords)
-                                {
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                <thead>
                                     <tr>
-                                        <td class="a-left auth-method-name">
-                                            @item.AuthMethodName
-                                        </td>
-                                        <td class="a-left email">
-                                            @item.Email
-                                        </td>
-                                        <td class="a-left external-id">
-                                            @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
-                                        </td>
-                                        <td class="a-center remove">
-                                            <a href="@Url.Action("RemoveExternalAssociation", "Customer", new { id = item.Id })">@T("Account.AssociatedExternalAuth.Remove")</a>
-                                        </td>
+                                        <th class="auth-method-name">
+                                            @T("Account.AssociatedExternalAuth.AuthMethodName")
+                                        </th>
+                                        <th class="email">
+                                            @T("Account.AssociatedExternalAuth.Email")
+                                        </th>
+                                        <th class="external-id">
+                                            @T("Account.AssociatedExternalAuth.ExternalIdentifier")
+                                        </th>
+                                        <th class="remove">
+                                            @T("Account.AssociatedExternalAuth.Remove")
+                                        </th>
                                     </tr>
-                                }
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AssociatedExternalAuthRecords)
+                                    {
+                                        <tr>
+                                            <td class="auth-method-name">
+                                                @item.AuthMethodName
+                                            </td>
+                                            <td class="email">
+                                                @item.Email
+                                            </td>
+                                            <td class="external-id">
+                                                @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
+                                            </td>
+                                            <td class="remove">
+                                                <a href="@Url.Action("RemoveExternalAssociation", "Customer", new { id = item.Id })">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     }
 
                     @if (Model.NumberOfExternalAuthenticationProviders > Model.AssociatedExternalAuthRecords.Count)

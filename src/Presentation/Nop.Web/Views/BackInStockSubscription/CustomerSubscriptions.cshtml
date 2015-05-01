@@ -38,41 +38,43 @@
             using (Html.BeginRouteForm("CustomerBackInStockSubscriptions", FormMethod.Post))
             {
             <div class="subscription-list">
-                <table class="data-table">
-                    <colgroup>
-                        <col width="1" />
-                        <col />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th class="a-center select-boxes">
-                                <input type="checkbox" id="selectall" />
-                            </th>
-                            <th class="a-center product">
-                                @T("Account.BackInStockSubscriptions.ProductColumn")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Subscriptions.Count; i++)
-                        {
-                            var item = Model.Subscriptions[i];
-                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                                <td class="a-center select-boxes">
-                                    <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
-                                </td>
-                                <td class="a-left product">
-                                    @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
-                                </td>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
+                            <col width="1" />
+                            <col />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th class="select-boxes">
+                                    <input type="checkbox" id="selectall" />
+                                </th>
+                                <th class="product">
+                                    @T("Account.BackInStockSubscriptions.ProductColumn")
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Subscriptions.Count; i++)
+                            {
+                                var item = Model.Subscriptions[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="select-boxes">
+                                        <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
+                                    </td>
+                                    <td class="product">
+                                        @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
                 <div class="pager">
                     @Html.Pager(Model.PagerModel)
                 </div>
                 <div class="buttons">
-                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-2 delete-selected-biss-button" />
+                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-1 delete-selected-biss-button" />
                 </div>
             </div>
             }

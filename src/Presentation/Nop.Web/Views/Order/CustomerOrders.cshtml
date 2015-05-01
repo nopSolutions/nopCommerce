@@ -18,83 +18,83 @@
     <div class="page-body">
         @if (Model.RecurringOrders.Count > 0)
         {
-            using (Html.BeginForm())
-            {
             <div class="section recurring-payments">
                 <div class="title">
                     <strong>@T("Account.CustomerOrders.RecurringOrders")</strong>
                 </div>
-                <div class="recurring-payments-box">
-                    <table class="data-table">
-                        <colgroup>
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th class="a-center start-date">
-                                    @T("Account.CustomerOrders.RecurringOrders.StartDate")
-                                </th>
-                                <th class="a-center cycle-info">
-                                    @T("Account.CustomerOrders.RecurringOrders.CycleInfo")
-                                </th>
-                                <th class="a-center next-payment">
-                                    @T("Account.CustomerOrders.RecurringOrders.NextPayment")
-                                </th>
-                                <th class="a-center total-cycles">
-                                    @T("Account.CustomerOrders.RecurringOrders.TotalCycles")
-                                </th>
-                                <th class="a-center cycles-remaining">
-                                    @T("Account.CustomerOrders.RecurringOrders.CyclesRemaining")
-                                </th>
-                                <th class="a-center initial-order">
-                                    @T("Account.CustomerOrders.RecurringOrders.InitialOrder")
-                                </th>
-                                <th class="a-center cancel">
-                                    @T("Account.CustomerOrders.RecurringOrders.Cancel")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.RecurringOrders)
-                            {
+                @using (Html.BeginForm())
+                {
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <colgroup>
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                            </colgroup>
+                            <thead>
                                 <tr>
-                                    <td class="a-center start-date">
-                                        @item.StartDate
-                                    </td>
-                                    <td class="a-center cycle-info">
-                                        @item.CycleInfo
-                                    </td>
-                                    <td class="a-center next-payment">
-                                        @item.NextPayment
-                                    </td>
-                                    <td class="a-center total-cycles">
-                                        @item.TotalCycles
-                                    </td>
-                                    <td class="a-center cycles-remaining">
-                                        @item.CyclesRemaining
-                                    </td>
-                                    <td class="a-center initial-order">
-                                        <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
-                                    </td>
-                                    <td class="a-center cancel">
-                                        @if (item.CanCancel)
-                                        {
-                                            <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" class="button-2 cancel-recurring-order-button" />
-                                        }
-                                    </td>
+                                    <th class="start-date">
+                                        @T("Account.CustomerOrders.RecurringOrders.StartDate")
+                                    </th>
+                                    <th class="cycle-info">
+                                        @T("Account.CustomerOrders.RecurringOrders.CycleInfo")
+                                    </th>
+                                    <th class="next-payment">
+                                        @T("Account.CustomerOrders.RecurringOrders.NextPayment")
+                                    </th>
+                                    <th class="total-cycles">
+                                        @T("Account.CustomerOrders.RecurringOrders.TotalCycles")
+                                    </th>
+                                    <th class="cycles-remaining">
+                                        @T("Account.CustomerOrders.RecurringOrders.CyclesRemaining")
+                                    </th>
+                                    <th class="initial-order">
+                                        @T("Account.CustomerOrders.RecurringOrders.InitialOrder")
+                                    </th>
+                                    <th class="cancel">
+                                        @T("Account.CustomerOrders.RecurringOrders.Cancel")
+                                    </th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.RecurringOrders)
+                                {
+                                    <tr>
+                                        <td class="start-date">
+                                            @item.StartDate
+                                        </td>
+                                        <td class="cycle-info">
+                                            @item.CycleInfo
+                                        </td>
+                                        <td class="next-payment">
+                                            @item.NextPayment
+                                        </td>
+                                        <td class="total-cycles">
+                                            @item.TotalCycles
+                                        </td>
+                                        <td class="cycles-remaining">
+                                            @item.CyclesRemaining
+                                        </td>
+                                        <td class="initial-order">
+                                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
+                                        </td>
+                                        <td class="cancel">
+                                            @if (item.CanCancel)
+                                            {
+                                                <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" class="button-2 cancel-recurring-order-button" />
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
             </div>
-            }
             if (Model.CancelRecurringPaymentErrors.Count > 0)
             {
             <div class="message-error">
@@ -107,10 +107,11 @@
             </div>
             }
         }
-        <div class="order-list">
-            @if (Model.Orders.Count > 0)
-            {
-                foreach (var order in Model.Orders)
+        
+        @if (Model.Orders.Count > 0)
+        {
+            <div class="order-list">
+                @foreach (var order in Model.Orders)
                 {
                 <div class="section order-item">
                     <div class="title">
@@ -130,11 +131,13 @@
                     </div>
                 </div>
                 }
-            }
-            else
-            {
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
                 @T("Account.CustomerOrders.NoOrders")
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>

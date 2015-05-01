@@ -14,13 +14,11 @@
                     <li @(i == Model.Count - 1 ? @Html.Raw(" class=\"last\"") : null)>
                         @if (!String.IsNullOrEmpty(product.DefaultPictureModel.ImageUrl))
                         {
-                            <div class="product-picture">
-                                <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
-                                    <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
-                                </a>
-                            </div>
+                            <a class="product-picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })" title="@product.DefaultPictureModel.Title">
+                                <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                            </a>
                         }
-                        <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })" class="product-name">@product.Name</a>
+                        <a class="product-name" href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
                     </li>
                 }
             </ul>

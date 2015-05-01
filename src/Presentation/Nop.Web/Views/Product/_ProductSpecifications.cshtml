@@ -6,25 +6,27 @@
         <div class="title">
             <strong>@T("Products.Specs")</strong>
         </div>
-        <table class="data-table">
-            <colgroup>
-                <col width="25%" />
-                <col />
-            </colgroup>
-            <tbody>
-                @for (int i = 0; i < Model.Count; i++)
-                {
-                    var item = Model[i];
-                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
-                        <td class="a-left spec-name">
-                            @item.SpecificationAttributeName
-                        </td>
-                        <td class="a-left spec-value">
-                            @Html.Raw(item.ValueRaw)
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <colgroup>
+                    <col width="25%" />
+                    <col />
+                </colgroup>
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var item = Model[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td class="spec-name">
+                                @item.SpecificationAttributeName
+                            </td>
+                            <td class="spec-value">
+                                @Html.Raw(item.ValueRaw)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 }

@@ -1,7 +1,7 @@
 ﻿@model RegisterModel
 @using Nop.Web.Models.Customer;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Register").Text);
@@ -11,8 +11,8 @@
     <script type="text/javascript">
         $(function () {
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
-             var selectedItem = $(this).val();
-             var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
                 var statesProgress = $("#states-loading-progress");
                 statesProgress.show();
                 $.ajax({
@@ -33,7 +33,7 @@
                     }
                 });
             });
-     });
+        });
     </script>
 }
 @using (Html.BeginForm())
@@ -44,9 +44,13 @@
             <h1>@T("Account.Register")</h1>
         </div>
         <div class="page-body">
-            <div class="message-error">
-                @Html.ValidationSummary(true)
-            </div>
+            @{
+                var validationSummary = Html.ValidationSummary(true);
+            }
+            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div>
+            }
             @Html.Partial("_ExternalAuthentication.AssociateMessage")
             <div class="fieldset">
                 <div class="title">
@@ -58,12 +62,14 @@
                         <div class="inputs">
                             <label>@T("Account.Fields.Gender"):</label>
                             <div class="gender">
-                                @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male" })
-                                <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
-                            </div>
-                            <div class="gender">
-                                @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
-                                <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                <span class="male">
+                                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "gender-male" })
+                                    <label class="forcheckbox" for="gender-male">@T("Account.Fields.Gender.Male")</label>
+                                </span>
+                                <span class="female">
+                                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "gender-female" })
+                                    <label class="forcheckbox" for="gender-female">@T("Account.Fields.Gender.Female")</label>
+                                </span>
                             </div>
                         </div>
                     }
@@ -81,7 +87,7 @@
                     </div>
                     @if (Model.DateOfBirthEnabled)
                     {
-                        <div class="inputs">
+                        <div class="inputs date-of-birth">
                             <label>@T("Account.Fields.DateOfBirth"):</label>
                             @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
                                 Html.FieldNameFor(x => x.DateOfBirthMonth),
@@ -114,7 +120,7 @@
                                 @Html.Partial("_CheckUsernameAvailability")
                             }
                         </div>
-                        
+
                     }
                 </div>
             </div>
@@ -160,7 +166,7 @@
                         {
                             <div class="inputs">
                                 @Html.LabelFor(model => model.StreetAddress, new { }, ":")
-                            @Html.EditorFor(model => model.StreetAddress)
+                                @Html.EditorFor(model => model.StreetAddress)
                                 @if (Model.StreetAddressRequired)
                                 {
                                     @Html.RequiredHint()
@@ -172,7 +178,7 @@
                         {
                             <div class="inputs">
                                 @Html.LabelFor(model => model.StreetAddress2, new { }, ":")
-                            @Html.EditorFor(model => model.StreetAddress2)
+                                @Html.EditorFor(model => model.StreetAddress2)
                                 @if (Model.StreetAddress2Required)
                                 {
                                     @Html.RequiredHint()
@@ -184,7 +190,7 @@
                         {
                             <div class="inputs">
                                 @Html.LabelFor(model => model.ZipPostalCode, new { }, ":")
-                            @Html.EditorFor(model => model.ZipPostalCode)
+                                @Html.EditorFor(model => model.ZipPostalCode)
                                 @if (Model.ZipPostalCodeRequired)
                                 {
                                     @Html.RequiredHint()
@@ -196,7 +202,7 @@
                         {
                             <div class="inputs">
                                 @Html.LabelFor(model => model.City, new { }, ":")
-                            @Html.EditorFor(model => model.City)
+                                @Html.EditorFor(model => model.City)
                                 @if (Model.CityRequired)
                                 {
                                     @Html.RequiredHint()
@@ -276,7 +282,7 @@
                         @if (Model.NewsletterEnabled)
                         {
                             <div class="inputs">
-                                @Html.LabelFor(model => model.Newsletter, new {}, ":")
+                                @Html.LabelFor(model => model.Newsletter, new { }, ":")
                                 @Html.EditorFor(model => model.Newsletter)
                                 @Html.ValidationMessageFor(model => model.Newsletter)
                             </div>

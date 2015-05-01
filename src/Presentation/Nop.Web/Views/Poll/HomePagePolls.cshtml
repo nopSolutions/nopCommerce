@@ -2,7 +2,10 @@
 @using Nop.Web.Models.Polls;
 @if (Model.Count > 0)
 {
-    <div class="todays-poll-box">
+    <div class="home-page-polls">
+        <div class="title">
+            <strong>Community Poll</strong>
+        </div>
         @foreach (var poll in Model)
         { 
             @Html.Partial("_Poll", poll)

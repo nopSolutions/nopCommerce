@@ -18,50 +18,50 @@
     <div class="page-body">
         @using (Html.BeginForm())
         {
-            <div class="message-error">
-                @Html.ValidationSummary(true)
-            </div>
+            var validationSummary = Html.ValidationSummary(true);
+            if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div> 
+            }
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.ForumId)
-            
-            <div class="form-fields">
-                <div class="inputs">
-                    <label>@T("Forum.ForumName"):</label>
-                    <strong>@Model.ForumName</strong>
-                </div>
-                <div class="inputs">
-                    <label>@T("Forum.TopicTitle"):</label>
-                    @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
-                    @Html.ValidationMessageFor(model => model.Subject)
-                </div>
-                <div class="inputs">
-                    @if (Model.ForumEditor == EditorType.BBCodeEditor)
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label>@T("Forum.ForumName"):</label>
+                        <strong>@Model.ForumName</strong>
+                    </div>
+                    <div class="inputs">
+                        <label>@T("Forum.TopicTitle"):</label>
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
+                        @Html.ValidationMessageFor(model => model.Subject)
+                    </div>
+                    <div class="inputs">
+                        @if (Model.ForumEditor == EditorType.BBCodeEditor)
+                        {
+                            @Html.BBCodeEditor("Text")
+                        }
+                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
+                        @Html.ValidationMessageFor(model => model.Text)
+                    </div>
+                    @if (Model.IsCustomerAllowedToSetTopicPriority)
                     {
-                        @Html.BBCodeEditor("Text")
+                        <div class="inputs">
+                            <label>@T("Forum.Priority"):</label>
+                            @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
+                        </div>
                     }
-                    @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
-                    @Html.ValidationMessageFor(model => model.Text)
+                    @if (Model.IsCustomerAllowedToSubscribe)
+                    {
+                        <div class="inputs reversed">
+                            @Html.EditorFor(model => model.Subscribed)
+                            <label>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</label>
+                        </div>
+                    }
                 </div>
-
-
-                @if (Model.IsCustomerAllowedToSetTopicPriority)
-                {
-                    <div class="inputs">
-                        <label>@T("Forum.Priority"):</label>
-                        @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
-                    </div>
-                }
-                @if (Model.IsCustomerAllowedToSubscribe)
-                {
-                    <div class="inputs">
-                        <label>@T("Forum.Options"):</label>
-                        @Html.EditorFor(model => model.Subscribed)
-                        <span>@T("Forum.NotifyWhenSomeonePostsInThisTopic")</span>
-                    </div>
-                }
             </div>
             <div class="buttons">
-                <input type="submit" value="@T("Forum.Submit")" class="button-2 submit-topic-button" />
+                <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-topic-button" />
                 <input type="button" class="button-2 cancel-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
             </div>
         }

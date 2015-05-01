@@ -7,9 +7,11 @@
         <div class="title">
             <strong>@T("Products.AlsoPurchased")</strong>
         </div>
-        @foreach (var item in Model)
-        {
-            <div class="item-box">@Html.Partial("_ProductBox", item)</div>
-        }
+        <div class="item-grid">
+            @foreach (var item in Model)
+            {
+                <div class="item-box">@Html.Partial("_ProductBox", item)</div>
+            }
+        </div>
     </div>
 }

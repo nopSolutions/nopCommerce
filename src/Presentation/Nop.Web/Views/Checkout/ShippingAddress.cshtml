@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
-<div class="page checkout-page">
+<div class="page checkout-page shipping-address-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
     <div class="page-title">
         <h1>@T("Checkout.ShippingAddress")</h1>
@@ -17,18 +17,20 @@
             if (Model.AllowPickUpInStore)
             {
                 <div class="section pickup-in-store">
-                    <p class="selector">
+                    <div class="selector">
                         @{
-                            var pickupInStoreName = T("Checkout.PickUpInStore").Text;
-                            if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
-                            {
-                                pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
-                            }
+                var pickupInStoreName = T("Checkout.PickUpInStore").Text;
+                if (!String.IsNullOrEmpty(Model.PickUpInStoreFee))
+                {
+                    pickupInStoreName = T("Checkout.PickUpInStoreAndFee", Model.PickUpInStoreFee).Text;
+                }
                         }
                         @Html.CheckBoxFor(x => x.PickUpInStore)
                         <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@pickupInStoreName</label>
-                    </p>
-                    <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
+                    </div>
+                    <div class="description">
+                        @T("Checkout.PickUpInStore.Description")
+                    </div>
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
@@ -56,26 +58,26 @@
                             @foreach (var item in Model.ExistingAddresses)
                             {
                                 <div class="address-item">
-                                    <div class="select-button">
-                                        <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick=" setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new {addressid = item.Id})') " />
-                                    </div>
                                     <ul class="address-box">
                                         <li class="name">
-                                            <strong>@item.FirstName @item.LastName</strong>
+                                            @item.FirstName @item.LastName
                                         </li>
-                                        <li class="email">@T("Address.Fields.Email"): @item.Email</li>
+                                        <li class="email">
+                                            <label>@T("Address.Fields.Email"):</label>
+                                            <span>@item.Email</span>
+                                        </li>
                                         @if (item.PhoneEnabled)
                                         {
                                             <li class="phone">
-                                                @T("Address.Fields.PhoneNumber"):
-                                                @item.PhoneNumber
+                                                <label>@T("Address.Fields.PhoneNumber"):</label>
+                                                <span>@item.PhoneNumber</span>
                                             </li>
                                         }
                                         @if (item.FaxEnabled)
                                         {
                                             <li class="fax">
-                                                @T("Address.Fields.FaxNumber"):
-                                                @item.FaxNumber
+                                                <label>@T("Address.Fields.FaxNumber"):</label>
+                                                <span>@item.FaxNumber</span>
                                             </li>
                                         }
                                         @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
@@ -130,6 +132,9 @@
                                             </li>
                                         }
                                     </ul>
+                                    <div class="select-button">
+                                        <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id })') " />
+                                    </div>
                                 </div>
                             }
                         </div>
@@ -148,18 +153,20 @@
                         }
                     </div>
                     <div class="enter-address">
-                        <div class="message-error">
-                            @Html.ValidationSummary(true)
-                        </div>
-                        <div class="enter-address-body">
-                            @{
-                                var dataDictAddress = new ViewDataDictionary();
-                                //Merge ModelState (required for validation)
-                                dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
-                                @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
-                            }
-                        </div>
+                        @{
+                            var validationSummary = Html.ValidationSummary(true);
+                        }
+                        @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                        {
+                            <div class="message-error">@validationSummary</div>
+                        }
+                        @{
+                            var dataDictAddress = new ViewDataDictionary();
+                            //Merge ModelState (required for validation)
+                            dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                            dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
+                            @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                        }
                     </div>
                 </div>
                 @Html.Widget("checkout_shipping_address_bottom")
@@ -168,7 +175,7 @@
                 <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
             </div>
         }
-        <div class="section order-summary-body">
+        <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>

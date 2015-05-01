@@ -5,7 +5,7 @@
 }
 @if (Model.Enabled)
 {
-    <div class="product-filters product-spec-filter">
+    <div class="product-filter product-spec-filter">
         <div class="filter-title">
             <strong>@T("Filtering.SpecificationFilter")</strong>
         </div>
@@ -17,7 +17,7 @@
                     {
                         var groupList = group.ToList();
                         
-                        <ul class="group">
+                        <ul class="group product-spec-group">
                             <li class="title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>
@@ -28,22 +28,24 @@
                                     <a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a>
                                 </li>
                             }
-                        </ul> 
+                        </ul>
                     }
                 </div>
             }
             @if (Model.AlreadyFilteredItems.Count > 0)
             {
-                <div class="already-filtered-items">
-                    <div class="filter-title">
-                        @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
-                    </div>
-                    @foreach (var item in Model.AlreadyFilteredItems)
-                    {
-                        <div class="item">
-                            <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
-                        </div>
-                    }
+                <div class="filtered-items">
+                    <ul>
+                        <li class="title">
+                            @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
+                        </li>
+                        @foreach (var item in Model.AlreadyFilteredItems)
+                        {
+                            <li class="item">
+                                <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                            </li>
+                        }
+                    </ul>
                 </div>
                 <div class="remove-filter">
                     <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>

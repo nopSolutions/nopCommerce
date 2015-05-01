@@ -17,9 +17,13 @@
             <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
         </div>
         <div class="page-body">
-            <div class="message-error">
-                @Html.ValidationSummary(true)
-            </div>
+            @{
+                var validationSummary = Html.ValidationSummary(true);
+            }
+            @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+            {
+                <div class="message-error">@validationSummary</div>
+            }
             <div class="fieldset">
                 @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                 {

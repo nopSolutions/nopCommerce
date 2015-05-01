@@ -1,30 +1,28 @@
 ﻿@model NewsletterBoxModel
 @using Nop.Web.Models.Newsletter;
-<div class="block block-newsletter">
+<div class="newsletter">
     <div class="title">
         <strong>@T("Newsletter.Title")</strong>
     </div>
-    <div class="listbox">
-        <div id="newsletter-subscribe-block" class="newsletter-subscribe-block">
-            <span>@T("Newsletter.Subscribe"):</span>
-            <div class="newsletter-email">
-                @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
-                @Html.ValidationMessageFor(x => x.NewsletterEmail)
-            </div>
-            <div class="buttons">
-                <input type="button" value="@T("Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
-                @if (Model.AllowToUnsubscribe)
-                {
-                    <input type="button" value="@T("Newsletter.Options.Unsubscribe")" id="newsletter-unsubscribe-button" class="button-1 newsletter-unsubscribe-button" />
-                }
-                <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-            </div>
+    <div class="newsletter-subscribe" id="newsletter-subscribe-block">
+        <div class="newsletter-email">
+            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text" })
+            <input type="button" value="@T("Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
         </div>
-        <div id="newsletter-result-block" class="newsletter-result-block">
+        <div class="newsletter-validation">
+            <span id="subscribe-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+            @Html.ValidationMessageFor(x => x.NewsletterEmail)
         </div>
+        @if (Model.AllowToUnsubscribe)
+        {
+            <div class="newsletter-remove-email">
+                <input type="button" value="@T("Newsletter.Options.Unsubscribe")" id="newsletter-unsubscribe-button" class="button-1 newsletter-unsubscribe-button" />
+            </div>
+        }
     </div>
-    <script type="text/javascript">
+    <div class="newsletter-result" id="newsletter-result-block"></div>
 
+    <script type="text/javascript">
         function newsletter_subscribe(subscribe) {
             
             var email = $("#newsletter-email").val();

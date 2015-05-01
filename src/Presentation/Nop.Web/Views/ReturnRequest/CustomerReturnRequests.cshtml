@@ -24,25 +24,27 @@
                 </div>
                 <ul class="details">
                     <li class="product">
-                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                        x @item.Quantity
+                        <label>@T("Account.CustomerReturnRequests.Item"):</label>
+                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                        <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">
-                        @string.Format(T("Account.CustomerReturnRequests.Reason").Text, item.ReturnReason)
+                        <label>@T("Account.CustomerReturnRequests.Reason"):</label>
+                        <span>@item.ReturnReason</span>
                     </li>
                     <li class="action">
-                        @string.Format(T("Account.CustomerReturnRequests.Action").Text, item.ReturnAction)
+                        <label>@T("Account.CustomerReturnRequests.Action"):</label>
+                        <span>@item.ReturnAction</span>
                     </li>
                     <li class="date">
-                        @string.Format(T("Account.CustomerReturnRequests.Date").Text, item.CreatedOn.ToString())
+                        <label>@T("Account.CustomerReturnRequests.Date"):</label>
+                        <span>@item.CreatedOn.ToString()</span>
                     </li>
                     @if (!String.IsNullOrEmpty(item.Comments))
                     {
-                        <li class="comments-label">
-                            @T("Account.CustomerReturnRequests.Comments")
-                        </li>
                         <li class="comments">
-                            @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))
+                            <label>@T("Account.CustomerReturnRequests.Comments"):</label>
+                            <div>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
                         </li>
                     }
                 </ul>

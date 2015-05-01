@@ -22,7 +22,7 @@
         @if (!String.IsNullOrEmpty(Model.CurrentCode))
         {
             <div class="current-code">
-                @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
+                <span class="applied-discount-code">@string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)</span>
                 @*empty value (little hack for FormValueExistsAttribute)*@
                 <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
             </div>

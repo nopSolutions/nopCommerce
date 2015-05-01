@@ -4,8 +4,9 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Localization;
 @using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Orders;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title, meta
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
@@ -46,7 +47,10 @@
     }
 }
 <!--product breadcrumb-->
-@Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
+@section ProductBreadcrumb
+{
+    @Html.Partial("_ProductBreadcrumb", Model.Breadcrumb)
+}
 @Html.Widget("productdetails_after_breadcrumb", Model.Id)
 <div class="page product-details-page">
     <div class="page-body">
@@ -72,12 +76,18 @@
                             </div>
                         }
                         @Html.Widget("productdetails_overview_top", Model.Id)
-                        <!--product manufacturers-->
-                        @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
                         <!--product reviews-->
                         @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
-                        @Html.Partial("_ProductEmailAFriendButton", Model)
-                        @Html.Partial("_CompareProductsButton", Model)
+                        <!--product manufacturers-->
+                        @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
+                        <!--compare, email-afriend-->
+                        @if (Model.CompareProductsEnabled || Model.EmailAFriendEnabled)
+                        { 
+                            <div class="overview-buttons">     
+                                @Html.Partial("_CompareProductsButton", Model)
+                                @Html.Partial("_ProductEmailAFriendButton", Model)
+                            </div>
+                        }
                         @Html.Partial("_ShareButton", Model)
                         @Html.Widget("productdetails_overview_bottom", Model.Id)
                     </div>
@@ -115,27 +125,65 @@
                                             @Html.Raw(variant.ShortDescription)
                                         </div>
                                     }
+                                    <!--availability-->
+                                    @if (!String.IsNullOrWhiteSpace(variant.StockAvailability) || variant.DisplayBackInStockSubscription)
+                                    { 
+                                        <div class="availability">
+                                            @if (!String.IsNullOrWhiteSpace(variant.StockAvailability))
+                                            {
+                                                <div class="stock">
+                                                    <span class="label">@T("Products.Availability"): </span><span class="value">@variant.StockAvailability</span>
+                                                </div>
+                                            }
+                                            @Html.Partial("_BackInStockSubscription", variant)
+                                        </div>
+                                    }
+                                    <!--SKU, MAN, GTIN, vendor-->
+                                    @Html.Partial("_SKU_Man_GTIN_Ven", variant)
+                                    <!--delivery-->
+                                    @if ((variant.FreeShippingNotificationEnabled && variant.IsFreeShipping) || !String.IsNullOrWhiteSpace(variant.DeliveryDate))
+                                    { 
+                                        <div class="delivery">
+                                            @if (variant.FreeShippingNotificationEnabled && variant.IsFreeShipping)
+                                            {
+                                                <div class="free-shipping">@T("Products.FreeShipping")</div>
+                                            }
+                                            @if (!String.IsNullOrWhiteSpace(variant.DeliveryDate))
+                                            {
+                                                <div class="delivery-date">
+                                                    <span class="label">@T("Products.DeliveryDate"): </span><span class="value">@variant.DeliveryDate</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    <!--wishlist-->
+                                    @{
+                                        var dataDictAddToWishlist = new ViewDataDictionary();
+                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                        @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
+                                    }
+
+                                    <!--sample download-->
                                     @Html.Partial("_DownloadSample", variant)
-                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
+                                    <!--attributes-->
                                     @{
                                         var dataDictAttributes = new ViewDataDictionary();
                                         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", variant.Id);
-                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)                  
+                                        @Html.Partial("_ProductAttributes", variant.ProductAttributes, dataDictAttributes)
                                     }
-                                    <!--product SKU, manufacturer part number, stock info-->
-                                    @Html.Partial("_SKU_Man_Stock", variant)
-                                    <!--Back in stock subscription-->
-                                    @Html.Partial("_BackInStockSubscription", variant)
+                                    <!--gift card-->
                                     @{
                                         var dataDictGiftCard = new ViewDataDictionary();
                                         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", variant.Id);
                                         @Html.Partial("_GiftCardInfo", variant.GiftCard, dataDictGiftCard)
                                     }
+                                    <!--rental info-->
                                     @{
                                         var dataDictRental = new ViewDataDictionary();
                                         dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", variant.Id);
                                         @Html.Partial("_RentalInfo", variant, dataDictRental)
                                     }
+                                    <!--price & add to cart-->
                                     @{
                                         var dataDictPrice = new ViewDataDictionary();
                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
@@ -146,6 +194,8 @@
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
                                     }
+                                    <!--price breaks-->
+                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
                                 </div>
                             </div>
                         }
@@ -158,10 +208,10 @@
                     </div>
                     @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
                     @Html.Partial("_ProductTags", Model.ProductTags)
-                    @*we do not display "also purchased" for grouped products
-                    @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
-                    @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
                 </div>
+                @*we do not display "also purchased" for grouped products
+                @Html.Action("ProductsAlsoPurchased", "Product", new { productId = Model.Id })*@
+                @Html.Action("RelatedProducts", "Product", new { productId = Model.Id })
             </div>
         }
         @Html.Widget("productdetails_bottom", Model.Id)

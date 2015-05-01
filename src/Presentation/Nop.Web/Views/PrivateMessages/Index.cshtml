@@ -2,13 +2,12 @@
 @using Nop.Web.Models.PrivateMessages;
 @{    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
-
+    
     Html.AddTitleParts(T("PageTitle.PrivateMessages").Text);
 }
-<div class="page private-messages-page">
+<div class="page private-messages private-messages-page">
     <div class="page-title">
-        <h1>
-            @T("PrivateMessages.PrivateMessages")</h1>
+        <h1>@T("PrivateMessages.PrivateMessages")</h1>
     </div>
     <div class="page-body">
         @{
@@ -19,8 +18,8 @@
                 $("#tabs").tabs()@Html.Raw(selectSentTab);
             });
         </script>
-        <div id="tabs">
-            <ul>
+        <div class="tabs inbox-tabs" id="tabs">
+            <ul class="tabs-header">
                 <li><a href="#tabs-1">@T("PrivateMessages.Inbox")</a></li>
                 <li><a href="#tabs-2">@T("PrivateMessages.SentItems")</a></li>
             </ul>

@@ -20,4 +20,6 @@
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
 }
-@Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
+<div class="tax-display-type-selector">
+    @Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
+</div>

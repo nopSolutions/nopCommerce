@@ -5,8 +5,8 @@
 
     Html.AddTitleParts(Model.Name);
 }
-@Html.Action("ForumBreadcrumb", new { forumGroupId = Model.Id })
-@Html.Partial("_SearchBox")
 <div class="page forum-group-page">
+    @Html.Action("ForumBreadcrumb", new { forumGroupId = Model.Id })
+    @Html.Partial("_ForumHeader")
     @Html.Partial("_ForumGroup", Model)
 </div>

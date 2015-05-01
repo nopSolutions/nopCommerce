@@ -5,7 +5,7 @@
         @Html.Widget("header_links_before")
         @if (Model.IsAuthenticated)
         {
-            <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@Model.CustomerEmailUsername</a></li>
+            <li><a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@Model.CustomerEmailUsername</a></li>
             <li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Logout")</a></li>
         }
         else
@@ -22,21 +22,21 @@
                 </a>
             </li>
         }
-        @if (Model.ShoppingCartEnabled)
-        {
-            <li id="topcartlink">
-                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
-                    <span class="cart-label">@T("ShoppingCart")</span>
-                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
-                </a>
-            </li>
-        }
         @if (Model.WishlistEnabled)
         {
             <li>
                 <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
                     <span class="wishlist-label">@T("Wishlist")</span>
                     <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li id="topcartlink">
+                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                    <span class="cart-label">@T("ShoppingCart")</span>
+                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
                 </a>
             </li>
         }

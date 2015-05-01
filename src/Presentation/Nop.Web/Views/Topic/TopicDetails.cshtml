@@ -6,7 +6,7 @@
     var isPopup = ViewBag.IsPopup;
     if (isPopup == null || isPopup == false)
     {
-        Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+        Layout = "~/Views/Shared/_ColumnsOne.cshtml";
     }
     else
     {
@@ -92,11 +92,8 @@
     </div>
 }
 <div class="page topic-page" id="ph-topic">
-    <div id="ph-title">
-        <div class="page-title">
-            <h1>
-                @Model.Title</h1>
-        </div>
+    <div class="page-title" id="ph-title">
+        <h1>@Model.Title</h1>
     </div>
     <div class="page-body">
         @Html.Raw(Model.Body)

@@ -15,11 +15,11 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {
-                            $('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').html(data.Title);
-                            if ($('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').text().length == 0) {
+                            $('#ph-title-@Model.Id .topic-block-title h2').html(data.Title);
+                            if ($('#ph-title-@Model.Id .topic-block-title h2').text().length == 0) {
                                 $('#ph-title-@Model.Id').hide();
                             }
-                            $('#ph-topic-@Model.Id .topic-html-content-body').html(data.Body);
+                            $('#ph-topic-@Model.Id .topic-block-body').html(data.Body);
                             $('#ph-password-@Model.Id').hide();
                             $('#ph-topic-@Model.Id').show();
                         }
@@ -54,29 +54,25 @@
             </div>
         }
     </div>
-    <div class="topic-html-content" id="ph-topic-@Model.Id">
-        <div id="ph-title-@Model.Id">
-            <div class="topic-html-content-title">
-                <h2 class="topic-html-content-header">
-                    @Model.Title</h2>
-            </div>
+    <div class="topic-block" id="ph-topic-@Model.Id">
+        <div class="topic-block-title" id="ph-title-@Model.Id">
+            <h2>@Model.Title</h2>
         </div>
-        <div class="topic-html-content-body">
+        <div class="topic-block-body">
             @Html.Raw(Model.Body)
         </div>
     </div>
 }
 else
 {
-    <div class="topic-html-content">
+    <div class="topic-block">
         @if (!String.IsNullOrEmpty(Model.Title))
         {
-            <div class="topic-html-content-title">
-                <h2 class="topic-html-content-header">
-                    @Model.Title</h2>
+            <div class="topic-block-title">
+                <h2>@Model.Title</h2>
             </div>
         }
-        <div class="topic-html-content-body">
+        <div class="topic-block-body">
             @Html.Raw(Model.Body)
         </div>
     </div>

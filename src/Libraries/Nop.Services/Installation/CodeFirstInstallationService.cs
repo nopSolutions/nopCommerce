@@ -4677,13 +4677,13 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new MediaSettings
                 {
                     AvatarPictureSize = 85,
-                    ProductThumbPictureSize = 125,
-                    ProductDetailsPictureSize = 300,
+                    ProductThumbPictureSize = 290,
+                    ProductDetailsPictureSize = 550,
                     ProductThumbPictureSizeOnProductDetailsPage = 70,
                     ProductThumbPerRowOnProductDetailsPage = 4,
-                    AssociatedProductPictureSize = 125,
-                    CategoryThumbPictureSize = 125,
-                    ManufacturerThumbPictureSize = 125,
+                    AssociatedProductPictureSize = 290,
+                    CategoryThumbPictureSize = 200,
+                    ManufacturerThumbPictureSize = 200,
                     CartThumbPictureSize = 80,
                     MiniCartThumbPictureSize = 47,
                     AutoCompleteSearchThumbPictureSize = 20,

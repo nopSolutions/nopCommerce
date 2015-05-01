@@ -11,10 +11,10 @@
     </div>
     <div class="page-body">
 
-        <div class="shipment-overview">
+        <div class="shipment-details-area">
             <ul class="shipping-details">
                 <li class="title">
-                    <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>
+                    @T("Order.Shipments.Order#")@Model.Order.Id
                 </li>
                 <li class="shipping-method">
                     @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
@@ -59,7 +59,7 @@
             {
                 <ul class="shipping-address">
                     <li class="title">
-                        <strong>@T("Order.Shipments.ShippingAddress")</strong>
+                        @T("Order.Shipments.ShippingAddress")
                     </li>
                     <li class="name">
                         @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
@@ -102,65 +102,67 @@
         {
             <div class="section products">
                 <div class="title">
-                    <strong>@T("Order.Shipments.Product(s)")</strong>
+                    @T("Order.Shipments.Product(s)")
                 </div>
-                <table class="data-table">
-                    <colgroup>
-                        @if (Model.ShowSku)
-                        {
-                            <col width="1" />
-                        }
-                        <col />
-                        <col />
-                    </colgroup>
-                    <thead>
-                        <tr>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
                             @if (Model.ShowSku)
                             {
-                                <th class="a-center sku">
-                                    @T("Order.Shipments.Product(s).SKU")
-                                </th>
+                                <col width="1" />
                             }
-                            <th class="a-center name">
-                                @T("Order.Shipments.Product(s).Name")
-                            </th>
-                            <th class="a-center quantity">
-                                @T("Order.Shipments.Product(s).Quantity")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="a-left sku">
-                                        @item.Sku
-                                    </td>
+                                    <th class="sku">
+                                        @T("Order.Shipments.Product(s).SKU")
+                                    </th>
                                 }
-                                <td class="a-left name">
-                                    <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
-                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                    {
-                                        <div class="attributes">
-                                            @Html.Raw(item.AttributeInfo)
-                                        </div>
-                                    }
-                                    @if (!String.IsNullOrEmpty(item.RentalInfo))
-                                    {
-                                        <div class="rental-info">
-                                            @Html.Raw(item.RentalInfo)
-                                        </div>
-                                    }
-                                </td>
-                                <td class="a-center quantity">
-                                    @item.QuantityShipped
-                                </td>
+                                <th class="name">
+                                    @T("Order.Shipments.Product(s).Name")
+                                </th>
+                                <th class="quantity">
+                                    @T("Order.Shipments.Product(s).Quantity")
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    @if (Model.ShowSku)
+                                    {
+                                        <td class="sku">
+                                            @item.Sku
+                                        </td>
+                                    }
+                                    <td class="name">
+                                        <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
+                                            <div class="attributes">
+                                                @Html.Raw(item.AttributeInfo)
+                                            </div>
+                                        }
+                                        @if (!String.IsNullOrEmpty(item.RentalInfo))
+                                        {
+                                            <div class="rental-info">
+                                                @Html.Raw(item.RentalInfo)
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="quantity">
+                                        @item.QuantityShipped
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
         @if (Model.ShipmentStatusEvents.Count > 0)
@@ -169,52 +171,54 @@
                 <div class="title">
                     <strong>@T("Order.ShipmentStatusEvents")</strong>
                 </div>
-                <table class="data-table">
-                    <colgroup>
-                        <col />
-                        <col />
-                        <col />
-                        <col />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th class="a-center event">
-                                @T("Order.ShipmentStatusEvents.Event")
-                            </th>
-                            <th class="a-center location">
-                                @T("Order.ShipmentStatusEvents.Location")
-                            </th>
-                            <th class="a-center country">
-                                @T("Order.ShipmentStatusEvents.Country")
-                            </th>
-                            <th class="a-center date">
-                                @T("Order.ShipmentStatusEvents.Date")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ShipmentStatusEvents)
-                        {
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
+                            <col />
+                            <col />
+                            <col />
+                            <col />
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td class="a-left event">
-                                    @item.EventName
-                                </td>
-                                <td class="a-left location">
-                                    @item.Location
-                                </td>
-                                <td class="a-left country">
-                                    @item.Country
-                                </td>
-                                <td class="a-left date">
-                                    @if (item.Date.HasValue)
-                                    {
-                                        @item.Date.Value.ToString("D")
-                                    }
-                                </td>
+                                <th class="event">
+                                    @T("Order.ShipmentStatusEvents.Event")
+                                </th>
+                                <th class="location">
+                                    @T("Order.ShipmentStatusEvents.Location")
+                                </th>
+                                <th class="country">
+                                    @T("Order.ShipmentStatusEvents.Country")
+                                </th>
+                                <th class="date">
+                                    @T("Order.ShipmentStatusEvents.Date")
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ShipmentStatusEvents)
+                            {
+                                <tr>
+                                    <td class="event">
+                                        @item.EventName
+                                    </td>
+                                    <td class="location">
+                                        @item.Location
+                                    </td>
+                                    <td class="country">
+                                        @item.Country
+                                    </td>
+                                    <td class="date">
+                                        @if (item.Date.HasValue)
+                                        {
+                                            @item.Date.Value.ToString("D")
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
     </div>

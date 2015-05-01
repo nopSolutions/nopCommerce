@@ -1,6 +1,6 @@
 ﻿@model PopularProductTagsModel
 @{
-    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.AllProductTags").Text);
@@ -16,8 +16,10 @@
             <ul class="product-tags-list">
                 @foreach (var item in Model.Tags)
                 {
-                    <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
-                        @item.Name</a> </li>
+                    <li>
+                        <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="producttag" style="font-size:@(Model.GetFontSize(item))%;">
+                        @item.Name</a>
+                    </li>
                 }
             </ul>
         }

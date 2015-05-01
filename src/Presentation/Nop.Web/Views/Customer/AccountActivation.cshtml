@@ -1,7 +1,7 @@
 ﻿@model AccountActivationModel
 @using Nop.Web.Models.Customer;
 @{
-    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
@@ -11,8 +11,8 @@
         <h1>@T("Account.AccountActivation")</h1>
     </div>
     <div class="page-body">
-        <strong>
+        <div class="result">
             @Model.Result
-        </strong>
+        </div>
     </div>
 </div>

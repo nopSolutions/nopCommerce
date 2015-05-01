@@ -34,128 +34,152 @@
         <div class="search-input">
             @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
             {
-                <div class="basic-search">
-                    <div class="inputs">
-                        @Html.LabelFor(model => model.q, new { }, ":")
-                        @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
-                    </div>
-                    @Html.Widget("productsearch_page_basic")
-                    <div class="inputs reversed">
-                        @Html.CheckBoxFor(model => model.adv)
-                        @Html.LabelFor(model => model.adv)
-                    </div>
-                </div>
-                <div class="advanced-search" id="advanced-search-block">
-                    @if (Model.AvailableCategories.Count > 0)
-                    {
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.cid, new { }, ":")
-                            @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="basic-search">
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.q, new { }, ":")
+                                @Html.TextBoxFor(model => model.q, new { @class = "search-text" })
+                            </div>
+                            @Html.Widget("productsearch_page_basic")
+                            <div class="inputs reversed">
+                                @Html.CheckBoxFor(model => model.adv)
+                                @Html.LabelFor(model => model.adv)
+                            </div>
                         </div>
-                        <div class="inputs reversed">
-                            @Html.CheckBoxFor(model => model.isc)
-                            @Html.LabelFor(model => model.isc)
+                        <div class="advanced-search" id="advanced-search-block">
+                            @if (Model.AvailableCategories.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.cid, new { }, ":")
+                                    @Html.DropDownListFor(model => model.cid, Model.AvailableCategories)
+                                </div>
+                                <div class="inputs reversed">
+                                    @Html.CheckBoxFor(model => model.isc)
+                                    @Html.LabelFor(model => model.isc)
+                                </div>
+                            }
+                            @if (Model.AvailableManufacturers.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.mid, new { }, ":")
+                                    @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
+                                </div>
+                            }
+                            <div class="inputs">
+                                <label>@T("Search.PriceRange"):</label>
+                                <span class="price-range">
+                                    @T("Search.PriceRange.From")
+                                    @Html.TextBoxFor(model => model.pf, new { @class = "price-from" })
+                                    @T("Search.PriceRange.To")
+                                    @Html.TextBoxFor(model => model.pt, new { @class = "price-to" })
+                                </span>
+                            </div>
+                            <div class="inputs reversed">
+                                @Html.CheckBoxFor(model => model.sid)
+                                @Html.LabelFor(model => model.sid)
+                            </div>
+                            @Html.Widget("productsearch_page_advanced")
                         </div>
-                    }
-                    @if (Model.AvailableManufacturers.Count > 0)
-                    {
-                        <div class="inputs">
-                            @Html.LabelFor(model => model.mid, new { }, ":")
-                            @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
-                        </div>
-                    }
-                    <div class="inputs">
-                        <label>@T("Search.PriceRange"):</label>
-                        <span class="price-range">
-                            @T("Search.PriceRange.From")
-                            @Html.TextBoxFor(model => model.pf, new { @class = "price-from" })
-                            @T("Search.PriceRange.To")
-                            @Html.TextBoxFor(model => model.pt, new { @class = "price-to" })
-                        </span>
                     </div>
-                    <div class="inputs reversed">
-                        @Html.CheckBoxFor(model => model.sid)
-                        @Html.LabelFor(model => model.sid)
-                    </div>
-                    @Html.Widget("productsearch_page_advanced")
                 </div>
                 <div class="buttons">
                     <input type="submit" class="button-1 search-button" value="@T("Search")" />
                 </div>
             }
         </div>
-        <div class="product-selectors">
-            @*view mode*@
-            @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
-            {
-                <div class="product-viewmode">
-                    <span>@T("Catalog.ViewMode")</span>
-                    @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
-                </div>
-            }
-            @*sorting*@
-            @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
-            {
-                <div class="product-sorting">
-                    <span>@T("Catalog.OrderBy")</span>
-                    @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
-                </div>
-            }
-            @*page size*@
-            @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
-            {
-                <div class="product-page-size">
-                    <span>@T("Catalog.PageSize")</span>
-                    @Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })
-                    <span>@T("Catalog.PageSize.PerPage")</span>
-                </div>
-            }
-        </div>
+
+        @if (Model.Products.Count > 0)
+        {
+            <div class="product-selectors">
+                @*view mode*@
+                @if (Model.PagingFilteringContext.AllowProductViewModeChanging)
+                {
+                    <div class="product-viewmode">
+                        <span>@T("Catalog.ViewMode")</span>
+                        @if (Model.PagingFilteringContext.AvailableViewModes.Count > 1)
+                        {
+                            var gridMode = Model.PagingFilteringContext.AvailableViewModes[0];
+                            var listMode = Model.PagingFilteringContext.AvailableViewModes[1];
+                    
+                        <a class="viewmode-icon grid @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text">@gridMode.Text</a>
+                        <a class="viewmode-icon list @if(listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text">@listMode.Text</a>
+                        }
+                    </div>
+                }
+                @*sorting*@
+                @if (Model.PagingFilteringContext.AllowProductSorting)
+                {
+                    <div class="product-sorting">
+                        <span>@T("Catalog.OrderBy")</span>
+                        @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+                    </div>
+                }
+                @*page size*@
+                @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize)
+                {
+                    <div class="product-page-size">
+                        <span>@T("Catalog.PageSize")</span>
+                        @Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })
+                        <span>@T("Catalog.PageSize.PerPage")</span>
+                    </div>
+                }
+            </div>
+        }
+        
         @Html.Widget("productsearch_page_before_results")
         <div class="search-results">
             @if (!String.IsNullOrEmpty(Model.Warning))
             {
-                <strong class="warning">
+                <div class="warning">
                     @Model.Warning
-                </strong>
+                </div>
             }
             @if (Model.NoResults)
             {
-                <strong class="result">
+                <div class="no-result">
                     @T("Search.NoResultsText")
-                </strong>
+                </div>
             }
-            @*product list*@
+            
             @if (Model.Products.Count > 0)
             {
                 if (Model.PagingFilteringContext.ViewMode == "list")
                 {
-                            @*list mode*@
+                    @*list mode*@
                     <div class="product-list">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
-                            </div>
-                        }
+                        <div class="item-grid">
+                            @foreach (var product in Model.Products)
+                            {
+                                <div class="item-box">
+                                    @Html.Partial("_ProductBox", product)
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
                 else
                 {
-                            @*grid mode*@
+                    @*grid mode*@
                     <div class="product-grid">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
-                            </div>
-                        }
+                        <div class="item-grid">
+                            @foreach (var product in Model.Products)
+                            {
+                                <div class="item-box">
+                                    @Html.Partial("_ProductBox", product)
+                                </div>
+                            }
+                        </div>
                     </div>
                 }
             }
+            
+            @if (Model.Products.Count > 0)
+            {
             <div class="pager">
                 @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid")
             </div>
+            }
         </div>
         @Html.Widget("productsearch_page_after_results")
     </div>

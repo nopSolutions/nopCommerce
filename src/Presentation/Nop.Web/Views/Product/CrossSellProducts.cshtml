@@ -6,11 +6,13 @@
         <div class="title">
             <strong>@T("ShoppingCart.CrossSells")</strong>
         </div>
-        @foreach (var product in Model)
-        {
-            <div class="item-box">
-                @Html.Partial("_ProductBox", product)
-            </div>
-        }
+        <div class="item-grid">
+            @foreach (var product in Model)
+            {
+                <div class="item-box">
+                    @Html.Partial("_ProductBox", product)
+                </div>
+            }
+        </div>
     </div>
 }

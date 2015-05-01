@@ -64,7 +64,7 @@
                     }
                     @if (item.AllowComments)
                     {
-                        <div class="blog-details">
+                        <div class="post-details">
                             <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">
                                 @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
                             </a>

@@ -3,24 +3,26 @@
 }
 @Html.Widget("body_start_html_tag_after")
 @Html.Partial("_Notifications")
-@Html.Action("AdminHeaderLinks", "Common")
+@Html.Action("JavaScriptDisabledWarning", "Common")
+@Html.Partial("OldInternetExplorerWarning")
+
 <div class="master-wrapper-page">
-    @Html.Action("JavaScriptDisabledWarning", "Common")
+    @Html.Action("AdminHeaderLinks", "Common")
+    @Html.Partial("Header")
+    <script type="text/javascript">
+        AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+    </script>
+    <div class="header-menu">
+        @Html.Action("TopMenu", "Catalog")
+    </div>
     <div class="master-wrapper-content">
-        <script type="text/javascript">
-            AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
-        </script>
-        @Html.Partial("Header")
-        <div class="header-menu">
-            @Html.Action("TopMenu", "Catalog")
-        </div>
         @Html.Widget("content_before")
-        @*ajax loading window*@
-        <div class="ajax-loading-block-window" style="display: none">
-            <div class="loading-image">
-            </div>
-        </div>
-        <div class="master-wrapper-main">
+
+        @if (IsSectionDefined("Breadcrumb"))
+        {
+            @RenderSection("Breadcrumb") 
+        }
+        <div class="master-column-wrapper">
             @RenderBody()
         </div>
         @Html.Widget("content_after")
@@ -29,3 +31,4 @@
 </div>
 @Html.Action("EuCookieLaw", "Common")
 @Html.Widget("body_end_html_tag_before")
+

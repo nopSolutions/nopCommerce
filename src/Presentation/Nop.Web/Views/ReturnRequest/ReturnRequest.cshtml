@@ -25,53 +25,55 @@
                 <div class="title">
                     <strong>@T("ReturnRequests.SelectProduct(s)")</strong>
                 </div>
-                <table class="data-table">
-                    <colgroup>
-                        <col />
-                        <col />
-                        <col width="1" />
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th class="a-center name">
-                                @T("ReturnRequests.Products.Name")
-                            </th>
-                            <th class="a-center price">
-                                @T("ReturnRequests.Products.Price")
-                            </th>
-                            <th class="a-center quantity">
-                                @T("ReturnRequests.Products.Quantity")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {   
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <colgroup>
+                            <col />
+                            <col width="1" />
+                            <col width="1" />
+                        </colgroup>
+                        <thead>
                             <tr>
-                                <td class="a-left name">
-                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
-                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                    {
-                                        <div class="attributes">
-                                            @Html.Raw(item.AttributeInfo)
-                                        </div>
-                                    }
-                                </td>
-                                <td class="a-left price">
-                                    @item.UnitPrice
-                                </td>
-                                <td class="a-left quantity">
-                                    <select name="quantity@(item.Id)">
-                                        @for (int i = 0; i <= item.Quantity; i++)
-                                        {
-                                            <option value="@(i)">@(i)</option>
-                                        }
-                                    </select>
-                                </td>
+                                <th class="product">
+                                    @T("ReturnRequests.Products.Name")
+                                </th>
+                                <th class="unit-price">
+                                    @T("ReturnRequests.Products.Price")
+                                </th>
+                                <th class="quantity">
+                                    @T("ReturnRequests.Products.Quantity")
+                                </th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {   
+                                <tr>
+                                    <td class="product">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
+                                            <div class="attributes">
+                                                @Html.Raw(item.AttributeInfo)
+                                            </div>
+                                        }
+                                    </td>
+                                    <td class="unit-price">
+                                        @item.UnitPrice
+                                    </td>
+                                    <td class="quantity">
+                                        <select name="quantity@(item.Id)">
+                                            @for (int i = 0; i <= item.Quantity; i++)
+                                            {
+                                                <option value="@(i)">@(i)</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             <div class="fieldset">

@@ -1,6 +1,6 @@
 ﻿<script type="text/javascript">
     $(function () {
-        $('#Username').after('<span id="username-availabilty"></span>');
+        $('#check-availability-button').before('<span id="username-availabilty"></span>');
         $('#Username').bind({
             keydown: function () {
                 $('#username-availabilty').text('');
@@ -29,12 +29,12 @@
                     }
                 });
             } else {
-                $('#username-availabilty').attr('class', 'not-available-status');
-                $('#username-availabilty').text('*');
+                $('#username-availabilty').attr('class', 'username-not-available-status');
+                $('#username-availabilty').text('@T("Username.Unavailable")');
             }
             return false;
         });
     });
 </script>
-<input type="button" id="check-availability-button" class="button-1 check-username-availability-button" value="@T("Account.CheckUsernameAvailability.Button")" />
+<input type="button" id="check-availability-button" class="button-2 check-username-availability-button" value="@T("Account.CheckUsernameAvailability.Button")" />
 <span id="availability-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>

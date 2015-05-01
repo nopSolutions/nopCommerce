@@ -4,7 +4,7 @@
 
     Html.AddScriptParts("~/Plugins/Widgets.NivoSlider/Scripts/jquery.nivo.slider.js");
     Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/nivo-slider.css");
-    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/default/default.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.NivoSlider/Content/nivoslider/themes/custom/custom.css");
 }
 @using Nop.Web.Framework.UI
 
@@ -24,7 +24,7 @@
         }
     }
 }
-<div class="slider-wrapper theme-default">
+<div class="slider-wrapper theme-custom">
     <div id="nivo-slider" class="nivoSlider">
         @RenderSliderLine(Model.Picture1Url, Model.Text1, Model.Link1)
         @RenderSliderLine(Model.Picture2Url, Model.Text2, Model.Link2)

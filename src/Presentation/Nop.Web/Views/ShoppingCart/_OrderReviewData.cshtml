@@ -5,7 +5,7 @@
     <div class="order-review-data">
         <ul class="billing-info">
             <li class="title">
-                <strong>@T("Order.BillingAddress")</strong>
+                @T("Order.BillingAddress")
             </li>
             <li class="name">
                 @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
@@ -81,7 +81,7 @@
             @if (!String.IsNullOrEmpty(Model.PaymentMethod))
             {
                 <li class="title">
-                    <strong>@T("Order.Payment")</strong>
+                    @T("Order.Payment")
                 </li>
                 <li class="payment-method">
                     <span class="label">
@@ -113,8 +113,7 @@
                 @if (!Model.SelectedPickUpInStore)
                 {
                     <li class="title">
-                        <strong>
-                            @T("Order.ShippingAddress")</strong>
+                        @T("Order.ShippingAddress")
                     </li>
                     <li class="name">
                         @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
@@ -189,7 +188,7 @@
                     }
                 }
                 <li class="title">
-                    <strong>@T("Order.Shipping")</strong>
+                    @T("Order.Shipping")
                 </li>
                 <li class="shipping-method">
                     <span class="label">

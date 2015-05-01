@@ -63,18 +63,20 @@
         @Html.Widget("op_checkout_shipping_address_middle")
         <div class="section new-shipping-address" id="shipping-new-address-form">
             <div class="enter-address">
-                <div class="message-error">
-                    @Html.ValidationSummary(true)
-                </div>
-                <div class="enter-address-body">
-                    @{
-                        var dataDictAddress = new ViewDataDictionary();
-                        //Merge ModelState (required for validation)
-                        dataDictAddress.ModelState.Merge(ViewData.ModelState);
-                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
-                        @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
-                    }
-                </div>
+                @{
+                    var validationSummary = Html.ValidationSummary(true);
+                }
+                @if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                @{
+                    var dataDictAddress = new ViewDataDictionary();
+                    //Merge ModelState (required for validation)
+                    dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                    @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                }
             </div>
         </div>
         @Html.Widget("op_checkout_shipping_address_bottom")

@@ -2,6 +2,7 @@
 @using Nop.Core
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
+@using Nop.Core.Domain.Catalog
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @{
@@ -16,7 +17,11 @@
     else
     {
         addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
-    }    
+    }
+
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity, });
+    
+    var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
 }
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
@@ -57,9 +62,9 @@
                     var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
                     //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
                     //of course, you can modify appropriate locales to include VAT info there
-                    <div class="tax-shipping-info">
+                    <span class="tax-shipping-info">
                         @T(inclTax ? "Products.Price.TaxShipping.InclTax" : "Products.Price.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
-                    </div>
+                    </span>
                     }
             </div>
             <div class="buttons">
@@ -76,6 +81,14 @@
                         addToCartText = T("ShoppingCart.PreOrder").Text;
                     }
                     <input type="button" value="@(addToCartText)" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink    ');return false;" />
+                }
+                @if (catalogSettings.CompareProductsEnabled)
+                {
+                    <input type="button" value="@T("ItemBoxCompareButton")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
+                }
+                @if (!Model.ProductPrice.DisableWishlistButton)
+                {
+                    <input type="button" class="button-2 add-to-wishlist-button" value="@T("ShoppingCart.AddToWishlist")" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink     ');return false;" />
                 }
             </div>
             @Html.Widget("productbox_add_info", Model.Id)

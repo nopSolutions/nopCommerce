@@ -15,12 +15,14 @@
         @if (Model.Count > 0)
         {
             <div class="product-grid">
-               @foreach (var product in Model)
-               {
-                   <div class="item-box">
-                       @Html.Partial("_ProductBox", product)
-                   </div>
-               }
+                <div class="item-grid">
+                    @foreach (var product in Model)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
+                </div>
             </div>        
         }
     </div>

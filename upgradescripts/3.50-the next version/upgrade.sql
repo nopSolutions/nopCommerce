@@ -1753,3 +1753,29 @@ BEGIN
 	VALUES (N'customersettings.passwordrecoverylinkdaysvalid', N'7', 0)
 END
 GO
+
+
+--update DefaultClean theme settings
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstoretheme' and [Value] = N'DefaultClean')
+BEGIN
+	UPDATE [Setting]
+	SET [Value] = N'290'
+	WHERE [Name] = 'mediasettings.productthumbpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'290'
+	WHERE [Name] = 'mediasettings.associatedproductpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'550'
+	WHERE [Name] = 'mediasettings.productdetailspicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'200'
+	WHERE [Name] = 'mediasettings.categorythumbpicturesize'
+		
+	UPDATE [Setting]
+	SET [Value] = N'200'
+	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
+END
+GO

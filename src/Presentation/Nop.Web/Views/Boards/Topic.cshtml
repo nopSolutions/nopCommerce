@@ -7,31 +7,30 @@
 
     Html.AddTitleParts(Model.Subject);
 }
-@Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
-@Html.Partial("_SearchBox")
 <div class="page forum-topic-page">
-    <div class="title">
-        <h2 class="topic-name">
-            <span>@Model.Subject</span></h2>
+    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @Html.Partial("_ForumHeader")
+    <div class="topic-name">
+        <h1>@Model.Subject</h1>
     </div>
-    <div class="topic-header">
-        <div class="topic-options">
+    <div class="topic-actions upper">
+        <div class="actions">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-link-button" })
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {                
-                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-link-button" })
+                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-button" })
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-link-button" })
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-button" })
             }
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
-                <a class="watch-topic-link-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
+                <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
                 <script type="text/javascript">
                     $(function () {
                         $('#watch-topic-top').click(function () {
@@ -69,41 +68,43 @@
             @pager
         </div>
     </div>
-    <div class="posts">
+
+    <div class="topic-posts">
         @foreach (var post in @Model.ForumPostModels)
         {
             Html.RenderPartial("_ForumPost", post);
         }
     </div>
-</div>
-<div class="topic-footer">
-    <div class="topic-options">
-        @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
-        @if (Model.IsCustomerAllowedToSubscribe)
-        {
-            <a class="watch-topic-link-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
+
+    <div class="topic-actions lower">
+        <div class="actions">
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                    $(function () {
-                        $('#watch-topic-bottom').click(function () {
-                            $.ajax({
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                                dataType: 'json',
-                                success: function (data) {
-                                    $('#watch-topic-top').text(data.Text);
-                                    $('#watch-topic-bottom').text(data.Text);
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to watch');
-                                }
-                            });
+                $(function () {
+                    $('#watch-topic-bottom').click(function () {
+                        $.ajax({
+                            cache: false,
+                            type: 'POST',
+                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                            dataType: 'json',
+                            success: function (data) {
+                                $('#watch-topic-top').text(data.Text);
+                                $('#watch-topic-bottom').text(data.Text);
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert('Failed to watch');
+                            }
                         });
                     });
+                });
                 </script>
-        }
-    </div>
-    <div class="pager lower">
-        @pager
+            }
+        </div>
+        <div class="pager lower">
+            @pager
+        </div>
     </div>
 </div>

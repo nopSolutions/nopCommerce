@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
-<div class="page checkout-page">
+<div class="page checkout-page payment-method-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
     <div class="page-title">
         <h1>@T("Checkout.SelectPaymentMethod")</h1>
@@ -65,7 +65,7 @@
             }
         </div>
         @Html.Widget("checkout_payment_method_bottom")
-        <div class="section order-summary-body">
+        <div class="section order-summary">
             <div class="title">
                 <strong>@T("Checkout.OrderSummary")</strong>
             </div>

@@ -1,7 +1,7 @@
 ﻿@model ContactVendorModel
 @using Nop.Web.Models.Common;
 @{
-    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.ContactVendor", Model.VendorName).Text);
@@ -16,49 +16,45 @@
         {
             <div class="result">
                 @Model.Result
-            </div>        
+            </div>
         }
         else
         {
             using (Html.BeginForm())
             {
-            <div class="message-error">
-                @Html.ValidationSummary(true)
-            </div>
-            <div class="form-fields">
-                <div class="inputs-left">
-                    <div class="inputs">
-                        @Html.LabelFor(model => model.FullName)
-                        <div class="input-box">
+                var validationSummary = Html.ValidationSummary(true);
+                if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
+                {
+                    <div class="message-error">@validationSummary</div>
+                }
+                <div class="fieldset">
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.FullName)
                             @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactVendor.FullName.Hint") })
+                            @Html.ValidationMessageFor(model => model.FullName)
                         </div>
-                        @Html.ValidationMessageFor(model => model.FullName)
-                    </div>
-                    <div class="inputs">
-                        @Html.LabelFor(model => model.Email)
-                        <div class="input-box">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Email)
                             @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactVendor.Email.Hint") })
+                            @Html.ValidationMessageFor(model => model.Email)
                         </div>
-                        @Html.ValidationMessageFor(model => model.Email)
-                    </div>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <div class="captcha-box">
-                            @Html.Raw(Html.GenerateCaptcha())
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.Enquiry)
+                            @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })
+                            @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
-                    }
-                </div>
-                <div class="inputs-right inputs">
-                    @Html.LabelFor(model => model.Enquiry)
-                    <div class="input-box">
-                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
                     </div>
-                    @Html.ValidationMessageFor(model => model.Enquiry)
                 </div>
-            </div>
-            <div class="buttons">
-                <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactVendor.Button")" />
-            </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactVendor.Button")" />
+                </div>
             }
         }
         @Html.Widget("contactvendor_bottom")

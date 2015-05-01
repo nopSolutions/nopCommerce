@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
-<div class="page checkout-page">
+<div class="page checkout-page order-confirm-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
     <div class="page-title">
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
@@ -53,8 +53,7 @@
                     </div>
                     <div class="terms-of-service">
                         <input id="termsofservice" type="checkbox" name="termsofservice" />
-                        @T("Checkout.TermsOfService.IAccept")
-                        <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
+                        <span>@T("Checkout.TermsOfService.IAccept")<a class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</a></span>
                     </div>
                     }
                     <div class="buttons">
@@ -75,7 +74,7 @@
             }
         </div>
         @Html.Widget("checkout_confirm_bottom")
-        <div class="order-summary-body">
+        <div class="section order-summary">
             @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
         </div>
     </div>

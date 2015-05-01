@@ -34,105 +34,110 @@
         @if (Model.Products.Count > 0)
         {
             <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')" class="clear-list">@T("Products.Compare.Clear")</a>
-            <table class="compare-products-table">
-                <tbody>
-                    <tr class="overview">
-                        <td>
-                            &nbsp;
-                        </td>
-                        @foreach (var product in Model.Products)
-                        {
-                            <td style="width: @columnWidth;" class="a-center">
-                                <div>
-                                    <p class="a-center">
-                                        <input type="button" value="@T("Common.Remove")" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
-                                    </p>
-                                    <p class="a-center">
-                                        <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
-                                    </p>
-                                </div>
-                            </td>
-                        }
-                    </tr>
-                    <tr class="product-name">
-                        <td>
-                            &nbsp;
-                        </td>
-                        @foreach (var product in Model.Products)
-                        {
-                            <td style="width: @columnWidth;" class="a-center">
-                                <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
-                            </td>
-                        }
-                    </tr>
-                    <tr class="product-price">
-                        <td>
-                            @T("Products.Compare.Price")
-                        </td>
-                        @foreach (var product in Model.Products)
-                        {
-                            <td style="width: @columnWidth;" class="a-center">
-                                @product.ProductPrice.Price
-                            </td>
-                        }
-                    </tr>
-                    @if (Model.IncludeShortDescriptionInCompareProducts)
-                    {
-                        <tr class="short-description">
-                            <td>
-                                @T("Products.Compare.ShortDescription")
-                            </td>
+            <div class="table-wrapper">
+                <table class="compare-products-table">
+                    <tbody>
+                        <tr class="remove-product">
+                            <td class="empty">&nbsp;</td>
                             @foreach (var product in Model.Products)
                             {
-                                <td style="width: @columnWidth;" class="a-left">
-                                    @Html.Raw(product.ShortDescription)
+                                <td style="width: @columnWidth;">
+                                    <input type="button" value="@T("Common.Remove")" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
                                 </td>
                             }
                         </tr>
-                    }
-                    @foreach (var specificationAttribute in specificationAttributes)
-                    {
-                        <tr class="specification">
-                            <td>@specificationAttribute.SpecificationAttributeName
+                        <tr class="product-picture">
+                            <td class="empty">&nbsp;</td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td style="width: @columnWidth;">
+                                    <a class="picture" href="@Url.RouteUrl("Product", new { SeName = product.SeName })"><img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" /></a>
+                                </td>
+                            }
+                        </tr>
+                        <tr class="product-name">
+                            <td>
+                                <label>@T("Products.Compare.Name")</label>
                             </td>
                             @foreach (var product in Model.Products)
                             {
-                                var foundProductSpec = product.SpecificationAttributeModels.FirstOrDefault(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId);
-                                var specValue = foundProductSpec != null ? foundProductSpec.ValueRaw : "";
+                                <td style="width: @columnWidth;">
+                                    <a href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
+                                </td>
+                            }
+                        </tr>
+                        <tr class="product-price">
+                            <td>
+                                <label>@T("Products.Compare.Price")</label>
+                            </td>
+                            @foreach (var product in Model.Products)
+                            {
+                                <td style="width: @columnWidth;">
+                                    @product.ProductPrice.Price
+                                </td>
+                            }
+                        </tr>
+                        @if (Model.IncludeShortDescriptionInCompareProducts)
+                        {
+                            <tr class="short-description">
+                                <td>
+                                    <label>@T("Products.Compare.ShortDescription")</label>
+                                </td>
+                                @foreach (var product in Model.Products)
+                                {
+                                    <td style="width: @columnWidth;">
+                                        @Html.Raw(product.ShortDescription)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        @foreach (var specificationAttribute in specificationAttributes)
+                        {
+                            <tr class="specification">
+                                <td>
+                                    <label>@specificationAttribute.SpecificationAttributeName</label>
+                                </td>
+                                @foreach (var product in Model.Products)
+                                {
+                                    var foundProductSpec = product.SpecificationAttributeModels.FirstOrDefault(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId);
+                                    var specValue = foundProductSpec != null ? foundProductSpec.ValueRaw : "";
                                                                 
-                                <td style="width: @columnWidth;" class="a-center">
-                                    @if (!String.IsNullOrEmpty(specValue))
-                                    {
-                                        @Html.Raw(specValue)
-                                    }
-                                    else
-                                    {
-                                        <text>&nbsp;</text>
-                                    }
+                                    <td style="width: @columnWidth;">
+                                        @if (!String.IsNullOrEmpty(specValue))
+                                        {
+                                            @Html.Raw(specValue)
+                                        }
+                                        else
+                                        {
+                                            <text>&nbsp;</text>
+                                        }
+                                    </td>
+                                }
+                            </tr>                    
+                        }
+                        @if (Model.IncludeFullDescriptionInCompareProducts)
+                        {
+                            <tr class="full-description">
+                                <td>
+                                    <label>@T("Products.Compare.FullDescription")</label>
                                 </td>
-                            }
-                        </tr>                    
-                    }
-                    @if (Model.IncludeFullDescriptionInCompareProducts)
-                    {
-                        <tr class="full-description">
-                            <td>
-                                @T("Products.Compare.FullDescription")
-                            </td>
-                            @foreach (var product in Model.Products)
-                            {
-                                <td style="width: @columnWidth;" class="a-left">
-                                    @Html.Raw(product.FullDescription)
-                                </td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                                @foreach (var product in Model.Products)
+                                {
+                                    <td style="width: @columnWidth;">
+                                        @Html.Raw(product.FullDescription)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         else
         {
-            @T("Products.Compare.NoItems")
+            <div class="no-data">
+                @T("Products.Compare.NoItems")
+            </div>
         }
     </div>
 </div>

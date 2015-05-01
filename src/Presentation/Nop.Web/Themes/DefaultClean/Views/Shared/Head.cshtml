@@ -2,39 +2,26 @@
 @using Nop.Core.Infrastructure
 @using Nop.Web.Framework.Themes
 @using Nop.Web.Framework.UI
-@{
+@{  
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
 
-    //we do not support responsive for RTL yet
-    var supportResponsive = !supportRtl;
     //add browser specific CSS files
     var browser = Request.Browser;
-    if (browser.Browser == "IE" && browser.MajorVersion == 6)
+    if (browser.Browser == "IE" && browser.MajorVersion == 8)
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/ie6.css", themeName));
-    }
-    else if (browser.Browser == "IE" && browser.MajorVersion == 7)
-    {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/ie7.css", themeName));
-    }
-    //responsive design
-    if (supportResponsive)
-    {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/responsive.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/ie8.css", themeName));
     }
     //add main CSS file
     if (supportRtl)
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/styles.rtl.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/styles.rtl.css", themeName));
     }
     else
     {
-        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/styles.css", themeName));
+        Html.AppendCssFileParts(string.Format("~/Themes/{0}/Content/css/styles.css", themeName));
     }
-    //responsive design
-    if (supportResponsive)
-    {
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    }
+    
+    //add jQuery UI css file
+    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 }

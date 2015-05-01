@@ -28,6 +28,15 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
+
+@if (IsSectionDefined("CategoryBreadcrumb"))
+{
+    @section Breadcrumb{ 
+
+        @RenderSection("CategoryBreadcrumb")
+    } 
+}
+
 <div class="side-2">
     @if (IsSectionDefined("left"))
     {
@@ -40,7 +49,9 @@
         @Html.Widget("left_side_column_after_category_navigation")
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })
         @Html.Action("VendorNavigation", "Catalog")
-        @Html.Action("NewsletterBox", "Newsletter")
+        @Html.Action("RecentlyViewedProductsBlock", "Product", new { productThumbPictureSize = 64 })
+        @Html.Action("PopularProductTags", "Catalog")
+        @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         @Html.Widget("left_side_column_after")
     }
 </div>

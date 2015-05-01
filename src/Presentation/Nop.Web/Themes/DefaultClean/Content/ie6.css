@@ -1,9 +1,0 @@
-.master-wrapper-main .center-2{width:700px;}
-.block-account-navigation a{white-space:normal!important;}
-#newsletter-subscribe-block input{width:150px;}
-.headermenu a:hover{color:#fff;text-decoration:none;}
-.search-box{width:400px;}
-.search-box-button{filter:none;height:30px;}
-.order-summary-content .totals{width:310px;}
-/*this style is required. otherwise, flyout cart will be hidden by nivo slider on the home page*/
-.header-links-wrapper{z-index:99999;}

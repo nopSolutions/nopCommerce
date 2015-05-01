@@ -13,7 +13,7 @@
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="message">
+            <div class="@(Model.IsApplied ? "message-success" : "message-failure")">
                 @Model.Message
             </div>
         }

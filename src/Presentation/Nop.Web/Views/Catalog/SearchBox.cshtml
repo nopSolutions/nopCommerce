@@ -55,7 +55,7 @@
                             t = htmlEncode(t);
                             return $("<li></li>")
                                 .data("item.autocomplete", item)
-                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)" + t + "</a>")
+                                .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
                             .appendTo(ul);
                     };
                 });

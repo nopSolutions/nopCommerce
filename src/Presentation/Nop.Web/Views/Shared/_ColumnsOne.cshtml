@@ -1,6 +1,15 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
+
+@if (IsSectionDefined("ProductBreadcrumb"))
+{
+    @section Breadcrumb
+    {
+        @RenderSection("ProductBreadcrumb")
+    } 
+}
+
 <div class="center-1">
     @Html.Widget("main_column_before")
     @RenderBody()

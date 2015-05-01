@@ -14,9 +14,13 @@
         @using (Html.BeginForm())
         {
             @Html.HiddenFor(model => model.Id)
-            <div class="inputs">
-                <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
-                @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label>@T("Forum.SelectTheForumToMoveTopic"):</label>
+                        @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
+                    </div>
+                </div>
             </div>
             <div class="buttons">
                 <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />

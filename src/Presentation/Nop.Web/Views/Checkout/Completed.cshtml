@@ -6,7 +6,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
-<div class="page checkout-page">
+<div class="page checkout-page order-completed-page">
     @if (!Model.OnePageCheckoutEnabled)
     {
         @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Complete })
@@ -20,16 +20,16 @@
             <div class="title">
                 <strong>@T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
             </div>
-            <ul class="details">
-                <li>
-                    @T("Checkout.OrderNumber"): @Model.OrderId
-                </li>
-                <li>
+            <div class="details">
+                <div class="order-number">
+                    <strong>@T("Checkout.OrderNumber"): @Model.OrderId</strong>
+                </div>
+                <div class="details-link">
                     <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
-                </li>
-            </ul>
+                </div>
+            </div>
             <div class="buttons">
-                <input type="button" value="@T("Checkout.ThankYou.Continue")" class="button-2 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
+                <input type="button" value="@T("Checkout.ThankYou.Continue")" class="button-1 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
         </div>
         @Html.Widget("checkout_completed_bottom")
