@@ -1794,3 +1794,6 @@ BEGIN
 	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
 END
 GO
+
+DELETE FROM [Setting] WHERE [name] = N'mediasettings.productthumbperrowonproductdetailspage'
+GO
