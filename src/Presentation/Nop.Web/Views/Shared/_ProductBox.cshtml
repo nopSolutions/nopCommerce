@@ -2,7 +2,6 @@
 @using Nop.Core
 @using Nop.Core.Domain.Orders
 @using Nop.Core.Domain.Tax
-@using Nop.Core.Domain.Catalog
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Catalog;
 @{
@@ -20,8 +19,6 @@
     }
 
     var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity, });
-    
-    var catalogSettings = EngineContext.Current.Resolve<CatalogSettings>();
 }
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
@@ -82,7 +79,7 @@
                     }
                     <input type="button" value="@(addToCartText)" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink    ');return false;" />
                 }
-                @if (catalogSettings.CompareProductsEnabled)
+                @if (!Model.ProductPrice.DisableAddToCompareListButton)
                 {
                     <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
                 }

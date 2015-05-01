@@ -129,6 +129,7 @@ namespace Nop.Web.Extensions
                                             priceModel.Price = null;
                                             priceModel.DisableBuyButton = true;
                                             priceModel.DisableWishlistButton = true;
+                                            priceModel.DisableAddToCompareListButton = true;
                                             priceModel.AvailableForPreOrder = false;
                                         }
                                         break;
@@ -137,6 +138,7 @@ namespace Nop.Web.Extensions
                                             //we have at least one associated product
                                             priceModel.DisableBuyButton = true;
                                             priceModel.DisableWishlistButton = true;
+                                            priceModel.DisableAddToCompareListButton = true;
                                             priceModel.AvailableForPreOrder = false;
 
                                             if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
@@ -208,6 +210,8 @@ namespace Nop.Web.Extensions
                                 priceModel.DisableWishlistButton = product.DisableWishlistButton ||
                                     !permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
                                     !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+                                //compare products
+                                priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
 
                                 //rental
                                 priceModel.IsRental = product.IsRental;
