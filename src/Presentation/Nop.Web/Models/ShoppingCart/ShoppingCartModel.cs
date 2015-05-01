@@ -151,6 +151,7 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public bool Display { get; set; }
             public string Message { get; set; }
+            public bool IsApplied { get; set; }
         }
 
         public partial class OrderReviewDataModel : BaseNopModel
