@@ -28,15 +28,12 @@
         currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
     }
 }
-
-@if (IsSectionDefined("CategoryBreadcrumb"))
+@if (IsSectionDefined("Breadcrumb"))
 {
-    @section Breadcrumb{ 
-
-        @RenderSection("CategoryBreadcrumb")
+    @section Breadcrumb {
+        @RenderSection("Breadcrumb")
     } 
 }
-
 <div class="side-2">
     @if (IsSectionDefined("left"))
     {
