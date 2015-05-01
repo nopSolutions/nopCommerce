@@ -4,7 +4,6 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Localization;
 @using Nop.Web.Models.Catalog;
-@using Nop.Core.Domain.Orders;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -81,43 +80,18 @@
                         <!--manufacturers-->
                         @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
                         <!--availability-->
-                        @if (!String.IsNullOrWhiteSpace(Model.StockAvailability) || Model.DisplayBackInStockSubscription)
-                        { 
-                            <div class="availability">
-                                @if (!String.IsNullOrWhiteSpace(Model.StockAvailability))
-                                {
-                                    <div class="stock">
-                                        <span class="label">@T("Products.Availability"): </span><span class="value">@Model.StockAvailability</span>
-                                    </div>
-                                }
-                                @Html.Partial("_BackInStockSubscription", Model)
-                            </div>
-                        }
+                        @Html.Partial("_Availability", Model)
                         <!--SKU, MAN, GTIN, vendor-->
                         @Html.Partial("_SKU_Man_GTIN_Ven", Model)
                         <!--delivery-->
-                        @if ((Model.FreeShippingNotificationEnabled && Model.IsFreeShipping) || !String.IsNullOrWhiteSpace(Model.DeliveryDate))
-                        { 
-                            <div class="delivery">
-                                @if (Model.FreeShippingNotificationEnabled && Model.IsFreeShipping)
-                                {
-                                    <div class="free-shipping">@T("Products.FreeShipping")</div>
-                                }
-                                @if (!String.IsNullOrWhiteSpace(Model.DeliveryDate))
-                                {
-                                    <div class="delivery-date">
-                                        <span class="label">@T("Products.DeliveryDate"): </span><span class="value">@Model.DeliveryDate</span>
-                                    </div>
-                                }
-                            </div>
-                        }
+                        @Html.Partial("_DeliveryInfo", Model)
                         <!--wishlist, compare, email-a-friend-->
                         @if ((!Model.AddToCart.DisableWishlistButton && Model.AddToCart.UpdatedShoppingCartItemId == 0) || Model.CompareProductsEnabled || Model.EmailAFriendEnabled)
                         { 
                             <div class="overview-buttons">
                                 @{
-                                    var dataDictAddToWishlist = new ViewDataDictionary();
-                                    dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                            var dataDictAddToWishlist = new ViewDataDictionary();
+                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                                     @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
                                 }
 
@@ -129,30 +103,30 @@
                         @Html.Partial("_DownloadSample", Model)
                         <!--attributes-->
                         @{
-                            var dataDictAttributes = new ViewDataDictionary();
-                            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
+                        var dataDictAttributes = new ViewDataDictionary();
+                        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
                             @Html.Partial("_ProductAttributes", Model.ProductAttributes, dataDictAttributes)                  
                         }  
                         <!--gift card-->
                         @{
-                            var dataDictGiftCard = new ViewDataDictionary();
-                            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                        var dataDictGiftCard = new ViewDataDictionary();
+                        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
                             @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
                         }
                         <!--rental info-->
                         @{
-                            var dataDictRental = new ViewDataDictionary();
-                            dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
+                        var dataDictRental = new ViewDataDictionary();
+                        dataDictRental.TemplateInfo.HtmlFieldPrefix = string.Format("rental_{0}", Model.Id);
                             @Html.Partial("_RentalInfo", Model, dataDictRental)
                         }
                         <!--price & add to cart-->
                         @{
-                            var dataDictPrice = new ViewDataDictionary();
-                            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
+                        var dataDictPrice = new ViewDataDictionary();
+                        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
                             @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
                             
-                            var dataDictAddToCart = new ViewDataDictionary();
-                            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                        var dataDictAddToCart = new ViewDataDictionary();
+                        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)                    
                         }
                         @Html.Partial("_ShareButton", Model)

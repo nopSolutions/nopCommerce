@@ -38,40 +38,7 @@
         }
         @if (Model.Products.Count > 0)
         {
-            <div class="product-selectors">
-                @*view mode*@
-                @if (Model.PagingFilteringContext.AllowProductViewModeChanging)
-                {
-                    <div class="product-viewmode">
-                        <span>@T("Catalog.ViewMode")</span>
-                        @if (Model.PagingFilteringContext.AvailableViewModes.Count > 1)
-                        {
-                            var gridMode = Model.PagingFilteringContext.AvailableViewModes[0];
-                            var listMode = Model.PagingFilteringContext.AvailableViewModes[1];
-                    
-                        <a class="viewmode-icon grid @if(gridMode.Selected){<text>selected</text>}" href="@gridMode.Value" title="@gridMode.Text">@gridMode.Text</a>
-                        <a class="viewmode-icon list @if(listMode.Selected){<text>selected</text>}" href="@listMode.Value" title="@listMode.Text">@listMode.Text</a>
-                        }
-                    </div>
-                }
-                @*sorting*@
-                @if (Model.PagingFilteringContext.AllowProductSorting)
-                {
-                    <div class="product-sorting">
-                        <span>@T("Catalog.OrderBy")</span>
-                        @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
-                    </div>
-                }
-                @*page size*@
-                @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize)
-                {
-                    <div class="product-page-size">
-                        <span>@T("Catalog.PageSize")</span>
-                        @Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })
-                        <span>@T("Catalog.PageSize.PerPage")</span>
-                    </div>
-                }
-            </div>
+            @Html.Partial("_CatalogSelectors", Model.PagingFilteringContext, new ViewDataDictionary())
         }
         @*product list*@
         @if (Model.Products.Count > 0)
