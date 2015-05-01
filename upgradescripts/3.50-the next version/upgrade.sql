@@ -623,6 +623,21 @@ set @resources='
   <LocaleResource Name="Messages.Order.Product(s).License">
     <Value>Download license</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Image">
+    <Value>Image</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.General">
+    <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CheckUsernameAvailability.EnterUsername">
+    <Value>Please enter username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Compare.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCompareList">
+    <Value>Add to compare list</Value>
+  </LocaleResource>
 </Language>
 '
 

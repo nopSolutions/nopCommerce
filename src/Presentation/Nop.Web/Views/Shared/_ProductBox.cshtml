@@ -84,7 +84,7 @@
                 }
                 @if (catalogSettings.CompareProductsEnabled)
                 {
-                    <input type="button" value="@T("ItemBoxCompareButton")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
+                    <input type="button" value="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
                 }
                 @if (!Model.ProductPrice.DisableWishlistButton)
                 {

@@ -117,6 +117,9 @@
   <LocaleResource Name="Account.CheckUsernameAvailability.CurrentUsername">
     <Value>Current username</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CheckUsernameAvailability.EnterUsername">
+    <Value>Please enter username</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.CheckUsernameAvailability.NotAvailable">
     <Value>Username not available</Value>
   </LocaleResource>
@@ -13101,6 +13104,9 @@
   <LocaleResource Name="Products.Compare.List">
     <Value>Compare products list</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Compare.Name">
+    <Value>Name</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.Compare.NoItems">
     <Value>You have no items to compare.</Value>
   </LocaleResource>
@@ -13554,6 +13560,9 @@
   <LocaleResource Name="ShoppingCart.AddToCart.Update">
     <Value>Update</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToCompareList">
+    <Value>Add to compare list</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.AddToWishlist">
     <Value>Add to wishlist</Value>
   </LocaleResource>
@@ -13649,6 +13658,9 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.HeaderQuantity">
     <Value>({0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Image">
+    <Value>Image</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.ItemTotal">
     <Value>Total</Value>
@@ -13829,6 +13841,9 @@
   </LocaleResource>
   <LocaleResource Name="Sitemap.Categories">
     <Value>Categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Sitemap.General">
+    <Value>General</Value>
   </LocaleResource>
   <LocaleResource Name="Sitemap.Manufacturers">
     <Value>Manufacturers</Value>
