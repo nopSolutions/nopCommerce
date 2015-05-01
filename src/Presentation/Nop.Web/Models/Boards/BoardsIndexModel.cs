@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Nop.Web.Models.Boards
 {
@@ -9,8 +8,6 @@ namespace Nop.Web.Models.Boards
         {
             this.ForumGroups = new List<ForumGroupModel>();
         }
-
-        public DateTime CurrentTime { get; set; }
         
         public IList<ForumGroupModel> ForumGroups { get; set; }
     }
