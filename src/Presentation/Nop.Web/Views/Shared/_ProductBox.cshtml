@@ -84,11 +84,11 @@
                 }
                 @if (catalogSettings.CompareProductsEnabled)
                 {
-                    <input type="button" value="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
+                    <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
                 }
                 @if (!Model.ProductPrice.DisableWishlistButton)
                 {
-                    <input type="button" class="button-2 add-to-wishlist-button" value="@T("ShoppingCart.AddToWishlist")" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink     ');return false;" />
+                    <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink     ');return false;" />
                 }
             </div>
             @Html.Widget("productbox_add_info", Model.Id)
