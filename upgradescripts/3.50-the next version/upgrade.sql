@@ -1773,7 +1773,7 @@ END
 GO
 
 
---update DefaultClean theme settings
+--update DefaultClean theme settings. You should remove this code if you're going to use the old theme
 IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstoretheme' and [Value] = N'DefaultClean')
 BEGIN
 	UPDATE [Setting]
@@ -1797,8 +1797,12 @@ BEGIN
 	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
 		
 	UPDATE [Setting]
-	SET [Value] = N'200'
+	SET [Value] = N'4'
 	WHERE [Name] = 'catalogsettings.numberofbestsellersonhomepage'
+		
+	UPDATE [Setting]
+	SET [Value] = N'true'
+	WHERE [Name] = 'newssettings.shownewsonmainpage'
 END
 GO
 

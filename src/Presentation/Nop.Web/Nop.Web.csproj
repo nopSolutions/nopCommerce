@@ -1554,8 +1554,6 @@
     <Content Include="Themes\DefaultClean\Content\images\rss.png" />
     <Content Include="Themes\DefaultClean\Content\images\shipping.png" />
     <Content Include="Themes\DefaultClean\Content\images\shopping-bag.png" />
-    <Content Include="Themes\DefaultClean\Content\images\slide1.jpg" />
-    <Content Include="Themes\DefaultClean\Content\images\slide2.jpg" />
     <Content Include="Themes\DefaultClean\Content\images\social-sprite.png" />
     <Content Include="Themes\DefaultClean\Content\images\subscribe-button.png" />
     <Content Include="Themes\DefaultClean\Content\images\toggle-black.png" />

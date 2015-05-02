@@ -4883,7 +4883,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     AllowNotRegisteredUsersToLeaveComments = true,
                     NotifyAboutNewNewsComments = false,
-                    ShowNewsOnMainPage = false,
+                    ShowNewsOnMainPage = true,
                     MainPageNewsCount = 3,
                     NewsArchivePageSize = 10,
                     ShowHeaderRssUrl = false,
