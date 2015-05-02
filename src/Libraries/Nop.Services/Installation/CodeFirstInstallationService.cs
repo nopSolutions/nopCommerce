@@ -4568,7 +4568,7 @@ namespace Nop.Services.Installation
                     ProductSearchTermMinimumLength = 3,
                     ShowProductImagesInSearchAutoComplete = false,
                     ShowBestsellersOnHomepage = false,
-                    NumberOfBestsellersOnHomepage = 3,
+                    NumberOfBestsellersOnHomepage = 4,
                     SearchPageProductsPerPage = 6,
                     SearchPageAllowCustomersToSelectPageSize = true,
                     SearchPagePageSizeOptions = "8, 4, 12",

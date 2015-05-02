@@ -1795,6 +1795,10 @@ BEGIN
 	UPDATE [Setting]
 	SET [Value] = N'200'
 	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
+		
+	UPDATE [Setting]
+	SET [Value] = N'200'
+	WHERE [Name] = 'catalogsettings.numberofbestsellersonhomepage'
 END
 GO
 
