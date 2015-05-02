@@ -1803,6 +1803,11 @@ BEGIN
 	UPDATE [Setting]
 	SET [Value] = N'true'
 	WHERE [Name] = 'newssettings.shownewsonmainpage'
+	
+	UPDATE [Setting]
+	SET [Value] = N'120'
+	WHERE [Name] = 'mediasettings.avatarpicturesize'
+		
 END
 GO
 
