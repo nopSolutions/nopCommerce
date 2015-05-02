@@ -85,20 +85,16 @@
                         @Html.Partial("_SKU_Man_GTIN_Ven", Model)
                         <!--delivery-->
                         @Html.Partial("_DeliveryInfo", Model)
-                        <!--wishlist, compare, email-a-friend-->
-                        @if ((!Model.AddToCart.DisableWishlistButton && Model.AddToCart.UpdatedShoppingCartItemId == 0) || Model.CompareProductsEnabled || Model.EmailAFriendEnabled)
-                        { 
-                            <div class="overview-buttons">
-                                @{
-                            var dataDictAddToWishlist = new ViewDataDictionary();
-                            dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-                                    @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
-                                }
-
-                                @Html.Partial("_CompareProductsButton", Model)
-                                @Html.Partial("_ProductEmailAFriendButton", Model)
-                            </div>
-                        }
+                        <!--wishlist, compare, email a friend-->
+                        <div class="overview-buttons">
+                            @{
+                                var dataDictAddToWishlist = new ViewDataDictionary();
+                                dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
+                                @Html.Partial("_AddToWishlist", Model.AddToCart, dataDictAddToWishlist)
+                            }
+                            @Html.Partial("_CompareProductsButton", Model)
+                            @Html.Partial("_ProductEmailAFriendButton", Model)
+                        </div>
                         <!--sample download-->
                         @Html.Partial("_DownloadSample", Model)
                         <!--attributes-->

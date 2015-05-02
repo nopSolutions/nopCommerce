@@ -79,14 +79,11 @@
                         @Html.Partial("_ProductReviewOverview", Model.ProductReviewOverview)
                         <!--product manufacturers-->
                         @Html.Partial("_ProductManufacturers", Model.ProductManufacturers)
-                        <!--compare, email-afriend-->
-                        @if (Model.CompareProductsEnabled || Model.EmailAFriendEnabled)
-                        { 
-                            <div class="overview-buttons">     
-                                @Html.Partial("_CompareProductsButton", Model)
-                                @Html.Partial("_ProductEmailAFriendButton", Model)
-                            </div>
-                        }
+                        <!--compare, email a friend-->
+                        <div class="overview-buttons">
+                            @Html.Partial("_CompareProductsButton", Model)
+                            @Html.Partial("_ProductEmailAFriendButton", Model)
+                        </div>
                         @Html.Partial("_ShareButton", Model)
                         @Html.Widget("productdetails_overview_bottom", Model.Id)
                     </div>
