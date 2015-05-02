@@ -7219,7 +7219,7 @@
     <Value>System keyword</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword.Hint">
-    <Value>The system keyword for this poll.</Value>
+    <Value>The system keyword for this poll. For example, you can enter 'LeftColumnPoll' in order to display it in the left column.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Info">
     <Value>Poll Info</Value>

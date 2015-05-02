@@ -9380,8 +9380,9 @@ namespace Nop.Services.Installation
             {
                 Language = defaultLanguage,
                 Name = "Do you like nopCommerce?",
-                SystemKeyword = "RightColumnPoll",
+                SystemKeyword = "",
                 Published = true,
+                ShowOnHomePage = true,
                 DisplayOrder = 1,
             };
             poll1.PollAnswers.Add(new PollAnswer

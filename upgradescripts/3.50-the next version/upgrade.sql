@@ -638,6 +638,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.AddToCompareList">
     <Value>Add to compare list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword.Hint">
+    <Value>The system keyword for this poll. For example, you can enter ''LeftColumnPoll'' in order to display it in the left column.</Value>
+  </LocaleResource>
 </Language>
 '
 
