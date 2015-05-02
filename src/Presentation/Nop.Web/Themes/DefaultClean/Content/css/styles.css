@@ -781,7 +781,7 @@ label, label + * {
 	display: none !important;
 }
 .ui-autocomplete {
-	z-index: 2;
+	z-index:10 !important;
 	width: 286px !important;
 	border: 1px solid #ddd;
 	border-top: none;
