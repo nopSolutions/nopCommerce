@@ -7193,6 +7193,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
+                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductAttributeMappings =
@@ -7422,8 +7423,8 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                ShowOnHomePage = true,
                 Published = true,
+                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
