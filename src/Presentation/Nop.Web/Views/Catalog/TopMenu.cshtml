@@ -76,7 +76,8 @@
 
 @{
     var rootCategoriesResponsive = Model.Categories.ToList();
-    var responsiveMenuTitle = rootCategoriesResponsive.Count > 0 ? T("Categories") : T("Menu");
+    //name it "Categories" if we have only categories. Otherwise, "Menu"
+    var responsiveMenuTitle = (rootCategoriesResponsive.Count > 0 && Model.Topics.Count == 0) ? T("Categories") : T("Menu");
     <div class="menu-toggle">@responsiveMenuTitle</div>
     <ul class="top-menu mobile">
         @Html.Widget("mob_header_menu_before")
@@ -90,7 +91,7 @@
         }
         @if (rootCategoriesResponsive.Count == 0 && Model.Topics.Count == 0)
         {
-            //no categories  or topis to display? in this case let's diplay some default menu items (should we?)
+            //no categories or topis to display? in this case let's diplay some default menu items (should we?)
             <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
             if (Model.RecentlyAddedProductsEnabled)
             {
