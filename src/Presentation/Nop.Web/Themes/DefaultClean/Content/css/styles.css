@@ -963,6 +963,9 @@ label, label + * {
 	padding: 25px 0;
 	font-size: 12px;
 }
+.footer-tax-shipping {
+    display: block;
+}
 .footer-tax-shipping a {
 	font-weight: bold;
 	color: #4ab2f1;
@@ -1832,6 +1835,14 @@ label, label + * {
 	padding: 2px 0 2px 28px;
 	font-weight: bold;
 	color: #444;
+}
+.overview .tax-shipping-info a,
+.variant-overview .tax-shipping-info a {
+	color: #4ab2f1;
+}
+.overview .tax-shipping-info a:hover,
+.variant-overview .tax-shipping-info a:hover {
+	text-decoration: underline;
 }
 .overview .download-sample,
 .variant-overview .download-sample {
