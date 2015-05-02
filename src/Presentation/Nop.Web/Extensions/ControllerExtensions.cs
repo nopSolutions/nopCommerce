@@ -125,21 +125,21 @@ namespace Nop.Web.Extensions
                                     case 0:
                                         {
                                             //no associated products
-                                            priceModel.OldPrice = null;
-                                            priceModel.Price = null;
-                                            priceModel.DisableBuyButton = true;
-                                            priceModel.DisableWishlistButton = true;
-                                            priceModel.DisableAddToCompareListButton = true;
-                                            priceModel.AvailableForPreOrder = false;
+                                            //priceModel.DisableBuyButton = true;
+                                            //priceModel.DisableWishlistButton = true;
+                                            //compare products
+                                            priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
+                                            //priceModel.AvailableForPreOrder = false;
                                         }
                                         break;
                                     default:
                                         {
                                             //we have at least one associated product
-                                            priceModel.DisableBuyButton = true;
-                                            priceModel.DisableWishlistButton = true;
-                                            priceModel.DisableAddToCompareListButton = true;
-                                            priceModel.AvailableForPreOrder = false;
+                                            //priceModel.DisableBuyButton = true;
+                                            //priceModel.DisableWishlistButton = true;
+                                            //compare products
+                                            priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
+                                            //priceModel.AvailableForPreOrder = false;
 
                                             if (permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                                             {
