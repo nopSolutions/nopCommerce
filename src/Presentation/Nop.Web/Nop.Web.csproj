@@ -1536,6 +1536,7 @@
     <Content Include="Themes\DefaultClean\Content\images\edit_.png" />
     <Content Include="Themes\DefaultClean\Content\images\email-button.png" />
     <Content Include="Themes\DefaultClean\Content\images\first.png" />
+    <Content Include="Themes\DefaultClean\Content\images\ie_warning.jpg" />
     <Content Include="Themes\DefaultClean\Content\images\last.png" />
     <Content Include="Themes\DefaultClean\Content\images\loading.gif" />
     <Content Include="Themes\DefaultClean\Content\images\logo.png" />
