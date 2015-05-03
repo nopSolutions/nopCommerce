@@ -4352,6 +4352,16 @@ label, label + * {
     border:dashed 1px #000;
     background-color:#fff;
 }
+.topic-post .signature {
+    border-color:#DDD;
+    border-style:solid;
+    border-width:1px 0 0;
+    font-size:90%;
+    margin:1em 8px 8px;
+    padding:1em 0 20px;
+    text-align:left;
+    font-style:italic;
+}
 
 /* forum edit & send message */
 
