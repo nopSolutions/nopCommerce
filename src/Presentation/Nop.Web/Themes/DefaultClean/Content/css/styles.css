@@ -4347,6 +4347,11 @@ label, label + * {
     max-width: 100%;
     height: auto;
 }
+.topic-post .quote{
+    padding:5px;
+    border:dashed 1px #000;
+    background-color:#fff;
+}
 
 /* forum edit & send message */
 
@@ -4512,6 +4517,11 @@ label, label + * {
 .latest-posts .topic-body .user-posted-image {
     max-width: 100%;
     height: auto;
+}
+.latest-posts .topic-body .quote{
+    padding:5px;
+    border:dashed 1px #000;
+    background-color:#fff;
 }
 
 
