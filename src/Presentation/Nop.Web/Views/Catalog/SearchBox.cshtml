@@ -1,33 +1,15 @@
 ﻿@model SearchBoxModel
 @using Nop.Web.Models.Catalog;
-@{
-    var searchTooltip = T("Search.SearchBox.Tooltip");
-}
 @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new {onsubmit = "return check_small_search_form()"}))
 {
-    <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" value="@searchTooltip" name="q" />
+    <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" />
     @Html.Widget("searchbox_before_search_button")
     <input type="submit" class="button-1 search-box-button" value="@T("Search")" />
     <script type="text/javascript">
-        $(document).ready(function() {
-            $("#small-searchterms").focus(function() {
-                if (this.value == '@T("Search.SearchBox.Tooltip")') {
-                    this.value = '';
-                }
-            });
-
-            $("#small-searchterms").blur(function() {
-                if (this.value == '') {
-                    this.value = '@searchTooltip';
-                }
-            });
-        });
-
         function check_small_search_form() {
-            var search_terms = $("#small-searchterms");
-            if (search_terms.val() == "" || search_terms.val() == "@searchTooltip") {
+            if ($("#small-searchterms").val() == "") {
                 alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Search.EnterSearchTerms").Text))');
-                search_terms.focus();
+                $("#small-searchterms").focus();
                 return false;
             }
             return true;
