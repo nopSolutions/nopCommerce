@@ -4331,6 +4331,11 @@ label, label + * {
 	line-height: 22px;
 }
 
+.topic-post .user-posted-image {
+    max-width: 100%;
+    height: auto;
+}
+
 /* forum edit & send message */
 
 .forum-edit-page .page-title,
@@ -4488,6 +4493,10 @@ label, label + * {
 }
 .latest-posts .topic-data {
 	color: #444;
+}
+.latest-posts .topic-body .user-posted-image {
+    max-width: 100%;
+    height: auto;
 }
 
 
