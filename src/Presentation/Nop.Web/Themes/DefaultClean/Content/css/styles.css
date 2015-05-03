@@ -1051,6 +1051,10 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.block .list .active > a {
+	color: #4ab2f1;
+
+}
 .block .list a:hover {
 	color: #4ab2f1;
 }
