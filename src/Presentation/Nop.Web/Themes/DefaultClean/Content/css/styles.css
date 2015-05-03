@@ -4416,6 +4416,9 @@ label, label + * {
 .private-messages-page td.date {
 	white-space: nowrap;
 }
+.private-messages-page .pm-unread {
+    font-weight: bold;
+}
 
 .private-message-view-page .view-message {
 	margin: 0 0 30px;
