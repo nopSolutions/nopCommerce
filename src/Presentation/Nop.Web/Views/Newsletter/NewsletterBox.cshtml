@@ -6,7 +6,7 @@
     </div>
     <div class="newsletter-subscribe" id="newsletter-subscribe-block">
         <div class="newsletter-email">
-            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text" })
+            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
             <input type="button" value="@T("Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
         </div>
         <div class="newsletter-validation">

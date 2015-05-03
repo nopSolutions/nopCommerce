@@ -641,6 +641,9 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword.Hint">
     <Value>The system keyword for this poll. For example, you can enter ''LeftColumnPoll'' in order to display it in the left column.</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Email.Placeholder">
+    <Value>Enter your email here...</Value>
+  </LocaleResource>
 </Language>
 '
 

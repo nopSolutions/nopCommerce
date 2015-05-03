@@ -12243,6 +12243,9 @@
   <LocaleResource Name="News.ViewAll">
     <Value>[View News Archive]</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Email.Placeholder">
+    <Value>Enter your email here...</Value>
+  </LocaleResource>
   <LocaleResource Name="Newsletter.Email.Wrong">
     <Value>Enter valid email</Value>
   </LocaleResource>
