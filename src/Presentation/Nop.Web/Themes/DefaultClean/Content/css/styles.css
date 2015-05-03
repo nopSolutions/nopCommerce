@@ -2911,7 +2911,6 @@ label, label + * {
 	border: 1px solid #ccc;
 }
 .avatar-page input[type="file"] {
-	width: 75px;
 	overflow: hidden;
 }
 .avatar-page .button-1 {
@@ -5835,7 +5834,6 @@ label, label + * {
 }
 
 .avatar-page .fieldset {
-	float: left;
 	margin: 0 20px 40px 0;
 }
 .avatar-page .message-error,
