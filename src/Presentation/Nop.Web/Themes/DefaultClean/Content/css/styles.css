@@ -2515,10 +2515,7 @@ label, label + * {
 }
 
 .not-found-page p {
-	text-align: center;
-}
-.not-found-page p:first-child {
-	margin: 30px 0;
+	margin: 30px 0 30px 15px;
 }
 
 .topic-password {
@@ -4907,14 +4904,6 @@ label, label + * {
 }
 
 
-/*** TOPICS ***/
-
-
-.home-page .topic-block-body p {
-	text-align: center;
-}
-
-
 /*** REGISTRATION, LOGIN, ACCOUNT ***/
 
 
@@ -5766,9 +5755,11 @@ label, label + * {
 /*** TOPICS ***/
 
 
-.center-1 .topic-block-title,
-.center-1 .topic-block-body {
+.center-1 .topic-block-title {
 	text-align: center;
+}
+.center-1 .topic-block-body {
+	text-align: left;
 }
 .topic-page p {
 	text-align: left;
