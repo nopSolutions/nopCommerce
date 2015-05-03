@@ -4525,6 +4525,53 @@ label, label + * {
 }
 
 
+/* BBCODES */
+pre{
+    white-space:pre-wrap;
+    white-space:normal;
+    word-wrap:break-word;
+}
+.csharpcode,.csharpcode pre{
+    font-size:small;
+    color:#000;
+    font-family:Consolas,"Courier New",Courier,Monospace;
+    background-color:#fff;
+}
+.csharpcode pre{
+    margin:0;
+}
+.csharpcode .rem{
+    color:green;
+}
+.csharpcode .kwrd{
+    color:#00f;
+}
+.csharpcode .str{
+    color:#006080;
+}
+.csharpcode .op{
+    color:#0000c0;
+}
+.csharpcode .preproc{
+    color:#c63;
+}
+.csharpcode .asp{
+    background-color:#ff0;
+}
+.csharpcode .html{
+    color:maroon;
+}
+.csharpcode .attr{
+    color:red;
+}
+.csharpcode .alt{
+    background-color:#f4f4f4;
+    width:100%;
+    margin:0;
+}
+.csharpcode .lnum{
+    color:#606060;
+}
 
 
 
