@@ -925,7 +925,7 @@ label, label + * {
 	height: 36px;
 	margin: 0 -1px 0 0;
 }
-.newsletter-subscribe-button {
+.newsletter-subscribe-button,.newsletter-unsubscribe-button {
 	float: left;
 	height: 36px;
 	border: none;
@@ -934,17 +934,29 @@ label, label + * {
 	text-align: center;
 	color: #fff;
 	text-transform: uppercase;
+    margin-right:3px;
 }
 .newsletter-subscribe-button:hover {
 	background-color: #248ece;
 }
 .newsletter-unsubscribe-button {
+	float: left;
+	height: 36px;
 	border: none;
-	background: none;
-	padding: 10px 0;
+	background-color: #aaa;
+	padding: 0 15px;
+	text-align: center;
+	color: #fff;
+	text-transform: uppercase;
 }
-.newsletter-unsubscribe-button:hover {
-	color: #4ab2f1;
+.newsletter-unsubscribe-button {
+    background-color: #aaa;
+}
+.newsletter-subscribe-button:hover,.newsletter-unsubscribe-button:hover {
+	background-color: #248ece;
+}
+.shopping-cart-page .common-buttons input:hover {
+	background-color: #999;
 }
 .newsletter-validation, 
 .newsletter-result { 
@@ -5586,10 +5598,7 @@ label, label + * {
 	display: block;
 }
 .newsletter-email input[type="text"] {
-	width: 200px;
-}
-.newsletter-email .newsletter-subscribe-button {
-	width: 100px;
+	width: 170px;
 }
 .newsletter-validation .field-validation-valid {
 	text-align: left;
