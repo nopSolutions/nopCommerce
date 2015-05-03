@@ -9,9 +9,8 @@
 
 var textarea;
 var content;
-var webRoot;
 
-function edToolbar(obj) {
+function edToolbar(obj, webRoot) {
     document.write("<div class=\"toolbar\">");
     document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/bold.gif\" title=\"Bold\" name=\"btnBold\" onClick=\"doAddTags('[b]','[/b]','" + obj + "')\">");
     document.write("<img class=\"button\" src=\"" + webRoot + "BBEditor/images/italic.gif\" title=\"Italic\" name=\"btnItalic\" onClick=\"doAddTags('[i]','[/i]','" + obj + "')\">");

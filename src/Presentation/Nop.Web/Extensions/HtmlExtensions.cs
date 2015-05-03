@@ -35,9 +35,7 @@ namespace Nop.Web.Extensions
             sb.Append(Environment.NewLine);
             sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
             sb.Append(Environment.NewLine);
-            sb.AppendFormat("    var webRoot = '{0}';", bbEditorWebRoot);
-            sb.Append(Environment.NewLine);
-            sb.AppendFormat("    edToolbar('{0}');", name);
+            sb.AppendFormat("edToolbar('{0}','{1}');", name, bbEditorWebRoot);
             sb.Append(Environment.NewLine);
             sb.Append("</script>");
             sb.Append(Environment.NewLine);
