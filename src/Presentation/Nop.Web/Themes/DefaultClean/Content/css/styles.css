@@ -2712,9 +2712,6 @@ label, label + * {
 .login-page .new-wrapper .topic-block {
 	margin: 0;
 }
-.login-page .new-wrapper .topic-block-body {
-	text-align: center;
-}
 .login-page .new-wrapper .topic-block-body strong {
 	color: #444;
 }
