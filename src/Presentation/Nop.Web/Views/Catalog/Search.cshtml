@@ -138,13 +138,9 @@
                     </div>
                 }
             }
-            
-            @if (Model.Products.Count > 0)
-            {
             <div class="pager">
-                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid")
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true)
             </div>
-            }
         </div>
         @Html.Widget("productsearch_page_after_results")
     </div>

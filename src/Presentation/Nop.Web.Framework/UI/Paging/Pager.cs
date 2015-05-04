@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
@@ -27,6 +28,7 @@ namespace Nop.Web.Framework.UI.Paging
         protected bool showNext = true;
         protected bool showLast = true;
         protected bool showIndividualPages = true;
+        protected bool renderEmptyParameters = true;
         protected int individualPagesDisplayedCount = 5;
         protected Func<int, string> urlBuilder;
         protected IList<string> booleanParameterNames;
@@ -82,6 +84,11 @@ namespace Nop.Web.Framework.UI.Paging
         public Pager ShowIndividualPages(bool value)
         {
             this.showIndividualPages = value;
+            return this;
+        }
+        public Pager RenderEmptyParameters(bool value)
+        {
+            this.renderEmptyParameters = value;
             return this;
         }
         public Pager IndividualPagesDisplayedCount(int value)
@@ -231,19 +238,29 @@ namespace Nop.Web.Framework.UI.Paging
 		{
 			var routeValues = new RouteValueDictionary();
 
+            var parametersWithEmptyValues = new List<string>();
 			foreach (var key in viewContext.RequestContext.HttpContext.Request.QueryString.AllKeys.Where(key => key != null))
 			{
                 var value = viewContext.RequestContext.HttpContext.Request.QueryString[key];
-                if (booleanParameterNames.Contains(key, StringComparer.InvariantCultureIgnoreCase))
+                if (renderEmptyParameters && String.IsNullOrEmpty(value))
+			    {
+                    //we store query string parameters with empty values separately
+                    //we need to do it because they are not properly processed in the UrlHelper.GenerateUrl method (dropped for some reasons)
+                    parametersWithEmptyValues.Add(key);
+			    }
+			    else
                 {
-                    //little hack here due to ugly MVC implementation
-                    //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
-                    if (!String.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
+                    if (booleanParameterNames.Contains(key, StringComparer.InvariantCultureIgnoreCase))
                     {
-                        value = "true";
+                        //little hack here due to ugly MVC implementation
+                        //find more info here: http://www.mindstorminteractive.com/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+                        if (!String.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            value = "true";
+                        }
                     }
-                }
-				routeValues[key] = value;
+                    routeValues[key] = value;
+			    }
 			}
 
             if (pageNumber > 1)
@@ -260,6 +277,15 @@ namespace Nop.Web.Framework.UI.Paging
             }
 
 			var url = UrlHelper.GenerateUrl(null, null, null, routeValues, RouteTable.Routes, viewContext.RequestContext, true);
+            if (renderEmptyParameters && parametersWithEmptyValues.Count > 0)
+            {
+                //we add such parameters manually because UrlHelper.GenerateUrl() ignores them
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                foreach (var key in parametersWithEmptyValues)
+                {
+                    url = webHelper.ModifyQueryString(url, key + "=", null);
+                }
+            }
 			return url;
 		}
 	}

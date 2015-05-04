@@ -45,7 +45,7 @@
                 </div>
             }
             <div class="pager">
-                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid")
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true)
             </div>
         </div>
     </div>
