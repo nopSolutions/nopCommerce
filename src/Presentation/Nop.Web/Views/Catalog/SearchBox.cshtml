@@ -21,7 +21,7 @@
     {
         <text>
             <script type="text/javascript">
-                $(function() {
+                $(document).ready(function() {
                     $('#small-searchterms').autocomplete({
                             delay: 500,
                             minLength: @(Model.SearchTermMinimumLength.ToString()),
