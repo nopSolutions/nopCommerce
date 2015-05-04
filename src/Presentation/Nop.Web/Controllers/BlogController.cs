@@ -111,6 +111,7 @@ namespace Nop.Web.Controllers
             model.SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false);
             model.Title = blogPost.Title;
             model.Body = blogPost.Body;
+            model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();

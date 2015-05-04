@@ -23,6 +23,7 @@ namespace Nop.Web.Models.Blogs
 
         public string Title { get; set; }
         public string Body { get; set; }
+        public string BodyOverview { get; set; }
         public bool AllowComments { get; set; }
         public int NumberOfComments { get; set; }
         public DateTime CreatedOn { get; set; }

@@ -118,6 +118,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BodyOverview):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.BodyOverview, new { style = "Width: 500px; Height: 150px;" })
+                @Html.ValidationMessageFor(model => model.BodyOverview)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AllowComments):
             </td>
             <td class="adminData">

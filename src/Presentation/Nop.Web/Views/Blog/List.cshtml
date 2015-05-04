@@ -43,7 +43,7 @@
                         <span class="post-date">-@item.CreatedOn.ToString("D")</span>
                     </div>
                     <div class="post-body">
-                        @Html.Raw(item.Body)
+                        @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
                     @if (item.Tags.Count > 0)
                     {
@@ -70,6 +70,9 @@
                             </a>
                         </div>
                     }
+                    <div class="buttons">
+                        <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="read-more">@T("Blog.MoreInfo")</a>
+                    </div>
                     @Html.Widget("bloglist_page_inside_post", item.Id)
                 </div>
             }

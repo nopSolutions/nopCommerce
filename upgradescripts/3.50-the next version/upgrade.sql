@@ -644,6 +644,15 @@ set @resources='
   <LocaleResource Name="Newsletter.Email.Placeholder">
     <Value>Enter your email here...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview">
+    <Value>Body overview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview.Hint">
+    <Value>Brief overview of blog post. If specified, then it will be used instead of full body on the main blog page. HTML is supported.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.MoreInfo">
+    <Value>details</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1815,4 +1824,12 @@ END
 GO
 
 DELETE FROM [Setting] WHERE [name] = N'mediasettings.productthumbperrowonproductdetailspage'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]') and NAME='BodyOverview')
+BEGIN
+	ALTER TABLE [BlogPost]
+	ADD [BodyOverview] nvarchar(MAX) NULL
+END
 GO

@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Blogs
             {
                 Title = "Title 1",
                 Body = "Body 1",
+                BodyOverview = "BodyOverview 1",
                 AllowComments = true,
                 CommentCount = 1,
                 Tags = "Tags 1",
@@ -38,6 +39,7 @@ namespace Nop.Data.Tests.Blogs
             fromDb.ShouldNotBeNull();
             fromDb.Title.ShouldEqual("Title 1");
             fromDb.Body.ShouldEqual("Body 1");
+            fromDb.BodyOverview.ShouldEqual("BodyOverview 1");
             fromDb.AllowComments.ShouldEqual(true);
             fromDb.CommentCount.ShouldEqual(1);
             fromDb.Tags.ShouldEqual("Tags 1");

@@ -6651,6 +6651,12 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Body.Required">
     <Value>Body is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview">
+    <Value>Body overview</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview.Hint">
+    <Value>Brief overview of blog post. If specified, then it will be used instead of full body on the main blog page. HTML is supported.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.Comments">
     <Value>View comments</Value>
   </LocaleResource>
@@ -10901,6 +10907,9 @@
   </LocaleResource>
   <LocaleResource Name="Blog.FilteredByMonth">
     <Value>Blog posts of '{0}' '{1}'</Value>
+  </LocaleResource>
+  <LocaleResource Name="Blog.MoreInfo">
+    <Value>details</Value>
   </LocaleResource>
   <LocaleResource Name="Blog.RSS">
     <Value>RSS</Value>

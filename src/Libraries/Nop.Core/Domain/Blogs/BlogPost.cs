@@ -24,9 +24,14 @@ namespace Nop.Core.Domain.Blogs
         public string Title { get; set; }
 
         /// <summary>
-        /// Gets or sets the blog post title
+        /// Gets or sets the blog post body
         /// </summary>
         public string Body { get; set; }
+
+        /// <summary>
+        /// Gets or sets the blog post overview. If specified, then it's used on the blog page instead of the "Body"
+        /// </summary>
+        public string BodyOverview { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the blog post comments are allowed 

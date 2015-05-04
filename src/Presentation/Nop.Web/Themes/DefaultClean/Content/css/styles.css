@@ -3852,6 +3852,7 @@ label, label + * {
 
 .post-details {
 	padding: 0 10px;
+    margin: 0 0 10px;
 }
 .post-details a {
 	font-weight: bold;
@@ -3957,11 +3958,11 @@ label, label + * {
 	line-height: 22px;
 }
 
-.news-items .buttons {
+.news-items .buttons, .blog-posts .buttons {
 	margin: 0;
 	padding: 0 10px;
 }
-.news-items .buttons a {
+.news-items .buttons a, .blog-posts .buttons a {
 	display: inline-block;
 	border: none;
 	background-color: #4ab2f1;
@@ -3970,7 +3971,7 @@ label, label + * {
 	color: #fff;
 	text-transform: uppercase;
 }
-.news-items .buttons a:hover {
+.news-items .buttons a:hover, .blog-posts .buttons a:hover {
 	background-color: #248ece;
 }
 

@@ -28,6 +28,10 @@ namespace Nop.Admin.Models.Blogs
         [AllowHtml]
         public string Body { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.BodyOverview")]
+        [AllowHtml]
+        public string BodyOverview { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.AllowComments")]
         public bool AllowComments { get; set; }
 
