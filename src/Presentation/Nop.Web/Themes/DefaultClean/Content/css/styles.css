@@ -5133,6 +5133,9 @@ pre{
 	float: right;
 	margin: 0 5px;
 }
+.shipment-details-page .tracking-number .tracking-url {
+    color: #4ab2f1;
+}
 
 
 /*** BLOG & NEWS ***/
