@@ -1,21 +1,22 @@
 ﻿@model SearchBoxModel
 @using Nop.Web.Models.Catalog;
-@using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new {onsubmit = "return check_small_search_form()"}))
+@using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { id = "small-search-box-form" }))
 {
     <input type="text" class="search-box-text" id="small-searchterms" autocomplete="off" name="q" placeholder="@T("Search.SearchBox.Tooltip")" />
     @Html.Widget("searchbox_before_search_button")
     <input type="submit" class="button-1 search-box-button" value="@T("Search")" />
-    <script type="text/javascript">
-        function check_small_search_form() {
-            if ($("#small-searchterms").val() == "") {
-                alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Search.EnterSearchTerms").Text))');
-                $("#small-searchterms").focus();
-                return false;
-            }
-            return true;
-        }
-    </script>
-
+    if (Model.SearchTermMinimumLength > 0)
+    {
+        <script type="text/javascript">
+            $("#small-search-box-form").submit(function(event) {
+                if ($("#small-searchterms").val() == "") {
+                    alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Search.EnterSearchTerms").Text))');
+                    $("#small-searchterms").focus();
+                    event.preventDefault();
+                }
+            });
+        </script>
+    }
     if (Model.AutoCompleteEnabled)
     {
         <text>
@@ -38,8 +39,8 @@
                             return $("<li></li>")
                                 .data("item.autocomplete", item)
                                 .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
-                            .appendTo(ul);
-                    };
+                                .appendTo(ul);
+                        };
                 });
             </script>
         </text>
