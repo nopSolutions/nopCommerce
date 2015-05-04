@@ -130,34 +130,16 @@
 
         @if (Model.Products.Count > 0)
         {
-            if (Model.PagingFilteringContext.ViewMode == "list")
-            {
-                @*list mode*@
-                <div class="product-list">
-                    <div class="item-grid">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
-                            </div>
-                        }
-                    </div>
+            <div class="@(Model.PagingFilteringContext.ViewMode == "list" ? "product-list" : "product-grid")">
+                <div class="item-grid">
+                    @foreach (var product in Model.Products)
+                    {
+                        <div class="item-box">
+                            @Html.Partial("_ProductBox", product)
+                        </div>
+                    }
                 </div>
-            }
-            else
-            {
-                @*grid mode*@
-                <div class="product-grid">
-                    <div class="item-grid">
-                        @foreach (var product in Model.Products)
-                        {
-                            <div class="item-box">
-                                @Html.Partial("_ProductBox", product)
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
+            </div>
         }
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
