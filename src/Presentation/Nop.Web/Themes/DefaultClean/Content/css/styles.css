@@ -631,6 +631,17 @@ label, label + * {
 	text-decoration: underline;
 }
 
+.noscript{
+    border:1px solid #ddd;
+    border-width:0 0 1px;
+    background:#ffff90;
+    font-size:12px;
+    line-height:1.25;
+    text-align:center;
+    color:#2f2f2f;
+}
+
+
 
 /*********** HEADER ***********/
 
