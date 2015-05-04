@@ -1,9 +1,8 @@
 ﻿<div class="search-box forum-search-box">
     @using (Html.BeginRouteForm("Search", FormMethod.Get))
     {
-        var searchText = T("Forum.SearchForumsTooltip");
         <div class="basic">
-            @Html.TextBox("searchterms", searchText, new { @class = "search-box-text", onclick = String.Format("if(this.value=='{0}')this.value=''", searchText), onblur = String.Format("if(this.value=='')this.value='{0}';", searchText) })
+            <input type="text" class="search-box-text" id="forums-small-searchterms" name="searchterms" placeholder="@T("Forum.SearchForumsTooltip")" />
             <input type="submit" value="@T("Forum.SearchButton")" class="button-2 search-box-button" />
         </div>
         <div class="advanced">
