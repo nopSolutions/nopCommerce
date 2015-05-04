@@ -112,7 +112,7 @@
 
                 @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
                 <script type="text/javascript">
-                    $(function() {
+                    $(document).ready(function() {
                         $('#search-product-name').autocomplete({
                             delay: 500,
                             minLength: 3,
