@@ -40,6 +40,7 @@
         <h1>@T("Checkout")</h1>
     </div>
     <div class="page-body checkout-data">
+        @Html.Widget("opc_content_before")
         <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="tab-section allow">
                 <div class="step-title">
@@ -48,10 +49,10 @@
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
                     <form id="co-billing-form" action="">
-                    <div id="checkout-billing-load">
-                        @Html.Action("OpcBillingForm", "Checkout")
-                        @*billing address content will be loaded here*@
-                    </div>
+                        <div id="checkout-billing-load">
+                            @Html.Action("OpcBillingForm", "Checkout")
+                            @*billing address content will be loaded here*@
+                        </div>
                     </form>
                     <script type="text/javascript">
                         Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/', @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()));
@@ -74,9 +75,9 @@
                     </div>
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
                         <form action="" id="co-shipping-form">
-                        <div id="checkout-shipping-load">
-                            @*shipping address content will be loaded here*@
-                        </div>
+                            <div id="checkout-shipping-load">
+                                @*shipping address content will be loaded here*@
+                            </div>
                         </form>
                         <script type="text/javascript">
                             Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
@@ -103,18 +104,18 @@
                     </div>
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
                         <form id="co-shipping-method-form" action="">
-                        <div id="checkout-shipping-method-load">
-                            @*shipping methods content will be loaded here*@
-                        </div>
-                        <script type="text/javascript">
-                            ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
-                        </script>
-                        <div class="buttons" id="shipping-method-buttons-container">
-                            <p class="back-link">
-                                <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                            <input type="button" class="button-1 shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
-                            <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
-                        </div>
+                            <div id="checkout-shipping-method-load">
+                                @*shipping methods content will be loaded here*@
+                            </div>
+                            <script type="text/javascript">
+                                ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
+                            </script>
+                            <div class="buttons" id="shipping-method-buttons-container">
+                                <p class="back-link">
+                                    <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                                <input type="button" class="button-1 shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
+                                <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                            </div>
                         </form>
                     </div>
                 </li>
@@ -126,9 +127,9 @@
                 </div>
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-method-form">
-                    <div id="checkout-payment-method-load">
-                        @*payment methods content will be loaded here*@ Payment is not required
-                    </div>
+                        <div id="checkout-payment-method-load">
+                            @*payment methods content will be loaded here*@ Payment is not required
+                        </div>
                     </form>
                     <script type="text/javascript">
                         PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
@@ -148,9 +149,9 @@
                 </div>
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-info-form">
-                    <div id="checkout-payment-info-load">
-                        @*payment info content will be loaded here*@ Payment is not required
-                    </div>
+                        <div id="checkout-payment-info-load">
+                            @*payment info content will be loaded here*@ Payment is not required
+                        </div>
                     </form>
                     <script type="text/javascript">
                         PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
@@ -184,6 +185,7 @@
                 </div>
             </li>
         </ol>
+        @Html.Widget("opc_content_after")
     </div>
     <script type="text/javascript">
         Accordion.init('checkout-steps', '.step-title', true);
