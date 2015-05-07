@@ -469,6 +469,7 @@ namespace Nop.Web.Controllers
             {
                 Email = _workContext.CurrentCustomer.Email,
                 FullName = _workContext.CurrentCustomer.GetFullName(),
+                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage
             };
             return View(model);
@@ -487,7 +488,9 @@ namespace Nop.Web.Controllers
             {
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
-                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
+                    model.Subject :
+                    string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
@@ -554,6 +557,7 @@ namespace Nop.Web.Controllers
             {
                 Email = _workContext.CurrentCustomer.Email,
                 FullName = _workContext.CurrentCustomer.GetFullName(),
+                SubjectEnabled = _commonSettings.SubjectFieldOnContactUsForm,
                 DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage,
                 VendorId = vendor.Id,
                 VendorName = vendor.GetLocalized(x => x.Name)
@@ -583,7 +587,11 @@ namespace Nop.Web.Controllers
             {
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
-                string subject = string.Format(_localizationService.GetResource("ContactVendor.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+
+                string subject = _commonSettings.SubjectFieldOnContactUsForm ?
+                    model.Subject :
+                    string.Format(_localizationService.GetResource("ContactVendor.EmailSubject"), _storeContext.CurrentStore.GetLocalized(x => x.Name));
+
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)

@@ -1,4 +1,5 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Core.Domain.Common;
 using Nop.Web.Models.Common;
 using Nop.Web.Validators.Common;
 using NUnit.Framework;
@@ -9,11 +10,13 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
     public class ContactUsValidatorTests : BaseValidatorTests
     {
         private ContactUsValidator _validator;
+        private CommonSettings _commonSettings;
         
         [SetUp]
         public new void Setup()
         {
-            _validator = new ContactUsValidator(_localizationService);
+            _commonSettings = new CommonSettings();
+            _validator = new ContactUsValidator(_localizationService, _commonSettings);
         }
         
         [Test]

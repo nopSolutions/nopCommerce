@@ -10,6 +10,7 @@ namespace Nop.Core.Domain.Common
             IgnoreLogWordlist = new List<string>();
         }
 
+        public bool SubjectFieldOnContactUsForm { get; set; }
         public bool UseSystemEmailForContactUsForm { get; set; }
 
         public bool UseStoredProceduresIfSupported { get; set; }

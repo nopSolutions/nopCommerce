@@ -668,6 +668,30 @@ set @resources='
   <LocaleResource Name="Account.Fields.DateOfBirth.Required">
     <Value>Date of birth is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm">
+    <Value>Contact us page. ''Subject'' field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm.Hint">
+    <Value>Check to allow a customer to type a subject on the contact us page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject.Hint">
+    <Value>Enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject.Required">
+    <Value>Please enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject.Hint">
+    <Value>Enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject.Required">
+    <Value>Please enter subject</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1856,3 +1880,12 @@ BEGIN
 	VALUES (N'customersettings.dateofbirthrequired', N'false', 0)
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.subjectfieldoncontactusform')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'commonsettings.subjectfieldoncontactusform', N'false', 0)
+END
+GO
+

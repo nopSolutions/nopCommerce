@@ -5574,6 +5574,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
     <Value>Store information</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm">
+    <Value>Contact us page. 'Subject' field</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm.Hint">
+    <Value>Check to allow a customer to type a subject on the contact us page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.TwitterLink">
     <Value>Twitter page URL</Value>
   </LocaleResource>
@@ -11292,6 +11298,15 @@
   <LocaleResource Name="ContactUs.FullName.Required">
     <Value>Enter your name</Value>
   </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject.Hint">
+    <Value>Enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Subject.Required">
+    <Value>Please enter subject</Value>
+  </LocaleResource>
   <LocaleResource Name="ContactUs.YourEnquiryHasBeenSent">
     <Value>Your enquiry has been successfully sent to the store owner.</Value>
   </LocaleResource>
@@ -11330,6 +11345,15 @@
   </LocaleResource>
   <LocaleResource Name="ContactVendor.FullName.Required">
     <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject">
+    <Value>Subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject.Hint">
+    <Value>Enter subject</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactVendor.Subject.Required">
+    <Value>Please enter subject</Value>
   </LocaleResource>
   <LocaleResource Name="ContactVendor.YourEnquiryHasBeenSent">
     <Value>Your enquiry has been successfully sent to the vendor.</Value>

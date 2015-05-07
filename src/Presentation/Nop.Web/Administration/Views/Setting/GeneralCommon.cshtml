@@ -221,6 +221,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm):
             </td>

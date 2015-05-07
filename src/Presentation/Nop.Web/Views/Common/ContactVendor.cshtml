@@ -39,6 +39,14 @@
                             @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactVendor.Email.Hint") })
                             @Html.ValidationMessageFor(model => model.Email)
                         </div>
+                        @if (Model.SubjectEnabled)
+                        {
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.Subject)
+                                @Html.TextBoxFor(model => model.Subject, new {@class = "subject", placeholder = T("ContactVendor.Subject.Hint")})
+                                @Html.ValidationMessageFor(model => model.Subject)
+                            </div>
+                        }
                         <div class="inputs">
                             @Html.LabelFor(model => model.Enquiry)
                             @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactVendor.Enquiry.Hint") })

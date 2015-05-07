@@ -2039,7 +2039,8 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.TwitterLink = storeInformationSettings.TwitterLink;
             model.StoreInformationSettings.YoutubeLink = storeInformationSettings.YoutubeLink;
             model.StoreInformationSettings.GooglePlusLink = storeInformationSettings.GooglePlusLink;
-            //contact us. use system email
+            //contact us
+            model.StoreInformationSettings.SubjectFieldOnContactUsForm = commonSettings.SubjectFieldOnContactUsForm;
             model.StoreInformationSettings.UseSystemEmailForContactUsForm = commonSettings.UseSystemEmailForContactUsForm;
             //override settings
             if (storeScope > 0)
@@ -2053,6 +2054,7 @@ namespace Nop.Admin.Controllers
                 model.StoreInformationSettings.TwitterLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.TwitterLink, storeScope);
                 model.StoreInformationSettings.YoutubeLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.YoutubeLink, storeScope);
                 model.StoreInformationSettings.GooglePlusLink_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.GooglePlusLink, storeScope);
+                model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope);
                 model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore = _settingService.SettingExists(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope);
             }
 
@@ -2176,7 +2178,8 @@ namespace Nop.Admin.Controllers
             storeInformationSettings.TwitterLink = model.StoreInformationSettings.TwitterLink;
             storeInformationSettings.YoutubeLink = model.StoreInformationSettings.YoutubeLink;
             storeInformationSettings.GooglePlusLink = model.StoreInformationSettings.GooglePlusLink;
-            //contact us. use system email
+            //contact us
+            commonSettings.SubjectFieldOnContactUsForm = model.StoreInformationSettings.SubjectFieldOnContactUsForm;
             commonSettings.UseSystemEmailForContactUsForm = model.StoreInformationSettings.UseSystemEmailForContactUsForm;
 
             /* We do not clear cache after each setting update.
@@ -2228,6 +2231,11 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.GooglePlusLink, storeScope);
 
+            if (model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(commonSettings, x => x.SubjectFieldOnContactUsForm, storeScope);
+            
             if (model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(commonSettings, x => x.UseSystemEmailForContactUsForm, storeScope, false);
             else if (storeScope > 0)

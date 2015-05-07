@@ -76,6 +76,10 @@ namespace Nop.Admin.Models.Settings
             public string GooglePlusLink { get; set; }
             public bool GooglePlusLink_OverrideForStore { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SubjectFieldOnContactUsForm")]
+            public bool SubjectFieldOnContactUsForm { get; set; }
+            public bool SubjectFieldOnContactUsForm_OverrideForStore { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSystemEmailForContactUsForm")]
             public bool UseSystemEmailForContactUsForm { get; set; }
             public bool UseSystemEmailForContactUsForm_OverrideForStore { get; set; }

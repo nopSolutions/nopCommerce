@@ -17,6 +17,11 @@ namespace Nop.Web.Models.Common
         public string Email { get; set; }
 
         [AllowHtml]
+        [NopResourceDisplayName("ContactVendor.Subject")]
+        public string Subject { get; set; }
+        public bool SubjectEnabled { get; set; }
+
+        [AllowHtml]
         [NopResourceDisplayName("ContactVendor.Enquiry")]
         public string Enquiry { get; set; }
 
