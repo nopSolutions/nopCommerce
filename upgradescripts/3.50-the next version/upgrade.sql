@@ -692,6 +692,12 @@ set @resources='
   <LocaleResource Name="ContactVendor.Subject.Required">
     <Value>Please enter subject</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders">
+    <Value>Disable PDF invoices for pending orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders.Hint">
+    <Value>If checked, customers won''t be allowed to print PDF invoices for pending orders.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1886,6 +1892,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.subjectfi
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'commonsettings.subjectfieldoncontactusform', N'false', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.disablepdfinvoicesforpendingorders')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'pdfsettings.disablepdfinvoicesforpendingorders', N'false', 0)
 END
 GO
 

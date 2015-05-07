@@ -230,6 +230,10 @@ namespace Nop.Admin.Models.Settings
             public int LogoPictureId { get; set; }
             public bool LogoPictureId_OverrideForStore { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders")]
+            public bool DisablePdfInvoicesForPendingOrders { get; set; }
+            public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
             public string InvoiceFooterTextColumn1 { get; set; }
             public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }

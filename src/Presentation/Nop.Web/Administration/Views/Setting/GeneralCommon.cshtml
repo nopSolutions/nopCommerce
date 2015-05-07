@@ -608,6 +608,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1):
             </td>

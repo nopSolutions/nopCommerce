@@ -26,7 +26,10 @@
         <div class="page-title">
             <h1>@T("Order.OrderInformation")</h1>
             <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">@T("Order.Print")</a>
-            <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
+            @if (!Model.PdfInvoiceDisabled)
+            {
+                <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-invoice-button">@T("Order.GetPDFInvoice")</a>
+            }
         </div>
     }
     <div class="page-body">

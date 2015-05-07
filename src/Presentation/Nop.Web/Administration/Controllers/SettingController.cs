@@ -2124,6 +2124,7 @@ namespace Nop.Admin.Controllers
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
             model.PdfSettings.LetterPageSizeEnabled = pdfSettings.LetterPageSizeEnabled;
             model.PdfSettings.LogoPictureId = pdfSettings.LogoPictureId;
+            model.PdfSettings.DisablePdfInvoicesForPendingOrders = pdfSettings.DisablePdfInvoicesForPendingOrders;
             model.PdfSettings.InvoiceFooterTextColumn1 = pdfSettings.InvoiceFooterTextColumn1;
             model.PdfSettings.InvoiceFooterTextColumn2 = pdfSettings.InvoiceFooterTextColumn2;
             //override settings
@@ -2131,6 +2132,7 @@ namespace Nop.Admin.Controllers
             {
                 model.PdfSettings.LetterPageSizeEnabled_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LetterPageSizeEnabled, storeScope);
                 model.PdfSettings.LogoPictureId_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.LogoPictureId, storeScope);
+                model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeScope);
                 model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceFooterTextColumn1, storeScope);
                 model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore = _settingService.SettingExists(pdfSettings, x => x.InvoiceFooterTextColumn2, storeScope);
             }
@@ -2373,6 +2375,7 @@ namespace Nop.Admin.Controllers
             var pdfSettings = _settingService.LoadSetting<PdfSettings>(storeScope);
             pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
             pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
+            pdfSettings.DisablePdfInvoicesForPendingOrders = model.PdfSettings.DisablePdfInvoicesForPendingOrders;
             pdfSettings.InvoiceFooterTextColumn1 = model.PdfSettings.InvoiceFooterTextColumn1;
             pdfSettings.InvoiceFooterTextColumn2 = model.PdfSettings.InvoiceFooterTextColumn2;
             /* We do not clear cache after each setting update.
@@ -2388,6 +2391,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(pdfSettings, x => x.LogoPictureId, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(pdfSettings, x => x.LogoPictureId, storeScope);
+
+            if (model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(pdfSettings, x => x.DisablePdfInvoicesForPendingOrders, storeScope);
 
             if (model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(pdfSettings, x => x.InvoiceFooterTextColumn1, storeScope, false);

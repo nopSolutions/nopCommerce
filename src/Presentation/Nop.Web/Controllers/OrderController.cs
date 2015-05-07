@@ -56,6 +56,7 @@ namespace Nop.Web.Controllers
         private readonly ShippingSettings _shippingSettings;
         private readonly AddressSettings _addressSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
+        private readonly PdfSettings _pdfSettings;
 
         #endregion
 
@@ -84,7 +85,8 @@ namespace Nop.Web.Controllers
             TaxSettings taxSettings,
             ShippingSettings shippingSettings, 
             AddressSettings addressSettings,
-            RewardPointsSettings rewardPointsSettings)
+            RewardPointsSettings rewardPointsSettings,
+            PdfSettings pdfSettings)
         {
             this._orderService = orderService;
             this._shipmentService = shipmentService;
@@ -111,6 +113,7 @@ namespace Nop.Web.Controllers
             this._shippingSettings = shippingSettings;
             this._addressSettings = addressSettings;
             this._rewardPointsSettings = rewardPointsSettings;
+            this._pdfSettings = pdfSettings;
         }
 
         #endregion
@@ -175,6 +178,7 @@ namespace Nop.Web.Controllers
             model.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.IsReOrderAllowed = _orderSettings.IsReOrderAllowed;
             model.IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order);
+            model.PdfInvoiceDisabled = _pdfSettings.DisablePdfInvoicesForPendingOrders && order.OrderStatus == OrderStatus.Pending;
 
             //shipping info
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);

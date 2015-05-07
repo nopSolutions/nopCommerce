@@ -5358,6 +5358,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultTitle.Hint">
     <Value>The default title for pages in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders">
+    <Value>Disable PDF invoices for pending orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders.Hint">
+    <Value>If checked, customers won't be allowed to print PDF invoices for pending orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning">
     <Value>Display EU cookie law warning</Value>
   </LocaleResource>
