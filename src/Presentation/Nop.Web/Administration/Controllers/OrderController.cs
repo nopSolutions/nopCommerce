@@ -1055,6 +1055,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult ExportXmlSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -1135,6 +1136,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult ExportExcelSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -1638,6 +1640,7 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", "orders.pdf");
         }
 
+        [HttpPost]
         public ActionResult PdfInvoiceSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -3344,6 +3347,7 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
+        [HttpPost]
         public ActionResult PdfPackagingSlipSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -3380,6 +3384,7 @@ namespace Nop.Admin.Controllers
             return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
+        [HttpPost]
         public ActionResult SetAsShippedSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -3411,6 +3416,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [HttpPost]
         public ActionResult SetAsDeliveredSelected(ICollection<int> selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))

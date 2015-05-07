@@ -2733,6 +2733,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult ExportXmlSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -2813,6 +2814,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [HttpPost]
         public ActionResult ExportExcelSelected(string selectedIds)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
