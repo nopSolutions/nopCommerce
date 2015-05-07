@@ -38,9 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus, Version=4.0.3.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+    <Reference Include="EPPlus, Version=4.0.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\EPPlus.4.0.3\lib\net20\EPPlus.dll</HintPath>
+      <HintPath>..\..\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="ImageResizer, Version=3.4.3.103, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,9 +75,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\nopCommerceCustom\PerlRegex.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RestSharp, Version=105.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+      <HintPath>..\..\packages\RestSharp.105.1.0\lib\net451\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
