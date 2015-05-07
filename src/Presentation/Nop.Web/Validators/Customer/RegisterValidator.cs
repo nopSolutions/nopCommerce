@@ -58,6 +58,18 @@ namespace Nop.Web.Validators.Customer
                     return null;
                 });
             }
+            if (customerSettings.DateOfBirthRequired && customerSettings.DateOfBirthEnabled)
+            {
+                Custom(x =>
+                {
+                    var dateOfBirth = x.ParseDateOfBirth();
+                    if (dateOfBirth == null)
+                    {
+                        return new ValidationFailure("DateOfBirthDay", localizationService.GetResource("Account.Fields.DateOfBirth.Required"));
+                    }
+                    return null;
+                });
+            }
             if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
             {
                 RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));

@@ -267,6 +267,9 @@
   <LocaleResource Name="Account.Fields.DateOfBirth">
     <Value>Date of birth</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.DateOfBirth.Required">
+    <Value>Date of birth is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.Email">
     <Value>Email</Value>
   </LocaleResource>
@@ -4913,6 +4916,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthEnabled.Hint">
     <Value>Set if 'Date of Birth' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired">
+    <Value>'Date of Birth' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired.Hint">
+    <Value>Check if 'Date of Birth' is required.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateTimeSettings">
     <Value>DateTime settings</Value>

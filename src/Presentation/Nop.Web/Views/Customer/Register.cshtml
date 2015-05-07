@@ -97,6 +97,10 @@
                                 Model.DateOfBirthDay,
                                 Model.DateOfBirthMonth,
                                 Model.DateOfBirthYear)
+                            @if (Model.DateOfBirthRequired)
+                            {
+                                @Html.RequiredHint()
+                            }
                             @Html.ValidationMessageFor(model => model.DateOfBirthDay)
                             @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
                             @Html.ValidationMessageFor(model => model.DateOfBirthYear)

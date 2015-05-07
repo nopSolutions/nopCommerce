@@ -656,6 +656,18 @@ set @resources='
   <LocaleResource Name="Admin.Orders.PdfInvoice.All">
     <Value>Print PDF invoices (all found)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired">
+    <Value>''Date of Birth'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired.Hint">
+    <Value>Check if ''Date of Birth'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.DateOfBirth.Required">
+    <Value>Check if ''Date of Birth'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.DateOfBirth.Required">
+    <Value>Date of birth is required</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1834,5 +1846,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[BlogPost]')
 BEGIN
 	ALTER TABLE [BlogPost]
 	ADD [BodyOverview] nvarchar(MAX) NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.dateofbirthrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.dateofbirthrequired', N'false', 0)
 END
 GO

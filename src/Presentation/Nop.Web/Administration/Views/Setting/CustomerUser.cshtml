@@ -293,6 +293,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
@@ -335,6 +336,12 @@
         }
 
         function toggleCustomerRequiredFormField() {
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked')) {
+                $('#pnlCustomerDateOfBirthRequired').show();
+            } else {
+                $('#pnlCustomerDateOfBirthRequired').hide();
+            }
+
             if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
                 $('#pnlCustomerCompanyRequired').show();
             } else {
@@ -418,6 +425,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.DateOfBirthEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthEnabled)
+            </td>
+        </tr>
+        <tr id="pnlCustomerDateOfBirthRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.DateOfBirthRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.DateOfBirthRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthRequired)
             </td>
         </tr>
         <tr>

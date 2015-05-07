@@ -94,6 +94,8 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DateOfBirthEnabled")]
             public bool DateOfBirthEnabled { get; set; }
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired")]
+            public bool DateOfBirthRequired { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CompanyEnabled")]
             public bool CompanyEnabled { get; set; }

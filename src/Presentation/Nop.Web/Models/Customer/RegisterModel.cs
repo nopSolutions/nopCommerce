@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
@@ -60,6 +61,20 @@ namespace Nop.Web.Models.Customer
         public int? DateOfBirthMonth { get; set; }
         [NopResourceDisplayName("Account.Fields.DateOfBirth")]
         public int? DateOfBirthYear { get; set; }
+        public bool DateOfBirthRequired { get; set; }
+        public DateTime? ParseDateOfBirth()
+        {
+            if (!DateOfBirthYear.HasValue || !DateOfBirthMonth.HasValue || !DateOfBirthDay.HasValue)
+                return null;
+
+            DateTime? dateOfBirth = null;
+            try
+            {
+                dateOfBirth = new DateTime(DateOfBirthYear.Value, DateOfBirthMonth.Value, DateOfBirthDay.Value);
+            }
+            catch { }
+            return dateOfBirth;
+        }
 
         public bool CompanyEnabled { get; set; }
         public bool CompanyRequired { get; set; }
