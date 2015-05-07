@@ -653,6 +653,9 @@ set @resources='
   <LocaleResource Name="Blog.MoreInfo">
     <Value>details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoice.All">
+    <Value>Print PDF invoices (all found)</Value>
+  </LocaleResource>
 </Language>
 '
 

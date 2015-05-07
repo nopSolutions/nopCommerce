@@ -998,6 +998,7 @@ namespace Nop.Admin.Controllers
                           .ToList();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
         #endregion
 
         #region Export / Import
@@ -1590,6 +1591,51 @@ namespace Nop.Admin.Controllers
                 bytes = stream.ToArray();
             }
             return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
+        }
+
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("pdf-invoice-all")]
+        public ActionResult PdfInvoiceAll(OrderListModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+            
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
+            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
+            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+
+            var filterByProductId = 0;
+            var product = _productService.GetProductById(model.ProductId);
+            if (product != null && HasAccessToProduct(product))
+                filterByProductId = model.ProductId;
+
+            //load orders
+            var orders = _orderService.SearchOrders(storeId: model.StoreId,
+                vendorId: model.VendorId,
+                productId: filterByProductId,
+                warehouseId: model.WarehouseId,
+                createdFromUtc: startDateValue,
+                createdToUtc: endDateValue,
+                os: orderStatus,
+                ps: paymentStatus,
+                ss: shippingStatus,
+                billingEmail: model.CustomerEmail,
+                orderNotes: model.OrderNotes,
+                orderGuid: model.OrderGuid);
+
+            byte[] bytes;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", "orders.pdf");
         }
 
         public ActionResult PdfInvoiceSelected(string selectedIds)
