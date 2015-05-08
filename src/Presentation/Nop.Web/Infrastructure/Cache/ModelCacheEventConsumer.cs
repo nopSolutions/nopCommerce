@@ -256,8 +256,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : parent category id
-        /// {2} : comma separated list of customer roles
-        /// {3} : current store ID
+        /// {1} : comma separated list of customer roles
+        /// {2} : current store ID
         /// </remarks>
         public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "Nop.pres.category.childidentifiers-{0}-{1}-{2}";
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
