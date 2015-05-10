@@ -698,6 +698,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisablePdfInvoicesForPendingOrders.Hint">
     <Value>If checked, customers won''t be allowed to print PDF invoices for pending orders.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
+    <Value>{0} [{1}]</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.CheckoutAttributes.PriceAdjustment">
+    <Value>{0} [{1}]</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -40,9 +40,10 @@
                             }
                             @foreach (var attributeValue in attribute.Values)
                             {
-                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeValue.Name
-                                    @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)
-                                </option>
+                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
+                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
                             }
                         </select>
                             }
@@ -52,9 +53,12 @@
                         <ul class="option-list">
                             @foreach (var attributeValue in attribute.Values)
                             {
+                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
                                 <li>
                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
                             }
                         </ul>
@@ -65,10 +69,13 @@
                             {
                         <ul class="option-list">
                             @foreach (var attributeValue in attribute.Values)
-                            {                                    
+                            {
+                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;                             
                                 <li>
                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</label>
+                                    <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
                             }
                         </ul>
@@ -159,14 +166,17 @@
                         <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
                             @foreach (var attributeValue in attribute.Values)
                             {
+                                var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                    attributeValue.Name :
+                                    T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;  
                                 <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                     <label for="@(controlId)_@(attributeValue.Id)">
-                                        <span class="color-container" title="@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)">
+                                        <span class="color-container" title="@attributeName">
                                             <span class="color" style="background-color:@(attributeValue.ColorSquaresRgb);">&nbsp;</span>
                                         </span>
                                         <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                         @*uncomment below to display attribute value name*@
-                                        @*<span class="name">@attributeValue.Name @(!String.IsNullOrEmpty(attributeValue.PriceAdjustment) ? " [" + attributeValue.PriceAdjustment + "]" : null)</span>*@
+                                        @*<span class="name">@attributeName</span>*@
                                     </label>
                                 </li>
                             }
