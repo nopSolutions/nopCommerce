@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Events;
 
 namespace Nop.Services.Stores
 {
@@ -36,6 +37,7 @@ namespace Nop.Services.Stores
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreContext _storeContext;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
         private readonly CatalogSettings _catalogSettings;
 
         #endregion
@@ -49,15 +51,18 @@ namespace Nop.Services.Stores
         /// <param name="storeContext">Store context</param>
         /// <param name="storeMappingRepository">Store mapping repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public StoreMappingService(ICacheManager cacheManager, 
             IStoreContext storeContext,
             IRepository<StoreMapping> storeMappingRepository,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._storeContext = storeContext;
             this._storeMappingRepository = storeMappingRepository;
             this._catalogSettings = catalogSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -77,6 +82,9 @@ namespace Nop.Services.Stores
 
             //cache
             _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(storeMapping);
         }
 
         /// <summary>
@@ -128,6 +136,9 @@ namespace Nop.Services.Stores
 
             //cache
             _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(storeMapping);
         }
 
         /// <summary>
@@ -170,6 +181,9 @@ namespace Nop.Services.Stores
 
             //cache
             _cacheManager.RemoveByPattern(STOREMAPPING_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(storeMapping);
         }
 
         /// <summary>
