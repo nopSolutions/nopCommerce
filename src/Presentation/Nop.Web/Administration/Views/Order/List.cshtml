@@ -101,7 +101,7 @@
                 @Html.DropDownList("WarehouseId", Model.AvailableWarehouses)
             </td>
         </tr>
-        <tr>
+        <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentMethodSystemName):
             </td>
