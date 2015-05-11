@@ -18,14 +18,16 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
             });
 
             $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
+                $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
             });
         });
-    </script>    
+    </script>
     <p>
         <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
         <ol>
