@@ -16,6 +16,7 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
+using RestSharp.Extensions;
 
 namespace Nop.Services.Shipping
 {
@@ -679,10 +680,11 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
         /// <returns>Shipment packages (requests)</returns>
         public virtual IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
-            Address shippingAddress, out bool shippingFromMultipleLocations)
+            Address shippingAddress, int storeId, out bool shippingFromMultipleLocations)
         {
             //if we always ship from the default shipping origin, then there's only one request
             //if we ship from warehouses ("ShippingSettings.UseWarehouseLocation" enabled),
@@ -738,6 +740,8 @@ namespace Nop.Services.Shipping
                 {
                     //create a new request
                     var request = new GetShippingOptionRequest();
+                    //store
+                    request.StoreId = storeId;
                     //add item
                     request.Items.Add(new GetShippingOptionRequest.PackageItem(sci));
                     //customer
@@ -810,7 +814,7 @@ namespace Nop.Services.Shipping
             
             //create a package
             bool shippingFromMultipleLocations;
-            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, out shippingFromMultipleLocations);
+            var shippingOptionRequests = CreateShippingOptionRequests(cart, shippingAddress, storeId, out shippingFromMultipleLocations);
             result.ShippingFromMultipleLocations = shippingFromMultipleLocations;
 
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods(storeId);

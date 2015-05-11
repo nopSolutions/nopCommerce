@@ -109,7 +109,9 @@ namespace Nop.Plugin.Shipping.ByWeight
                 return response;
             }
 
-            var storeId = _storeContext.CurrentStore.Id;
+            var storeId = getShippingOptionRequest.StoreId;
+            if (storeId == 0)
+                storeId = _storeContext.CurrentStore.Id;
             int countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
             int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
             int warehouseId = getShippingOptionRequest.WarehouseFrom != null ? getShippingOptionRequest.WarehouseFrom.Id : 0;

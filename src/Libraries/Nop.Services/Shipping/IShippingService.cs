@@ -185,10 +185,11 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="shippingAddress">Shipping address</param>
+        /// <param name="storeId">Load records allowed only in a specified store; pass 0 to load all records</param>
         /// <returns>Shipment packages (requests)</returns>
         /// <param name="shippingFromMultipleLocations">Value indicating whether shipping is done from multiple locations (warehouses)</param>
-        IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart, 
-            Address shippingAddress, out bool shippingFromMultipleLocations);
+        IList<GetShippingOptionRequest> CreateShippingOptionRequests(IList<ShoppingCartItem> cart,
+            Address shippingAddress, int storeId, out bool shippingFromMultipleLocations);
 
         /// <summary>
         ///  Gets available shipping options

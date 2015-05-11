@@ -63,6 +63,11 @@ namespace Nop.Services.Shipping
         /// </summary>
         public string AddressFrom { get; set; }
 
+        /// <summary>
+        /// Limit to store (identifier)
+        /// </summary>
+        public int StoreId { get; set; }
+
         #endregion
 
         #region Nested classes
