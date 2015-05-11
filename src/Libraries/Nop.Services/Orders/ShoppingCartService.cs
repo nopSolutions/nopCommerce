@@ -358,7 +358,7 @@ namespace Nop.Services.Orders
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), product.OrderMaximumQuantity));
                 hasQtyWarnings = true;
             }
-            var allowedQuantities = product.ParseAllowedQuatities();
+            var allowedQuantities = product.ParseAllowedQuantities();
             if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));

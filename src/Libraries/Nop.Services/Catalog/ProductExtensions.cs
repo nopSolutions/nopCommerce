@@ -150,11 +150,11 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
-        /// Get a list of allowed quanities (parse 'AllowedQuanities' property)
+        /// Get a list of allowed quantities (parse 'AllowedQuantities' property)
         /// </summary>
         /// <param name="product">Product</param>
         /// <returns>Result</returns>
-        public static int[] ParseAllowedQuatities(this Product product)
+        public static int[] ParseAllowedQuantities(this Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");

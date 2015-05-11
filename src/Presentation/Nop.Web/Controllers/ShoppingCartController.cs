@@ -457,7 +457,7 @@ namespace Nop.Web.Controllers
                     sci.Product.VisibleIndividually;
 
                 //allowed quantities
-                var allowedQuantities = sci.Product.ParseAllowedQuatities();
+                var allowedQuantities = sci.Product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
                 {
                     cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -680,7 +680,7 @@ namespace Nop.Web.Controllers
                 };
 
                 //allowed quantities
-                var allowedQuantities = sci.Product.ParseAllowedQuatities();
+                var allowedQuantities = sci.Product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
                 {
                     cartItemModel.AllowedQuantities.Add(new SelectListItem
@@ -1394,7 +1394,7 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            var allowedQuantities = product.ParseAllowedQuatities();
+            var allowedQuantities = product.ParseAllowedQuantities();
             if (allowedQuantities.Length > 0)
             {
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)

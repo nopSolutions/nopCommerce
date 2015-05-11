@@ -538,7 +538,7 @@ namespace Nop.Web.Controllers
                     _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
             }
             //allowed quantities
-            var allowedQuantities = product.ParseAllowedQuatities();
+            var allowedQuantities = product.ParseAllowedQuantities();
             foreach (var qty in allowedQuantities)
             {
                 model.AddToCart.AllowedQuantities.Add(new SelectListItem

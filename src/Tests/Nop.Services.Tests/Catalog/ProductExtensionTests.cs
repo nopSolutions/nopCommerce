@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Catalog
                 AllowedQuantities = "1, 5,4,10,sdf"
             };
 
-            var result = product.ParseAllowedQuatities();
+            var result = product.ParseAllowedQuantities();
             result.Length.ShouldEqual(4);
             result[0].ShouldEqual(1);
             result[1].ShouldEqual(5);
