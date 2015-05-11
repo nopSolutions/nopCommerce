@@ -118,6 +118,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
+        /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="os">Order status</param>
         /// <param name="ps">Payment status</param>
         /// <param name="ss">Shipping status</param>
@@ -127,7 +128,8 @@ namespace Nop.Services.Orders
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0, int vendorId = 0, int orderId = 0,
+        public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
+            int vendorId = 0, int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, bool ignoreCancelledOrders = false, string orderNotes = null)
@@ -161,6 +163,8 @@ namespace Nop.Services.Orders
                 var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
                 query = query.Where(o => o.OrderStatusId != cancelledOrderStatusId);
             }
+            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+                query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (orderStatusId.HasValue)
                 query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
             if (paymentStatusId.HasValue)
@@ -223,8 +227,9 @@ namespace Nop.Services.Orders
             if (!timeZone.IsInvalidTime(t1))
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
-                DateTime? endTime1 = null;
-                var todayResult = GetOrderAverageReportLine(storeId, 0, 0, os, null,null, startTime1, endTime1, null);
+                var todayResult = GetOrderAverageReportLine(storeId: storeId,
+                    os: os, 
+                    startTimeUtc: startTime1);
                 item.SumTodayOrders = todayResult.SumOrders;
                 item.CountTodayOrders = todayResult.CountOrders;
             }
@@ -235,8 +240,9 @@ namespace Nop.Services.Orders
             if (!timeZone.IsInvalidTime(t2))
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
-                DateTime? endTime2 = null;
-                var weekResult = GetOrderAverageReportLine(storeId, 0, 0, os, null, null, startTime2, endTime2, null);
+                var weekResult = GetOrderAverageReportLine(storeId: storeId,
+                    os: os,
+                    startTimeUtc: startTime2);
                 item.SumThisWeekOrders = weekResult.SumOrders;
                 item.CountThisWeekOrders = weekResult.CountOrders;
             }
@@ -245,8 +251,9 @@ namespace Nop.Services.Orders
             if (!timeZone.IsInvalidTime(t3))
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
-                DateTime? endTime3 = null;
-                var monthResult = GetOrderAverageReportLine(storeId, 0, 0, os, null, null, startTime3, endTime3, null);
+                var monthResult = GetOrderAverageReportLine(storeId: storeId,
+                    os: os,
+                    startTimeUtc: startTime3);
                 item.SumThisMonthOrders = monthResult.SumOrders;
                 item.CountThisMonthOrders = monthResult.CountOrders;
             }
@@ -255,15 +262,14 @@ namespace Nop.Services.Orders
             if (!timeZone.IsInvalidTime(t4))
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
-                DateTime? endTime4 = null;
-                var yearResult = GetOrderAverageReportLine(storeId, 0, 0, os, null, null, startTime4, endTime4, null);
+                var yearResult = GetOrderAverageReportLine(storeId: storeId,
+                    os: os,
+                    startTimeUtc: startTime4);
                 item.SumThisYearOrders = yearResult.SumOrders;
                 item.CountThisYearOrders = yearResult.CountOrders;
             }
             //all time
-            DateTime? startTime5 = null;
-            DateTime? endTime5 = null;
-            var allTimeResult = GetOrderAverageReportLine(storeId, 0, 0, os, null, null, startTime5, endTime5, null);
+            var allTimeResult = GetOrderAverageReportLine(storeId: storeId, os: os);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 
@@ -459,6 +465,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
+        /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="os">Order status; null to load all records</param>
@@ -467,7 +474,8 @@ namespace Nop.Services.Orders
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
-        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0, int orderId = 0,
+        public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
+            int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string orderNotes = null)
@@ -487,10 +495,13 @@ namespace Nop.Services.Orders
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
             //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
             bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
+            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
-                              (orderId == 0 || orderId == o.Id) && 
+                              (orderId == 0 || orderId == o.Id) &&
+                              (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
                               (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
@@ -510,7 +521,9 @@ namespace Nop.Services.Orders
                 storeId: storeId,
                 vendorId:vendorId, 
                 orderId: orderId,
-                os: os, ps: ps, 
+                paymentMethodSystemName: paymentMethodSystemName,
+                os: os, 
+                ps: ps, 
                 ss: ss,
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,

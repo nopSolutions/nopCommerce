@@ -704,6 +704,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.CheckoutAttributes.PriceAdjustment">
     <Value>{0} [{1}]</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.PaymentMethod">
+    <Value>Payment method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.PaymentMethod.Hint">
+    <Value>Search by a specific payment method.</Value>
+  </LocaleResource>
 </Language>
 '
 

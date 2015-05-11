@@ -103,6 +103,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PaymentMethodSystemName):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductId):
             </td>
             <td class="adminData">
@@ -371,6 +379,7 @@
                             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
+                            PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                             ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
                             OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val(),
                             OrderGuid: $('#@Html.FieldIdFor(model => model.OrderGuid)').val()

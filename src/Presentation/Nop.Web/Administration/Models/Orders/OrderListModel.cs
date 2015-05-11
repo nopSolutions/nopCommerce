@@ -17,6 +17,7 @@ namespace Nop.Admin.Models.Orders
             AvailableStores = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             AvailableWarehouses = new List<SelectListItem>();
+            AvailablePaymentMethods = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Orders.List.StartDate")]
@@ -37,6 +38,9 @@ namespace Nop.Admin.Models.Orders
         public int PaymentStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.List.ShippingStatus")]
         public int ShippingStatusId { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.List.PaymentMethod")]
+        public string PaymentMethodSystemName { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.Store")]
         public int StoreId { get; set; }
@@ -69,5 +73,6 @@ namespace Nop.Admin.Models.Orders
         public IList<SelectListItem> AvailableStores { get; set; }
         public IList<SelectListItem> AvailableVendors { get; set; }
         public IList<SelectListItem> AvailableWarehouses { get; set; }
+        public IList<SelectListItem> AvailablePaymentMethods { get; set; }
     }
 }
