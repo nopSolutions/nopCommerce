@@ -425,7 +425,10 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var products = discount.AppliedToProducts;
+            var products = discount
+                .AppliedToProducts
+                .Where(x => !x.Deleted)
+                .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = products.Select(x => new DiscountModel.AppliedToProductModel
@@ -567,7 +570,10 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var categories = discount.AppliedToCategories;
+            var categories = discount
+                .AppliedToCategories
+                .Where(x => !x.Deleted)
+                .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x => new DiscountModel.AppliedToCategoryModel
@@ -682,7 +688,10 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new Exception("No discount found with the specified id");
 
-            var manufacturers = discount.AppliedToManufacturers;
+            var manufacturers = discount
+                .AppliedToManufacturers
+                .Where(x => !x.Deleted)
+                .ToList();
             var gridModel = new DataSourceResult
             {
                 Data = manufacturers.Select(x => new DiscountModel.AppliedToManufacturerModel
