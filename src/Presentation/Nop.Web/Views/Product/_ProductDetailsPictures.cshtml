@@ -8,7 +8,7 @@
     <div class="picture">
         @if (Model.DefaultPictureZoomEnabled)
         {
-            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.Name" id="main-product-img-lightbox-anchor-@Model.Id">
+            <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
                 <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
             </a>
             <script type="text/javascript">
@@ -39,7 +39,7 @@
         <div class="picture-thumbs">
             @foreach (var picture in Model.PictureModels)
             {
-                <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@Model.Name">
+                <a class="thumb-popup-link" href="@picture.FullSizeImageUrl" title="@picture.Title">
                     <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                 </a>
             }
