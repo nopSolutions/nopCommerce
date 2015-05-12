@@ -12174,6 +12174,21 @@
   <LocaleResource Name="Media.Category.ImageLinkTitleFormat">
     <Value>Show products in category {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Loading">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Close">
+    <Value>Close (Esc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Previous">
+    <Value>Previous (Left arrow key)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Next">
+    <Value>Next (Right arrow key)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Counter">
+    <Value>%curr% of %total%</Value>
+  </LocaleResource>
   <LocaleResource Name="Media.Manufacturer.ImageAlternateTextFormat">
     <Value>Picture for manufacturer {0}</Value>
   </LocaleResource>

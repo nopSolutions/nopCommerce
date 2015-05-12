@@ -710,6 +710,21 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.PaymentMethod.Hint">
     <Value>Search by a specific payment method.</Value>
   </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Loading">
+    <Value>Loading...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Close">
+    <Value>Close (Esc)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Previous">
+    <Value>Previous (Left arrow key)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Next">
+    <Value>Next (Right arrow key)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.MagnificPopup.Counter">
+    <Value>%curr% of %total%</Value>
+  </LocaleResource>
 </Language>
 '
 
