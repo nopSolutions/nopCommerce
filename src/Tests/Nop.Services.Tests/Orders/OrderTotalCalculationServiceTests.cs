@@ -43,6 +43,7 @@ namespace Nop.Services.Tests.Orders
         private TaxSettings _taxSettings;
         private RewardPointsSettings _rewardPointsSettings;
         private ICategoryService _categoryService;
+        private IManufacturerService _manufacturerService;
         private IProductAttributeParser _productAttributeParser;
         private IPriceCalculationService _priceCalcService;
         private IOrderTotalCalculationService _orderTotalCalcService;
@@ -79,13 +80,15 @@ namespace Nop.Services.Tests.Orders
 
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
+            _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
             _catalogSettings = new CatalogSettings();
 
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
-                _discountService, _categoryService, _productAttributeParser,
+                _discountService, _categoryService, 
+                _manufacturerService, _productAttributeParser,
                 _productService, cacheManager, 
                 _shoppingCartSettings, _catalogSettings);
 
@@ -192,6 +195,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -252,6 +256,7 @@ namespace Nop.Services.Tests.Orders
             cart.ForEach(sci => sci.CustomerId = customer.Id);
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -323,6 +328,7 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -395,6 +401,7 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -955,6 +962,7 @@ namespace Nop.Services.Tests.Orders
                             });
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             //56 - items, 10 - shipping (fixed), 20 - payment fee
 
@@ -1056,6 +1064,7 @@ namespace Nop.Services.Tests.Orders
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -1132,6 +1141,7 @@ namespace Nop.Services.Tests.Orders
             _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -1219,6 +1229,7 @@ namespace Nop.Services.Tests.Orders
 
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             decimal discountAmount;
             Discount appliedDiscount;
@@ -1297,6 +1308,7 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
 
             _genericAttributeService.Expect(x => x.GetAttributesForEntity(customer.Id, "Customer"))

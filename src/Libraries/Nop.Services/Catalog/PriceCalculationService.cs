@@ -24,6 +24,7 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IDiscountService _discountService;
         private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductService _productService;
         private readonly ICacheManager _cacheManager;
@@ -38,6 +39,7 @@ namespace Nop.Services.Catalog
             IStoreContext storeContext,
             IDiscountService discountService, 
             ICategoryService categoryService,
+            IManufacturerService manufacturerService,
             IProductAttributeParser productAttributeParser, 
             IProductService productService,
             ICacheManager cacheManager,
@@ -48,6 +50,7 @@ namespace Nop.Services.Catalog
             this._storeContext = storeContext;
             this._discountService = discountService;
             this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
             this._productAttributeParser = productAttributeParser;
             this._productService = productService;
             this._cacheManager = cacheManager;
@@ -111,6 +114,29 @@ namespace Nop.Services.Catalog
                         {
                             if (_discountService.IsDiscountValid(discount, customer) &&
                                 discount.DiscountType == DiscountType.AssignedToCategories &&
+                                !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
+                        }
+                    }
+                }
+            }
+
+            //performance optimization
+            //load all manufacturer discounts just to ensure that we have at least one
+            if (_discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers).Any())
+            {
+                var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id);
+                foreach (var productManufacturer in productManufacturers)
+                {
+                    var manufacturer = productManufacturer.Manufacturer;
+                    if (manufacturer.HasDiscountsApplied)
+                    {
+                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                        var manufacturerDiscounts = manufacturer.AppliedDiscounts;
+                        foreach (var discount in manufacturerDiscounts)
+                        {
+                            if (_discountService.IsDiscountValid(discount, customer) &&
+                                discount.DiscountType == DiscountType.AssignedToManufacturers &&
                                 !allowedDiscounts.ContainsDiscount(discount))
                                 allowedDiscounts.Add(discount);
                         }

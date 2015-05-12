@@ -725,6 +725,27 @@ set @resources='
   <LocaleResource Name="Media.MagnificPopup.Counter">
     <Value>%curr% of %total%</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToManufacturers">
+    <Value>Assigned to manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers">
+    <Value>Applied to manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add manufacturers for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.AddNew">
+    <Value>Add a new manufacturer</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1930,3 +1951,62 @@ BEGIN
 END
 GO
 
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Manufacturer]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [Manufacturer]
+	ADD [HasDiscountsApplied] bit NULL
+END
+GO
+
+UPDATE [Manufacturer]
+SET [HasDiscountsApplied] = 0
+WHERE [HasDiscountsApplied] IS NULL
+GO
+
+ALTER TABLE [Manufacturer] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
+GO
+
+
+
+--New table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Discount_AppliedToManufacturers]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Discount_AppliedToManufacturers](
+	[Discount_Id] [int] NOT NULL,
+	[Manufacturer_Id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Discount_Id] ASC,
+	[Manufacturer_Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+)
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'Discount_AppliedToManufacturers_Source'
+           AND parent_object_id = Object_id('Discount_AppliedToManufacturers')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Discount_AppliedToManufacturers
+DROP CONSTRAINT Discount_AppliedToManufacturers_Source
+GO
+ALTER TABLE [dbo].[Discount_AppliedToManufacturers]  WITH CHECK ADD  CONSTRAINT [Discount_AppliedToManufacturers_Source] FOREIGN KEY([Discount_Id])
+REFERENCES [dbo].[Discount] ([Id])
+ON DELETE CASCADE
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'Discount_AppliedToManufacturers_Target'
+           AND parent_object_id = Object_id('Discount_AppliedToManufacturers')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Discount_AppliedToManufacturers
+DROP CONSTRAINT Discount_AppliedToManufacturers_Target
+GO
+ALTER TABLE [dbo].[Discount_AppliedToManufacturers]  WITH CHECK ADD  CONSTRAINT [Discount_AppliedToManufacturers_Target] FOREIGN KEY([Manufacturer_Id])
+REFERENCES [dbo].[Manufacturer] ([Id])
+ON DELETE CASCADE
+GO

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Customers;
+using Nop.Admin.Models.Discounts;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
@@ -93,6 +94,11 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AvailableStores")]
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
+
+
+        //discounts
+        public List<DiscountModel> AvailableDiscounts { get; set; }
+        public int[] SelectedDiscountIds { get; set; }
 
 
         #region Nested classes

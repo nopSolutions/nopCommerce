@@ -52,6 +52,7 @@ namespace Nop.Services.Tests.Orders
         private TaxSettings _taxSettings;
         private RewardPointsSettings _rewardPointsSettings;
         private ICategoryService _categoryService;
+        private IManufacturerService _manufacturerService;
         private IProductAttributeParser _productAttributeParser;
         private IPriceCalculationService _priceCalcService;
         private IOrderTotalCalculationService _orderTotalCalcService;
@@ -115,9 +116,11 @@ namespace Nop.Services.Tests.Orders
             //price calculation service
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
+            _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
+
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _priceCalcService = new PriceCalculationService(_workContext, _storeContext,
-                _discountService, _categoryService, 
+                _discountService, _categoryService, _manufacturerService,
                 _productAttributeParser, _productService, 
                 cacheManager, _shoppingCartSettings, _catalogSettings);
 

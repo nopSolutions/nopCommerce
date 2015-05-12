@@ -237,6 +237,19 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        public virtual void UpdateHasDiscountsApplied(Manufacturer manufacturer)
+        {
+            if (manufacturer == null)
+                throw new ArgumentNullException("manufacturer");
+
+            manufacturer.HasDiscountsApplied = manufacturer.AppliedDiscounts.Count > 0;
+            UpdateManufacturer(manufacturer);
+        }
+
+        /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>

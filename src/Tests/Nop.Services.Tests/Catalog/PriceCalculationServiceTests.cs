@@ -22,6 +22,7 @@ namespace Nop.Services.Tests.Catalog
         private IStoreContext _storeContext;
         private IDiscountService _discountService;
         private ICategoryService _categoryService;
+        private IManufacturerService _manufacturerService;
         private IProductAttributeParser _productAttributeParser;
         private IProductService _productService;
         private IPriceCalculationService _priceCalcService;
@@ -42,6 +43,7 @@ namespace Nop.Services.Tests.Catalog
 
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
+            _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
             _productService = MockRepository.GenerateMock<IProductService>();
 
 
@@ -56,6 +58,7 @@ namespace Nop.Services.Tests.Catalog
                 _storeContext, 
                 _discountService,
                 _categoryService,
+                _manufacturerService,
                 _productAttributeParser,
                 _productService,
                 _cacheManager,
@@ -236,6 +239,7 @@ namespace Nop.Services.Tests.Catalog
             product.HasDiscountsApplied = true;
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             _priceCalcService.GetFinalPrice(product, customer, 0, true, 1).ShouldEqual(9.34M);
         }
@@ -253,9 +257,10 @@ namespace Nop.Services.Tests.Catalog
                 SpecialPriceEndDateTimeUtc= DateTime.UtcNow.AddDays(1),
                 CustomerEntersPrice = false,
                 Published = true,
-            }; 
-            
+            };
+
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             //customer
             var customer = new Customer();
@@ -297,6 +302,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             _priceCalcService.GetUnitPrice(sci1).ShouldEqual(12.34);
 
@@ -327,6 +333,7 @@ namespace Nop.Services.Tests.Catalog
             };
 
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
+            _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 
             _priceCalcService.GetSubTotal(sci1).ShouldEqual(24.68);
 

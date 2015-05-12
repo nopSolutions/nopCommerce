@@ -5,8 +5,10 @@ using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -39,6 +41,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IExportManager _exportManager;
+        private readonly IDiscountService _discountService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly IAclService _aclService; 
@@ -62,6 +65,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService, 
             IExportManager exportManager,
+            IDiscountService discountService,
             ICustomerActivityService customerActivityService, 
             IVendorService vendorService,
             IAclService aclService,
@@ -81,6 +85,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
             this._exportManager = exportManager;
+            this._discountService = discountService;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
             this._aclService = aclService;
@@ -150,6 +155,23 @@ namespace Nop.Admin.Controllers
                     Text = template.Name,
                     Value = template.Id.ToString()
                 });
+            }
+        }
+
+        [NonAction]
+        protected virtual void PrepareDiscountModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableDiscounts = _discountService
+                .GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true)
+                .Select(d => d.ToModel())
+                .ToList();
+
+            if (!excludeProperties && manufacturer != null)
+            {
+                model.SelectedDiscountIds = manufacturer.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
         }
 
@@ -286,6 +308,8 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //templates
             PrepareTemplatesModel(model);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, false);
             //Stores
@@ -317,6 +341,16 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
                 //locales
                 UpdateLocales(manufacturer, model);
+                //discounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                        manufacturer.AppliedDiscounts.Add(discount);
+                }
+                _manufacturerService.UpdateManufacturer(manufacturer);
+                //update "HasDiscountsApplied" property
+                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
                 //ACL (customer roles)
@@ -334,6 +368,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
+            //discounts
+            PrepareDiscountModel(model, null, true);
             //ACL
             PrepareAclModel(model, null, true);
             //Stores
@@ -365,6 +401,8 @@ namespace Nop.Admin.Controllers
             });
             //templates
             PrepareTemplatesModel(model);
+            //discounts
+            PrepareDiscountModel(model, manufacturer, false);
             //ACL
             PrepareAclModel(model, manufacturer, false);
             //Stores
@@ -395,6 +433,26 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
                 //locales
                 UpdateLocales(manufacturer, model);
+                //discounts
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers, showHidden: true);
+                foreach (var discount in allDiscounts)
+                {
+                    if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
+                    {
+                        //new discount
+                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            manufacturer.AppliedDiscounts.Add(discount);
+                    }
+                    else
+                    {
+                        //remove discount
+                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                            manufacturer.AppliedDiscounts.Remove(discount);
+                    }
+                }
+                _manufacturerService.UpdateManufacturer(manufacturer);
+                //update "HasDiscountsApplied" property
+                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
                 {
@@ -428,6 +486,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
+            //discounts
+            PrepareDiscountModel(model, manufacturer, true);
             //ACL
             PrepareAclModel(model, manufacturer, true);
             //Stores

@@ -266,6 +266,17 @@ namespace Nop.Admin.Controllers
                     foreach (var category in categories)
                         _categoryService.UpdateHasDiscountsApplied(category);
                 }
+                if (prevDiscountType == DiscountType.AssignedToManufacturers
+                    && discount.DiscountType != DiscountType.AssignedToManufacturers)
+                {
+                    //applied to manufacturers
+                    var manufacturers = discount.AppliedToManufacturers.ToList();
+                    discount.AppliedToManufacturers.Clear();
+                    _discountService.UpdateDiscount(discount);
+                    //update "HasDiscountsApplied" property
+                    foreach (var manufacturer in manufacturers)
+                        _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
+                }
                 if (prevDiscountType == DiscountType.AssignedToSkus
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
@@ -312,6 +323,8 @@ namespace Nop.Admin.Controllers
 
             //applied to categories
             var categories = discount.AppliedToCategories.ToList();
+            //applied to manufacturers
+            var manufacturers = discount.AppliedToManufacturers.ToList();
             //applied to products
             var products = discount.AppliedToProducts.ToList();
 
@@ -320,6 +333,8 @@ namespace Nop.Admin.Controllers
             //update "HasDiscountsApplied" properties
             foreach (var category in categories)
                 _categoryService.UpdateHasDiscountsApplied(category);
+            foreach (var manufacturer in manufacturers)
+                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
             foreach (var p in products)
                 _productService.UpdateHasDiscountsApplied(p);
 
@@ -643,6 +658,116 @@ namespace Nop.Admin.Controllers
 
                         _categoryService.UpdateCategory(category);
                         _categoryService.UpdateHasDiscountsApplied(category);
+                    }
+                }
+            }
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+            return View(model);
+        }
+
+        #endregion
+
+        #region Applied to manufacturers
+
+        [HttpPost]
+        public ActionResult ManufacturerList(DataSourceRequest command, int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var manufacturers = discount.AppliedToManufacturers;
+            var gridModel = new DataSourceResult
+            {
+                Data = manufacturers.Select(x => new DiscountModel.AppliedToManufacturerModel
+                {
+                    ManufacturerId = x.Id,
+                    ManufacturerName = x.Name
+                }),
+                Total = manufacturers.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        public ActionResult ManufacturerDelete(int discountId, int manufacturerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(discountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
+            if (manufacturer == null)
+                throw new Exception("No manufacturer found with the specified id");
+
+            //remove discount
+            if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) > 0)
+                manufacturer.AppliedDiscounts.Remove(discount);
+
+            _manufacturerService.UpdateManufacturer(manufacturer);
+            _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
+
+            return new NullJsonResult();
+        }
+
+        public ActionResult ManufacturerAddPopup(int discountId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var model = new DiscountModel.AddManufacturerToDiscountModel();
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ManufacturerAddPopupList(DataSourceRequest command, DiscountModel.AddManufacturerToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
+                command.Page - 1, command.PageSize, true);
+            var gridModel = new DataSourceResult
+            {
+                Data = manufacturers.Select(x => x.ToModel()),
+                Total = manufacturers.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        [FormValueRequired("save")]
+        public ActionResult ManufacturerAddPopup(string btnId, string formId, DiscountModel.AddManufacturerToDiscountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
+                return AccessDeniedView();
+
+            var discount = _discountService.GetDiscountById(model.DiscountId);
+            if (discount == null)
+                throw new Exception("No discount found with the specified id");
+
+            if (model.SelectedManufacturerIds != null)
+            {
+                foreach (int id in model.SelectedManufacturerIds)
+                {
+                    var manufacturer = _manufacturerService.GetManufacturerById(id);
+                    if (manufacturer != null)
+                    {
+                        if (manufacturer.AppliedDiscounts.Count(d => d.Id == discount.Id) == 0)
+                            manufacturer.AppliedDiscounts.Add(discount);
+
+                        _manufacturerService.UpdateManufacturer(manufacturer);
+                        _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                     }
                 }
             }

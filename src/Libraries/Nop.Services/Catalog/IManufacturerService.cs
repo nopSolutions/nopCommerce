@@ -48,6 +48,12 @@ namespace Nop.Services.Catalog
         void UpdateManufacturer(Manufacturer manufacturer);
 
         /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        void UpdateHasDiscountsApplied(Manufacturer manufacturer);
+
+        /// <summary>
         /// Deletes a product manufacturer mapping
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>

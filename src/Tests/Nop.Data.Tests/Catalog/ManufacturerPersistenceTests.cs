@@ -24,6 +24,7 @@ namespace Nop.Data.Tests.Catalog
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "4, 2, 8, 12",
                 PriceRanges = "1-3;",
+                HasDiscountsApplied = true,
                 Published = true,
                 SubjectToAcl = true,
                 LimitedToStores = true, 
@@ -45,6 +46,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.AllowCustomersToSelectPageSize.ShouldEqual(true);
             fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
             fromDb.PriceRanges.ShouldEqual("1-3;");
+            fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.SubjectToAcl.ShouldEqual(true);
             fromDb.LimitedToStores.ShouldEqual(true);

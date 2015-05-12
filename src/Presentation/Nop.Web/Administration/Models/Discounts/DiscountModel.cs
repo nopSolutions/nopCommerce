@@ -120,6 +120,25 @@ namespace Nop.Admin.Models.Discounts
             public int[] SelectedCategoryIds { get; set; }
         }
 
+
+        public partial class AppliedToManufacturerModel : BaseNopModel
+        {
+            public int ManufacturerId { get; set; }
+
+            public string ManufacturerName { get; set; }
+        }
+        public partial class AddManufacturerToDiscountModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Catalog.Manufacturers.List.SearchManufacturerName")]
+            [AllowHtml]
+            public string SearchManufacturerName { get; set; }
+
+            public int DiscountId { get; set; }
+
+            public int[] SelectedManufacturerIds { get; set; }
+        }
+
+
         public partial class AppliedToProductModel : BaseNopModel
         {
             public int ProductId { get; set; }

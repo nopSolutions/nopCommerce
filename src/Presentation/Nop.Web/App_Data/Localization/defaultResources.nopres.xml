@@ -1800,6 +1800,12 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Deleted">
     <Value>The manufacturer has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts">
+    <Value>Discounts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Discounts.NoDiscounts">
+    <Value>No discounts available. Create at least one discount before mapping.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.EditManufacturerDetails">
     <Value>Edit manufacturer details</Value>
   </LocaleResource>
@@ -9507,6 +9513,18 @@
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToCategories.AddNew">
     <Value>Add a new category</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers">
+    <Value>Applied to manufacturers</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit">
+    <Value>You need to save the discount before you can add manufacturers for this discount page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer">
+    <Value>Manufacturer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.AddNew">
+    <Value>Add a new manufacturer</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToProducts">
     <Value>Applied to products</Value>
   </LocaleResource>
@@ -11579,6 +11597,9 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToCategories">
     <Value>Assigned to categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToManufacturers">
+    <Value>Assigned to manufacturers</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Discounts.DiscountType.AssignedToOrderSubTotal">
     <Value>Assigned to order subtotal</Value>

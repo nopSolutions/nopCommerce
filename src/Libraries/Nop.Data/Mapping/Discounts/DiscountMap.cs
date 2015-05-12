@@ -24,6 +24,10 @@ namespace Nop.Data.Mapping.Discounts
             this.HasMany(dr => dr.AppliedToCategories)
                 .WithMany(c => c.AppliedDiscounts)
                 .Map(m => m.ToTable("Discount_AppliedToCategories"));
+
+            this.HasMany(dr => dr.AppliedToManufacturers)
+                .WithMany(c => c.AppliedDiscounts)
+                .Map(m => m.ToTable("Discount_AppliedToManufacturers"));
             
             this.HasMany(dr => dr.AppliedToProducts)
                 .WithMany(p => p.AppliedDiscounts)

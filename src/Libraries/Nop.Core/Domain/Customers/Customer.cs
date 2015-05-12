@@ -85,7 +85,7 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether this customer has some products in the shopping cart
         /// <remarks>The same as if we run this.ShoppingCartItems.Count > 0
         /// We use this property for performance optimization:
-        /// if this property is set to false, then we do not need to load "ShoppingCartItems" navifation property for each page load
+        /// if this property is set to false, then we do not need to load "ShoppingCartItems" navigation property for each page load
         /// It's used only in a couple of places in the presenation layer
         /// </remarks>
         /// </summary>

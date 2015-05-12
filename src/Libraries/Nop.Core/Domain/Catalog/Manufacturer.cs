@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
@@ -11,6 +13,8 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported, IStoreMappingSupported
     {
+        private ICollection<Discount> _appliedDiscounts;
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -65,7 +69,16 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available price ranges
         /// </summary>
         public string PriceRanges { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this manufacturer has discounts applied
+        /// <remarks>The same as if we run manufacturer.AppliedDiscounts.Count > 0
+        /// We use this property for performance optimization:
+        /// if this property is set to false, then we do not need to load Applied Discounts navigation property
+        /// </remarks>
+        /// </summary>
+        public bool HasDiscountsApplied { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the entity is subject to ACL
  	    /// </summary>
@@ -100,5 +113,14 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collection of applied discounts
+        /// </summary>
+        public virtual ICollection<Discount> AppliedDiscounts
+        {
+            get { return _appliedDiscounts ?? (_appliedDiscounts = new List<Discount>()); }
+            protected set { _appliedDiscounts = value; }
+        }
     }
 }

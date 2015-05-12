@@ -89,7 +89,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether this category has discounts applied
         /// <remarks>The same as if we run category.AppliedDiscounts.Count > 0
         /// We use this property for performance optimization:
-        /// if this property is set to false, then we do not need to load Applied Discounts navifation property
+        /// if this property is set to false, then we do not need to load Applied Discounts navigation property
         /// </remarks>
         /// </summary>
         public bool HasDiscountsApplied { get; set; }

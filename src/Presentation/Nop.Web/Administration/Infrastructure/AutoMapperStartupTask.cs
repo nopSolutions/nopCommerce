@@ -203,6 +203,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<Manufacturer, ManufacturerModel>()
                 .ForMember(dest => dest.AvailableManufacturerTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
                 .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
@@ -210,9 +212,11 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ManufacturerModel, Manufacturer>()
+                .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.Deleted, mo => mo.Ignore());
+                .ForMember(dest => dest.Deleted, mo => mo.Ignore())
+                .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore()); ;
 
             //vendors
             Mapper.CreateMap<Vendor, VendorModel>()
@@ -549,6 +553,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedToCategories, mo => mo.Ignore())
+                .ForMember(dest => dest.AppliedToManufacturers, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedToProducts, mo => mo.Ignore());
             //gift cards
             Mapper.CreateMap<GiftCard, GiftCardModel>()

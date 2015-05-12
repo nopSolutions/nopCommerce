@@ -24,9 +24,12 @@
         <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex()) id="tab-applied-to-categories">
             @T("Admin.Promotions.Discounts.AppliedToCategories")
         </li>
+        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex()) id="tab-applied-to-manufacturers">
+            @T("Admin.Promotions.Discounts.AppliedToManufacturers")
+        </li>
         @if (Model.Id > 0)
         {
-            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
                 @T("Admin.Promotions.Discounts.History")
             </li>
         }
@@ -42,6 +45,9 @@
     </div>
     <div>
         @TabAppliedToCategories()
+    </div>
+    <div>
+        @TabAppliedToManufacturers()
     </div>
     @if (Model.Id > 0)
     {
@@ -100,16 +106,24 @@
                 var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
                 if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
                     $('#tab-applied-to-categories').show();
+                $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').show();
                 }
-                else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
+                else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToManufacturers).ToString())) {
                     $('#tab-applied-to-categories').hide();
+                    $('#tab-applied-to-manufacturers').show();
+                    $('#tab-applied-to-products').hide();
+                    $('#pnlMaximumDiscountedQuantity').show();
+                } else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
+                    $('#tab-applied-to-categories').hide();
+                    $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').show();
                     $('#pnlMaximumDiscountedQuantity').show();
                 }
                 else {
                     $('#tab-applied-to-categories').hide();
+                    $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').hide();
                 }
@@ -674,6 +688,112 @@
     else
     {
         @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
+    }
+}
+@helper TabAppliedToManufacturers()
+{
+    if (Model.Id > 0)
+    {
+        <table class="adminContent">
+            <tr>
+                <td>
+
+                    <div id="manufacturers-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#manufacturers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new { discountId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new { discountId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ManufacturerId",
+                                            fields: {
+                                                ManufacturerName: {editable: false, type: "string" },
+                                                ManufacturerId: {editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "ManufacturerName",
+                                    title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
+                                },  {
+                                    field: "ManufacturerId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 150,
+                                    template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [{
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }],
+                                    width: 150
+                                }]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+            <tr>
+                <td width="100%">
+                    <input type="submit" id="btnAddNewManufacturer" value="@T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new { discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form" }))', 800, 800, true); return false;" class="k-button" />
+                    <input type="submit" id="btnRefreshManufacturers" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshManufacturers').click(function () {
+                                //refresh grid
+                                var grid = $("#manufacturers-grid").data('kendoGrid');
+                                grid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
     }
 }
 @helper TabHistory()
