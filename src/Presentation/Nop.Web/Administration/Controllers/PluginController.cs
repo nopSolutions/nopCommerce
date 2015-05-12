@@ -23,6 +23,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 
 namespace Nop.Admin.Controllers
@@ -256,13 +257,22 @@ namespace Nop.Admin.Controllers
 	        return Json(gridModel);
 	    }
 
-	    public ActionResult Install(string systemName)
+        [HttpPost, ActionName("List")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "install-plugin-link-")]
+        [ValidateInput(false)]
+        public ActionResult Install(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
             {
+                //get plugin system name
+                string systemName = null;
+                foreach (var formValue in form.AllKeys)
+                    if (formValue.StartsWith("install-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
+                        systemName = formValue.Substring("install-plugin-link-".Length);
+
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id
@@ -286,13 +296,22 @@ namespace Nop.Admin.Controllers
              
             return RedirectToAction("List");
         }
-        public ActionResult Uninstall(string systemName)
+        [HttpPost, ActionName("List")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "uninstall-plugin-link-")]
+        [ValidateInput(false)]
+        public ActionResult Uninstall(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
             try
             {
+                //get plugin system name
+                string systemName = null;
+                foreach (var formValue in form.AllKeys)
+                    if (formValue.StartsWith("uninstall-plugin-link-", StringComparison.InvariantCultureIgnoreCase))
+                        systemName = formValue.Substring("uninstall-plugin-link-".Length);
+
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, LoadPluginsMode.All);
                 if (pluginDescriptor == null)
                     //No plugin found with the specified id

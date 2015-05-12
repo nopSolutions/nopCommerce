@@ -17,14 +17,18 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
+            //install a plugin
             $("#plugins-grid").on("click", ".install-plugin-link", function (e) {
                 $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Install.Progress").Text))');
+                return true;
             });
 
+            //uninstall a plugin
             $("#plugins-grid").on("click", ".uninstall-plugin-link", function (e) {
                 $("html, body").animate({ scrollTop: 0 }, 400);
                 showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Configuration.Plugins.Fields.Uninstall.Progress").Text))');
+                return true;
             });
         });
     </script>
@@ -133,7 +137,7 @@
                                 }, {
                                     field: "Installed",
                                     title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
-                                    template: '# if(Installed) {# <a href="@Url.Content("~/Admin/Plugin/Uninstall/")?systemName=#=SystemName#" class="plugin-button uninstall-plugin-link">@T("Admin.Configuration.Plugins.Fields.Uninstall")</a> #} else {#  <a href="@Url.Content("~/Admin/Plugin/Install/")?systemName=#=SystemName#" class="plugin-button install-plugin-link">@T("Admin.Configuration.Plugins.Fields.Install")</a> #} #',
+                                    template: '# if(Installed) {# <input type="submit" name="uninstall-plugin-link-#=SystemName#" class="plugin-button uninstall-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Uninstall")" /> #} else {#  <input type="submit" name="install-plugin-link-#=SystemName#" class="plugin-button install-plugin-link" value="@T("Admin.Configuration.Plugins.Fields.Install")" /> #} #',
                                     headerAttributes: {style: "text-align:center" },
                                     attributes: { style: "text-align:center" }
                                 }

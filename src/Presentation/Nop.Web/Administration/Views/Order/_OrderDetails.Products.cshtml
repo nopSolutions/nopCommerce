@@ -343,8 +343,8 @@
                             {
                                 <td align="center" style="width: 15%;">
                                     <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="adminButton" style="display:none;" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="adminButton" style="display:none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); " />
                                     <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)    (false);return false; " id="btnCancelOrderItem@(item.Id)" class="adminButton" style="display:none;" />
                                 </td>
                             }
