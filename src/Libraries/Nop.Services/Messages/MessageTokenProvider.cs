@@ -8,6 +8,7 @@ using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
@@ -54,6 +55,7 @@ namespace Nop.Services.Messages
         private readonly MessageTemplatesSettings _templatesSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly CurrencySettings _currencySettings;
 
         private readonly IEventPublisher _eventPublisher;
 
@@ -76,7 +78,8 @@ namespace Nop.Services.Messages
             IAddressAttributeFormatter addressAttributeFormatter,
             MessageTemplatesSettings templatesSettings,
             CatalogSettings catalogSettings,
-            TaxSettings taxSettings, 
+            TaxSettings taxSettings,
+            CurrencySettings currencySettings,
             IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
@@ -96,6 +99,7 @@ namespace Nop.Services.Messages
             this._templatesSettings = templatesSettings;
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
+            this._currencySettings = currencySettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -618,6 +622,22 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
+        public virtual void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount)
+        {
+            //should we convert it to customer currency?
+            //most probably, no. It can cause some rounding or legal issues
+            //furthermore, exchange rate could be changed
+            //so let's display it the primary store currency
+
+            var primaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            var refundedAmountStr = _priceFormatter.FormatPrice(refundedAmount, true, primaryStoreCurrencyCode, false, _workContext.WorkingLanguage);
+
+            tokens.Add(new Token("Order.AmountRefunded", refundedAmountStr));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(order, tokens);
+        }
+
         public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
         {
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
@@ -910,6 +930,7 @@ namespace Nop.Services.Messages
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
                 "%Order.NewNoteText%",
+                "%Order.AmountRefunded%",
                 "%RecurringPayment.ID%",
                 "%Shipment.ShipmentNumber%",
                 "%Shipment.TrackingNumber%",

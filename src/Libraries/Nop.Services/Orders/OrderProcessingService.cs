@@ -2284,6 +2284,19 @@ namespace Nop.Services.Orders
                     //check order status
                     CheckOrderStatus(order);
 
+                    //notifications
+                    var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
+                    if (orderRefundedCustomerNotificationQueuedEmailId > 0)
+                    {
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+                    }
+
                     //raise event       
                     _eventPublisher.Publish(new OrderRefundedEvent(order, request.AmountToRefund));
                 }
@@ -2380,6 +2393,19 @@ namespace Nop.Services.Orders
             //check order status
             CheckOrderStatus(order);
 
+            //notifications
+            var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+            if (orderRefundedCustomerNotificationQueuedEmailId > 0)
+            {
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+            }
+
             //raise event       
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }
@@ -2463,7 +2489,20 @@ namespace Nop.Services.Orders
 
                     //check order status
                     CheckOrderStatus(order);
-                    
+
+                    //notifications
+                    var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+                    if (orderRefundedCustomerNotificationQueuedEmailId > 0)
+                    {
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+                    }
+
                     //raise event       
                     _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
                 }
@@ -2558,7 +2597,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
-                Note = string.Format("Order has been marked as partially refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
+                Note = string.Format("Order has been marked as partially refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
@@ -2567,6 +2606,18 @@ namespace Nop.Services.Orders
             //check order status
             CheckOrderStatus(order);
 
+            //notifications
+            var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
+            if (orderRefundedCustomerNotificationQueuedEmailId > 0)
+            {
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = string.Format("\"Order refunded\" email (to customer) has been queued. Queued email identifier: {0}.", orderRefundedCustomerNotificationQueuedEmailId),
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+            }
             //raise event       
             _eventPublisher.Publish(new OrderRefundedEvent(order, amountToRefund));
         }

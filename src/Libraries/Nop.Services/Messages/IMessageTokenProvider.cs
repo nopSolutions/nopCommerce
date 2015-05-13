@@ -17,6 +17,8 @@ namespace Nop.Services.Messages
 
         void AddOrderTokens(IList<Token> tokens, Order order, int languageId, int vendorId = 0);
 
+        void AddOrderRefundedTokens(IList<Token> tokens, Order order, decimal refundedAmount);
+
         void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId);
 
         void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote);

@@ -143,6 +143,15 @@ namespace Nop.Services.Messages
         int SendOrderCancelledCustomerNotification(Order order, int languageId);
 
         /// <summary>
+        /// Sends an order refunded notification to a customer
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="refundedAmount">Amount refunded</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendOrderRefundedCustomerNotification(Order order, decimal refundedAmount, int languageId);
+
+        /// <summary>
         /// Sends a new order note added notification to a customer
         /// </summary>
         /// <param name="orderNote">Order note</param>
