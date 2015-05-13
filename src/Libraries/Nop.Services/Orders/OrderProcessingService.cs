@@ -2275,7 +2275,7 @@ namespace Nop.Services.Orders
                     //add a note
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("Order has been refunded. Amount = {0}", _priceFormatter.FormatPrice(request.AmountToRefund, true, false)),
+                        Note = string.Format("Order has been refunded. Amount = {0}", request.AmountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
@@ -2371,7 +2371,7 @@ namespace Nop.Services.Orders
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
-                Note = string.Format("Order has been marked as refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
+                Note = string.Format("Order has been marked as refunded. Amount = {0}", amountToRefund),
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
@@ -2455,7 +2455,7 @@ namespace Nop.Services.Orders
                     //add a note
                     order.OrderNotes.Add(new OrderNote
                     {
-                        Note = string.Format("Order has been partially refunded. Amount = {0}", _priceFormatter.FormatPrice(amountToRefund, true, false)),
+                        Note = string.Format("Order has been partially refunded. Amount = {0}", amountToRefund),
                         DisplayToCustomer = false,
                         CreatedOnUtc = DateTime.UtcNow
                     });
