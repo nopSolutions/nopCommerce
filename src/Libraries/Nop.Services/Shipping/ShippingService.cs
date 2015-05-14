@@ -16,7 +16,6 @@ using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
-using RestSharp.Extensions;
 
 namespace Nop.Services.Shipping
 {
