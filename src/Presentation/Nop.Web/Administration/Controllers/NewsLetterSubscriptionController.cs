@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Messages;
 using Nop.Core;
+using Nop.Services.Customers;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
+        private readonly ICustomerService _customerService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
@@ -32,6 +34,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IStoreService storeService,
+            ICustomerService customerService,
             IExportManager exportManager,
             IImportManager importManager)
 		{
@@ -40,6 +43,7 @@ namespace Nop.Admin.Controllers
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeService = storeService;
+            this._customerService = customerService;
             this._exportManager = exportManager;
             this._importManager = importManager;
 		}
@@ -77,6 +81,12 @@ namespace Nop.Admin.Controllers
                 Value = "2",
                 Text = _localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.List.SearchActive.NotActiveOnly")
             });
+
+            //customer roles
+            model.AvailableCustomerRoles.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var cr in _customerService.GetAllCustomerRoles(true))
+                model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
+
 			return View(model);
 		}
 
@@ -93,7 +103,8 @@ namespace Nop.Admin.Controllers
                 isActive = false;
 
             var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive, command.Page - 1, command.PageSize);
+                model.StoreId, isActive, model.CustomerRoleId,
+                command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
             {
@@ -158,7 +169,7 @@ namespace Nop.Admin.Controllers
                 isActive = false;
 
 			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive);
+                model.StoreId, isActive, model.CustomerRoleId);
 
 		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 

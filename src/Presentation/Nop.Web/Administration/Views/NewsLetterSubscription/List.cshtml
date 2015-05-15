@@ -45,6 +45,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerRoleId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("CustomerRoleId", Model.AvailableCustomerRoles)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-subscriptions" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -180,6 +188,7 @@
             var data = {
                 ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
                 StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
                 SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
             };
             addAntiForgeryToken(data);

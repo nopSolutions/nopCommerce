@@ -746,6 +746,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.AppliedToManufacturers.AddNew">
     <Value>Add a new manufacturer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
+    <Value>Search by a specific customer role.</Value>
+  </LocaleResource>
 </Language>
 '
 
