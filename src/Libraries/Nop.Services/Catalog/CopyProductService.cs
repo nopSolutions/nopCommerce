@@ -264,7 +264,7 @@ namespace Nop.Services.Catalog
             {
                 productCopy.ProductTags.Add(productTag);
             }
-            _productService.UpdateProduct(product);
+            _productService.UpdateProduct(productCopy);
 
             //product pictures
             //variable to store original and new picture identifiers
