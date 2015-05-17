@@ -261,14 +261,19 @@ namespace Nop.Web.Framework
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerLifetimeScope();
 
-            if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
-                Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
+            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            if (!databaseInstalled)
             {
-                builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
-            }
-            else
-            {
-                builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
+                //installation service
+                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
+                    Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
+                {
+                    builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
+                }
+                else
+                {
+                    builder.RegisterType<CodeFirstInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
+                }
             }
 
             builder.RegisterType<ForumService>().As<IForumService>().InstancePerLifetimeScope();
