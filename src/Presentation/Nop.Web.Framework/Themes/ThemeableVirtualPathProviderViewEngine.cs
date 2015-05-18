@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Themes
     public abstract class ThemeableVirtualPathProviderViewEngine : VirtualPathProviderViewEngine
     {
         //the original implementation can be found at http://aspnetwebstack.codeplex.com/SourceControl/latest#src/System.Web.Mvc/VirtualPathProviderViewEngine.cs
-
+        //we make some methods protected virtual because they are overridden by some plugin vendors
         #region Fields
 
         private const string CacheKeyFormat = ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}:{5}";
@@ -62,13 +62,13 @@ namespace Nop.Web.Framework.Themes
             return themeContext.WorkingThemeName;
         }
 
-        internal virtual string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
+        protected virtual string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
         {
             return String.Format(CultureInfo.InvariantCulture, CacheKeyFormat,
                                  GetType().AssemblyQualifiedName, prefix, name, controllerName, areaName, theme);
         }
 
-        internal static string AppendDisplayModeToCacheKey(string cacheKey, string displayMode)
+        protected virtual string AppendDisplayModeToCacheKey(string cacheKey, string displayMode)
         {
             return cacheKey + displayMode + ":";
         }
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.Themes
             return new ViewEngineResult(CreateView(controllerContext, viewPath, masterPath), this);
         }
 
-        private string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
+        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {
             searchedLocations = _emptyLocations;
 
@@ -193,7 +193,7 @@ namespace Nop.Web.Framework.Themes
             }
         }
 
-        private string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
+        protected virtual string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
         {
             string result = String.Empty;
             searchedLocations = new string[locations.Count];
@@ -243,7 +243,7 @@ namespace Nop.Web.Framework.Themes
             return result;
         }
 
-        private string GetPathFromSpecificName(ControllerContext controllerContext, string name, string cacheKey, ref string[] searchedLocations)
+        protected virtual string GetPathFromSpecificName(ControllerContext controllerContext, string name, string cacheKey, ref string[] searchedLocations)
         {
             string result = name;
 
@@ -257,7 +257,7 @@ namespace Nop.Web.Framework.Themes
             return result;
         }
 
-        private bool FilePathIsSupported(string virtualPath)
+        protected virtual bool FilePathIsSupported(string virtualPath)
         {
             if (FileExtensions == null)
             {
@@ -272,7 +272,7 @@ namespace Nop.Web.Framework.Themes
             }
         }
 
-        private static List<ViewLocation> GetViewLocations(string[] viewLocationFormats, string[] areaViewLocationFormats)
+        protected virtual List<ViewLocation> GetViewLocations(string[] viewLocationFormats, string[] areaViewLocationFormats)
         {
             List<ViewLocation> allLocations = new List<ViewLocation>();
 
@@ -295,7 +295,7 @@ namespace Nop.Web.Framework.Themes
             return allLocations;
         }
 
-        private static bool IsSpecificPath(string name)
+        protected virtual bool IsSpecificPath(string name)
         {
             char c = name[0];
             return (c == '~' || c == '/');
