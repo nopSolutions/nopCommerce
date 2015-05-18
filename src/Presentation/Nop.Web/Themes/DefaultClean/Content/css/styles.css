@@ -3419,6 +3419,9 @@ label, label + * {
 .payment-info .info td input[type="text"] {
 	width: 100% !important;
 }
+.payment-info .info td input[name="CardCode"] {
+	width: 65px !important;
+}
 .payment-info .info td select {
 	min-width: 70px;
 }
