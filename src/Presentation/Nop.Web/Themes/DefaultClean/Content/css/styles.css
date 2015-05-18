@@ -2007,6 +2007,7 @@ label, label + * {
 .tier-prices .item-price {
 	background-color: #f9f9f9;
 	font-size: 16px;
+    font-weight: bold;
 	color: #e4434b;
 }
 
