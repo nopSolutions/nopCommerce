@@ -196,19 +196,19 @@
     <Value>Return requests</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Action">
-    <Value>Return Action: {0}</Value>
+    <Value>Return Action:</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Comments">
     <Value>Your Comments:</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Date">
-    <Value>Date Requested: {0}</Value>
+    <Value>Date Requested:</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Item">
     <Value>Returned Item:</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Reason">
-    <Value>Return Reason: {0}</Value>
+    <Value>Return Reason:</Value>
   </LocaleResource>
   <LocaleResource Name="Account.CustomerReturnRequests.Title">
     <Value>Return #{0} - {1}</Value>
@@ -11997,9 +11997,6 @@
   <LocaleResource Name="Forum.NotifyWhenSomeonePostsInThisTopic">
     <Value>Notify me via email when someone posts in this topic</Value>
   </LocaleResource>
-  <LocaleResource Name="Forum.Options">
-    <Value>Options</Value>
-  </LocaleResource>
   <LocaleResource Name="Forum.PageTitle.ActiveDiscussions">
     <Value>Active discussions</Value>
   </LocaleResource>
@@ -12340,7 +12337,7 @@
     <Value>Click here to be informed automatically when we add new items to our site</Value>
   </LocaleResource>
   <LocaleResource Name="News.ViewAll">
-    <Value>[View News Archive]</Value>
+    <Value>View News Archive</Value>
   </LocaleResource>
   <LocaleResource Name="Newsletter.Email.Placeholder">
     <Value>Enter your email here...</Value>
@@ -13149,9 +13146,6 @@
   <LocaleResource Name="PrivateMessages.View.From">
     <Value>From:</Value>
   </LocaleResource>
-  <LocaleResource Name="PrivateMessages.View.Message">
-    <Value>Message:</Value>
-  </LocaleResource>
   <LocaleResource Name="PrivateMessages.View.ReplyButton">
     <Value>Reply</Value>
   </LocaleResource>
@@ -13888,7 +13882,10 @@
     <Value>Calculated during checkout</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo">
-    <Value>Gift Card ({0})</Value>
+    <Value>Gift Card</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo.Code">
+    <Value>({0})</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo.Remaining">
     <Value>{0} remaining</Value>

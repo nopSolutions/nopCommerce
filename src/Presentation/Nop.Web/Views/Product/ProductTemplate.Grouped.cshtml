@@ -127,13 +127,6 @@
                                     @Html.Partial("_SKU_Man_GTIN_Ven", variant)
                                     <!--delivery-->
                                     @Html.Partial("_DeliveryInfo", variant)
-                                    <!--wishlist-->
-                                    @{
-                                        var dataDictAddToWishlist = new ViewDataDictionary();
-                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
-                                        @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
-                                    }
-
                                     <!--sample download-->
                                     @Html.Partial("_DownloadSample", variant)
                                     <!--attributes-->
@@ -164,6 +157,12 @@
                                         var dataDictAddToCart = new ViewDataDictionary();
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToCart", variant.AddToCart, dataDictAddToCart)
+                                    }
+                                    <!--wishlist-->
+                                    @{
+                                        var dataDictAddToWishlist = new ViewDataDictionary();
+                                        dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
+                                        @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }
                                     <!--price breaks-->
                                     @Html.Partial("_ProductTierPrices", variant.TierPrices)

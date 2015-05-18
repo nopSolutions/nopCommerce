@@ -24,26 +24,26 @@
                 </div>
                 <ul class="details">
                     <li class="product">
-                        <label>@T("Account.CustomerReturnRequests.Item"):</label>
+                        <label>@T("Account.CustomerReturnRequests.Item")</label>
                         <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                         <span>x @item.Quantity</span>
                     </li>
                     <li class="reason">
-                        <label>@T("Account.CustomerReturnRequests.Reason"):</label>
+                        <label>@T("Account.CustomerReturnRequests.Reason")</label>
                         <span>@item.ReturnReason</span>
                     </li>
                     <li class="action">
-                        <label>@T("Account.CustomerReturnRequests.Action"):</label>
+                        <label>@T("Account.CustomerReturnRequests.Action")</label>
                         <span>@item.ReturnAction</span>
                     </li>
                     <li class="date">
-                        <label>@T("Account.CustomerReturnRequests.Date"):</label>
+                        <label>@T("Account.CustomerReturnRequests.Date")</label>
                         <span>@item.CreatedOn.ToString()</span>
                     </li>
                     @if (!String.IsNullOrEmpty(item.Comments))
                     {
                         <li class="comments">
-                            <label>@T("Account.CustomerReturnRequests.Comments"):</label>
+                            <label>@T("Account.CustomerReturnRequests.Comments")</label>
                             <div>@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(item.Comments, false, true, false, false, false, false))</div>
                         </li>
                     }

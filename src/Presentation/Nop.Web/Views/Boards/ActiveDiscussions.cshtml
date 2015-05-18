@@ -5,11 +5,8 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
 }
-@Html.Action("ForumBreadcrumb")
-@if (!Model.ViewAllLinkEnabled)
-{
-    @Html.Partial("_SearchBox")   
-}
 <div class="page active-discussions-page">
+    @Html.Action("ForumBreadcrumb")
+    @Html.Partial("_ForumHeader")
     @Html.Partial("_ActiveTopics", Model)
 </div>

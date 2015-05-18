@@ -151,7 +151,7 @@ label, label + * {
 }
 
 .page {
-	clear: both; /* because of forum breadcrumbs */
+	min-height: 200px;
 	text-align: center;
 }
 .page-title {
@@ -249,7 +249,7 @@ label, label + * {
 	position: relative;
 	margin: 0 0 15px;
 	text-align: center;
-	white-space: nowrap; /*necessary because of "*" */
+	white-space: nowrap; /*fix for 'required' elements*/
     font-size: 0;
 }
 .inputs:after {
@@ -431,6 +431,10 @@ label, label + * {
 	white-space: nowrap;
     color: #4ab2f1;
 }
+.cart td.subtotal .discount {
+	border-top: 1px dotted #4ab2f1;
+	font-weight: bold;
+}
 
 .data-table em a {
 	font-weight: bold;
@@ -482,6 +486,15 @@ label, label + * {
 	cursor: pointer;
 }
 
+.noscript {
+    border-bottom: 1px solid #333;
+    background-color: #ff9;
+	padding: 30px 15px;
+    text-align: center;
+	line-height: 22px;
+    color: #444;
+}
+
 .ajax-loading-block-window {
 	position: fixed;
 	top: 50%;
@@ -500,7 +513,7 @@ label, label + * {
 	box-shadow: 0 0 2px rgba(0,0,0,0.15);
 	overflow: hidden;
 	background-color: #fff;
-	/*override jQuery UI styles, do not delete doubled styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	border-radius: 0;
 	padding: 0;
 	font: normal 14px Arial, Helvetica, sans-serif;
@@ -519,7 +532,7 @@ label, label + * {
 	overflow: hidden;
 	background-color: #eee;
 	padding: 10px 15px;
-	/*override jQuery UI styles, do not delete doubled styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	border-width: 0 0 1px;
 	border-radius: 0;
 	background-image: none;
@@ -531,7 +544,7 @@ label, label + * {
 	float: left;
 	font-size: 18px;
 	color: #444;
-	/*override jQuery UI styles, do not delete doubled styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	margin: 0 !important;
 }
 .ui-dialog-titlebar button {
@@ -544,7 +557,7 @@ label, label + * {
 	overflow: hidden;
 	background: url('../images/close.png') center no-repeat;
 	font-size: 0;
-	/*override jQuery UI styles, do not delete doubled styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	top: 0 !important;
 	right: 0 !important;
 	width: 42px !important;
@@ -562,36 +575,11 @@ label, label + * {
 	height: auto !important;
 	padding: 15px;
 	line-height: 20px;
-	/*override jQuery UI styles, do not delete doubled styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	background-color: #fff !important;
 	padding: 15px !important;
 	color: #777;
 }
-/*.ui-dialog-content .topic-block {
-	margin: 10px 0 0;
-}
-.ui-dialog-content .topic-block-body {
-	max-height: 200px;
-	overflow-y: scroll;
-}
-.ui-dialog-content .topic-block-body p {
-	margin: 0;
-}
-.ui-dialog-buttonset {
-	padding: 10px;
-	text-align: right;
-}
-.ui-dialog-buttonset button {
-	min-width: 60px;
-	margin-left: 5px;
-	border: 1px solid #bbb;
-	box-shadow: 0 0 1px #ddd, inset 0 0 1px #fff;
-	background-color: #eee;
-	padding: 5px;
-}
-.ui-dialog-buttonset button:hover {
-	background-color: #f6f6f6;
-}*/
 
 .eu-cookie-bar-notification {
     position: fixed;
@@ -631,17 +619,6 @@ label, label + * {
 	text-decoration: underline;
 }
 
-.noscript{
-    border:1px solid #ddd;
-    border-width:0 0 1px;
-    background:#ffff90;
-    font-size:12px;
-    line-height:1.25;
-    text-align:center;
-    color:#2f2f2f;
-}
-
-
 
 /*********** HEADER ***********/
 
@@ -652,12 +629,22 @@ label, label + * {
 	text-align: center;
 	color: #eee;
 }
-.admin-header-links a {
-	display: block;
+.admin-header-links * {
+	display: inline-block;
 	margin: 0 10px;
 	line-height: 35px;
 	font-size: 12px;
 	font-weight: bold;
+}
+.admin-header-links .impersonate {
+	display: inline-block;
+}
+.admin-header-links .impersonate a {
+	background-color: #555;
+	padding: 0 15px;
+}
+.admin-header-links .impersonate a:hover {
+	background-color: #666;
 }
 
 .header {
@@ -679,6 +666,7 @@ label, label + * {
 	display: inline-block;
 	width: 40%;
 	margin: 10px 5px;
+	vertical-align: middle;
 }
 .header-selectors-wrapper select {
 	width: 100%;
@@ -689,12 +677,13 @@ label, label + * {
 }
 .language-list li {
 	display: inline-block; 
-	margin: 0 1px; 
+	margin: 0 1px;
+	vertical-align: middle;
 }
 .language-list a { 
 	display: block;
 	position: relative;
-	width: 32px;
+	width: 24px;
 	height: 32px;
 	line-height: 0;
 }
@@ -792,13 +781,13 @@ label, label + * {
 	display: none !important;
 }
 .ui-autocomplete {
-	z-index:10 !important;
-	width: 286px !important;
+	z-index: 2;
+	width: 285px !important;
 	border: 1px solid #ddd;
 	border-top: none;
 	overflow: hidden;
 	background-color: #fff;
-	/*override jQuery UI styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	border-radius: 0;
 	padding: 0;
 	font: normal 14px Arial, Helvetica, sans-serif;
@@ -813,7 +802,7 @@ label, label + * {
 	display: block;
 	padding: 15px;
 	font-size: 14px;
-	/*override jQuery UI styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	margin: 0 !important;
 	border: none !important;
 	border-radius: 0 !important;
@@ -936,7 +925,7 @@ label, label + * {
 	height: 36px;
 	margin: 0 -1px 0 0;
 }
-.newsletter-subscribe-button,.newsletter-unsubscribe-button {
+.newsletter-subscribe-button {
 	float: left;
 	height: 36px;
 	border: none;
@@ -945,29 +934,20 @@ label, label + * {
 	text-align: center;
 	color: #fff;
 	text-transform: uppercase;
-    margin-right:3px;
 }
 .newsletter-subscribe-button:hover {
 	background-color: #248ece;
 }
 .newsletter-unsubscribe-button {
-	float: left;
-	height: 36px;
+	display: block;
+	clear: both;
+	margin: auto;
 	border: none;
-	background-color: #aaa;
-	padding: 0 15px;
-	text-align: center;
-	color: #fff;
-	text-transform: uppercase;
+	background: none;
+	padding: 10px 0;
 }
-.newsletter-unsubscribe-button {
-    background-color: #aaa;
-}
-.newsletter-subscribe-button:hover,.newsletter-unsubscribe-button:hover {
-	background-color: #248ece;
-}
-.shopping-cart-page .common-buttons input:hover {
-	background-color: #999;
+.newsletter-unsubscribe-button:hover {
+	color: #4ab2f1;
 }
 .newsletter-validation, 
 .newsletter-result { 
@@ -985,9 +965,6 @@ label, label + * {
 	overflow: hidden;
 	padding: 25px 0;
 	font-size: 12px;
-}
-.footer-tax-shipping {
-    display: block;
 }
 .footer-tax-shipping a {
 	font-weight: bold;
@@ -1014,14 +991,14 @@ label, label + * {
 }
 
 
-/*********** COLUMN ***********/
+/*********** SIDE COLUMN ***********/
 
 
 
 .block {
-	float: left;
-	width: 100%;
+	max-width: 600px; /*width limit in mobile*/
 	min-height: 50px;
+	margin: auto;
 	text-align: left;
 }
 .block .title {
@@ -1064,7 +1041,6 @@ label, label + * {
 }
 .block .list .active > a {
 	color: #4ab2f1;
-
 }
 .block .list a:hover {
 	color: #4ab2f1;
@@ -1188,7 +1164,6 @@ label, label + * {
 }
 .home-page-polls li {
 	display: inline-block;
-	min-width: 100px;
 	margin: 10px;
 }
 
@@ -1198,7 +1173,7 @@ label, label + * {
 
 
 .breadcrumb {
-	margin: 0 0 20px;
+	margin: 0 0 50px;
 	background-color: #f6f6f6;
 	padding: 5px 10px;
 }
@@ -1317,7 +1292,9 @@ label, label + * {
 	color: #4ab2f1;
 }
 .product-filter .group li.item {
+	display: inline-block;
 	position: relative;
+	margin: 0 15px 0 0;
 	padding: 0 0 0 15px;
 }
 .product-filter .group li.item:before {
@@ -1328,7 +1305,6 @@ label, label + * {
 	width: 5px;
 	height: 5px;
 	background-color: #ddd;
-	
 }
 
 .filtered-items .title {
@@ -1353,8 +1329,6 @@ label, label + * {
 	background-color: #999;	
 }
 
-.item-grid {
-}
 .item-grid:after {
 	content: "";
 	display: block;
@@ -1389,6 +1363,7 @@ label, label + * {
 	bottom: 0;
 	left: 0;
 	max-width: 100%;
+	max-height: 100%;
 	margin: auto;
 	transition: all 0.3s ease;
 	-webkit-transform: translateZ(0) scale(1.0, 1.0);
@@ -1411,7 +1386,7 @@ label, label + * {
 	display: block;
 }
 .item-box .product-title a:hover {
-	/*text-decoration: underline;*/
+	color: #248ece;
 }
 .item-box .product-rating-box {
     display: inline-block;
@@ -1503,11 +1478,6 @@ label, label + * {
 }
 .home-page-category-grid .title,
 .sub-category-grid .title {
-	position: absolute;
-	bottom: 0;
-	z-index: 1;
-	width: 100%;
-	background-color: rgba(255,255,255,0.8);
 	text-align: center;
 	font-size: 22px;
 	font-weight: normal;
@@ -1516,7 +1486,7 @@ label, label + * {
 .home-page-category-grid .title a,
 .sub-category-grid .title a {
 	display: block;
-	padding: 15px 0;
+	padding: 0 0 15px;
 }
 .home-page-category-grid .item-box:hover .title,
 .sub-category-grid .item-box:hover .title {
@@ -1528,11 +1498,7 @@ label, label + * {
 }
 .home-page-category-grid .picture a:before,
 .sub-category-grid .picture a:before {
-	padding-top: 70%;
-}
-.home-page-category-grid .picture a img,
-.sub-category-grid .picture a img {
-	top: auto;
+	padding-top: 65%;
 }
 
 .product-grid,
@@ -1549,8 +1515,6 @@ label, label + * {
 }
 .product-grid .title strong {
 	font-weight: normal;
-}
-.cross-sells {
 }
 
 .manufacturer-grid .picture {
@@ -1774,7 +1738,7 @@ label, label + * {
 }
 .overview-buttons div {
 	width: 80%;
-	margin: 0 auto 2px;
+	margin: 0 auto 3px;
 }
 .overview .button-2,
 .variant-overview .button-2 {
@@ -1863,14 +1827,6 @@ label, label + * {
 	font-weight: bold;
 	color: #444;
 }
-.overview .tax-shipping-info a,
-.variant-overview .tax-shipping-info a {
-	color: #4ab2f1;
-}
-.overview .tax-shipping-info a:hover,
-.variant-overview .tax-shipping-info a:hover {
-	text-decoration: underline;
-}
 .overview .download-sample,
 .variant-overview .download-sample {
 	display: inline-block;
@@ -1891,7 +1847,9 @@ label, label + * {
 	vertical-align: middle;
 }
 .overview .old-product-price,
-.variant-overview .old-product-price {
+.variant-overview .old-product-price,
+.overview .non-discounted-price,
+.variant-overview .non-discounted-price {
 	font-size: 14px;
 	color: #999;
 	text-decoration: line-through;
@@ -1900,6 +1858,14 @@ label, label + * {
 .variant-overview .product-price {
 	font-size: 20px;
 	color: #444;
+}
+.overview .tax-shipping-info a,
+.variant-overview .tax-shipping-info a {
+	color: #4ab2f1;
+}
+.overview .tax-shipping-info a:hover,
+.variant-overview .tax-shipping-info a:hover {
+	text-decoration: underline;
 }
 
 .customer-entered-price {
@@ -1985,8 +1951,6 @@ label, label + * {
 	font-weight: normal;
 }
 
-.product-variant-list {
-}
 .product-variant-line {
 	margin: 0 0 30px;
 	border-bottom: 1px solid #ddd;
@@ -2022,6 +1986,7 @@ label, label + * {
 	margin: 0 0 25px;
 }
 .variant-overview .add-to-wishlist-button {
+	display: inline-block;
 	width: auto;
 }
 .variant-overview .add-to-cart {
@@ -2034,11 +1999,14 @@ label, label + * {
 .tier-prices table td {
 	border: 1px solid #ddd;
 	padding: 10px;
+	color: #444;
 }
 .tier-prices .field-header {
 	min-width: 100px;
 }
 .tier-prices .item-price {
+	background-color: #f9f9f9;
+	font-size: 16px;
 	color: #e4434b;
 }
 
@@ -2063,6 +2031,9 @@ label, label + * {
 .product-tags-list a {
 	display: inline-block;
 	line-height: 24px;
+}
+.product-tags-list a:hover {
+	color: #444;
 }
 
 .attributes {
@@ -2106,12 +2077,24 @@ label, label + * {
 	box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
 	background-color: #fff;
 	text-align: center;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	border: none;
+	border-radius: 0;
+	padding: 0;
+	font: normal 14px Arial, Helvetica, sans-serif;
+	color: #777;
 }
 .ui-datepicker-header {
 	position: relative;
 	height: 32px;
 	background-color: #4ab2f1;
 	color: #fff;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	border: none;
+	border-radius: 0;
+	background-image: none;
+	padding: 0 !important;
+	font-weight: normal;
 }
 .ui-datepicker-header a {
 	position: absolute;
@@ -2121,6 +2104,11 @@ label, label + * {
 	height: 32px;
 	line-height: 32px;
 	font-size: 0;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	top: 0 !important;
+	width: 32px !important;
+	height: 32px !important;
+	border: none !important;
 }
 .ui-datepicker-header a.ui-datepicker-prev {
 	left: 0;
@@ -2130,12 +2118,23 @@ label, label + * {
 	right: 0;
 	background: url('../images/calendar-next.png') center no-repeat;
 }
+.ui-datepicker-header a span {
+	/*override jQuery UI styles, do not delete doubled properties*/
+	display: none !important;
+}
 .ui-datepicker-title {
 	position: relative;
 	z-index: 0;
 	line-height: 32px;
 	font-weight: bold;
 	text-transform: uppercase;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	line-height: 32px !important;
+}
+.ui-datepicker-calendar {
+	/*override jQuery UI styles, do not delete doubled properties*/
+	margin: 0 !important;
+	font-size: 14px !important;
 }
 .ui-datepicker-calendar th {
 	background-color: #eee;
@@ -2144,6 +2143,8 @@ label, label + * {
 .ui-datepicker-calendar td {
 	width: 14.285%;
 	border: 1px solid #ddd;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	padding: 0;
 }
 .ui-datepicker-calendar th span,
 .ui-datepicker-calendar td a {
@@ -2152,10 +2153,20 @@ label, label + * {
 	line-height: 32px;
 	color: #444;
 }
+.ui-datepicker-calendar td a {
+	/*override jQuery UI styles, do not delete doubled properties*/
+	border: none !important;
+	background: none !important;
+	padding: 0;
+	text-align: center;
+	color: #444 !important;
+}
 .ui-datepicker-calendar .ui-state-active {
-	outline: 1px solid #888;
-	background-color: #888;
-	color: #fff;
+	outline: 2px solid #4ab2f1;
+	font-weight: bold;
+	color: #4ab2f1;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	color: #4ab2f1 !important;
 }
 
 .color-squares {
@@ -2378,8 +2389,9 @@ label, label + * {
 	font-size: 0;
 }
 .wishlist-content .button-2 {
-	min-width: 140px;
-	margin: 0 1px 5px;
+	display: block;
+	width: 250px;
+	margin: 0 auto 3px;
 	border: none;
     padding: 10px 25px;
 	text-align: center;
@@ -2405,9 +2417,11 @@ label, label + * {
 .wishlist-page .share-info {
 	text-align: center;
 }
-.wishlist-page .share-info a {
+.wishlist-page .share-info span {
 	display: block;
-	margin: 5px 0 0;
+	margin: 0 0 5px;
+}
+.wishlist-page .share-info a {
 	font-weight: bold;
 	color: #444;
 }
@@ -2436,6 +2450,7 @@ label, label + * {
 }
 .compare-products-page .table-wrapper {
 	margin: 0 0 30px;
+	padding: 0 0 1px; /*IE mobile table border fix*/
 }
 .compare-products-table td {
 	min-width: 150px;
@@ -2482,7 +2497,6 @@ label, label + * {
     margin: auto;
 }
 .compare-products-table .product-name td {
-	/*background-color: #f6f6f6;*/
 	font-weight: bold;
 }
 .compare-products-table .product-name td a:hover {
@@ -2542,7 +2556,7 @@ label, label + * {
 }
 
 .not-found-page p {
-	margin: 30px 0 30px 15px;
+	margin: 30px 15px;
 }
 
 .topic-password {
@@ -2634,7 +2648,7 @@ label, label + * {
 	line-height: 32px;
 }
 .date-of-birth select {
-	width: 31%; /*birth-date selectors, always single line*/
+	width: 31%; /*always single line*/
 	max-width: 126px;
 }
 .date-of-birth select + select {
@@ -2762,8 +2776,22 @@ label, label + * {
 	overflow: hidden;
 	text-align: center;
 }
-.external-authentication fieldset {
-	float: none !important;
+.external-authentication .buttons {
+    margin: 0 0 30px;
+    border-top: 1px solid #e6e6e6;
+    padding: 30px;
+}
+.external-auth-errors {
+	color: #e4444c;
+}
+.external-auth-association {
+	color: #444;
+}
+.external-auth-association a {
+	color: #4ab2f1;
+}
+.external-auth-association a:hover {
+	text-decoration: underline;
 }
 
 .password-recovery-page .result {
@@ -2920,7 +2948,7 @@ label, label + * {
 	margin: 0 0 30px;
 	overflow: hidden;
 	background-color: #f9f9f9;
-    padding: 20px;
+    padding: 30px 25px;
 }
 .avatar-page .message-error {
 	margin: 0 0 10px;
@@ -2930,9 +2958,6 @@ label, label + * {
 }
 .avatar-page .image img {
 	border: 1px solid #ccc;
-}
-.avatar-page input[type="file"] {
-	overflow: hidden;
 }
 .avatar-page .button-1 {
 	font-size: 14px;
@@ -2949,7 +2974,6 @@ label, label + * {
 	background-color: #999;
 }
 .avatar-page .info {
-	margin: 0 0 40px;
 	color: #444;
 }
 
@@ -3104,11 +3128,9 @@ label, label + * {
 .cart-total td:first-child {
 	text-align: left;
 }
-/*.cart-total td label + span {
-	vertical-align: baseline;
-}*/
 .cart-total .giftcard-remaining {
 	font-style: italic;
+    display: block;
 }
 .cart-total .order-total {
 	font-size: 20px;
@@ -3116,6 +3138,9 @@ label, label + * {
 }
 .cart-total .order-total strong {
 	font-weight: normal;
+}
+.cart-total .earn-reward-points {
+	font-style: italic;
 }
 
 .min-amount-warning {
@@ -3206,7 +3231,7 @@ label, label + * {
 	float: left;
 	width: 40%;
 	height: 36px; /*safari padding fix*/
-	padding: 0 10px;
+	padding: 0;
 }
 .cart-collaterals .message-failure {
 	margin: 5px 0 0;
@@ -3338,7 +3363,7 @@ label, label + * {
 .shipping-method .method-list li,
 .payment-method .method-list li {
 	margin: 20px 0;
-	font-size: 14px; /*resize zeroing*/
+	font-size: 14px; /*reset zeroing*/
 }
 .shipping-method .method-list li label,
 .payment-method .method-list li label {
@@ -3372,9 +3397,7 @@ label, label + * {
 }
 
 .payment-info .info {
-	/*margin: 0 0 30px;*/
 	padding: 30px 15px;
-	/*background-color: #f9f9f9;*/
 	color: #444;
 }
 .payment-info .info tr {
@@ -3461,11 +3484,9 @@ label, label + * {
 }
 
 .opc .step-title {
-	position: relative;
 	margin: 0 0 1px;
 	overflow: hidden;
 	background-color: #f6f6f6;
-	padding: 10px 15px 10px 55px;
 }
 .opc .allow .step-title {
 	background-color: #4ab2f1;
@@ -3474,23 +3495,20 @@ label, label + * {
 .opc .step-title .number,
 .opc .step-title .title {
 	float: left;
+	min-height: 40px;
+	padding: 10px 15px;
+	line-height: 20px;
 	font-size: 16px;
 	font-weight: normal;
 }
 .opc .allow .step-title .number,
 .opc .allow .step-title .title {
 	color: #fff;
-	text-transform: uppercase;
 	cursor: pointer;
 }
 .opc .step-title .number {
-	position: absolute;
-	top: 0;
-	left: 0;
 	width: 42px;
-	height: 100%;
 	border-right: 1px solid #fff;
-	line-height: 40px;
 	text-align: center;
 }
 .opc .allow .step-title .number {
@@ -3559,18 +3577,6 @@ label, label + * {
 	border-bottom: 1px solid #ddd;
 	padding: 0 0 10px;
 }
-/*.order-details-page .page-title a {
-	margin: 0 10px;
-	background-position: left center;
-	background-repeat: no-repeat;
-	padding: 0 0 0 20px;
-}
-.order-details-page .print-order-button {
-	background-image: url('../images/print.png');
-}
-.order-details-page .pdf-invoice-button {
-	background-image: url('../images/download-invoice.png');
-}*/
 .order-details-page .page-title a {
 	display: inline-block;
 	min-width: 180px;
@@ -3608,14 +3614,44 @@ label, label + * {
 	color: #4ab2f1;
 }
 
-.order-details-area { 
-	overflow: hidden;  
+.order-details-page .repost .button-2 {
+	display: inline-block;
+	margin: 10px 0;
+	border: none;
+	background-color: #4ab2f1;
+	padding: 10px 15px;
+	font-size: 12px;
+	color: #fff;
+	text-transform: uppercase;
 }
-.order-details-area td {
-	float: left;
-	width: 100%;
-	max-width: 100%;
-	vertical-align: top;
+.order-details-page .repost .button-2:hover {
+	background-color: #248ece;
+}
+
+.order-details-page .download a {
+	font-weight: normal;
+	color: #4ab2f1;
+}
+.order-details-page .download a:hover {
+	text-decoration: underline;
+}
+.user-agreement-page .terms-of-agreement {
+	margin: 0 0 20px;
+	padding: 20px;
+	text-align: center;
+}
+.user-agreement-page .button-1 {
+	min-width: 140px;
+    border: none;
+    background-color: #4ab2f1;
+    padding: 10px 30px;
+    text-align: center;
+	font-size: 15px;
+	color: #fff;
+    text-transform: uppercase;
+}
+.user-agreement-page .button-1:hover {
+	background-color: #248ece;
 }
 
 .order-details-page .tax-shipping-info {
@@ -3795,6 +3831,11 @@ label, label + * {
 .news-items .news-item {
 	margin: 0 0 30px;
 }
+.blog-page .post:after {
+	content: "";
+	display: block;
+	clear: both;
+}
 .post-title,
 .news-title {
 	display: inline-block;
@@ -3825,7 +3866,7 @@ label, label + * {
 }
 .blog-page .tags, 
 .blogpost-page .tags {
-	margin: 0 0 10px;
+	margin: 0 0 15px;
 	overflow: hidden;
 	padding: 0 10px;
 }
@@ -3861,16 +3902,33 @@ label, label + * {
 	text-decoration: underline;
 }
 
-.post-details {
+.blog-posts .buttons,
+.news-items .buttons {
+	margin: 0;
 	padding: 0 10px;
-    margin: 0 0 10px;
 }
-.post-details a {
+.blog-posts .buttons .read-comments {
+	display: block;
+	margin: 0 0 15px;
 	font-weight: bold;
 	color: #444;
 }
-.post-details a:hover {
+.blog-posts .buttons .read-comments:hover {
 	color: #4ab2f1;
+}
+.blog-posts .buttons .read-more,
+.news-items .buttons .read-more {
+	display: inline-block;
+	border: none;
+	background-color: #4ab2f1;
+	padding: 10px 20px;
+	font-size: 12px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.blog-posts .buttons .read-more:hover,
+.news-items .buttons .read-more:hover {
+	background-color: #248ece;
 }
 
 .new-comment {
@@ -3969,23 +4027,6 @@ label, label + * {
 	line-height: 22px;
 }
 
-.news-items .buttons, .blog-posts .buttons {
-	margin: 0;
-	padding: 0 10px;
-}
-.news-items .buttons a, .blog-posts .buttons a {
-	display: inline-block;
-	border: none;
-	background-color: #4ab2f1;
-	padding: 10px 20px;
-	font-size: 12px;
-	color: #fff;
-	text-transform: uppercase;
-}
-.news-items .buttons a:hover, .blog-posts .buttons a:hover {
-	background-color: #248ece;
-}
-
 .news-list-homepage {
 	margin: 0 0 75px;
 }
@@ -4022,6 +4063,9 @@ label, label + * {
 }
 .forums-main-page .topic-block p {
 	text-align: center;
+}
+.forums-main-page .pager {
+	display: none;
 }
 
 .forum-breadcrumb {
@@ -4214,6 +4258,19 @@ label, label + * {
 	display: none;
 }
 
+.active-discussions-page .forums-table-section-title {
+	margin: 0 0 25px;
+	border-bottom: 1px solid #ddd;
+    padding: 0 10px 10px;
+}
+.active-discussions-page .forums-table-section-title strong {
+	font-size: 30px;
+	font-weight: normal;
+}
+.active-discussions-page .forums-table-section-body {
+	margin: 0 0 20px;
+}
+
 /* topic post */
 
 .topic-post {
@@ -4349,27 +4406,30 @@ label, label + * {
 }
 
 .topic-post .post-body {
+	/*topic post-body also gets style from blog post-body*/
+	padding: 0 10px 20px;
 	line-height: 22px;
+	color: #444;
 }
 
-.topic-post .user-posted-image {
+.topic-post .user-posted-image,
+.latest-posts .user-posted-image {
     max-width: 100%;
     height: auto;
 }
-.topic-post .quote{
-    padding:5px;
-    border:dashed 1px #000;
-    background-color:#fff;
+.topic-post .quote,
+.latest-posts .quote {
+	margin: 10px 0;
+    border: 1px dashed #ccc;
+    background-color: #f9f9f9;
+	padding: 10px;
+	color: #777;
 }
 .topic-post .signature {
-    border-color:#DDD;
-    border-style:solid;
-    border-width:1px 0 0;
-    font-size:90%;
-    margin:1em 8px 8px;
-    padding:1em 0 20px;
-    text-align:left;
-    font-style:italic;
+	border-top: 1px solid #ddd;
+	padding: 20px;
+	font-size: 13px;
+    font-style: italic;
 }
 
 /* forum edit & send message */
@@ -4389,7 +4449,7 @@ label, label + * {
 .forum-edit-page .inputs strong {
 	display: inline-block;
 	max-width: 400px;
-	font-size: 18px; /*reset zeroing*/
+	font-size: 22px; /*reset zeroing*/
 	font-weight: normal;
 	color: #444;
 	white-space: normal;
@@ -4404,6 +4464,7 @@ label, label + * {
 	width: auto;
 	margin: 5px;
 	font-size: 14px; /*reset zeroing*/
+	white-space: normal;
 }
 .forum-edit-page .toolbar,
 .private-message-send-page .toolbar {
@@ -4420,13 +4481,13 @@ label, label + * {
 .forum-edit-page .buttons input,
 .move-topic-page .buttons input,
 .private-messages .buttons input {
+	min-width: 140px;
+    border: none;
 	background-color: #999;
-    border: medium none;
-    color: #fff;
-    font-size: 15px;
-    min-width: 140px;
     padding: 10px 30px;
     text-align: center;
+    font-size: 15px;
+	color: #fff;
     text-transform: uppercase;
 }
 .forum-edit-page .buttons input:hover,
@@ -4450,14 +4511,93 @@ label, label + * {
 	color: #4ab2f1;
 }
 
+/* jQuery tabs */
+
+.ui-tabs {
+	/*override jQuery UI styles, do not delete doubled properties*/
+	border: none;
+	border-radius: 0;
+	background: none;
+	padding: 0;
+	font: normal 14px Arial, Helvetica, sans-serif;
+	color: #777;
+}
+.ui-tabs-nav {
+	margin: 0 0 30px;
+	border-bottom: 1px solid #ddd;
+	overflow: hidden;
+	font-size: 0;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	margin: 0 0 30px !important;
+	border-width: 0 0 1px;
+	border-radius: 0;
+	background: none;
+	padding: 0 !important;
+	line-height: normal;
+	font-weight: normal;
+	color: #444;
+}
+.ui-tabs-nav li {
+	margin: 0 0 -1px;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	float: none !important;
+	margin: 0 0 -1px !important;
+	border: none !important;
+	border-radius: 0;
+	background: none !important;
+	padding: 0 !important;
+}
+.ui-tabs-nav li a {
+	display: block;
+	border: 1px solid #ddd;
+	padding: 12px 24px;
+	text-align: center;
+	font-size: 18px;
+	color: #444;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	float: none !important;
+	padding: 12px 24px !important;
+}
+.ui-tabs-nav li.ui-state-active a {
+	background-color: #eee;
+	color: #4ab2f1;
+}
+.ui-tabs-panel {
+	/*override jQuery UI styles, do not delete doubled properties*/
+	padding: 0 !important;
+}
+
 /* inbox & view message */
 
-
+.private-messages-page th.select {
+	text-align: center;
+}
+.private-messages-page td.from, 
+.private-messages-page td.to,
+.private-messages-page td.subject {
+	min-width: 150px;
+}
 .private-messages-page td.date {
 	white-space: nowrap;
 }
-.private-messages-page .pm-unread {
-    font-weight: bold;
+.private-messages-page td.subject a {
+	color: #444;
+}
+.private-messages-page td.subject a.pm-unread {
+	color: #4ab2f1;
+}
+.private-messages-page .buttons,
+.private-message-view-page .buttons {
+	font-size: 0;
+}
+.private-messages-page .buttons .button-1,
+.private-messages-page .buttons .button-2,
+.private-message-view-page .buttons .button-1,
+.private-message-view-page .buttons .button-2 {
+	display: block;
+	width: 250px;
+	margin: 0 auto 3px;
+	font-size: 15px; /*reset zeroing*/
 }
 
 .private-message-view-page .view-message {
@@ -4486,7 +4626,7 @@ label, label + * {
 
 .profile-info-box {
 	overflow: hidden;
-	/*override jQuery UI styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	line-height: normal;
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -4503,9 +4643,12 @@ label, label + * {
 	font-size: 18px;
 	color: #444;
 }
+.profile-info-box .stats {
+	margin: 0 0 15px;
+}
 
 .latest-posts {
-	/*override jQuery UI styles*/
+	/*override jQuery UI styles, do not delete doubled properties*/
 	line-height: normal;
 	font-size: 14px;
 	font-family: Arial, Helvetica, sans-serif;
@@ -4516,12 +4659,14 @@ label, label + * {
 }
 .latest-posts .topic-title {
 	margin: 0 0 20px;
+	border-top: 1px solid #ddd;
 	background: #f6f6f6;
 	padding: 10px;
 	font-size: 16px;
 }
 .latest-posts .topic-title a {
 	font-weight: bold;
+	color: #444;
 }
 .latest-posts .topic-title a:hover {
 	color: #4ab2f1;
@@ -4533,68 +4678,115 @@ label, label + * {
 .latest-posts .topic-data {
 	color: #444;
 }
-.latest-posts .topic-body .user-posted-image {
-    max-width: 100%;
-    height: auto;
+
+/* BB codes */
+
+pre {
+    white-space: pre-wrap;
+    white-space: normal;
+    word-wrap: break-word;	
 }
-.latest-posts .topic-body .quote{
-    padding:5px;
-    border:dashed 1px #000;
-    background-color:#fff;
+.csharpcode {
+	margin: 10px 0;
+    border: 1px dashed #ccc;
+	background-color: #fff;
+    padding: 10px; 
+	font-family: "Courier New", Courier, monospace;
+	color: #000;  
+}
+.csharpcode .rem {
+    color: green;
+}
+.csharpcode .kwrd {
+    color: #00f;
+}
+.csharpcode .str {
+    color: #006080;
+}
+.csharpcode .op {
+    color: #00c;
+}
+.csharpcode .preproc {
+    color: #c63;
+}
+.csharpcode .asp {
+    background-color: #ff0;
+}
+.csharpcode .html {
+    color: maroon;
+}
+.csharpcode .attr {
+    color: red;
+}
+.csharpcode .alt {
+    width: 100%;
+    margin: 0;
+	background-color: #f6f6f6;
+}
+.csharpcode .lnum {
+    color: #666;
 }
 
 
-/* BBCODES */
-pre{
-    white-space:pre-wrap;
-    white-space:normal;
-    word-wrap:break-word;
-}
-.csharpcode,.csharpcode pre{
-    font-size:small;
-    color:#000;
-    font-family:Consolas,"Courier New",Courier,Monospace;
-    background-color:#fff;
-}
-.csharpcode pre{
-    margin:0;
-}
-.csharpcode .rem{
-    color:green;
-}
-.csharpcode .kwrd{
-    color:#00f;
-}
-.csharpcode .str{
-    color:#006080;
-}
-.csharpcode .op{
-    color:#0000c0;
-}
-.csharpcode .preproc{
-    color:#c63;
-}
-.csharpcode .asp{
-    background-color:#ff0;
-}
-.csharpcode .html{
-    color:maroon;
-}
-.csharpcode .attr{
-    color:red;
-}
-.csharpcode .alt{
-    background-color:#f4f4f4;
-    width:100%;
-    margin:0;
-}
-.csharpcode .lnum{
-    color:#606060;
-}
 
 
 
 @media all and (max-width: 1000px) {
+
+
+/*** GLOBAL TABLES ***/
+
+
+.cart {
+	display: block;
+}
+.cart colgroup,
+.cart thead {
+	display: none;
+}
+.cart tbody {
+	display: block;
+	overflow: hidden;
+}
+.cart tr {
+	display: block;
+	float: left;
+	width: 100%;
+	margin: 40px 0 0;
+	border: 1px solid #ddd;
+}
+.cart td {
+	display: block;
+	border: none;
+	padding: 10px;
+}
+.cart td.remove-from-cart {
+    margin: 0 0 15px;
+	border-bottom: 1px solid #ddd;
+	background-color: #eee;
+	padding: 10px;
+}
+.cart td.product-picture {
+	border-top: 1px solid #ddd;
+	padding: 15px 10px 5px;
+}
+.cart td.product {
+	min-width: 0;
+	border-bottom: 1px solid #ddd;
+	padding: 5px 10px 15px;
+	text-align: center;
+}
+.cart td.quantity {
+	display: inline-block;
+	padding: 0 10px;
+	vertical-align: middle;
+}
+.cart td.unit-price,
+.cart td.subtotal {
+	display: inline-block;
+	padding: 20px 10px;
+	vertical-align: middle;
+}
 
 
 /*** MOBILE NAVIGATION ***/
@@ -4697,6 +4889,13 @@ pre{
 .header-menu {
 	width: 92.5%;
 }
+.cart tr {
+	width: 46%;
+	margin: 40px 2% 0;
+}
+.cart tr:nth-child(2n+1) {
+	clear: both;
+}
 
 
 /*** HEADER ***/
@@ -4706,10 +4905,10 @@ pre{
 	width: 30%;
 }
 .search-box input.search-box-text {
-	width: 260px;
+	width: 280px;
 }
 .ui-autocomplete {
-	width: 346px !important;
+	width: 280px !important;
 }
 .ui-autocomplete img {
 	display: inline;
@@ -4730,13 +4929,14 @@ pre{
 /*** COLUMN ***/
 
 
-.block {
+/*.block {
+	float: left;
 	width: 46%;
 	margin: 0 2%;
 }
 .block:nth-child(2n+1) {
 	clear: both;
-}
+}*/
 
 
 /*** CATEGORY ***/
@@ -4753,20 +4953,11 @@ pre{
 .product-filter .product-spec-group {
 	float: left;
 	margin: 0 25px 10px 0;
-	/*padding: 0 0 0 10px;*/
 }
-/*.product-filter .group li.title strong {
-	position: relative;
+.product-filter .group li.item {
+	display: block;
+	margin: 0;
 }
-.product-filter .group li.title strong:before {
-	content: "";
-	position: absolute;
-	top: 12px;
-	left: -12px;
-	width: 5px;
-	height: 5px;
-	background-color: #ddd;
-}*/
 
 .item-box {
 	width: 49%;
@@ -4787,6 +4978,17 @@ pre{
 }
 
 
+/*** WISHLIST ***/
+
+
+.wishlist-content .button-2 {
+	display: inline-block;
+	width: auto;
+	min-width: 140px;
+	margin: 0 1px 5px;
+}
+
+
 /*** TOPICS ***/
 
 
@@ -4800,6 +5002,23 @@ pre{
 .forums-header {
 	background-color: #f9f9f9;
 	padding: 30px 20px 20px;
+}
+
+.ui-tabs-nav li {
+	display: inline-block;
+	min-width: 150px;
+	margin: 0 5px -1px;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	margin: 0 5px -1px !important;
+}
+
+.private-messages-page .buttons .button-1,
+.private-messages-page .buttons .button-2,
+.private-message-view-page .buttons .button-1,
+.private-message-view-page .buttons .button-2 {
+	display: inline-block;
+	width: auto;
+	margin: 1px;
 }
 
 }
@@ -4816,6 +5035,19 @@ pre{
 
 .master-wrapper-content {
 	width: 94%;
+}
+.cart tr {
+	width: 31.33333%;
+	margin: 40px 1% 0;
+}
+.cart tr:nth-child(2n+1) {
+	clear: none;
+}
+.cart tr:nth-child(3n+1) {
+	clear: both;
+}
+.home-page-polls li {
+	min-width: 100px;
 }
 
 
@@ -4864,7 +5096,7 @@ pre{
 /*** COLUMN ***/
 
 
-.block {
+/*.block {
 	width: 31.33333%;
 	margin: 0 1%;
 }
@@ -4873,7 +5105,7 @@ pre{
 }
 .block:nth-child(3n+1) {
 	clear: both;
-}
+}*/
 
 
 /*** CATEGORY ***/
@@ -4908,14 +5140,14 @@ pre{
 	opacity: 1;
 }
 
-.product-grid .item-box {
+.item-box {
 	width: 32.33333%;
 	margin: 0 0.5% 50px;
 }
-.product-grid .item-box:nth-child(2n+1) {
+.item-box:nth-child(2n+1) {
 	clear: none;
 }
-.product-grid .item-box:nth-child(3n+1) {
+.item-box:nth-child(3n+1) {
 	clear: both;
 }
 
@@ -5150,6 +5382,17 @@ pre{
 /*** BLOG & NEWS ***/
 
 
+.blog-posts .tags {
+	float: right;
+	width: 80%;
+	text-align: right;
+}
+.blog-posts .buttons {
+	float: left;
+	width: 20%;
+	text-align: left;
+}
+
 .new-comment {
 	text-align: center;
 }
@@ -5318,6 +5561,15 @@ pre{
 	padding: 20px;
 }
 
+.ui-tabs-nav {
+	text-align: left;
+}
+.ui-tabs-nav li {
+	margin: 0 10px -1px 0;
+	/*override jQuery UI styles, do not delete doubled properties*/
+	margin: 0 10px -1px 0 !important;
+}
+
 .profile-info-box .avatar {
 	float: left;
 	margin: 0 15px 15px 0;
@@ -5394,6 +5646,21 @@ pre{
 }
 
 
+/*** GLOBAL TABLES ***/
+
+
+.cart tr {
+	width: auto;
+	margin: 0;
+}
+.cart label {
+	display: none;
+}
+.cart .subtotal label {
+	display: inline;
+}
+
+
 /*** HEADER ***/
 
 
@@ -5421,6 +5688,9 @@ pre{
 	height: 25px;
 	padding: 4px;
 	font-size: 12px;
+}
+.language-list {
+	text-align: left;
 }
 .header-links-wrapper {
 	float: right;
@@ -5610,7 +5880,7 @@ pre{
 	display: none;
 	position: absolute;
 	width: 200px;
-	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	box-shadow: 0 0 2px rgba(0,0,0,0.2);
 	background-color: #fff;
 	padding: 10px 0;
 	text-align: left;
@@ -5681,7 +5951,14 @@ pre{
 	display: block;
 }
 .newsletter-email input[type="text"] {
-	width: 170px;
+	width: 200px;
+}
+.newsletter-email .newsletter-subscribe-button {
+	width: 100px;
+	padding: 0 5px;
+}
+.newsletter-unsubscribe-button {
+	display: inline-block;
 }
 .newsletter-validation .field-validation-valid {
 	text-align: left;
@@ -5753,16 +6030,10 @@ pre{
 /*** CATEGORY ***/
 
 
-.item-box {
-	width: 32.33333%;
-	margin: 0 0.5% 50px;
+.breadcrumb {
+	margin: 0 0 20px;
 }
-.item-box:nth-child(2n+1) {
-	clear: none;
-}
-.item-box:nth-child(3n+1) {
-	clear: both;
-}
+
 .item-box .buttons {
 	text-align: left;
 }
@@ -5783,9 +6054,6 @@ pre{
 .shopping-cart-page .product-grid .item-box:nth-child(4n+1) {
 	clear: both;
 }
-/*.home-page .product-grid .title {
-	text-align: center;
-}*/
 
 
 /*** PRODUCT PAGE ***/
@@ -5853,11 +6121,8 @@ pre{
 .center-1 .topic-block-title {
 	text-align: center;
 }
-.center-1 .topic-block-body {
-	text-align: left;
-}
 .topic-page p {
-	text-align: left;
+	text-align: justify;
 }
 
 
@@ -5919,9 +6184,6 @@ pre{
 	right: 10px;
 }
 
-.avatar-page .fieldset {
-	margin: 0 20px 40px 0;
-}
 .avatar-page .message-error,
 .avatar-page .buttons {
 	text-align: left;
@@ -6005,6 +6267,9 @@ pre{
 	width: 31.33333%;
 	margin: 0 1% 30px;
 }
+.news-list-homepage .news-item:nth-child(3n+1) {
+	clear: both;
+}
 .news-list-homepage .news-item:only-child {
 	float: none;
 	width: auto;
@@ -6014,13 +6279,7 @@ pre{
 	text-align: center;
 }
 .news-list-homepage .news-body {
-	height: 90px;
-	overflow: hidden;
 	text-align: justify;
-}
-.news-list-homepage .news-item:only-child .news-body {
-	height: auto;
-	text-align: center;
 }
 
 
@@ -6058,6 +6317,11 @@ pre{
 	max-width: 400px;
 }
 
+.forum-edit-page textarea,
+.private-message-send-page textarea {
+	width: 600px;
+	height: 250px;
+}
 .private-message-send-page .toolbar {
 	display: inline-block;
 	width: 400px;

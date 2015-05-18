@@ -112,7 +112,7 @@
                 <tr class="giftcard-summary">
                     <td class="cart-total-left">
                         <label>@T("ShoppingCart.Totals.GiftCardInfo")</label>
-                        <span>@gc.CouponCode</span>
+                        <span>@T("ShoppingCart.Totals.GiftCardInfo.Code", gc.CouponCode)</span>
                         @if (Model.IsEditable)
                         {
                             //little hack here with empty "value" element

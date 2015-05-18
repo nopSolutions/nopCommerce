@@ -41,7 +41,6 @@
                 <span>@Model.RentalPrice</span>
             </div>
         }
-        
         if (!String.IsNullOrWhiteSpace(Model.OldPrice))
         {
             @*old price*@
@@ -50,20 +49,15 @@
                 <span>@Model.OldPrice</span>
             </div>
         }
-
-
-
         <div class="@if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
                     {<text>product-price</text>}
                     else
                     {<text>non-discounted-price</text>}">
-
             @if (!String.IsNullOrWhiteSpace(Model.OldPrice) || !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
             {
                 @*display "Price:" label if we have old price or discounted one*@
                 <label>@T("Products.Price"):</label>
             }
-            
             @*render price*@
             <span @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount)) { <text> itemprop="price" class="price-value-@(Model.ProductId)" </text>  }>
                 @if (dynamicPriceUpdateSupported && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
@@ -76,8 +70,6 @@
                 }
             </span>
         </div>
-        
-        
         if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
             @*discounted price*@

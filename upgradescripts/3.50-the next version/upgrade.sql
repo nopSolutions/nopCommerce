@@ -752,6 +752,30 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.CustomerRoles.Hint">
     <Value>Search by a specific customer role.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Action">
+    <Value>Return Action:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Date">
+    <Value>Date Requested:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.CustomerReturnRequests.Reason">
+    <Value>Return Reason:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Options">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="News.ViewAll">
+    <Value>View News Archive</Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivateMessages.View.Message">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo">
+    <Value>Gift Card</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo.Code">
+    <Value>({0})</Value>
+  </LocaleResource>
 </Language>
 '
 

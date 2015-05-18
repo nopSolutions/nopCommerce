@@ -24,11 +24,11 @@
         <h1>@T("DownloadableProducts.UserAgreement")</h1>
     </div>
     <div class="page-body">
-        @Html.Raw(Model.UserAgreementText)
-        <div>
+        <div class="terms-of-agreement">
             <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
+            @Html.Raw(Model.UserAgreementText)
         </div>
-        <div>
+        <div class="buttons">
             <input type="submit" id="continue-downloading" class="button-1 user-agreement-button" value="@T("Common.Continue")" onclick="setLocation('@Url.RouteUrl("GetDownload", new { orderItemId = Model.OrderItemGuid, agree = true })')" />
         </div>
     </div>

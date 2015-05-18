@@ -60,7 +60,9 @@
                         }
                         @if (Model.ShowProductImages)
                         {
-                            <th class="product-picture">@T("ShoppingCart.Image")</th>
+                            <th class="product-picture">
+                                @T("ShoppingCart.Image")
+                            </th>
                         }
                         <th class="product">
                             @T("ShoppingCart.Product(s)")
@@ -83,19 +85,21 @@
                             @if (Model.IsEditable)
                             {
                                 <td class="remove-from-cart">
+                                    <label class="td-title">@T("ShoppingCart.Remove"):</label>
                                     <input type="checkbox" name="removefromcart" value="@(item.Id)" />
                                 </td>
                             }
                             @if (Model.ShowSku)
                             {
                                 <td class="sku">
+                                    <label class="td-title">@T("ShoppingCart.SKU"):</label>
                                     @item.Sku
                                 </td>
                             }
                             @if (Model.ShowProductImages)
                             {
                                 <td class="product-picture">
-                                    <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                    <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })"><img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" /></a>
                                 </td>
                             }
                             <td class="product">
@@ -139,9 +143,11 @@
                                 }
                             </td>
                             <td class="unit-price">
+                                <label class="td-title">@T("ShoppingCart.UnitPrice"):</label>
                                 <span class="product-unit-price">@item.UnitPrice</span>
                             </td>
                             <td class="quantity">
+                                <label class="td-title">@T("ShoppingCart.Quantity"):</label>
                                 @if (Model.IsEditable)
                                 {
                                     if (item.AllowedQuantities.Count > 0)
@@ -165,7 +171,7 @@
                                 }
                             </td>
                             <td class="subtotal">
-                                <span class="td-title">@T("ShoppingCart.ItemTotal"):</span>
+                                <label class="td-title">@T("ShoppingCart.ItemTotal"):</label>
                                 <span class="product-subtotal">@item.SubTotal</span>
                                 @if (!String.IsNullOrEmpty(item.Discount))
                                 {
