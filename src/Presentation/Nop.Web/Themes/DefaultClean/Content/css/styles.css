@@ -1517,16 +1517,16 @@ label, label + * {
 	font-weight: normal;
 }
 
-.manufacturer-grid .picture {
-	margin: 0 0 15px;
-	border: 1px solid #ddd;
-}
 .manufacturer-grid .title {
+	margin: 0 0 15px;
 	text-align: center;
 	font-size: 16px;
 }
 .manufacturer-grid .title a:hover {
 	color: #4ab2f1;
+}
+.manufacturer-grid .picture {
+	border: 1px solid #ddd;
 }
 
 .vendor-list li {
@@ -2007,7 +2007,6 @@ label, label + * {
 .tier-prices .item-price {
 	background-color: #f9f9f9;
 	font-size: 16px;
-    font-weight: bold;
 	color: #e4434b;
 }
 
@@ -3131,7 +3130,6 @@ label, label + * {
 }
 .cart-total .giftcard-remaining {
 	font-style: italic;
-    display: block;
 }
 .cart-total .order-total {
 	font-size: 20px;
