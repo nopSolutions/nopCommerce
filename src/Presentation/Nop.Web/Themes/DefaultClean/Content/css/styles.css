@@ -777,6 +777,7 @@ label, label + * {
 .search-box .search-box-button:hover {
 	background-color: #248ece;
 }
+.search-box .ui-autocomplete-loading{background:white url('../images/ajax_loader_small.gif') right center no-repeat;}
 .ui-helper-hidden-accessible {
 	display: none !important;
 }
