@@ -39,9 +39,11 @@
             <div class="order-number">
                 <strong>@T("Order.Order#")@Model.Id</strong>
             </div>
-            <div class="order-info">
-                <span class="order-date">@T("Order.OrderDate"): @Model.CreatedOn.ToString("D")</span>
-                <span class="order-status">@T("Order.OrderStatus"): @Model.OrderStatus</span>
+            <div class="order-date">
+                @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
+            </div>
+            <div class="order-status">
+                @T("Order.OrderStatus"): @Model.OrderStatus
             </div>
             <div class="order-total">
                 @T("Order.OrderTotal"): <strong>@Model.OrderTotal</strong>
