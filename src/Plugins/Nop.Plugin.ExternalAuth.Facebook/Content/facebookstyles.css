@@ -1,5 +1,13 @@
-﻿.foo{}
-fieldset.facebook-login-block{display:inline;float:left;margin:5px;}
-.facebook-btn{float:left;background-image:url('images/facebook-signing.png');background-repeat:no-repeat;width:150px;height:23px;margin:5px;}
-.facebook-btn:hover{background-position:0px -24px;}
-.facebook-btn:active{background-position:0px -48px;}
+﻿.facebook-btn {
+    display: inline-block;
+    width: 150px;
+    height: 23px;
+    background-image: url('images/facebook-signing.png');
+    background-repeat: no-repeat;
+}
+.facebook-btn:hover {
+    background-position: 0px -24px;
+}
+.facebook-btn:active {
+    background-position: 0px -48px;
+}

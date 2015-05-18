@@ -117,9 +117,6 @@
 }
 
 @media all and (min-width: 1001px) {
-.header-menu {
-	border-bottom: none;
-}
 .theme-custom {
 	margin: -30px 0 60px;
 }
