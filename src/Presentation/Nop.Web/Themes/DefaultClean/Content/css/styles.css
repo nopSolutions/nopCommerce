@@ -429,11 +429,11 @@ label, label + * {
 .cart td.subtotal,
 .data-table td.total {
 	white-space: nowrap;
-    color: #4ab2f1;
+    color: #444;
 }
 .cart td.subtotal .discount {
-	border-top: 1px dotted #4ab2f1;
-	font-weight: bold;
+    font-style: italic;
+    color: #4ab2f1;
 }
 
 .data-table em a {
@@ -5653,11 +5653,8 @@ pre {
 	width: auto;
 	margin: 0;
 }
-.cart label {
+.cart label.td-title {
 	display: none;
-}
-.cart .subtotal label {
-	display: inline;
 }
 
 
