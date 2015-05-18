@@ -1857,6 +1857,7 @@ label, label + * {
 .overview .product-price,
 .variant-overview .product-price {
 	font-size: 20px;
+	font-weight: bold;
 	color: #444;
 }
 .overview .tax-shipping-info a,
