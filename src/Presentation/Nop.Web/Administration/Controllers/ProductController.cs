@@ -495,7 +495,7 @@ namespace Nop.Admin.Controllers
                 {
                     model.AvailableCategories.Add(new SelectListItem
                     {
-                        Text = category.Name,
+                        Text = category.GetFormattedBreadCrumb(allCategories),
                         Value = category.Id.ToString()
                     });
                 }
