@@ -40,9 +40,15 @@
                 </div>
             </div>
         }
-        <div class="pager">
-            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
-        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!pager.IsEmpty())
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
         @Html.Widget("productsbytag_bottom", Model.Id)
     </div>
 </div>

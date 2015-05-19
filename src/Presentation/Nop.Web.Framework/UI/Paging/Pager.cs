@@ -186,6 +186,11 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return result;
 		}
+	    public virtual bool IsEmpty()
+	    {
+            var html = ToString();
+	        return string.IsNullOrEmpty(html);
+	    }
 
         protected virtual int GetFirstIndividualPageIndex()
         {
@@ -200,7 +205,6 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return (model.PageIndex - (individualPagesDisplayedCount / 2));
         }
-
         protected virtual int GetLastIndividualPageIndex()
         {
             int num = individualPagesDisplayedCount / 2;
@@ -233,7 +237,6 @@ namespace Nop.Web.Framework.UI.Paging
 
             return liBuilder.ToString(TagRenderMode.Normal);
 		}
-
         protected virtual string CreateDefaultUrl(int pageNumber)
 		{
 			var routeValues = new RouteValueDictionary();

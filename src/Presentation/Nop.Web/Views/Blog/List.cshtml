@@ -55,7 +55,7 @@
                                     <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
                                     if (i != item.Tags.Count - 1)
                                     {
-                                    <li class="separator">,</li>
+                                        <li class="separator">,</li>
                                     }
                                 }
                             </ul>
@@ -72,9 +72,15 @@
                 </div>
             }
         </div>
-        <div class="pager">
-            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
-        </div>
+        @{
+            var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber");
+        }
+        @if (!pager.IsEmpty())
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
         @Html.Widget("bloglist_page_after_posts")
     </div>
 </div>

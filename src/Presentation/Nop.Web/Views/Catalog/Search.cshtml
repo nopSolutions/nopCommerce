@@ -118,9 +118,15 @@
                     </div>
                 </div>
             }
-            <div class="pager">
-                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true)
-            </div>
+            @{
+                var pager = Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("adv").BooleanParameterName("isc").BooleanParameterName("sid").RenderEmptyParameters(true);
+            }
+            @if (!pager.IsEmpty())
+            {
+                <div class="pager">
+                    @pager
+                </div>
+            }
         </div>
         @Html.Widget("productsearch_page_after_results")
     </div>
