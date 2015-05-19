@@ -4480,6 +4480,16 @@ label, label + * {
 	background-color: #ddd;
 	padding: 10px;
 }
+.forum-edit-page .toolbar .button,
+.private-message-send-page .toolbar .button {
+    padding:2px;
+    margin-right:2px;
+    border:#cec6b5 1px solid;
+}
+.forum-edit-page .toolbar .button:hover,
+.private-message-send-page .toolbar .button:hover {
+	border: #333 1px solid;
+}
 .forum-edit-page textarea,
 .private-message-send-page textarea {
 	display: block;
