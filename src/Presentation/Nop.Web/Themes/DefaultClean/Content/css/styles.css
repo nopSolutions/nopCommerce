@@ -5725,9 +5725,6 @@ pre {
 .cart label {
 	display: none;
 }
-.cart .subtotal label {
-	display: inline;
-}
 
 .order-details-page .data-table tr {
 	width: auto;
