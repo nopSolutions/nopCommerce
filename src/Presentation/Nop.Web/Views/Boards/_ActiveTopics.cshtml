@@ -9,7 +9,6 @@
         }
         <strong>@T("Forum.ActiveDiscussions")</strong>
     </div>
-    <div class="pager upper">
         @{
             var pager = Html.Pager(new PagerModel
             {
@@ -22,8 +21,12 @@
                 RouteValues = new ForumActiveDiscussionsRouteValues()
             });
         }
-        @pager
-    </div>
+    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    {
+        <div class="pager upper">
+            @pager
+        </div>
+    }
     <div class="forums-table-section-body">
         @if (Model.ForumTopics.Count > 0)
         {
@@ -96,9 +99,12 @@
             </div>
         }
     </div>
-    <div class="pager lower">
-        @pager
-    </div>
+    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    {
+        <div class="pager lower">
+            @pager
+        </div>
+    }
     @if (Model.ViewAllLinkEnabled)
     {
         <div class="view-all">

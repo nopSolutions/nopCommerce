@@ -69,9 +69,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="pager">
-                    @Html.Pager(Model.PagerModel)
-                </div>
+                    @{
+                        var pager = Html.Pager(Model.PagerModel);
+                    }
+                    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+                    {
+                        <div class="pager">
+                            @pager
+                        </div>
+                    }
                 <div class="buttons">
                     <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="button-1 delete-selected-biss-button" />
                 </div>

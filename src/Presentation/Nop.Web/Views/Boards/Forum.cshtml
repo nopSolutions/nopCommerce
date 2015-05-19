@@ -48,21 +48,24 @@
                 </script>
             }
         </div>
-        <div class="pager upper">
-            @{
-                var pager = Html.Pager(new PagerModel
-                {
-                    PageSize = Model.TopicPageSize,
-                    TotalRecords = Model.TopicTotalRecords,
-                    PageIndex = Model.TopicPageIndex,
-                    ShowTotalSummary = false,
-                    RouteActionName = "ForumSlugPaged",
-                    UseRouteLinks = true,
-                    RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
-                });
-            }
-            @pager
-        </div>
+        @{
+            var pager = Html.Pager(new PagerModel
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ForumSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+            });
+        }
+        @if (!MvcHtmlString.IsNullOrEmpty(pager))
+        {
+            <div class="pager upper">
+                @pager
+            </div>
+        }
     </div>
 
     <div class="forums-table-section topic-group">
@@ -164,7 +167,10 @@
             </div>
         }
     </div>
-    <div class="pager lower">
-        @pager
-    </div>
+    @if (!MvcHtmlString.IsNullOrEmpty(pager))
+    {
+        <div class="pager lower">
+            @pager
+        </div>
+    }
 </div>

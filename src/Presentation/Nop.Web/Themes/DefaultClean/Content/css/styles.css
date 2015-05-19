@@ -4573,6 +4573,10 @@ label, label + * {
 
 /* inbox & view message */
 
+.private-messages-page .pager {
+    margin-top: 20px;
+}
+
 .private-messages-page th.select {
 	text-align: center;
 }

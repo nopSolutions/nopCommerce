@@ -94,9 +94,12 @@
                     RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
                 });
             }
-            <div class="pager upper">
-                @pager
-            </div>
+            @if (!MvcHtmlString.IsNullOrEmpty(pager))
+            {
+                <div class="pager upper">
+                    @pager
+                </div>
+            }
             @if (Model.NoResultsVisisble)
             {   
                 <div class="no-result">
@@ -202,9 +205,12 @@
                     </div>
                 }
             </div>
-            <div class="pager lower">
-                @pager
-            </div>
+            @if (!MvcHtmlString.IsNullOrEmpty(pager))
+            {
+                <div class="pager lower">
+                    @pager
+                </div>
+            }
         </div>
     </div>
 </div>

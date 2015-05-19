@@ -72,9 +72,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="pager">
-            @Html.Pager(Model.PagerModel)
-        </div>
+        var pager = Html.Pager(Model.PagerModel);
+        if (!MvcHtmlString.IsNullOrEmpty(pager))
+        {
+            <div class="pager">
+                @pager
+            </div>
+        }
         <div class="buttons">
             <input class="button-1 delete-selected-pm-button" name="delete-sent" type="submit" value="@T("PrivateMessages.Inbox.DeleteSelected")" />
         </div>

@@ -29,7 +29,12 @@ else
         @T("Profile.LatestPosts.NoPosts")
     </div>
 }
-
-<div class="pager">
-    @Html.Pager(Model.PagerModel)
-</div>
+@{
+    var pager = Html.Pager(Model.PagerModel);
+}
+@if (!MvcHtmlString.IsNullOrEmpty(pager))
+{
+    <div class="pager">
+        @pager
+    </div>
+}
