@@ -63,10 +63,20 @@ a {
 	border-bottom: 1px solid;
 	padding: 5px 10px;
 }
-.order-details-page .data-table .price,
+.order-details-page .data-table .sku,
+.order-details-page .data-table .unit-price,
+.order-details-page .data-table .quantity,
+.order-details-page .data-table .total {
+    white-space: nowrap;
+    text-align: center;
+}
+.order-details-page .data-table .unit-price,
 .order-details-page .data-table .quantity,
 .order-details-page .data-table .total {
 	width: 15%;
+}
+.order-details-page .data-table label {
+	display: none;
 }
 
 .order-details-page .section {
@@ -81,6 +91,9 @@ a {
 	text-align:right;
 }
 
+.order-details-page .cart-total-right {
+    white-space: nowrap;
+}
 .order-details-page .cart-total td {
 	padding: 5px 10px;
 	text-align: right;
