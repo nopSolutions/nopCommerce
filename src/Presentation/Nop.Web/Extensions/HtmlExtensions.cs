@@ -222,18 +222,6 @@ namespace Nop.Web.Extensions
         {
             return new Pager(pagination, helper.ViewContext);
         }
-        public static Pager Pager(this HtmlHelper helper, string viewDataKey)
-        {
-            var dataSource = helper.ViewContext.ViewData.Eval(viewDataKey) as IPageableModel;
-
-            if (dataSource == null)
-            {
-                throw new InvalidOperationException(string.Format("Item in ViewData with key '{0}' is not an IPagination.",
-                                                                  viewDataKey));
-            }
-
-            return helper.Pager(dataSource);
-        }
 
         /// <summary>
         /// Get topic system name
