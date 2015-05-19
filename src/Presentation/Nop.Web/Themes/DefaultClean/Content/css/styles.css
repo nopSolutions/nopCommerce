@@ -1,4 +1,4 @@
-﻿
+
 
 /*********** CSS RESET **********/
 
@@ -382,6 +382,7 @@ label, label + * {
 .data-table .product,
 .data-table .message,
 .data-table .info,
+.data-table .name,
 .forum-table .forum-details,
 .forum-table .topic-details {
 	min-width: 225px;
@@ -649,12 +650,14 @@ label, label + * {
 
 .header {
 	position: relative;
-	z-index: 3;
+	z-index: 10;
 	width: 95%;
 	margin: auto;
 	text-align: center;
 }
 .header-upper {
+	position: relative;
+	z-index: 1;
 	border-bottom: 1px solid #ddd;
 }
 
@@ -733,7 +736,9 @@ label, label + * {
 }
 
 .header-lower {
-	padding: 35px 0
+	position: relative;
+	z-index: 0;
+	padding: 35px 0;
 }
 
 .header-logo {
@@ -777,17 +782,19 @@ label, label + * {
 .search-box .search-box-button:hover {
 	background-color: #248ece;
 }
-.search-box .ui-autocomplete-loading{background:white url('../images/ajax_loader_small.gif') right center no-repeat;}
+.search-box .ui-autocomplete-loading {
+	background:white url('../images/ajax_loader_small.gif') right center no-repeat;
+}
 .ui-helper-hidden-accessible {
 	display: none !important;
 }
 .ui-autocomplete {
-	z-index: 2;
 	width: 285px !important;
 	border: 1px solid #ddd;
 	border-top: none;
 	overflow: hidden;
 	background-color: #fff;
+	text-align: left;
 	/*override jQuery UI styles, do not delete doubled properties*/
 	border-radius: 0;
 	padding: 0;
@@ -3702,10 +3709,6 @@ label, label + * {
 	color: #444;
 }
 
-.shipments .data-table td {
-	white-space: nowrap;
-}
-
 
 /****** SEARCH & SITEMAP ******/
 
@@ -4796,6 +4799,37 @@ pre {
 	vertical-align: middle;
 }
 
+.order-details-page .data-table {
+	display: block;
+}
+.order-details-page .data-table colgroup,
+.order-details-page .data-table thead {
+	display: none;
+}
+.order-details-page .data-table tbody {
+	display: block;
+	overflow: hidden;
+}
+.order-details-page .data-table tr {
+	display: block;
+	float: left;
+	width: 100%;
+	margin: 40px 0 0;
+	border: 1px solid #ddd;
+}
+.order-details-page .data-table td {
+	display: block;
+	border: none;
+	padding: 10px;
+}
+.order-details-page .data-table td.product,
+.order-details-page .data-table td.tracking-number {
+	min-width: 0;
+	border-bottom: 1px solid #ddd;
+	padding: 5px 10px 15px;
+	text-align: center;
+}
+
 
 /*** MOBILE NAVIGATION ***/
 
@@ -4897,11 +4931,23 @@ pre {
 .header-menu {
 	width: 92.5%;
 }
+
+
+/*** GLOBAL TABLES ***/
+
+
 .cart tr {
 	width: 46%;
 	margin: 40px 2% 0;
 }
 .cart tr:nth-child(2n+1) {
+	clear: both;
+}
+.order-details-page .data-table tr {
+	width: 46%;
+	margin: 40px 2% 0;
+}
+.order-details-page .data-table tr:nth-child(2n+1) {
 	clear: both;
 }
 
@@ -5044,6 +5090,14 @@ pre {
 .master-wrapper-content {
 	width: 94%;
 }
+.home-page-polls li {
+	min-width: 100px;
+}
+
+
+/**** GLOBAL TABLES ***/
+
+
 .cart tr {
 	width: 31.33333%;
 	margin: 40px 1% 0;
@@ -5054,8 +5108,15 @@ pre {
 .cart tr:nth-child(3n+1) {
 	clear: both;
 }
-.home-page-polls li {
-	min-width: 100px;
+.order-details-page .data-table tr {
+	width: 31.33333%;
+	margin: 40px 1% 0;
+}
+.order-details-page .data-table tr:nth-child(2n+1) {
+	clear: none;
+}
+.order-details-page .data-table tr:nth-child(3n+1) {
+	clear: both;
 }
 
 
@@ -5661,7 +5722,18 @@ pre {
 	width: auto;
 	margin: 0;
 }
-.cart label.td-title {
+.cart label {
+	display: none;
+}
+.cart .subtotal label {
+	display: inline;
+}
+
+.order-details-page .data-table tr {
+	width: auto;
+	margin: 0;
+}
+.order-details-page .data-table label {
 	display: none;
 }
 
@@ -5842,7 +5914,7 @@ pre {
 
 .header-menu {
 	position: relative;
-	z-index: 1;
+	z-index: 5;
 	width: 980px;
 	margin: 0 auto 30px;
 	border-top: 1px solid #ddd;
@@ -6466,4 +6538,3 @@ pre {
 }
 
 }
-

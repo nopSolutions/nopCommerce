@@ -63,6 +63,11 @@ a {
 	border-bottom: 1px solid;
 	padding: 5px 10px;
 }
+.order-details-page .data-table .price,
+.order-details-page .data-table .quantity,
+.order-details-page .data-table .total {
+	width: 15%;
+}
 
 .order-details-page .section {
 	margin: 30px 0;
@@ -77,7 +82,7 @@ a {
 }
 
 .order-details-page .cart-total td {
-	padding: 3px 5px;
+	padding: 5px 10px;
 	text-align: right;
 }
 .order-details-page td.cart-total-left {
