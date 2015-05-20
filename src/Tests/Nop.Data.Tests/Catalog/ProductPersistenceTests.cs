@@ -95,6 +95,11 @@ namespace Nop.Data.Tests.Catalog
                 CustomerEntersPrice = true,
                 MinimumCustomerEnteredPrice = 24.1M,
                 MaximumCustomerEnteredPrice = 25.1M,
+                BasepriceEnabled = true,
+                BasepriceAmount = 33.1M,
+                BasepriceUnitId = 4,
+                BasepriceBaseAmount = 34.1M,
+                BasepriceBaseUnitId = 5,
                 HasTierPrices = true,
                 HasDiscountsApplied = true,
                 Weight = 26.1M,
@@ -194,6 +199,11 @@ namespace Nop.Data.Tests.Catalog
             fromDb.CustomerEntersPrice.ShouldEqual(true);
             fromDb.MinimumCustomerEnteredPrice.ShouldEqual(24.1M);
             fromDb.MaximumCustomerEnteredPrice.ShouldEqual(25.1M);
+            fromDb.BasepriceEnabled.ShouldEqual(true);
+            fromDb.BasepriceAmount.ShouldEqual(33.1M);
+            fromDb.BasepriceUnitId.ShouldEqual(4);
+            fromDb.BasepriceBaseAmount.ShouldEqual(34.1M);
+            fromDb.BasepriceBaseUnitId.ShouldEqual(5);
             fromDb.HasTierPrices.ShouldEqual(true);
             fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Weight.ShouldEqual(26.1M);

@@ -56,6 +56,7 @@ namespace Nop.Web.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly IMeasureService _measureService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IWebHelper _webHelper;
@@ -99,6 +100,7 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService,
             IPictureService pictureService, 
             ILocalizationService localizationService,
+            IMeasureService measureService,
             IPriceCalculationService priceCalculationService,
             IPriceFormatter priceFormatter,
             IWebHelper webHelper, 
@@ -138,6 +140,7 @@ namespace Nop.Web.Controllers
             this._currencyService = currencyService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
+            this._measureService = measureService;
             this._priceCalculationService = priceCalculationService;
             this._priceFormatter = priceFormatter;
             this._webHelper = webHelper;
@@ -477,6 +480,10 @@ namespace Nop.Web.Controllers
                         model.ProductPrice.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoProductDetailsPage
                             && product.IsShipEnabled && 
                             !product.IsFreeShipping;
+
+                        //PAngV baseprice (used in Germany)
+                        model.ProductPrice.BasePricePAngV = product.FormatBasePrice(finalPriceWithDiscountBase,
+                            _localizationService, _measureService, _currencyService, _workContext, _priceFormatter);
 
                         //currency code
                         model.ProductPrice.CurrencyCode = _workContext.WorkingCurrency.CurrencyCode;

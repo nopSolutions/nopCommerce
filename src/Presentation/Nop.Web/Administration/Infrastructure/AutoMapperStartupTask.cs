@@ -262,6 +262,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDeliveryDates, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableWarehouses, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableBasepriceUnits, mo => mo.Ignore())
+                .ForMember(dest => dest.AvailableBasepriceBaseUnits, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())

@@ -306,6 +306,11 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("CustomerEntersPrice", null, product.CustomerEntersPrice.ToString());
                 xmlWriter.WriteElementString("MinimumCustomerEnteredPrice", null, product.MinimumCustomerEnteredPrice.ToString());
                 xmlWriter.WriteElementString("MaximumCustomerEnteredPrice", null, product.MaximumCustomerEnteredPrice.ToString());
+                xmlWriter.WriteElementString("BasepriceEnabled", null, product.BasepriceEnabled.ToString());
+                xmlWriter.WriteElementString("BasepriceAmount", null, product.BasepriceAmount.ToString());
+                xmlWriter.WriteElementString("BasepriceUnitId", null, product.BasepriceUnitId.ToString());
+                xmlWriter.WriteElementString("BasepriceBaseAmount", null, product.BasepriceBaseAmount.ToString());
+                xmlWriter.WriteElementString("BasepriceBaseUnitId", null, product.BasepriceBaseUnitId.ToString());
                 xmlWriter.WriteElementString("Weight", null, product.Weight.ToString());
                 xmlWriter.WriteElementString("Length", null, product.Length.ToString());
                 xmlWriter.WriteElementString("Width", null, product.Width.ToString());
@@ -576,6 +581,11 @@ namespace Nop.Services.ExportImport
                     "CustomerEntersPrice",
                     "MinimumCustomerEnteredPrice",
                     "MaximumCustomerEnteredPrice",
+                    "BasepriceEnabled",
+                    "BasepriceAmount",
+                    "BasepriceUnitId",
+                    "BasepriceBaseAmount",
+                    "BasepriceBaseUnitId",
                     "Weight",
                     "Length",
                     "Width",
@@ -827,6 +837,21 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.MaximumCustomerEnteredPrice;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.BasepriceEnabled;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.BasepriceAmount;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.BasepriceUnitId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.BasepriceBaseAmount;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.BasepriceBaseUnitId;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.Weight;

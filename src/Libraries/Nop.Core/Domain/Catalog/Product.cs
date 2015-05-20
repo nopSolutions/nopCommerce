@@ -377,6 +377,27 @@ namespace Nop.Core.Domain.Catalog
         public decimal MaximumCustomerEnteredPrice { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether base price (PAngV) is enabled. Used by German users.
+        /// </summary>
+        public bool BasepriceEnabled { get; set; }
+        /// <summary>
+        /// Gets or sets an amount in product for PAngV
+        /// </summary>
+        public decimal BasepriceAmount { get; set; }
+        /// <summary>
+        /// Gets or sets a unit of product for PAngV (MeasureWeight entity)
+        /// </summary>
+        public int BasepriceUnitId { get; set; }
+        /// <summary>
+        /// Gets or sets a reference amount for PAngV
+        /// </summary>
+        public decimal BasepriceBaseAmount { get; set; }
+        /// <summary>
+        /// Gets or sets a reference unit for PAngV (MeasureWeight entity)
+        /// </summary>
+        public int BasepriceBaseUnitId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this product has tier prices configured
         /// <remarks>The same as if we run this.TierPrices.Count > 0
         /// We use this property for performance optimization:

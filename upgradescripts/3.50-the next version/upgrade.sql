@@ -779,6 +779,39 @@ set @resources='
   <LocaleResource Name="Forum.Search.SearchKeyword">
     <Value>Search keyword:</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceEnabled">
+    <Value>PAngV (base price) enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceEnabled.Hint">
+    <Value>Check to display baseprice of a product. This is required according to the German law (PAngV). If you sell 500ml of beer for 1,50 euro, then you have to display baseprice: 3.00 euro per 1L.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceAmount">
+    <Value>Amount in product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceAmount.Hint">
+    <Value>Enter an amount in product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit">
+    <Value>Unit of product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit.Hint">
+    <Value>Enter a unit of product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseAmount">
+    <Value>Reference amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseAmount.Hint">
+    <Value>Enter a reference amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseUnit">
+    <Value>Reference unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseUnit.Hint">
+    <Value>Enter a reference unit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.BasePrice">
+    <Value>equates to {0} per {1} {2}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2054,4 +2087,88 @@ BEGIN
 	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
 	VALUES (N'OrderRefunded.CustomerNotification', null, N'%Store.Name%. Order #%Order.OrderNumber% refunded', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Thanks for buying from <a href="%Store.URL%">%Store.Name%</a>. Order #%Order.OrderNumber% has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a href="%Order.OrderURLForCustomer%" target="_blank">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>', 0, 0, 0, 0)
 END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='BasepriceEnabled')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [BasepriceEnabled] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [BasepriceEnabled] = 0
+WHERE [BasepriceEnabled] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [BasepriceEnabled] bit NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='BasepriceAmount')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [BasepriceAmount] decimal(18,4) NULL
+END
+GO
+
+UPDATE [Product]
+SET [BasepriceAmount] = 0
+WHERE [BasepriceAmount] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [BasepriceAmount] decimal(18,4) NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='BasepriceUnitId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [BasepriceUnitId] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [BasepriceUnitId] = 0
+WHERE [BasepriceUnitId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [BasepriceUnitId] int NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='BasepriceBaseAmount')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [BasepriceBaseAmount] decimal(18,4) NULL
+END
+GO
+
+UPDATE [Product]
+SET [BasepriceBaseAmount] = 0
+WHERE [BasepriceBaseAmount] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [BasepriceBaseAmount] decimal(18,4) NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='BasepriceBaseUnitId')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [BasepriceBaseUnitId] int NULL
+END
+GO
+
+UPDATE [Product]
+SET [BasepriceBaseUnitId] = 0
+WHERE [BasepriceBaseUnitId] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [BasepriceBaseUnitId] int NOT NULL
 GO

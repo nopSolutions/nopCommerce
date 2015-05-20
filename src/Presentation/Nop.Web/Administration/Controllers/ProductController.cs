@@ -612,6 +612,13 @@ namespace Nop.Admin.Controllers
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString(), Selected = product != null && !setPredefinedValues && tc.Id == product.TaxCategoryId });
 
+            //baseprice units
+            var measureWeights = _measureService.GetAllMeasureWeights();
+            foreach (var mw in measureWeights)
+                model.AvailableBasepriceUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceUnitId });
+            foreach (var mw in measureWeights)
+                model.AvailableBasepriceBaseUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceBaseUnitId });
+
             //specification attributes
             var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
             for (int i = 0; i < specificationAttributes.Count; i++)

@@ -2229,6 +2229,36 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.BackorderMode.Hint">
     <Value>Select backorder mode.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceEnabled">
+    <Value>PAngV (base price) enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceEnabled.Hint">
+    <Value>Check to display baseprice of a product. This is required according to the German law (PAngV). If you sell 500ml of beer for 1,50 euro, then you have to display baseprice: 3.00 euro per 1L.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceAmount">
+    <Value>Amount in product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceAmount.Hint">
+    <Value>Enter an amount in product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit">
+    <Value>Unit of product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceUnit.Hint">
+    <Value>Enter a unit of product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseAmount">
+    <Value>Reference amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseAmount.Hint">
+    <Value>Enter a reference amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseUnit">
+    <Value>Reference unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.BasepriceBaseUnit.Hint">
+    <Value>Enter a reference unit.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.CallForPrice">
     <Value>Call for price</Value>
   </LocaleResource>
@@ -13181,6 +13211,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Availability.OutOfStock">
     <Value>Out of stock</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.BasePrice">
+    <Value>equates to {0} per {1} {2}</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Breadcrumb.Top">
     <Value>Home</Value>

@@ -191,6 +191,11 @@ namespace Nop.Services.ExportImport
                     "CustomerEntersPrice",
                     "MinimumCustomerEnteredPrice",
                     "MaximumCustomerEnteredPrice",
+                    "BasepriceEnabled",
+                    "BasepriceAmount",
+                    "BasepriceUnitId",
+                    "BasepriceBaseAmount",
+                    "BasepriceBaseUnitId",
                     "Weight",
                     "Length",
                     "Width",
@@ -306,6 +311,11 @@ namespace Nop.Services.ExportImport
                     bool customerEntersPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
                     decimal minimumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
                     decimal maximumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
+                    bool basepriceEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceEnabled")].Value);
+                    decimal basepriceAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceAmount")].Value);
+                    int basepriceUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceUnitId")].Value);
+                    decimal basepriceBaseAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseAmount")].Value);
+                    int basepriceBaseUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseUnitId")].Value);
                     decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
@@ -400,6 +410,11 @@ namespace Nop.Services.ExportImport
                     product.CustomerEntersPrice = customerEntersPrice;
                     product.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
                     product.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
+                    product.BasepriceEnabled = basepriceEnabled;
+                    product.BasepriceAmount = basepriceAmount;
+                    product.BasepriceUnitId = basepriceUnitId;
+                    product.BasepriceBaseAmount = basepriceBaseAmount;
+                    product.BasepriceBaseUnitId = basepriceBaseUnitId;
                     product.Weight = weight;
                     product.Length = length;
                     product.Width = width;

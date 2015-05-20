@@ -21,6 +21,8 @@ namespace Nop.Admin.Models.Catalog
             Locales = new List<ProductLocalizedModel>();
             ProductPictureModels = new List<ProductPictureModel>();
             CopyProductModel = new CopyProductModel();
+            AvailableBasepriceUnits = new List<SelectListItem>();
+            AvailableBasepriceBaseUnits = new List<SelectListItem>();
             AvailableProductTemplates = new List<SelectListItem>();
             AvailableVendors = new List<SelectListItem>();
             AvailableTaxCategories = new List<SelectListItem>();
@@ -307,6 +309,19 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice")]
         public decimal MaximumCustomerEnteredPrice { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceEnabled")]
+        public bool BasepriceEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceAmount")]
+        public decimal BasepriceAmount { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceUnit")]
+        public int BasepriceUnitId { get; set; }
+        public IList<SelectListItem> AvailableBasepriceUnits { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseAmount")]
+        public decimal BasepriceBaseAmount { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.BasepriceBaseUnit")]
+        public int BasepriceBaseUnitId { get; set; }
+        public IList<SelectListItem> AvailableBasepriceBaseUnits { get; set; } 
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Weight")]
         public decimal Weight { get; set; }
 
@@ -326,7 +341,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AvailableEndDateTime")]
         [UIHint("DateTimeNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
-
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }

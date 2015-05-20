@@ -19,6 +19,7 @@
         $("#@Html.FieldIdFor(model => model.AvailableForPreOrder)").click(togglePreOrder);
         $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
         $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
+        $("#@Html.FieldIdFor(model => model.BasepriceEnabled)").click(toggleBasepriceEnabled);
         $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.UnlimitedDownloads)").click(toggleDownloadableProduct);
         $("#@Html.FieldIdFor(model => model.HasSampleDownload)").click(toggleDownloadableProduct);
@@ -41,6 +42,7 @@
         toggleRequireOtherProducts();
         toggleGiftCard();
         toggleCustomerEntersPrice();
+        toggleBasepriceEnabled();
         toggleDownloadableProduct();
         toggleRecurring();
         toggleRental();
@@ -120,6 +122,20 @@
         }
     }
 
+    function toggleBasepriceEnabled() {
+        if ($('#@Html.FieldIdFor(model => model.BasepriceEnabled)').is(':checked')) {
+            $('#pnlBasepriceAmount').show();
+            $('#pnlBasepriceUnit').show();
+            $('#pnlBasepriceBaseAmount').show();
+            $('#pnlBasepriceBaseUnit').show();
+        } else {
+            $('#pnlBasepriceAmount').hide();
+            $('#pnlBasepriceUnit').hide();
+            $('#pnlBasepriceBaseAmount').hide();
+            $('#pnlBasepriceBaseUnit').hide();
+        }
+    }
+    
     function toggleDownloadableProduct() {
         if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
 
@@ -681,6 +697,56 @@
         <td class="adminData">
             @Html.EditorFor(model => model.MaximumCustomerEnteredPrice) [@Model.PrimaryStoreCurrencyCode]
             @Html.ValidationMessageFor(model => model.MaximumCustomerEnteredPrice)
+        </td>
+    </tr>
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BasepriceEnabled):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.BasepriceEnabled)
+            @Html.ValidationMessageFor(model => model.BasepriceEnabled)
+        </td>
+    </tr>
+    <tr id="pnlBasepriceAmount">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BasepriceAmount):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.BasepriceAmount)
+            @Html.ValidationMessageFor(model => model.BasepriceAmount)
+        </td>
+    </tr>
+    <tr id="pnlBasepriceUnit">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BasepriceUnitId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.BasepriceUnitId, Model.AvailableBasepriceUnits)
+            @Html.ValidationMessageFor(model => model.BasepriceUnitId)
+        </td>
+    </tr>
+    <tr id="pnlBasepriceBaseAmount">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BasepriceBaseAmount):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.BasepriceBaseAmount)
+            @Html.ValidationMessageFor(model => model.BasepriceBaseAmount)
+        </td>
+    </tr>
+    <tr id="pnlBasepriceBaseUnit">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.BasepriceBaseUnitId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownListFor(model => model.BasepriceBaseUnitId, Model.AvailableBasepriceBaseUnits)
+            @Html.ValidationMessageFor(model => model.BasepriceBaseUnitId)
         </td>
     </tr>
 </table>

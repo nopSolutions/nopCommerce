@@ -177,6 +177,10 @@ namespace Nop.Web.Models.Catalog
             /// A value indicating whether we should display tax/shipping info (used in Germany)
             /// </summary>
             public bool DisplayTaxShippingInfo { get; set; }
+            /// <summary>
+            /// PAngV baseprice (used in Germany)
+            /// </summary>
+            public string BasePricePAngV { get; set; }
         }
 
         public partial class GiftCardModel : BaseNopModel

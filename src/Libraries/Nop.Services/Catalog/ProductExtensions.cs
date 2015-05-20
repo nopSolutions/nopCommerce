@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Services.Directory;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Catalog
@@ -411,6 +413,67 @@ namespace Nop.Services.Catalog
                 return null;
 
             return date.ToShortDateString();
+        }
+
+        /// <summary>
+        /// Format base price (PAngV)
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productPrice">Product price (in primary currency). Pass null if you want to use a default produce price</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="measureService">Measure service</param>
+        /// <param name="currencyService">Currency service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="priceFormatter">Price formatter</param>
+        /// <returns>Base price</returns>
+        public static string FormatBasePrice(this Product product, decimal? productPrice, ILocalizationService localizationService,
+            IMeasureService measureService, ICurrencyService currencyService,
+            IWorkContext workContext, IPriceFormatter priceFormatter)
+        {
+            if (product == null)
+                throw new ArgumentNullException("product");
+
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+            
+            if (measureService == null)
+                throw new ArgumentNullException("measureService");
+
+            if (currencyService == null)
+                throw new ArgumentNullException("currencyService");
+
+            if (workContext == null)
+                throw new ArgumentNullException("workContext");
+
+            if (priceFormatter == null)
+                throw new ArgumentNullException("priceFormatter");
+
+            if (!product.BasepriceEnabled)
+                return null;
+
+            var productAmount = product.BasepriceAmount;
+            //Amount in product cannot be 0
+            if (productAmount == 0)
+                return null;
+            var referenceAmount = product.BasepriceBaseAmount;
+            var productUnit = measureService.GetMeasureWeightById(product.BasepriceUnitId);
+            //measure weight cannot be loaded
+            if (productUnit == null)
+                return null;
+            var referenceUnit = measureService.GetMeasureWeightById(product.BasepriceBaseUnitId);
+            //measure weight cannot be loaded
+            if (referenceUnit == null)
+                return null;
+
+            productPrice = productPrice.HasValue ? productPrice.Value : product.Price;
+
+            decimal basePrice = measureService.ConvertWeight(productPrice.Value / productAmount, productUnit, referenceUnit) * referenceAmount;
+            decimal basePriceInCurrentCurrency = currencyService.ConvertFromPrimaryStoreCurrency(basePrice, workContext.WorkingCurrency);
+            string basePriceStr = priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
+
+            var result = string.Format(localizationService.GetResource("Products.BasePrice"),
+                basePriceStr, referenceAmount.ToString("G29"), referenceUnit.Name);
+            return result;
         }
     }
 }
