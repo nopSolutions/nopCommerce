@@ -382,18 +382,19 @@ namespace Nop.Services.Media
                 {
                     using (var b = new Bitmap(filePath))
                     {
-                        var newSize = CalculateDimensions(b.Size, targetSize);
-
-                        var destStream = new MemoryStream();
-                        ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                        using (var destStream = new MemoryStream())
                         {
-                            Width = newSize.Width,
-                            Height = newSize.Height,
-                            Scale = ScaleMode.Both,
-                            Quality = _mediaSettings.DefaultImageQuality
-                        });
-                        var destBinary = destStream.ToArray();
-                        File.WriteAllBytes(thumbFilePath, destBinary);
+                            var newSize = CalculateDimensions(b.Size, targetSize);
+                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                            {
+                                Width = newSize.Width,
+                                Height = newSize.Height,
+                                Scale = ScaleMode.Both,
+                                Quality = _mediaSettings.DefaultImageQuality
+                            });
+                            var destBinary = destStream.ToArray();
+                            File.WriteAllBytes(thumbFilePath, destBinary);
+                        }
                     }
                 }
                 var url = GetThumbUrl(thumbFileName, storeLocation);
@@ -504,20 +505,20 @@ namespace Nop.Services.Media
                                 return url;
                             }
 
-                            var newSize = CalculateDimensions(b.Size, targetSize);
-
-                            var destStream = new MemoryStream();
-                            ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                            using (var destStream = new MemoryStream())
                             {
-                                Width = newSize.Width,
-                                Height = newSize.Height,
-                                Scale = ScaleMode.Both,
-                                Quality = _mediaSettings.DefaultImageQuality
-                            });
-                            var destBinary = destStream.ToArray();
-                            File.WriteAllBytes(thumbFilePath, destBinary);
-
-                            b.Dispose();
+                                var newSize = CalculateDimensions(b.Size, targetSize);
+                                ImageBuilder.Current.Build(b, destStream, new ResizeSettings
+                                {
+                                    Width = newSize.Width,
+                                    Height = newSize.Height,
+                                    Scale = ScaleMode.Both,
+                                    Quality = _mediaSettings.DefaultImageQuality
+                                });
+                                var destBinary = destStream.ToArray();
+                                File.WriteAllBytes(thumbFilePath, destBinary);
+                                b.Dispose();
+                            }
                         }
                     }
                 }
@@ -752,14 +753,16 @@ namespace Nop.Services.Media
         /// <returns>Picture binary or throws an exception</returns>
         public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            var destStream = new MemoryStream();
-            ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
+            using (var destStream = new MemoryStream())
             {
-                MaxWidth = _mediaSettings.MaximumImageSize,
-                MaxHeight = _mediaSettings.MaximumImageSize,
-                Quality = _mediaSettings.DefaultImageQuality
-            });
-            return destStream.ToArray();
+                ImageBuilder.Current.Build(pictureBinary, destStream, new ResizeSettings
+                {
+                    MaxWidth = _mediaSettings.MaximumImageSize,
+                    MaxHeight = _mediaSettings.MaximumImageSize,
+                    Quality = _mediaSettings.DefaultImageQuality
+                });
+                return destStream.ToArray();
+            }
         }
         
         #endregion
