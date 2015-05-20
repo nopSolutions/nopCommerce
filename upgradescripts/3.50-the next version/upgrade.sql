@@ -776,6 +776,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Totals.GiftCardInfo.Code">
     <Value>({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Search.SearchKeyword">
+    <Value>Search keyword:</Value>
+  </LocaleResource>
 </Language>
 '
 

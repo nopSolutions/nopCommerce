@@ -12090,6 +12090,9 @@
   <LocaleResource Name="Forum.Search.SearchInForum.All">
     <Value>All forums</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Search.SearchKeyword">
+    <Value>Search keyword:</Value>
+  </LocaleResource>
   <LocaleResource Name="Forum.Search.SearchWithin">
     <Value>Search within:</Value>
   </LocaleResource>
