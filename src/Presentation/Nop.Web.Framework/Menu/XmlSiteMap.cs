@@ -71,17 +71,13 @@ namespace Nop.Web.Framework.Menu
 
         private static void PopulateNode(SiteMapNode siteMapNode, XmlNode xmlNode)
         {
+            //system name
+            siteMapNode.SystemName = GetStringValueFromAttribute(xmlNode, "SystemName");
+
             //title
             var nopResource = GetStringValueFromAttribute(xmlNode, "nopResource");
-            if (!string.IsNullOrEmpty(nopResource))
-            {
-                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                siteMapNode.Title = localizationService.GetResource(nopResource);
-            }
-            else
-            {
-                siteMapNode.Title = GetStringValueFromAttribute(xmlNode, "title");
-            }
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            siteMapNode.Title = localizationService.GetResource(nopResource);
 
             //routes, url
             string controllerName = GetStringValueFromAttribute(xmlNode, "controller");

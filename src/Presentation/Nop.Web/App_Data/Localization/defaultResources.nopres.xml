@@ -8481,6 +8481,9 @@
   <LocaleResource Name="Admin.Help.Topics">
     <Value>Help topics</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Home">
+    <Value>Home</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.NopCommerceNews">
     <Value>NopCommerce News</Value>
   </LocaleResource>

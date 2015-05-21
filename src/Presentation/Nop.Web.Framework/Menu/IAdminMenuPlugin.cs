@@ -8,9 +8,9 @@ namespace Nop.Web.Framework.Menu
     public interface IAdminMenuPlugin : IPlugin
     {
         /// <summary>
-        /// Build menu item
+        /// Manage sitemap. You can use "SystemName" of menu items to manage existing sitemap or add a new menu item.
         /// </summary>
-        /// <returns>Site map item</returns>
-        SiteMapNode BuildMenuItem();
+        /// <param name="rootNode">Root node of the sitemap.</param>
+        void ManageSiteMap(SiteMapNode rootNode);
     }
 }

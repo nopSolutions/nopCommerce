@@ -54,39 +54,28 @@
 }
 
 <ul id="admin-menu">
-    @*standard (default) items*@
-    @foreach (var item in siteMap.RootNode.ChildNodes.Where(x => x.Visible))
-    {
-        @RenderMenuItem(item)
-    }
-    @*plugin items*@
     @{
+        //standard (default) items
+        var rootNode = siteMap.RootNode;
+        
+        //plugins
         var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
             .GetPlugins<IAdminMenuPlugin>()
             .ToList();
-
-        var pluginMenuItems = new List<Nop.Web.Framework.Menu.SiteMapNode>();
         foreach (var adminMenuPlugin in adminMenuPlugins)
         {
-            var pluginMenuItem = adminMenuPlugin.BuildMenuItem();
-            if (pluginMenuItem.Visible)
-            {
-                pluginMenuItems.Add(pluginMenuItem);
-            }
+            adminMenuPlugin.ManageSiteMap(rootNode);
         }
-        if (pluginMenuItems.Any())
+        //"Plugins" menu item should be visible when it has some child nodes
+        var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
+        if (pluginNode != null && pluginNode.Visible)
         {
-            var pluginRootMenuItem = new Nop.Web.Framework.Menu.SiteMapNode
-            {
-                Title = T("Admin.Plugins").Text,
-                Visible = true
-            };
-            foreach (var pluginMenuItem in pluginMenuItems)
-            {
-                pluginRootMenuItem.ChildNodes.Add(pluginMenuItem);
-            }
-            @RenderMenuItem(pluginRootMenuItem)
+            pluginNode.Visible = pluginNode.ChildNodes.Any(x => x.Visible);
         }
+    }
+    @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
+    {
+        @RenderMenuItem(item)
     }
 </ul>
 <script>

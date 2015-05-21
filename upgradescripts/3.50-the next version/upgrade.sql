@@ -812,6 +812,9 @@ set @resources='
   <LocaleResource Name="Products.BasePrice">
     <Value>equates to {0} per {1} {2}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Home">
+    <Value>Home</Value>
+  </LocaleResource>
 </Language>
 '
 
