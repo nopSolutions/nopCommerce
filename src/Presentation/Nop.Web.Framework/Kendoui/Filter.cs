@@ -100,15 +100,16 @@ namespace Nop.Web.Framework.Kendoui
             //    return String.Format("{0}.{1}(@{2})", Field, comparison, index);
             //}
 
-            
             //we ignore case
             if (comparison == "Contains")
             {
                 return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) >= 0", Field, index);
             }
-            if (comparison == "=")
+            if (comparison == "=" && Value.GetType() == typeof(String))
             {
+                //string only
                 comparison = "Equals";
+                //numeric values use standard "=" char
             }
             if (comparison == "StartsWith" || comparison == "EndsWith" || comparison == "Equals")
             {
