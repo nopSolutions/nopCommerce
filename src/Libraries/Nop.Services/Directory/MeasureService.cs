@@ -199,6 +199,12 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertDimension(decimal value, 
             MeasureDimension sourceMeasureDimension, MeasureDimension targetMeasureDimension, bool round = true)
         {
+            if (sourceMeasureDimension == null)
+                throw new ArgumentNullException("sourceMeasureDimension");
+
+            if (targetMeasureDimension == null)
+                throw new ArgumentNullException("targetMeasureDimension");
+
             decimal result = value;
             if (result != decimal.Zero && sourceMeasureDimension.Id != targetMeasureDimension.Id)
             {
@@ -219,6 +225,9 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertToPrimaryMeasureDimension(decimal value,
             MeasureDimension sourceMeasureDimension)
         {
+            if (sourceMeasureDimension == null)
+                throw new ArgumentNullException("sourceMeasureDimension");
+
             decimal result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (result != decimal.Zero && sourceMeasureDimension.Id != baseDimensionIn.Id)
@@ -240,6 +249,9 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertFromPrimaryMeasureDimension(decimal value,
             MeasureDimension targetMeasureDimension)
         {
+            if (targetMeasureDimension == null)
+                throw new ArgumentNullException("targetMeasureDimension");
+
             decimal result = value;
             var baseDimensionIn = GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (result != decimal.Zero && targetMeasureDimension.Id != baseDimensionIn.Id)
@@ -366,6 +378,12 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertWeight(decimal value,
             MeasureWeight sourceMeasureWeight, MeasureWeight targetMeasureWeight, bool round = true)
         {
+            if (sourceMeasureWeight == null)
+                throw new ArgumentNullException("sourceMeasureWeight");
+
+            if (targetMeasureWeight == null)
+                throw new ArgumentNullException("targetMeasureWeight");
+
             decimal result = value;
             if (result != decimal.Zero && sourceMeasureWeight.Id != targetMeasureWeight.Id)
             {
@@ -385,6 +403,9 @@ namespace Nop.Services.Directory
         /// <returns>Converted value</returns>
         public virtual decimal ConvertToPrimaryMeasureWeight(decimal value, MeasureWeight sourceMeasureWeight)
         {
+            if (sourceMeasureWeight == null)
+                throw new ArgumentNullException("sourceMeasureWeight");
+
             decimal result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (result != decimal.Zero && sourceMeasureWeight.Id != baseWeightIn.Id)
@@ -406,6 +427,9 @@ namespace Nop.Services.Directory
         public virtual decimal ConvertFromPrimaryMeasureWeight(decimal value,
             MeasureWeight targetMeasureWeight)
         {
+            if (targetMeasureWeight == null)
+                throw new ArgumentNullException("targetMeasureWeight");
+
             decimal result = value;
             var baseWeightIn = GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (result != decimal.Zero && targetMeasureWeight.Id != baseWeightIn.Id)
