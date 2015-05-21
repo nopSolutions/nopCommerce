@@ -467,7 +467,10 @@ namespace Nop.Services.Catalog
 
             productPrice = productPrice.HasValue ? productPrice.Value : product.Price;
 
-            decimal basePrice = measureService.ConvertWeight(productPrice.Value / productAmount, productUnit, referenceUnit) * referenceAmount;
+            decimal basePrice = productPrice.Value /
+                //do not round. otherwise, it can cause issues
+                measureService.ConvertWeight(productAmount, productUnit, referenceUnit, false) * 
+                referenceAmount;
             decimal basePriceInCurrentCurrency = currencyService.ConvertFromPrimaryStoreCurrency(basePrice, workContext.WorkingCurrency);
             string basePriceStr = priceFormatter.FormatPrice(basePriceInCurrentCurrency, true, false);
 
