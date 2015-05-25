@@ -1526,6 +1526,7 @@
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
     <None Include="Scripts\_references.js" />
     <Content Include="Themes\DefaultClean\Content\css\styles.css" />
+    <Content Include="Themes\DefaultClean\Content\css\styles.rtl.css" />
     <Content Include="Themes\DefaultClean\Content\images\ajax-loader-small.gif" />
     <Content Include="Themes\DefaultClean\Content\images\back-button.png" />
     <Content Include="Themes\DefaultClean\Content\images\calendar-next.png" />

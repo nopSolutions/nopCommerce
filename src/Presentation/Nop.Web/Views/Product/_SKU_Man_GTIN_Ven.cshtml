@@ -8,28 +8,32 @@
         @if (!String.IsNullOrWhiteSpace(Model.Sku) && Model.ShowSku)
         {
             <div class="sku">
-                <span class="label">@T("Products.Sku"): </span><span class="value" itemprop="sku" id="sku-@Model.Id">@Model.Sku</span>
+                <span class="label">@T("Products.Sku"):</span>
+                <span class="value" itemprop="sku" id="sku-@Model.Id">@Model.Sku</span>
             </div>
         }
         @*Manufacturer part number*@
         @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
         {
             <div class="manufacturer-part-number">
-                <span class="label">@T("Products.ManufacturerPartNumber"): </span><span class="value" id="mpn-@Model.Id">@Model.ManufacturerPartNumber</span>
+                <span class="label">@T("Products.ManufacturerPartNumber"):</span>
+                <span class="value" id="mpn-@Model.Id">@Model.ManufacturerPartNumber</span>
             </div>
         }
         @*GTIN*@
         @if (!String.IsNullOrWhiteSpace(Model.Gtin) && Model.ShowGtin)
         {
             <div class="gtin">
-                <span class="label">@T("Products.GTIN"): </span><span class="value" id="gtin-@Model.Id">@Model.Gtin</span>
+                <span class="label">@T("Products.GTIN"):</span>
+                <span class="value" id="gtin-@Model.Id">@Model.Gtin</span>
             </div>
         }
         @*Vendor*@
         @if (Model.ShowVendor)
         {
             <div class="product-vendor">
-                <span class="label">@T("Products.Vendor"): </span><span class="value"><a href="@Url.RouteUrl("Vendor", new { SeName = Model.VendorModel.SeName })">@Model.VendorModel.Name</a></span>
+                <span class="label">@T("Products.Vendor"):</span>
+                <span class="value"><a href="@Url.RouteUrl("Vendor", new { SeName = Model.VendorModel.SeName })">@Model.VendorModel.Name</a></span>
             </div>
         }
     </div>

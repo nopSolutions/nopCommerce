@@ -112,7 +112,7 @@
                                 <span class="separator">|</span>
                                 <span class="date">
                                     <label>@T("Reviews.Date"):</label>
-                                    @review.WrittenOnStr
+                                    <span>@review.WrittenOnStr</span>
                                 </span>
                             </div>
                             @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())

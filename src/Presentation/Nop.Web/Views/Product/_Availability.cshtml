@@ -6,7 +6,8 @@
         @if (!String.IsNullOrWhiteSpace(Model.StockAvailability))
         {
             <div class="stock">
-                <span class="label">@T("Products.Availability"): </span><span class="value">@Model.StockAvailability</span>
+                <span class="label">@T("Products.Availability"):</span>
+                <span class="value">@Model.StockAvailability</span>
             </div>
         }
         @Html.Partial("_BackInStockSubscription", Model)
