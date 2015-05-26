@@ -152,7 +152,6 @@
     <Compile Include="Events\EntityDeleted.cs" />
     <Compile Include="Events\EntityInserted.cs" />
     <Compile Include="Events\EntityUpdated.cs" />
-    <Compile Include="Fakes\Extensions.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeHttpRequest.cs" />
     <Compile Include="Fakes\FakeHttpResponse.cs" />
