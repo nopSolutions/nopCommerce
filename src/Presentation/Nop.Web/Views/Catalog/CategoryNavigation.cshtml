@@ -23,7 +23,14 @@
 }
 @helper RenderCategoryLine(CategorySimpleModel category)
 {
-    <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")">
+    bool active = category.Id == Model.CurrentCategoryId || category.SubCategories.Count(BreadCrumbContainsCurrentCategoryId) > 0;
+    bool last = category.Id == Model.CurrentCategoryId;
+    string liClass = active ? "active" : "inactive";
+    if (last)
+    {
+        liClass += " last";
+    }
+    <li class="@liClass">
         <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
             @if (category.NumberOfProducts.HasValue)
             {
