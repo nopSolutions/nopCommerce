@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Principal;
@@ -19,7 +20,7 @@ namespace Nop.Core.Fakes
         private readonly NameValueCollection _serverVariables;
         private HttpResponseBase _response;
         private HttpRequestBase _request;
-        private readonly Dictionary<object, object> _items;
+        private readonly IDictionary _items;
 
         public static FakeHttpContext Root()
         {
@@ -99,7 +100,7 @@ namespace Nop.Core.Fakes
             get { return new FakeHttpSessionState(_sessionItems); }
         }
 
-        public override System.Collections.IDictionary Items
+        public override IDictionary Items
         {
             get
             {
