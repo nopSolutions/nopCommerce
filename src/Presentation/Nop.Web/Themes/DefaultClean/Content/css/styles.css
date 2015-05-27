@@ -3757,6 +3757,10 @@ label, label + * {
 	color: #e4434b;
 }
 
+.sitemap-page .description {
+	margin: 0 0 30px;
+    text-align: center;
+}
 .sitemap-page .entity {
 	margin: 0 0 30px;
 }

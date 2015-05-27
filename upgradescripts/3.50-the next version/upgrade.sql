@@ -815,6 +815,9 @@ set @resources='
   <LocaleResource Name="Admin.Home">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Sitemap.Description">
+    <Value>View the sitemap for this website below, with links to each of the pages and brief descriptions of what to find in each section</Value>
+  </LocaleResource>
 </Language>
 '
 
