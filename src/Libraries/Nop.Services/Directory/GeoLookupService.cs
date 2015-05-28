@@ -1,4 +1,6 @@
-﻿using System;
+﻿//This product includes GeoLite2 data created by MaxMind, available from http://www.maxmind.com
+
+using System;
 using MaxMind.GeoIP2;
 using MaxMind.GeoIP2.Exceptions;
 using MaxMind.GeoIP2.Responses;
