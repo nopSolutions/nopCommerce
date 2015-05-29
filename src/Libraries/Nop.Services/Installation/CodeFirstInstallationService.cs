@@ -167,7 +167,7 @@ namespace Nop.Services.Installation
         }
 
         #endregion
-        
+
         #region Utilities
 
         protected virtual void InstallStores()
@@ -291,7 +291,7 @@ namespace Nop.Services.Installation
                                        },
                                    new TaxCategory
                                        {
-                                           Name = "Apparel & Shoes",
+                                           Name = "Apparel",
                                            DisplayOrder = 20,
                                        },
                                };
@@ -3856,7 +3856,7 @@ namespace Nop.Services.Installation
                                     new ShippingMethod
                                         {
                                             Name = "Ground",
-                                            Description ="Compared to other shipping methods, like by flight or over seas, ground shipping is carried out closer to the earth",
+                                            Description ="Compared to other shipping methods, ground shipping is carried out closer to the earth",
                                             DisplayOrder = 1
                                         },
                                     new ShippingMethod
@@ -3958,7 +3958,7 @@ namespace Nop.Services.Installation
                 PasswordSalt = "",
                 Active = true,
                 CreatedOnUtc = DateTime.UtcNow,
-                LastActivityDateUtc= DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
             };
             var defaultAdminUserAddress = new Address
             {
@@ -4299,15 +4299,6 @@ namespace Nop.Services.Installation
                                        },
                                    new MessageTemplate
                                        {
-                                           Name = "OrderRefunded.CustomerNotification",
-                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
-                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%, <br />Thanks for buying from <a href=\"%Store.URL%\">%Store.Name%</a>. Order #%Order.OrderNumber% has been has been refunded. Please allow 7-14 days for the refund to be reflected in your account.<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Below is the summary of the order. <br /><br />Order Number: %Order.OrderNumber%<br />Order Details: <a href=\"%Order.OrderURLForCustomer%\" target=\"_blank\">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod%<br /><br />%Order.Product(s)%</p>",
-                                           //this template is disabled by default
-                                           IsActive = false,
-                                           EmailAccountId = eaGeneral.Id,
-                                       },
-                                   new MessageTemplate
-                                       {
                                            Name = "OrderPaid.StoreOwnerNotification",
                                            Subject = "%Store.Name%. Order #%Order.OrderNumber% paid",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just paid<br />Date Ordered: %Order.CreatedOn%</p>",
@@ -4554,7 +4545,7 @@ namespace Nop.Services.Installation
                     AllowProductSorting = true,
                     AllowProductViewModeChanging = true,
                     DefaultViewMode = "grid",
-                    ShowProductsFromSubcategories = false,
+                    ShowProductsFromSubcategories = true,
                     ShowCategoryProductNumber = false,
                     ShowCategoryProductNumberIncludingSubcategories = false,
                     CategoryBreadcrumbEnabled = true,
@@ -4602,7 +4593,7 @@ namespace Nop.Services.Installation
                     ProductsByTagPageSizeOptions = "8, 4, 12",
                     MaximumBackInStockSubscriptions = 200,
                     LoadAllSideCategoryMenuSubcategories = false,
-                    ManufacturersBlockItemsToDisplay = 5,
+                    ManufacturersBlockItemsToDisplay = 2,
                     DisplayTaxShippingInfoFooter = false,
                     DisplayTaxShippingInfoProductDetailsPage = false,
                     DisplayTaxShippingInfoProductBoxes = false,
@@ -4686,16 +4677,16 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new MediaSettings
                 {
                     AvatarPictureSize = 120,
-                    ProductThumbPictureSize = 290,
+                    ProductThumbPictureSize = 340,
                     ProductDetailsPictureSize = 550,
-                    ProductThumbPictureSizeOnProductDetailsPage = 70,
-                    AssociatedProductPictureSize = 290,
-                    CategoryThumbPictureSize = 200,
-                    ManufacturerThumbPictureSize = 200,
+                    ProductThumbPictureSizeOnProductDetailsPage = 100,
+                    AssociatedProductPictureSize = 220,
+                    CategoryThumbPictureSize = 450,
+                    ManufacturerThumbPictureSize = 420,
                     CartThumbPictureSize = 80,
-                    MiniCartThumbPictureSize = 47,
+                    MiniCartThumbPictureSize = 70,
                     AutoCompleteSearchThumbPictureSize = 20,
-                    MaximumImageSize = 1280,
+                    MaximumImageSize = 1980,
                     DefaultPictureZoomEnabled = false,
                     DefaultImageQuality = 80,
                     MultipleThumbDirectories = false
@@ -4776,7 +4767,7 @@ namespace Nop.Services.Installation
                     ShowProductImagesInMiniShoppingCart = true,
                     MiniShoppingCartProductNumber = 5,
                     RoundPricesDuringCalculation = true,
-                    GroupTierPricesForDistinctShoppingCartItems= false,
+                    GroupTierPricesForDistinctShoppingCartItems = false,
                     AllowCartItemEditing = true,
                     RenderAssociatedAttributeValueQuantity = false
                 });
@@ -4932,7 +4923,7 @@ namespace Nop.Services.Installation
                     ForumFeedCount = 10,
                     ForumSearchTermMinimumLength = 3,
                 });
-            
+
             settingService.SaveSetting(new VendorSettings
             {
                 DefaultVendorPageSizeOptions = "8, 4, 12",
@@ -4994,23 +4985,28 @@ namespace Nop.Services.Installation
             };
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "10.0''",
+                Name = "13.0''",
+                DisplayOrder = 2,
+            });
+            sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "13.3''",
                 DisplayOrder = 3,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "14.1''",
+                Name = "14.0''",
                 DisplayOrder = 4,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "15.4''",
-                DisplayOrder = 5,
+                Name = "15.0''",
+                DisplayOrder = 4,
             });
             sa1.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "16.0''",
-                DisplayOrder = 6,
+                Name = "15.6''",
+                DisplayOrder = 5,
             });
             var sa2 = new SpecificationAttribute
             {
@@ -5019,12 +5015,12 @@ namespace Nop.Services.Installation
             };
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "AMD",
+                Name = "Intel Core i5",
                 DisplayOrder = 1,
             });
             sa2.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "Intel",
+                Name = "Intel Core i7",
                 DisplayOrder = 2,
             });
             var sa3 = new SpecificationAttribute
@@ -5034,13 +5030,18 @@ namespace Nop.Services.Installation
             };
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "1 GB",
+                Name = "4 GB",
                 DisplayOrder = 1,
             });
             sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "3 GB",
+                Name = "8 GB",
                 DisplayOrder = 2,
+            });
+            sa3.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
+            {
+                Name = "16 GB",
+                DisplayOrder = 3,
             });
             var sa4 = new SpecificationAttribute
             {
@@ -5049,17 +5050,17 @@ namespace Nop.Services.Installation
             };
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "320 GB",
+                Name = "128 GB",
                 DisplayOrder = 7,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "250 GB",
+                Name = "500 GB",
                 DisplayOrder = 4,
             });
             sa4.SpecificationAttributeOptions.Add(new SpecificationAttributeOption
             {
-                Name = "160 GB",
+                Name = "1 TB",
                 DisplayOrder = 3,
             });
             var specificationAttributes = new List<SpecificationAttribute>
@@ -5130,37 +5131,17 @@ namespace Nop.Services.Installation
 
             //categories
             var allCategories = new List<Category>();
-            var categoryBooks = new Category
-            {
-                Name = "Books",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                MetaKeywords = "Books, Dictionary, Textbooks",
-                MetaDescription = "Books category description",
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
-                PriceRanges = "-25;25-50;50-;",
-                IncludeInTopMenu = true,
-                Published = true,
-                DisplayOrder = 1,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryBooks);
-            _categoryRepository.Insert(categoryBooks);
-
             var categoryComputers = new Category
             {
                 Name = "Computers",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 2,
+                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5172,9 +5153,9 @@ namespace Nop.Services.Installation
             {
                 Name = "Desktops",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops")).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
@@ -5192,9 +5173,9 @@ namespace Nop.Services.Installation
             {
                 Name = "Notebooks",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks")).Id,
                 IncludeInTopMenu = true,
@@ -5207,56 +5188,37 @@ namespace Nop.Services.Installation
             _categoryRepository.Insert(categoryNotebooks);
 
 
-            var categoryAccessories = new Category
-            {
-                Name = "Accessories",
-                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
-                AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
-                ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories")).Id,
-                IncludeInTopMenu = true,
-                PriceRanges = "-100;100-;",
-                Published = true,
-                DisplayOrder = 3,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allCategories.Add(categoryAccessories);
-            _categoryRepository.Insert(categoryAccessories);
-
-
             var categorySoftware = new Category
             {
-                Name = "Software & Games",
+                Name = "Software",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 5,
+                DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
             allCategories.Add(categorySoftware);
             _categoryRepository.Insert(categorySoftware);
 
-            
+
             var categoryElectronics = new Category
             {
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 3,
+                ShowOnHomePage = true,
+                DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5266,17 +5228,17 @@ namespace Nop.Services.Installation
 
             var categoryCameraPhoto = new Category
             {
-                Name = "Camera, photo",
+                Name = "Camera & photo",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo")).Id,
                 PriceRanges = "-500;500-;",
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 2,
+                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5288,14 +5250,14 @@ namespace Nop.Services.Installation
             {
                 Name = "Cell phones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 4,
+                DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5303,37 +5265,116 @@ namespace Nop.Services.Installation
             _categoryRepository.Insert(categoryCellPhones);
 
 
-            var categoryApparelShoes = new Category
+            var categoryOthers = new Category
             {
-                Name = "Apparel & Shoes",
+                Name = "Others",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel & Shoes")).Id,
+                PageSizeOptions = "6, 3, 9",
+                ParentCategoryId = categoryElectronics.Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories")).Id,
                 IncludeInTopMenu = true,
+                PriceRanges = "-100;100-;",
                 Published = true,
-                DisplayOrder = 5,
+                DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
-            allCategories.Add(categoryApparelShoes);
-            _categoryRepository.Insert(categoryApparelShoes);
+            allCategories.Add(categoryOthers);
+            _categoryRepository.Insert(categoryOthers);
 
 
+            var categoryApparel = new Category
+            {
+                Name = "Apparel",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
+                IncludeInTopMenu = true,
+                Published = true,
+                ShowOnHomePage = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allCategories.Add(categoryApparel);
+            _categoryRepository.Insert(categoryApparel);
+
+
+            var categoryShoes = new Category
+            {
+                Name = "Shoes",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                ParentCategoryId = categoryApparel.Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Shoes")).Id,
+                PriceRanges = "-500;500-;",
+                IncludeInTopMenu = true,
+                Published = true,
+                DisplayOrder = 1,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allCategories.Add(categoryShoes);
+            _categoryRepository.Insert(categoryShoes);
+
+
+            var categoryClothing = new Category
+            {
+                Name = "Clothing",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                ParentCategoryId = categoryApparel.Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_clothing.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Clothing")).Id,
+                IncludeInTopMenu = true,
+                Published = true,
+                DisplayOrder = 2,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allCategories.Add(categoryClothing);
+            _categoryRepository.Insert(categoryClothing);
+
+
+            var categoryAccessories = new Category
+            {
+                Name = "Accessories",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                ParentCategoryId = categoryApparel.Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel Accessories")).Id,
+                IncludeInTopMenu = true,
+                PriceRanges = "-100;100-;",
+                Published = true,
+                DisplayOrder = 3,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allCategories.Add(categoryAccessories);
+            _categoryRepository.Insert(categoryAccessories);
 
 
             var categoryDigitalDownloads = new Category
             {
                 Name = "Digital downloads",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 6,
+                ShowOnHomePage = true,
+                DisplayOrder = 4,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5341,18 +5382,39 @@ namespace Nop.Services.Installation
             _categoryRepository.Insert(categoryDigitalDownloads);
 
 
+            var categoryBooks = new Category
+            {
+                Name = "Books",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
+                MetaKeywords = "Books, Dictionary, Textbooks",
+                MetaDescription = "Books category description",
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
+                PriceRanges = "-25;25-50;50-;",
+                IncludeInTopMenu = true,
+                Published = true,
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allCategories.Add(categoryBooks);
+            _categoryRepository.Insert(categoryBooks);
+
+
             var categoryJewelry = new Category
             {
                 Name = "Jewelry",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 7,
+                DisplayOrder = 6,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5363,13 +5425,13 @@ namespace Nop.Services.Installation
             {
                 Name = "Gift Cards",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 3,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
                 IncludeInTopMenu = true,
                 Published = true,
-                DisplayOrder = 10,
+                DisplayOrder = 7,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5394,6 +5456,9 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallManufacturers()
         {
+            var pictureService = EngineContext.Current.Resolve<IPictureService>();
+            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
             if (manufacturerTemplateInGridAndLines == null)
@@ -5402,13 +5467,14 @@ namespace Nop.Services.Installation
             var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer
             {
-                Name = "ASUS",
+                Name = "Apple",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 Published = true,
-                DisplayOrder = 2,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_apple.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apple")).Id,
+                DisplayOrder = 1,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
@@ -5420,10 +5486,11 @@ namespace Nop.Services.Installation
             {
                 Name = "HP",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
-                PageSize = 4,
+                PageSize = 2,
                 AllowCustomersToSelectPageSize = true,
-                PageSizeOptions = "8, 4, 12",
+                PageSizeOptions = "6, 3, 9",
                 Published = true,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_hp.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Hp")).Id,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
@@ -5431,6 +5498,22 @@ namespace Nop.Services.Installation
             _manufacturerRepository.Insert(manufacturerHp);
             allManufacturers.Add(manufacturerHp);
 
+
+            var manufacturerNike = new Manufacturer
+            {
+                Name = "Nike",
+                ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
+                PageSize = 3,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "6, 3, 9",
+                Published = true,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "manufacturer_nike.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Nike")).Id,
+                DisplayOrder = 5,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            _manufacturerRepository.Insert(manufacturerNike);
+            allManufacturers.Add(manufacturerNike);
 
             //search engine names
             foreach (var manufacturer in allManufacturers)
@@ -5475,975 +5558,17 @@ namespace Nop.Services.Installation
 
             //products
             var allProducts = new List<Product>();
-            var product5GiftCard = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "$5 Virtual Gift Card",
-                ShortDescription = "$5 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
-                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "5-virtual-gift-card",
-                AllowCustomerReviews = true,
-                Price = 5M,
-                IsGiftCard = true,
-                GiftCardType = GiftCardType.Virtual,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(product5GiftCard);
-            product5GiftCard.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(product5GiftCard);
 
-
-
-            var product25GiftCard = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "$25 Virtual Gift Card",
-                ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
-                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "25-virtual-gift-card",
-                AllowCustomerReviews = true,
-                Price = 25M,
-                IsGiftCard = true,
-                GiftCardType = GiftCardType.Virtual,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                Published = true,
-                ShowOnHomePage = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                        DisplayOrder = 2,
-                    }
-                }
-            };
-            allProducts.Add(product25GiftCard);
-            product25GiftCard.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(product25GiftCard);
-
-
-
-
-
-            var product50GiftCard = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "$50 Physical Gift Card",
-                ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
-                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "50-physical-gift-card",
-                AllowCustomerReviews = true,
-                Price = 50M,
-                IsGiftCard = true,
-                GiftCardType = GiftCardType.Physical,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                DeliveryDateId = deliveryDate.Id,
-                Weight = 1,
-                Length = 1,
-                Width = 1,
-                Height = 1,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                        DisplayOrder = 3,
-                    }
-                }
-            };
-            allProducts.Add(product50GiftCard);
-            product50GiftCard.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(product50GiftCard);
-
-
-
-
-
-            var product100GiftCard = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "$100 Physical Gift Card",
-                ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
-                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "100-physical-gift-card",
-                AllowCustomerReviews = true,
-                Price = 100M,
-                IsGiftCard = true,
-                GiftCardType = GiftCardType.Physical,
-                IsShipEnabled = true,
-                DeliveryDateId = deliveryDate.Id,
-                Weight = 1,
-                Length = 1,
-                Width = 1,
-                Height = 1,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-                        DisplayOrder = 4,
-                    }
-                }
-            };
-            allProducts.Add(product100GiftCard);
-            product100GiftCard.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(product100GiftCard);
-
-
-
-
-
-            var productRockabillyPolka = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "50's Rockabilly Polka Dot Top JR Plus Size",
-                ShortDescription = "",
-                FullDescription = "<p>Fitted polkadot print cotton top with tie cap sleeves.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 15M,
-                IsShipEnabled = true,
-                Weight = 1,
-                Length = 2,
-                Width = 3,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductAttributeMappings =
-                {
-                    new ProductAttributeMapping
-                    {
-                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                        AttributeControlType = AttributeControlType.DropdownList,
-                        IsRequired = true,
-                        ProductAttributeValues =
-                        {
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "Small",
-                                DisplayOrder = 1,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "1X",
-                                DisplayOrder = 2,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "2X",
-                                DisplayOrder = 3,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "3X",
-                                DisplayOrder = 4,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "4X",
-                                DisplayOrder = 5,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "5X",
-                                DisplayOrder = 6,
-                            }
-                        }
-                    }
-                },
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productRockabillyPolka);
-            productRockabillyPolka.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_RockabillyPolka.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productRockabillyPolka.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productRockabillyPolka);
-
-
-
-
-
-            var productAcerAspireOne = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Acer Aspire One 8.9\" Mini-Notebook Case - (Black)",
-                ShortDescription = "Acer Aspire One 8.9\" Mini-Notebook and 6 Cell Battery model (AOA150-1447)",
-                FullDescription = "<p>Acer Aspire One 8.9&quot; Memory Foam Pouch is the perfect fit for Acer Aspire One 8.9&quot;. This pouch is made out of premium quality shock absorbing memory form and it provides extra protection even though case is very light and slim. This pouch is water resistant and has internal supporting bands for Acer Aspire One 8.9&quot;. Made In Korea.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "acer-aspire-one-89-mini-notebook-case-black",
-                AllowCustomerReviews = true,
-                Price = 21.6M,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                TierPrices =
-                {
-                    new TierPrice
-                    {
-                        Quantity = 2,
-                        Price = 19
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 5,
-                        Price = 17
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 10,
-                        Price = 15
-                    }
-                },
-                HasTierPrices = true,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productAcerAspireOne);
-            productAcerAspireOne.ProductPictures.Add(new ProductPicture
-                    {
-                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name)),
-                        DisplayOrder = 1,
-                    });
-            productAcerAspireOne.ProductPictures.Add(new ProductPicture
-                    {
-                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name)),
-                        DisplayOrder = 2,
-                    });
-            _productRepository.Insert(productAcerAspireOne);
-
-
-
-
-
-            var productAdidasShoe = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "adidas Women's Supernova CSH 7 Running Shoe",
-                ShortDescription = "Now there are even more reasons to love this training favorite. An improved last, new step-in sockliner and the smooth control of 3-D ForMotion™ deliver a natural, balanced touchdown that feels better than ever.",
-                FullDescription = "<p>Built to take you far and fast, Adidas Supernova Cushion 7 road-running shoes offer incredible cushioning and comfort with low weight. * Abrasion-resistant nylon mesh uppers are lightweight and highly breathable; synthetic leather overlays create structure and support * GeoFit construction at ankles provides an anatomically correct fit and extra comfort * Nylon linings and molded, antimicrobial dual-layer EVA footbeds dry quickly and fight odor * adiPRENE&reg; midsoles absorb shock in the heels and help maximize heel protection and stability * adiPRENE&reg;+ under forefeet retains natural propulsive forces for improved efficiency * Torsion&reg; system at the midfoot allows natural rotation between the rearfoot and the forefoot, helping improve surface adaptability * ForMotion&reg; freely moving, decoupled heel system allows your feet to adapt to the ground strike and adjust for forward momentum * adiWEAR&reg; rubber outsoles give ample durability in high-wear areas and offer lightweight grip and cushion Mens shoes , men's shoes , running shoes , adidas shoes , adidas running shoes , mens running shoes , snova running shoes , snova mens adidas , snova adidas running , snova shoes , sport shoes mens , sport shoes adidas , mens shoes , men's shoes , running , adidas</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "adidas-womens-supernova-csh-7-running-shoe",
-                AllowCustomerReviews = true,
-                Price = 40M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductAttributeMappings =
-                {
-                    new ProductAttributeMapping
-                    {
-                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
-                        AttributeControlType = AttributeControlType.DropdownList,
-                        IsRequired = true,
-                        ProductAttributeValues =
-                        {
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "8",
-                                DisplayOrder = 1,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "9",
-                                DisplayOrder = 2,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "10",
-                                DisplayOrder = 3,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "11",
-                                DisplayOrder = 4,
-                            }
-                        }
-                    },
-                    new ProductAttributeMapping
-                    {
-                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
-                        AttributeControlType = AttributeControlType.DropdownList,
-                        IsRequired = true,
-                        ProductAttributeValues =
-                        {
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "White/Blue",
-                                DisplayOrder = 1,
-                            },
-                            new ProductAttributeValue
-                            {
-                                AttributeValueType = AttributeValueType.Simple,
-                                Name = "White/Black",
-                                DisplayOrder = 2,
-                            },
-                        }
-                    }
-                },
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productAdidasShoe);
-            productAdidasShoe.ProductPictures.Add(new ProductPicture
-                    {
-                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name)),
-                        DisplayOrder = 1,
-                    });
-            productAdidasShoe.ProductPictures.Add(new ProductPicture
-                    {
-                        Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name)),
-                        DisplayOrder = 2,
-                    });
-            _productRepository.Insert(productAdidasShoe);
-
-
-
-
-
-            var productAdobePhotoshop = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Adobe Photoshop Elements 7",
-                ShortDescription = "Easily find and view all your photos",
-                FullDescription = "<p>Adobe Photoshop Elements 7 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop Elements so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "adobe-photoshop-elements-7",
-                AllowCustomerReviews = true,
-                Price = 75M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productAdobePhotoshop);
-            productAdobePhotoshop.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productAdobePhotoshop);
-
-
-
-
-
-            var productApcUps = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "APC Back-UPS RS 800VA - UPS - 800 VA - UPS battery - lead acid ( BR800BLK )",
-                ShortDescription = "APC Back-UPS RS, 800VA/540W, Input 120V/Output 120V, Interface Port USB. ",
-                FullDescription = "<p>The Back-UPS RS offers high performance protection for your business and office computer systems. It provides abundant battery backup power, allowing you to work through medium and extended length power outages. It also safeguards your equipment from damaging surges and spikes that travel along utility, phone and network lines. A distinguishing feature of the Back-UPS RS is automatic voltage regulation (AVR). AVR instantly adjusts both low and high voltages to safe levels, so you can work indefinitely during brownouts and overvoltage situations, saving the battery for power outages when you need it most. Award-winning shutdown software automatically powers down your computer system in the event of an extended power outage.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "apc-back-ups-rs-800va-ups-800-va-ups-battery-lead-acid-br800blk",
-                AllowCustomerReviews = true,
-                Price = 75M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories = 
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productApcUps);
-            productApcUps.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ApcUps.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productApcUps.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productApcUps);
-
-
-
-
-
-            var productArrow = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Arrow Men's Wrinkle Free Pinpoint Solid Long Sleeve",
-                ShortDescription = "",
-                FullDescription = "<p>This Wrinkle Free Pinpoint Long Sleeve Dress Shirt needs minimum ironing. It is a great product at a great value!</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "arrow-mens-wrinkle-free-pinpoint-solid-long-sleeve",
-                AllowCustomerReviews = true,
-                Price = 24M,
-                IsShipEnabled = true,
-                Weight = 4,
-                Length = 3,
-                Width = 3,
-                Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                TierPrices =
-                {
-                    new TierPrice
-                    {
-                        Quantity = 3,
-                        Price = 21
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 7,
-                        Price = 19
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 10,
-                        Price = 16
-                    }
-                },
-                HasTierPrices = true,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productArrow);
-            productArrow.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_arrow.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productArrow.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productArrow);
-
-
-
-
-
-            var productAsusPc1000 = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "ASUS Eee PC 1000HA 10-Inch Netbook",
-                ShortDescription = "Super Hybrid Engine offers a choice of performance and power consumption modes for easy adjustments according to various needs",
-                FullDescription = "<p>Much more compact than a standard-sized notebook and weighing just over 3 pounds, the Eee PC 1000HA is perfect for students toting to school or road warriors packing away to Wi-Fi hotspots. The Eee PC 1000HA also features a 160 GB hard disk drive (HDD), 1 GB of RAM, 1.3-megapixel webcam integrated into the bezel above the LCD, 54g Wi-Fi networking (802.11b/g), Secure Digital memory card slot, multiple USB ports, a VGA output for connecting to a monitor.</p><p>It comes preinstalled with the Microsoft Windows XP Home operating system, which offers more experienced users an enhanced and innovative experience that incorporates Windows Live features like Windows Live Messenger for instant messaging and Windows Live Mail for consolidated email accounts on your desktop. Complementing this is Microsoft Works, which equips the user with numerous office applications to work efficiently.</p><p>The new Eee PC 1000HA has a customized, cutting-edge Infusion casing technology in Fine Ebony. Inlaid within the chassis itself, the motifs are an integral part of the entire cover and will not fade with time. The Infusion surface also provides a new level of resilience, providing scratch resistance and a beautiful style while out and about.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
-                AllowCustomerReviews = true,
-                Price = 2600M,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                Weight = 3,
-                Length = 3,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                        DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
-                        DisplayOrder = 2,
-                    }
-                },
-                ProductSpecificationAttributes =
-                {
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 1,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "10.0''")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 2,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 3,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
-                    }
-                }
-            };
-            allProducts.Add(productAsusPc1000);
-            productAsusPc1000.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc1000.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc1000.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productAsusPc1000);
-
-
-
-
-
-            var productAsusPc900 = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "ASUS Eee PC 900HA 8.9-Inch Netbook Black",
-                ShortDescription = "High Speed Connectivity Anywhere with Wi-Fi 802.11b/g.",
-                FullDescription = "<p>Much more compact than a standard-sized notebook and weighing just 2.5 pounds, the Eee PC 900HA is perfect for students toting to school or road warriors packing away to Wi-Fi hotspots. In addition to the 160 GB hard disk drive (HDD), the Eee PC 900HA also features 1 GB of RAM, VGA-resolution webcam integrated into the bezel above the LCD, 54g Wi-Fi networking (802.11b/g), multiple USB ports, SD memory card slot, a VGA output for connecting to a monitor, and up to 10 GB of online storage (complimentary for 18 months).</p><p>It comes preinstalled with the Microsoft Windows XP Home operating system, which offers more experienced users an enhanced and innovative experience that incorporates Windows Live features like Windows Live Messenger for instant messaging and Windows Live Mail for consolidated email accounts on your desktop. Complementing this is Microsoft Works, which equips the user with numerous office applications to work efficiently.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
-                AllowCustomerReviews = true,
-                Price = 1500M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                        DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
-                        DisplayOrder = 1,
-                    }
-                },
-                ProductSpecificationAttributes =
-                {
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 2,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "AMD")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 3,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
-                    }
-                }
-            };
-            allProducts.Add(productAsusPc900);
-            productAsusPc900.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc900.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc900.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productAsusPc900);
-
-
-
-
-
-            var productBestGrillingRecipes = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Best Grilling Recipes",
-                ShortDescription = "More Than 100 Regional Favorites Tested and Perfected for the Outdoor Cook (Hardcover)",
-                FullDescription = "<p>Take a winding cross-country trip and you'll discover barbecue shacks with offerings like tender-smoky Baltimore pit beef and saucy St. Louis pork steaks. To bring you the best of these hidden gems, along with all the classics, the editors of Cook's Country magazine scoured the country, then tested and perfected their favorites. HEre traditions large and small are brought into the backyard, from Hawaii's rotisserie favorite, the golden-hued Huli Huli Chicken, to fall-off-the-bone Chicago Barbecued Ribs. In Kansas City, they're all about the sauce, and for our saucy Kansas City Sticky Ribs, we found a surprise ingredient-root beer. We also tackle all the best sides. <br /><br />Not sure where or how to start? This cookbook kicks off with an easy-to-follow primer that will get newcomers all fired up. Whether you want to entertain a crowd or just want to learn to make perfect burgers, Best Grilling Recipes shows you the way.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "best-grilling-recipes",
-                AllowCustomerReviews = true,
-                Price = 27M,
-                OldPrice = 30M,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productBestGrillingRecipes);
-            productBestGrillingRecipes.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestGrillingRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestGrillingRecipes.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productBestGrillingRecipes);
-
-
-
-
-
-            var productDiamondHeart = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Black & White Diamond Heart",
-                ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
-                FullDescription = "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "black-white-diamond-heart",
-                AllowCustomerReviews = true,
-                Price = 130M,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productDiamondHeart);
-            productDiamondHeart.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productDiamondHeart);
-
-
-
-
-
-            var productBlackBerry = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "BlackBerry Bold 9000 Phone, Black (AT&T)",
-                ShortDescription = "Global Blackberry messaging smartphone with quad-band GSM",
-                FullDescription = "<p>Keep yourself on track for your next meeting with turn-by-turn directions via the AT&amp;T Navigator service, which is powered by TeleNav and provides spoken or text-based turn-by-turn directions with automatic missed turn rerouting and a local business finder service in 20 countries. It also supports AT&amp;T mobile music services and access to thousands of video clips via Cellular Video. Other features include a 2-megapixel camera/camcorder, Bluetooth for handsfree communication, 1 GB of internal memory with MicroSD expansion (up to 32 GB), multi-format audio/video playback, and up to 4.5 hours of talk time.</p><p>The Blackberry Bold also comes with free access to AT&amp;T Wi-Fi Hotspots, available at more than 17,000 locations nationwide including Starbucks. The best part is that you do'nt need to sign up for anything new to use this service--Wi-Fi access for is included in all Blackberry Personal and Enterprise Rate Plans. (You must subscribe to a Blackberry Data Rate Plan to access AT&amp;T Wi-Fi Hotspots.) Additionally, the Blackberry Bold is the first RIM device that supports AT&amp;T Cellular Video (CV).</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "blackberry-bold-9000-phone-black-att",
-                AllowCustomerReviews = true,
-                Price = 245M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productBlackBerry);
-            productBlackBerry.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BlackBerry.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBlackBerry.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productBlackBerry);
-
-
+            #region Desktops
 
 
             var productBuildComputer = new Product
             {
-                ProductType = ProductType.SimpleProduct, 
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Build your own computer",
                 ShortDescription = "Build it",
-                FullDescription = "<p>Fight back against cluttered workspaces with the stylish Sony VAIO JS All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The silver Sony VAIO VGC-JS110J/S has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
+                FullDescription = "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "build-your-own-computer",
                 AllowCustomerReviews = true,
@@ -6619,155 +5744,28 @@ namespace Nop.Services.Installation
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 2,
             });
-            productBuildComputer.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
-                DisplayOrder = 3,
-            });
+            //productBuildComputer.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
+            //    DisplayOrder = 3,
+            //});
             _productRepository.Insert(productBuildComputer);
 
 
 
-            
-            //this one is a grouped product with two associated ones
-            var productCanonCamera = new Product
+
+
+            var productDigitalStorm = new Product
             {
-                ProductType = ProductType.GroupedProduct,
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Canon Digital SLR Camera",
-                ShortDescription = "12.2-megapixel CMOS sensor captures enough detail for poster-size, photo-quality prints",
-                FullDescription = "<p>For stunning photography with point and shoot ease, look no further than Canon&rsquo;s EOS Rebel XSi. The EOS Rebel XSi brings staggering technological innovation to the masses. It features Canon&rsquo;s EOS Integrated Cleaning System, Live View Function, a powerful DIGIC III Image Processor, plus a new 12.2-megapixel CMOS sensor and is available in a kit with the new EF-S 18-55mm f/3.5-5.6 IS lens with Optical Image Stabilizer. The EOS Rebel XSi&rsquo;s refined, ergonomic design includes a new 3.0-inch LCD monitor, compatibility with SD and SDHC memory cards and new accessories that enhance every aspect of the photographic experience.</p>",
-                ProductTemplateId = productTemplateGrouped.Id,
-                //SeName = "canon-digital-slr-camera",
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productCanonCamera);
-            productCanonCamera.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name)),
-                DisplayOrder = 1,
-            });
-            productCanonCamera.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name)),
-                DisplayOrder = 2,
-            });
-            _productRepository.Insert(productCanonCamera);
-            var productCanonCamera_associated_1 = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = false, //hide this products
-                ParentGroupedProductId = productCanonCamera.Id,
-                Name = "Canon Digital SLR Camera - Black",
+                Name = "Digital Storm VANQUISH 3 Custom Performance PC",
+                ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
+                FullDescription = "<p>Blow the doors off today’s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-digital-slr-camera-black",
+                //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
                 AllowCustomerReviews = true,
-                Published = true,
-                Price = 670M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCanonCamera_associated_1);
-            productCanonCamera_associated_1.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productCanonCamera_associated_1);
-            var productCanonCamera_associated_2 = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = false, //hide this products
-                ParentGroupedProductId = productCanonCamera.Id,
-                Name = "Canon Digital SLR Camera - Silver",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-digital-slr-camera-silver",
-                AllowCustomerReviews = true,
-                Published = true,
-                Price = 630M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow
-            };
-            allProducts.Add(productCanonCamera_associated_2);
-            productCanonCamera_associated_2.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productCanonCamera_associated_2);
-
-
-
-
-
-            var productCanonCamcoder = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Canon VIXIA HF100 Camcorder",
-                ShortDescription = "12x optical zoom; SuperRange Optical Image Stabilizer",
-                FullDescription = "<p>From Canon's long history of optical excellence, advanced image processing, superb performance and technological innovation in photographic and broadcast television cameras comes the latest in high definition camcorders. <br /><br />Now, with the light, compact Canon VIXIA HF100, you can have stunning AVCHD (Advanced Video Codec High Definition) format recording with the ease and numerous benefits of Flash Memory. It's used in some of the world's most innovative electronic products such as laptop computers, MP3 players, PDAs and cell phones. <br /><br />Add to that the VIXIA HF100's Canon Exclusive features such as our own 3.3 Megapixel Full HD CMOS sensor and advanced DIGIC DV II Image Processor, SuperRange Optical Image Stabilization, Instant Auto Focus, our 2.7-inch Widescreen Multi-Angle Vivid LCD and the Genuine Canon 12x HD video zoom lens and you have a Flash Memory camcorder that's hard to beat.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "canon-vixia-hf100-camcorder",
-                AllowCustomerReviews = true,
-                Price = 530M,
+                Price = 1259M,
                 IsShipEnabled = true,
                 Weight = 7,
                 Length = 7,
@@ -6790,32 +5788,32 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productCanonCamcoder);
-            productCanonCamcoder.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productDigitalStorm);
+            productDigitalStorm.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamcoder.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DigitalStorm.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productDigitalStorm.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productCanonCamcoder);
+            _productRepository.Insert(productDigitalStorm);
 
 
 
 
 
-            var productCompaq = new Product
+            var productLenovoIdeaCentre = new Product
             {
-                ProductType = ProductType.SimpleProduct, 
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Compaq Presario SR1519X Pentium 4 Desktop PC with CDRW",
-                ShortDescription = "Compaq Presario Desktop PC",
-                FullDescription = "<p>Compaq Presario PCs give you solid performance, ease of use, and deliver just what you need so you can do more with less effort. Whether you are e-mailing family, balancing your online checkbook or creating school projects, the Presario is the right PC for you.</p>",
+                Name = "Lenovo IdeaCentre 600 All-in-One PC",
+                ShortDescription = "",
+                FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
+                //SeName = "hp-iq506-touchsmart-desktop-pc",
                 AllowCustomerReviews = true,
                 Price = 500M,
                 IsShipEnabled = true,
@@ -6845,37 +5843,134 @@ namespace Nop.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productCompaq);
-            productCompaq.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productLenovoIdeaCentre);
+            productLenovoIdeaCentre.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Compaq.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCompaq.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoIdeaCentre.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoIdeaCentre.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productCompaq);
+            _productRepository.Insert(productLenovoIdeaCentre);
 
 
 
 
+            #endregion
 
-            var productCookingForTwo = new Product
+            #region Notebooks
+
+            var productAppleMacBookPro = new Product
             {
-                ProductType = ProductType.SimpleProduct, 
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Cooking for Two",
-                ShortDescription = "More Than 200 Foolproof Recipes for Weeknights and Special Occasions (Hardcover)",
-                FullDescription = "<p>Hardcover: 352 pages<br />Publisher: America's Test Kitchen (May 2009)<br />Language: English<br />ISBN-10: 1933615435<br />ISBN-13: 978-1933615431</p>",
+                Name = "Apple MacBook Pro 13-inch",
+                ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
+                FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "cooking-for-two",
+                //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
                 AllowCustomerReviews = true,
-                Price = 19M,
-                OldPrice = 27M,
+                Price = 1800M,
                 IsShipEnabled = true,
-                DeliveryDateId = deliveryDate.Id,
-                Weight = 2,
-                Length = 2,
+                IsFreeShipping = true,
+                Weight = 3,
+                Length = 3,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                ShowOnHomePage = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Apple"),
+                        DisplayOrder = 2,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "13.0''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i5")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "4 GB")
+                    }
+                    //new ProductSpecificationAttribute
+                    //{
+                    //    AllowFiltering = false,
+                    //    ShowOnProductPage = true,
+                    //    DisplayOrder = 4,
+                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "160 GB")
+                    //}
+                }
+            };
+            allProducts.Add(productAppleMacBookPro);
+            productAppleMacBookPro.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                DisplayOrder = 1,
+            });
+            productAppleMacBookPro.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_macbook_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleMacBookPro.Name)),
+                DisplayOrder = 2,
+            });
+            _productRepository.Insert(productAppleMacBookPro);
+
+
+
+
+
+            var productAsusN551JK = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Asus N551JK-XO076H Laptop",
+                ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
+                FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX’s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
+                AllowCustomerReviews = true,
+                Price = 1500M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6892,30 +5987,465 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                //ProductManufacturers =
+                //{
+                //    new ProductManufacturer
+                //    {
+                //        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
+                //        DisplayOrder = 1,
+                //    }
+                //},
+                ProductSpecificationAttributes =
+                {
+                     new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.6''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i7")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "16 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "1 TB")
+                    }
+                }
+            };
+            allProducts.Add(productAsusN551JK);
+            productAsusN551JK.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc_N551JK.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusN551JK.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productAsusN551JK);
+
+
+
+
+
+            var productSamsungSeries = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
+                ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
+                FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "hp-pavilion-artist-edition-dv2890nr-141-inch-laptop",
+                AllowCustomerReviews = true,
+                Price = 1590M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                //ShowOnHomePage = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.0''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i5")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "8 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
+                    }
+                }
+            };
+            allProducts.Add(productSamsungSeries);
+            productSamsungSeries.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungNP900X4C.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungSeries.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productSamsungSeries);
+
+
+
+
+
+            var productHpSpectre = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "HP Spectre XT Pro UltraBook",
+                ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
+                FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "hp-pavilion-elite-m9150f-desktop-pc",
+                AllowCustomerReviews = true,
+                Price = 1350M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 3,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "13.3''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i5")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "4 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "128 GB")
+                    }
+                }
+            };
+            allProducts.Add(productHpSpectre);
+            productHpSpectre.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)),
+                DisplayOrder = 1,
+            });
+            productHpSpectre.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HPSpectreXT_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpSpectre.Name)),
+                DisplayOrder = 2,
+            });
+            _productRepository.Insert(productHpSpectre);
+
+
+
+            var productHpEnvy = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
+                ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
+                FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br><b>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
+                AllowCustomerReviews = true,
+                Price = 1460M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
+                        DisplayOrder = 4,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.6''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i7")         
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 3,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "8 GB")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 4,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "500 GB")
+                    }
+                }
+            };
+            allProducts.Add(productHpEnvy);
+            productHpEnvy.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpEnvy6.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpEnvy.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productHpEnvy);
+
+
+
+
+
+            var productLenovoThinkpad = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Lenovo Thinkpad X1 Carbon Laptop",
+                ShortDescription = "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
+                FullDescription = "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "toshiba-satellite-a305-s6908-154-inch-laptop",
+                AllowCustomerReviews = true,
+                Price = 1360M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        DisplayOrder = 1,
+                    }
+                },
+                ProductSpecificationAttributes =
+                {
+                   new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = false,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 1,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.0''")
+                    },
+                    new ProductSpecificationAttribute
+                    {
+                        AllowFiltering = true,
+                        ShowOnProductPage = true,
+                        DisplayOrder = 2,
+                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel Core i7")
+                    }
+                    //new ProductSpecificationAttribute
+                    //{
+                    //    AllowFiltering = true,
+                    //    ShowOnProductPage = true,
+                    //    DisplayOrder = 3,
+                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
+                    //},
+                    //new ProductSpecificationAttribute
+                    //{
+                    //    AllowFiltering = false,
+                    //    ShowOnProductPage = true,
+                    //    DisplayOrder = 4,
+                    //    SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
+                    //}
+                }
+            };
+            allProducts.Add(productLenovoThinkpad);
+            productLenovoThinkpad.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LenovoThinkpad.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLenovoThinkpad.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productLenovoThinkpad);
+
+            #endregion
+
+            #region Software
+
+
+            var productAdobePhotoshop = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Adobe Photoshop CS4",
+                ShortDescription = "Easily find and view all your photos",
+                FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "adobe-photoshop-elements-7",
+                AllowCustomerReviews = true,
+                Price = 75M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productCookingForTwo);
-            productCookingForTwo.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productAdobePhotoshop);
+            productAdobePhotoshop.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productCookingForTwo);
+            _productRepository.Insert(productAdobePhotoshop);
 
 
 
 
 
-            var productCorel = new Product
+
+            var productWindows8Pro = new Product
             {
-                ProductType = ProductType.SimpleProduct, 
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Corel Paint Shop Pro Photo X2",
-                ShortDescription = "The ideal choice for any aspiring photographer's digital darkroom",
-                FullDescription = "<p>Corel Paint Shop Pro Photo X2 is the ideal choice for any aspiring photographer's digital darkroom. Fix brightness, color, and photo flaws in a few clicks; use precision editing tools to create the picture you want; give photos a unique, exciting look using hundreds of special effects, and much more! Plus, the NEW one-of-a-kind Express Lab helps you quickly view and fix dozens of photos in the time it used to take to edit a few. Paint Shop Pro Photo X2 even includes a built-in Learning Center to help you get started, it's the easiest way to get professional-looking photos - fast!</p>",
+                Name = "Windows 8 Pro",
+                ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
+                FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "corel-paint-shop-pro-photo-x2",
                 AllowCustomerReviews = true,
@@ -6942,40 +6472,865 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productCorel);
-            productCorel.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productWindows8Pro);
+            productWindows8Pro.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Corel.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCorel.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Windows8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWindows8Pro.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productCorel);
+            _productRepository.Insert(productWindows8Pro);
 
 
 
 
 
-            var productCustomTShirt = new Product
+            var productSoundForge = new Product
             {
-                ProductType = ProductType.SimpleProduct, 
+                ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Custom T-Shirt",
-                ShortDescription = "T-Shirt - Add Your Content",
-                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
+                Name = "Sound Forge Pro 11",
+                ShortDescription = "Advanced audio waveform editor.",
+                FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "custom-t-shirt",
+                //SeName = "major-league-baseball-2k9",
                 AllowCustomerReviews = true,
-                Price = 15M,
+                Price = 54.99M,
                 IsShipEnabled = true,
-                Weight = 4,
-                Length = 3,
-                Width = 3,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Software"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productSoundForge);
+            productSoundForge.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SoundForge.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoundForge.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productSoundForge);
+
+
+
+
+
+            //var productMedalOfHonor = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "Medal of Honor - Limited Edition (Xbox 360)",
+            //    ShortDescription = "One of the great pioneers in military simulations returns to gaming as the Medal of Honor series depicts modern warfare for the first time, with a harrowing tour of duty in current day Afghanistan.",
+            //    FullDescription = "You'll take control of both ordinary U.S. Army Rangers and Tier 1 Elite Ops Special Forces as you fight enemy insurgents in the most dangerous theatre of war of the modern age. The intense first person combat has been created with input from U.S. military consultants and based on real-life descriptions from veteran soldiers. This allows you to use genuine military tactics and advanced technology including combat drones and targeted air strikes.",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "medal-of-honor-limited-edition-xbox-360",
+            //    AllowCustomerReviews = true,
+            //    Price = 37M,
+            //    IsShipEnabled = true,
+            //    Weight = 7,
+            //    Length = 7,
+            //    Width = 7,
+            //    Height = 7,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productMedalOfHonor);
+            //productMedalOfHonor.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productMedalOfHonor);
+
+
+            //var productWoW = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "World of Warcraft: Wrath of the Lich King Expansion Pack",
+            //    ShortDescription = "This expansion pack REQUIRES the original World of Warcraft game in order to run",
+            //    FullDescription = "<p>Fans of World of Warcraft, prepare for Blizzard Entertainment's next installment -- World of Warcraft: Wrath of King Lich. In this latest expansion, something is afoot in the cold, harsh northlands. The Lich King Arthas has set in motion events that could lead to the extinction of all life on Azeroth. The necromantic power of the plague and legions of undead armies threaten to sweep across the land. Only the mightiest heroes can oppose the Lich King and end his reign of terror.</p><p>This expansion adds a host of content to the already massive existing game world. Players will achieve soaring levels of power, explore Northrend (the vast icy continent of the Lich King), and battle high-level heroes to determine the ultimate fate of Azeroth. As you face the dangers of the frigid, harsh north, prepare to master the dark necromantic powers of the Death Night -- World of Warcraft's first Hero class. No longer servants of the Lich King, the Death Knights begin their new calling as experienced, formidable adversaries. Each is heavily armed, armored, and in possession of a deadly arsenal of forbidden magic.</p><p>If you have a World of Warcraft account with a character of at least level 55, you will be able to create a new level-55 Death Knight of any race (if on a PvP realm, the Death Knight must be the same faction as your existing character). And upon entering the new world, your Death Knight will begin to quest to level 80, gaining potent new abilities and talents along the way. This expansion allows for only one Death Knight per realm, per account.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "world-of-warcraft-wrath-of-the-lich-king-expansion-pack",
+            //    AllowCustomerReviews = true,
+            //    Price = 29.5M,
+            //    IsShipEnabled = true,
+            //    Weight = 7,
+            //    Length = 7,
+            //    Width = 7,
+            //    Height = 7,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productWoW);
+            //productWoW.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productWoW);
+
+
+
+
+
+            //var productSoccer = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "World Wide Soccer Manager 2009",
+            //    ShortDescription = "Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game",
+            //    FullDescription = "<p>Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game. At the helm, you'll enter the new season with a wide array of all-new features. The most impressive update is the first-time-ever, real-time 3D match engine with motion captured animations. With over 5,000 playable teams and every management decision in the palm of your hand, you'll love watching your matches and decisions unfold from multiple camera angles as you compete in leagues around the world and major international tournaments.</p><p>Watch your match in real-time, or use the Match Time Bar to fast-forward through sluggish minutes or rewind key moments in the game. With this customization at your fingertips you can also choose the information you'd like to see during the match, such as latest scores or player performance stats for the match.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "world-wide-soccer-manager-2009",
+            //    AllowCustomerReviews = true,
+            //    Price = 25.99M,
+            //    IsShipEnabled = true,
+            //    Weight = 7,
+            //    Length = 7,
+            //    Width = 7,
+            //    Height = 7,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productSoccer);
+            //productSoccer.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productSoccer);
+
+
+
+            #endregion
+
+            #region Camera, Photo
+
+
+            //this one is a grouped product with two associated ones
+            var productNikonD5500DSLR = new Product
+            {
+                ProductType = ProductType.GroupedProduct,
+                VisibleIndividually = true,
+                Name = "Nikon D5500 DSLR",
+                ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
+                FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it’s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon’s range, and while it offers much the same features the company says it’s a much slimmer and lighter prospect. There’s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
+                ProductTemplateId = productTemplateGrouped.Id,
+                //SeName = "canon-digital-slr-camera",
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 670M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera & photo"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productNikonD5500DSLR);
+            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                DisplayOrder = 1,
+            });
+            productNikonD5500DSLR.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNikonD5500DSLR.Name)),
+                DisplayOrder = 2,
+            });
+            _productRepository.Insert(productNikonD5500DSLR);
+            var productNikonD5500DSLR_associated_1 = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false, //hide this products
+                ParentGroupedProductId = productNikonD5500DSLR.Id,
+                Name = "Nikon D5500 DSLR - Black",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "canon-digital-slr-camera-black",
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 670M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productNikonD5500DSLR_associated_1);
+            productNikonD5500DSLR_associated_1.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Black")),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productNikonD5500DSLR_associated_1);
+            var productNikonD5500DSLR_associated_2 = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = false, //hide this products
+                ParentGroupedProductId = productNikonD5500DSLR.Id,
+                Name = "Nikon D5500 DSLR - Red",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "canon-digital-slr-camera-silver",
+                AllowCustomerReviews = true,
+                Published = true,
+                Price = 630M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow
+            };
+            allProducts.Add(productNikonD5500DSLR_associated_2);
+            productNikonD5500DSLR_associated_2.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikonCamera_red.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital SLR Camera - Silver")),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productNikonD5500DSLR_associated_2);
+
+
+
+
+
+            var productLeica = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Leica T Mirrorless Digital Camera",
+                ShortDescription = "Leica T (Typ 701) Silver",
+                FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "canon-vixia-hf100-camcorder",
+                AllowCustomerReviews = true,
+                Price = 530M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera & photo"),
+                        DisplayOrder = 3,
+                    }
+                }
+            };
+            allProducts.Add(productLeica);
+            productLeica.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeicaT.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productLeica.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productLeica);
+
+
+
+
+
+
+            var productAppleICam = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Apple iCam",
+                ShortDescription = "Photography becomes smart",
+                FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "panasonic-hdc-sdt750k-high-definition-3d-camcorder",
+                AllowCustomerReviews = true,
+                Price = 1300M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera & photo"),
+                        DisplayOrder = 2,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Apple"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productAppleICam);
+            productAppleICam.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_iCam.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAppleICam.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productAppleICam);
+
+
+
+
+            #endregion
+
+            #region Cell Phone
+
+            var productHtcOne = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "HTC One M8 Android L 5.0 Lollipop",
+                ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
+                FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "blackberry-bold-9000-phone-black-att",
+                AllowCustomerReviews = true,
+                Price = 245M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                ShowOnHomePage = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productHtcOne);
+            productHtcOne.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOne.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productHtcOne);
+
+
+
+
+
+
+            var productHtcOneMini = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "HTC One Mini Blue",
+                ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
+                FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "samsung-rugby-a837-phone-black-att",
+                AllowCustomerReviews = true,
+                Price = 100M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productHtcOneMini);
+            productHtcOneMini.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                DisplayOrder = 1,
+            });
+            productHtcOneMini.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_Mini_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHtcOneMini.Name)),
+                DisplayOrder = 2,
+            });
+            _productRepository.Insert(productHtcOneMini);
+
+
+
+
+
+
+            var productNokiaLumia = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Nokia Lumia 1020",
+                ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
+                FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "sony-dcr-sr85-1mp-60gb-hard-drive-handycam-camcorder",
+                AllowCustomerReviews = true,
+                Price = 349M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productNokiaLumia);
+            productNokiaLumia.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Lumia1020.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNokiaLumia.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productNokiaLumia);
+
+
+            #endregion
+
+            #region Others
+
+
+
+            var productBeatsPill = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Beats Pill 2.0 Wireless Speaker",
+                ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
+                FullDescription = "<p<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul></p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "acer-aspire-one-89-mini-notebook-case-black",
+                AllowCustomerReviews = true,
+                Price = 79.99M,
+                IsShipEnabled = true,
+                IsFreeShipping = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
                 Height = 3,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 2,
+                        Price = 19
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 5,
+                        Price = 17
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 15
+                    }
+                },
+                HasTierPrices = true,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Others"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productBeatsPill);
+            productBeatsPill.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)),
+                DisplayOrder = 1,
+            });
+            productBeatsPill.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PillBeats_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBeatsPill.Name)),
+                DisplayOrder = 2,
+            });
+            _productRepository.Insert(productBeatsPill);
+
+
+
+
+
+            var productUniversalTabletCover = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Universal 7-8 Inch Tablet Cover",
+                ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
+                FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "apc-back-ups-rs-800va-ups-800-va-ups-battery-lead-acid-br800blk",
+                AllowCustomerReviews = true,
+                Price = 39M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories = 
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Others"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productUniversalTabletCover);
+            productUniversalTabletCover.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_TabletCover.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productUniversalTabletCover.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productUniversalTabletCover);
+
+
+
+            //var productKensington = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "Kensington 33117 International All-in-One Travel Plug Adapter",
+            //    ShortDescription = "Includes plug adapters for use in more than 150 countries",
+            //    FullDescription = "<p>The Kensington 33117 Travel Plug Adapter is a pocket-sized power adapter for go-anywhere convenience. This all-in-one unit provides plug adapters for use in more than 150 countries, so you never need to be at a loss for power again. The Kensington 33117 is easy to use, with slide-out power plugs that ensure you won't lose any vital pieces, in a compact, self-contained unit that eliminates any hassles. This all-in-one plug adapts power outlets for laptops, chargers, and similar devices, and features a safety release button and built-in fuse to ensure safe operation. The Kensington 33117 does not reduce or convert electrical voltage, is suitable for most consumer electronics ranging from 110-volts to Mac 275-watts, to 220-volts to Mac 550-watts. Backed by Kensington's one-year warranty, this unit weighs 0.5, and measures 1.875 x 2 x 2.25 inches (WxDxH). Please note that this adapter is not designed for use with high-watt devices such as hairdryers and irons, so users should check electronic device specifications before using.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "kensington-33117-international-all-in-one-travel-plug-adapter",
+            //    AllowCustomerReviews = true,
+            //    Price = 35M,
+            //    IsShipEnabled = true,
+            //    Weight = 7,
+            //    Length = 7,
+            //    Width = 7,
+            //    Height = 7,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productKensington);
+            //productKensington.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productKensington);
+
+
+
+
+            var productPortableSoundSpeakers = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Portable Sound Speakers",
+                ShortDescription = "Universall portable sound speakers",
+                FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "microsoft-bluetooth-notebook-mouse-5000-macwindows",
+                AllowCustomerReviews = true,
+                Price = 37M,
+                IsShipEnabled = true,
+                Weight = 7,
+                Length = 7,
+                Width = 7,
+                Height = 7,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Others"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productPortableSoundSpeakers);
+            productPortableSoundSpeakers.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Speakers.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPortableSoundSpeakers.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productPortableSoundSpeakers);
+
+
+            #endregion
+
+            #region Shoes
+
+
+            var productNikeFloral = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Nike Floral Roshe Customized Running Shoes",
+                ShortDescription = "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
+                FullDescription = "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "adidas-womens-supernova-csh-7-running-shoe",
+                AllowCustomerReviews = true,
+                Price = 40M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -6992,206 +7347,109 @@ namespace Nop.Services.Installation
                 {
                     new ProductAttributeMapping
                     {
-                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
-                        TextPrompt = "Enter your text:",
-                        AttributeControlType = AttributeControlType.TextBox,
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
                         IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "8",
+                                DisplayOrder = 1,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "9",
+                                DisplayOrder = 2,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "10",
+                                DisplayOrder = 3,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "11",
+                                DisplayOrder = 4,
+                            }
+                        }
+                    },
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Color"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "White/Blue",
+                                DisplayOrder = 1,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "White/Black",
+                                DisplayOrder = 2,
+                            },
+                        }
                     }
                 },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
                     }
-                }
-            };
-            allProducts.Add(productCustomTShirt);
-            productCustomTShirt.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productCustomTShirt);
-
-
-
-
-
-            var productDiamondEarrings = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Diamond Pave Earrings",
-                ShortDescription = "1/2 Carat (ctw) in White Gold",
-                FullDescription = "<p>Perfect for both a professional look as well as perhaps something more sensual, these 10 karat white gold huggie earrings boast 86 sparkling round diamonds set in a pave arrangement that total 1/2 carat (ctw).</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "diamond-pave-earrings",
-                AllowCustomerReviews = true,
-                Price = 569M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
+                },
+                ProductManufacturers =
                 {
-                    new ProductCategory
+                    new ProductManufacturer
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                        DisplayOrder = 1,
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
+                        DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productDiamondEarrings);
-            productDiamondEarrings.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productNikeFloral);
+            productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondEarrings.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondEarrings.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productDiamondEarrings);
-
-
-
-
-
-            var productDiamondBracelet = new Product
+            productNikeFloral.ProductPictures.Add(new ProductPicture
             {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "Diamond Tennis Bracelet",
-                ShortDescription = "1.0 Carat (ctw) in White Gold",
-                FullDescription = "<p>Jazz up any outfit with this classic diamond tennis bracelet. This piece has one full carat of diamonds uniquely set in brilliant 10 karat white gold.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "diamond-tennis-bracelet",
-                AllowCustomerReviews = true,
-                Price = 360M,
-                IsShipEnabled = true,
-                IsFreeShipping = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productDiamondBracelet);
-            productDiamondBracelet.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name)),
-                DisplayOrder = 1,
-            });
-            productDiamondBracelet.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeFloralShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeFloral.Name)),
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productDiamondBracelet);
+            _productRepository.Insert(productNikeFloral);
 
 
 
 
-
-            var productEatingWell = new Product
-            {
-                ProductType = ProductType.SimpleProduct, 
-                VisibleIndividually = true,
-                Name = "EatingWell in Season",
-                ShortDescription = "A Farmers' Market Cookbook (Hardcover)",
-                FullDescription = "<p>Trying to get big chocolate flavor into a crisp holiday cookie is no easy feat. Any decent baker can get a soft, chewy cookie to scream &ldquo;chocolate,&rdquo; but a dough that can withstand a rolling pin and cookie cutters simply can&rsquo;t be too soft. Most chocolate butter cookies skimp on the gooey chocolate and their chocolate flavor is quite modest.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "eatingwell-in-season",
-                AllowCustomerReviews = true,
-                Price = 51M,
-                OldPrice = 67M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productEatingWell);
-            productEatingWell.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EatingWell.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productEatingWell.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productEatingWell);
-
-
-
-
-            var productEtnies = new Product
+            var productAdidas = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "etnies Men's Digit Sneaker",
-                ShortDescription = "This sleek shoe has all you need--from the padded tongue and collar and internal EVA midsole, to the STI Level 2 cushioning for impact absorption and stability.",
-                FullDescription = "<p>Established in 1986, etnies is the first skateboarder-owned and skateboarder-operated global action sports footwear and apparel company. etnies not only pushed the envelope by creating the first pro model skate shoe, but it pioneered technological advances and changed the face of skateboard footwear forever. Today, etnies' vision is to remain the leading action sports company committed to creating functional products that provide the most style, comfort, durability and protection possible. etnies stays true to its roots by sponsoring a world-class team of skateboarding, surfing, snowboarding, moto-x, and BMX athletes and continues its dedication by giving back to each of these communities.</p>",
+                Name = "adidas Consortium Campus 80s Running Shoes",
+                ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
+                FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
-                Price = 17.56M,
+                Price = 27.56M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7202,7 +7460,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
+                //ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductAttributeMappings =
@@ -7250,23 +7508,23 @@ namespace Nop.Services.Installation
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "White",
+                                Name = "Red",
                                 IsPreSelected = true,
-                                ColorSquaresRgb = "#FFFFFF",
+                                ColorSquaresRgb = "#663030",
                                 DisplayOrder = 1,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Black",
-                                ColorSquaresRgb = "#000000",
+                                Name = "Blue",
+                                ColorSquaresRgb = "#363656",
                                 DisplayOrder = 2,
                             },
                             new ProductAttributeValue
                             {
                                 AttributeValueType = AttributeValueType.Simple,
-                                Name = "Green",
-                                ColorSquaresRgb = "#1fcb1a",
+                                Name = "Silver",
+                                ColorSquaresRgb = "#c5c5d5",
                                 DisplayOrder = 3,
                             }
                         }
@@ -7276,40 +7534,56 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productEtnies);
-            productEtnies.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productAdidas);
+            productAdidas.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Etnies.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEtnies.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productEtnies);
+            productAdidas.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
+                DisplayOrder = 2,
+            });
+            productAdidas.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_adidas_3.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidas.Name)),
+                DisplayOrder = 3,
+            });
+
+
+            _productRepository.Insert(productAdidas);
+
+            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
+            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
+            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Silver").First().PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
+            _productRepository.Update(productAdidas);
 
 
 
 
-
-            var productLeatherHandbag = new Product
+            var productNikeZoom = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Genuine Leather Handbag with Cell Phone Holder & Many Pockets",
-                ShortDescription = "Classic Leather Handbag",
-                FullDescription = "<p>This fine leather handbag will quickly become your favorite bag. It has a zipper organizer on the front that includes a notepad pocket, pen holder, credit card slots and zipper pocket divider. On top of this is a zipper pocket and another flap closure pocket. The main compartment is fully lined and includes a side zipper pocket. On the back is another zipper pocket. And don't forget the convenient built in cell phone holder on the side! The long strap is fully adjustable so you can wear it crossbody or over the shoulder. This is a very well-made, quality leather bag that is not too big, but not too small.</p>",
+                Name = "Nike SB Zoom Stefan Janoski “Medium Mint”",
+                ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
+                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a “Medium Mint” accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "genuine-leather-handbag-with-cell-phone-holder-many-pockets",
+                //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
-                Price = 35M,
+                Price = 30M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7326,45 +7600,50 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Shoes"),
                         DisplayOrder = 1,
+                    }
+                },
+                ProductManufacturers =
+                {
+                    new ProductManufacturer
+                    {
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
+                        DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productLeatherHandbag);
-            productLeatherHandbag.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productNikeZoom);
+            productNikeZoom.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeZoom.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeZoom.Name)),
                 DisplayOrder = 1,
             });
-            productLeatherHandbag.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
-                DisplayOrder = 2,
-            });
-            _productRepository.Insert(productLeatherHandbag);
+            _productRepository.Insert(productNikeZoom);
 
 
+            #endregion
 
+            #region Clothing
 
-
-            var productHp506 = new Product
+            var productNikeTailwind = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP IQ506 TouchSmart Desktop PC",
+                Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
                 ShortDescription = "",
-                FullDescription = "<p>Redesigned with a next-generation, touch-enabled 22-inch high-definition LCD screen, the HP TouchSmart IQ506 all-in-one desktop PC is designed to fit wherever life happens: in the kitchen, family room, or living room. With one touch you can check the weather, download your e-mail, or watch your favorite TV show. It's also designed to maximize energy, with a power-saving Intel Core 2 Duo processor and advanced power management technology, as well as material efficiency--right down to the packaging. It has a sleek piano black design with elegant espresso side-panel highlights, and the HP Ambient Light lets you set a mood--or see your keyboard in the dark.</p>",
+                FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-iq506-touchsmart-desktop-pc",
+                //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
                 AllowCustomerReviews = true,
-                Price = 1199M,
+                Published = true,
+                Price = 15M,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                Weight = 1,
+                Length = 2,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7374,14 +7653,61 @@ namespace Nop.Services.Installation
                 BackorderMode = BackorderMode.NoBackorders,
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
-                Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductAttributeMappings =
+                {
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Size"),
+                        AttributeControlType = AttributeControlType.DropdownList,
+                        IsRequired = true,
+                        ProductAttributeValues =
+                        {
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "Small",
+                                DisplayOrder = 1,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "1X",
+                                DisplayOrder = 2,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "2X",
+                                DisplayOrder = 3,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "3X",
+                                DisplayOrder = 4,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "4X",
+                                DisplayOrder = 5,
+                            },
+                            new ProductAttributeValue
+                            {
+                                AttributeValueType = AttributeValueType.Simple,
+                                Name = "5X",
+                                DisplayOrder = 6,
+                            }
+                        }
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Clothing"),
                         DisplayOrder = 1,
                     }
                 },
@@ -7389,40 +7715,39 @@ namespace Nop.Services.Installation
                 {
                     new ProductManufacturer
                     {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                        DisplayOrder = 1,
+                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "Nike"),
+                        DisplayOrder = 2,
                     }
                 }
             };
-            allProducts.Add(productHp506);
-            productHp506.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productNikeTailwind);
+            productNikeTailwind.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Hp506.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHp506.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NikeShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productNikeTailwind.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productHp506);
+            _productRepository.Insert(productNikeTailwind);
 
 
 
 
-
-            var productHpPavilion1 = new Product
+            var productOversizedWomenTShirt = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Pavilion Artist Edition DV2890NR 14.1-inch Laptop",
-                ShortDescription = "Unique Asian-influenced HP imprint wraps the laptop both inside and out",
-                FullDescription = "<p>Optimize your mobility with a BrightView 14.1-inch display that has the same viewable area as a 15.4-inch screen--in a notebook that weighs a pound less. Encouraging more direct interaction, the backlit media control panel responds to the touch or sweep of a finger. Control settings for audio and video playback from up to 10 feet away with the included HP remote, then store it conveniently in the PC card slot. Enjoy movies or music in seconds with the external DVD or music buttons to launch HP QuickPlay (which bypasses the boot process).</p><p>It's powered by the 1.83 GHz Intel Core 2 Duo T5550 processor, which provides an optimized, multithreaded architecture for improved gaming and multitasking performance, as well as excellent battery management. It also includes Intel's 4965 AGN wireless LAN, which will connect to draft 802.11n routers and offers compatibility with 802.11a/b/g networks as well. It also features a 250 GB hard drive, 3 GB of installed RAM (4 GB maximum), LighScribe dual-layer DVD&plusmn;R burner, HDMI port for connecting to an HDTV, and Nvidia GeForce Go 8400M GS video/graphics card with up to 1407 MB of total allocated video memory (128 MB dedicated). It also includes an integrated Webcam in the LCD's bezel and an omnidirectional microphone for easy video chats.</p>",
+                Name = "Oversized Women T-Shirt",
+                ShortDescription = "",
+                FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-artist-edition-dv2890nr-141-inch-laptop",
+                //SeName = "arrow-mens-wrinkle-free-pinpoint-solid-long-sleeve",
                 AllowCustomerReviews = true,
-                Price = 1590M,
+                Price = 24M,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7433,86 +7758,64 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
-                ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 3,
+                        Price = 21
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 7,
+                        Price = 19
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 16
+                    }
+                },
+                HasTierPrices = true,
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Clothing"),
                         DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                        DisplayOrder = 2,
-                    }
-                },
-                ProductSpecificationAttributes =
-                {
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 1,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "14.1''")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 2,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 3,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
                     }
                 }
             };
-            allProducts.Add(productHpPavilion1);
-            productHpPavilion1.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productOversizedWomenTShirt);
+            productOversizedWomenTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion1.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_WomenTShirt.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productOversizedWomenTShirt.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productHpPavilion1);
+            _productRepository.Insert(productOversizedWomenTShirt);
 
 
 
 
-
-            var productHpPavilion2 = new Product
+            var productCustomTShirt = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Pavilion Elite M9150F Desktop PC",
-                ShortDescription = "Top-of-the-line multimedia desktop featuring 2.4 GHz Intel Core 2 Quad Processor Q6600 with four lightning fast execution cores",
-                FullDescription = "<p>The updated chassis with sleek piano black paneling and components is far from the most significant improvements in the multimedia powerhouse HP Pavilion Elite m9150f desktop PC. It's powered by Intel's newest processor--the 2.4 GHz Intel Core 2 Quad Q6600--which delivers four complete execution cores within a single processor for unprecedented performance and responsiveness in multi-threaded and multi-tasking business/home environments. You can also go wireless and clutter-free with wireless keyboard, mouse, and remote control, and it includes the next step in Wi-Fi networking with a 54g wireless LAN (802.11b/g).</p>",
+                Name = "Custom T-Shirt",
+                ShortDescription = "T-Shirt - Add Your Content",
+                FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-elite-m9150f-desktop-pc",
+                //SeName = "custom-t-shirt",
                 AllowCustomerReviews = true,
-                Price = 1350M,
+                Price = 15M,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                Weight = 4,
+                Length = 3,
+                Width = 3,
+                Height = 3,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7525,136 +7828,179 @@ namespace Nop.Services.Installation
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
+                ProductAttributeMappings =
+                {
+                    new ProductAttributeMapping
+                    {
+                        ProductAttribute = _productAttributeRepository.Table.Single(x => x.Name == "Custom Text"),
+                        TextPrompt = "Enter your text:",
+                        AttributeControlType = AttributeControlType.TextBox,
+                        IsRequired = true,
+                    }
+                },
                 ProductCategories =
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Desktops"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Clothing"),
                         DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                        DisplayOrder = 3,
                     }
                 }
             };
-            allProducts.Add(productHpPavilion2);
-            productHpPavilion2.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productCustomTShirt);
+            productCustomTShirt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name)),
                 DisplayOrder = 1,
             });
-            productHpPavilion2.ProductPictures.Add(new ProductPicture
+            _productRepository.Insert(productCustomTShirt);
+
+
+
+
+
+
+            var productLeviJeans = new Product
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name)),
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Levi's 511 Jeans",
+                ShortDescription = "Levi's Faded Black 511 Jeans ",
+                FullDescription = "",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "levis-skinny-511-jeans",
+                AllowCustomerReviews = true,
+                Price = 43.5M,
+                OldPrice = 55M,
+                IsShipEnabled = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                TierPrices =
+                {
+                    new TierPrice
+                    {
+                        Quantity = 3,
+                        Price = 40
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 6,
+                        Price = 38
+                    },
+                    new TierPrice
+                    {
+                        Quantity = 10,
+                        Price = 35
+                    }
+                },
+                HasTierPrices = true,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Clothing"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productLeviJeans);
+
+            productLeviJeans.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
+                DisplayOrder = 1,
+            });
+            productLeviJeans.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
                 DisplayOrder = 2,
             });
-            _productRepository.Insert(productHpPavilion2);
+            _productRepository.Insert(productLeviJeans);
+
+
+            #endregion
+
+            #region Accessories
+
+
+            //var productLeatherHandbag = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "Genuine Leather Handbag with Cell Phone Holder & Many Pockets",
+            //    ShortDescription = "Classic Leather Handbag",
+            //    FullDescription = "<p>This fine leather handbag will quickly become your favorite bag. It has a zipper organizer on the front that includes a notepad pocket, pen holder, credit card slots and zipper pocket divider. On top of this is a zipper pocket and another flap closure pocket. The main compartment is fully lined and includes a side zipper pocket. On the back is another zipper pocket. And don't forget the convenient built in cell phone holder on the side! The long strap is fully adjustable so you can wear it crossbody or over the shoulder. This is a very well-made, quality leather bag that is not too big, but not too small.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "genuine-leather-handbag-with-cell-phone-holder-many-pockets",
+            //    AllowCustomerReviews = true,
+            //    Price = 35M,
+            //    IsShipEnabled = true,
+            //    Weight = 2,
+            //    Length = 2,
+            //    Width = 2,
+            //    Height = 2,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Apparel Accessories"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productLeatherHandbag);
+            //productLeatherHandbag.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //productLeatherHandbag.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
+            //    DisplayOrder = 2,
+            //});
+            //_productRepository.Insert(productLeatherHandbag);
 
 
 
 
 
-            var productHpPavilion3 = new Product
+
+            var productObeyHat = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "HP Pavilion G60-230US 16.0-Inch Laptop",
-                ShortDescription = "Streamlined multimedia laptop with 16-inch screen for basic computing, entertainment and online communication",
-                FullDescription = "<p>Chat face to face, or take pictures and video clips with the webcam and integrated digital microphone. Play games and enhance multimedia with the Intel GMA 4500M with up to 1309 MB of total available graphics memory. And enjoy movies or music in seconds with the external DVD or music buttons to launch HP QuickPlay (which bypasses the boot process).  It offers dual-core productivity from its 2.0 GHz Intel Pentium T4200 processor for excellent multitasking. Other features include a 320 GB hard drive, 3 GB of installed RAM (4 GB maximum capacity), dual-layer DVD&plusmn;RW drive (which also burns CDs), quad-mode Wi-Fi (802.11a/b/g/n), 5-in-1 memory card reader, and pre-installed Windows Vista Home Premium (SP1).</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
-                AllowCustomerReviews = true,
-                Price = 1460M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                        DisplayOrder = 1,
-                    }
-                },
-                ProductManufacturers =
-                {
-                    new ProductManufacturer
-                    {
-                        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "HP"),
-                        DisplayOrder = 4,
-                    }
-                },
-                ProductSpecificationAttributes =
-                {
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 1,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "16.0''")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 2,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")            
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 3,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "3 GB")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "320 GB")
-                    }
-                }
-            };
-            allProducts.Add(productHpPavilion3);
-            productHpPavilion3.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion3.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productHpPavilion3);
-
-
-
-
-
-            var productHat = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Indiana Jones® Shapeable Wool Hat",
-                ShortDescription = "Wear some adventure with the same hat Indiana Jones&reg; wears in his movies.",
-                FullDescription = "<p>Wear some adventure with the same hat Indiana Jones&reg; wears in his movies. Easy to shape to fit your personal style. Wool. Import. Please Note - Due to new UPS shipping rules and the size of the box, if you choose to expedite your hat order (UPS 3-day, 2-day or Overnight), an additional non-refundable $20 shipping charge per hat will be added at the time your order is processed.</p>",
+                Name = "Obey Propaganda Hat",
+                ShortDescription = "",
+                FullDescription = "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "indiana-jones-shapeable-wool-hat",
                 AllowCustomerReviews = true,
@@ -7664,7 +8010,7 @@ namespace Nop.Services.Installation
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -7717,306 +8063,32 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productHat);
-            productHat.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productHat.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productHat);
-
-
-
-
-
-            var productKensington = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Kensington 33117 International All-in-One Travel Plug Adapter",
-                ShortDescription = "Includes plug adapters for use in more than 150 countries",
-                FullDescription = "<p>The Kensington 33117 Travel Plug Adapter is a pocket-sized power adapter for go-anywhere convenience. This all-in-one unit provides plug adapters for use in more than 150 countries, so you never need to be at a loss for power again. The Kensington 33117 is easy to use, with slide-out power plugs that ensure you won't lose any vital pieces, in a compact, self-contained unit that eliminates any hassles. This all-in-one plug adapts power outlets for laptops, chargers, and similar devices, and features a safety release button and built-in fuse to ensure safe operation. The Kensington 33117 does not reduce or convert electrical voltage, is suitable for most consumer electronics ranging from 110-volts to Mac 275-watts, to 220-volts to Mac 550-watts. Backed by Kensington's one-year warranty, this unit weighs 0.5, and measures 1.875 x 2 x 2.25 inches (WxDxH). Please note that this adapter is not designed for use with high-watt devices such as hairdryers and irons, so users should check electronic device specifications before using.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "kensington-33117-international-all-in-one-travel-plug-adapter",
-                AllowCustomerReviews = true,
-                Price = 35M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
                         Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productKensington);
-            productKensington.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productObeyHat);
+            productObeyHat.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productObeyHat.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productKensington);
+            _productRepository.Insert(productObeyHat);
 
 
 
 
 
-            var productLeviJeans = new Product
+
+
+            var productBelt = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Levi's Skinny 511 Jeans",
-                ShortDescription = "Levi's Faded Black Skinny 511 Jeans ",
-                FullDescription = "",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "levis-skinny-511-jeans",
-                AllowCustomerReviews = true,
-                Price = 43.5M,
-                OldPrice = 55M,
-                IsShipEnabled = true,
-                Weight = 2,
-                Length = 2,
-                Width = 2,
-                Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                TierPrices =
-                {
-                    new TierPrice
-                    {
-                        Quantity = 3,
-                        Price = 40
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 6,
-                        Price = 38
-                    },
-                    new TierPrice
-                    {
-                        Quantity = 10,
-                        Price = 35
-                    }
-                },
-                HasTierPrices = true,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productLeviJeans);
-
-            productLeviJeans.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
-                DisplayOrder = 1,
-            });
-            productLeviJeans.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name)),
-                DisplayOrder = 2,
-            });
-            _productRepository.Insert(productLeviJeans);
-
-
-
-
-
-            var productBaseball = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Major League Baseball 2K9",
-                ShortDescription = "Take charge of your franchise and enjoy the all-new MLB.com presentation style",
-                FullDescription = "<p>Major League Baseball 2K9 captures the essence of baseball down to some of the most minute, player- specific details including batting stances, pitching windups and signature swings. 2K Sports has gone above and beyond the call of duty to deliver this in true major league fashion. Additionally, gameplay enhancements in pitching, batting, fielding and base running promise this year's installment to be user-friendly and enjoyable for rookies or veterans. New commentary and presentation provide the icing to this ultimate baseball experience. If you really want to Play Ball this is the game for you.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "major-league-baseball-2k9",
-                AllowCustomerReviews = true,
-                Price = 14.99M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productBaseball);
-            productBaseball.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Baseball.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBaseball.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productBaseball);
-
-
-
-
-
-            var productMedalOfHonor = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Medal of Honor - Limited Edition (Xbox 360)",
-                ShortDescription = "One of the great pioneers in military simulations returns to gaming as the Medal of Honor series depicts modern warfare for the first time, with a harrowing tour of duty in current day Afghanistan.",
-                FullDescription = "You'll take control of both ordinary U.S. Army Rangers and Tier 1 Elite Ops Special Forces as you fight enemy insurgents in the most dangerous theatre of war of the modern age. The intense first person combat has been created with input from U.S. military consultants and based on real-life descriptions from veteran soldiers. This allows you to use genuine military tactics and advanced technology including combat drones and targeted air strikes.",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "medal-of-honor-limited-edition-xbox-360",
-                AllowCustomerReviews = true,
-                Price = 37M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productMedalOfHonor);
-            productMedalOfHonor.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productMedalOfHonor);
-
-
-
-
-
-            var productMouse = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Microsoft Bluetooth Notebook Mouse 5000 Mac/Windows",
-                ShortDescription = "Enjoy reliable, transceiver-free wireless connection to your PC with Bluetooth Technology",
-                FullDescription = "<p>Enjoy wireless freedom with the Microsoft&reg; Bluetooth&reg; Notebook Mouse 5000 &mdash; no transceiver to connect or lose! Keep USB ports free for other devices. And, take it with you in a convenient carrying case (included)</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "microsoft-bluetooth-notebook-mouse-5000-macwindows",
-                AllowCustomerReviews = true,
-                Price = 37M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productMouse);
-            productMouse.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mouse.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMouse.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productMouse);
-
-
-
-
-
-            var productGolfBelt = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "NIKE Golf Casual Belt",
-                ShortDescription = "NIKE Golf Casual Belt is a great look for in the clubhouse after a round of golf.",
-                FullDescription = "<p>NIKE Golf Casual Belt is a great look for in the clubhouse after a round of golf. The belt strap is made of full grain oil tanned leather. The buckle is made of antique brushed metal with an embossed Swoosh design on it. This belt features an English beveled edge with rivets on the tab and tip of the 38mm wide strap. Size: 32; Color: Black.</p>",
+                Name = "Reversible Horseferry Check Belt",
+                ShortDescription = "Reversible belt in Horseferry check with smooth leather trim",
+                FullDescription = "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "nike-golf-casual-belt",
                 AllowCustomerReviews = true,
@@ -8026,7 +8098,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8043,68 +8115,19 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productGolfBelt);
-            productGolfBelt.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productBelt);
+            productBelt.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GolfBelt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGolfBelt.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Belt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBelt.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productGolfBelt);
+            _productRepository.Insert(productBelt);
 
-
-
-
-
-            var productPanasonic = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Panasonic HDC-SDT750K, High Definition 3D Camcorder",
-                ShortDescription = "World's first 3D Shooting Camcorder",
-                FullDescription = "<p>Unlike previous 3D images that required complex, professional equipment to create, now you can shoot your own. Simply attach the 3D Conversion Lens to the SDT750 for quick and easy 3D shooting. And because the SDT750 features the Advanced 3MOS System, which has gained worldwide popularity, colors are vivid and 3D images are extremely realistic. Let the SDT750 save precious moments for you in true-to-life images.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "panasonic-hdc-sdt750k-high-definition-3d-camcorder",
-                AllowCustomerReviews = true,
-                Price = 1300M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productPanasonic);
-            productPanasonic.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_productPanasonic.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPanasonic.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productPanasonic);
 
 
 
@@ -8114,7 +8137,7 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Ray Ban Aviator Sunglasses RB 3025",
+                Name = "Ray Ban Aviator Sunglasses",
                 ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
                 FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8126,7 +8149,7 @@ namespace Nop.Services.Installation
                 Length = 7,
                 Width = 7,
                 Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8143,7 +8166,7 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
                         DisplayOrder = 1,
                     }
                 }
@@ -8156,27 +8179,237 @@ namespace Nop.Services.Installation
             });
             _productRepository.Insert(productSunglasses);
 
+            #endregion
+
+            #region Digital Downloads
 
 
-
-
-            var productSamsungPhone = new Product
+            var downloadNightVision1 = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                ContentType = "application/x-zip-co",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_1.zip"),
+                Extension = ".zip",
+                Filename = "Night_Vision_1",
+                IsNew = true,
+            };
+            downloadService.InsertDownload(downloadNightVision1);
+            var downloadNightVision2 = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                ContentType = "text/plain",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_NightVision_2.txt"),
+                Extension = ".txt",
+                Filename = "Night_Vision_1",
+                IsNew = true,
+            };
+            downloadService.InsertDownload(downloadNightVision2);
+            var productNightVision = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Samsung Rugby A837 Phone, Black (AT&T)",
-                ShortDescription = "Ruggedized 3G handset in black great for outdoor workforces",
-                FullDescription = "<p>Ideal for on-site field services, the ruggedized Samsung Rugby for AT&amp;T can take just about anything you can throw at it. This highly durable handset is certified to Military Standard MIL-STD 810F standards that's perfect for users like construction foremen and landscape designers. In addition to access to AT&amp;T Navigation turn-by-turn direction service, the Rugby also features compatibility with Push to Talk communication, Enterprise Paging, and AT&amp;T's breakthrough Video Share calling services. This quad-band GSM phone runs on AT&amp;T's dual-band 3G (HSDPA/UMTS) network, for fast downloads and seamless video calls. It also offers a 1.3-megapixel camera, microSD memory expansion to 8 GB, Bluetooth for handsfree communication and stereo music streaming, access to personal email and instant messaging, and up to 5 hours of talk time.</p>",
+                Name = "Night Visions",
+                ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
+                FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "samsung-rugby-a837-phone-black-att",
+                //SeName = "poker-face",
                 AllowCustomerReviews = true,
-                Price = 100M,
+                Price = 2.8M,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                IsDownload = true,
+                DownloadId = downloadNightVision1.Id,
+                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
+                UnlimitedDownloads = true,
+                HasUserAgreement = false,
+                HasSampleDownload = true,
+                SampleDownloadId = downloadNightVision2.Id,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productNightVision);
+            productNightVision.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_NightVisions.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productNightVision.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productNightVision);
+
+
+
+
+
+            var downloadIfYouWait1 = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                ContentType = "application/x-zip-co",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_1.zip"),
+                Extension = ".zip",
+                Filename = "If_You_Wait_1",
+                IsNew = true,
+            };
+            downloadService.InsertDownload(downloadIfYouWait1);
+            var downloadIfYouWait2 = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                ContentType = "text/plain",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_IfYouWait_2.txt"),
+                Extension = ".txt",
+                Filename = "If_You_Wait_1",
+                IsNew = true,
+            };
+            downloadService.InsertDownload(downloadIfYouWait2);
+            var productIfYouWait = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "If You Wait",
+                ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
+                FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "single-ladies-put-a-ring-on-it",
+                AllowCustomerReviews = true,
+                Price = 3M,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                IsDownload = true,
+                DownloadId = downloadIfYouWait1.Id,
+                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
+                UnlimitedDownloads = true,
+                HasUserAgreement = false,
+                HasSampleDownload = true,
+                SampleDownloadId = downloadIfYouWait2.Id,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productIfYouWait);
+
+            productIfYouWait.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_IfYouWait.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productIfYouWait.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productIfYouWait);
+
+
+
+
+
+            var downloadScienceAndFaith = new Download
+            {
+                DownloadGuid = Guid.NewGuid(),
+                ContentType = "application/x-zip-co",
+                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_ScienceAndFaith_1.zip"),
+                Extension = ".zip",
+                Filename = "Science_And_Faith",
+                IsNew = true,
+            };
+            downloadService.InsertDownload(downloadScienceAndFaith);
+            var productScienceAndFaith = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Science & Faith",
+                ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
+                FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "the-battle-of-los-angeles",
+                AllowCustomerReviews = true,
+                Price = 3M,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                IsDownload = true,
+                DownloadId = downloadScienceAndFaith.Id,
+                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
+                UnlimitedDownloads = true,
+                HasUserAgreement = false,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productScienceAndFaith);
+            productScienceAndFaith.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ScienceAndFaith.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productScienceAndFaith.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(productScienceAndFaith);
+
+
+
+            #endregion
+
+            #region Books
+
+            var productFahrenheit = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Fahrenheit 451 by Ray Bradbury",
+                ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
+                FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "best-grilling-recipes",
+                AllowCustomerReviews = true,
+                Price = 27M,
+                OldPrice = 30M,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                IsFreeShipping = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8193,45 +8426,92 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Cell phones"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productSamsungPhone);
-            productSamsungPhone.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productFahrenheit);
+            productFahrenheit.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Fahrenheit451.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFahrenheit.Name)),
                 DisplayOrder = 1,
             });
-            productSamsungPhone.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name)),
-                DisplayOrder = 2,
-            });
-            _productRepository.Insert(productSamsungPhone);
+            _productRepository.Insert(productFahrenheit);
 
 
 
 
 
-            var productSonyCamcoder = new Product
+            //var productCookingForTwo = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "Cooking for Two",
+            //    ShortDescription = "More Than 200 Foolproof Recipes for Weeknights and Special Occasions (Hardcover)",
+            //    FullDescription = "<p>Hardcover: 352 pages<br />Publisher: America's Test Kitchen (May 2009)<br />Language: English<br />ISBN-10: 1933615435<br />ISBN-13: 978-1933615431</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "cooking-for-two",
+            //    AllowCustomerReviews = true,
+            //    Price = 19M,
+            //    OldPrice = 27M,
+            //    IsShipEnabled = true,
+            //    DeliveryDateId = deliveryDate.Id,
+            //    Weight = 2,
+            //    Length = 2,
+            //    Width = 2,
+            //    Height = 2,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productCookingForTwo);
+            //productCookingForTwo.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productCookingForTwo);
+
+
+
+
+            var productFirstPrizePies = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Sony DCR-SR85 1MP 60GB Hard Drive Handycam Camcorder",
-                ShortDescription = "Capture video to hard disk drive; 60 GB storage",
-                FullDescription = "<p>You&rsquo;ll never miss a moment because of switching tapes or discs with the DCR-SR85. Its built-in 60GB hard disk drive offers plenty of storage as you zero in on your subjects with the professional-quality Carl Zeiss Vario-Tessar lens and a powerful 25x optical/2000x digital zoom. Compose shots using the 2.7-inch wide (16:9) touch-panel LCD display, and maintain total control and clarity with the Super SteadyShot image stabilization system. Hybrid recording technology even gives you the choice to record video to either the internal hard disk drive or removable Memory Stick Pro Duo media.</p>",
+                Name = "First Prize Pies",
+                ShortDescription = "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
+                FullDescription = "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "sony-dcr-sr85-1mp-60gb-hard-drive-handycam-camcorder",
+                //SeName = "eatingwell-in-season",
                 AllowCustomerReviews = true,
-                Price = 349M,
+                Price = 51M,
+                OldPrice = 67M,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8248,30 +8528,32 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Camera, photo"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productSonyCamcoder);
-            productSonyCamcoder.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productFirstPrizePies);
+            productFirstPrizePies.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SonyCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyCamcoder.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FirstPrizePies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productFirstPrizePies.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productSonyCamcoder);
+            _productRepository.Insert(productFirstPrizePies);
 
 
 
 
 
-            var productBestSkilletRecipes = new Product
+
+
+            var productPrideAndPrejudice = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "The Best Skillet Recipes",
-                ShortDescription = "What's the Best Way to Make Lasagna With Rich, Meaty Flavor, Chunks of Tomato, and Gooey Cheese, Without Ever Turning on the Oven or Boiling a Pot of (Hardcover)",
-                FullDescription = "<p>In this latest addition of the Best Recipe Classic series, <em>Cooks Illustrated</em> editor Christopher Kimball and his team of kitchen scientists celebrate the untold versatility of that ordinary workhorse, the 12-inch skillet. An indispensable tool for eggs, pan-seared meats and saut&eacute;ed vegetables, the skillet can also be used for stovetop-to-oven dishes such as All-American Mini Meatloaves; layered dishes such as tamale pie and Tuscan bean casserole; and even desserts such as hot fudge pudding cake. In the trademark style of other America's Test Kitchen publications, the cookbook contains plenty of variations on basic themes (you can make chicken and rice with peas and scallions, broccoli and cheddar, or coconut milk and pistachios); ingredient and equipment roundups; and helpful illustrations for preparing mango and stringing snowpeas. Yet the true strength of the series lies in the sheer thoughtfulness and detail of the recipes. Whether or not you properly appreciate your skillet, this book will at least teach you to wield it gracefully. <i>(Mar.)</i>   <br />Copyright &copy; Reed Business Information, a division of Reed Elsevier Inc. All rights reserved.</p>",
+                Name = "Pride and Prejudice",
+                ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
+                FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "the-best-skillet-recipes",
                 AllowCustomerReviews = true,
@@ -8304,116 +8586,88 @@ namespace Nop.Services.Installation
                     }
                 }
             };
-            allProducts.Add(productBestSkilletRecipes);
-            productBestSkilletRecipes.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productPrideAndPrejudice);
+            productPrideAndPrejudice.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestSkilletRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestSkilletRecipes.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PrideAndPrejudice.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPrideAndPrejudice.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productBestSkilletRecipes);
+            _productRepository.Insert(productPrideAndPrejudice);
+
+
+
+            #endregion
+
+            #region Jewelry
+
+
+            //var productDiamondHeart = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "Black & White Diamond Heart",
+            //    ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
+            //    FullDescription = "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "black-white-diamond-heart",
+            //    AllowCustomerReviews = true,
+            //    Price = 130M,
+            //    IsShipEnabled = true,
+            //    IsFreeShipping = true,
+            //    Weight = 2,
+            //    Length = 2,
+            //    Width = 2,
+            //    Height = 2,
+            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    DisplayStockAvailability = true,
+            //    LowStockActivity = LowStockActivity.DisableBuyButton,
+            //    BackorderMode = BackorderMode.NoBackorders,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(productDiamondHeart);
+            //productDiamondHeart.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(productDiamondHeart);
 
 
 
 
-
-            var productSatellite = new Product
+            var productElegantGemstoneNecklace = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Toshiba Satellite A305-S6908 15.4-Inch Laptop",
-                ShortDescription = "Stylish, highly versatile laptop with 15.4-inch LCD, webcam integrated into bezel, and high-gloss finish",
-                FullDescription = "<p>It's powered by the 2.0 GHz Intel Core 2 Duo T6400 processor, which boosts speed, reduces power requirements, and saves on battery life. It also offers a fast 800 MHz front-side bus speed and 2 MB L2 cache. It also includes Intel's 5100AGN wireless LAN, which will connect to draft 802.11n routers and offers compatibility with 802.11a/b/g networks as well. Other features include an enormous 250 GB hard drive,&nbsp;1 GB of installed RAM (max capacity), dual-layer DVD&plusmn;RW burner (with Labelflash disc printing), ExpressCard 54/34 slot, a combo USB/eSATA port, SPDIF digital audio output for surround sound, and a 5-in-1 memory card adapter.</p><p>This PC comes preinstalled with the 64-bit version of Microsoft Windows Vista Home Premium (SP1), which includes all of the Windows Media Center capabilities for turning your PC into an all-in-one home entertainment center. In addition to easily playing your DVD movies and managing your digital audio library, you'll be able to record and watch your favorite TV shows (even HDTV). Vista also integrates new search tools throughout the operating system, includes new parental control features, and offers new tools that can warn you of impending hardware failures</p>",
+                Name = "Elegant Gemstone Necklace",
+                ShortDescription = "Classic and elegant gemstone necklace now available in our store",
+                FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "toshiba-satellite-a305-s6908-154-inch-laptop",
+                //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
-                Price = 1360M,
-                IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Notebooks"),
-                        DisplayOrder = 1,
-                    }
-                },
-                ProductSpecificationAttributes =
-                {
-                   new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 1,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Screensize").SpecificationAttributeOptions.Single(sao => sao.Name == "15.4''")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 2,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "CPU Type").SpecificationAttributeOptions.Single(sao => sao.Name == "Intel")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = true,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 3,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Memory").SpecificationAttributeOptions.Single(sao => sao.Name == "1 GB")
-                    },
-                    new ProductSpecificationAttribute
-                    {
-                        AllowFiltering = false,
-                        ShowOnProductPage = true,
-                        DisplayOrder = 4,
-                        SpecificationAttributeOption = _specificationAttributeRepository.Table.Single(sa => sa.Name == "Hardrive").SpecificationAttributeOptions.Single(sao => sao.Name == "250 GB")
-                    }
-                }
-            };
-            allProducts.Add(productSatellite);
-            productSatellite.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Notebooks.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSatellite.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productSatellite);
-
-
-
-
-
-            var productDenimShort = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "V-Blue Juniors' Cuffed Denim Short with Rhinestones",
-                ShortDescription = "Superior construction and reinforced seams",
-                FullDescription = "",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
-                AllowCustomerReviews = true,
-                Price = 10M,
+                Price = 569M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
                 Width = 2,
                 Height = 2,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel & Shoes").Id,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
                 ManageInventoryMethod = ManageInventoryMethod.ManageStock,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
@@ -8430,18 +8684,77 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Apparel & Shoes"),
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
                         DisplayOrder = 1,
                     }
                 }
             };
-            allProducts.Add(productDenimShort);
-            productDenimShort.ProductPictures.Add(new ProductPicture
+            allProducts.Add(productElegantGemstoneNecklace);
+            productElegantGemstoneNecklace.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DenimShort.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDenimShort.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GemstoneNecklaces.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productElegantGemstoneNecklace.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productDenimShort);
+            _productRepository.Insert(productElegantGemstoneNecklace);
+
+
+
+
+
+            var productFlowerGirlBracelet = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "Flower Girl Bracelet",
+                ShortDescription = "Personalised Flower Braceled",
+                FullDescription = "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "diamond-tennis-bracelet",
+                AllowCustomerReviews = true,
+                Price = 360M,
+                IsShipEnabled = true,
+                IsFreeShipping = true,
+                Weight = 2,
+                Length = 2,
+                Width = 2,
+                Height = 2,
+                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
+                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                DisplayStockAvailability = true,
+                LowStockActivity = LowStockActivity.DisableBuyButton,
+                BackorderMode = BackorderMode.NoBackorders,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                Published = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
+                        DisplayOrder = 1,
+                    }
+                }
+            };
+            allProducts.Add(productFlowerGirlBracelet);
+            productFlowerGirlBracelet.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
+                DisplayOrder = 1,
+            });
+            //productDiamondBracelet.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name)),
+            //    DisplayOrder = 2,
+            //});
+            _productRepository.Insert(productFlowerGirlBracelet);
+
+
+
 
 
 
@@ -8451,7 +8764,7 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Vintage Style Three Stone Diamond Engagement Ring",
+                Name = "Vintage Style Engagement Ring",
                 ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
                 FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8491,43 +8804,130 @@ namespace Nop.Services.Installation
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
                 DisplayOrder = 1,
             });
-            productEngagementRing.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
-                DisplayOrder = 2,
-            });
+            //productEngagementRing.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
+            //    DisplayOrder = 2,
+            //});
             _productRepository.Insert(productEngagementRing);
 
 
 
+            #endregion
+
+            #region Gift Cards
+
+            //var product5GiftCard = new Product
+            //{
+            //    ProductType = ProductType.SimpleProduct,
+            //    VisibleIndividually = true,
+            //    Name = "$5 Virtual Gift Card",
+            //    ShortDescription = "$5 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+            //    FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
+            //    ProductTemplateId = productTemplateSimple.Id,
+            //    //SeName = "5-virtual-gift-card",
+            //    AllowCustomerReviews = true,
+            //    Price = 5M,
+            //    IsGiftCard = true,
+            //    GiftCardType = GiftCardType.Virtual,
+            //    ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+            //    OrderMinimumQuantity = 1,
+            //    OrderMaximumQuantity = 10000,
+            //    StockQuantity = 10000,
+            //    NotifyAdminForQuantityBelow = 1,
+            //    AllowBackInStockSubscriptions = false,
+            //    Published = true,
+            //    CreatedOnUtc = DateTime.UtcNow,
+            //    UpdatedOnUtc = DateTime.UtcNow,
+            //    ProductCategories =
+            //    {
+            //        new ProductCategory
+            //        {
+            //            Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+            //            DisplayOrder = 1,
+            //        }
+            //    }
+            //};
+            //allProducts.Add(product5GiftCard);
+            //product5GiftCard.ProductPictures.Add(new ProductPicture
+            //{
+            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name)),
+            //    DisplayOrder = 1,
+            //});
+            //_productRepository.Insert(product5GiftCard);
 
 
-            var productWoW = new Product
+
+            var product25GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "World of Warcraft: Wrath of the Lich King Expansion Pack",
-                ShortDescription = "This expansion pack REQUIRES the original World of Warcraft game in order to run",
-                FullDescription = "<p>Fans of World of Warcraft, prepare for Blizzard Entertainment's next installment -- World of Warcraft: Wrath of King Lich. In this latest expansion, something is afoot in the cold, harsh northlands. The Lich King Arthas has set in motion events that could lead to the extinction of all life on Azeroth. The necromantic power of the plague and legions of undead armies threaten to sweep across the land. Only the mightiest heroes can oppose the Lich King and end his reign of terror.</p><p>This expansion adds a host of content to the already massive existing game world. Players will achieve soaring levels of power, explore Northrend (the vast icy continent of the Lich King), and battle high-level heroes to determine the ultimate fate of Azeroth. As you face the dangers of the frigid, harsh north, prepare to master the dark necromantic powers of the Death Night -- World of Warcraft's first Hero class. No longer servants of the Lich King, the Death Knights begin their new calling as experienced, formidable adversaries. Each is heavily armed, armored, and in possession of a deadly arsenal of forbidden magic.</p><p>If you have a World of Warcraft account with a character of at least level 55, you will be able to create a new level-55 Death Knight of any race (if on a PvP realm, the Death Knight must be the same faction as your existing character). And upon entering the new world, your Death Knight will begin to quest to level 80, gaining potent new abilities and talents along the way. This expansion allows for only one Death Knight per realm, per account.</p>",
+                Name = "$25 Virtual Gift Card",
+                ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "world-of-warcraft-wrath-of-the-lich-king-expansion-pack",
+                //SeName = "25-virtual-gift-card",
                 AllowCustomerReviews = true,
-                Price = 29.5M,
+                Price = 25M,
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Virtual,
+                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
+                StockQuantity = 10000,
+                NotifyAdminForQuantityBelow = 1,
+                AllowBackInStockSubscriptions = false,
+                Published = true,
+                ShowOnHomePage = true,
+                CreatedOnUtc = DateTime.UtcNow,
+                UpdatedOnUtc = DateTime.UtcNow,
+                ProductCategories =
+                {
+                    new ProductCategory
+                    {
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 2,
+                    }
+                }
+            };
+            allProducts.Add(product25GiftCard);
+            product25GiftCard.ProductPictures.Add(new ProductPicture
+            {
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name)),
+                DisplayOrder = 1,
+            });
+            _productRepository.Insert(product25GiftCard);
+
+
+
+
+
+            var product50GiftCard = new Product
+            {
+                ProductType = ProductType.SimpleProduct,
+                VisibleIndividually = true,
+                Name = "$50 Physical Gift Card",
+                ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
+                ProductTemplateId = productTemplateSimple.Id,
+                //SeName = "50-physical-gift-card",
+                AllowCustomerReviews = true,
+                Price = 50M,
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Physical,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
+                IsFreeShipping = true,
+                DeliveryDateId = deliveryDate.Id,
+                Weight = 1,
+                Length = 1,
+                Width = 1,
+                Height = 1,
+                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8535,121 +8935,48 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                        DisplayOrder = 1,
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 3,
                     }
                 }
             };
-            allProducts.Add(productWoW);
-            productWoW.ProductPictures.Add(new ProductPicture
+            allProducts.Add(product50GiftCard);
+            product50GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productWoW);
+            _productRepository.Insert(product50GiftCard);
 
 
 
 
 
-            var productSoccer = new Product
+            var product100GiftCard = new Product
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "World Wide Soccer Manager 2009",
-                ShortDescription = "Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game",
-                FullDescription = "<p>Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game. At the helm, you'll enter the new season with a wide array of all-new features. The most impressive update is the first-time-ever, real-time 3D match engine with motion captured animations. With over 5,000 playable teams and every management decision in the palm of your hand, you'll love watching your matches and decisions unfold from multiple camera angles as you compete in leagues around the world and major international tournaments.</p><p>Watch your match in real-time, or use the Match Time Bar to fast-forward through sluggish minutes or rewind key moments in the game. With this customization at your fingertips you can also choose the information you'd like to see during the match, such as latest scores or player performance stats for the match.</p>",
+                Name = "$100 Physical Gift Card",
+                ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
+                FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "world-wide-soccer-manager-2009",
+                //SeName = "100-physical-gift-card",
                 AllowCustomerReviews = true,
-                Price = 25.99M,
+                Price = 100M,
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Physical,
                 IsShipEnabled = true,
-                Weight = 7,
-                Length = 7,
-                Width = 7,
-                Height = 7,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-                ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productSoccer);
-            productSoccer.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productSoccer);
-
-
-
-
-
-            var downloadPokerFace1 = new Download
-            {
-                DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_1.zip"),
-                Extension = ".zip",
-                Filename = "Poker_Face_1",
-                IsNew = true,
-            };
-            downloadService.InsertDownload(downloadPokerFace1);
-            var downloadPokerFace2 = new Download
-            {
-                DownloadGuid = Guid.NewGuid(),
-                ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_2.txt"),
-                Extension = ".txt",
-                Filename = "Poker_Face_1",
-                IsNew = true,
-            };
-            downloadService.InsertDownload(downloadPokerFace2);
-            var productPokerFace = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Poker Face",
-                ShortDescription = "Poker Face by Lady GaGa",
-                FullDescription = "<p>Original Release Date: October 28, 2008</p><p>Release Date: October 28, 2008</p><p>Label: Streamline/Interscoope/KonLive/Cherrytree</p><p>Copyright: (C) 2008 Interscope Records</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "poker-face",
-                AllowCustomerReviews = true,
-                Price = 2.8M,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
+                DeliveryDateId = deliveryDate.Id,
+                Weight = 1,
+                Length = 1,
+                Width = 1,
+                Height = 1,
                 ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
+                OrderMinimumQuantity = 1,
+                OrderMaximumQuantity = 10000,
                 StockQuantity = 10000,
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                IsDownload = true,
-                DownloadId = downloadPokerFace1.Id,
-                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
-                UnlimitedDownloads = true,
-                HasUserAgreement = false,
-                HasSampleDownload = true,
-                SampleDownloadId = downloadPokerFace2.Id,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
@@ -8657,151 +8984,21 @@ namespace Nop.Services.Installation
                 {
                     new ProductCategory
                     {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                        DisplayOrder = 1,
+                        Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
+                        DisplayOrder = 4,
                     }
                 }
             };
-            allProducts.Add(productPokerFace);
-            productPokerFace.ProductPictures.Add(new ProductPicture
+            allProducts.Add(product100GiftCard);
+            product100GiftCard.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PokerFace.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPokerFace.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name)),
                 DisplayOrder = 1,
             });
-            _productRepository.Insert(productPokerFace);
+            _productRepository.Insert(product100GiftCard);
 
+            #endregion
 
-
-
-
-            var downloadSingleLadies1 = new Download
-            {
-                DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_SingleLadies_1.zip"),
-                Extension = ".zip",
-                Filename = "Single_Ladies_1",
-                IsNew = true,
-            };
-            downloadService.InsertDownload(downloadSingleLadies1);
-            var downloadSingleLadies2 = new Download
-            {
-                DownloadGuid = Guid.NewGuid(),
-                ContentType = "text/plain",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_SingleLadies_2.txt"),
-                Extension = ".txt",
-                Filename = "Single_Ladies_1",
-                IsNew = true,
-            };
-            downloadService.InsertDownload(downloadSingleLadies2);
-            var productSingleLadies = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "Single Ladies (Put A Ring On It)",
-                ShortDescription = "Single Ladies (Put A Ring On It) by Beyonce",
-                FullDescription = "<p>Original Release Date: November 18, 2008</p><p>Label: Music World Music/Columbia</p><p>Copyright: (P) 2008 SONY BMG MUSIC ENTERTAINMENT</p><p>Song Length: 3:13 minutes</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "single-ladies-put-a-ring-on-it",
-                AllowCustomerReviews = true,
-                Price = 3M,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                IsDownload = true,
-                DownloadId = downloadSingleLadies1.Id,
-                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
-                UnlimitedDownloads = true,
-                HasUserAgreement = false,
-                HasSampleDownload = true,
-                SampleDownloadId = downloadSingleLadies2.Id,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productSingleLadies);
-
-            productSingleLadies.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SingleLadies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSingleLadies.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productSingleLadies);
-
-
-
-
-
-            var downloadBattleOfLa = new Download
-            {
-                DownloadGuid = Guid.NewGuid(),
-                ContentType = "application/x-zip-co",
-                DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_BattleOfLa_1.zip"),
-                Extension = ".zip",
-                Filename = "The_Battle_Of_Los_Angeles",
-                IsNew = true,
-            };
-            downloadService.InsertDownload(downloadBattleOfLa);
-            var productBattleOfLa = new Product
-            {
-                ProductType = ProductType.SimpleProduct,
-                VisibleIndividually = true,
-                Name = "The Battle Of Los Angeles",
-                ShortDescription = "The Battle Of Los Angeles by Rage Against The Machine",
-                FullDescription = "<p># Original Release Date: November 2, 1999<br /># Label: Epic<br /># Copyright: 1999 Sony Music Entertainment Inc. (c) 1999 Sony Music Entertainment Inc.</p>",
-                ProductTemplateId = productTemplateSimple.Id,
-                //SeName = "the-battle-of-los-angeles",
-                AllowCustomerReviews = true,
-                Price = 3M,
-                TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Downloadable Products").Id,
-                ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-                StockQuantity = 10000,
-                NotifyAdminForQuantityBelow = 1,
-                AllowBackInStockSubscriptions = false,
-                DisplayStockAvailability = true,
-                LowStockActivity = LowStockActivity.DisableBuyButton,
-                BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
-                OrderMaximumQuantity = 10000,
-                IsDownload = true,
-                DownloadId = downloadBattleOfLa.Id,
-                DownloadActivationType = DownloadActivationType.WhenOrderIsPaid,
-                UnlimitedDownloads = true,
-                HasUserAgreement = false,
-                Published = true,
-                CreatedOnUtc = DateTime.UtcNow,
-                UpdatedOnUtc = DateTime.UtcNow,
-                ProductCategories =
-                {
-                    new ProductCategory
-                    {
-                        Category = _categoryRepository.Table.Single(c => c.Name == "Digital downloads"),
-                        DisplayOrder = 1,
-                    }
-                }
-            };
-            allProducts.Add(productBattleOfLa);
-            productBattleOfLa.ProductPictures.Add(new ProductPicture
-            {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BattleOfLA.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBattleOfLa.Name)),
-                DisplayOrder = 1,
-            });
-            _productRepository.Insert(productBattleOfLa);
 
 
             //search engine names
@@ -8818,367 +9015,422 @@ namespace Nop.Services.Installation
             }
 
 
+            #region Related Products
 
             //related products
             var relatedProducts = new List<RelatedProduct>
             {
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productDiamondHeart.Id,
+                //     ProductId2 = productDiamondBracelet.Id,
+                //},
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productDiamondHeart.Id,
+                //     ProductId2 = productDiamondEarrings.Id,
+                //},
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productDiamondHeart.Id,
+                //     ProductId2 = productEngagementRing.Id,
+                //},
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productDiamondBracelet.Id,
+                //     ProductId2 = productDiamondHeart.Id,
+                //},
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondHeart.Id,
-                     ProductId2 = productDiamondBracelet.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productDiamondHeart.Id,
-                     ProductId2 = productDiamondEarrings.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productDiamondHeart.Id,
+                     ProductId1 = productFlowerGirlBracelet.Id,
                      ProductId2 = productEngagementRing.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondBracelet.Id,
-                     ProductId2 = productDiamondHeart.Id,
+                     ProductId1 = productFlowerGirlBracelet.Id,
+                     ProductId2 = productElegantGemstoneNecklace.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productEngagementRing.Id,
+                //     ProductId2 = productDiamondHeart.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productEngagementRing.Id,
+                     ProductId2 = productFlowerGirlBracelet.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondBracelet.Id,
+                     ProductId1 = productEngagementRing.Id,
+                     ProductId2 = productElegantGemstoneNecklace.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productDiamondEarrings.Id,
+                //     ProductId2 = productDiamondHeart.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productElegantGemstoneNecklace.Id,
+                     ProductId2 = productFlowerGirlBracelet.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productElegantGemstoneNecklace.Id,
                      ProductId2 = productEngagementRing.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondBracelet.Id,
-                     ProductId2 = productDiamondEarrings.Id,
+                     ProductId1 = productIfYouWait.Id,
+                     ProductId2 = productNightVision.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEngagementRing.Id,
-                     ProductId2 = productDiamondHeart.Id,
+                     ProductId1 = productIfYouWait.Id,
+                     ProductId2 = productScienceAndFaith.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEngagementRing.Id,
-                     ProductId2 = productDiamondBracelet.Id,
+                     ProductId1 = productNightVision.Id,
+                     ProductId2 = productIfYouWait.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEngagementRing.Id,
-                     ProductId2 = productDiamondEarrings.Id,
+                     ProductId1 = productNightVision.Id,
+                     ProductId2 = productScienceAndFaith.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productBestSkilletRecipes.Id,
+                //     ProductId2 = productCookingForTwo.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productPrideAndPrejudice.Id,
+                     ProductId2 = productFirstPrizePies.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondEarrings.Id,
-                     ProductId2 = productDiamondHeart.Id,
+                     ProductId1 = productPrideAndPrejudice.Id,
+                     ProductId2 = productFahrenheit.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productCookingForTwo.Id,
+                //     ProductId2 = productBestSkilletRecipes.Id,
+                //},
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productCookingForTwo.Id,
+                //     ProductId2 = productEatingWell.Id,
+                //},
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productCookingForTwo.Id,
+                //     ProductId2 = productBestGrillingRecipes.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productFirstPrizePies.Id,
+                     ProductId2 = productPrideAndPrejudice.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productEatingWell.Id,
+                //     ProductId2 = productCookingForTwo.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productFirstPrizePies.Id,
+                     ProductId2 = productFahrenheit.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productBestGrillingRecipes.Id,
+                //     ProductId2 = productCookingForTwo.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productFahrenheit.Id,
+                     ProductId2 = productFirstPrizePies.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondEarrings.Id,
-                     ProductId2 = productDiamondBracelet.Id,
+                     ProductId1 = productFahrenheit.Id,
+                     ProductId2 = productPrideAndPrejudice.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productDiamondEarrings.Id,
-                     ProductId2 = productEngagementRing.Id,
+                     ProductId1 = productAsusN551JK.Id,
+                     ProductId2 = productLenovoThinkpad.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productSingleLadies.Id,
-                     ProductId2 = productPokerFace.Id,
+                     ProductId1 = productAsusN551JK.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productSingleLadies.Id,
-                     ProductId2 = productBattleOfLa.Id,
+                     ProductId1 = productAsusN551JK.Id,
+                     ProductId2 = productSamsungSeries.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productPokerFace.Id,
-                     ProductId2 = productSingleLadies.Id,
+                     ProductId1 = productAsusN551JK.Id,
+                     ProductId2 = productHpSpectre.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productPokerFace.Id,
-                     ProductId2 = productBattleOfLa.Id,
+                     ProductId1 = productLenovoThinkpad.Id,
+                     ProductId2 = productAsusN551JK.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestSkilletRecipes.Id,
-                     ProductId2 = productCookingForTwo.Id,
+                     ProductId1 = productLenovoThinkpad.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestSkilletRecipes.Id,
-                     ProductId2 = productEatingWell.Id,
+                     ProductId1 = productLenovoThinkpad.Id,
+                     ProductId2 = productSamsungSeries.Id,
+                },
+                 new RelatedProduct
+                {
+                     ProductId1 = productLenovoThinkpad.Id,
+                     ProductId2 = productHpEnvy.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestSkilletRecipes.Id,
-                     ProductId2 = productBestGrillingRecipes.Id,
+                     ProductId1 = productAppleMacBookPro.Id,
+                     ProductId2 = productLenovoThinkpad.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productCookingForTwo.Id,
-                     ProductId2 = productBestSkilletRecipes.Id,
+                     ProductId1 = productAppleMacBookPro.Id,
+                     ProductId2 = productSamsungSeries.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productCookingForTwo.Id,
-                     ProductId2 = productEatingWell.Id,
+                     ProductId1 = productAppleMacBookPro.Id,
+                     ProductId2 = productAsusN551JK.Id,
+                },
+                 new RelatedProduct
+                {
+                     ProductId1 = productAppleMacBookPro.Id,
+                     ProductId2 = productHpSpectre.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productCookingForTwo.Id,
-                     ProductId2 = productBestGrillingRecipes.Id,
+                     ProductId1 = productHpSpectre.Id,
+                     ProductId2 = productLenovoThinkpad.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEatingWell.Id,
-                     ProductId2 = productBestSkilletRecipes.Id,
+                     ProductId1 = productHpSpectre.Id,
+                     ProductId2 = productSamsungSeries.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEatingWell.Id,
-                     ProductId2 = productCookingForTwo.Id,
+                     ProductId1 = productHpSpectre.Id,
+                     ProductId2 = productAsusN551JK.Id,
+                },
+                 new RelatedProduct
+                {
+                     ProductId1 = productHpSpectre.Id,
+                     ProductId2 = productHpEnvy.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productEatingWell.Id,
-                     ProductId2 = productBestGrillingRecipes.Id,
+                     ProductId1 = productHpEnvy.Id,
+                     ProductId2 = productAsusN551JK.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestGrillingRecipes.Id,
-                     ProductId2 = productCookingForTwo.Id,
+                     ProductId1 = productHpEnvy.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestGrillingRecipes.Id,
-                     ProductId2 = productEatingWell.Id,
+                     ProductId1 = productHpEnvy.Id,
+                     ProductId2 = productHpSpectre.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productBestGrillingRecipes.Id,
-                     ProductId2 = productBestSkilletRecipes.Id,
+                     ProductId1 = productHpEnvy.Id,
+                     ProductId2 = productSamsungSeries.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productAsusPc900.Id,
-                     ProductId2 = productSatellite.Id,
+                     ProductId1 = productSamsungSeries.Id,
+                     ProductId2 = productAsusN551JK.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productAsusPc900.Id,
-                     ProductId2 = productAsusPc1000.Id,
+                     ProductId1 = productSamsungSeries.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productAsusPc900.Id,
-                     ProductId2 = productHpPavilion1.Id,
+                     ProductId1 = productSamsungSeries.Id,
+                     ProductId2 = productHpEnvy.Id,
+                },
+                 new RelatedProduct
+                {
+                     ProductId1 = productSamsungSeries.Id,
+                     ProductId2 = productHpSpectre.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productSatellite.Id,
-                     ProductId2 = productAsusPc900.Id,
+                     ProductId1 = productLeica.Id,
+                     ProductId2 = productHtcOneMini.Id,
+                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productCanonCamcoder.Id,
+                //     ProductId2 = productSonyCamcoder.Id,
+                //},
+                new RelatedProduct
+                {
+                     ProductId1 = productLeica.Id,
+                     ProductId2 = productNikonD5500DSLR.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productSatellite.Id,
-                     ProductId2 = productAsusPc1000.Id,
+                     ProductId1 = productNokiaLumia.Id,
+                     ProductId2 = productHtcOneMini.Id,
                 },
                 new RelatedProduct
                 {
-                     ProductId1 = productSatellite.Id,
-                     ProductId2 = productAcerAspireOne.Id,
+                     ProductId1 = productNokiaLumia.Id,
+                     //ProductId2 = productCanonCamcoder.Id,
+                     ProductId2 = productHtcOne.Id,
                 },
-                new RelatedProduct
-                {
-                     ProductId1 = productAsusPc1000.Id,
-                     ProductId2 = productSatellite.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productAsusPc1000.Id,
-                     ProductId2 = productHpPavilion1.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productAsusPc1000.Id,
-                     ProductId2 = productAcerAspireOne.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion3.Id,
-                     ProductId2 = productAsusPc900.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion3.Id,
-                     ProductId2 = productAsusPc1000.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion3.Id,
-                     ProductId2 = productAcerAspireOne.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion1.Id,
-                     ProductId2 = productAsusPc900.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion1.Id,
-                     ProductId2 = productAsusPc1000.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productHpPavilion1.Id,
-                     ProductId2 = productAcerAspireOne.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productCanonCamcoder.Id,
-                     ProductId2 = productSamsungPhone.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productCanonCamcoder.Id,
-                     ProductId2 = productSonyCamcoder.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productCanonCamcoder.Id,
-                     ProductId2 = productCanonCamera.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productSonyCamcoder.Id,
-                     ProductId2 = productSamsungPhone.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productSonyCamcoder.Id,
-                     ProductId2 = productCanonCamcoder.Id,
-                },
-                new RelatedProduct
-                {
-                     ProductId1 = productSonyCamcoder.Id,
-                     ProductId2 = productCanonCamera.Id,
-                },
+                //new RelatedProduct
+                //{
+                //     ProductId1 = productSonyCamcoder.Id,
+                //     ProductId2 = productCanonCamera.Id,
+                //},
             };
             relatedProducts.ForEach(rp => _relatedProductRepository.Insert(rp));
+
+            #endregion
+
+
+            #region Product Tags
 
             //product tags
             AddProductTag(product25GiftCard, "nice");
             AddProductTag(product25GiftCard, "gift");
-            AddProductTag(product5GiftCard, "nice");
-            AddProductTag(product5GiftCard, "gift");
-            AddProductTag(productRockabillyPolka, "cool");
-            AddProductTag(productRockabillyPolka, "apparel");
-            AddProductTag(productRockabillyPolka, "shirt");
-            AddProductTag(productAcerAspireOne, "computer");
-            AddProductTag(productAcerAspireOne, "cool");
-            AddProductTag(productAdidasShoe, "cool");
-            AddProductTag(productAdidasShoe, "shoes");
-            AddProductTag(productAdidasShoe, "apparel");
+            //AddProductTag(product5GiftCard, "nice");
+            //AddProductTag(product5GiftCard, "gift");
+            AddProductTag(productNikeTailwind, "cool");
+            AddProductTag(productNikeTailwind, "apparel");
+            AddProductTag(productNikeTailwind, "shirt");
+            AddProductTag(productBeatsPill, "computer");
+            AddProductTag(productBeatsPill, "cool");
+            AddProductTag(productNikeFloral, "cool");
+            AddProductTag(productNikeFloral, "shoes");
+            AddProductTag(productNikeFloral, "apparel");
             AddProductTag(productAdobePhotoshop, "computer");
             AddProductTag(productAdobePhotoshop, "awesome");
-            AddProductTag(productApcUps, "computer");
-            AddProductTag(productApcUps, "cool");
-            AddProductTag(productArrow, "cool");
-            AddProductTag(productArrow, "apparel");
-            AddProductTag(productArrow, "shirt");
-            AddProductTag(productAsusPc1000, "compact");
-            AddProductTag(productAsusPc1000, "awesome");
-            AddProductTag(productAsusPc1000, "computer");
-            AddProductTag(productAsusPc900, "compact");
-            AddProductTag(productAsusPc900, "awesome");
-            AddProductTag(productAsusPc900, "computer");
-            AddProductTag(productBestGrillingRecipes, "awesome");
-            AddProductTag(productBestGrillingRecipes, "book");
-            AddProductTag(productBestGrillingRecipes, "nice");
-            AddProductTag(productDiamondHeart, "awesome");
-            AddProductTag(productDiamondHeart, "jewelry");
-            AddProductTag(productBlackBerry, "cell");
-            AddProductTag(productBlackBerry, "compact");
-            AddProductTag(productBlackBerry, "awesome");
+            AddProductTag(productUniversalTabletCover, "computer");
+            AddProductTag(productUniversalTabletCover, "cool");
+            AddProductTag(productOversizedWomenTShirt, "cool");
+            AddProductTag(productOversizedWomenTShirt, "apparel");
+            AddProductTag(productOversizedWomenTShirt, "shirt");
+            AddProductTag(productAppleMacBookPro, "compact");
+            AddProductTag(productAppleMacBookPro, "awesome");
+            AddProductTag(productAppleMacBookPro, "computer");
+            AddProductTag(productAsusN551JK, "compact");
+            AddProductTag(productAsusN551JK, "awesome");
+            AddProductTag(productAsusN551JK, "computer");
+            AddProductTag(productFahrenheit, "awesome");
+            AddProductTag(productFahrenheit, "book");
+            AddProductTag(productFahrenheit, "nice");
+            //AddProductTag(productDiamondHeart, "awesome");
+            //AddProductTag(productDiamondHeart, "jewelry");
+            AddProductTag(productHtcOne, "cell");
+            AddProductTag(productHtcOne, "compact");
+            AddProductTag(productHtcOne, "awesome");
             AddProductTag(productBuildComputer, "awesome");
             AddProductTag(productBuildComputer, "computer");
-            AddProductTag(productCanonCamera, "cool");
-            AddProductTag(productCanonCamera, "camera");
-            AddProductTag(productCanonCamcoder, "camera");
-            AddProductTag(productCanonCamcoder, "cool");
-            AddProductTag(productCompaq, "cool");
-            AddProductTag(productCompaq, "computer");
-            AddProductTag(productCookingForTwo, "awesome");
-            AddProductTag(productCookingForTwo, "book");
-            AddProductTag(productCorel, "awesome");
-            AddProductTag(productCorel, "computer");
+            AddProductTag(productNikonD5500DSLR, "cool");
+            AddProductTag(productNikonD5500DSLR, "camera");
+            AddProductTag(productLeica, "camera");
+            AddProductTag(productLeica, "cool");
+            AddProductTag(productDigitalStorm, "cool");
+            AddProductTag(productDigitalStorm, "computer");
+            //AddProductTag(productCookingForTwo, "awesome");
+            //AddProductTag(productCookingForTwo, "book");
+            AddProductTag(productWindows8Pro, "awesome");
+            AddProductTag(productWindows8Pro, "computer");
             AddProductTag(productCustomTShirt, "cool");
             AddProductTag(productCustomTShirt, "shirt");
             AddProductTag(productCustomTShirt, "apparel");
-            AddProductTag(productDiamondEarrings, "jewelry");
-            AddProductTag(productDiamondEarrings, "awesome");
-            AddProductTag(productDiamondBracelet, "awesome");
-            AddProductTag(productDiamondBracelet, "jewelry");
-            AddProductTag(productEatingWell, "book");
-            AddProductTag(productEtnies, "cool");
-            AddProductTag(productEtnies, "shoes");
-            AddProductTag(productEtnies, "apparel");
-            AddProductTag(productLeatherHandbag, "apparel");
-            AddProductTag(productLeatherHandbag, "cool");
-            AddProductTag(productLeatherHandbag, "awesome");
-            AddProductTag(productHp506, "awesome");
-            AddProductTag(productHp506, "computer");
-            AddProductTag(productHpPavilion1, "nice");
-            AddProductTag(productHpPavilion1, "computer");
-            AddProductTag(productHpPavilion1, "compact");
-            AddProductTag(productHpPavilion2, "nice");
-            AddProductTag(productHpPavilion2, "computer");
-            AddProductTag(productHpPavilion3, "computer");
-            AddProductTag(productHpPavilion3, "cool");
-            AddProductTag(productHpPavilion3, "compact");
-            AddProductTag(productHat, "apparel");
-            AddProductTag(productHat, "cool");
-            AddProductTag(productKensington, "computer");
-            AddProductTag(productKensington, "cool");
+            AddProductTag(productElegantGemstoneNecklace, "jewelry");
+            AddProductTag(productElegantGemstoneNecklace, "awesome");
+            AddProductTag(productFlowerGirlBracelet, "awesome");
+            AddProductTag(productFlowerGirlBracelet, "jewelry");
+            AddProductTag(productFirstPrizePies, "book");
+            AddProductTag(productAdidas, "cool");
+            AddProductTag(productAdidas, "shoes");
+            AddProductTag(productAdidas, "apparel");
+            //AddProductTag(productLeatherHandbag, "apparel");
+            //AddProductTag(productLeatherHandbag, "cool");
+            //AddProductTag(productLeatherHandbag, "awesome");
+            AddProductTag(productLenovoIdeaCentre, "awesome");
+            AddProductTag(productLenovoIdeaCentre, "computer");
+            AddProductTag(productSamsungSeries, "nice");
+            AddProductTag(productSamsungSeries, "computer");
+            AddProductTag(productSamsungSeries, "compact");
+            AddProductTag(productHpSpectre, "nice");
+            AddProductTag(productHpSpectre, "computer");
+            AddProductTag(productHpEnvy, "computer");
+            AddProductTag(productHpEnvy, "cool");
+            AddProductTag(productHpEnvy, "compact");
+            AddProductTag(productObeyHat, "apparel");
+            AddProductTag(productObeyHat, "cool");
+            //AddProductTag(productKensington, "computer");
+            //AddProductTag(productKensington, "cool");
             AddProductTag(productLeviJeans, "cool");
             AddProductTag(productLeviJeans, "jeans");
             AddProductTag(productLeviJeans, "apparel");
-            AddProductTag(productBaseball, "game");
-            AddProductTag(productBaseball, "computer");
-            AddProductTag(productBaseball, "cool");
-            AddProductTag(productPokerFace, "awesome");
-            AddProductTag(productPokerFace, "digital");
+            AddProductTag(productSoundForge, "game");
+            AddProductTag(productSoundForge, "computer");
+            AddProductTag(productSoundForge, "cool");
+            AddProductTag(productNightVision, "awesome");
+            AddProductTag(productNightVision, "digital");
             AddProductTag(productSunglasses, "apparel");
             AddProductTag(productSunglasses, "cool");
-            AddProductTag(productSamsungPhone, "awesome");
-            AddProductTag(productSamsungPhone, "compact");
-            AddProductTag(productSamsungPhone, "cell");
-            AddProductTag(productSingleLadies, "digital");
-            AddProductTag(productSingleLadies, "awesome");
-            AddProductTag(productSonyCamcoder, "awesome");
-            AddProductTag(productSonyCamcoder, "cool");
-            AddProductTag(productSonyCamcoder, "camera");
-            AddProductTag(productBattleOfLa, "digital");
-            AddProductTag(productBattleOfLa, "awesome");
-            AddProductTag(productBestSkilletRecipes, "book");
-            AddProductTag(productSatellite, "awesome");
-            AddProductTag(productSatellite, "computer");
-            AddProductTag(productSatellite, "compact");
-            AddProductTag(productDenimShort, "jeans");
-            AddProductTag(productDenimShort, "cool");
-            AddProductTag(productDenimShort, "apparel");
+            AddProductTag(productHtcOneMini, "awesome");
+            AddProductTag(productHtcOneMini, "compact");
+            AddProductTag(productHtcOneMini, "cell");
+            AddProductTag(productIfYouWait, "digital");
+            AddProductTag(productIfYouWait, "awesome");
+            AddProductTag(productNokiaLumia, "awesome");
+            AddProductTag(productNokiaLumia, "cool");
+            AddProductTag(productNokiaLumia, "camera");
+            AddProductTag(productScienceAndFaith, "digital");
+            AddProductTag(productScienceAndFaith, "awesome");
+            AddProductTag(productPrideAndPrejudice, "book");
+            AddProductTag(productLenovoThinkpad, "awesome");
+            AddProductTag(productLenovoThinkpad, "computer");
+            AddProductTag(productLenovoThinkpad, "compact");
+            AddProductTag(productNikeZoom, "jeans");
+            AddProductTag(productNikeZoom, "cool");
+            AddProductTag(productNikeZoom, "apparel");
             AddProductTag(productEngagementRing, "jewelry");
             AddProductTag(productEngagementRing, "awesome");
-            AddProductTag(productWoW, "computer");
-            AddProductTag(productWoW, "cool");
-            AddProductTag(productWoW, "game");
-            AddProductTag(productSoccer, "game");
-            AddProductTag(productSoccer, "cool");
-            AddProductTag(productSoccer, "computer");
+            //AddProductTag(productWoW, "computer");
+            //AddProductTag(productWoW, "cool");
+            //AddProductTag(productWoW, "game");
+            //AddProductTag(productSoccer, "game");
+            //AddProductTag(productSoccer, "cool");
+            //AddProductTag(productSoccer, "computer");
+
+
+            #endregion
 
             //reviews
             var random = new Random();
@@ -9212,7 +9464,7 @@ namespace Nop.Services.Installation
                 _productRepository.Update(product);
             }
         }
-        
+
         protected virtual void InstallForums()
         {
             var forumGroup = new ForumGroup
@@ -9347,25 +9599,36 @@ namespace Nop.Services.Installation
             var news = new List<NewsItem>
                                 {
                                     new NewsItem
-                                        {
-                                             AllowComments = true,
-                                             Language = defaultLanguage,
-                                             Title = "nopCommerce new release!",
-                                             Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!<br /><br />nopCommerce is a fully customizable shopping cart. It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
-                                             Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p><p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
-                                             Published  = true,
-                                             CreatedOnUtc = DateTime.UtcNow,
-                                        },
+                                    {
+	                                     AllowComments = true,
+	                                     Language = defaultLanguage,
+	                                     Title = "About nopCommerce",
+	                                     Short = "It's stable and highly usable. From downloads to documentation, www.nopCommerce.com offers a comprehensive base of information, resources, and support to the nopCommerce community.",
+	                                     Full = "<p>For full feature list go to <a href=\"http://www.nopCommerce.com\">nopCommerce.com</a></p><p>Providing outstanding custom search engine optimization, web development services and e-commerce development solutions to our clients at a fair price in a professional manner.</p>",
+	                                     Published  = true,
+	                                     CreatedOnUtc = DateTime.UtcNow,
+                                    },
                                     new NewsItem
-                                        {
-                                             AllowComments = true,
-                                             Language = defaultLanguage,
-                                             Title = "New online store is open!",
-                                             Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.",
-                                             Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
-                                             Published  = true,
-                                             CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
-                                        },
+                                    {
+	                                     AllowComments = true,
+	                                     Language = defaultLanguage,
+	                                     Title = "nopCommerce new release!",
+	                                     Short = "nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included! nopCommerce is a fully customizable shopping cart",
+	                                     Full = "<p>nopCommerce includes everything you need to begin your e-commerce online store. We have thought of everything and it's all included!</p>",
+	                                     Published  = true,
+	                                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
+                                    },
+                                    new NewsItem
+                                    {
+	                                     AllowComments = true,
+	                                     Language = defaultLanguage,
+	                                     Title = "New online store is open!",
+	                                     Short = "The new nopCommerce store is open now! We are very excited to offer our new range of products. We will be constantly adding to our range so please register on our site.",
+	                                     Full = "<p>Our online store is officially up and running. Stock up for the holiday season! We have a great selection of items. We will be constantly adding to our range so please register on our site, this will enable you to keep up to date with any new products.</p><p>All shipping is worldwide and will leave the same day an order is placed! Happy Shopping and spread the word!!</p>",
+	                                     Published  = true,
+	                                     CreatedOnUtc = DateTime.UtcNow.AddSeconds(2),
+                                    },
+
                                 };
             news.ForEach(n => _newsItemRepository.Insert(n));
 

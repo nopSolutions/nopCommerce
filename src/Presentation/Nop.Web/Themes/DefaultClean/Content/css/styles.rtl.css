@@ -313,6 +313,7 @@ label, label + * {
 	text-align: center;
 	font-size: 13px;
 	color: #e4434b;
+    margin-top: 5px;
 }
 .field-validation-valid,
 .username-available-status {
@@ -668,9 +669,9 @@ label, label + * {
 	padding: 10px 0;
 }
 .header-selectors-wrapper > div {
-	display: inline-block;
-	width: 40%;
-	margin: 10px 5px;
+	display: block;
+	width: 50%;
+	margin: 10px auto;
 	vertical-align: middle;
 }
 .header-selectors-wrapper select {
@@ -754,6 +755,7 @@ label, label + * {
 }
 .header-logo a img {
 	max-width: 100%;
+	opacity: 1;
 }
 
 .search-box form {
@@ -1043,6 +1045,7 @@ label, label + * {
 	padding: 5px 0;
 	font-size: 16px;
 	color: #444;
+    -webkit-transition: all 0.1s ease;
 	transition: all 0.1s ease;
 }
 .block .list a:before {
@@ -1381,6 +1384,7 @@ label, label + * {
 	max-width: 100%;
 	max-height: 100%;
 	margin: auto;
+    -webkit-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 	-webkit-transform: translateZ(0) scale(1.0, 1.0);
 }
@@ -1395,6 +1399,7 @@ label, label + * {
 	margin: 0 0 5px;
 	overflow: hidden;
 	font-size: 17px;
+    line-height: 1.2;
 	font-weight: normal;
 	color: #4ab2f1;
 }
@@ -1497,6 +1502,7 @@ label, label + * {
 	text-align: center;
 	font-size: 22px;
 	font-weight: normal;
+    -webkit-transition: all 0.3s ease;
 	transition: all 0.3s ease;
 }
 .home-page-category-grid .title a,
@@ -4654,6 +4660,9 @@ label, label + * {
 	font-size: 15px; /*reset zeroing*/
 }
 
+.private-message-view-page .view-message {
+	margin: 0 0 30px;
+}
 .private-message-view-page .message-head {
 	margin: 0 0 20px;
 	line-height: 22px;
@@ -5002,7 +5011,9 @@ pre {
 
 
 .header-selectors-wrapper > div {
+    display: inline-block;
 	width: 30%;
+    margin: 10px auto;
 }
 .search-box input.search-box-text {
 	width: 280px;

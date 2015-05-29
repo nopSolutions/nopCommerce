@@ -1,0 +1,77 @@
+input[type=text] {
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 32px;
+}
+.inputs select {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 0 !important;
+}
+.inputs input[type=text],
+.inputs INPUT[type='password'] {
+    padding: 0 8px !important;
+    min-height: 0 !important;
+    height: 38px !important;
+    line-height: 38px !important;
+}
+.date-of-birth select {
+    max-width: 112px;
+}
+#check-availability-button {
+    display: inline-block !important;
+    margin: 10px 0 0 43% !important;
+}
+
+
+.search-box INPUT.search-box-text {
+    line-height: 36px;
+}
+.flyout-cart {
+    border: 1px solid #eee;
+}
+.pager li span,
+.pager li a {
+    padding-left: 0;
+    padding-right: 0;
+}
+.page-title {
+    min-height: 0;
+    padding-bottom: 10px;
+}
+.overview .qty-input {
+    line-height: 41px;
+}
+.order-details-page .page-title a {
+    min-width: 80px;
+}
+
+.payment-info .info TD {
+    display: inline-block;
+    width: auto !important;
+    max-width: 400px !important;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+    .payment-info .info TD INPUT[type='text'] {
+        width: auto !important;
+    }
+
+.topic-post .username {
+    height: 40px !important;
+    min-height: 0 !important;
+    overflow: hidden;
+}
+
+.topic-post .post-actions A.post-link-button,
+.topic-post .post-actions .quote-post-button {
+    text-align: center;
+    padding: 10px 0;
+}
+.forum-edit-page .buttons INPUT,
+.move-topic-page .buttons INPUT,
+.private-messages .buttons INPUT {
+    min-width: 0;
+}
