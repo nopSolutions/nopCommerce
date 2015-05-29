@@ -77,15 +77,15 @@
                     {
                         addToCartText = T("ShoppingCart.PreOrder").Text;
                     }
-                    <input type="button" value="@(addToCartText)" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink    ');return false;" />
+                    <input type="button" value="@(addToCartText)" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink');return false;" />
                 }
                 @if (!Model.ProductPrice.DisableAddToCompareListButton)
                 {
-                    <input type="button" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
+                    <input type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
                 }
                 @if (!Model.ProductPrice.DisableWishlistButton)
                 {
-                    <input type="button" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink     ');return false;" />
+                    <input type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
                 }
             </div>
             @Html.Widget("productbox_add_info", Model.Id)
