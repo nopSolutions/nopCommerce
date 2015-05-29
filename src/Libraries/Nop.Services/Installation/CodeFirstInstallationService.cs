@@ -4571,7 +4571,7 @@ namespace Nop.Services.Installation
                     NumberOfBestsellersOnHomepage = 4,
                     SearchPageProductsPerPage = 6,
                     SearchPageAllowCustomersToSelectPageSize = true,
-                    SearchPagePageSizeOptions = "8, 4, 12",
+                    SearchPagePageSizeOptions = "6, 3, 9, 18",
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
                     EnableDynamicPriceUpdate = true,
@@ -4587,10 +4587,10 @@ namespace Nop.Services.Installation
                     IgnoreAcl = false,
                     IgnoreStoreLimitations = false,
                     CacheProductPrices = false,
-                    DefaultCategoryPageSizeOptions = "8, 4, 12",
-                    DefaultManufacturerPageSizeOptions = "8, 4, 12",
+                    DefaultCategoryPageSizeOptions = "6, 3, 9",
+                    DefaultManufacturerPageSizeOptions = "6, 3, 9",
                     ProductsByTagAllowCustomersToSelectPageSize = true,
-                    ProductsByTagPageSizeOptions = "8, 4, 12",
+                    ProductsByTagPageSizeOptions = "6, 3, 9, 18",
                     MaximumBackInStockSubscriptions = 200,
                     LoadAllSideCategoryMenuSubcategories = false,
                     ManufacturersBlockItemsToDisplay = 2,
@@ -4760,7 +4760,7 @@ namespace Nop.Services.Installation
                     ShowProductImagesOnWishList = true,
                     ShowDiscountBox = true,
                     ShowGiftCardBox = true,
-                    CrossSellsNumber = 5,
+                    CrossSellsNumber = 4,
                     EmailWishlistEnabled = true,
                     AllowAnonymousUsersToEmailWishlist = false,
                     MiniShoppingCartEnabled = true,
@@ -4926,7 +4926,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new VendorSettings
             {
-                DefaultVendorPageSizeOptions = "8, 4, 12",
+                DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true

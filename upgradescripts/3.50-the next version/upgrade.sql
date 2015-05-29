@@ -1984,7 +1984,30 @@ BEGIN
 	UPDATE [Setting]
 	SET [Value] = N'120'
 	WHERE [Name] = 'mediasettings.avatarpicturesize'
-		
+	
+	UPDATE [Setting]
+	SET [Value] = N'4'
+	WHERE [Name] = 'shoppingcartsettings.crosssellsnumber'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9, 18'
+	WHERE [Name] = 'catalogsettings.searchpagepagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'catalogsettings.defaultcategorypagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'catalogsettings.defaultmanufacturerpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9, 18'
+	WHERE [Name] = 'catalogsettings.productsbytagpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'vendorsettings.defaultvendorpagesizeoptions'
 END
 GO
 
