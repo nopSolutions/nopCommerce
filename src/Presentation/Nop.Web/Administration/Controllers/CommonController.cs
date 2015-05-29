@@ -521,6 +521,9 @@ namespace Nop.Admin.Controllers
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.Action("Index", "Home", new { area = "Admin" });
+            //prevent open redirection attack
+            if (!Url.IsLocalUrl(returnUrl))
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
 
@@ -535,10 +538,10 @@ namespace Nop.Admin.Controllers
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
 
@@ -553,10 +556,10 @@ namespace Nop.Admin.Controllers
 
             //home page
             if (String.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             //prevent open redirection attack
             if (!Url.IsLocalUrl(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
             return Redirect(returnUrl);
         }
 
