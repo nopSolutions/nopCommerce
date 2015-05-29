@@ -5137,7 +5137,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Computers",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers")).Id,
@@ -5155,7 +5155,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Desktops",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
@@ -5175,7 +5175,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Notebooks",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
@@ -5194,7 +5194,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Software",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryComputers.Id,
@@ -5213,7 +5213,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics")).Id,
@@ -5232,7 +5232,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Camera & photo",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
@@ -5252,7 +5252,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Cell phones",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
@@ -5271,7 +5271,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Others",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryElectronics.Id,
@@ -5291,7 +5291,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Apparel",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel")).Id,
@@ -5310,7 +5310,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Shoes",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
@@ -5330,7 +5330,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Clothing",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
@@ -5349,7 +5349,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Accessories",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 ParentCategoryId = categoryApparel.Id,
@@ -5369,7 +5369,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Digital downloads",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads")).Id,
@@ -5390,7 +5390,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 MetaKeywords = "Books, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book")).Id,
@@ -5409,7 +5409,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Jewelry",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry")).Id,
@@ -5427,7 +5427,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Gift Cards",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards")).Id,
@@ -5488,7 +5488,7 @@ namespace Nop.Services.Installation
             {
                 Name = "HP",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
-                PageSize = 2,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
@@ -5505,7 +5505,7 @@ namespace Nop.Services.Installation
             {
                 Name = "Nike",
                 ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
-                PageSize = 3,
+                PageSize = 6,
                 AllowCustomersToSelectPageSize = true,
                 PageSizeOptions = "6, 3, 9",
                 Published = true,
