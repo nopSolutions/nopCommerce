@@ -756,12 +756,14 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
-                .ForMember(dest => dest.DefaultCategoryPageSizeOptions, mo => mo.Ignore())
-                .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumBackInStockSubscriptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTierPricesWithDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.LoadAllSideCategoryMenuSubcategories, mo => mo.Ignore())
-                .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore());
+                .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultCategoryPageSizeOptions, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultCategoryPageSize, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultManufacturerPageSizeOptions, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultManufacturerPageSize, mo => mo.Ignore());
             Mapper.CreateMap<RewardPointsSettings, RewardPointsSettingsModel>()
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())

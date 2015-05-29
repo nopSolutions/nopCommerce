@@ -315,11 +315,10 @@ namespace Nop.Admin.Controllers
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //default values
-            model.PageSize = 4;
-            model.Published = true;
-
-            model.AllowCustomersToSelectPageSize = true;
+            model.PageSize = _catalogSettings.DefaultManufacturerPageSize;
             model.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
+            model.Published = true;
+            model.AllowCustomersToSelectPageSize = true;
             
             return View(model);
         }

@@ -2201,3 +2201,19 @@ GO
 
 ALTER TABLE [Product] ALTER COLUMN [BasepriceBaseUnitId] int NOT NULL
 GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultcategorypagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.defaultcategorypagesize', N'6', 0)
+END
+GO
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultmanufacturerpagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.defaultmanufacturerpagesize', N'6', 0)
+END
+GO

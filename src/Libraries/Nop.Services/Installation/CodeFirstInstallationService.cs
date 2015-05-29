@@ -4587,8 +4587,6 @@ namespace Nop.Services.Installation
                     IgnoreAcl = false,
                     IgnoreStoreLimitations = false,
                     CacheProductPrices = false,
-                    DefaultCategoryPageSizeOptions = "6, 3, 9",
-                    DefaultManufacturerPageSizeOptions = "6, 3, 9",
                     ProductsByTagAllowCustomersToSelectPageSize = true,
                     ProductsByTagPageSizeOptions = "6, 3, 9, 18",
                     MaximumBackInStockSubscriptions = 200,
@@ -4599,6 +4597,10 @@ namespace Nop.Services.Installation
                     DisplayTaxShippingInfoProductBoxes = false,
                     DisplayTaxShippingInfoWishlist = false,
                     DisplayTaxShippingInfoOrderDetailsPage = false,
+                    DefaultCategoryPageSizeOptions = "6, 3, 9",
+                    DefaultCategoryPageSize = 6,
+                    DefaultManufacturerPageSizeOptions = "6, 3, 9",
+                    DefaultManufacturerPageSize = 6,
                 });
 
             settingService.SaveSetting(new LocalizationSettings
