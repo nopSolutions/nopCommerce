@@ -508,6 +508,12 @@ label, label + * {
 	background: url('../images/loading.gif') center no-repeat;
 }
 
+.please-wait {
+	background: url('../images/ajax-loader-small.gif') no-repeat;
+    padding-right: 20px;
+	font-size: 14px;
+}
+
 .ui-dialog {
 	width: 350px !important;
 	max-width: 90%;
@@ -966,9 +972,6 @@ label, label + * {
 	width: 100%;
 	overflow: hidden; 
 	line-height: 28px; 
-}
-.newsletter-validation .please-wait {
-	display: none !important; 
 }
 
 .footer-lower {
@@ -3584,9 +3587,10 @@ label, label + * {
 .opc .back-link a:hover {
 	color: #4ab2f1;
 }
-.opc .please-wait {
+.opc .buttons .please-wait {
 	display: block;
 	margin: 10px 0 0;
+    background: none;
 }
 .opc .section.pickup-in-store {
 	margin: 0 0 30px;
