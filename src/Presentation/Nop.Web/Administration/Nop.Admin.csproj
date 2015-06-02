@@ -1284,6 +1284,12 @@
   <ItemGroup>
     <Content Include="Views\Discount\ManufacturerAddPopup.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\MultistoreDisabledWarning.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Common\AclDisabledWarning.cshtml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

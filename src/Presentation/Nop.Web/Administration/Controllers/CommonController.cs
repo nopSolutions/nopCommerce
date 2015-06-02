@@ -17,6 +17,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -54,6 +55,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizationService _localizationService;
         private readonly ISearchTermService _searchTermService;
+        private readonly ISettingService _settingService;
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
         private readonly HttpContextBase _httpContext;
@@ -79,6 +81,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, 
             ILocalizationService localizationService,
             ISearchTermService searchTermService,
+            ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
             HttpContextBase httpContext)
@@ -100,6 +103,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizationService = localizationService;
             this._searchTermService = searchTermService;
+            this._settingService = settingService;
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
@@ -688,6 +692,60 @@ namespace Nop.Admin.Controllers
                 Total = searchTermRecordLines.TotalCount
             };
             return Json(gridModel);
+        }
+
+
+        //action displaying notification (warning) to a store owner that "limit per store" feature is ignored
+        [ChildActionOnly]
+        public ActionResult MultistoreDisabledWarning()
+        {
+            //default setting
+            bool enabled = _catalogSettings.IgnoreStoreLimitations;
+            if (!enabled)
+            {
+                //overridden settings
+                var stores = _storeService.GetAllStores();
+                foreach (var store in stores)
+                {
+                    if (!enabled)
+                    {
+                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                        enabled = catalogSettings.IgnoreStoreLimitations;
+                    }
+                }
+            }
+
+            //This setting is disabled. No warnings.
+            if (!enabled)
+                return Content("");
+
+            return PartialView();
+        }
+        //action displaying notification (warning) to a store owner that "ACL rules" feature is ignored
+        [ChildActionOnly]
+        public ActionResult AclDisabledWarning()
+        {
+            //default setting
+            bool enabled = _catalogSettings.IgnoreAcl;
+            if (!enabled)
+            {
+                //overridden settings
+                var stores = _storeService.GetAllStores();
+                foreach (var store in stores)
+                {
+                    if (!enabled)
+                    {
+                        var catalogSettings = _settingService.LoadSetting<CatalogSettings>(store.Id);
+                        enabled = catalogSettings.IgnoreAcl;
+                    }
+                }
+            }
+
+            //This setting is disabled. No warnings.
+            if (!enabled)
+                return Content("");
+
+            return PartialView();
         }
 
         #endregion

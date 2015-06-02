@@ -130,6 +130,7 @@ table.order-edit td{padding:1px 5px;border:medium none;}
 .system-warnings .error{color:Red;}
 .system-warnings .suggestion{color:Red;font-style:italic;font-size:120%;}
 .system-warnings ul{list-style:none;}
+.warning.limit-per-store,.warning.acl-rules{margin:0 0 10px;font-style:italic;}
 .throbber-header{font-size:145%;}
 .throbber{display:none;}
 .throbber .curtain{position:fixed;left:0;top:0;width:100%;height:100%;background-color:#3e4d45;opacity:0.9;filter:alpha(opacity=90);}

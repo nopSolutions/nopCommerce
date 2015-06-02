@@ -523,6 +523,7 @@
             <td class="adminData">
                 @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                 {
+                    @Html.Action("AclDisabledWarning", "Common")
                     foreach (var customerRole in Model.AvailableCustomerRoles)
                     {
                     <div>
@@ -533,7 +534,8 @@
                 else
                 {
                     <div>No customer roles defined</div>
-                }</td>
+                }
+            </td>
         </tr>
     </table>
 }
@@ -576,6 +578,7 @@
             <td class="adminData">
                 @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                 {
+                    @Html.Action("MultistoreDisabledWarning", "Common")
                     foreach (var store in Model.AvailableStores)
                     {
                     <div>
@@ -586,7 +589,8 @@
                 else
                 {
                     <div>No stores defined</div>
-                }</td>
+                }
+            </td>
         </tr>
     </table>
 }

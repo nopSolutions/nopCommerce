@@ -36,6 +36,7 @@
         <td class="adminData">
             @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
             {
+                @Html.Action("AclDisabledWarning", "Common")
                 foreach (var customerRole in Model.AvailableCustomerRoles)
                 {
                 <div>
@@ -46,6 +47,7 @@
             else
             {
                 <div>No customer roles defined</div>
-            }</td>
+            }
+        </td>
     </tr>
 </table>

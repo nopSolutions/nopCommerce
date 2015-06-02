@@ -821,6 +821,12 @@ set @resources='
   <LocaleResource Name="Newsletter.Options.Send">
     <Value>Send</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreStoreLimitations.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Perfomance > Ignore "limit per store" rules (sitewide).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
+    <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Perfomance > Ignore ACL rules (sitewide).</Value>
+  </LocaleResource>
 </Language>
 '
 
