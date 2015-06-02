@@ -25,6 +25,13 @@ namespace Nop.Services.Discounts
         /// Key for caching
         /// </summary>
         /// <remarks>
+        /// {0} : discont ID
+        /// </remarks>
+        private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
+        /// <summary>
+        /// Key for caching
+        /// </summary>
+        /// <remarks>
         /// {0} : show hidden records?
         /// {1} : coupon code
         /// {2} : discount name
@@ -157,7 +164,8 @@ namespace Nop.Services.Discounts
             if (discountId == 0)
                 return null;
 
-            return _discountRepository.GetById(discountId);
+            string key = string.Format(DISCOUNTS_BY_ID_KEY, discountId);
+            return _cacheManager.Get(key, () => _discountRepository.GetById(discountId));
         }
 
         /// <summary>
