@@ -818,6 +818,9 @@ set @resources='
   <LocaleResource Name="Sitemap.Description">
     <Value>View the sitemap for this website below, with links to each of the pages and brief descriptions of what to find in each section</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Send">
+    <Value>Send</Value>
+  </LocaleResource>
 </Language>
 '
 

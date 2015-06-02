@@ -12381,6 +12381,9 @@
   <LocaleResource Name="Newsletter.Email.Wrong">
     <Value>Enter valid email</Value>
   </LocaleResource>
+  <LocaleResource Name="Newsletter.Options.Send">
+    <Value>Send</Value>
+  </LocaleResource>
   <LocaleResource Name="Newsletter.Options.Subscribe">
     <Value>Subscribe</Value>
   </LocaleResource>

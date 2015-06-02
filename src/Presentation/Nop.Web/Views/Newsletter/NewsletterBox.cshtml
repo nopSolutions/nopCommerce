@@ -7,10 +7,19 @@
     <div class="newsletter-subscribe" id="newsletter-subscribe-block">
         <div class="newsletter-email">
             @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email", @class = "newsletter-subscribe-text", placeholder = T("Newsletter.Email.Placeholder") })
-            <input type="button" value="@T("Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
+            <input type="button" value="@T(Model.AllowToUnsubscribe ? "Newsletter.Options.Send" : "Newsletter.Options.Subscribe")" id="newsletter-subscribe-button" class="button-1 newsletter-subscribe-button" />
             @if (Model.AllowToUnsubscribe)
             {
-                <input type="button" value="@T("Newsletter.Options.Unsubscribe")" id="newsletter-unsubscribe-button" class="button-1 newsletter-unsubscribe-button" />
+                <div class="options">
+                    <span class="subscribe">
+                        <input id="newsletter_subscribe" type="radio" value="newsletter_subscribe" name="newsletter_block" checked="checked" />
+                        <label for="newsletter_subscribe">@T("Newsletter.Options.Subscribe")</label>
+                    </span>
+                    <span class="unsubscribe">
+                        <input id="newsletter_unsubscribe" type="radio" value="newsletter_unsubscribe" name="newsletter_block" />
+                        <label for="newsletter_unsubscribe">@T("Newsletter.Options.Unsubscribe")</label>
+                    </span>
+                </div>
             }
         </div>
         <div class="newsletter-validation">
@@ -19,10 +28,8 @@
         </div>
     </div>
     <div class="newsletter-result" id="newsletter-result-block"></div>
-
     <script type="text/javascript">
         function newsletter_subscribe(subscribe) {
-            
             var email = $("#newsletter-email").val();
             var subscribeProgress = $("#subscribe-loading-progress");
             subscribeProgress.show();
@@ -50,10 +57,18 @@
 
         $(document).ready(function () {
             $('#newsletter-subscribe-button').click(function () {
-                newsletter_subscribe('true');
-            });
-            $('#newsletter-unsubscribe-button').click(function () {
-                newsletter_subscribe('false');
+                @if (Model.AllowToUnsubscribe)
+                {
+                    <text>if ($('#newsletter_subscribe').is(':checked')) {
+                        newsletter_subscribe('true');
+                    } else {
+                        newsletter_subscribe('false');
+                    }</text>
+                }
+                else
+                {
+                    <text>newsletter_subscribe('true');</text>
+                }
             });
         });
     </script>

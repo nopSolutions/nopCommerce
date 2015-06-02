@@ -956,17 +956,6 @@ label, label + * {
 .newsletter-subscribe-button:hover {
 	background-color: #248ece;
 }
-.newsletter-unsubscribe-button {
-	display: block;
-	clear: both;
-	margin: auto;
-	border: none;
-	background: none;
-	padding: 10px 0;
-}
-.newsletter-unsubscribe-button:hover {
-	color: #4ab2f1;
-}
 .newsletter-validation, 
 .newsletter-result { 
 	width: 100%;
@@ -6091,9 +6080,6 @@ pre {
 .newsletter-email .newsletter-subscribe-button {
 	width: 100px;
 	padding: 0 5px;
-}
-.newsletter-unsubscribe-button {
-	display: inline-block;
 }
 .newsletter-validation .field-validation-valid {
 	text-align: right;
