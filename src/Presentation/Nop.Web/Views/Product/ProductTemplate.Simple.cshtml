@@ -111,6 +111,8 @@
                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);
                             @Html.Partial("_ProductPrice", Model.ProductPrice, dataDictPrice)
                             
+                        @Html.Partial("_ProductTierPrices", Model.TierPrices)
+
                         var dataDictAddToCart = new ViewDataDictionary();
                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
                             @Html.Partial("_AddToCart", Model.AddToCart, dataDictAddToCart)                    
@@ -137,7 +139,6 @@
                 </div>
                 @Html.Widget("productdetails_before_collateral", Model.Id)
                 <div class="product-collateral">
-                    @Html.Partial("_ProductTierPrices", Model.TierPrices)
                     @Html.Partial("_ProductSpecifications", Model.ProductSpecifications)
                     @Html.Partial("_ProductTags", Model.ProductTags)
                 </div>

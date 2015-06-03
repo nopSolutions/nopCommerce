@@ -962,6 +962,9 @@ label, label + * {
 	overflow: hidden; 
 	line-height: 28px; 
 }
+/*.newsletter-validation .please-wait {
+	display: none !important; 
+}*/
 
 .footer-lower {
 	width: 95%;
@@ -1884,9 +1887,6 @@ label, label + * {
 	margin: 0 0 20px;
 	overflow: hidden;
 }
-.customer-entered-price > div {
-	display: inline-block;
-}
 .customer-entered-price .price-input label {
 	display: block;
 	margin: 0 0 5px;
@@ -1898,8 +1898,28 @@ label, label + * {
 	text-align: center;
 }
 .customer-entered-price .price-range {
-	margin: 0 10px;
+	margin: 5px 0 0;
+	color: #777;
+}
+
+.tier-prices {
+	margin: 0 0 20px;
+}
+.tier-prices .title {
+    display: none;
+}
+.tier-prices table td {
+	border: 1px solid #ddd;
+	padding: 10px;
 	color: #444;
+}
+.tier-prices .field-header {
+	min-width: 80px;
+}
+.tier-prices .item-price {
+	background-color: #f9f9f9;
+	font-size: 16px;
+	color: #e4434b;
 }
 
 .overview .add-to-cart {
@@ -2005,23 +2025,6 @@ label, label + * {
 	margin: 0 0 10px;
 }
 
-.tier-prices {
-	margin: 0 0 40px;
-}
-.tier-prices table td {
-	border: 1px solid #ddd;
-	padding: 10px;
-	color: #444;
-}
-.tier-prices .field-header {
-	min-width: 100px;
-}
-.tier-prices .item-price {
-	background-color: #f9f9f9;
-	font-size: 16px;
-	color: #e4434b;
-}
-
 .product-specs-box {
 	margin: 0 0 40px;
 }
@@ -2053,6 +2056,7 @@ label, label + * {
 }
 .attributes dl {
 	overflow: hidden; 
+    padding: 0 2px; /* fix for Chrome in Mac, the checkboxes get cut off */
 }
 .attributes dt,
 .attribute-label {

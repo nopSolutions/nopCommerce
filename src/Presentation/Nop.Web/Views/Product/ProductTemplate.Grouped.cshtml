@@ -153,6 +153,8 @@
                                         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", variant.Id);
                                         @Html.Partial("_ProductPrice", variant.ProductPrice, dataDictPrice)
                                     }
+                                    <!--price breaks-->
+                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
                                     @{
                                         var dataDictAddToCart = new ViewDataDictionary();
                                         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
@@ -164,8 +166,6 @@
                                         dataDictAddToWishlist.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", variant.Id);
                                         @Html.Partial("_AddToWishlist", variant.AddToCart, dataDictAddToWishlist)
                                     }
-                                    <!--price breaks-->
-                                    @Html.Partial("_ProductTierPrices", variant.TierPrices)
                                 </div>
                             </div>
                         }
