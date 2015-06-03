@@ -5746,11 +5746,6 @@ namespace Nop.Services.Installation
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
                 DisplayOrder = 2,
             });
-            //productBuildComputer.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name)),
-            //    DisplayOrder = 3,
-            //});
             _productRepository.Insert(productBuildComputer);
 
 
@@ -5993,14 +5988,6 @@ namespace Nop.Services.Installation
                         DisplayOrder = 1,
                     }
                 },
-                //ProductManufacturers =
-                //{
-                //    new ProductManufacturer
-                //    {
-                //        Manufacturer = _manufacturerRepository.Table.Single(c => c.Name == "ASUS"),
-                //        DisplayOrder = 1,
-                //    }
-                //},
                 ProductSpecificationAttributes =
                 {
                      new ProductSpecificationAttribute
@@ -6540,152 +6527,6 @@ namespace Nop.Services.Installation
 
 
 
-
-            //var productMedalOfHonor = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "Medal of Honor - Limited Edition (Xbox 360)",
-            //    ShortDescription = "One of the great pioneers in military simulations returns to gaming as the Medal of Honor series depicts modern warfare for the first time, with a harrowing tour of duty in current day Afghanistan.",
-            //    FullDescription = "You'll take control of both ordinary U.S. Army Rangers and Tier 1 Elite Ops Special Forces as you fight enemy insurgents in the most dangerous theatre of war of the modern age. The intense first person combat has been created with input from U.S. military consultants and based on real-life descriptions from veteran soldiers. This allows you to use genuine military tactics and advanced technology including combat drones and targeted air strikes.",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "medal-of-honor-limited-edition-xbox-360",
-            //    AllowCustomerReviews = true,
-            //    Price = 37M,
-            //    IsShipEnabled = true,
-            //    Weight = 7,
-            //    Length = 7,
-            //    Width = 7,
-            //    Height = 7,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productMedalOfHonor);
-            //productMedalOfHonor.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productMedalOfHonor);
-
-
-            //var productWoW = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "World of Warcraft: Wrath of the Lich King Expansion Pack",
-            //    ShortDescription = "This expansion pack REQUIRES the original World of Warcraft game in order to run",
-            //    FullDescription = "<p>Fans of World of Warcraft, prepare for Blizzard Entertainment's next installment -- World of Warcraft: Wrath of King Lich. In this latest expansion, something is afoot in the cold, harsh northlands. The Lich King Arthas has set in motion events that could lead to the extinction of all life on Azeroth. The necromantic power of the plague and legions of undead armies threaten to sweep across the land. Only the mightiest heroes can oppose the Lich King and end his reign of terror.</p><p>This expansion adds a host of content to the already massive existing game world. Players will achieve soaring levels of power, explore Northrend (the vast icy continent of the Lich King), and battle high-level heroes to determine the ultimate fate of Azeroth. As you face the dangers of the frigid, harsh north, prepare to master the dark necromantic powers of the Death Night -- World of Warcraft's first Hero class. No longer servants of the Lich King, the Death Knights begin their new calling as experienced, formidable adversaries. Each is heavily armed, armored, and in possession of a deadly arsenal of forbidden magic.</p><p>If you have a World of Warcraft account with a character of at least level 55, you will be able to create a new level-55 Death Knight of any race (if on a PvP realm, the Death Knight must be the same faction as your existing character). And upon entering the new world, your Death Knight will begin to quest to level 80, gaining potent new abilities and talents along the way. This expansion allows for only one Death Knight per realm, per account.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "world-of-warcraft-wrath-of-the-lich-king-expansion-pack",
-            //    AllowCustomerReviews = true,
-            //    Price = 29.5M,
-            //    IsShipEnabled = true,
-            //    Weight = 7,
-            //    Length = 7,
-            //    Width = 7,
-            //    Height = 7,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productWoW);
-            //productWoW.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productWoW);
-
-
-
-
-
-            //var productSoccer = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "World Wide Soccer Manager 2009",
-            //    ShortDescription = "Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game",
-            //    FullDescription = "<p>Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game. At the helm, you'll enter the new season with a wide array of all-new features. The most impressive update is the first-time-ever, real-time 3D match engine with motion captured animations. With over 5,000 playable teams and every management decision in the palm of your hand, you'll love watching your matches and decisions unfold from multiple camera angles as you compete in leagues around the world and major international tournaments.</p><p>Watch your match in real-time, or use the Match Time Bar to fast-forward through sluggish minutes or rewind key moments in the game. With this customization at your fingertips you can also choose the information you'd like to see during the match, such as latest scores or player performance stats for the match.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "world-wide-soccer-manager-2009",
-            //    AllowCustomerReviews = true,
-            //    Price = 25.99M,
-            //    IsShipEnabled = true,
-            //    Weight = 7,
-            //    Length = 7,
-            //    Width = 7,
-            //    Height = 7,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Software & Games"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productSoccer);
-            //productSoccer.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productSoccer);
-
-
-
             #endregion
 
             #region Camera, Photo
@@ -7212,54 +7053,6 @@ namespace Nop.Services.Installation
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productUniversalTabletCover);
-
-
-
-            //var productKensington = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "Kensington 33117 International All-in-One Travel Plug Adapter",
-            //    ShortDescription = "Includes plug adapters for use in more than 150 countries",
-            //    FullDescription = "<p>The Kensington 33117 Travel Plug Adapter is a pocket-sized power adapter for go-anywhere convenience. This all-in-one unit provides plug adapters for use in more than 150 countries, so you never need to be at a loss for power again. The Kensington 33117 is easy to use, with slide-out power plugs that ensure you won't lose any vital pieces, in a compact, self-contained unit that eliminates any hassles. This all-in-one plug adapts power outlets for laptops, chargers, and similar devices, and features a safety release button and built-in fuse to ensure safe operation. The Kensington 33117 does not reduce or convert electrical voltage, is suitable for most consumer electronics ranging from 110-volts to Mac 275-watts, to 220-volts to Mac 550-watts. Backed by Kensington's one-year warranty, this unit weighs 0.5, and measures 1.875 x 2 x 2.25 inches (WxDxH). Please note that this adapter is not designed for use with high-watt devices such as hairdryers and irons, so users should check electronic device specifications before using.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "kensington-33117-international-all-in-one-travel-plug-adapter",
-            //    AllowCustomerReviews = true,
-            //    Price = 35M,
-            //    IsShipEnabled = true,
-            //    Weight = 7,
-            //    Length = 7,
-            //    Width = 7,
-            //    Height = 7,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Electronics & Software").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Accessories"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productKensington);
-            //productKensington.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productKensington);
 
 
 
@@ -7938,63 +7731,7 @@ namespace Nop.Services.Installation
             #endregion
 
             #region Accessories
-
-
-            //var productLeatherHandbag = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "Genuine Leather Handbag with Cell Phone Holder & Many Pockets",
-            //    ShortDescription = "Classic Leather Handbag",
-            //    FullDescription = "<p>This fine leather handbag will quickly become your favorite bag. It has a zipper organizer on the front that includes a notepad pocket, pen holder, credit card slots and zipper pocket divider. On top of this is a zipper pocket and another flap closure pocket. The main compartment is fully lined and includes a side zipper pocket. On the back is another zipper pocket. And don't forget the convenient built in cell phone holder on the side! The long strap is fully adjustable so you can wear it crossbody or over the shoulder. This is a very well-made, quality leather bag that is not too big, but not too small.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "genuine-leather-handbag-with-cell-phone-holder-many-pockets",
-            //    AllowCustomerReviews = true,
-            //    Price = 35M,
-            //    IsShipEnabled = true,
-            //    Weight = 2,
-            //    Length = 2,
-            //    Width = 2,
-            //    Height = 2,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Apparel").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Apparel Accessories"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productLeatherHandbag);
-            //productLeatherHandbag.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //productLeatherHandbag.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name)),
-            //    DisplayOrder = 2,
-            //});
-            //_productRepository.Insert(productLeatherHandbag);
-
-
-
-
-
+            
 
             var productObeyHat = new Product
             {
@@ -8443,59 +8180,6 @@ namespace Nop.Services.Installation
 
 
 
-
-
-            //var productCookingForTwo = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "Cooking for Two",
-            //    ShortDescription = "More Than 200 Foolproof Recipes for Weeknights and Special Occasions (Hardcover)",
-            //    FullDescription = "<p>Hardcover: 352 pages<br />Publisher: America's Test Kitchen (May 2009)<br />Language: English<br />ISBN-10: 1933615435<br />ISBN-13: 978-1933615431</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "cooking-for-two",
-            //    AllowCustomerReviews = true,
-            //    Price = 19M,
-            //    OldPrice = 27M,
-            //    IsShipEnabled = true,
-            //    DeliveryDateId = deliveryDate.Id,
-            //    Weight = 2,
-            //    Length = 2,
-            //    Width = 2,
-            //    Height = 2,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Books").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Books"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productCookingForTwo);
-            //productCookingForTwo.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productCookingForTwo);
-
-
-
-
             var productFirstPrizePies = new Product
             {
                 ProductType = ProductType.SimpleProduct,
@@ -8603,55 +8287,6 @@ namespace Nop.Services.Installation
             #region Jewelry
 
 
-            //var productDiamondHeart = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "Black & White Diamond Heart",
-            //    ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
-            //    FullDescription = "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "black-white-diamond-heart",
-            //    AllowCustomerReviews = true,
-            //    Price = 130M,
-            //    IsShipEnabled = true,
-            //    IsFreeShipping = true,
-            //    Weight = 2,
-            //    Length = 2,
-            //    Width = 2,
-            //    Height = 2,
-            //    TaxCategoryId = _taxCategoryRepository.Table.Single(tc => tc.Name == "Jewelry").Id,
-            //    ManageInventoryMethod = ManageInventoryMethod.ManageStock,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    DisplayStockAvailability = true,
-            //    LowStockActivity = LowStockActivity.DisableBuyButton,
-            //    BackorderMode = BackorderMode.NoBackorders,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Jewelry"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(productDiamondHeart);
-            //productDiamondHeart.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(productDiamondHeart);
-
-
-
 
             var productElegantGemstoneNecklace = new Product
             {
@@ -8748,11 +8383,6 @@ namespace Nop.Services.Installation
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_FlowerBracelet.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productFlowerGirlBracelet.Name)),
                 DisplayOrder = 1,
             });
-            //productDiamondBracelet.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name)),
-            //    DisplayOrder = 2,
-            //});
             _productRepository.Insert(productFlowerGirlBracelet);
 
 
@@ -8806,11 +8436,6 @@ namespace Nop.Services.Installation
                 Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
                 DisplayOrder = 1,
             });
-            //productEngagementRing.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name)),
-            //    DisplayOrder = 2,
-            //});
             _productRepository.Insert(productEngagementRing);
 
 
@@ -8818,46 +8443,6 @@ namespace Nop.Services.Installation
             #endregion
 
             #region Gift Cards
-
-            //var product5GiftCard = new Product
-            //{
-            //    ProductType = ProductType.SimpleProduct,
-            //    VisibleIndividually = true,
-            //    Name = "$5 Virtual Gift Card",
-            //    ShortDescription = "$5 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
-            //    FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
-            //    ProductTemplateId = productTemplateSimple.Id,
-            //    //SeName = "5-virtual-gift-card",
-            //    AllowCustomerReviews = true,
-            //    Price = 5M,
-            //    IsGiftCard = true,
-            //    GiftCardType = GiftCardType.Virtual,
-            //    ManageInventoryMethod = ManageInventoryMethod.DontManageStock,
-            //    OrderMinimumQuantity = 1,
-            //    OrderMaximumQuantity = 10000,
-            //    StockQuantity = 10000,
-            //    NotifyAdminForQuantityBelow = 1,
-            //    AllowBackInStockSubscriptions = false,
-            //    Published = true,
-            //    CreatedOnUtc = DateTime.UtcNow,
-            //    UpdatedOnUtc = DateTime.UtcNow,
-            //    ProductCategories =
-            //    {
-            //        new ProductCategory
-            //        {
-            //            Category = _categoryRepository.Table.Single(c => c.Name == "Gift Cards"),
-            //            DisplayOrder = 1,
-            //        }
-            //    }
-            //};
-            //allProducts.Add(product5GiftCard);
-            //product5GiftCard.ProductPictures.Add(new ProductPicture
-            //{
-            //    Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name)),
-            //    DisplayOrder = 1,
-            //});
-            //_productRepository.Insert(product5GiftCard);
-
 
 
             var product25GiftCard = new Product
@@ -9022,26 +8607,6 @@ namespace Nop.Services.Installation
             //related products
             var relatedProducts = new List<RelatedProduct>
             {
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productDiamondHeart.Id,
-                //     ProductId2 = productDiamondBracelet.Id,
-                //},
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productDiamondHeart.Id,
-                //     ProductId2 = productDiamondEarrings.Id,
-                //},
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productDiamondHeart.Id,
-                //     ProductId2 = productEngagementRing.Id,
-                //},
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productDiamondBracelet.Id,
-                //     ProductId2 = productDiamondHeart.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productFlowerGirlBracelet.Id,
@@ -9052,11 +8617,6 @@ namespace Nop.Services.Installation
                      ProductId1 = productFlowerGirlBracelet.Id,
                      ProductId2 = productElegantGemstoneNecklace.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productEngagementRing.Id,
-                //     ProductId2 = productDiamondHeart.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productEngagementRing.Id,
@@ -9067,11 +8627,6 @@ namespace Nop.Services.Installation
                      ProductId1 = productEngagementRing.Id,
                      ProductId2 = productElegantGemstoneNecklace.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productDiamondEarrings.Id,
-                //     ProductId2 = productDiamondHeart.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productElegantGemstoneNecklace.Id,
@@ -9102,11 +8657,6 @@ namespace Nop.Services.Installation
                      ProductId1 = productNightVision.Id,
                      ProductId2 = productScienceAndFaith.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productBestSkilletRecipes.Id,
-                //     ProductId2 = productCookingForTwo.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productPrideAndPrejudice.Id,
@@ -9117,41 +8667,16 @@ namespace Nop.Services.Installation
                      ProductId1 = productPrideAndPrejudice.Id,
                      ProductId2 = productFahrenheit.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productCookingForTwo.Id,
-                //     ProductId2 = productBestSkilletRecipes.Id,
-                //},
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productCookingForTwo.Id,
-                //     ProductId2 = productEatingWell.Id,
-                //},
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productCookingForTwo.Id,
-                //     ProductId2 = productBestGrillingRecipes.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productFirstPrizePies.Id,
                      ProductId2 = productPrideAndPrejudice.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productEatingWell.Id,
-                //     ProductId2 = productCookingForTwo.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productFirstPrizePies.Id,
                      ProductId2 = productFahrenheit.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productBestGrillingRecipes.Id,
-                //     ProductId2 = productCookingForTwo.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productFahrenheit.Id,
@@ -9287,11 +8812,6 @@ namespace Nop.Services.Installation
                      ProductId1 = productLeica.Id,
                      ProductId2 = productHtcOneMini.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productCanonCamcoder.Id,
-                //     ProductId2 = productSonyCamcoder.Id,
-                //},
                 new RelatedProduct
                 {
                      ProductId1 = productLeica.Id,
@@ -9305,14 +8825,8 @@ namespace Nop.Services.Installation
                 new RelatedProduct
                 {
                      ProductId1 = productNokiaLumia.Id,
-                     //ProductId2 = productCanonCamcoder.Id,
                      ProductId2 = productHtcOne.Id,
                 },
-                //new RelatedProduct
-                //{
-                //     ProductId1 = productSonyCamcoder.Id,
-                //     ProductId2 = productCanonCamera.Id,
-                //},
             };
             relatedProducts.ForEach(rp => _relatedProductRepository.Insert(rp));
 
@@ -9324,8 +8838,6 @@ namespace Nop.Services.Installation
             //product tags
             AddProductTag(product25GiftCard, "nice");
             AddProductTag(product25GiftCard, "gift");
-            //AddProductTag(product5GiftCard, "nice");
-            //AddProductTag(product5GiftCard, "gift");
             AddProductTag(productNikeTailwind, "cool");
             AddProductTag(productNikeTailwind, "apparel");
             AddProductTag(productNikeTailwind, "shirt");
@@ -9350,8 +8862,6 @@ namespace Nop.Services.Installation
             AddProductTag(productFahrenheit, "awesome");
             AddProductTag(productFahrenheit, "book");
             AddProductTag(productFahrenheit, "nice");
-            //AddProductTag(productDiamondHeart, "awesome");
-            //AddProductTag(productDiamondHeart, "jewelry");
             AddProductTag(productHtcOne, "cell");
             AddProductTag(productHtcOne, "compact");
             AddProductTag(productHtcOne, "awesome");
@@ -9363,8 +8873,6 @@ namespace Nop.Services.Installation
             AddProductTag(productLeica, "cool");
             AddProductTag(productDigitalStorm, "cool");
             AddProductTag(productDigitalStorm, "computer");
-            //AddProductTag(productCookingForTwo, "awesome");
-            //AddProductTag(productCookingForTwo, "book");
             AddProductTag(productWindows8Pro, "awesome");
             AddProductTag(productWindows8Pro, "computer");
             AddProductTag(productCustomTShirt, "cool");
@@ -9378,9 +8886,6 @@ namespace Nop.Services.Installation
             AddProductTag(productAdidas, "cool");
             AddProductTag(productAdidas, "shoes");
             AddProductTag(productAdidas, "apparel");
-            //AddProductTag(productLeatherHandbag, "apparel");
-            //AddProductTag(productLeatherHandbag, "cool");
-            //AddProductTag(productLeatherHandbag, "awesome");
             AddProductTag(productLenovoIdeaCentre, "awesome");
             AddProductTag(productLenovoIdeaCentre, "computer");
             AddProductTag(productSamsungSeries, "nice");
@@ -9393,8 +8898,6 @@ namespace Nop.Services.Installation
             AddProductTag(productHpEnvy, "compact");
             AddProductTag(productObeyHat, "apparel");
             AddProductTag(productObeyHat, "cool");
-            //AddProductTag(productKensington, "computer");
-            //AddProductTag(productKensington, "cool");
             AddProductTag(productLeviJeans, "cool");
             AddProductTag(productLeviJeans, "jeans");
             AddProductTag(productLeviJeans, "apparel");
@@ -9424,12 +8927,6 @@ namespace Nop.Services.Installation
             AddProductTag(productNikeZoom, "apparel");
             AddProductTag(productEngagementRing, "jewelry");
             AddProductTag(productEngagementRing, "awesome");
-            //AddProductTag(productWoW, "computer");
-            //AddProductTag(productWoW, "cool");
-            //AddProductTag(productWoW, "game");
-            //AddProductTag(productSoccer, "game");
-            //AddProductTag(productSoccer, "cool");
-            //AddProductTag(productSoccer, "computer");
 
 
             #endregion
