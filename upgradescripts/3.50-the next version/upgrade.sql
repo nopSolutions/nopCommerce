@@ -2017,6 +2017,15 @@ BEGIN
 	UPDATE [Setting]
 	SET [Value] = N'6, 3, 9'
 	WHERE [Name] = 'vendorsettings.defaultvendorpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'3'
+	WHERE [Name] = 'catalogsettings.recentlyviewedproductsnumber'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6'
+	WHERE [Name] = 'catalogsettings.recentlyaddedproductsnumber'
+	
 END
 GO
 
