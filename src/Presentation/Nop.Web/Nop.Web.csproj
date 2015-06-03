@@ -1927,7 +1927,7 @@
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
-    <Content Include="Themes\print.css" />
+    <Content Include="Themes\DefaultClean\Content\css\print.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
