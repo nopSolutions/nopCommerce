@@ -8954,8 +8954,8 @@ namespace Nop.Services.Installation
                 product.ApprovedRatingSum = rating;
                 product.ApprovedTotalReviews = product.ProductReviews.Count;
 
-                _productRepository.Update(product);
             }
+            _productRepository.Update(allProducts);
         }
 
         protected virtual void InstallForums()
