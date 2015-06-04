@@ -117,6 +117,10 @@
                             attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IncludeInFooterColumn3#.gif" />'
                         }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.ContentManagement.Topics.Fields.DisplayOrder")",
+                            width: 100
+                        }, {
                             field: "Id",
                             title: "@T("Admin.Common.Edit")",
                             width: 100,

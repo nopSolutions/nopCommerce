@@ -827,6 +827,24 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.Performance.IgnoreAcl.Notification">
     <Value>In order to use this functionality you have to disable the following setting: Configuration > Catalog settings > Perfomance > Ignore ACL rules (sitewide).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.DisplayOrder.Hint">
+    <Value>The topic display order. 1 represents the first item in the list. It''s used with properties such as "Include in top menu" or "Include in footer".</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShippingReturns">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="PrivacyNotice">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ConditionsOfUse">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="AboutUs">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1959,76 +1977,6 @@ END
 GO
 
 
---update DefaultClean theme settings. You should remove this code if you're going to use the old theme
-IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstoretheme' and [Value] = N'DefaultClean')
-BEGIN
-	UPDATE [Setting]
-	SET [Value] = N'290'
-	WHERE [Name] = 'mediasettings.productthumbpicturesize'
-	
-	UPDATE [Setting]
-	SET [Value] = N'290'
-	WHERE [Name] = 'mediasettings.associatedproductpicturesize'
-	
-	UPDATE [Setting]
-	SET [Value] = N'550'
-	WHERE [Name] = 'mediasettings.productdetailspicturesize'
-	
-	UPDATE [Setting]
-	SET [Value] = N'200'
-	WHERE [Name] = 'mediasettings.categorythumbpicturesize'
-		
-	UPDATE [Setting]
-	SET [Value] = N'200'
-	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
-		
-	UPDATE [Setting]
-	SET [Value] = N'4'
-	WHERE [Name] = 'catalogsettings.numberofbestsellersonhomepage'
-		
-	UPDATE [Setting]
-	SET [Value] = N'true'
-	WHERE [Name] = 'newssettings.shownewsonmainpage'
-	
-	UPDATE [Setting]
-	SET [Value] = N'120'
-	WHERE [Name] = 'mediasettings.avatarpicturesize'
-	
-	UPDATE [Setting]
-	SET [Value] = N'4'
-	WHERE [Name] = 'shoppingcartsettings.crosssellsnumber'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6, 3, 9, 18'
-	WHERE [Name] = 'catalogsettings.searchpagepagesizeoptions'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6, 3, 9'
-	WHERE [Name] = 'catalogsettings.defaultcategorypagesizeoptions'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6, 3, 9'
-	WHERE [Name] = 'catalogsettings.defaultmanufacturerpagesizeoptions'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6, 3, 9, 18'
-	WHERE [Name] = 'catalogsettings.productsbytagpagesizeoptions'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6, 3, 9'
-	WHERE [Name] = 'vendorsettings.defaultvendorpagesizeoptions'
-	
-	UPDATE [Setting]
-	SET [Value] = N'3'
-	WHERE [Name] = 'catalogsettings.recentlyviewedproductsnumber'
-	
-	UPDATE [Setting]
-	SET [Value] = N'6'
-	WHERE [Name] = 'catalogsettings.recentlyaddedproductsnumber'
-	
-END
-GO
-
 DELETE FROM [Setting] WHERE [name] = N'mediasettings.productthumbperrowonproductdetailspage'
 GO
 
@@ -2233,5 +2181,112 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultm
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.defaultmanufacturerpagesize', N'6', 0)
+END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='DisplayOrder')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [DisplayOrder] int NULL
+END
+GO
+
+UPDATE [Topic]
+SET [DisplayOrder] = 1
+WHERE [DisplayOrder] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [DisplayOrder] int NOT NULL
+GO
+
+
+--update DefaultClean theme settings. You should remove this code if you're going to use the old theme
+IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstoretheme' and [Value] = N'DefaultClean')
+BEGIN
+	UPDATE [Setting]
+	SET [Value] = N'290'
+	WHERE [Name] = 'mediasettings.productthumbpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'290'
+	WHERE [Name] = 'mediasettings.associatedproductpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'550'
+	WHERE [Name] = 'mediasettings.productdetailspicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'200'
+	WHERE [Name] = 'mediasettings.categorythumbpicturesize'
+		
+	UPDATE [Setting]
+	SET [Value] = N'200'
+	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
+		
+	UPDATE [Setting]
+	SET [Value] = N'4'
+	WHERE [Name] = 'catalogsettings.numberofbestsellersonhomepage'
+		
+	UPDATE [Setting]
+	SET [Value] = N'true'
+	WHERE [Name] = 'newssettings.shownewsonmainpage'
+	
+	UPDATE [Setting]
+	SET [Value] = N'120'
+	WHERE [Name] = 'mediasettings.avatarpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'4'
+	WHERE [Name] = 'shoppingcartsettings.crosssellsnumber'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9, 18'
+	WHERE [Name] = 'catalogsettings.searchpagepagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'catalogsettings.defaultcategorypagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'catalogsettings.defaultmanufacturerpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9, 18'
+	WHERE [Name] = 'catalogsettings.productsbytagpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6, 3, 9'
+	WHERE [Name] = 'vendorsettings.defaultvendorpagesizeoptions'
+	
+	UPDATE [Setting]
+	SET [Value] = N'3'
+	WHERE [Name] = 'catalogsettings.recentlyviewedproductsnumber'
+	
+	UPDATE [Setting]
+	SET [Value] = N'6'
+	WHERE [Name] = 'catalogsettings.recentlyaddedproductsnumber'
+	
+	UPDATE [Topic]
+	SET [DisplayOrder] = 5,
+	[IncludeInFooterColumn1] = 1
+	WHERE [SystemName] = 'ShippingInfo'
+	
+	UPDATE [Topic]
+	SET [DisplayOrder] = 10,
+	[IncludeInFooterColumn1] = 1
+	WHERE [SystemName] = 'PrivacyInfo'
+	
+	UPDATE [Topic]
+	SET [DisplayOrder] = 15,
+	[IncludeInFooterColumn1] = 1
+	WHERE [SystemName] = 'ConditionsOfUse'
+	
+	UPDATE [Topic]
+	SET [DisplayOrder] = 20,
+	[IncludeInFooterColumn1] = 1
+	WHERE [SystemName] = 'AboutUs'
 END
 GO

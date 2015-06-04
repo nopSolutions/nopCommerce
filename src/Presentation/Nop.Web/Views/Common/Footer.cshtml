@@ -15,15 +15,11 @@
                 {
                     <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
                 }
-                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo") })">@T("ShippingReturns")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("PrivacyNotice")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("ConditionsOfUse")</a></li>
-                <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("aboutus") })">@T("AboutUs")</a></li>
-                <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
                 @foreach (var topic in Model.Topics.Where(x => x.IncludeInFooterColumn1).ToList())
                 {
                     <li><a href="@Url.RouteUrl("Topic", new { SeName = topic.SeName })">@topic.Name</a></li>
                 }
+                <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
             </ul>
         </div>
         <div class="footer-block customer-service">

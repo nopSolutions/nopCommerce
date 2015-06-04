@@ -1,8 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="English">
-  <LocaleResource Name="AboutUs">
-    <Value>About us</Value>
-  </LocaleResource>
   <LocaleResource Name="Account.AccountActivation">
     <Value>Account activation</Value>
   </LocaleResource>
@@ -7326,6 +7323,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Body.Hint">
     <Value>The body of your topic.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.DisplayOrder.Hint">
+    <Value>The topic display order. 1 represents the first item in the list. It's used with properties such as "Include in top menu" or "Include in footer".</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn1">
     <Value>Include in footer (column 1)</Value>
   </LocaleResource>
@@ -11334,9 +11337,6 @@
   <LocaleResource Name="Common.Yes">
     <Value>Yes</Value>
   </LocaleResource>
-  <LocaleResource Name="ConditionsOfUse">
-    <Value>Conditions of Use</Value>
-  </LocaleResource>
   <LocaleResource Name="ContactUs">
     <Value>Contact us</Value>
   </LocaleResource>
@@ -13107,9 +13107,6 @@
   <LocaleResource Name="Polls.VotesResultLine">
     <Value>{0} ({1} vote(s) - {2}%)</Value>
   </LocaleResource>
-  <LocaleResource Name="PrivacyNotice">
-    <Value>Privacy Notice</Value>
-  </LocaleResource>
   <LocaleResource Name="PrivateMessages.Inbox">
     <Value>Inbox</Value>
   </LocaleResource>
@@ -13694,9 +13691,6 @@
   </LocaleResource>
   <LocaleResource Name="Search.SearchTermMinimumLengthIsNCharacters">
     <Value>Search term minimum length is {0} characters</Value>
-  </LocaleResource>
-  <LocaleResource Name="ShippingReturns">
-    <Value>Shipping &amp; Returns</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Shopping cart</Value>

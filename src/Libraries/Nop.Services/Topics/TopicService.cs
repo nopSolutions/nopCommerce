@@ -133,7 +133,7 @@ namespace Nop.Services.Topics
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
-                query = query.OrderBy(t => t.SystemName);
+                query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
                 //Store mapping
                 if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)

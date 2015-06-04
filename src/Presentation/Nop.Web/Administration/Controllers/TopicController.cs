@@ -217,6 +217,10 @@ namespace Nop.Admin.Controllers
             PrepareStoresMappingModel(model, null, false);
             //locales
             AddLocales(_languageService, model.Locales);
+            
+            //default values
+            model.DisplayOrder = 1;
+
             return View(model);
         }
 

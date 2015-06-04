@@ -38,6 +38,11 @@ namespace Nop.Core.Domain.Topics
         public bool IncludeInFooterColumn3 { get; set; }
 
         /// <summary>
+        /// Gets or sets the display order
+        /// </summary>
+        public int DisplayOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets the value indicating whether this topic is accessible when a store is closed
         /// </summary>
         public bool AccessibleWhenStoreClosed { get; set; }

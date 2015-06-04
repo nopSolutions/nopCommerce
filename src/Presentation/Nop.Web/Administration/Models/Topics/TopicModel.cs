@@ -43,6 +43,8 @@ namespace Nop.Admin.Models.Topics
         public bool IncludeInFooterColumn2 { get; set; }
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.IncludeInFooterColumn3")]
         public bool IncludeInFooterColumn3 { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.DisplayOrder")]
+        public int DisplayOrder { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed")]
         public bool AccessibleWhenStoreClosed { get; set; }
