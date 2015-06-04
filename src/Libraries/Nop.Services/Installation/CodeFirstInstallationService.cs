@@ -7661,7 +7661,7 @@ namespace Nop.Services.Installation
                 VisibleIndividually = true,
                 Name = "Levi's 511 Jeans",
                 ShortDescription = "Levi's Faded Black 511 Jeans ",
-                FullDescription = "",
+                FullDescription = "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "levis-skinny-511-jeans",
                 AllowCustomerReviews = true,
