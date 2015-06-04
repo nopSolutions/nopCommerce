@@ -8813,13 +8813,176 @@ namespace Nop.Services.Installation
                 },
                 new RelatedProduct
                 {
+                     ProductId1 = productLeica.Id,
+                     ProductId2 = productAppleICam.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLeica.Id,
+                     ProductId2 = productNokiaLumia.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOne.Id,
+                     ProductId2 = productHtcOneMini.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOne.Id,
+                     ProductId2 = productNokiaLumia.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOne.Id,
+                     ProductId2 = productBeatsPill.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOne.Id,
+                     ProductId2 = productPortableSoundSpeakers.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOneMini.Id,
+                     ProductId2 = productHtcOne.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOneMini.Id,
+                     ProductId2 = productNokiaLumia.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOneMini.Id,
+                     ProductId2 = productBeatsPill.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productHtcOneMini.Id,
+                     ProductId2 = productPortableSoundSpeakers.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productNokiaLumia.Id,
+                     ProductId2 = productHtcOne.Id,
+                },
+                new RelatedProduct
+                {
                      ProductId1 = productNokiaLumia.Id,
                      ProductId2 = productHtcOneMini.Id,
                 },
                 new RelatedProduct
                 {
                      ProductId1 = productNokiaLumia.Id,
-                     ProductId2 = productHtcOne.Id,
+                     ProductId2 = productBeatsPill.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productNokiaLumia.Id,
+                     ProductId2 = productPortableSoundSpeakers.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productAdidas.Id,
+                     ProductId2 = productLeviJeans.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productAdidas.Id,
+                     ProductId2 = productNikeFloral.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productAdidas.Id,
+                     ProductId2 = productNikeZoom.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productAdidas.Id,
+                     ProductId2 = productNikeTailwind.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLeviJeans.Id,
+                     ProductId2 = productAdidas.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLeviJeans.Id,
+                     ProductId2 = productNikeFloral.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLeviJeans.Id,
+                     ProductId2 = productNikeZoom.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLeviJeans.Id,
+                     ProductId2 = productNikeTailwind.Id,
+                },
+                
+                new RelatedProduct
+                {
+                     ProductId1 = productCustomTShirt.Id,
+                     ProductId2 = productLeviJeans.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productCustomTShirt.Id,
+                     ProductId2 = productNikeTailwind.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productCustomTShirt.Id,
+                     ProductId2 = productOversizedWomenTShirt.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productCustomTShirt.Id,
+                     ProductId2 = productObeyHat.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productDigitalStorm.Id,
+                     ProductId2 = productBuildComputer.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productDigitalStorm.Id,
+                     ProductId2 = productLenovoIdeaCentre.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productDigitalStorm.Id,
+                     ProductId2 = productLenovoThinkpad.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productDigitalStorm.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
+                },
+
+                
+                new RelatedProduct
+                {
+                     ProductId1 = productLenovoIdeaCentre.Id,
+                     ProductId2 = productBuildComputer.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLenovoIdeaCentre.Id,
+                     ProductId2 = productDigitalStorm.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLenovoIdeaCentre.Id,
+                     ProductId2 = productLenovoThinkpad.Id,
+                },
+                new RelatedProduct
+                {
+                     ProductId1 = productLenovoIdeaCentre.Id,
+                     ProductId2 = productAppleMacBookPro.Id,
                 },
             };
             _relatedProductRepository.Insert(relatedProducts);
