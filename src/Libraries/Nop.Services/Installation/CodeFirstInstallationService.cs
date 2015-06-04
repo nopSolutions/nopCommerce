@@ -191,7 +191,7 @@ namespace Nop.Services.Installation
                 },
             };
 
-            stores.ForEach(x => _storeRepository.Insert(x));
+            _storeRepository.Insert(stores);
         }
 
         protected virtual void InstallMeasures()
@@ -228,7 +228,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            measureDimensions.ForEach(x => _measureDimensionRepository.Insert(x));
+            _measureDimensionRepository.Insert(measureDimensions);
 
             var measureWeights = new List<MeasureWeight>
             {
@@ -262,7 +262,7 @@ namespace Nop.Services.Installation
                 }
             };
 
-            measureWeights.ForEach(x => _measureWeightRepository.Insert(x));
+            _measureWeightRepository.Insert(measureWeights);
         }
 
         protected virtual void InstallTaxCategories()
@@ -295,7 +295,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 20,
                                        },
                                };
-            taxCategories.ForEach(tc => _taxCategoryRepository.Insert(tc));
+            _taxCategoryRepository.Insert(taxCategories);
 
         }
 
@@ -466,7 +466,7 @@ namespace Nop.Services.Installation
                     UpdatedOnUtc = DateTime.UtcNow,
                 },
             };
-            currencies.ForEach(c => _currencyRepository.Insert(c));
+            _currencyRepository.Insert(currencies);
         }
 
         protected virtual void InstallCountriesAndStates()
@@ -3846,7 +3846,7 @@ namespace Nop.Services.Installation
 	                                    Published = true
                                     },
                                 };
-            countries.ForEach(c => _countryRepository.Insert(c));
+            _countryRepository.Insert(countries);
         }
 
         protected virtual void InstallShippingMethods()
@@ -3872,8 +3872,7 @@ namespace Nop.Services.Installation
                                             DisplayOrder = 3
                                         }
                                 };
-            shippingMethods.ForEach(sm => _shippingMethodRepository.Insert(sm));
-
+            _shippingMethodRepository.Insert(shippingMethods);
         }
 
         protected virtual void InstallDeliveryDates()
@@ -3896,8 +3895,7 @@ namespace Nop.Services.Installation
                                             DisplayOrder = 10
                                         },
                                 };
-            deliveryDates.ForEach(dd => _deliveryDateRepository.Insert(dd));
-
+            _deliveryDateRepository.Insert(deliveryDates);
         }
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
@@ -3945,7 +3943,7 @@ namespace Nop.Services.Installation
                                     crGuests,
                                     crVendors
                                 };
-            customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
+            _customerRoleRepository.Insert(customerRoles);
 
             //admin user
             var adminUser = new Customer
@@ -4045,8 +4043,7 @@ namespace Nop.Services.Installation
                                            UseDefaultCredentials = false
                                        },
                                };
-            emailAccounts.ForEach(ea => _emailAccountRepository.Insert(ea));
-
+            _emailAccountRepository.Insert(emailAccounts);
         }
 
         protected virtual void InstallMessageTemplates()
@@ -4325,8 +4322,7 @@ namespace Nop.Services.Installation
                                            EmailAccountId = eaGeneral.Id,
                                        }
                                };
-            messageTemplates.ForEach(mt => _messageTemplateRepository.Insert(mt));
-
+            _messageTemplateRepository.Insert(messageTemplates);
         }
 
         protected virtual void InstallTopics()
@@ -4430,7 +4426,7 @@ namespace Nop.Services.Installation
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
                                };
-            topics.ForEach(t => _topicRepository.Insert(t));
+            _topicRepository.Insert(topics);
 
 
             //search engine names
@@ -4975,7 +4971,7 @@ namespace Nop.Services.Installation
                                 {
                                     ca1,
                                 };
-            checkoutAttributes.ForEach(ca => _checkoutAttributeRepository.Insert(ca));
+            _checkoutAttributeRepository.Insert(checkoutAttributes);
         }
 
         protected virtual void InstallSpecificationAttributes()
@@ -5072,8 +5068,7 @@ namespace Nop.Services.Installation
                                     sa3,
                                     sa4
                                 };
-            specificationAttributes.ForEach(sa => _specificationAttributeRepository.Insert(sa));
-
+            _specificationAttributeRepository.Insert(specificationAttributes);
         }
 
         protected virtual void InstallProductAttributes()
@@ -5113,8 +5108,7 @@ namespace Nop.Services.Installation
                     Name = "Software",
                 },
             };
-            productAttributes.ForEach(pa => _productAttributeRepository.Insert(pa));
-
+            _productAttributeRepository.Insert(productAttributes);
         }
 
         protected virtual void InstallCategories()
@@ -8828,7 +8822,7 @@ namespace Nop.Services.Installation
                      ProductId2 = productHtcOne.Id,
                 },
             };
-            relatedProducts.ForEach(rp => _relatedProductRepository.Insert(rp));
+            _relatedProductRepository.Insert(relatedProducts);
 
             #endregion
 
@@ -9048,8 +9042,7 @@ namespace Nop.Services.Installation
                                             CouponCode = "456",
                                         },
                                 };
-            discounts.ForEach(d => _discountRepository.Insert(d));
-
+            _discountRepository.Insert(discounts);
         }
 
         protected virtual void InstallBlogPosts()
@@ -9078,7 +9071,7 @@ namespace Nop.Services.Installation
                                              CreatedOnUtc = DateTime.UtcNow.AddSeconds(1),
                                         },
                                 };
-            blogPosts.ForEach(bp => _blogPostRepository.Insert(bp));
+            _blogPostRepository.Insert(blogPosts);
 
             //search engine names
             foreach (var blogPost in blogPosts)
@@ -9131,7 +9124,7 @@ namespace Nop.Services.Installation
                                     },
 
                                 };
-            news.ForEach(n => _newsItemRepository.Insert(n));
+            _newsItemRepository.Insert(news);
 
             //search engine names
             foreach (var newsItem in news)
@@ -9543,7 +9536,7 @@ namespace Nop.Services.Installation
                                                   Name = "Public store. Delete forum post"
                                               },
                                       };
-            activityLogTypes.ForEach(alt => _activityLogTypeRepository.Insert(alt));
+            _activityLogTypeRepository.Insert(activityLogTypes);
         }
 
         protected virtual void InstallProductTemplates()
@@ -9563,8 +9556,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 100
                                        },
                                };
-            productTemplates.ForEach(pt => _productTemplateRepository.Insert(pt));
-
+            _productTemplateRepository.Insert(productTemplates);
         }
 
         protected virtual void InstallCategoryTemplates()
@@ -9578,8 +9570,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            categoryTemplates.ForEach(ct => _categoryTemplateRepository.Insert(ct));
-
+            _categoryTemplateRepository.Insert(categoryTemplates);
         }
 
         protected virtual void InstallManufacturerTemplates()
@@ -9593,8 +9584,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            manufacturerTemplates.ForEach(mt => _manufacturerTemplateRepository.Insert(mt));
-
+            _manufacturerTemplateRepository.Insert(manufacturerTemplates);
         }
 
         protected virtual void InstallTopicTemplates()
@@ -9608,7 +9598,7 @@ namespace Nop.Services.Installation
                                            DisplayOrder = 1
                                        },
                                };
-            topicTemplates.ForEach(tt => _topicTemplateRepository.Insert(tt));
+            _topicTemplateRepository.Insert(topicTemplates);
         }
 
         protected virtual void InstallScheduleTasks()
@@ -9666,7 +9656,7 @@ namespace Nop.Services.Installation
                 },
             };
 
-            tasks.ForEach(x => _scheduleTaskRepository.Insert(x));
+            _scheduleTaskRepository.Insert(tasks);
         }
 
         private void AddProductTag(Product product, string tag)
