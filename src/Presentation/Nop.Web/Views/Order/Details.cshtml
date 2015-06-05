@@ -383,6 +383,7 @@
                                                <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                            </div>
                                        }
+                                       @Html.Widget("orderdetails_product_line", item.Id)
                                    </td>
                                    <td class="unit-price">
                                         <label class="td-title">@T("Order.Product(s).Price"):</label>
