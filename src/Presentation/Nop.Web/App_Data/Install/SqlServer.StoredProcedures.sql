@@ -700,7 +700,7 @@ BEGIN
 		p.[Deleted] = 0
 		AND p.Published = 1
 		AND (@StoreId = 0 or (p.LimitedToStores = 0 OR EXISTS (
-			SELECT 1 FROM [StoreMapping] sm
+			SELECT 1 FROM [StoreMapping] sm with (NOLOCK)
 			WHERE [sm].EntityId = p.Id AND [sm].EntityName = 'Product' and [sm].StoreId=@StoreId
 			)))
 	GROUP BY pt.Id
@@ -850,12 +850,6 @@ GO
 
 
 --new stored procedure
-IF EXISTS (
-		SELECT *
-		FROM sys.objects
-		WHERE object_id = OBJECT_ID(N'[DeleteGuests]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
-DROP PROCEDURE [DeleteGuests]
-GO
 CREATE PROCEDURE [dbo].[DeleteGuests]
 (
 	@OnlyWithoutShoppingCart bit = 1,
@@ -868,7 +862,7 @@ BEGIN
 	CREATE TABLE #tmp_guests (CustomerId int)
 		
 	INSERT #tmp_guests (CustomerId)
-	SELECT [Id] FROM [Customer] c
+	SELECT [Id] FROM [Customer] c with (NOLOCK)
 	WHERE
 	--created from
 	((@CreatedFromUtc is null) OR (c.[CreatedOnUtc] > @CreatedFromUtc))
@@ -877,34 +871,34 @@ BEGIN
 	((@CreatedToUtc is null) OR (c.[CreatedOnUtc] < @CreatedToUtc))
 	AND
 	--shopping cart items
-	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci inner join [Customer] on sci.[CustomerId]=c.[Id])))
+	((@OnlyWithoutShoppingCart=0) OR (NOT EXISTS(SELECT 1 FROM [ShoppingCartItem] sci with (NOLOCK) inner join [Customer] with (NOLOCK) on sci.[CustomerId]=c.[Id])))
 	AND
 	--guests only
-	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm inner join [Customer] on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
+	(EXISTS(SELECT 1 FROM [Customer_CustomerRole_Mapping] ccrm with (NOLOCK) inner join [Customer] with (NOLOCK) on ccrm.[Customer_Id]=c.[Id] inner join [CustomerRole] cr with (NOLOCK) on cr.[Id]=ccrm.[CustomerRole_Id] WHERE cr.[SystemName] = N'Guests'))
 	AND
 	--no orders
-	(NOT EXISTS(SELECT 1 FROM [Order] o inner join [Customer] on o.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [Order] o with (NOLOCK) inner join [Customer] with (NOLOCK) on o.[CustomerId]=c.[Id]))
 	AND
 	--no blog comments
-	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc inner join [Customer] on bc.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [BlogComment] bc with (NOLOCK) inner join [Customer] with (NOLOCK) on bc.[CustomerId]=c.[Id]))
 	AND
 	--no news comments
-	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc inner join [Customer] on nc.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [NewsComment] nc  with (NOLOCK)inner join [Customer] with (NOLOCK) on nc.[CustomerId]=c.[Id]))
 	AND
 	--no product reviews
-	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr inner join [Customer] on pr.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [ProductReview] pr with (NOLOCK) inner join [Customer] with (NOLOCK) on pr.[CustomerId]=c.[Id]))
 	AND
 	--no product reviews helpfulness
-	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh inner join [Customer] on prh.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [ProductReviewHelpfulness] prh with (NOLOCK) inner join [Customer] with (NOLOCK) on prh.[CustomerId]=c.[Id]))
 	AND
 	--no poll voting
-	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr inner join [Customer] on pvr.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [PollVotingRecord] pvr with (NOLOCK) inner join [Customer] with (NOLOCK) on pvr.[CustomerId]=c.[Id]))
 	AND
 	--no forum topics 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft inner join [Customer] on ft.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [Forums_Topic] ft with (NOLOCK) inner join [Customer] with (NOLOCK) on ft.[CustomerId]=c.[Id]))
 	AND
 	--no forum posts 
-	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp inner join [Customer] on fp.[CustomerId]=c.[Id]))
+	(NOT EXISTS(SELECT 1 FROM [Forums_Post] fp with (NOLOCK) inner join [Customer] with (NOLOCK) on fp.[CustomerId]=c.[Id]))
 	AND
 	--no system accounts
 	(c.IsSystemAccount = 0)
