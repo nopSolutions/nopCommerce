@@ -50,7 +50,6 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual SpecificationAttributeOption SpecificationAttributeOption { get; set; }
 
-
         /// <summary>
         /// Gets the attribute control type
         /// </summary>

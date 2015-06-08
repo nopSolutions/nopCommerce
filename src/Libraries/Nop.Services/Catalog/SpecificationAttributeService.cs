@@ -283,21 +283,11 @@ namespace Nop.Services.Catalog
         /// Gets a product specification attribute mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product specification attribute mapping collection</returns>
-        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId)
-        {
-            return GetProductSpecificationAttributesByProductId(productId, null, null);
-        }
-
-        /// <summary>
-        /// Gets a product specification attribute mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId, 
-            bool? allowFiltering, bool? showOnProductPage)
+        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
+            bool? allowFiltering = null, bool? showOnProductPage = null)
         {
             string allowFilteringCacheStr = "null";
             if (allowFiltering.HasValue)
@@ -367,6 +357,23 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productSpecificationAttribute);
+        }
+
+        /// <summary>
+        /// Gets a count of product specification attribute mapping records
+        /// </summary>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="specificationAttributeOptionId">The specification attribute option identifier; 0 to load all records</param>
+        /// <returns>Count</returns>
+        public virtual int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeOptionId = 0)
+        {
+            var query = _productSpecificationAttributeRepository.Table;
+            if (productId > 0)
+                query = query.Where(psa => psa.ProductId == productId);
+            if (specificationAttributeOptionId > 0)
+                query = query.Where(psa => psa.SpecificationAttributeOptionId == specificationAttributeOptionId);
+
+            return query.Count();
         }
 
         #endregion

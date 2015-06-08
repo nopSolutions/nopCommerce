@@ -101,18 +101,11 @@ namespace Nop.Services.Catalog
         /// Gets a product specification attribute mapping collection
         /// </summary>
         /// <param name="productId">Product identifier</param>
-        /// <returns>Product specification attribute mapping collection</returns>
-        IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId);
-
-        /// <summary>
-        /// Gets a product specification attribute mapping collection
-        /// </summary>
-        /// <param name="productId">Product identifier</param>
         /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
         /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
         IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
-            bool? allowFiltering, bool? showOnProductPage);
+            bool? allowFiltering = null, bool? showOnProductPage = null);
 
         /// <summary>
         /// Gets a product specification attribute mapping 
@@ -132,6 +125,14 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productSpecificationAttribute">Product specification attribute mapping</param>
         void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
+
+        /// <summary>
+        /// Gets a count of product specification attribute mapping records
+        /// </summary>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="specificationAttributeOptionId">The specification attribute option identifier; 0 to load all records</param>
+        /// <returns>Count</returns>
+        int GetProductSpecificationAttributeCount(int productId = 0, int specificationAttributeOptionId = 0);
 
         #endregion
     }

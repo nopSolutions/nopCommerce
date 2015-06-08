@@ -512,8 +512,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
-                .ForMember(dest => dest.SpecificationAttribute, mo => mo.Ignore())
-                .ForMember(dest => dest.ProductSpecificationAttributes, mo => mo.Ignore());
+                .ForMember(dest => dest.SpecificationAttribute, mo => mo.Ignore());
             //checkout attributes
             Mapper.CreateMap<CheckoutAttribute, CheckoutAttributeModel>()
                 .ForMember(dest => dest.AvailableTaxCategories, mo => mo.Ignore())

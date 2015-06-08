@@ -29,14 +29,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the specification attribute
         /// </summary>
         public virtual SpecificationAttribute SpecificationAttribute { get; set; }
-
-        /// <summary>
-        /// Gets or sets the product specification attribute
-        /// </summary>
-        public virtual ICollection<ProductSpecificationAttribute> ProductSpecificationAttributes
-        {
-            get { return _productSpecificationAttributes ?? (_productSpecificationAttributes = new List<ProductSpecificationAttribute>()); }
-            protected set { _productSpecificationAttributes = value; }
-        }
     }
 }

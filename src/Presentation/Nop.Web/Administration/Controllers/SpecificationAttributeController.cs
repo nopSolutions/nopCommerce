@@ -238,8 +238,9 @@ namespace Nop.Admin.Controllers
                 Data = options.Select(x => 
                     {
                         var model = x.ToModel();
-                        //in order to save performance to do not check whether a product isn't deleted
-                        model.NumberOfAssociatedProducts = x.ProductSpecificationAttributes.Count;
+                        //in order to save performance to do not check whether a product is deleted, etc
+                        model.NumberOfAssociatedProducts = _specificationAttributeService
+                            .GetProductSpecificationAttributeCount(0, x.Id);
                         //locales
                         //AddLocales(_languageService, model.Locales, (locale, languageId) =>
                         //{

@@ -14,7 +14,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Ignore(psa => psa.AttributeType);
 
             this.HasRequired(psa => psa.SpecificationAttributeOption)
-                .WithMany(sao => sao.ProductSpecificationAttributes)
+                .WithMany()
                 .HasForeignKey(psa => psa.SpecificationAttributeOptionId);
 
 
