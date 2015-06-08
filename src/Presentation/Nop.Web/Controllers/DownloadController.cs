@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Catalog;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
 
@@ -14,16 +15,21 @@ namespace Nop.Web.Controllers
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
-
+        private readonly ILocalizationService _localizationService;
         private readonly CustomerSettings _customerSettings;
 
-        public DownloadController(IDownloadService downloadService, IProductService productService,
-            IOrderService orderService, IWorkContext workContext, CustomerSettings customerSettings)
+        public DownloadController(IDownloadService downloadService,
+            IProductService productService,
+            IOrderService orderService,
+            IWorkContext workContext,
+            ILocalizationService localizationService,
+            CustomerSettings customerSettings)
         {
             this._downloadService = downloadService;
             this._productService = productService;
             this._orderService = orderService;
             this._workContext = workContext;
+            this._localizationService = localizationService;
             this._customerSettings = customerSettings;
         }
         
@@ -83,7 +89,7 @@ namespace Nop.Web.Controllers
 
 
             if (!product.UnlimitedDownloads && orderItem.DownloadCount >= product.MaxNumberOfDownloads)
-                return Content(string.Format("You have reached maximum number of downloads {0}", product.MaxNumberOfDownloads));
+                return Content(string.Format(_localizationService.GetResource("DownloadableProducts.ReachedMaximumNumber"), product.MaxNumberOfDownloads));
             
 
             if (download.UseDownloadUrl)

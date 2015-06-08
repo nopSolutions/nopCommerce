@@ -845,6 +845,9 @@ set @resources='
   <LocaleResource Name="AboutUs">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="DownloadableProducts.ReachedMaximumNumber">
+    <Value>You have reached maximum number of downloads {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
