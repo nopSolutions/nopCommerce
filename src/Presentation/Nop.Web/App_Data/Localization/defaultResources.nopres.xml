@@ -13410,6 +13410,12 @@
   <LocaleResource Name="Products.ProductAttributes.PriceAdjustment">
     <Value>{0} [{1}]</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToCompareList">
+    <Value>The product has been added to your product comparison</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToCompareList.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">product comparison</a>]]></Value>
+  </LocaleResource>
   <LocaleResource Name="Products.ProductHasBeenAddedToTheCart">
     <Value>The product has been added to your shopping cart</Value>
   </LocaleResource>

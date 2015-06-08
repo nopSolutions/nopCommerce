@@ -852,6 +852,7 @@ namespace Nop.Web.Controllers
                                                    "/checkout/paymentmethod",
                                                    "/clearcomparelist",
                                                    "/compareproducts",
+                                                   "/compareproducts/add/*",
                                                    "/customer/avatar",
                                                    "/customer/activation",
                                                    "/customer/addresses",

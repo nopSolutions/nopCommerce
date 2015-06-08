@@ -15,10 +15,11 @@
     }
     else
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
+        addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity });
     }
 
-    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity, });
+    var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
@@ -83,11 +84,11 @@
                 }
                 @if (!Model.ProductPrice.DisableAddToCompareListButton)
                 {
-                    <input type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="setLocation('@Url.RouteUrl("AddProductToCompare", new { productId = Model.Id })')" />
+                    <input type="button" value="@T("ShoppingCart.AddToCompareList")" title="@T("ShoppingCart.AddToCompareList")" class="button-2 add-to-compare-list-button" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink');return false;" />
                 }
                 @if (!Model.ProductPrice.DisableWishlistButton)
                 {
-                    <input type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" data-productid="@Model.Id" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
+                    <input type="button" value="@T("ShoppingCart.AddToWishlist")" title="@T("ShoppingCart.AddToWishlist")" class="button-2 add-to-wishlist-button" onclick="AjaxCart.addproducttocart_catalog('@addtowishlistlink');return false;" />
                 }
             </div>
             @Html.Widget("productbox_addinfo_after", Model.Id)

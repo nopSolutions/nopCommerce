@@ -854,6 +854,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.BillingCountry.Hint">
     <Value>Filter by order billing country.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToCompareList">
+    <Value>The product has been added to your product comparison</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToCompareList.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">product comparison</a>]]></Value>
+  </LocaleResource>
 </Language>
 '
 

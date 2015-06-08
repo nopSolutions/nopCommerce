@@ -57,7 +57,24 @@ var AjaxCart = {
             error: this.ajaxFailure
         });
     },
-    
+
+    //add a product to compare list
+    addproducttocomparelist: function (urladd) {
+        if (this.loadWaiting != false) {
+            return;
+        }
+        this.setLoadWaiting(true);
+
+        $.ajax({
+            cache: false,
+            url: urladd,
+            type: 'post',
+            success: this.success_process,
+            complete: this.resetLoadWaiting,
+            error: this.ajaxFailure
+        });
+    },
+
     success_process: function (response) {
         if (response.updatetopcartsectionhtml) {
             $(AjaxCart.topcartselector).html(response.updatetopcartsectionhtml);
@@ -104,6 +121,6 @@ var AjaxCart = {
     },
 
     ajaxFailure: function () {
-        alert('Failed to add the product to the cart. Please refresh the page and try one more time.');
+        alert('Failed to add the product. Please refresh the page and try one more time.');
     }
 };

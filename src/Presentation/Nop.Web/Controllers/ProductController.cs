@@ -1421,21 +1421,36 @@ namespace Nop.Web.Controllers
 
         #region Comparing products
 
+        [HttpPost]
         public ActionResult AddProductToCompareList(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published)
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
 
             if (!_catalogSettings.CompareProductsEnabled)
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    success = false,
+                    message = "Product comparison is disabled"
+                });
 
             _compareProductsService.AddProductToCompareList(productId);
 
             //activity log
             _customerActivityService.InsertActivity("PublicStore.AddToCompareList", _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
-
-            return RedirectToRoute("CompareProducts");
+            
+            return Json(new
+            {
+                success = true,
+                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToCompareList.Link"), Url.RouteUrl("CompareProducts"))
+                //use the code below (commented) if you want a customer to be automatically redirected to the compare products page
+                //redirect = Url.RouteUrl("CompareProducts"),
+            });
         }
 
         public ActionResult RemoveProductFromCompareList(int productId)
