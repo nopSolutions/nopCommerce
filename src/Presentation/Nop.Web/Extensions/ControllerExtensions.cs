@@ -35,7 +35,7 @@ namespace Nop.Web.Extensions
 
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, workContext.WorkingLanguage.Id);
             return cacheManager.Get(cacheKey, () =>
-                specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                specificationAttributeService.GetProductSpecificationAttributes(product.Id, 0, null, true)
                 .Select(psa =>
                 {
                     var m = new ProductSpecificationModel

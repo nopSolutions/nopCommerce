@@ -2373,7 +2373,7 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            var productrSpecs = _specificationAttributeService.GetProductSpecificationAttributesByProductId(productId);
+            var productrSpecs = _specificationAttributeService.GetProductSpecificationAttributes(productId);
 
             var productrSpecsModel = productrSpecs
                 .Select(x =>

@@ -282,25 +282,25 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product specification attribute mapping collection
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
-        /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="specificationAttributeOptionId">Specification attribute option identifier; 0 to load all records</param>
+        /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 1 to load attributes with AllowFiltering set to true, null to load all attributes</param>
+        /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 1 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
-            bool? allowFiltering = null, bool? showOnProductPage = null)
+        public virtual IList<ProductSpecificationAttribute> GetProductSpecificationAttributes(int productId = 0,
+            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null)
         {
-            string allowFilteringCacheStr = "null";
-            if (allowFiltering.HasValue)
-                allowFilteringCacheStr = allowFiltering.ToString();
-            string showOnProductPageCacheStr = "null";
-            if (showOnProductPage.HasValue)
-                showOnProductPageCacheStr = showOnProductPage.ToString();
+            string allowFilteringCacheStr = allowFiltering.HasValue ? allowFiltering.ToString() : "null";
+            string showOnProductPageCacheStr = showOnProductPage.HasValue ? showOnProductPage.ToString() : "null";
             string key = string.Format(PRODUCTSPECIFICATIONATTRIBUTE_ALLBYPRODUCTID_KEY, productId, allowFilteringCacheStr, showOnProductPageCacheStr);
             
             return _cacheManager.Get(key, () =>
             {
                 var query = _productSpecificationAttributeRepository.Table;
-                query = query.Where(psa => psa.ProductId == productId);
+                if (productId > 0)
+                    query = query.Where(psa => psa.ProductId == productId);
+                if (specificationAttributeOptionId > 0)
+                    query = query.Where(psa => psa.SpecificationAttributeOptionId == specificationAttributeOptionId);
                 if (allowFiltering.HasValue)
                     query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);
                 if (showOnProductPage.HasValue)

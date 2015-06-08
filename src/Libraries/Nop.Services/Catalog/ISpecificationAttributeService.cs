@@ -100,12 +100,13 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product specification attribute mapping collection
         /// </summary>
-        /// <param name="productId">Product identifier</param>
-        /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 0 to load attributes with AllowFiltering set to true, null to load all attributes</param>
-        /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 0 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
+        /// <param name="productId">Product identifier; 0 to load all records</param>
+        /// <param name="specificationAttributeOptionId">Specification attribute option identifier; 0 to load all records</param>
+        /// <param name="allowFiltering">0 to load attributes with AllowFiltering set to false, 1 to load attributes with AllowFiltering set to true, null to load all attributes</param>
+        /// <param name="showOnProductPage">0 to load attributes with ShowOnProductPage set to false, 1 to load attributes with ShowOnProductPage set to true, null to load all attributes</param>
         /// <returns>Product specification attribute mapping collection</returns>
-        IList<ProductSpecificationAttribute> GetProductSpecificationAttributesByProductId(int productId,
-            bool? allowFiltering = null, bool? showOnProductPage = null);
+        IList<ProductSpecificationAttribute> GetProductSpecificationAttributes(int productId = 0,
+            int specificationAttributeOptionId = 0, bool? allowFiltering = null, bool? showOnProductPage = null);
 
         /// <summary>
         /// Gets a product specification attribute mapping 
