@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Nop.Core.Domain.Localization;
+﻿using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -8,8 +7,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class SpecificationAttributeOption : BaseEntity, ILocalizedEntity
     {
-        private ICollection<ProductSpecificationAttribute> _productSpecificationAttributes;
-
         /// <summary>
         /// Gets or sets the specification attribute identifier
         /// </summary>
