@@ -8931,6 +8931,12 @@
   <LocaleResource Name="Admin.Orders.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingCountry.Hint">
+    <Value>Filter by order billing country.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.CustomerEmail">
     <Value>Billing email address</Value>
   </LocaleResource>

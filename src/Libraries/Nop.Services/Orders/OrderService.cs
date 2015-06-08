@@ -144,6 +144,7 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; 0 to load all orders</param>
         /// <param name="productId">Product identifier which was purchased in an order; 0 to load all orders</param>
         /// <param name="affiliateId">Affiliate identifier; 0 to load all orders</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="warehouseId">Warehouse identifier, only orders with products from a specified warehouse will be loaded; 0 to load all orders</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
@@ -160,7 +161,7 @@ namespace Nop.Services.Orders
         public virtual IPagedList<Order> SearchOrders(int storeId = 0,
             int vendorId = 0, int customerId = 0,
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
-            string paymentMethodSystemName = null,
+            int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             string billingEmail = null, string orderNotes = null, string orderGuid = null,
@@ -214,6 +215,8 @@ namespace Nop.Services.Orders
                         orderItem.Product.WarehouseId == warehouseId))
                         );
             }
+            if (billingCountryId > 0)
+                query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (!String.IsNullOrEmpty(paymentMethodSystemName))
                 query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
             if (affiliateId > 0)

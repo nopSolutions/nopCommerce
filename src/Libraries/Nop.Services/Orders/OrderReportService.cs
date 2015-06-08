@@ -117,6 +117,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="os">Order status</param>
@@ -129,7 +130,8 @@ namespace Nop.Services.Orders
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(int storeId = 0,
-            int vendorId = 0, int orderId = 0, string paymentMethodSystemName = null,
+            int vendorId = 0, int billingCountryId = 0, 
+            int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, bool ignoreCancelledOrders = false, string orderNotes = null)
@@ -158,6 +160,8 @@ namespace Nop.Services.Orders
                     .Where(o => o.OrderItems
                     .Any(orderItem => orderItem.Product.VendorId == vendorId));
             }
+            if (billingCountryId > 0)
+                query = query.Where(o => o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId);
             if (ignoreCancelledOrders)
             {
                 var cancelledOrderStatusId = (int)OrderStatus.Cancelled;
@@ -465,6 +469,7 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier; pass 0 to ignore this parameter</param>
         /// <param name="vendorId">Vendor identifier; pass 0 to ignore this parameter</param>
         /// <param name="orderId">Order identifier; pass 0 to ignore this parameter</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all orders</param>
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
@@ -475,7 +480,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
-            int orderId = 0, string paymentMethodSystemName = null,
+            int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
             string billingEmail = null, string orderNotes = null)
@@ -501,6 +506,7 @@ namespace Nop.Services.Orders
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                         where (storeId == 0 || storeId == o.StoreId) &&
                               (orderId == 0 || orderId == o.Id) &&
+                              (billingCountryId ==0 || (o.BillingAddress != null && o.BillingAddress.CountryId == billingCountryId)) &&
                               (dontSearchPaymentMethods || paymentMethodSystemName == o.PaymentMethodSystemName) &&
                               (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
                               (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
@@ -519,7 +525,8 @@ namespace Nop.Services.Orders
 
             var reportSummary = GetOrderAverageReportLine(
                 storeId: storeId,
-                vendorId:vendorId, 
+                vendorId: vendorId,
+                billingCountryId: billingCountryId,
                 orderId: orderId,
                 paymentMethodSystemName: paymentMethodSystemName,
                 os: os, 

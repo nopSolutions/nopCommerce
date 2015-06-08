@@ -854,6 +854,13 @@ namespace Nop.Admin.Controllers
             foreach (var pm in _paymentService.LoadAllPaymentMethods())
                 model.AvailablePaymentMethods.Add(new SelectListItem { Text = pm.PluginDescriptor.FriendlyName, Value = pm.PluginDescriptor.SystemName });
 
+            //billing countries
+            foreach (var c in _countryService.GetAllCountriesForBilling(true))
+            {
+                model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+            }
+            model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
             //a vendor should have access only to orders with his products
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
@@ -892,6 +899,7 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
+                billingCountryId: model.BillingCountryId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue, 
                 createdToUtc: endDateValue,
@@ -925,9 +933,11 @@ namespace Nop.Admin.Controllers
             };
 
             //summary report
+            //currently we do not support productId and warehouseId parameters for this report
             var reportSummary = _orderReportService.GetOrderAverageReportLine(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                billingCountryId: model.BillingCountryId,
                 orderId: 0,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 os: orderStatus,
@@ -940,6 +950,7 @@ namespace Nop.Admin.Controllers
             var profit = _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
+                billingCountryId: model.BillingCountryId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 os: orderStatus,
                 ps: paymentStatus, 
@@ -1042,6 +1053,7 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
+                billingCountryId: model.BillingCountryId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -1119,6 +1131,7 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
+                billingCountryId: model.BillingCountryId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
@@ -1638,6 +1651,7 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 productId: filterByProductId,
                 warehouseId: model.WarehouseId,
+                billingCountryId: model.BillingCountryId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,

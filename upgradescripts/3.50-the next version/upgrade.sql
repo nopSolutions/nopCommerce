@@ -848,6 +848,12 @@ set @resources='
   <LocaleResource Name="DownloadableProducts.ReachedMaximumNumber">
     <Value>You have reached maximum number of downloads {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingCountry.Hint">
+    <Value>Filter by order billing country.</Value>
+  </LocaleResource>
 </Language>
 '
 

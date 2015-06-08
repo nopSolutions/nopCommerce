@@ -101,6 +101,14 @@
                 @Html.DropDownList("WarehouseId", Model.AvailableWarehouses)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BillingCountryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("BillingCountryId", Model.AvailableCountries)
+            </td>
+        </tr>
         <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PaymentMethodSystemName):
@@ -379,6 +387,7 @@
                             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
+                            BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                             PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                             ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
                             OrderNotes: $('#@Html.FieldIdFor(model => model.OrderNotes)').val(),
