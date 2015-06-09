@@ -315,12 +315,30 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="rootCategoryId">Root category identifier</param>
         /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
+        /// <param name="allCategories">All available categories; pass null to load them internally</param>
         /// <returns>Category models</returns>
         [NonAction]
-        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
+        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
+            bool loadSubCategories = true,IList<Category> allCategories = null)
         {
             var result = new List<CategorySimpleModel>();
-            foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
+
+            //little hack for performance optimization.
+            //we know that this method is used to load top and left menu for categories.
+            //it'll load all categories anyway.
+            //so there's no need to invoke "GetAllCategoriesByParentCategoryId" multiple times (extra SQL commands) to load childs
+            //so we load all categories at once
+            //if you don't like this implementation if you can uncomment the line below (old behavior) and comment several next lines (before foreach)
+            //var categories = _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId);
+            if (allCategories == null)
+            {
+                //load categories if null passed
+                //we implemeneted it this way for performance optimization - recursive iterations (below)
+                //this way all categories are loaded only once
+                allCategories = _categoryService.GetAllCategories();
+            }
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
+            foreach (var category in categories)
             {
                 var categoryModel = new CategorySimpleModel
                 {
@@ -350,7 +368,7 @@ namespace Nop.Web.Controllers
 
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories, allCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
