@@ -648,8 +648,7 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-               .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_PAGE_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -714,8 +713,7 @@ namespace Nop.Web.Controllers
             if (!_commonSettings.SitemapEnabled)
                 return RedirectToRoute("HomePage");
 
-             var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-               .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
             string cacheKey = string.Format(ModelCacheEventConsumer.SITEMAP_SEO_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var siteMap = _cacheManager.Get(cacheKey, () => _sitemapGenerator.Generate(this.Url));
             return Content(siteMap, "text/xml");

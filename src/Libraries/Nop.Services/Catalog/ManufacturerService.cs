@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 
 namespace Nop.Services.Catalog
@@ -152,8 +153,7 @@ namespace Nop.Services.Catalog
                 if (!_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
-                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                        .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                    var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     query = from m in query
                             join acl in _aclRepository.Table
                             on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into m_acl
@@ -298,8 +298,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                            .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table
@@ -363,8 +362,7 @@ namespace Nop.Services.Catalog
                     if (!_catalogSettings.IgnoreAcl)
                     {
                         //ACL (access control list)
-                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                            .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                         query = from pm in query
                                 join m in _manufacturerRepository.Table on pm.ManufacturerId equals m.Id
                                 join acl in _aclRepository.Table

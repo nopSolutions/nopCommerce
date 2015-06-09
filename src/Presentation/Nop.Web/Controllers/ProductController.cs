@@ -197,10 +197,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active)
-                .Select(cr => cr.Id)
-                .ToList();
+            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
 
             #region Standard properties
 

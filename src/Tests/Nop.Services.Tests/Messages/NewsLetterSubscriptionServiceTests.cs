@@ -11,7 +11,7 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Messages 
 {
     [TestFixture]
-    public class NewsLetterSubscriptionServiceTests
+    public class NewsLetterSubscriptionServiceTests : ServiceTest
     {
         private IEventPublisher _eventPublisher;
         private IRepository<NewsLetterSubscription> _newsLetterSubscriptionRepository;

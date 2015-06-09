@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
@@ -258,6 +259,25 @@ namespace Nop.Services.Customers
                 return true;
 
             return false;
+        }
+
+        /// <summary>
+        /// Get customer role identifiers
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="showHidden">A value indicating whether to load hidden records</param>
+        /// <returns>Customer role identifiers</returns>
+        public static int[] GetCustomerRoleIds(this Customer customer, bool showHidden = false)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var customerRolesIds = customer.CustomerRoles
+               .Where(cr => showHidden || cr.Active)
+               .Select(cr => cr.Id)
+               .ToArray();
+
+            return customerRolesIds;
         }
     }
 }

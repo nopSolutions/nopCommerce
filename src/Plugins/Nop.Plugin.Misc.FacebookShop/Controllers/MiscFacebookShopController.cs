@@ -9,6 +9,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Misc.FacebookShop.Infrastructure.Cache;
 using Nop.Plugin.Misc.FacebookShop.Models;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
@@ -413,8 +414,7 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
         public ActionResult CategoryNavigation()
         {
-            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                   .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
                 string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0, null, 0, true).ToList());

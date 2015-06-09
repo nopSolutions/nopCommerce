@@ -9,6 +9,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog.Cache;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 
 namespace Nop.Services.Catalog
@@ -309,8 +310,8 @@ namespace Nop.Services.Catalog
                 product.Id, 
                 additionalCharge.ToString(CultureInfo.InvariantCulture),
                 includeDiscounts, 
-                quantity, 
-                string.Join(",", customer.CustomerRoles.Where(cr => cr.Active).Select(cr => cr.Id).ToList()),
+                quantity,
+                string.Join(",", customer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
             var cacheTime = _catalogSettings.CacheProductPrices ? 60 : 0;
             //we do not cache price for rental products

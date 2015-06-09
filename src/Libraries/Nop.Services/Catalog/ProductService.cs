@@ -13,6 +13,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Data;
+using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -296,8 +297,7 @@ namespace Nop.Services.Catalog
             if (!_catalogSettings.IgnoreAcl)
             {
                 //Access control list. Allowed customer roles
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+                var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
 
                 query = from p in query
                         join acl in _aclRepository.Table
@@ -467,8 +467,7 @@ namespace Nop.Services.Catalog
                 categoryIds.Remove(0);
 
             //Access control list. Allowed customer roles
-            var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
 
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
@@ -493,15 +492,7 @@ namespace Nop.Services.Catalog
 
 
                 //pass customer role identifiers as comma-delimited string
-                string commaSeparatedAllowedCustomerRoleIds = "";
-                for (int i = 0; i < allowedCustomerRolesIds.Count; i++)
-                {
-                    commaSeparatedAllowedCustomerRoleIds += allowedCustomerRolesIds[i].ToString();
-                    if (i != allowedCustomerRolesIds.Count - 1)
-                    {
-                        commaSeparatedAllowedCustomerRoleIds += ",";
-                    }
-                }
+                string commaSeparatedAllowedCustomerRoleIds = string.Join(",", allowedCustomerRolesIds);
 
 
                 //pass specification identifiers as comma-delimited string
