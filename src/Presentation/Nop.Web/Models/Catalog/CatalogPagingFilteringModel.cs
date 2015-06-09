@@ -259,17 +259,10 @@ namespace Nop.Web.Models.Catalog
             
             protected virtual string GenerateFilteredSpecQueryParam(IList<int> optionIds)
             {
-                string result = "";
+                if (optionIds == null)
+                    return "";
 
-                if (optionIds == null || optionIds.Count == 0)
-                    return result;
-
-                for (int i = 0; i < optionIds.Count; i++)
-                {
-                    result += optionIds[i];
-                    if (i != optionIds.Count - 1)
-                        result += ",";
-                }
+                string result = string.Join(",", optionIds);
                 return result;
             }
 

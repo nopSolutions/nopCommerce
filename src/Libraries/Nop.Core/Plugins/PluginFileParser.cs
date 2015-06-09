@@ -164,13 +164,7 @@ namespace Nop.Core.Plugins
             keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
             if (plugin.LimitedToStores.Count > 0)
             {
-                var storeList = "";
-                for (int i = 0; i < plugin.LimitedToStores.Count; i++)
-                {
-                    storeList += plugin.LimitedToStores[i];
-                    if (i != plugin.LimitedToStores.Count - 1)
-                        storeList += ",";
-                }
+                var storeList = string.Join(",", plugin.LimitedToStores);
                 keyValues.Add(new KeyValuePair<string, string>("LimitedToStores", storeList));
             }
 

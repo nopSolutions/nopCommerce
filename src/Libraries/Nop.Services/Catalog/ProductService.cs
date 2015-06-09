@@ -477,18 +477,7 @@ namespace Nop.Services.Catalog
                 #region Use stored procedure
                 
                 //pass category identifiers as comma-delimited string
-                string commaSeparatedCategoryIds = "";
-                if (categoryIds != null)
-                {
-                    for (int i = 0; i < categoryIds.Count; i++)
-                    {
-                        commaSeparatedCategoryIds += categoryIds[i].ToString();
-                        if (i != categoryIds.Count - 1)
-                        {
-                            commaSeparatedCategoryIds += ",";
-                        }
-                    }
-                }
+                string commaSeparatedCategoryIds = categoryIds == null ? "" : string.Join(",", categoryIds);
 
 
                 //pass customer role identifiers as comma-delimited string
@@ -500,14 +489,7 @@ namespace Nop.Services.Catalog
                 if (filteredSpecs != null)
                 {
                     ((List<int>)filteredSpecs).Sort();
-                    for (int i = 0; i < filteredSpecs.Count; i++)
-                    {
-                        commaSeparatedSpecIds += filteredSpecs[i].ToString();
-                        if (i != filteredSpecs.Count - 1)
-                        {
-                            commaSeparatedSpecIds += ",";
-                        }
-                    }
+                    commaSeparatedSpecIds = string.Join(",", filteredSpecs);
                 }
 
                 //some databases don't support int.MaxValue
