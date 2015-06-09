@@ -757,7 +757,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumBackInStockSubscriptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DisplayTierPricesWithDiscounts, mo => mo.Ignore())
-                .ForMember(dest => dest.LoadAllSideCategoryMenuSubcategories, mo => mo.Ignore())
                 .ForMember(dest => dest.CompareProductsNumber, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultCategoryPageSizeOptions, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultCategoryPageSize, mo => mo.Ignore())

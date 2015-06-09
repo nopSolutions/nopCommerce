@@ -176,9 +176,8 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : language id
         /// {1} : comma separated list of customer roles
         /// {2} : current store ID
-        /// {3} : current category id
         /// </remarks>
-        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_NAVIGATION_MODEL_KEY = "Nop.pres.category.navigation-{0}-{1}-{2}";
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "Nop.pres.category.navigation";
 
         /// <summary>

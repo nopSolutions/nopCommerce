@@ -2414,3 +2414,8 @@ BEGIN
 	DROP TABLE #tmp_guests
 END
 GO
+
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'catalogsettings.loadallsidecategorymenusubcategories'
+GO

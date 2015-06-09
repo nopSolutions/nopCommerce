@@ -314,12 +314,10 @@ namespace Nop.Web.Controllers
         /// Prepare category (simple) models
         /// </summary>
         /// <param name="rootCategoryId">Root category identifier</param>
-        /// <param name="loadSubCategoriesForIds">Load subcategories only for the specified category IDs; pass null to load subcategories for all categories</param>
-        /// <param name="level">Current level</param>
+        /// <param name="loadSubCategories">A value indicating whether subcategories should be loaded</param>
         /// <returns>Category models</returns>
         [NonAction]
-        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds)
+        protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId, bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -350,28 +348,9 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                //load subcategories?
-                bool loadSubCategories = false;
-                if (loadSubCategoriesForIds == null)
-                {
-                    //load all subcategories
-                    loadSubCategories = true;
-                }
-                else
-                {
-                    //we load subcategories only for certain categories
-                    for (int i = 0; i <= loadSubCategoriesForIds.Count - 1; i++)
-                    {
-                        if (loadSubCategoriesForIds[i] == category.Id)
-                        {
-                            loadSubCategories = true;
-                            break;
-                        }
-                    }
-                }
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategories);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -633,21 +612,8 @@ namespace Nop.Web.Controllers
             string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
-                _storeContext.CurrentStore.Id, 
-                activeCategoryId);
-            var cachedModel = _cacheManager.Get(cacheKey, () =>
-            {
-                if (_catalogSettings.LoadAllSideCategoryMenuSubcategories)
-                {
-                    return PrepareCategorySimpleModels(0, null).ToList();
-                }
-
-                var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
-                var breadCrumb = activeCategory != null 
-                    ? activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService).Select(x => x.Id).ToList()
-                    : new List<int>();
-                return PrepareCategorySimpleModels(0, breadCrumb).ToList();
-            });
+                _storeContext.CurrentStore.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0).ToList());
 
             var model = new CategoryNavigationModel
             {
@@ -666,10 +632,7 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
-            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
-                PrepareCategorySimpleModels(0, null)
-                .ToList()
-            );
+            var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () => PrepareCategorySimpleModels(0));
 
             //top menu topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_TOP_MENU_MODEL_KEY, 

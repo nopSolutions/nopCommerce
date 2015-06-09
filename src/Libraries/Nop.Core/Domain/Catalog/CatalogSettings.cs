@@ -263,12 +263,6 @@ namespace Nop.Core.Domain.Catalog
         public int MaximumBackInStockSubscriptions { get; set; }
 
         /// <summary>
-        /// Gets or sets the value indicating whether we should load all subcategories in the left menu with categories.
-        /// It can be used by third-party theme developers.
-        /// </summary>
-        public bool LoadAllSideCategoryMenuSubcategories { get; set; }
-
-        /// <summary>
         /// Gets or sets the value indicating how many manufacturers to display in manufacturers block
         /// </summary>
         public int ManufacturersBlockItemsToDisplay { get; set; }
