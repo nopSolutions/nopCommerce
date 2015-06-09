@@ -319,7 +319,7 @@ namespace Nop.Web.Controllers
         /// <returns>Category models</returns>
         [NonAction]
         protected virtual IList<CategorySimpleModel> PrepareCategorySimpleModels(int rootCategoryId,
-            IList<int> loadSubCategoriesForIds, int level)
+            IList<int> loadSubCategoriesForIds)
         {
             var result = new List<CategorySimpleModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -371,7 +371,7 @@ namespace Nop.Web.Controllers
                 }
                 if (loadSubCategories)
                 {
-                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds, level + 1);
+                    var subCategories = PrepareCategorySimpleModels(category.Id, loadSubCategoriesForIds);
                     categoryModel.SubCategories.AddRange(subCategories);
                 }
                 result.Add(categoryModel);
@@ -639,14 +639,14 @@ namespace Nop.Web.Controllers
             {
                 if (_catalogSettings.LoadAllSideCategoryMenuSubcategories)
                 {
-                    return PrepareCategorySimpleModels(0, null, 0).ToList();
+                    return PrepareCategorySimpleModels(0, null).ToList();
                 }
 
                 var activeCategory = _categoryService.GetCategoryById(activeCategoryId);
                 var breadCrumb = activeCategory != null 
                     ? activeCategory.GetCategoryBreadCrumb(_categoryService, _aclService, _storeMappingService).Select(x => x.Id).ToList()
                     : new List<int>();
-                return PrepareCategorySimpleModels(0, breadCrumb, 0).ToList();
+                return PrepareCategorySimpleModels(0, breadCrumb).ToList();
             });
 
             var model = new CategoryNavigationModel
@@ -667,7 +667,7 @@ namespace Nop.Web.Controllers
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
-                PrepareCategorySimpleModels(0, null, 0)
+                PrepareCategorySimpleModels(0, null)
                 .ToList()
             );
 
