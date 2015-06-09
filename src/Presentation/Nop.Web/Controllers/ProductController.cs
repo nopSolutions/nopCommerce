@@ -197,8 +197,6 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentNullException("product");
 
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-
             #region Standard properties
 
             var model = new ProductDetailsModel
@@ -303,7 +301,11 @@ namespace Nop.Web.Controllers
             //do not prepare this model for the associated products. anyway it's not used
             if (_catalogSettings.CategoryBreadcrumbEnabled && !isAssociatedProduct)
             {
-                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                var breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY,
+                    product.Id,
+                    _workContext.WorkingLanguage.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
                 model.Breadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
                 {
                     var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel
@@ -799,7 +801,11 @@ namespace Nop.Web.Controllers
             //do not prepare this model for the associated products. any it's not used
             if (!isAssociatedProduct)
             {
-                string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                string manufacturersCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, 
+                    product.Id, 
+                    _workContext.WorkingLanguage.Id,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
                 model.ProductManufacturers = _cacheManager.Get(manufacturersCacheKey, () =>
                     _manufacturerService.GetProductManufacturersByProductId(product.Id)
                     .Select(x => x.Manufacturer.ToModel())

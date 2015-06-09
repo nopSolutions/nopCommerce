@@ -414,9 +414,10 @@ namespace Nop.Plugin.Misc.FacebookShop.Controllers
 
         public ActionResult CategoryNavigation()
         {
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
-                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             var model = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0, null, 0, true).ToList());
 
             return PartialView("~/Plugins/Misc.FacebookShop/Views/MiscFacebookShop/CategoryNavigation.cshtml", model);

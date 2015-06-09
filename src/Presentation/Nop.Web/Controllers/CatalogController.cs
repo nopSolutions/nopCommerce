@@ -293,8 +293,10 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected virtual List<int> GetChildCategoryIds(int parentCategoryId)
         {
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, 
+                parentCategoryId, 
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                _storeContext.CurrentStore.Id);
             return _cacheManager.Get(cacheKey, () =>
             {
                 var categoriesIds = new List<int>();
@@ -333,9 +335,10 @@ namespace Nop.Web.Controllers
                 //product number for each category
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
-                    var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
                     string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NUMBER_OF_PRODUCTS_MODEL_KEY,
-                        string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id, category.Id);
+                        string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                        _storeContext.CurrentStore.Id, 
+                        category.Id);
                     categoryModel.NumberOfProducts = _cacheManager.Get(cacheKey, () =>
                     {
                         var categoryIds = new List<int>();
@@ -454,8 +457,6 @@ namespace Nop.Web.Controllers
             }
 
 
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-
             //category breadcrumb
             if (_catalogSettings.CategoryBreadcrumbEnabled)
             {
@@ -463,7 +464,7 @@ namespace Nop.Web.Controllers
 
                 string breadcrumbCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_BREADCRUMB_KEY,
                     categoryId,
-                    string.Join(",", customerRolesIds),
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                     _storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
                 model.CategoryBreadcrumb = _cacheManager.Get(breadcrumbCacheKey, () =>
@@ -486,7 +487,7 @@ namespace Nop.Web.Controllers
             //subcategories
             string subCategoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_SUBCATEGORIES_KEY,
                 categoryId,
-                string.Join(",", customerRolesIds),
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id,
                 _webHelper.IsCurrentConnectionSecured());
@@ -531,7 +532,7 @@ namespace Nop.Web.Controllers
                 //We cache a value indicating whether we have featured products
                 IPagedList<Product> featuredProducts = null;
                 string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, categoryId,
-                    string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
@@ -629,9 +630,11 @@ namespace Nop.Web.Controllers
                     activeCategoryId = productCategories[0].CategoryId;
             }
 
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, _workContext.WorkingLanguage.Id,
-                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id, activeCategoryId);
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                _storeContext.CurrentStore.Id, 
+                activeCategoryId);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
                 if (_catalogSettings.LoadAllSideCategoryMenuSubcategories)
@@ -659,9 +662,10 @@ namespace Nop.Web.Controllers
         public ActionResult TopMenu()
         {
             //categories
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY, _workContext.WorkingLanguage.Id,
-                string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            string categoryCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_MENU_MODEL_KEY,
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                _storeContext.CurrentStore.Id);
             var cachedCategoriesModel = _cacheManager.Get(categoryCacheKey, () =>
                 PrepareCategorySimpleModels(0, null, 0)
                 .ToList()
@@ -695,10 +699,8 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-
             string categoriesCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_HOMEPAGE_KEY,
-                string.Join(",", customerRolesIds), 
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id, 
                 _webHelper.IsCurrentConnectionSecured());
@@ -804,9 +806,10 @@ namespace Nop.Web.Controllers
                 IPagedList<Product> featuredProducts = null;
 
                 //We cache a value indicating whether we have featured products
-                var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, manufacturerId,
-                    string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+                string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_HAS_FEATURED_PRODUCTS_KEY, 
+                    manufacturerId,
+                    string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
                 var hasFeaturedProductsCache = _cacheManager.Get<bool?>(cacheKey);
                 if (!hasFeaturedProductsCache.HasValue)
                 {
@@ -909,8 +912,11 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.ManufacturersBlockItemsToDisplay == 0)
                 return Content("");
 
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id);
+            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, 
+                currentManufacturerId, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
+                _storeContext.CurrentStore.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -1209,8 +1215,10 @@ namespace Nop.Web.Controllers
                 _catalogSettings.SearchPageProductsPerPage);
 
 
-            var customerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
-            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds), _storeContext.CurrentStore.Id); 
+            string cacheKey = string.Format(ModelCacheEventConsumer.SEARCH_CATEGORIES_MODEL_KEY, 
+                _workContext.WorkingLanguage.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
+                _storeContext.CurrentStore.Id); 
             var categories = _cacheManager.Get(cacheKey, () =>
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
