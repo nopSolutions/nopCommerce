@@ -1590,7 +1590,7 @@ namespace Nop.Services.Orders
                 }
 
                 //Adjust inventory for already shipped shipments
-                //only products with "use mutliple warehouses"
+                //only products with "use multiple warehouses"
                 foreach (var shipment in order.Shipments)
                 {
                     foreach (var shipmentItem in shipment.ShipmentItems)
@@ -1988,7 +1988,7 @@ namespace Nop.Services.Orders
             }
 
             //Adjust inventory for already shipped shipments
-            //only products with "use mutliple warehouses"
+            //only products with "use multiple warehouses"
             foreach (var shipment in order.Shipments)
             {
                 foreach (var shipmentItem in shipment.ShipmentItems)
