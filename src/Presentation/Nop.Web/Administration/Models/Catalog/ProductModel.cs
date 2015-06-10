@@ -229,6 +229,8 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
         public int StockQuantity { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.StockQuantity")]
+        public string StockQuantityStr { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.DisplayStockAvailability")]
         public bool DisplayStockAvailability { get; set; }

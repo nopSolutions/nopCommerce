@@ -872,8 +872,12 @@ namespace Nop.Admin.Controllers
                 //picture
                 var defaultProductPicture = _pictureService.GetPicturesByProductId(x.Id, 1).FirstOrDefault();
                 productModel.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
-
+                //product type
                 productModel.ProductTypeName = x.ProductType.GetLocalizedEnum(_localizationService, _workContext);
+                //friendly stock qantity
+                //if a simple product AND "manage inventory" is "Track inventory", then display
+                if (x.ProductType == ProductType.SimpleProduct && x.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
+                    productModel.StockQuantityStr = x.GetTotalStockQuantity().ToString();
                 return productModel;
             });
             gridModel.Total = products.TotalCount;

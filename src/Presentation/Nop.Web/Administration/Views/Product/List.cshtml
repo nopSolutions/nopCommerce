@@ -191,13 +191,9 @@
                                     //if not a grouped product, then display
                                     template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct)) {# #:Price# #}  #"
                                 }, {
-                                    field: "StockQuantity",
+                                    field: "StockQuantityStr",
                                     title: "@T("Admin.Catalog.Products.Fields.StockQuantity")",
-                                    width: 100,
-                                    //if not a grouped product
-                                    //AND "manage inventory" is "Track inventory"
-                                    //then display
-                                    template: "# if(ProductTypeId != @((int)ProductType.GroupedProduct) && ManageInventoryMethodId == @((int)ManageInventoryMethod.ManageStock)) {# #:StockQuantity# #}  #"
+                                    width: 100
                                 }, {
                                     field: "ProductTypeName",
                                     title: "@T("Admin.Catalog.Products.Fields.ProductType")",
