@@ -4687,7 +4687,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new MediaSettings
                 {
                     AvatarPictureSize = 120,
-                    ProductThumbPictureSize = 340,
+                    ProductThumbPictureSize = 415,
                     ProductDetailsPictureSize = 550,
                     ProductThumbPictureSizeOnProductDetailsPage = 100,
                     AssociatedProductPictureSize = 220,

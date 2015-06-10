@@ -2220,24 +2220,33 @@ GO
 --update DefaultClean theme settings. You should remove this code if you're going to use the old theme
 IF EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstoretheme' and [Value] = N'DefaultClean')
 BEGIN
+
 	UPDATE [Setting]
-	SET [Value] = N'290'
-	WHERE [Name] = 'mediasettings.productthumbpicturesize'
+	SET [Value] = N'120'
+	WHERE [Name] = 'mediasettings.avatarpicturesize'
 	
 	UPDATE [Setting]
-	SET [Value] = N'290'
-	WHERE [Name] = 'mediasettings.associatedproductpicturesize'
+	SET [Value] = N'415'
+	WHERE [Name] = 'mediasettings.productthumbpicturesize'
 	
 	UPDATE [Setting]
 	SET [Value] = N'550'
 	WHERE [Name] = 'mediasettings.productdetailspicturesize'
 	
 	UPDATE [Setting]
-	SET [Value] = N'200'
+	SET [Value] = N'100'
+	WHERE [Name] = 'mediasettings.productthumbpicturesizeonproductdetailspage'
+	
+	UPDATE [Setting]
+	SET [Value] = N'220'
+	WHERE [Name] = 'mediasettings.associatedproductpicturesize'
+	
+	UPDATE [Setting]
+	SET [Value] = N'450'
 	WHERE [Name] = 'mediasettings.categorythumbpicturesize'
 		
 	UPDATE [Setting]
-	SET [Value] = N'200'
+	SET [Value] = N'420'
 	WHERE [Name] = 'mediasettings.manufacturerthumbpicturesize'
 		
 	UPDATE [Setting]
@@ -2247,10 +2256,6 @@ BEGIN
 	UPDATE [Setting]
 	SET [Value] = N'true'
 	WHERE [Name] = 'newssettings.shownewsonmainpage'
-	
-	UPDATE [Setting]
-	SET [Value] = N'120'
-	WHERE [Name] = 'mediasettings.avatarpicturesize'
 	
 	UPDATE [Setting]
 	SET [Value] = N'4'
