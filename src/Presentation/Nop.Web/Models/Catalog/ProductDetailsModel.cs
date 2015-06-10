@@ -263,6 +263,11 @@ namespace Nop.Web.Models.Catalog
 
         public partial class ProductAttributeValueModel : BaseNopEntityModel
         {
+            public ProductAttributeValueModel()
+            {
+                PictureModel = new PictureModel();
+            }
+
             public string Name { get; set; }
 
             public string ColorSquaresRgb { get; set; }
@@ -273,8 +278,8 @@ namespace Nop.Web.Models.Catalog
 
             public bool IsPreSelected { get; set; }
 
-            public string PictureUrl { get; set; }
-            public string FullSizePictureUrl { get; set; }
+            //picture model is used when we want to override a default product picture when some attribute is selected
+            public PictureModel PictureModel { get; set; }
         }
 
 		#endregion

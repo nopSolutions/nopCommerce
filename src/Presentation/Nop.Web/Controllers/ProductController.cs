@@ -663,11 +663,25 @@ namespace Nop.Web.Controllers
                         }
 
                         //picture
-                        var valuePicture = _pictureService.GetPictureById(attributeValue.PictureId);
-                        if (valuePicture != null)
+                        if (attributeValue.PictureId > 0)
                         {
-                            valueModel.PictureUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize);
-                            valueModel.FullSizePictureUrl = _pictureService.GetPictureUrl(valuePicture);
+                            var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
+                                attributeValue.PictureId,
+                                _webHelper.IsCurrentConnectionSecured(),
+                                _storeContext.CurrentStore.Id);
+                            valueModel.PictureModel = _cacheManager.Get(productAttributePictureCacheKey, () =>
+                            {
+                                var valuePicture = _pictureService.GetPictureById(attributeValue.PictureId);
+                                if (valuePicture != null)
+                                {
+                                    return new PictureModel
+                                    {
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(valuePicture),
+                                        ImageUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize)
+                                    };
+                                }
+                                return new PictureModel();
+                            });
                         }
                     }
                 }

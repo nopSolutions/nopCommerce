@@ -77,6 +77,8 @@ namespace Nop.Web.Infrastructure.Cache
         //Product attributes
         IConsumer<EntityInserted<ProductAttributeMapping>>,
         IConsumer<EntityDeleted<ProductAttributeMapping>>,
+        //Product attribute values
+        IConsumer<EntityUpdated<ProductAttributeValue>>,
         //Topics
         IConsumer<EntityInserted<Topic>>,
         IConsumer<EntityUpdated<Topic>>,
@@ -463,6 +465,17 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_DETAILS_PICTURES_MODEL_KEY = "Nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}-{5}";
         public const string PRODUCT_DETAILS_TPICTURES_PATTERN_KEY = "Nop.pres.product.picture";
+
+        /// <summary>
+        /// Key for product attribute picture caching on the product details page
+        /// </summary>
+        /// <remarks>
+        /// {0} : picture id
+        /// {1} : is connection SSL secured?
+        /// {2} : current store ID
+        /// </remarks>
+        public const string PRODUCTATTRIBUTE_PICTURE_MODEL_KEY = "Nop.pres.productattribute.picture-{0}-{1}-{2}";
+        public const string PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY = "Nop.pres.productattribute.picture";
 
         /// <summary>
         /// Key for category picture caching
@@ -929,6 +942,11 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductAttributeMapping> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_HAS_PRODUCT_ATTRIBUTES_PATTERN_KEY);
+        }
+        //Product attributes
+        public void HandleEvent(EntityUpdated<ProductAttributeValue> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
         }
 
         //Topics
