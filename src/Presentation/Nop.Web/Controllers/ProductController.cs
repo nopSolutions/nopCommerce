@@ -668,7 +668,6 @@ namespace Nop.Web.Controllers
                         {
                             valueModel.PictureUrl = _pictureService.GetPictureUrl(valuePicture, defaultPictureSize);
                             valueModel.FullSizePictureUrl = _pictureService.GetPictureUrl(valuePicture);
-                            valueModel.PictureId = valuePicture.Id;
                         }
                     }
                 }
