@@ -47,7 +47,8 @@ namespace Nop.Web.Framework.Kendoui
             {"gte", ">="},
             {"startswith", "StartsWith"},
             {"endswith", "EndsWith"},
-            {"contains", "Contains"}
+            {"contains", "Contains"},
+            {"doesnotcontain", "DoesNotContain"}
         };
 
         /// <summary>
@@ -104,6 +105,10 @@ namespace Nop.Web.Framework.Kendoui
             if (comparison == "Contains")
             {
                 return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) >= 0", Field, index);
+            }
+            if (comparison == "DoesNotContain")
+            {
+                return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) < 0", Field, index);
             }
             if (comparison == "=" && Value.GetType() == typeof(String))
             {
