@@ -304,6 +304,7 @@ namespace Nop.Plugin.Shipping.USPS
                 var sb = new StringBuilder();
                 // sb.AppendFormat("<IntlRateRequest USERID=\"{0}\" PASSWORD=\"{1}\">", username, password);
                 sb.AppendFormat("<IntlRateV2Request USERID=\"{0}\" PASSWORD=\"{1}\">", username, password);
+                sb.AppendFormat("<Revision>2</Revision>");
 
                 //V2 International rates require the package value to be declared.  Max content value for most shipping options is $400 so it is limited here.  
                 decimal intlSubTotal = subTotal > 400 ? 400 : subTotal;
@@ -345,6 +346,7 @@ namespace Nop.Plugin.Shipping.USPS
                     sb.AppendFormat("<Length>{0}</Length>", length);
                     sb.AppendFormat("<Height>{0}</Height>", height);
                     sb.AppendFormat("<Girth>{0}</Girth>", girth);
+                    sb.AppendFormat("<OriginZip>{0}</OriginZip>", zipPostalCodeFrom);
                     sb.Append("<CommercialFlag>N</CommercialFlag>");
                     sb.Append("</Package>");
                 }
@@ -405,6 +407,7 @@ namespace Nop.Plugin.Shipping.USPS
                         sb.AppendFormat("<Length>{0}</Length>", length2);
                         sb.AppendFormat("<Height>{0}</Height>", height2);
                         sb.AppendFormat("<Girth>{0}</Girth>", girth2);
+                        sb.AppendFormat("<OriginZip>{0}</OriginZip>", zipPostalCodeFrom);
                         sb.Append("<CommercialFlag>N</CommercialFlag>");
                         sb.Append("</Package>");
                     }
