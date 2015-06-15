@@ -7372,9 +7372,9 @@ namespace Nop.Services.Installation
             {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
-                Name = "Nike SB Zoom Stefan Janoski “Medium Mint”",
+                Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
                 ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
-                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a “Medium Mint” accents that sits atop a Dark Grey suede. Expected to drop in October.",
+                FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
