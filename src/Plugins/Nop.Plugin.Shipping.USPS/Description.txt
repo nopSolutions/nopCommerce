@@ -2,7 +2,7 @@
 FriendlyName: USPS (US Postal Service)
 SystemName: Shipping.USPS
 Version: 1.28
-SupportedVersions: 3.60
+SupportedVersions: 3.70
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Shipping.USPS.dll

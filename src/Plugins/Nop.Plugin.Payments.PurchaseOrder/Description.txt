@@ -2,7 +2,7 @@
 FriendlyName: Purchase Order
 SystemName: Payments.PurchaseOrder
 Version: 1.17
-SupportedVersions: 3.60
+SupportedVersions: 3.70
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Payments.PurchaseOrder.dll

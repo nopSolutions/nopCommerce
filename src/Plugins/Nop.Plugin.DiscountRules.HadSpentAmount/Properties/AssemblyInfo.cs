@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nop Solutions, Ltd")]
 [assembly: AssemblyProduct("Nop.Plugin.DiscountRules.HadSpentAmount")]
-[assembly: AssemblyCopyright("Copyright © Nop Solutions, Ltd 2011")]
+[assembly: AssemblyCopyright("Copyright © Nop Solutions, Ltd")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

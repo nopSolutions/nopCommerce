@@ -2,7 +2,7 @@
 FriendlyName: Canada Post
 SystemName: Shipping.CanadaPost
 Version: 1.13
-SupportedVersions: 3.60
+SupportedVersions: 3.70
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Shipping.CanadaPost.dll
