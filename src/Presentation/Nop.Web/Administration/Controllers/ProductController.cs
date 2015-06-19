@@ -2199,8 +2199,12 @@ namespace Nop.Admin.Controllers
                 DisplayOrder = displayOrder,
             });
 
-            _pictureService.UpdatePicture(picture.Id, picture.PictureBinary, picture.MimeType,
-                picture.SeoFilename, overrideAltAttribute, overrideTitleAttribute);
+            _pictureService.UpdatePicture(picture.Id,
+                _pictureService.LoadPictureBinary(picture),
+                picture.MimeType,
+                picture.SeoFilename, 
+                overrideAltAttribute, 
+                overrideTitleAttribute);
 
             _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
 
@@ -2280,8 +2284,12 @@ namespace Nop.Admin.Controllers
             if (picture == null)
                 throw new ArgumentException("No picture found with the specified id");
 
-            _pictureService.UpdatePicture(picture.Id, picture.PictureBinary, picture.MimeType,
-                picture.SeoFilename, model.OverrideAltAttribute, model.OverrideTitleAttribute);
+            _pictureService.UpdatePicture(picture.Id,
+                _pictureService.LoadPictureBinary(picture),
+                picture.MimeType,
+                picture.SeoFilename,
+                model.OverrideAltAttribute, 
+                model.OverrideTitleAttribute);
 
             return new NullJsonResult();
         }
