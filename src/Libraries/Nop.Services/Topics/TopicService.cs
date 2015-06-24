@@ -151,7 +151,7 @@ namespace Nop.Services.Topics
                                 into tGroup
                                 orderby tGroup.Key
                                 select tGroup.FirstOrDefault();
-                    query = query.OrderBy(t => t.SystemName);
+                    query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
                 }
 
                 return query.ToList();                            
