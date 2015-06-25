@@ -3122,7 +3122,7 @@ namespace Nop.Admin.Controllers
             var orderId = shipment.OrderId;
             _shipmentService.DeleteShipment(shipment);
 
-            var order = shipment.Order;
+            var order =_orderService.GetOrderById(orderId);
             //add a note
             order.OrderNotes.Add(new OrderNote
             {
