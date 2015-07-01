@@ -89,14 +89,7 @@ namespace Nop.Core.Html
                     text = StripTags(text);
                 }
 
-                if (allowHtml)
-                {
-                    text = EnsureOnlyAllowedHtml(text);
-                }
-                else
-                {
-                    text = HttpUtility.HtmlEncode(text);
-                }
+                text = allowHtml ? EnsureOnlyAllowedHtml(text) : HttpUtility.HtmlEncode(text);
 
                 if (convertPlainTextToHtml)
                 {

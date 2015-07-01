@@ -832,17 +832,12 @@ namespace Nop.Services.Forums
             {
                 query = query.Where(fp => fp.Text.Contains(keywords));
             }
-            if (ascSort)
-            {
-                query = query.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
-            }
-            else
-            {
-                query = query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
-            }
+
+            query = ascSort ?
+                query.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id) :
+                query.OrderByDescending(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id);
 
             var forumPosts = new PagedList<ForumPost>(query, pageIndex, pageSize);
-
             return forumPosts;
         }
 

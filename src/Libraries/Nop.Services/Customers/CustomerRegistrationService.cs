@@ -67,11 +67,9 @@ namespace Nop.Services.Customers
         /// <returns>Result</returns>
         public virtual CustomerLoginResults ValidateCustomer(string usernameOrEmail, string password)
         {
-            Customer customer;
-            if (_customerSettings.UsernamesEnabled)
-                customer = _customerService.GetCustomerByUsername(usernameOrEmail);
-            else
-                customer = _customerService.GetCustomerByEmail(usernameOrEmail);
+            var customer = _customerSettings.UsernamesEnabled ? 
+                _customerService.GetCustomerByUsername(usernameOrEmail) :
+                _customerService.GetCustomerByEmail(usernameOrEmail);
 
             if (customer == null)
                 return CustomerLoginResults.CustomerNotExist;

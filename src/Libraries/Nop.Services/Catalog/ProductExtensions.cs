@@ -102,16 +102,11 @@ namespace Nop.Services.Catalog
             var stockQuantity = product.GetTotalStockQuantity();
             if (stockQuantity > 0)
             {
-                if (product.DisplayStockQuantity)
-                {
+                stockMessage = product.DisplayStockQuantity ?
                     //display "in stock" with stock quantity
-                    stockMessage = string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity);
-                }
-                else
-                {
+                    string.Format(localizationService.GetResource("Products.Availability.InStockWithQuantity"), stockQuantity) : 
                     //display "in stock" without stock quantity
-                    stockMessage = localizationService.GetResource("Products.Availability.InStock");
-                }
+                    localizationService.GetResource("Products.Availability.InStock");
             }
             else
             {

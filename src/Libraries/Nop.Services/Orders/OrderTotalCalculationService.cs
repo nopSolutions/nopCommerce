@@ -321,10 +321,7 @@ namespace Nop.Services.Orders
             }
 
             //subtotal without discount
-            if (includingTax)
-                subTotalWithoutDiscount = subTotalInclTaxWithoutDiscount;
-            else
-                subTotalWithoutDiscount = subTotalExclTaxWithoutDiscount;
+            subTotalWithoutDiscount = includingTax ? subTotalInclTaxWithoutDiscount : subTotalExclTaxWithoutDiscount;
             if (subTotalWithoutDiscount < decimal.Zero)
                 subTotalWithoutDiscount = decimal.Zero;
 
@@ -570,17 +567,12 @@ namespace Nop.Services.Orders
 
                 var pickUpInStore = _shippingSettings.AllowPickUpInStore && 
                     customer.GetAttribute<bool>(SystemCustomerAttributeNames.SelectedPickUpInStore, _storeContext.CurrentStore.Id);
-                if (pickUpInStore)
-                {
+                shippingTotal =  pickUpInStore ?
                     //"pick up in store" fee
                     //we do not adjust shipping rate ("AdjustShippingRate" method) for pickup in store
-                    shippingTotal = _shippingSettings.PickUpInStoreFee;
-                }
-                else
-                {
+                    _shippingSettings.PickUpInStoreFee :
                     //adjust shipping rate
-                    shippingTotal = AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
-                }
+                    AdjustShippingRate(shippingOption.Rate, cart, out appliedDiscount);
             }
             else
             {
@@ -922,11 +914,9 @@ namespace Nop.Services.Orders
                         if (resultTemp > decimal.Zero)
                         {
                             decimal remainingAmount = gc.GetGiftCardRemainingAmount();
-                            decimal amountCanBeUsed;
-                            if (resultTemp > remainingAmount)
-                                amountCanBeUsed = remainingAmount;
-                            else
-                                amountCanBeUsed = resultTemp;
+                            decimal amountCanBeUsed = resultTemp > remainingAmount ? 
+                                remainingAmount : 
+                                resultTemp;
 
                             //reduce subtotal
                             resultTemp -= amountCanBeUsed;

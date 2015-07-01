@@ -289,19 +289,14 @@ namespace Nop.Core
 
                 if (useSsl)
                 {
-                    if (!String.IsNullOrWhiteSpace(currentStore.SecureUrl))
-                    {
+                    result = !String.IsNullOrWhiteSpace(currentStore.SecureUrl) ?
                         //Secure URL specified. 
                         //So a store owner don't want it to be detected automatically.
                         //In this case let's use the specified secure URL
-                        result = currentStore.SecureUrl;
-                    }
-                    else
-                    {
+                        currentStore.SecureUrl :
                         //Secure URL is not specified.
                         //So a store owner wants it to be detected automatically.
-                        result = result.Replace("http:/", "https:/");
-                    }
+                        result.Replace("http:/", "https:/");
                 }
                 else
                 {

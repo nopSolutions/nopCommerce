@@ -156,16 +156,11 @@ namespace Nop.Services.Messages
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => !qe.SentOnUtc.HasValue);
             query = query.Where(qe => qe.SentTries < maxSendTries);
-            if (loadNewest)
-            {
+            query = loadNewest ?
                 //load the newest records
-                query = query.OrderByDescending(qe => qe.CreatedOnUtc);
-            }
-            else
-            {
+                query.OrderByDescending(qe => qe.CreatedOnUtc) :
                 //load by priority
-                query = query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
-            }
+                query.OrderByDescending(qe => qe.PriorityId).ThenBy(qe => qe.CreatedOnUtc);
 
             var queuedEmails = new PagedList<QueuedEmail>(query, pageIndex, pageSize);
             return queuedEmails;
