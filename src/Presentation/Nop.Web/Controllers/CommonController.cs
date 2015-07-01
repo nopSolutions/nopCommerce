@@ -798,7 +798,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsSearchEngineAccount())
                 return Content("");
 
-            if (_workContext.CurrentCustomer.GetAttribute<bool>("EuCookieLaw.Accepted", _storeContext.CurrentStore.Id))
+            if (_workContext.CurrentCustomer.GetAttribute<bool>(SystemCustomerAttributeNames.EuCookieLawAccepted, _storeContext.CurrentStore.Id))
                 //already accepted
                 return Content("");
 
@@ -812,7 +812,7 @@ namespace Nop.Web.Controllers
                 return Json(new { stored = false });
 
             //save setting
-            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true, _storeContext.CurrentStore.Id);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.EuCookieLawAccepted, true, _storeContext.CurrentStore.Id);
             return Json(new { stored = true });
         }
 

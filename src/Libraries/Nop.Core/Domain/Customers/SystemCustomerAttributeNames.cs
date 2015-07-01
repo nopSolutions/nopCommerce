@@ -52,5 +52,6 @@ namespace Nop.Core.Domain.Customers
         public static string WorkingThemeName { get { return "WorkingThemeName"; } }
         public static string TaxDisplayTypeId { get { return "TaxDisplayTypeId"; } }
         public static string UseRewardPointsDuringCheckout { get { return "UseRewardPointsDuringCheckout"; } }
+        public static string EuCookieLawAccepted { get { return "EuCookieLaw.Accepted"; } }
     }
 }
