@@ -56,7 +56,7 @@ namespace Nop.Services.Payments
             if (fee <= 0)
                 return fee;
 
-            var result = decimal.Zero;
+            decimal result;
             if (usePercentage)
             {
                 //percentage

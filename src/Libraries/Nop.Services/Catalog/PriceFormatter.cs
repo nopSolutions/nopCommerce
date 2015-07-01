@@ -67,24 +67,29 @@ namespace Nop.Services.Catalog
             if (targetCurrency == null)
                 throw new ArgumentNullException("targetCurrency");
 
-            string result = "";
+            string result;
             if (!String.IsNullOrEmpty(targetCurrency.CustomFormatting))
             {
+                //custom formatting specified by a store owner
                 result = amount.ToString(targetCurrency.CustomFormatting);
             }
             else
             {
                 if (!String.IsNullOrEmpty(targetCurrency.DisplayLocale))
                 {
+                    //default behavior
                     result = amount.ToString("C", new CultureInfo(targetCurrency.DisplayLocale));
                 }
                 else
                 {
+                    //not possible because "DisplayLocale" should be always specified
+                    //but anyway let's just handle this behavior
                     result = String.Format("{0} ({1})", amount.ToString("N"), targetCurrency.CurrencyCode);
                     return result;
                 }
             }
 
+            //display currency code?
             if (showCurrency && _currencySettings.DisplayCurrencyLabel)
                 result = String.Format("{0} ({1})", result, targetCurrency.CurrencyCode);
             return result;

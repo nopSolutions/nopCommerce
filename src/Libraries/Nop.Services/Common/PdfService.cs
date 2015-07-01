@@ -510,7 +510,7 @@ namespace Nop.Services.Common
                     }
 
                     //price
-                    string unitPrice = string.Empty;
+                    string unitPrice;
                     if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax
@@ -533,7 +533,7 @@ namespace Nop.Services.Common
                     productsTable.AddCell(cellProductItem);
 
                     //total
-                    string subTotal = string.Empty; 
+                    string subTotal; 
                     if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                     {
                         //including tax

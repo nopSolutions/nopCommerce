@@ -7369,9 +7369,9 @@ namespace Nop.Services.Installation
 
             _productRepository.Insert(productAdidas);
 
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Red").First().PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Blue").First().PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
-            productAdidas.ProductAttributeMappings.Where(x => x.ProductAttribute.Name == "Color").First().ProductAttributeValues.Where(x => x.Name == "Silver").First().PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
+            productAdidas.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Color").ProductAttributeValues.First(x => x.Name == "Red").PictureId = productAdidas.ProductPictures.ElementAt(0).PictureId;
+            productAdidas.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Color").ProductAttributeValues.First(x => x.Name == "Blue").PictureId = productAdidas.ProductPictures.ElementAt(1).PictureId;
+            productAdidas.ProductAttributeMappings.First(x => x.ProductAttribute.Name == "Color").ProductAttributeValues.First(x => x.Name == "Silver").PictureId = productAdidas.ProductPictures.ElementAt(2).PictureId;
             _productRepository.Update(productAdidas);
 
 

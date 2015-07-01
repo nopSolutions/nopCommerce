@@ -922,7 +922,7 @@ namespace Nop.Services.Orders
                         if (resultTemp > decimal.Zero)
                         {
                             decimal remainingAmount = gc.GetGiftCardRemainingAmount();
-                            decimal amountCanBeUsed = decimal.Zero;
+                            decimal amountCanBeUsed;
                             if (resultTemp > remainingAmount)
                                 amountCanBeUsed = remainingAmount;
                             else

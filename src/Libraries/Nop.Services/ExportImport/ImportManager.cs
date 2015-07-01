@@ -549,7 +549,7 @@ namespace Nop.Services.ExportImport
                         continue;
                     string[] tmp = line.Split(',');
 
-                    var email = "";
+                    string email;
                     bool isActive = true;
                     int storeId = _storeContext.CurrentStore.Id;
                     //parse

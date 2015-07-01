@@ -598,7 +598,7 @@ namespace Nop.Services.Orders
             //order total (and applied discounts, gift cards, reward points)
             if (!processPaymentRequest.IsRecurringPayment)
             {
-                List<AppliedGiftCard> appliedGiftCards = null;
+                List<AppliedGiftCard> appliedGiftCards;
                 Discount orderAppliedDiscount;
                 decimal orderDiscountAmount;
                 int redeemedRewardPoints ;
@@ -2808,17 +2808,11 @@ namespace Nop.Services.Orders
             if (order.OrderStatus != OrderStatus.Complete)
                 return false;
 
-            bool numberOfDaysReturnRequestAvailableValid = false;
             if (_orderSettings.NumberOfDaysReturnRequestAvailable == 0)
-            {
-                numberOfDaysReturnRequestAvailableValid = true;
-            }
-            else
-            {
-                var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
-                numberOfDaysReturnRequestAvailableValid = (daysPassed - _orderSettings.NumberOfDaysReturnRequestAvailable) < 0;
-            }
-            return numberOfDaysReturnRequestAvailableValid;
+                return true;
+
+            var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
+            return (daysPassed - _orderSettings.NumberOfDaysReturnRequestAvailable) < 0;
         }
         
 

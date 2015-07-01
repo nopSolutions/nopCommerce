@@ -171,7 +171,7 @@ namespace Nop.Services.Tax
             if (basedOn == TaxBasedOn.ShippingAddress && customer.ShippingAddress == null)
                 basedOn = TaxBasedOn.DefaultAddress;
 
-            Address address = null;
+            Address address;
 
             switch (basedOn)
             {

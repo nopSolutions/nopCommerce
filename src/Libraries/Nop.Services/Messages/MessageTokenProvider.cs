@@ -116,7 +116,7 @@ namespace Nop.Services.Messages
         /// <returns>HTML table of products</returns>
         protected virtual string ProductListToHtmlTable(Order order, int languageId, int vendorId)
         {
-            var result = "";
+            string result;
 
             var language = _languageService.GetLanguageById(languageId);
 
@@ -193,7 +193,7 @@ namespace Nop.Services.Messages
                 }
                 sb.AppendLine("</td>");
 
-                string unitPriceStr = string.Empty;
+                string unitPriceStr;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -210,7 +210,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine(string.Format("<td style=\"padding: 0.6em 0.4em;text-align: center;\">{0}</td>", orderItem.Quantity));
 
-                string priceStr = string.Empty; 
+                string priceStr; 
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -247,7 +247,7 @@ namespace Nop.Services.Messages
                 #region Totals
 
                 //subtotal
-                string cusSubTotal = string.Empty;
+                string cusSubTotal;
                 bool displaySubTotalDiscount = false;
                 string cusSubTotalDiscount = string.Empty;
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax && !_taxSettings.ForceTaxExclusionFromOrderSubtotal)
@@ -282,12 +282,12 @@ namespace Nop.Services.Messages
                 }
                 
                 //shipping, payment method fee
-                string cusShipTotal = string.Empty;
-                string cusPaymentMethodAdditionalFee = string.Empty;
+                string cusShipTotal;
+                string cusPaymentMethodAdditionalFee;
                 var taxRates = new SortedDictionary<decimal, decimal>();
                 string cusTaxTotal = string.Empty;
                 string cusDiscount = string.Empty;
-                string cusTotal = string.Empty; 
+                string cusTotal; 
                 if (order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     //including tax
@@ -443,7 +443,7 @@ namespace Nop.Services.Messages
         /// <returns>HTML table of products</returns>
         protected virtual string ProductListToHtmlTable(Shipment shipment, int languageId)
         {
-            var result = "";
+            string result;
             
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");

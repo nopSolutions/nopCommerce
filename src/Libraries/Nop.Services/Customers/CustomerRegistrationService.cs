@@ -83,7 +83,7 @@ namespace Nop.Services.Customers
             if (!customer.IsRegistered())
                 return CustomerLoginResults.NotRegistered;
 
-            string pwd = "";
+            string pwd;
             switch (customer.PasswordFormat)
             {
                 case PasswordFormat.Encrypted:
@@ -258,7 +258,7 @@ namespace Nop.Services.Customers
             if (request.ValidateRequest)
             {
                 //password
-                string oldPwd = "";
+                string oldPwd;
                 switch (customer.PasswordFormat)
                 {
                     case PasswordFormat.Encrypted:
