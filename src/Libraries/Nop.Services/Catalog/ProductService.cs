@@ -62,7 +62,6 @@ namespace Nop.Services.Catalog
         private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
         private readonly IWorkContext _workContext;
-        private readonly IStoreContext _storeContext;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CommonSettings _commonSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -149,7 +148,6 @@ namespace Nop.Services.Catalog
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._workContext = workContext;
-            this._storeContext= storeContext;
             this._localizationSettings = localizationSettings;
             this._commonSettings = commonSettings;
             this._catalogSettings = catalogSettings;

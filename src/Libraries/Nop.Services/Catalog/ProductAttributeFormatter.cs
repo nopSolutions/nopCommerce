@@ -121,7 +121,7 @@ namespace Nop.Services.Catalog
                                 if (download != null)
                                 {
                                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-                                    string attributeText = "";
+                                    string attributeText;
                                     var fileName = string.Format("{0}{1}", 
                                         download.Filename ?? download.DownloadGuid.ToString(),
                                         download.Extension);
