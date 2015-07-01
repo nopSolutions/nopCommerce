@@ -688,11 +688,9 @@ namespace Nop.Web.Controllers
 
             }
 
-            //standard logout 
-
             //activity log
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
-
+            //standard logout 
             _authenticationService.SignOut();
             return RedirectToRoute("HomePage");
         }

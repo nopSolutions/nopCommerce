@@ -11,12 +11,18 @@ namespace Nop.Services.Authentication
     /// </summary>
     public partial class FormsAuthenticationService : IAuthenticationService
     {
+        #region Fields
+
         private readonly HttpContextBase _httpContext;
         private readonly ICustomerService _customerService;
         private readonly CustomerSettings _customerSettings;
         private readonly TimeSpan _expirationTimeSpan;
 
         private Customer _cachedCustomer;
+
+        #endregion
+
+        #region Ctor
 
         /// <summary>
         /// Ctor
@@ -33,7 +39,39 @@ namespace Nop.Services.Authentication
             this._expirationTimeSpan = FormsAuthentication.Timeout;
         }
 
+        #endregion
 
+        #region Utilities
+
+        /// <summary>
+        /// Get authenticated customer
+        /// </summary>
+        /// <param name="ticket">Ticket</param>
+        /// <returns>Customer</returns>
+        protected virtual Customer GetAuthenticatedCustomerFromTicket(FormsAuthenticationTicket ticket)
+        {
+            if (ticket == null)
+                throw new ArgumentNullException("ticket");
+
+            var usernameOrEmail = ticket.UserData;
+
+            if (String.IsNullOrWhiteSpace(usernameOrEmail))
+                return null;
+            var customer = _customerSettings.UsernamesEnabled
+                ? _customerService.GetCustomerByUsername(usernameOrEmail)
+                : _customerService.GetCustomerByEmail(usernameOrEmail);
+            return customer;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Sign in
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="createPersistentCookie">A value indicating whether to create a persistent cookie</param>
         public virtual void SignIn(Customer customer, bool createPersistentCookie)
         {
             var now = DateTime.UtcNow.ToLocalTime();
@@ -66,12 +104,19 @@ namespace Nop.Services.Authentication
             _cachedCustomer = customer;
         }
 
+        /// <summary>
+        /// Sign out
+        /// </summary>
         public virtual void SignOut()
         {
             _cachedCustomer = null;
             FormsAuthentication.SignOut();
         }
 
+        /// <summary>
+        /// Get authenticated customer
+        /// </summary>
+        /// <returns>Customer</returns>
         public virtual Customer GetAuthenticatedCustomer()
         {
             if (_cachedCustomer != null)
@@ -92,19 +137,7 @@ namespace Nop.Services.Authentication
             return _cachedCustomer;
         }
 
-        public virtual Customer GetAuthenticatedCustomerFromTicket(FormsAuthenticationTicket ticket)
-        {
-            if (ticket == null)
-                throw new ArgumentNullException("ticket");
+        #endregion
 
-            var usernameOrEmail = ticket.UserData;
-
-            if (String.IsNullOrWhiteSpace(usernameOrEmail))
-                return null;
-            var customer = _customerSettings.UsernamesEnabled
-                ? _customerService.GetCustomerByUsername(usernameOrEmail)
-                : _customerService.GetCustomerByEmail(usernameOrEmail);
-            return customer;
-        }
     }
 }
