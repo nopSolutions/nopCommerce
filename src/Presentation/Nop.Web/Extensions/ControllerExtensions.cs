@@ -173,7 +173,7 @@ namespace Nop.Web.Extensions
 
                                                         priceModel.OldPrice = null;
                                                         priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
-
+                                                        priceModel.PriceValue = finalPrice;
                                                     }
                                                     else
                                                     {
@@ -269,6 +269,7 @@ namespace Nop.Web.Extensions
                                             {
                                                 priceModel.OldPrice = null;
                                                 priceModel.Price = String.Format(localizationService.GetResource("Products.PriceRangeFrom"), priceFormatter.FormatPrice(finalPrice));
+                                                priceModel.PriceValue = finalPrice;
                                             }
                                             else
                                             {
@@ -276,11 +277,13 @@ namespace Nop.Web.Extensions
                                                 {
                                                     priceModel.OldPrice = priceFormatter.FormatPrice(oldPrice);
                                                     priceModel.Price = priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
                                                 }
                                                 else
                                                 {
                                                     priceModel.OldPrice = null;
                                                     priceModel.Price = priceFormatter.FormatPrice(finalPrice);
+                                                    priceModel.PriceValue = finalPrice;
                                                 }
                                             }
                                             if (product.IsRental)
