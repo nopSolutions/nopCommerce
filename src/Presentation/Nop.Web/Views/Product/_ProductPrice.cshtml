@@ -17,7 +17,7 @@
 @if (dynamicPriceUpdateSupported)
 {
     <script type="text/javascript">
-        var priceValForDynUpd_@(Model.ProductId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));
+        var priceValForDynUpd_@(Model.ProductId) = @(((float)(Model.PriceValue)).ToString(new CultureInfo("en-US")));
     </script>
 }
 <div class="prices" itemprop="offers" itemscope itemtype="http://schema.org/Offer">

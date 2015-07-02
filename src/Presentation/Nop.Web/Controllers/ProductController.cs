@@ -470,8 +470,7 @@ namespace Nop.Web.Controllers
                         if (finalPriceWithoutDiscountBase != finalPriceWithDiscountBase)
                             model.ProductPrice.PriceWithDiscount = _priceFormatter.FormatPrice(finalPriceWithDiscount);
 
-                        model.ProductPrice.PriceValue = finalPriceWithoutDiscount;
-                        model.ProductPrice.PriceWithDiscountValue = finalPriceWithDiscount;
+                        model.ProductPrice.PriceValue = finalPriceWithDiscount;
                         
                         //property for German market
                         //we display tax/shipping info only with "shipping enabled" for this product
