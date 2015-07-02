@@ -1826,6 +1826,12 @@ label, label + * {
 	font-weight: bold;
 	color: #444;
 }
+.overview .min-qty-notification,
+.variant-overview .min-qty-notification {
+	margin: 10px 0;
+    font-style: italic;
+	color: #444;
+}
 .overview .download-sample,
 .variant-overview .download-sample {
 	display: inline-block;

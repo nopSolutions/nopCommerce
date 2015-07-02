@@ -511,6 +511,22 @@ namespace Nop.Web.Controllers
 
             //quantity
             model.AddToCart.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
+            //allowed quantities
+            var allowedQuantities = product.ParseAllowedQuantities();
+            foreach (var qty in allowedQuantities)
+            {
+                model.AddToCart.AllowedQuantities.Add(new SelectListItem
+                {
+                    Text = qty.ToString(),
+                    Value = qty.ToString(),
+                    Selected = updatecartitem != null && updatecartitem.Quantity == qty
+                });
+            }
+            //minimum quantity notification
+            if (product.OrderMinimumQuantity > 1)
+            {
+                model.AddToCart.MinimumQuantityNotification = string.Format(_localizationService.GetResource("Products.MinimumQuantityNotification"), product.OrderMinimumQuantity);
+            }
 
             //'add to cart', 'add to wishlist' buttons
             model.AddToCart.DisableBuyButton = product.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
@@ -541,17 +557,6 @@ namespace Nop.Web.Controllers
                 model.AddToCart.CustomerEnteredPriceRange = string.Format(_localizationService.GetResource("Products.EnterProductPrice.Range"),
                     _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                     _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
-            }
-            //allowed quantities
-            var allowedQuantities = product.ParseAllowedQuantities();
-            foreach (var qty in allowedQuantities)
-            {
-                model.AddToCart.AllowedQuantities.Add(new SelectListItem
-                {
-                    Text = qty.ToString(),
-                    Value = qty.ToString(),
-                    Selected = updatecartitem != null && updatecartitem.Quantity == qty
-                });
             }
 
             #endregion

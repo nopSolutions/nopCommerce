@@ -5,8 +5,8 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Products.MinimumQuantityNotification">
+    <Value>This product has a minimum quantity of {0}</Value>
   </LocaleResource>
 </Language>
 '

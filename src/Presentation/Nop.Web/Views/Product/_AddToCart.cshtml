@@ -21,6 +21,10 @@
                 </div>
             </div>
         }
+        @if (!String.IsNullOrEmpty(Model.MinimumQuantityNotification))
+        {
+            <div class="min-qty-notification">@Model.MinimumQuantityNotification</div>
+        }
         @if (!Model.DisableBuyButton)
         {
             <div class="add-to-cart-panel">
@@ -47,24 +51,24 @@
 
                 }
                 @{
-                var addToCartText = "";
-                if (Model.UpdatedShoppingCartItemId > 0)
-                {
-                    addToCartText = T("ShoppingCart.AddToCart.Update").Text;
-                }
-                else
-                {
-                    addToCartText = T("ShoppingCart.AddToCart").Text;
-                    if (Model.IsRental)
+                    var addToCartText = "";
+                    if (Model.UpdatedShoppingCartItemId > 0)
                     {
-                        addToCartText = T("ShoppingCart.Rent").Text;
+                        addToCartText = T("ShoppingCart.AddToCart.Update").Text;
                     }
-                    if (Model.AvailableForPreOrder)
+                    else
                     {
-                        addToCartText = T("ShoppingCart.PreOrder").Text;
+                        addToCartText = T("ShoppingCart.AddToCart").Text;
+                        if (Model.IsRental)
+                        {
+                            addToCartText = T("ShoppingCart.Rent").Text;
+                        }
+                        if (Model.AvailableForPreOrder)
+                        {
+                            addToCartText = T("ShoppingCart.PreOrder").Text;
+                        }
                     }
-                }
-                <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />
+                    <input type="button" id="add-to-cart-button-@Model.ProductId" class="button-1 add-to-cart-button" value="@addToCartText" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new { productId = Model.ProductId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />
                 }
             </div>
         }

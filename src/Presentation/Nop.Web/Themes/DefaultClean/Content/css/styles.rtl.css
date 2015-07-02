@@ -1830,6 +1830,12 @@ label, label + * {
 	margin: 25px 0;
 	overflow: hidden;
 }
+.overview .min-qty-notification,
+.variant-overview .min-qty-notification {
+	margin: 10px 0;
+    font-style: italic;
+	color: #444;
+}
 .overview .free-shipping,
 .variant-overview .free-shipping {
 	display: inline-block;

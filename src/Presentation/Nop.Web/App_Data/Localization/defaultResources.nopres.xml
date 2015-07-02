@@ -13362,6 +13362,9 @@
   <LocaleResource Name="Products.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.MinimumQuantityNotification">
+    <Value>This product has a minimum quantity of {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Products.NewProducts">
     <Value>New products</Value>
   </LocaleResource>

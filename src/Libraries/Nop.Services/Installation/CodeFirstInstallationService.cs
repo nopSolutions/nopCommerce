@@ -5895,7 +5895,7 @@ namespace Nop.Services.Installation
                 DisplayStockAvailability = true,
                 LowStockActivity = LowStockActivity.DisableBuyButton,
                 BackorderMode = BackorderMode.NoBackorders,
-                OrderMinimumQuantity = 1,
+                OrderMinimumQuantity = 2,
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 ShowOnHomePage = true,
