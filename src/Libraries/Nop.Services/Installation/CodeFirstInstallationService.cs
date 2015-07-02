@@ -926,7 +926,7 @@ namespace Nop.Services.Installation
                 ThreeLetterIsoCode = "CAN",
                 NumericIsoCode = 124,
                 SubjectToVat = false,
-                DisplayOrder = 2,
+                DisplayOrder = 100,
                 Published = true,
             };
             cCanada.StateProvinces.Add(new StateProvince
