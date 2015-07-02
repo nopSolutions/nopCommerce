@@ -55,8 +55,16 @@ using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework
 {
+    /// <summary>
+    /// Dependency registrar
+    /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
+        /// <summary>
+        /// Register services and interfaces
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        /// <param name="typeFinder">Type finder</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             //HTTP context and other related stuff
@@ -320,6 +328,9 @@ namespace Nop.Web.Framework
 
         }
 
+        /// <summary>
+        /// Order of this dependency registrar implementation
+        /// </summary>
         public int Order
         {
             get { return 0; }

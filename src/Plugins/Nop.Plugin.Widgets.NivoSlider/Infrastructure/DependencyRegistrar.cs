@@ -7,8 +7,16 @@ using Nop.Plugin.Widgets.NivoSlider.Controllers;
 
 namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure
 {
+    /// <summary>
+    /// Dependency registrar
+    /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
+        /// <summary>
+        /// Register services and interfaces
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        /// <param name="typeFinder">Type finder</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             //we cache presentation models between requests
@@ -16,6 +24,9 @@ namespace Nop.Plugin.Widgets.NivoSlider.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
         }
 
+        /// <summary>
+        /// Order of this dependency registrar implementation
+        /// </summary>
         public int Order
         {
             get { return 2; }

@@ -11,8 +11,16 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Feed.Froogle
 {
+    /// <summary>
+    /// Dependency registrar
+    /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
+        /// <summary>
+        /// Register services and interfaces
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        /// <param name="typeFinder">Type finder</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerLifetimeScope();
@@ -27,6 +35,9 @@ namespace Nop.Plugin.Feed.Froogle
                 .InstancePerLifetimeScope();
         }
 
+        /// <summary>
+        /// Order of this dependency registrar implementation
+        /// </summary>
         public int Order
         {
             get { return 1; }

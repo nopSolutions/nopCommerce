@@ -11,8 +11,16 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {
+    /// <summary>
+    /// Dependency registrar
+    /// </summary>
     public class DependencyRegistrar : IDependencyRegistrar
     {
+        /// <summary>
+        /// Register services and interfaces
+        /// </summary>
+        /// <param name="builder">Container builder</param>
+        /// <param name="typeFinder">Type finder</param>
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
             builder.RegisterType<TaxRateService>().As<ITaxRateService>().InstancePerLifetimeScope();
@@ -27,6 +35,9 @@ namespace Nop.Plugin.Tax.CountryStateZip
                 .InstancePerLifetimeScope();
         }
 
+        /// <summary>
+        /// Order of this dependency registrar implementation
+        /// </summary>
         public int Order
         {
             get { return 1; }
