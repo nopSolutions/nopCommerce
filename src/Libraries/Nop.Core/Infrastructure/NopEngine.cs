@@ -46,10 +46,10 @@ namespace Nop.Core.Infrastructure
         {
             var builder = new ContainerBuilder();
             var container = builder.Build();
+            this._containerManager = new ContainerManager(container);
 
             //we create new instance of ContainerBuilder
             //because Build() or Update() method can only be called once on a ContainerBuilder.
-
 
             //dependencies
             var typeFinder = new WebAppTypeFinder(config);
@@ -71,9 +71,6 @@ namespace Nop.Core.Infrastructure
                 dependencyRegistrar.Register(builder, typeFinder);
             builder.Update(container);
 
-
-            this._containerManager = new ContainerManager(container);
-            
             //set dependency resolver
             DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
