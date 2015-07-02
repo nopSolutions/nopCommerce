@@ -8,15 +8,25 @@ using Autofac.Integration.Mvc;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
+    /// <summary>
+    /// Container manager
+    /// </summary>
     public class ContainerManager
     {
         private readonly IContainer _container;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="container">Conainer</param>
         public ContainerManager(IContainer container)
         {
             this._container = container;
         }
 
+        /// <summary>
+        /// Gets a container
+        /// </summary>
         public virtual IContainer Container
         {
             get
@@ -25,6 +35,13 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             }
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">key</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved service</returns>
         public virtual T Resolve<T>(string key = "", ILifetimeScope scope = null) where T : class
         {
             if (scope == null)
@@ -39,6 +56,12 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.ResolveKeyed<T>(key);
         }
 
+        /// <summary>
+        /// Resolve
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved service</returns>
         public virtual object Resolve(Type type, ILifetimeScope scope = null)
         {
             if (scope == null)
@@ -49,6 +72,13 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.Resolve(type);
         }
 
+        /// <summary>
+        /// Resolve all
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="key">key</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved services</returns>
         public virtual T[] ResolveAll<T>(string key = "", ILifetimeScope scope = null)
         {
             if (scope == null)
@@ -63,11 +93,23 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.ResolveKeyed<IEnumerable<T>>(key).ToArray();
         }
 
+        /// <summary>
+        /// Resolve unregistered service
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved service</returns>
         public virtual T ResolveUnregistered<T>(ILifetimeScope scope = null) where T:class
         {
             return ResolveUnregistered(typeof(T), scope) as T;
         }
 
+        /// <summary>
+        /// Resolve unregistered service
+        /// </summary>
+        /// <param name="type">Type</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved service</returns>
         public virtual object ResolveUnregistered(Type type, ILifetimeScope scope = null)
         {
             if (scope == null)
@@ -98,6 +140,13 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             throw new NopException("No contructor was found that had all the dependencies satisfied.");
         }
         
+        /// <summary>
+        /// Try to resolve srevice
+        /// </summary>
+        /// <param name="serviceType">Type</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <param name="instance">Resolved service</param>
+        /// <returns>Value indicating whether service has been successfully resolved</returns>
         public virtual bool TryResolve(Type serviceType, ILifetimeScope scope, out object instance)
         {
             if (scope == null)
@@ -108,6 +157,12 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.TryResolve(serviceType, out instance);
         }
 
+        /// <summary>
+        /// Check whether some service is registered (can be resolved)
+        /// </summary>
+        /// <param name="serviceType">Type</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Result</returns>
         public virtual bool IsRegistered(Type serviceType, ILifetimeScope scope = null)
         {
             if (scope == null)
@@ -118,6 +173,12 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.IsRegistered(serviceType);
         }
 
+        /// <summary>
+        /// Resolve optional
+        /// </summary>
+        /// <param name="serviceType">Type</param>
+        /// <param name="scope">Scope; pass null to automatically resolve the current scope</param>
+        /// <returns>Resolved service</returns>
         public virtual object ResolveOptional(Type serviceType, ILifetimeScope scope = null)
         {
             if (scope == null)
@@ -128,6 +189,10 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             return scope.ResolveOptional(serviceType);
         }
         
+        /// <summary>
+        /// Get current scope
+        /// </summary>
+        /// <returns>Scope</returns>
         public virtual ILifetimeScope Scope()
         {
             try
