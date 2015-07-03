@@ -29,6 +29,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
@@ -600,8 +601,10 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Login / logout
-        
+
         [NopHttpsRequirement(SslRequirement.Yes)]
+        //available even when a store is closed
+        [StoreClosedAttribute(true)] 
         public ActionResult Login(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
@@ -613,6 +616,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [CaptchaValidator]
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult Login(LoginModel model, string returnUrl, bool captchaValid)
         {
             //validate CAPTCHA
@@ -673,6 +678,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        //available even when a store is closed
+        [StoreClosedAttribute(true)] 
         public ActionResult Logout()
         {
             //external authentication

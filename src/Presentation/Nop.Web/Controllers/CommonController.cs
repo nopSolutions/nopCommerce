@@ -32,6 +32,7 @@ using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Services.Vendors;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
@@ -222,6 +223,8 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
@@ -463,6 +466,8 @@ namespace Nop.Web.Controllers
 
         //contact us page
         [NopHttpsRequirement(SslRequirement.Yes)]
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult ContactUs()
         {
             var model = new ContactUsModel
@@ -476,6 +481,8 @@ namespace Nop.Web.Controllers
         }
         [HttpPost, ActionName("ContactUs")]
         [CaptchaValidator]
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
             //validate CAPTCHA
@@ -805,6 +812,8 @@ namespace Nop.Web.Controllers
             return PartialView();
         }
         [HttpPost]
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -945,6 +954,8 @@ namespace Nop.Web.Controllers
         }
 
         //store is closed
+        //available even when a store is closed
+        [StoreClosed(true)] 
         public ActionResult StoreClosed()
         {
             return View();
