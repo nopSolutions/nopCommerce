@@ -511,9 +511,13 @@ namespace Nop.Services.ExportImport
 
                         if (!pictureAlreadyExists)
                         {
+                            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name));
                             product.ProductPictures.Add(new ProductPicture
                             {
-                                Picture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name)),
+                                //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                                //pictures are duplicated
+                                //maybe because entity size is too large
+                                PictureId = newPicture.Id,
                                 DisplayOrder = 1,
                             });
                             _productService.UpdateProduct(product);
