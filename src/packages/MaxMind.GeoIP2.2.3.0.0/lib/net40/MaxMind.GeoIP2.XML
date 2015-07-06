@@ -47,6 +47,12 @@
                 Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
             </summary>
         </member>
+        <member name="M:MaxMind.GeoIP2.DatabaseReader.Dispose(System.Boolean)">
+            <summary>
+                Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="disposing"></param>
+        </member>
         <member name="M:MaxMind.GeoIP2.DatabaseReader.Country(System.Net.IPAddress)">
             <summary>
                 Returns an <see cref="T:MaxMind.GeoIP2.Responses.CountryResponse" /> for the specified IP address.
@@ -243,6 +249,11 @@
             </summary>
             <param name="message">A message that describes the error.</param>
         </member>
+        <member name="T:MaxMind.GeoIP2.IGeoIP2DatabaseReader">
+            <summary>
+                Interface for database reader
+            </summary>
+        </member>
         <member name="M:MaxMind.GeoIP2.IGeoIP2DatabaseReader.AnonymousIP(System.String)">
             <summary>
                 Look up an IP address in a GeoIP2 Anonymous IP.
@@ -304,6 +315,11 @@
             </summary>
             <param name="ip">The ip address.</param>
             <returns>An <see cref="T:MaxMind.GeoIP2.Responses.CityResponse" /></returns>
+        </member>
+        <member name="T:MaxMind.GeoIP2.IGeoIP2WebServicesClient">
+            <summary>
+                Interface for web-service client
+            </summary>
         </member>
         <member name="M:MaxMind.GeoIP2.IGeoIP2WebServicesClient.Insights(System.String)">
             <summary>
@@ -437,6 +453,11 @@
                 the Insights end point.
             </summary>
         </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.AverageIncome">
+            <summary>
+                The average income in US dollars associated with the IP address.
+            </summary>
+        </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.HasCoordinates">
             <summary>
                 Determines whether both the <see cref="P:MaxMind.GeoIP2.Model.Location.Latitude">latitude</see>
@@ -458,6 +479,11 @@
                 The metro code of the location if the location is in the US.
                 MaxMind returns the same metro codes as the
                 <a href="https://developers.google.com/adwords/api/docs/appendix/cities-DMAregions">Google AdWords API</a>.
+            </summary>
+        </member>
+        <member name="P:MaxMind.GeoIP2.Model.Location.PopulationDensity">
+            <summary>
+                The estimated number of people per square kilometer.
             </summary>
         </member>
         <member name="P:MaxMind.GeoIP2.Model.Location.TimeZone">
@@ -893,6 +919,12 @@
             <summary>
                 Abstract class that represents a generic response.
             </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Responses.AbstractResponse.SetLocales(System.Collections.Generic.List{System.String})">
+            <summary>
+                This is simplify the database API. Also, we may need to use the locales in the future.
+            </summary>
+            <param name="locales"></param>
         </member>
         <member name="T:MaxMind.GeoIP2.Responses.CityResponse">
             <summary>
