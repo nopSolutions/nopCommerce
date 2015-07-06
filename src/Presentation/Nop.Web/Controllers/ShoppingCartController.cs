@@ -255,6 +255,7 @@ namespace Nop.Web.Controllers
             }
             model.TermsOfServiceOnShoppingCartPage = _orderSettings.TermsOfServiceOnShoppingCartPage;
             model.TermsOfServiceOnOrderConfirmPage = _orderSettings.TermsOfServiceOnOrderConfirmPage;
+            model.DisplayTaxShippingInfo = _catalogSettings.DisplayTaxShippingInfoShoppingCart;
 
             //gift card and gift card boxes
             model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;

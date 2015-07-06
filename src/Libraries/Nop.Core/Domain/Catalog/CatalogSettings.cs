@@ -271,22 +271,22 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to display information about shipping and tax in the footer (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoFooter { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to display information about shipping and tax on product details pages (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoProductDetailsPage { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to display information about shipping and tax in product boxes (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoProductBoxes { get; set; }
-
+        /// <summary>
+        /// Gets or sets a value indicating whether to display information about shipping and tax on shopping cart page (used in Germany)
+        /// </summary>
+        public bool DisplayTaxShippingInfoShoppingCart { get; set; }
         /// <summary>
         /// Gets or sets a value indicating whether to display information about shipping and tax on wishlist page (used in Germany)
         /// </summary>
         public bool DisplayTaxShippingInfoWishlist { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to display information about shipping and tax on order details page (used in Germany)
         /// </summary>

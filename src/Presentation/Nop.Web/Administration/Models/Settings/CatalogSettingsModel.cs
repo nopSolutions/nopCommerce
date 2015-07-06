@@ -212,6 +212,10 @@ namespace Nop.Admin.Models.Settings
         public bool DisplayTaxShippingInfoProductBoxes { get; set; }
         public bool DisplayTaxShippingInfoProductBoxes_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoShoppingCart")]
+        public bool DisplayTaxShippingInfoShoppingCart { get; set; }
+        public bool DisplayTaxShippingInfoShoppingCart_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist")]
         public bool DisplayTaxShippingInfoWishlist { get; set; }
         public bool DisplayTaxShippingInfoWishlist_OverrideForStore { get; set; }

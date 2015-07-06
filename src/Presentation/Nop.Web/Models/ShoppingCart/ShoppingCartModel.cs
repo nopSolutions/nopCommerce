@@ -37,6 +37,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         public IList<string> Warnings { get; set; }
         public string MinOrderSubtotalWarning { get; set; }
+        public bool DisplayTaxShippingInfo { get; set; }
         public bool TermsOfServiceOnShoppingCartPage { get; set; }
         public bool TermsOfServiceOnOrderConfirmPage { get; set; }
         public EstimateShippingModel EstimateShipping { get; set; }

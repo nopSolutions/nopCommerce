@@ -4491,6 +4491,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoProductDetailsPage.Hint">
     <Value>Check to display tax and shipping info on product details pages. This option is used in Germany.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoShoppingCart">
+    <Value>Display tax/shipping info (shopping cart)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoShoppingCart.Hint">
+    <Value>Check to display tax and shipping info on the shopping cart page. This option is used in Germany.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist">
     <Value>Display tax/shipping info (wishlist)</Value>
   </LocaleResource>
@@ -13931,6 +13937,12 @@
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.SKU">
     <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.TaxShipping.ExclTax">
+    <Value><![CDATA[All prices are entered excluding tax. Excluding <a href="{0}">shipping</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.TaxShipping.InclTax">
+    <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.TextboxMaximumLength">
     <Value>{0} : maximum length is {1} chars</Value>

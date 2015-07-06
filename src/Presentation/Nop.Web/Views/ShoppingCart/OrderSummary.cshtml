@@ -1,5 +1,6 @@
 @model ShoppingCartModel
 @using Nop.Core
+@using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart;
 @{
@@ -185,6 +186,15 @@
                </tbody>
            </table>
        </div>
+        if (Model.IsEditable && Model.Items.Count > 0 && Model.DisplayTaxShippingInfo)
+        {
+            var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+            //tax info is already included in the price (incl/excl tax). that's why we display only shipping info here
+            //of course, you can modify appropriate locales to include VAT info there
+        <div class="tax-shipping-info">
+            @T(inclTax ? "ShoppingCart.TaxShipping.InclTax" : "ShoppingCart.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+        </div>
+        }
        <div class="cart-options">
            @if (Model.IsEditable)
            {

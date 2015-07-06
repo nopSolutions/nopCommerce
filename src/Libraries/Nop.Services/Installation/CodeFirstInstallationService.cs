@@ -4612,6 +4612,7 @@ namespace Nop.Services.Installation
                     DisplayTaxShippingInfoFooter = false,
                     DisplayTaxShippingInfoProductDetailsPage = false,
                     DisplayTaxShippingInfoProductBoxes = false,
+                    DisplayTaxShippingInfoShoppingCart = false,
                     DisplayTaxShippingInfoWishlist = false,
                     DisplayTaxShippingInfoOrderDetailsPage = false,
                     DefaultCategoryPageSizeOptions = "6, 3, 9",

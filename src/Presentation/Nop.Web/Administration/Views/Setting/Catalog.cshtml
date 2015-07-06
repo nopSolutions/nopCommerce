@@ -485,6 +485,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoShoppingCart_OverrideForStore, model => model.DisplayTaxShippingInfoShoppingCart, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoShoppingCart):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoShoppingCart)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, model => model.DisplayTaxShippingInfoWishlist, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.DisplayTaxShippingInfoWishlist):
             </td>

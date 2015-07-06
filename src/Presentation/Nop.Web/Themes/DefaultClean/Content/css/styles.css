@@ -3038,6 +3038,16 @@ label, label + * {
 	text-align: left;
 }
 
+.shopping-cart-page .tax-shipping-info {
+	margin: 20px 0;
+	text-align: center;
+}
+.shopping-cart-page .tax-shipping-info a {
+	color: #4ab3f1;
+}
+.shopping-cart-page .tax-shipping-info a:hover {
+	text-decoration: underline;
+}
 .shopping-cart-page .common-buttons {
 	margin: 0 0 60px;
 	background-color: #f6f6f6;
