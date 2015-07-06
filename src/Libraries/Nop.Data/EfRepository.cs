@@ -30,9 +30,27 @@ namespace Nop.Data
         {
             this._context = context;
         }
-        
+
         #endregion
-        
+
+        #region Utilities
+
+        /// <summary>
+        /// Get full error
+        /// </summary>
+        /// <param name="exc">Exception</param>
+        /// <returns>Error</returns>
+        protected string GetFullErrorText(DbEntityValidationException exc)
+        {
+            var msg = string.Empty;
+            foreach (var validationErrors in exc.EntityValidationErrors)
+                foreach (var error in validationErrors.ValidationErrors)
+                    msg += string.Format("Property: {0} Error: {1}", error.PropertyName, error.ErrorMessage) + Environment.NewLine;
+            return msg;
+        }
+
+        #endregion
+
         #region Methods
 
         /// <summary>
@@ -64,14 +82,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
@@ -93,14 +104,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
@@ -119,14 +123,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
@@ -145,14 +142,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
@@ -173,14 +163,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
 
@@ -202,14 +185,7 @@ namespace Nop.Data
             }
             catch (DbEntityValidationException dbEx)
             {
-                var msg = string.Empty;
-
-                foreach (var validationErrors in dbEx.EntityValidationErrors)
-                    foreach (var validationError in validationErrors.ValidationErrors)
-                        msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
-
-                var fail = new Exception(msg, dbEx);
-                throw fail;
+                throw new Exception(GetFullErrorText(dbEx), dbEx);
             }
         }
         
