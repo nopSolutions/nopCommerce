@@ -1459,7 +1459,8 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries());
+                loadCountries: () => _countryService.GetAllCountries(),
+                overrideAttributesXml: customAttributes);
 
             return View(model);
         }
@@ -1530,7 +1531,8 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries());
+                loadCountries: () => _countryService.GetAllCountries(),
+                overrideAttributesXml: customAttributes);
             return View(model);
         }
 

@@ -152,8 +152,8 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null, 
-            bool prePopulateNewAddressWithCustomerFields = false)
+        protected virtual CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null,
+            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutBillingAddressModel();
             //existing addresses
@@ -186,13 +186,14 @@ namespace Nop.Web.Controllers
                 addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountriesForBilling(),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer);
+                customer: _workContext.CurrentCustomer,
+                overrideAttributesXml: overrideAttributesXml);
             return model;
         }
 
         [NonAction]
-        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null, 
-            bool prePopulateNewAddressWithCustomerFields = false)
+        protected virtual CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null,
+            bool prePopulateNewAddressWithCustomerFields = false, string overrideAttributesXml = "")
         {
             var model = new CheckoutShippingAddressModel();
             //allow pickup in store?
@@ -234,7 +235,8 @@ namespace Nop.Web.Controllers
                 addressAttributeParser: _addressAttributeParser,
                 loadCountries: () => _countryService.GetAllCountriesForShipping(),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
-                customer: _workContext.CurrentCustomer);
+                customer: _workContext.CurrentCustomer,
+                overrideAttributesXml: overrideAttributesXml);
             return model;
         }
 
@@ -629,7 +631,9 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareBillingAddressModel(selectedCountryId: model.NewAddress.CountryId);
+            model = PrepareBillingAddressModel(
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributes);
             return View(model);
         }
 
@@ -776,7 +780,9 @@ namespace Nop.Web.Controllers
 
 
             //If we got this far, something failed, redisplay form
-            model = PrepareShippingAddressModel(selectedCountryId: model.NewAddress.CountryId);
+            model = PrepareShippingAddressModel(
+                selectedCountryId: model.NewAddress.CountryId,
+                overrideAttributesXml: customAttributes);
             return View(model);
         }
         
@@ -1399,7 +1405,9 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var billingAddressModel = PrepareBillingAddressModel(selectedCountryId: model.NewAddress.CountryId);
+                        var billingAddressModel = PrepareBillingAddressModel(
+                            selectedCountryId: model.NewAddress.CountryId,
+                            overrideAttributesXml: customAttributes);
                         billingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
@@ -1560,7 +1568,9 @@ namespace Nop.Web.Controllers
                     if (!ModelState.IsValid)
                     {
                         //model is not valid. redisplay the form with errors
-                        var shippingAddressModel = PrepareShippingAddressModel(selectedCountryId: model.NewAddress.CountryId);
+                        var shippingAddressModel = PrepareShippingAddressModel(
+                            selectedCountryId: model.NewAddress.CountryId,
+                            overrideAttributesXml: customAttributes);
                         shippingAddressModel.NewAddressPreselected = true;
                         return Json(new
                         {
