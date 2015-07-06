@@ -403,17 +403,17 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteStartObject">
             <summary>
-            Writes the beginning of a Json object.
+            Writes the beginning of a JSON object.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteEndObject">
             <summary>
-            Writes the end of a Json object.
+            Writes the end of a JSON object.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteStartArray">
             <summary>
-            Writes the beginning of a Json array.
+            Writes the beginning of a JSON array.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteEndArray">
@@ -447,7 +447,7 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteEnd">
             <summary>
-            Writes the end of the current Json object or array.
+            Writes the end of the current JSON object or array.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriter.WriteToken(Newtonsoft.Json.JsonReader)">
@@ -882,17 +882,17 @@
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WriteStartArray">
             <summary>
-            Writes the beginning of a Json array.
+            Writes the beginning of a JSON array.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WriteStartObject">
             <summary>
-            Writes the beginning of a Json object.
+            Writes the beginning of a JSON object.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Bson.BsonWriter.WritePropertyName(System.String)">
             <summary>
-            Writes the property name of a name/value pair on a Json object.
+            Writes the property name of a name/value pair on a JSON object.
             </summary>
             <param name="name">The name of the property.</param>
         </member>
@@ -1112,7 +1112,12 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonConverter.GetSchema">
             <summary>
+            <para>
             Gets the <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/> of the JSON produced by the JsonConverter.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
             <returns>The <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/> of the JSON produced by the JsonConverter.</returns>
         </member>
@@ -2636,13 +2641,13 @@
             Initializes a new instance of the <see cref="T:Newtonsoft.Json.JsonConverterAttribute"/> class.
             </summary>
             <param name="converterType">Type of the converter.</param>
-            <param name="converterParameters">Parameter list to use when constructing the JsonConverter.  Can be null.</param>
+            <param name="converterParameters">Parameter list to use when constructing the JsonConverter. Can be null.</param>
         </member>
         <member name="P:Newtonsoft.Json.JsonConverterAttribute.ConverterType">
             <summary>
-            Gets the type of the converter.
+            Gets the <see cref="T:System.Type"/> of the converter.
             </summary>
-            <value>The type of the converter.</value>
+            <value>The <see cref="T:System.Type"/> of the converter.</value>
         </member>
         <member name="P:Newtonsoft.Json.JsonConverterAttribute.ConverterParameters">
             <summary>
@@ -2673,7 +2678,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonException">
             <summary>
-            The exception thrown when an error occurs during Json serialization or deserialization.
+            The exception thrown when an error occurs during JSON serialization or deserialization.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonException.#ctor">
@@ -2882,7 +2887,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonReaderException">
             <summary>
-            The exception thrown when an error occurs while reading Json text.
+            The exception thrown when an error occurs while reading JSON text.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonReaderException.#ctor">
@@ -2932,9 +2937,14 @@
             </summary>
             <value>The path to the JSON where the error occurred.</value>
         </member>
+        <member name="T:Newtonsoft.Json.JsonRequiredAttribute">
+            <summary>
+            Instructs the <see cref="T:Newtonsoft.Json.JsonSerializer"/> to always serialize the member, and require the member has a value.
+            </summary>
+        </member>
         <member name="T:Newtonsoft.Json.JsonSerializationException">
             <summary>
-            The exception thrown when an error occurs during Json serialization or deserialization.
+            The exception thrown when an error occurs during JSON serialization or deserialization.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializationException.#ctor">
@@ -3035,14 +3045,14 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Deserialize(Newtonsoft.Json.JsonReader)">
             <summary>
-            Deserializes the Json structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>.
+            Deserializes the JSON structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>.
             </summary>
             <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> that contains the JSON structure to deserialize.</param>
             <returns>The <see cref="T:System.Object"/> being deserialized.</returns>
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Deserialize(System.IO.TextReader,System.Type)">
             <summary>
-            Deserializes the Json structure contained by the specified <see cref="T:System.IO.StringReader"/>
+            Deserializes the JSON structure contained by the specified <see cref="T:System.IO.StringReader"/>
             into an instance of the specified type.
             </summary>
             <param name="reader">The <see cref="T:System.IO.TextReader"/> containing the object.</param>
@@ -3051,7 +3061,7 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Deserialize``1(Newtonsoft.Json.JsonReader)">
             <summary>
-            Deserializes the Json structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>
+            Deserializes the JSON structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>
             into an instance of the specified type.
             </summary>
             <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> containing the object.</param>
@@ -3060,7 +3070,7 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Deserialize(Newtonsoft.Json.JsonReader,System.Type)">
             <summary>
-            Deserializes the Json structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>
+            Deserializes the JSON structure contained by the specified <see cref="T:Newtonsoft.Json.JsonReader"/>
             into an instance of the specified type.
             </summary>
             <param name="reader">The <see cref="T:Newtonsoft.Json.JsonReader"/> containing the object.</param>
@@ -3069,18 +3079,18 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Serialize(System.IO.TextWriter,System.Object)">
             <summary>
-            Serializes the specified <see cref="T:System.Object"/> and writes the Json structure
+            Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
             to a <c>Stream</c> using the specified <see cref="T:System.IO.TextWriter"/>. 
             </summary>
-            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the Json structure.</param>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the JSON structure.</param>
             <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Serialize(Newtonsoft.Json.JsonWriter,System.Object,System.Type)">
             <summary>
-            Serializes the specified <see cref="T:System.Object"/> and writes the Json structure
+            Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
             to a <c>Stream</c> using the specified <see cref="T:System.IO.TextWriter"/>. 
             </summary>
-            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the Json structure.</param>
+            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the JSON structure.</param>
             <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
             <param name="objectType">
             The type of the value being serialized.
@@ -3090,10 +3100,10 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Serialize(System.IO.TextWriter,System.Object,System.Type)">
             <summary>
-            Serializes the specified <see cref="T:System.Object"/> and writes the Json structure
+            Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
             to a <c>Stream</c> using the specified <see cref="T:System.IO.TextWriter"/>. 
             </summary>
-            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the Json structure.</param>
+            <param name="textWriter">The <see cref="T:System.IO.TextWriter"/> used to write the JSON structure.</param>
             <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
             <param name="objectType">
             The type of the value being serialized.
@@ -3103,10 +3113,10 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonSerializer.Serialize(Newtonsoft.Json.JsonWriter,System.Object)">
             <summary>
-            Serializes the specified <see cref="T:System.Object"/> and writes the Json structure
+            Serializes the specified <see cref="T:System.Object"/> and writes the JSON structure
             to a <c>Stream</c> using the specified <see cref="T:Newtonsoft.Json.JsonWriter"/>. 
             </summary>
-            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the Json structure.</param>
+            <param name="jsonWriter">The <see cref="T:Newtonsoft.Json.JsonWriter"/> used to write the JSON structure.</param>
             <param name="value">The <see cref="T:System.Object"/> to serialize.</param>
         </member>
         <member name="E:Newtonsoft.Json.JsonSerializer.Error">
@@ -3129,6 +3139,12 @@
             Gets or sets the <see cref="T:Newtonsoft.Json.Serialization.ITraceWriter"/> used by the serializer when writing trace messages.
             </summary>
             <value>The trace writer.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.JsonSerializer.EqualityComparer">
+            <summary>
+            Gets or sets the equality comparer used by the serializer when comparing references.
+            </summary>
+            <value>The equality comparer.</value>
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializer.TypeNameHandling">
             <summary>
@@ -3241,7 +3257,7 @@
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializer.DateFormatString">
             <summary>
-            Get or set how <see cref="T:System.DateTime"/> and <see cref="T:System.DateTimeOffset"/> values are formatting when writing JSON text.
+            Get or set how <see cref="T:System.DateTime"/> and <see cref="T:System.DateTimeOffset"/> values are formatted when writing JSON text, and the expected date format when reading JSON text.
             </summary>
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializer.Culture">
@@ -3345,11 +3361,23 @@
             </summary>
             <value>The contract resolver.</value>
         </member>
+        <member name="P:Newtonsoft.Json.JsonSerializerSettings.EqualityComparer">
+            <summary>
+            Gets or sets the equality comparer used by the serializer when comparing references.
+            </summary>
+            <value>The equality comparer.</value>
+        </member>
         <member name="P:Newtonsoft.Json.JsonSerializerSettings.ReferenceResolver">
             <summary>
             Gets or sets the <see cref="T:Newtonsoft.Json.Serialization.IReferenceResolver"/> used by the serializer when resolving references.
             </summary>
             <value>The reference resolver.</value>
+        </member>
+        <member name="P:Newtonsoft.Json.JsonSerializerSettings.ReferenceResolverProvider">
+            <summary>
+            Gets or sets a function that creates the <see cref="T:Newtonsoft.Json.Serialization.IReferenceResolver"/> used by the serializer when resolving references.
+            </summary>
+            <value>A function that creates the <see cref="T:Newtonsoft.Json.Serialization.IReferenceResolver"/> used by the serializer when resolving references.</value>
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializerSettings.TraceWriter">
             <summary>
@@ -3377,7 +3405,7 @@
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializerSettings.DateFormatString">
             <summary>
-            Get or set how <see cref="T:System.DateTime"/> and <see cref="T:System.DateTimeOffset"/> values are formatting when writing JSON text.
+            Get or set how <see cref="T:System.DateTime"/> and <see cref="T:System.DateTimeOffset"/> values are formatted when writing JSON text, and the expected date format when reading JSON text.
             </summary>
         </member>
         <member name="P:Newtonsoft.Json.JsonSerializerSettings.MaxDepth">
@@ -3544,12 +3572,12 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WriteStartObject">
             <summary>
-            Writes the beginning of a Json object.
+            Writes the beginning of a JSON object.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WriteStartArray">
             <summary>
-            Writes the beginning of a Json array.
+            Writes the beginning of a JSON array.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WriteStartConstructor(System.String)">
@@ -3566,7 +3594,7 @@
         </member>
         <member name="M:Newtonsoft.Json.JsonTextWriter.WritePropertyName(System.String)">
             <summary>
-            Writes the property name of a name/value pair on a Json object.
+            Writes the property name of a name/value pair on a JSON object.
             </summary>
             <param name="name">The name of the property.</param>
         </member>
@@ -3781,7 +3809,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonToken">
             <summary>
-            Specifies the type of Json token.
+            Specifies the type of JSON token.
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.JsonToken.None">
@@ -3876,7 +3904,12 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonValidatingReader">
             <summary>
+            <para>
             Represents a reader that provides <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/> validation.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonValidatingReader.#ctor(Newtonsoft.Json.JsonReader)">
@@ -3986,7 +4019,7 @@
         </member>
         <member name="T:Newtonsoft.Json.JsonWriterException">
             <summary>
-            The exception thrown when an error occurs while reading Json text.
+            The exception thrown when an error occurs while reading JSON text.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.JsonWriterException.#ctor">
@@ -6434,12 +6467,12 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WriteStartObject">
             <summary>
-            Writes the beginning of a Json object.
+            Writes the beginning of a JSON object.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WriteStartArray">
             <summary>
-            Writes the beginning of a Json array.
+            Writes the beginning of a JSON array.
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WriteStartConstructor(System.String)">
@@ -6456,7 +6489,7 @@
         </member>
         <member name="M:Newtonsoft.Json.Linq.JTokenWriter.WritePropertyName(System.String)">
             <summary>
-            Writes the property name of a name/value pair on a Json object.
+            Writes the property name of a name/value pair on a JSON object.
             </summary>
             <param name="name">The name of the property.</param>
         </member>
@@ -6806,12 +6839,22 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.Extensions">
             <summary>
+            <para>
             Contains the JSON schema extension methods.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Schema.Extensions.IsValid(Newtonsoft.Json.Linq.JToken,Newtonsoft.Json.Schema.JsonSchema)">
             <summary>
+            <para>
             Determines whether the <see cref="T:Newtonsoft.Json.Linq.JToken"/> is valid.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
             <param name="source">The source <see cref="T:Newtonsoft.Json.Linq.JToken"/> to test.</param>
             <param name="schema">The schema to test with.</param>
@@ -6821,7 +6864,12 @@
         </member>
         <member name="M:Newtonsoft.Json.Schema.Extensions.IsValid(Newtonsoft.Json.Linq.JToken,Newtonsoft.Json.Schema.JsonSchema,System.Collections.Generic.IList{System.String}@)">
             <summary>
+            <para>
             Determines whether the <see cref="T:Newtonsoft.Json.Linq.JToken"/> is valid.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
             <param name="source">The source <see cref="T:Newtonsoft.Json.Linq.JToken"/> to test.</param>
             <param name="schema">The schema to test with.</param>
@@ -6832,14 +6880,24 @@
         </member>
         <member name="M:Newtonsoft.Json.Schema.Extensions.Validate(Newtonsoft.Json.Linq.JToken,Newtonsoft.Json.Schema.JsonSchema)">
             <summary>
+            <para>
             Validates the specified <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
             <param name="source">The source <see cref="T:Newtonsoft.Json.Linq.JToken"/> to test.</param>
             <param name="schema">The schema to test with.</param>
         </member>
         <member name="M:Newtonsoft.Json.Schema.Extensions.Validate(Newtonsoft.Json.Linq.JToken,Newtonsoft.Json.Schema.JsonSchema,Newtonsoft.Json.Schema.ValidationEventHandler)">
             <summary>
+            <para>
             Validates the specified <see cref="T:Newtonsoft.Json.Linq.JToken"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
             <param name="source">The source <see cref="T:Newtonsoft.Json.Linq.JToken"/> to test.</param>
             <param name="schema">The schema to test with.</param>
@@ -6847,7 +6905,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.JsonSchema">
             <summary>
+            <para>
             An in-memory representation of a JSON Schema.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Schema.JsonSchema.#ctor">
@@ -7104,7 +7167,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.JsonSchemaException">
             <summary>
+            <para>
             Returns detailed information about the schema exception.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Schema.JsonSchemaException.#ctor">
@@ -7156,7 +7224,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.JsonSchemaGenerator">
             <summary>
+            <para>
             Generates a <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/> from a specified <see cref="T:System.Type"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Schema.JsonSchemaGenerator.Generate(System.Type)">
@@ -7204,7 +7277,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.JsonSchemaResolver">
             <summary>
+            <para>
             Resolves <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/> from an id.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="M:Newtonsoft.Json.Schema.JsonSchemaResolver.#ctor">
@@ -7227,7 +7305,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.JsonSchemaType">
             <summary>
+            <para>
             The value types allowed by the <see cref="T:Newtonsoft.Json.Schema.JsonSchema"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.Schema.JsonSchemaType.None">
@@ -7277,7 +7360,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.UndefinedSchemaIdHandling">
             <summary>
+            <para>
             Specifies undefined schema Id handling options for the <see cref="T:Newtonsoft.Json.Schema.JsonSchemaGenerator"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.Schema.UndefinedSchemaIdHandling.None">
@@ -7297,7 +7385,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.ValidationEventArgs">
             <summary>
+            <para>
             Returns detailed information related to the <see cref="T:Newtonsoft.Json.Schema.ValidationEventHandler"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="P:Newtonsoft.Json.Schema.ValidationEventArgs.Exception">
@@ -7320,7 +7413,12 @@
         </member>
         <member name="T:Newtonsoft.Json.Schema.ValidationEventHandler">
             <summary>
+            <para>
             Represents the callback method that will handle JSON schema validation events and the <see cref="T:Newtonsoft.Json.Schema.ValidationEventArgs"/>.
+            </para>
+            <note type="caution">
+            JSON Schema validation has been moved to its own package. See <see href="http://www.newtonsoft.com/jsonschema">http://www.newtonsoft.com/jsonschema</see> for more details.
+            </note>
             </summary>
         </member>
         <member name="T:Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver">
@@ -7493,7 +7591,14 @@
             Resolves the name of the property.
             </summary>
             <param name="propertyName">Name of the property.</param>
-            <returns>Name of the property.</returns>
+            <returns>Resolved name of the property.</returns>
+        </member>
+        <member name="M:Newtonsoft.Json.Serialization.DefaultContractResolver.ResolveDictionaryKey(System.String)">
+            <summary>
+            Resolves the key of the dictionary. By default <see cref="M:Newtonsoft.Json.Serialization.DefaultContractResolver.ResolvePropertyName(System.String)"/> is used to resolve dictionary keys.
+            </summary>
+            <param name="dictionaryKey">Key of the dictionary.</param>
+            <returns>Resolved key of the dictionary.</returns>
         </member>
         <member name="M:Newtonsoft.Json.Serialization.DefaultContractResolver.GetResolvedPropertyName(System.String)">
             <summary>
@@ -8012,6 +8117,12 @@
             </summary>
             <value>The property name resolver.</value>
         </member>
+        <member name="P:Newtonsoft.Json.Serialization.JsonDictionaryContract.DictionaryKeyResolver">
+            <summary>
+            Gets or sets the dictionary key resolver.
+            </summary>
+            <value>The dictionary key resolver.</value>
+        </member>
         <member name="P:Newtonsoft.Json.Serialization.JsonDictionaryContract.DictionaryKeyType">
             <summary>
             Gets the <see cref="T:System.Type"/> of the dictionary keys.
@@ -8472,6 +8583,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:Newtonsoft.Json.Serialization.ReflectionAttributeProvider"/> class.
             </summary>
+            <param name="attributeProvider">The instance to get attributes for. This parameter should be a <see cref="T:System.Type"/>, <see cref="T:System.Reflection.MemberInfo"/>, <see cref="T:System.Reflection.ParameterInfo"/> or <see cref="T:System.Reflection.Assembly"/>.</param>
         </member>
         <member name="M:Newtonsoft.Json.Serialization.ReflectionAttributeProvider.GetAttributes(System.Boolean)">
             <summary>
@@ -8581,7 +8693,7 @@
         </member>
         <member name="M:Newtonsoft.Json.Utilities.CollectionUtils.IndexOf``1(System.Collections.Generic.IEnumerable{``0},``0,System.Collections.Generic.IEqualityComparer{``0})">
             <summary>
-            Returns the index of the first occurrence in a sequence by using a specified IEqualityComparer.
+            Returns the index of the first occurrence in a sequence by using a specified IEqualityComparer{TSource}.
             </summary>
             <typeparam name="TSource">The type of the elements of source.</typeparam>
             <param name="list">A sequence in which to locate a value.</param>
