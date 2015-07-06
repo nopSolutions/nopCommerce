@@ -570,7 +570,8 @@ namespace Nop.Web.Controllers
             //products
             IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
             IList<int> filterableSpecificationAttributeOptionIds;
-            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds, true,
+            var products = _productService.SearchProducts(out filterableSpecificationAttributeOptionIds,
+                true,
                 categoryIds: categoryIds,
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
@@ -587,8 +588,11 @@ namespace Nop.Web.Controllers
 
             //specs
             model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
-                filterableSpecificationAttributeOptionIds, 
-                _specificationAttributeService, _webHelper, _workContext);
+                filterableSpecificationAttributeOptionIds != null ? filterableSpecificationAttributeOptionIds.ToArray() : null, 
+                _specificationAttributeService, 
+                _webHelper, 
+                _workContext,
+                _cacheManager);
             
 
             //template

@@ -264,6 +264,16 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "Nop.pres.category.childidentifiers";
 
         /// <summary>
+        /// Key for SpecificationAttributeOptionFilter caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : comma separated list of specification attribute option IDs
+        /// {1} : language id
+        /// </remarks>
+        public const string SPECS_FILTER_MODEL_KEY = "Nop.pres.filter.specs-{0}-{1}";
+        public const string SPECS_FILTER_PATTERN_KEY = "Nop.pres.filter.specs";
+
+        /// <summary>
         /// Key for ProductBreadcrumbModel caching
         /// </summary>
         /// <remarks>
@@ -651,6 +661,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
@@ -666,6 +677,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
@@ -681,6 +693,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(SEARCH_CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
@@ -899,34 +912,41 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         
         //specification attribute options
         public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         
         //Product specification attribute
         public void HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPECS_FILTER_PATTERN_KEY);
         }
         
         //Product attributes

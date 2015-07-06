@@ -4,11 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.UI.Paging;
+using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -289,21 +291,22 @@ namespace Nop.Web.Models.Catalog
             }
 
             public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
-                IList<int> filterableSpecificationAttributeOptionIds,
+                int[] filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
-                IWorkContext workContext)
+                IWorkContext workContext,
+                ICacheManager cacheManager)
             {
-                var allFilters = new List<SpecificationAttributeOptionFilter>();
-                var specificationAttributeOptions = specificationAttributeService
-                    .GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds != null ?
-                    filterableSpecificationAttributeOptionIds.ToArray() : null);
-                foreach (var sao in specificationAttributeOptions)
-                {
-                    var sa = sao.SpecificationAttribute;
-                    if (sa != null)
+                string cacheKey = string.Format(ModelCacheEventConsumer.SPECS_FILTER_MODEL_KEY,
+                    filterableSpecificationAttributeOptionIds != null ? string.Join(",", filterableSpecificationAttributeOptionIds) : "",
+                    workContext.WorkingLanguage.Id);
+                var allFilters = cacheManager.Get(cacheKey, () =>
+                    specificationAttributeService
+                    .GetSpecificationAttributeOptionsByIds(filterableSpecificationAttributeOptionIds)
+                    .Select(sao =>
                     {
-                        allFilters.Add(new SpecificationAttributeOptionFilter
+                        var sa = sao.SpecificationAttribute;
+                        return new SpecificationAttributeOptionFilter
                         {
                             SpecificationAttributeId = sa.Id,
                             SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
@@ -311,9 +314,9 @@ namespace Nop.Web.Models.Catalog
                             SpecificationAttributeOptionId = sao.Id,
                             SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
                             SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
-                        });
-                    }
-                }
+                        };
+                    })
+                    .ToList());
 
                 //sort loaded options
                 allFilters = allFilters.OrderBy(saof => saof.SpecificationAttributeDisplayOrder)
