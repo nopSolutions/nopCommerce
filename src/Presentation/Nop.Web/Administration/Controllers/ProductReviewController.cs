@@ -245,6 +245,31 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        [HttpPost]
+        public ActionResult DeleteSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProductReviews))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds)
+                {
+                    var productReview = _productService.GetProductReviewById(id);
+                    if (productReview != null)
+                    {
+                        var product = productReview.Product;
+                        _productService.DeleteProductReview(productReview);
+                        //update product totals
+                        _productService.UpdateProductReviewTotals(product);
+
+                    }
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
         #endregion
     }
 }

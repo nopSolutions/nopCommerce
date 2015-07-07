@@ -1968,6 +1968,9 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Deleted">
     <Value>The product review has been deleted successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.DisapproveSelected">
     <Value>Disapprove selected</Value>
   </LocaleResource>

@@ -20,6 +20,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.TaxShipping.InclTax">
     <Value><![CDATA[All prices are entered including tax. Excluding <a href="{0}">shipping</a>]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
 </Language>
 '
 

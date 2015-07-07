@@ -13,8 +13,9 @@
         @T("Admin.Catalog.ProductReviews")
     </div>
     <div class="options">
-    <input type="button" id="approve-selected" class="k-button" value="@T("Admin.Catalog.ProductReviews.ApproveSelected")" />
-    <input type="button" id="disapprove-selected" class="k-button" value="@T("Admin.Catalog.ProductReviews.DisapproveSelected")" />
+        <input type="button" id="approve-selected" class="k-button" value="@T("Admin.Catalog.ProductReviews.ApproveSelected")" />
+        <input type="button" id="disapprove-selected" class="k-button" value="@T("Admin.Catalog.ProductReviews.DisapproveSelected")" />
+        <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Catalog.ProductReviews.DeleteSelected")" />
     </div>
 </div>
     <table width="100%">
@@ -197,6 +198,33 @@
                             cache:false,
                             type: "POST",
                             url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
+                            data: postData,
+                            complete: function (data) {
+                                //reload grid
+                                var grid = $('#productreviews-grid').data('kendoGrid');
+                                grid.dataSource.read();
+                            },
+                            error:function (xhr, ajaxOptions, thrownError){
+                                alert(thrownError);
+                            },
+                            traditional: true
+                        });
+                        return false;
+                    });
+
+                    //"delete selected" button
+                    $('#delete-selected').click(function (e) {
+                        e.preventDefault();
+
+                        var postData = {
+                            selectedIds: selectedIds
+                        };
+                        addAntiForgeryToken(postData);
+
+                        $.ajax({
+                            cache:false,
+                            type: "POST",
+                            url: "@(Url.Action("DeleteSelected", "ProductReview"))",
                             data: postData,
                             complete: function (data) {
                                 //reload grid
