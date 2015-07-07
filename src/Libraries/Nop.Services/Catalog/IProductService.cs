@@ -442,6 +442,13 @@ namespace Nop.Services.Catalog
         ProductReview GetProductReviewById(int productReviewId);
 
         /// <summary>
+        /// Get product reviews by identifiers
+        /// </summary>
+        /// <param name="productReviewIds">Product review identifiers</param>
+        /// <returns>Product reviews</returns>
+        IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds);
+
+        /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>

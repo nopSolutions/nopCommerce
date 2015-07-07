@@ -199,22 +199,19 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds)
+                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+                foreach (var productReview in productReviews)
                 {
-                    var productReview = _productService.GetProductReviewById(id);
-                    if (productReview != null)
-                    {
-                        var previousIsApproved = productReview.IsApproved;
-                        productReview.IsApproved = true;
-                        _productService.UpdateProduct(productReview.Product);
-                        //update product totals
-                        _productService.UpdateProductReviewTotals(productReview.Product);
+                    var previousIsApproved = productReview.IsApproved;
+                    productReview.IsApproved = true;
+                    _productService.UpdateProduct(productReview.Product);
+                    //update product totals
+                    _productService.UpdateProductReviewTotals(productReview.Product);
 
 
-                        //raise event (only if it wasn't approved before)
-                        if (!previousIsApproved)
-                            _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
-                    }
+                    //raise event (only if it wasn't approved before)
+                    if (!previousIsApproved)
+                        _eventPublisher.Publish(new ProductReviewApprovedEvent(productReview));
                 }
             }
 
@@ -229,16 +226,13 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds)
+                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+                foreach (var productReview in productReviews)
                 {
-                    var productReview = _productService.GetProductReviewById(id);
-                    if (productReview != null)
-                    {
-                        productReview.IsApproved = false;
-                        _productService.UpdateProduct(productReview.Product);
-                        //update product totals
-                        _productService.UpdateProductReviewTotals(productReview.Product);
-                    }
+                    productReview.IsApproved = false;
+                    _productService.UpdateProduct(productReview.Product);
+                    //update product totals
+                    _productService.UpdateProductReviewTotals(productReview.Product);
                 }
             }
 
@@ -253,17 +247,13 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds)
+                var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
+                foreach (var productReview in productReviews)
                 {
-                    var productReview = _productService.GetProductReviewById(id);
-                    if (productReview != null)
-                    {
-                        var product = productReview.Product;
-                        _productService.DeleteProductReview(productReview);
-                        //update product totals
-                        _productService.UpdateProductReviewTotals(product);
-
-                    }
+                    var product = productReview.Product;
+                    _productService.DeleteProductReview(productReview);
+                    //update product totals
+                    _productService.UpdateProductReviewTotals(product);
                 }
             }
 

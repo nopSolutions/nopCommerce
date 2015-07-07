@@ -1824,6 +1824,31 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get product reviews by identifiers
+        /// </summary>
+        /// <param name="productReviewIds">Product review identifiers</param>
+        /// <returns>Product reviews</returns>
+        public virtual IList<ProductReview> GetProducReviewsByIds(int[] productReviewIds)
+        {
+            if (productReviewIds == null || productReviewIds.Length == 0)
+                return new List<ProductReview>();
+
+            var query = from pr in _productReviewRepository.Table
+                        where productReviewIds.Contains(pr.Id)
+                        select pr;
+            var productReviews = query.ToList();
+            //sort by passed identifiers
+            var sortedProductReviews = new List<ProductReview>();
+            foreach (int id in productReviewIds)
+            {
+                var productReview = productReviews.Find(x => x.Id == id);
+                if (productReview != null)
+                    sortedProductReviews.Add(productReview);
+            }
+            return sortedProductReviews;
+        }
+
+        /// <summary>
         /// Deletes a product review
         /// </summary>
         /// <param name="productReview">Product review</param>
