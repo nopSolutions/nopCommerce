@@ -61,6 +61,13 @@ namespace Nop.Services.News
         NewsComment GetNewsCommentById(int newsCommentId);
 
         /// <summary>
+        /// Get news comments by identifiers
+        /// </summary>
+        /// <param name="commentIds">News comment identifiers</param>
+        /// <returns>News comments</returns>
+        IList<NewsComment> GetNewsCommentsByIds(int[] commentIds);
+
+        /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>

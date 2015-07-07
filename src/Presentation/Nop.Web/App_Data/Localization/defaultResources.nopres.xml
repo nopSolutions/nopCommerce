@@ -6804,6 +6804,9 @@
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments">
     <Value>Blog comments</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.Fields.BlogPost">
     <Value>Blog post</Value>
   </LocaleResource>
@@ -7049,6 +7052,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments">
     <Value>News comments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.DeleteSelected">
+    <Value>Delete selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.News.Comments.Fields.CommentText">
     <Value>Comment text</Value>

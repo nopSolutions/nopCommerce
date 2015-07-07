@@ -88,6 +88,13 @@ namespace Nop.Services.Blogs
         BlogComment GetBlogCommentById(int blogCommentId);
 
         /// <summary>
+        /// Get blog comments by identifiers
+        /// </summary>
+        /// <param name="commentIds">Blog comment identifiers</param>
+        /// <returns>Blog comments</returns>
+        IList<BlogComment> GetBlogCommentsByIds(int[] commentIds);
+
+        /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>

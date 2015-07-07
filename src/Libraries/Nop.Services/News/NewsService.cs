@@ -178,6 +178,31 @@ namespace Nop.Services.News
         }
 
         /// <summary>
+        /// Get news comments by identifiers
+        /// </summary>
+        /// <param name="commentIds">News comment identifiers</param>
+        /// <returns>News comments</returns>
+        public virtual IList<NewsComment> GetNewsCommentsByIds(int[] commentIds)
+        {
+            if (commentIds == null || commentIds.Length == 0)
+                return new List<NewsComment>();
+
+            var query = from nc in _newsCommentRepository.Table
+                        where commentIds.Contains(nc.Id)
+                        select nc;
+            var comments = query.ToList();
+            //sort by passed identifiers
+            var sortedComments = new List<NewsComment>();
+            foreach (int id in commentIds)
+            {
+                var comment = comments.Find(x => x.Id == id);
+                if (comment != null)
+                    sortedComments.Add(comment);
+            }
+            return sortedComments;
+        }
+
+        /// <summary>
         /// Deletes a news comment
         /// </summary>
         /// <param name="newsComment">News comment</param>

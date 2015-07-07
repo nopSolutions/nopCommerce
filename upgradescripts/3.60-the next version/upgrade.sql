@@ -23,6 +23,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.DeleteSelected">
     <Value>Delete selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.Comments.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
 </Language>
 '
 

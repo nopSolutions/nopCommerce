@@ -250,6 +250,31 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
+        /// Get blog comments by identifiers
+        /// </summary>
+        /// <param name="commentIds">Blog comment identifiers</param>
+        /// <returns>Blog comments</returns>
+        public virtual IList<BlogComment> GetBlogCommentsByIds(int[] commentIds)
+        {
+            if (commentIds == null || commentIds.Length == 0)
+                return new List<BlogComment>();
+
+            var query = from bc in _blogCommentRepository.Table
+                        where commentIds.Contains(bc.Id)
+                        select bc;
+            var comments = query.ToList();
+            //sort by passed identifiers
+            var sortedComments = new List<BlogComment>();
+            foreach (int id in commentIds)
+            {
+                var comment = comments.Find(x => x.Id == id);
+                if (comment != null)
+                    sortedComments.Add(comment);
+            }
+            return sortedComments;
+        }
+
+        /// <summary>
         /// Deletes a blog comment
         /// </summary>
         /// <param name="blogComment">Blog comment</param>

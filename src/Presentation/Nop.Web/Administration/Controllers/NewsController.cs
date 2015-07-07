@@ -352,6 +352,27 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
+        public ActionResult DeleteSelectedComments(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var comments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray());
+                foreach (var comment in comments)
+                {
+                    var newsItem = comment.NewsItem;
+                    _newsService.DeleteNewsComment(comment);
+                    //update totals
+                    newsItem.CommentCount = newsItem.NewsComments.Count;
+                    _newsService.UpdateNews(newsItem);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
 
         #endregion
     }

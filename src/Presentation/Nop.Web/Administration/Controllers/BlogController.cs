@@ -339,6 +339,27 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
+        public ActionResult DeleteSelectedComments(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
+                foreach (var comment in comments)
+                {
+                    var blogPost = comment.BlogPost;
+                    _blogService.DeleteBlogComment(comment);
+                    //update totals
+                    blogPost.CommentCount = blogPost.BlogComments.Count;
+                    _blogService.UpdateBlogPost(blogPost);
+                }
+            }
+
+            return Json(new { Result = true });
+        }
 
         #endregion
     }
