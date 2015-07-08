@@ -6582,6 +6582,12 @@
   <LocaleResource Name="Admin.Configuration.Stores.Fields.CompanyVat.Hint">
     <Value>Enter your company VAT (the European Union Value Added Tax)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
+    <Value>Default language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
+    <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>

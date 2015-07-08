@@ -29,6 +29,12 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.Comments.DeleteSelected">
     <Value>Delete selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage">
+    <Value>Default language</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
+    <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -122,4 +128,21 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.displaytaxshippinginfoshoppingcart', N'false', 0)
 END
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Store]') and NAME='DefaultLanguageId')
+BEGIN
+	ALTER TABLE [Store]
+	ADD [DefaultLanguageId] int NULL
+END
+GO
+
+UPDATE [Store]
+SET [DefaultLanguageId] = 0
+WHERE [DefaultLanguageId] IS NULL
+GO
+
+ALTER TABLE [Store] ALTER COLUMN [DefaultLanguageId] int NOT NULL
 GO

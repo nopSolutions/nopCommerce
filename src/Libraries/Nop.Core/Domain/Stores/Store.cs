@@ -33,6 +33,11 @@ namespace Nop.Core.Domain.Stores
         public string Hosts { get; set; }
 
         /// <summary>
+        /// Gets or sets the identifier of the default language for this store; 0 is set when we use the default language display order
+        /// </summary>
+        public int DefaultLanguageId { get; set; }
+
+        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public int DisplayOrder { get; set; }

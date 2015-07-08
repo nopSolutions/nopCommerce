@@ -346,6 +346,12 @@ namespace Nop.Web.Framework
                 var language = allLanguages.FirstOrDefault(x => x.Id == languageId);
                 if (language == null)
                 {
+                    //it not found, then let's load the default currency for the current language (if specified)
+                    languageId = _storeContext.CurrentStore.DefaultLanguageId;
+                    language = allLanguages.FirstOrDefault(x => x.Id == languageId);
+                }
+                if (language == null)
+                {
                     //it not specified, then return the first (filtered by current store) found one
                     language = allLanguages.FirstOrDefault();
                 }

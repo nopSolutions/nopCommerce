@@ -15,12 +15,18 @@ namespace Nop.Admin.Controllers
 {
     public partial class StoreController : BaseAdminController
     {
+        #region Fields
+
         private readonly IStoreService _storeService;
         private readonly ISettingService _settingService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPermissionService _permissionService;
+
+        #endregion
+
+        #region Constructors
 
         public StoreController(IStoreService storeService,
             ISettingService settingService,
@@ -37,6 +43,33 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
         }
 
+        #endregion
+
+        #region Utilities
+
+        [NonAction]
+        protected virtual void PrepareLanguagesModel(StoreModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            //templates
+            model.AvailableLanguages.Add(new SelectListItem
+            {
+                Text = "---",
+                Value = "0"
+            });
+            var languages = _languageService.GetAllLanguages(true);
+            foreach (var language in languages)
+            {
+                model.AvailableLanguages.Add(new SelectListItem
+                {
+                    Text = language.Name,
+                    Value = language.Id.ToString()
+                });
+            }
+        }
+
         [NonAction]
         protected virtual void UpdateAttributeLocales(Store store, StoreModel model)
         {
@@ -48,6 +81,10 @@ namespace Nop.Admin.Controllers
                     localized.LanguageId);
             }
         }
+
+        #endregion
+
+        #region Methods
 
         public ActionResult List()
         {
@@ -82,6 +119,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new StoreModel();
+            //languages
+            PrepareLanguagesModel(model);
             //locales
             AddLocales(_languageService, model.Locales);
             return View(model);
@@ -108,6 +147,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+            //languages
+            PrepareLanguagesModel(model);
             return View(model);
         }
 
@@ -122,6 +164,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = store.ToModel();
+            //languages
+            PrepareLanguagesModel(model);
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
@@ -157,6 +201,9 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+
+            //languages
+            PrepareLanguagesModel(model);
             return View(model);
         }
 
@@ -204,5 +251,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", new {id = store.Id});
             }
         }
+
+        #endregion
+
     }
 }

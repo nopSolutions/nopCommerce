@@ -14,6 +14,7 @@ namespace Nop.Admin.Models.Stores
         public StoreModel()
         {
             Locales = new List<StoreLocalizedModel>();
+            AvailableLanguages = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Name")]
@@ -34,6 +35,12 @@ namespace Nop.Admin.Models.Stores
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.Hosts")]
         [AllowHtml]
         public string Hosts { get; set; }
+
+        //default language
+        [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DefaultLanguage")]
+        [AllowHtml]
+        public int DefaultLanguageId { get; set; }
+        public IList<SelectListItem> AvailableLanguages { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Stores.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }

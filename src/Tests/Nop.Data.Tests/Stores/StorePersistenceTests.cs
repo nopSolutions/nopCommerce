@@ -15,7 +15,8 @@ namespace Nop.Data.Tests.Stores
                 Name = "Computer store",
                 Url = "http://www.yourStore.com",
                 Hosts = "yourStore.com,www.yourStore.com",
-                DisplayOrder = 1,
+                DefaultLanguageId = 1,
+                DisplayOrder = 2,
                 CompanyName = "company name",
                 CompanyAddress = "some address",
                 CompanyPhoneNumber = "123456789",
@@ -27,7 +28,8 @@ namespace Nop.Data.Tests.Stores
             fromDb.Name.ShouldEqual("Computer store");
             fromDb.Url.ShouldEqual("http://www.yourStore.com");
             fromDb.Hosts.ShouldEqual("yourStore.com,www.yourStore.com");
-            fromDb.DisplayOrder.ShouldEqual(1);
+            fromDb.DefaultLanguageId.ShouldEqual(1);
+            fromDb.DisplayOrder.ShouldEqual(2);
             fromDb.CompanyName.ShouldEqual("company name");
             fromDb.CompanyAddress.ShouldEqual("some address");
             fromDb.CompanyPhoneNumber.ShouldEqual("123456789");
