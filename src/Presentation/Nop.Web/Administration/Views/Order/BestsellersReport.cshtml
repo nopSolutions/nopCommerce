@@ -73,6 +73,14 @@
             @Html.DropDownList("BillingCountryId", Model.AvailableCountries)
         </td>
     </tr>
+    <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.VendorId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("VendorId", Model.AvailableVendors)
+        </td>
+    </tr>
     <tr>
         <td colspan="2">
             <input type="button" id="search-salesreport" class="k-button" value="@T("Admin.SalesReport.Bestsellers.RunReport")" />
@@ -161,7 +169,8 @@
                         PaymentStatusId: $('#PaymentStatusId').val(),
                         CategoryId: $('#CategoryId').val(),
                         ManufacturerId: $('#ManufacturerId').val(),
-                        BillingCountryId: $('#BillingCountryId').val()
+                        BillingCountryId: $('#BillingCountryId').val(),
+                        VendorId: $('#VendorId').val()
                     };
                     addAntiForgeryToken(data);
                     return data;

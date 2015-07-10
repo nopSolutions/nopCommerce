@@ -3665,6 +3665,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new BestsellersReportModel();
+            //vendor
+            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
@@ -3687,13 +3689,14 @@ namespace Nop.Admin.Controllers
 
             //billing countries
             foreach (var c in _countryService.GetAllCountriesForBilling(true))
-            {
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
-            }
             model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
-            //vendor
-            model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
+            //vendors
+            model.AvailableVendors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var vendors = _vendorService.GetAllVendors(showHidden: true);
+            foreach (var v in vendors)
+                model.AvailableVendors.Add(new SelectListItem { Text = v.Name, Value = v.Id.ToString() });
 
             return View(model);
         }
@@ -3704,10 +3707,11 @@ namespace Nop.Admin.Controllers
                 return Content("");
 
             //a vendor should have access only to his products
-            int vendorId = 0;
             if (_workContext.CurrentVendor != null)
-                vendorId = _workContext.CurrentVendor.Id;
-            
+            {
+                model.VendorId = _workContext.CurrentVendor.Id;
+            }
+
             DateTime? startDateValue = (model.StartDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
 
@@ -3724,7 +3728,7 @@ namespace Nop.Admin.Controllers
                 ps: paymentStatus,
                 billingCountryId: model.BillingCountryId,
                 orderBy: 2,
-                vendorId: vendorId,
+                vendorId: model.VendorId,
                 categoryId: model.CategoryId,
                 manufacturerId: model.ManufacturerId,
                 pageIndex: command.Page - 1,

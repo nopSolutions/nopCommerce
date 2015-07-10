@@ -10110,6 +10110,12 @@
   <LocaleResource Name="Admin.SalesReport.Bestsellers.StartDate.Hint">
     <Value>The start date for the search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.SalesReport.Country">
     <Value>Country report</Value>
   </LocaleResource>

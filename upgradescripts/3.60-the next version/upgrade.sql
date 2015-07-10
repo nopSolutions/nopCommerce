@@ -35,6 +35,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Stores.Fields.DefaultLanguage.Hint">
     <Value>This property allows a store owner to specify a default language for a store. If not specified, then the default language display order will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor.Hint">
+    <Value>Search by a specific vendor.</Value>
+  </LocaleResource>
 </Language>
 '
 
