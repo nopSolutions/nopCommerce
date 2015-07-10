@@ -1254,7 +1254,7 @@ namespace Nop.Services.Orders
                                     {
                                         GiftCardType = sc.Product.GiftCardType,
                                         PurchasedWithOrderItem = orderItem,
-                                        Amount = scUnitPriceExclTax,
+                                        Amount = sc.Product.OverriddenGiftCardAmount.HasValue ? sc.Product.OverriddenGiftCardAmount.Value : scUnitPriceExclTax,
                                         IsGiftCardActivated = false,
                                         GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
                                         RecipientName = giftCardRecipientName,

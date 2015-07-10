@@ -107,8 +107,10 @@
     function toggleGiftCard() {
         if ($('#@Html.FieldIdFor(model => model.IsGiftCard)').is(':checked')) {
             $('#pnlGiftCardType').show();
+            $('#pnlOverriddenGiftCardAmount').show();
         } else {
             $('#pnlGiftCardType').hide();
+            $('#pnlOverriddenGiftCardAmount').hide();
         }
     }
 
@@ -821,6 +823,15 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
             @Html.ValidationMessageFor(model => model.GiftCardTypeId)
+        </td>
+    </tr>
+    <tr id="pnlOverriddenGiftCardAmount">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.OverriddenGiftCardAmount):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.OverriddenGiftCardAmount)
+            @Html.ValidationMessageFor(model => model.OverriddenGiftCardAmount)
         </td>
     </tr>
 </table>

@@ -135,6 +135,7 @@ namespace Nop.Services.ExportImport
                     "Gtin",
                     "IsGiftCard",
                     "GiftCardTypeId",
+                    "OverriddenGiftCardAmount",
                     "RequireOtherProducts",
                     "RequiredProductIds",
                     "AutomaticallyAddRequiredProducts",
@@ -242,6 +243,10 @@ namespace Nop.Services.ExportImport
                     string gtin = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Gtin")].Value);
                     bool isGiftCard = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
                     int giftCardTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
+                    decimal? overriddenGiftCardAmount = null;
+                    var overriddenGiftCardAmountExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "OverriddenGiftCardAmount")].Value;
+                    if (overriddenGiftCardAmountExcel != null)
+                        overriddenGiftCardAmount = Convert.ToDecimal(overriddenGiftCardAmountExcel);
                     bool requireOtherProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
                     string requiredProductIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "RequiredProductIds")].Value);
                     bool automaticallyAddRequiredProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AutomaticallyAddRequiredProducts")].Value);
@@ -354,6 +359,7 @@ namespace Nop.Services.ExportImport
                     product.Gtin = gtin;
                     product.IsGiftCard = isGiftCard;
                     product.GiftCardTypeId = giftCardTypeId;
+                    product.OverriddenGiftCardAmount = overriddenGiftCardAmount;
                     product.RequireOtherProducts = requireOtherProducts;
                     product.RequiredProductIds = requiredProductIds;
                     product.AutomaticallyAddRequiredProducts = automaticallyAddRequiredProducts;

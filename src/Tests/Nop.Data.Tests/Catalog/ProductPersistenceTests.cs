@@ -41,6 +41,7 @@ namespace Nop.Data.Tests.Catalog
                 Gtin = "gtin 1",
                 IsGiftCard = true,
                 GiftCardTypeId = 1,
+                OverriddenGiftCardAmount = 1,
                 IsDownload = true,
                 DownloadId = 2,
                 UnlimitedDownloads = true,
@@ -145,6 +146,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Gtin.ShouldEqual("gtin 1");
             fromDb.IsGiftCard.ShouldEqual(true);
             fromDb.GiftCardTypeId.ShouldEqual(1);
+            fromDb.OverriddenGiftCardAmount.ShouldEqual(1);
             fromDb.IsDownload.ShouldEqual(true);
             fromDb.DownloadId.ShouldEqual(2);
             fromDb.UnlimitedDownloads.ShouldEqual(true);

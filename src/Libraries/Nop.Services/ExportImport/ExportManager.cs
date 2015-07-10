@@ -246,6 +246,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Gtin", null, product.Gtin);
                 xmlWriter.WriteElementString("IsGiftCard", null, product.IsGiftCard.ToString());
                 xmlWriter.WriteElementString("GiftCardType", null, product.GiftCardType.ToString());
+                xmlWriter.WriteElementString("OverriddenGiftCardAmount", null, product.OverriddenGiftCardAmount.HasValue ? product.OverriddenGiftCardAmount.ToString() : "");
                 xmlWriter.WriteElementString("RequireOtherProducts", null, product.RequireOtherProducts.ToString());
                 xmlWriter.WriteElementString("RequiredProductIds", null, product.RequiredProductIds);
                 xmlWriter.WriteElementString("AutomaticallyAddRequiredProducts", null, product.AutomaticallyAddRequiredProducts.ToString());
@@ -525,6 +526,7 @@ namespace Nop.Services.ExportImport
                     "Gtin",
                     "IsGiftCard",
                     "GiftCardTypeId",
+                    "OverriddenGiftCardAmount",
                     "RequireOtherProducts",
                     "RequiredProductIds",
                     "AutomaticallyAddRequiredProducts",
@@ -669,6 +671,9 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.GiftCardTypeId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.OverriddenGiftCardAmount;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.RequireOtherProducts;

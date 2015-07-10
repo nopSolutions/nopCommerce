@@ -123,9 +123,11 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.OverriddenGiftCardAmount")]
+        [UIHint("DecimalNullable")]
+        public decimal? OverriddenGiftCardAmount { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.RequireOtherProducts")]
         public bool RequireOtherProducts { get; set; }

@@ -150,6 +150,7 @@ namespace Nop.Services.Catalog
                 Gtin = product.Gtin,
                 IsGiftCard = product.IsGiftCard,
                 GiftCardType = product.GiftCardType,
+                OverriddenGiftCardAmount = product.OverriddenGiftCardAmount,
                 RequireOtherProducts = product.RequireOtherProducts,
                 RequiredProductIds = product.RequiredProductIds,
                 AutomaticallyAddRequiredProducts = product.AutomaticallyAddRequiredProducts,

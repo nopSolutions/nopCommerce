@@ -138,6 +138,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the gift card type identifier
         /// </summary>
         public int GiftCardTypeId { get; set; }
+        /// <summary>
+        /// Gets or sets gift card amount that can be used after purchase. If not specified, then product price will be used.
+        /// </summary>
+        public decimal? OverriddenGiftCardAmount { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the product requires that other products are added to the cart (Product X requires Product Y)

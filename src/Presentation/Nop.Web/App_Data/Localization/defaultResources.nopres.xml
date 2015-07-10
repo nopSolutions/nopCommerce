@@ -2535,6 +2535,12 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.OrderMinimumQuantity.Hint">
     <Value>Set the minimum quantity allowed in a customer's shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenGiftCardAmount">
+    <Value>Overridden gift card amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenGiftCardAmount.Hint">
+    <Value>Enter gift card amount that can be used after purchase. If not specified, then product price will be used.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.PictureThumbnailUrl">
     <Value>Picture</Value>
   </LocaleResource>

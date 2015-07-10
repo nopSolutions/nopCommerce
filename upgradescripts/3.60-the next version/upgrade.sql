@@ -41,6 +41,12 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.Bestsellers.Vendor.Hint">
     <Value>Search by a specific vendor.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenGiftCardAmount">
+    <Value>Overridden gift card amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenGiftCardAmount.Hint">
+    <Value>Enter gift card amount that can be used after purchase. If not specified, then product price will be used.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -151,4 +157,13 @@ WHERE [DefaultLanguageId] IS NULL
 GO
 
 ALTER TABLE [Store] ALTER COLUMN [DefaultLanguageId] int NOT NULL
+GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='OverriddenGiftCardAmount')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [OverriddenGiftCardAmount] decimal NULL
+END
 GO
