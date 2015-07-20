@@ -4055,6 +4055,7 @@ label, label + * {
 	max-width: 100%;
 	max-height: 100%;
 	margin: auto;
+    border: solid 2px #CEDBE1 !important;
 }
 .comment-time {
 	margin: 0 0 15px;
@@ -4374,6 +4375,9 @@ label, label + * {
 	max-width: 100%;
 	max-height: 100%;
 	margin: auto;
+}
+.topic-post .avatar img {
+    border: solid 2px #CEDBE1 !important;
 }
 .topic-post .user-stats {
 	margin: 0 0 15px;
