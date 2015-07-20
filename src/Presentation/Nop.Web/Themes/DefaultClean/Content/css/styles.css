@@ -1248,7 +1248,6 @@ label, label + * {
 }
 .product-selectors select {
 	margin: 0 8px;
-	text-transform: lowercase;
 }
 .product-selectors .product-viewmode {
 	display: none;
