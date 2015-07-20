@@ -141,7 +141,10 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             if (serviceName != null && !serviceName.StartsWith("Australia Post.", StringComparison.InvariantCultureIgnoreCase))
                 serviceName = string.Format("Australia Post. {0}", serviceName);
             shippingOption.Name = serviceName;
-            shippingOption.Description = String.Format("{0} Days", rspParams["days"]);
+            if (!_australiaPostSettings.HideDeliveryInformation)
+            {
+                shippingOption.Description = String.Format("{0} Days", rspParams["days"]);
+            }
             shippingOption.Rate = Decimal.Parse(rspParams["charge"]);
 
             return shippingOption;
@@ -357,14 +360,18 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             var settings = new AustraliaPostSettings
             {
                 GatewayUrl = "http://drc.edeliver.com.au/ratecalc.asp",
+                AdditionalHandlingCharge = 0,
+                HideDeliveryInformation = false
             };
             _settingService.SaveSetting(settings);
 
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl", "Gateway URL");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint", "Specify gateway URL");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation", "Hide delivery information");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint", "Check to hide delivery information as description of returned shipping methods.");
             
             base.Install();
         }
@@ -379,6 +386,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge");
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint");
             
             base.Uninstall();
         }

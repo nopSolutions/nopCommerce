@@ -9,5 +9,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Models
 
         [NopResourceDisplayName("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge")]
         public decimal AdditionalHandlingCharge { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation")]
+        public bool HideDeliveryInformation { get; set; }
     }
 }

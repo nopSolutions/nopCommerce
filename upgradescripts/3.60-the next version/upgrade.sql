@@ -56,6 +56,12 @@ set @resources='
   <LocaleResource Name="Account.Fields.DateOfBirth.MinimumAge">
     <Value>You have to be {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation">
+    <Value>Hide delivery information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint">
+    <Value>Check to hide delivery information as description of returned shipping methods.</Value>
+  </LocaleResource>
 </Language>
 '
 

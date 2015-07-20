@@ -8,5 +8,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         public string GatewayUrl { get; set; }
 
         public decimal AdditionalHandlingCharge { get; set; }
+
+        public bool HideDeliveryInformation { get; set; }
     }
 }
