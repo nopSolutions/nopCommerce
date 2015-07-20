@@ -87,9 +87,8 @@ namespace Nop.Web.Controllers
                 NumReplies = topic.NumReplies,
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
-                AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
-                CustomerName = topic.Customer.FormatUserName(),
-                IsCustomerGuest = topic.Customer.IsGuest()
+                AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !topic.Customer.IsGuest(),
+                CustomerName = topic.Customer.FormatUserName()
             };
 
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
@@ -521,15 +520,14 @@ namespace Nop.Web.Controllers
                         IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
                         IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                         CustomerId = post.CustomerId,
-                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
+                        AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !post.Customer.IsGuest(),
                         CustomerName = post.Customer.FormatUserName(),
                         IsCustomerForumModerator = post.Customer.IsForumModerator(),
-                        IsCustomerGuest= post.Customer.IsGuest(),
                         ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
                         ForumPostCount = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount),
-                        ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate,
+                        ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate && !post.Customer.IsGuest(),
                         CustomerJoinDate = post.Customer.CreatedOnUtc,
-                        AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
+                        AllowPrivateMessages = _forumSettings.AllowPrivateMessages && !post.Customer.IsGuest(),
                         SignaturesEnabled = _forumSettings.SignaturesEnabled,
                         FormattedSignature = post.Customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature).FormatForumSignatureText(),
                     };
@@ -548,7 +546,7 @@ namespace Nop.Web.Controllers
                             defaultPictureType: PictureType.Avatar);
                     }
                     //location
-                    forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation;
+                    forumPostModel.ShowCustomersLocation = _customerSettings.ShowCustomersLocation && !post.Customer.IsGuest();
                     if (_customerSettings.ShowCustomersLocation)
                     {
                         var countryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
@@ -1600,9 +1598,8 @@ namespace Nop.Web.Controllers
                 model.ForumTopicSeName = post.ForumTopic.GetSeName();
                 model.ForumTopicSubject = post.ForumTopic.StripTopicSubject();
                 model.CustomerId = post.CustomerId;
-                model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles;
+                model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles && !post.Customer.IsGuest();
                 model.CustomerName = post.Customer.FormatUserName();
-                model.IsCustomerGuest = post.Customer.IsGuest();
                 //created on string
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
                     model.PostCreatedOnStr = post.CreatedOnUtc.RelativeFormat(true, "f");

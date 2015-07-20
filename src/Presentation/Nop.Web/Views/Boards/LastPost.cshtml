@@ -16,7 +16,7 @@
     {
         <div class="author">
             <label>@T("Forum.By"):</label>
-            @if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
+            @if (Model.AllowViewingProfiles)
             {
                 @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
             }

@@ -178,7 +178,7 @@
                                                 @if (topic.CustomerId > 0)
                                                 {
                                                     <label>@T("Forum.Author"):</label>
-                                                    if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
+                                                    if (topic.AllowViewingProfiles)
                                                     {
                                                     @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                                     }

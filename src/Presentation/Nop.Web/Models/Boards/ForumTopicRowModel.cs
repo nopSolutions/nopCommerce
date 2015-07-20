@@ -17,7 +17,6 @@ namespace Nop.Web.Models.Boards
         public int CustomerId { get; set; }
         public bool AllowViewingProfiles { get; set; }
         public string CustomerName { get; set; }
-        public bool IsCustomerGuest { get; set; }
 
         //posts
         public int TotalPostPages { get; set; }

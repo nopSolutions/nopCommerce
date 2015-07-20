@@ -6,7 +6,7 @@
         <div class="user-info">
             @if (Model.CustomerId > 0)
             {
-                if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
+                if (Model.AllowViewingProfiles)
                 {
                     @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
                 }
@@ -18,7 +18,7 @@
             @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
             {
                 <div class="avatar">
-                    @if (Model.CustomerId > 0 && Model.AllowViewingProfiles && !Model.IsCustomerGuest)
+                    @if (Model.CustomerId > 0 && Model.AllowViewingProfiles)
                     {
                         <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })" class="avatar-img-link">
                             <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
@@ -46,14 +46,14 @@
                     <span>@Model.ForumPostCount</span>
                 </li>
             }
-            @if (Model.ShowCustomersJoinDate && !Model.IsCustomerGuest)
+            @if (Model.ShowCustomersJoinDate)
             {
                 <li class="joined">
                     <label>@T("Forum.Joined"):</label>
                     <span>@Model.CustomerJoinDate.ToString("d")</span>
                 </li>
             }
-            @if (Model.ShowCustomersLocation && !Model.IsCustomerGuest & !String.IsNullOrEmpty(Model.CustomerLocation))
+            @if (Model.ShowCustomersLocation && !String.IsNullOrEmpty(Model.CustomerLocation))
             {
                 <li class="location">
                     <label>@T("Forum.Location"):</label>
@@ -61,7 +61,7 @@
                 </li>
             }
         </ul>
-        @if (Model.AllowPrivateMessages && !Model.IsCustomerGuest)
+        @if (Model.AllowPrivateMessages)
         {
             <div class="send-pm">
                 @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-button" })

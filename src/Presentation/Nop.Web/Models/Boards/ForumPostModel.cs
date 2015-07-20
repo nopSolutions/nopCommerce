@@ -18,7 +18,6 @@ namespace Nop.Web.Models.Boards
         public string CustomerAvatarUrl { get; set; }
         public string CustomerName { get; set; }
         public bool IsCustomerForumModerator { get; set; }
-        public bool IsCustomerGuest { get; set; }
 
         public string PostCreatedOnStr { get; set; }
 
