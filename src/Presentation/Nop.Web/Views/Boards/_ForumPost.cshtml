@@ -4,21 +4,18 @@
 <div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
     <div class="post-info">
         <div class="user-info">
-            @if (Model.CustomerId > 0)
+            @if (Model.AllowViewingProfiles)
             {
-                if (Model.AllowViewingProfiles)
-                {
-                    @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
-                }
-                else
-                {
-                    <span class="username">@Model.CustomerName</span>
-                }
+                @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
+            }
+            else
+            {
+                <span class="username">@Model.CustomerName</span>
             }
             @if (!String.IsNullOrEmpty(Model.CustomerAvatarUrl))
             {
                 <div class="avatar">
-                    @if (Model.CustomerId > 0 && Model.AllowViewingProfiles)
+                    @if (Model.AllowViewingProfiles)
                     {
                         <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId })" class="avatar-img-link">
                             <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />

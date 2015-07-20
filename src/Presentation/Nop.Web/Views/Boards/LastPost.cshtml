@@ -12,20 +12,17 @@
             @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
         </div>
     }
-    if (Model.CustomerId > 0)
-    {
-        <div class="author">
-            <label>@T("Forum.By"):</label>
-            @if (Model.AllowViewingProfiles)
-            {
-                @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
-            }
-            else
-            {
-                @Model.CustomerName
-            }
-        </div>
-    }
+    <div class="author">
+        <label>@T("Forum.By"):</label>
+        @if (Model.AllowViewingProfiles)
+        {
+            @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
+        }
+        else
+        {
+            @Model.CustomerName
+        }
+    </div>
 }
 else
 {
