@@ -95,12 +95,12 @@
                                                 @if (comment.AllowViewingProfiles)
                                                 {
                                                     <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="avatar-img-link">
-                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
+                                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img"  alt="avatar" />
                                                     </a>
                                                 }
                                                 else
                                                 {
-                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
+                                                    <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" alt="avatar" />
                                                 }
                                             </div>
                                         }
