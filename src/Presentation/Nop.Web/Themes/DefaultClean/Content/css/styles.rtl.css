@@ -4227,9 +4227,6 @@ label, label + * {
 	display: inline-block;
 	color: #777;
 }
-.forum-group .latest-post .author {
-	display: none;
-}
 
 .forums-table-section .view-all {
 	margin: 30px 0 0;
