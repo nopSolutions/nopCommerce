@@ -30,6 +30,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
+using Nop.Services.Shipping;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Messages
@@ -56,6 +57,7 @@ namespace Nop.Services.Messages
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly ShippingSettings _shippingSettings;
 
         private readonly IEventPublisher _eventPublisher;
 
@@ -80,6 +82,7 @@ namespace Nop.Services.Messages
             CatalogSettings catalogSettings,
             TaxSettings taxSettings,
             CurrencySettings currencySettings,
+            ShippingSettings shippingSettings,
             IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
@@ -100,6 +103,7 @@ namespace Nop.Services.Messages
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            this._shippingSettings = shippingSettings;
             this._eventPublisher = eventPublisher;
         }
 
@@ -642,6 +646,25 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
             tokens.Add(new Token("Shipment.TrackingNumber", shipment.TrackingNumber));
+            var trackingNumberUrl = "";
+            if (!String.IsNullOrEmpty(shipment.TrackingNumber))
+            {
+                //we cannot inject IShippingService into constructor because it'll cause circular references.
+                //that's why we resolve it here this way
+                var shippingService = EngineContext.Current.Resolve<IShippingService>();
+                var srcm = shippingService.LoadShippingRateComputationMethodBySystemName(shipment.Order.ShippingRateComputationMethodSystemName);
+                if (srcm != null &&
+                    srcm.PluginDescriptor.Installed &&
+                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                {
+                    var shipmentTracker = srcm.ShipmentTracker;
+                    if (shipmentTracker != null)
+                    {
+                        trackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                    }
+                }
+            }
+            tokens.Add(new Token("Shipment.TrackingNumberURL", trackingNumberUrl, true));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
             tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", GetStoreUrl(shipment.Order.StoreId), shipment.Id), true));
 
@@ -934,6 +957,7 @@ namespace Nop.Services.Messages
                 "%RecurringPayment.ID%",
                 "%Shipment.ShipmentNumber%",
                 "%Shipment.TrackingNumber%",
+                "%Shipment.TrackingNumberURL%",
                 "%Shipment.Product(s)%",
                 "%Shipment.URLForCustomer%",
                 "%ReturnRequest.ID%",
