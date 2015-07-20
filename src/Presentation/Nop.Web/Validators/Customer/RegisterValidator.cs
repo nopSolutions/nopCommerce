@@ -1,5 +1,7 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 using FluentValidation.Results;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -58,14 +60,21 @@ namespace Nop.Web.Validators.Customer
                     return null;
                 });
             }
-            if (customerSettings.DateOfBirthRequired && customerSettings.DateOfBirthEnabled)
+            if (customerSettings.DateOfBirthEnabled && customerSettings.DateOfBirthRequired)
             {
                 Custom(x =>
                 {
                     var dateOfBirth = x.ParseDateOfBirth();
-                    if (dateOfBirth == null)
+                    //entered?
+                    if (!dateOfBirth.HasValue)
                     {
                         return new ValidationFailure("DateOfBirthDay", localizationService.GetResource("Account.Fields.DateOfBirth.Required"));
+                    }
+                    //minimum age
+                    if (customerSettings.DateOfBirthMinimumAge.HasValue &&
+                        CommonHelper.GetDifferenceInYears(dateOfBirth.Value, DateTime.Today) < customerSettings.DateOfBirthMinimumAge.Value)
+                    {
+                        return new ValidationFailure("DateOfBirthDay", string.Format(localizationService.GetResource("Account.Fields.DateOfBirth.MinimumAge"), customerSettings.DateOfBirthMinimumAge.Value));
                     }
                     return null;
                 });

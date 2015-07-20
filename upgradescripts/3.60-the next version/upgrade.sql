@@ -47,6 +47,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.OverriddenGiftCardAmount.Hint">
     <Value>Enter gift card amount that can be used after purchase. If not specified, then product price will be used.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthMinimumAge">
+    <Value>Customer minimum age</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthMinimumAge.Hint">
+    <Value>Enter minimum allowed age. Leave empty if customers of all ages are allowed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.DateOfBirth.MinimumAge">
+    <Value>You have to be {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -165,5 +174,13 @@ IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') 
 BEGIN
 	ALTER TABLE [Product]
 	ADD [OverriddenGiftCardAmount] decimal NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.dateofbirthminimumage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customersettings.dateofbirthminimumage', N'', 0)
 END
 GO

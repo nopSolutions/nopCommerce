@@ -4656,6 +4656,8 @@ namespace Nop.Services.Installation
                     CustomerNameFormat = CustomerNameFormat.ShowFirstName,
                     GenderEnabled = true,
                     DateOfBirthEnabled = true,
+                    DateOfBirthRequired = false,
+                    DateOfBirthMinimumAge = null,
                     CompanyEnabled = true,
                     StreetAddressEnabled = false,
                     StreetAddress2Enabled = false,

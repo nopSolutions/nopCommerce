@@ -264,6 +264,9 @@
   <LocaleResource Name="Account.Fields.DateOfBirth">
     <Value>Date of birth</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.DateOfBirth.MinimumAge">
+    <Value>You have to be {0}</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.DateOfBirth.Required">
     <Value>Date of birth is required</Value>
   </LocaleResource>
@@ -4964,6 +4967,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthEnabled.Hint">
     <Value>Set if 'Date of Birth' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthMinimumAge">
+    <Value>Customer minimum age</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthMinimumAge.Hint">
+    <Value>Enter minimum allowed age. Leave empty if customers of all ages are allowed.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DateOfBirthRequired">
     <Value>'Date of Birth' required</Value>

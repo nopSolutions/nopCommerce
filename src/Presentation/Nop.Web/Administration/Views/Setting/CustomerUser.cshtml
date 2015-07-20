@@ -294,6 +294,7 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.StateProvinceEnabled)").click(toggleCustomerStateProvinceFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleCustomerRequiredFormField);
@@ -340,6 +341,13 @@
                 $('#pnlCustomerDateOfBirthRequired').show();
             } else {
                 $('#pnlCustomerDateOfBirthRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)').is(':checked') &&
+                $('#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)').is(':checked')) {
+                $('#pnlDateOfBirthMinimumAge').show();
+            } else {
+                $('#pnlDateOfBirthMinimumAge').hide();
             }
 
             if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
@@ -434,6 +442,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.DateOfBirthRequired)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthRequired)
+            </td>
+        </tr>
+        <tr id="pnlDateOfBirthMinimumAge">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.DateOfBirthMinimumAge):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.DateOfBirthMinimumAge)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.DateOfBirthMinimumAge)
             </td>
         </tr>
         <tr>

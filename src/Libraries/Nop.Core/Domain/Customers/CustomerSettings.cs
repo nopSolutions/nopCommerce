@@ -150,6 +150,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether 'Date of Birth' is required
         /// </summary>
         public bool DateOfBirthRequired { get; set; }
+        /// <summary>
+        /// Gets or sets a minimum age. Null if ignored
+        /// </summary>
+        public int? DateOfBirthMinimumAge { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether 'Company' is enabled
