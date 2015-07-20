@@ -329,11 +329,13 @@ namespace Nop.Web.Framework
         /// <param name="selectedMonth">Selected month</param>
         /// <param name="selectedYear">Selected year</param>
         /// <param name="localizeLabels">Localize labels</param>
+        /// <param name="htmlAttributes">HTML attributes</param>
         /// <returns></returns>
         public static MvcHtmlString DatePickerDropDowns(this HtmlHelper html,
             string dayName, string monthName, string yearName,
             int? beginYear = null, int? endYear = null,
-            int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null, bool localizeLabels = true)
+            int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null,
+            bool localizeLabels = true, object htmlAttributes = null)
         {
             var daysList = new TagBuilder("select");
             var monthsList = new TagBuilder("select");
@@ -342,6 +344,11 @@ namespace Nop.Web.Framework
             daysList.Attributes.Add("name", dayName);
             monthsList.Attributes.Add("name", monthName);
             yearsList.Attributes.Add("name", yearName);
+
+            var htmlAttributesDictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            daysList.MergeAttributes(htmlAttributesDictionary, true);
+            monthsList.MergeAttributes(htmlAttributesDictionary, true);
+            yearsList.MergeAttributes(htmlAttributesDictionary, true);
 
             var days = new StringBuilder();
             var months = new StringBuilder();
@@ -437,7 +444,7 @@ namespace Nop.Web.Framework
             }
             tag.SetInnerText(resolvedLabelText);
 
-            var dictionary = ((IDictionary<string, object>)HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
+            var dictionary = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             tag.MergeAttributes(dictionary, true);
 
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
