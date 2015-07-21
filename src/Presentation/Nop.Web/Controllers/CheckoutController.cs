@@ -158,10 +158,13 @@ namespace Nop.Web.Controllers
             var model = new CheckoutBillingAddressModel();
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                //allow billing
-                .Where(a => a.Country == null || a.Country.AllowsBilling)
-                //enabled for the current store
-                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .Where(a => a.Country == null || 
+                    (//published
+                    a.Country.Published && 
+                    //allow billing
+                    a.Country.AllowsBilling && 
+                    //enabled for the current store
+                    _storeMappingService.Authorize(a.Country)))
                 .ToList();
             foreach (var address in addresses)
             {
@@ -207,10 +210,13 @@ namespace Nop.Web.Controllers
             }
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses
-                //allow shipping
-                .Where(a => a.Country == null || a.Country.AllowsShipping)
-                //enabled for the current store
-                .Where(a => a.Country == null || _storeMappingService.Authorize(a.Country))
+                .Where(a => a.Country == null || 
+                    (//published
+                    a.Country.Published &&
+                    //allow shipping
+                    a.Country.AllowsShipping &&
+                    //enabled for the current store
+                    _storeMappingService.Authorize(a.Country)))
                 .ToList();
             foreach (var address in addresses)
             {
