@@ -64,15 +64,15 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
         #region Utilities
 
-
         /// <summary>
         /// Gets Authorize.NET URL
         /// </summary>
         /// <returns></returns>
         private string GetAuthorizeNetUrl()
         {
-            return _authorizeNetPaymentSettings.UseSandbox ? "https://test.authorize.net/gateway/transact.dll" :
-                "https://secure.authorize.net/gateway/transact.dll";
+            return _authorizeNetPaymentSettings.UseSandbox ? 
+                "https://test.authorize.net/gateway/transact.dll": 
+                "https://secure2.authorize.net/gateway/transact.dll";
         }
 
         /// <summary>

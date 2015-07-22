@@ -240,10 +240,10 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <WebReferenceUrl Include="https://apitest.authorize.net/soap/v1/Service.asmx">
+    <WebReferenceUrl Include="https://api2.authorize.net/soap/v1/Service.asmx">
       <UrlBehavior>Dynamic</UrlBehavior>
       <RelPath>Web References\net.authorize.api\</RelPath>
-      <UpdateFromURL>https://apitest.authorize.net/soap/v1/Service.asmx</UpdateFromURL>
+      <UpdateFromURL>https://api2.authorize.net/soap/v1/Service.asmx</UpdateFromURL>
       <ServiceLocationURL>
       </ServiceLocationURL>
       <CachedDynamicPropName>

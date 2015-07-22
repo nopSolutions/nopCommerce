@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="Nop_Plugin_Payments_AuthorizeNet_net_authorize_api_Service" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">https://apitest.authorize.net/soap/v1/Service.asmx</Value>
+      <Value Profile="(Default)">https://api2.authorize.net/soap/v1/Service.asmx</Value>
     </Setting>
   </Settings>
 </SettingsFile>
