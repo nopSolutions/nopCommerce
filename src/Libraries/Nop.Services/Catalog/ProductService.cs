@@ -1165,6 +1165,9 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            if (quantityToChange == 0)
+                return;
+
             //var prevStockQuantity = product.GetTotalStockQuantity();
 
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)

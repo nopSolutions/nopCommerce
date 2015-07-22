@@ -1883,6 +1883,8 @@ namespace Nop.Admin.Controllers
 
             if (quantity > 0)
             {
+                int qtyDifference = orderItem.Quantity - quantity;
+
                 orderItem.UnitPriceInclTax = unitPriceInclTax;
                 orderItem.UnitPriceExclTax = unitPriceExclTax;
                 orderItem.Quantity = quantity;
@@ -1891,9 +1893,17 @@ namespace Nop.Admin.Controllers
                 orderItem.PriceInclTax = priceInclTax;
                 orderItem.PriceExclTax = priceExclTax;
                 _orderService.UpdateOrder(order);
+
+                //adjust inventory
+                _productService.AdjustInventory(orderItem.Product, qtyDifference, orderItem.AttributesXml);
+
             }
             else
             {
+                //adjust inventory
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+
+                //delete item
                 _orderService.DeleteOrderItem(orderItem);
             }
 
@@ -1960,6 +1970,10 @@ namespace Nop.Admin.Controllers
             }
             else
             {
+                //adjust inventory
+                _productService.AdjustInventory(orderItem.Product, orderItem.Quantity, orderItem.AttributesXml);
+
+                //delete item
                 _orderService.DeleteOrderItem(orderItem);
 
                 //add a note
@@ -2492,6 +2506,9 @@ namespace Nop.Admin.Controllers
                 };
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
+
+                //adjust inventory
+                _productService.AdjustInventory(orderItem.Product, -orderItem.Quantity, orderItem.AttributesXml);
 
                 //add a note
                 order.OrderNotes.Add(new OrderNote
