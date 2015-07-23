@@ -156,4 +156,6 @@ body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .customer-info-tab .gender{display:inline-block;}
 .customer-info-tab ul.option-list{padding:0px;margin:0px;}
 .customer-info-tab ul.option-list li{list-style:none;}
+.address-block ul.option-list{padding:0px;margin:0px;}
+.address-block ul.option-list li{list-style:none;}
 .required-product-names{display:block;margin-top:5px;}
