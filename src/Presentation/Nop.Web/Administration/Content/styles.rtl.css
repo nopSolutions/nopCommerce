@@ -60,7 +60,6 @@ label{padding-left:3px;}
 .headerstyle th{background:url(images/admin-gvw-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
 .headerstyle th a{font-weight:700;text-decoration:none;text-align:center;color:#fff;display:block;padding-left:10px;}
 .rowstyle td,.altrowstyle td{padding:4px 10px;border-left:solid 1px #A0C0E7;border-left-color:gray;}
-.PagerStyle{height:28px;background:url(Images/grid_header_back.png) repeat-x;background:#EEE;vertical-align:middle;}
 /* MISC. CLASSES */
 .progress{position:absolute;top:20px;width:280px;height:40px;left:0;right:0;margin-right:auto;margin-left:auto;background:none repeat scroll 0 0 #FFF;padding:5px 10px;text-align:center;z-index:2147483647;}
 .clearer{zoom:1;}

@@ -399,7 +399,6 @@
     <Content Include="Content\images\error-message.gif" />
     <Content Include="Content\images\google-maps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
-    <Content Include="Content\images\grid_header_back.png" />
     <Content Include="Content\images\ico-blacklist.png" />
     <Content Include="Content\images\ico-catalog.png" />
     <Content Include="Content\images\ico-configuration.png" />
