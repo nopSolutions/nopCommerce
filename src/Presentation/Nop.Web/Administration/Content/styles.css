@@ -84,9 +84,9 @@ a img{border:0;}
 /* MASTER HEADER STATUS BAR */
 .status-bar{background:#e7efef no-repeat;border:solid 1px #acacac;padding:5px;font-weight:700;}
 /* MASTER ERRORS */
-.messageBox{background-color:#F4F4F4;background-position:7px 5px;background-repeat:no-repeat;color:#333;font-family:Tahoma;font-size:11px;margin:5px 0;padding:8px 8px 8px 30px;}
-.messageBoxError{background-color:#FFECEC;background-image:url(images/error-message.gif);}
-.messageBoxSuccess{background-image:url(images/success-message.gif);}
+.message-box{background-color:#F4F4F4;background-position:7px 5px;background-repeat:no-repeat;color:#333;font-family:Tahoma;font-size:11px;margin:5px 0;padding:8px 8px 8px 30px;}
+.message-box-error{background-color:#FFECEC;background-image:url(images/error-message.gif);}
+.message-box-success{background-image:url(images/success-message.gif);}
 .field-validation-error,.validation-summary-errors {color:red;}
 /* MASTER CONTENT */
 .content .cph{padding:20px 15px 5px;}
