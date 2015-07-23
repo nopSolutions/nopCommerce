@@ -51,7 +51,7 @@ ul{
   color:#FFF;
 }
 #pnlDirList .selected,#pnlDirList div.selected:hover{background-color: #DFD !important;}
-.dialog input,#fileUploads{width:97%;}
+.dialog input{width:97%;}
 .filesize{font-weight:bold;margin-top:4px;display:inline-block;}
 .pnlDragFile,.pnlDragDir{
   background:#FFF;
@@ -75,7 +75,7 @@ ul{
 }
 #txtSearch{
   padding:0 22px 0 3px;
-  background:url(../images/search.png) no-repeat 87px center;
+  background:url(../images/sprite.png) no-repeat 87px -314px;
   width:80px;
   height:20px;
 }
@@ -152,21 +152,28 @@ hr{margin:0;color:#AAA;}
   margin-bottom: 3px;
 }
 .actions input[type=button]:hover,.actions input.selected{background-color: #DFD;cursor:pointer;}
-#btnAddDir, #mnuCreateDir{background-image:url(../images/folder-add.png);}
-#mnuDownloadDir{background-image:url(../images/folder-download.png);}
-#btnDeleteDir,#mnuDeleteDir{background-image:url(../images/folder-delete.png);}
-#btnAddFile{background-image:url(../images/file-add.png);}
-#btnDeleteFile,#mnuDeleteFile{background-image:url(../images/file-delete.png);}
+#btnAddDir{background-image:url(../images/sprite.png);background-position: 4px -213px;}
+#mnuCreateDir{background-image:url(../images/sprite.png);background-position: 4px -210px;}
+#mnuDownloadDir{background-image:url(../images/sprite.png);background-position: 4px 7px;}
+#btnDeleteDir{background-image:url(../images/sprite.png);background-position: 4px -237px;}
+#mnuDeleteDir{background-image:url(../images/sprite.png);background-position: 4px -235px;}
+#btnAddFile{background-image:url(../images/sprite.png);background-position: 4px -81px;}
+#btnDeleteFile{background-image:url(../images/sprite.png);background-position: 4px -104px;}
+#mnuDeleteFile{background-image:url(../images/sprite.png);background-position: 4px -102px;}
 #btnDeleteFile{margin-right:15px;}
-#btnDownloadFile,#mnuDownload{background-image:url(../images/file-download.png);}
-#btnPreviewFile,#mnuPreview{background-image:url(../images/preview.png);}
-#btnSelectFile,#mnuSelectFile{background-image:url(../images/select.png);}
-#btnThumbView{background-image:url(../images/view-tile.png);background-position: center center;}
-#btnListView{background-image:url(../images/view-list.png);background-position: center center;}
-#btnRenameFile,#btnRenameDir,#mnuRenameDir,#mnuRenameFile{background-image:url(../images/rename.png);}
-#mnuDirCut,#mnuFileCut{background-image:url(../images/cut.png);}
-#mnuDirCopy,#mnuFileCopy{background-image:url(../images/copy.png);}
-#mnuDirPaste,#mnuFilePaste{background-image:url(../images/paste.png);}
+#btnDownloadFile{background-image:url(../images/sprite.png);background-position: 4px -128px;}
+#mnuDownload{background-image:url(../images/sprite.png);background-position: 4px -126px;}
+#btnPreviewFile{background-image:url(../images/sprite.png);background-position: 4px -285px;}
+#mnuPreview{background-image:url(../images/sprite.png);background-position: 4px -283px;}
+#btnSelectFile{background-image:url(../images/sprite.png);background-position: 4px -399px;}
+#mnuSelectFile{background-image:url(../images/sprite.png);background-position: 4px -397px;}
+#btnThumbView{background-image:url(../images/sprite.png);background-position: center -447px;}
+#btnListView{background-image:url(../images/sprite.png);background-position: center -483px;}
+#btnRenameFile,#btnRenameDir{background-image:url(../images/sprite.png);background-position: 4px 4px;}
+#mnuRenameDir,#mnuRenameFile{background-image:url(../images/sprite.png);background-position: 4px 7px;}
+#mnuDirCut,#mnuFileCut{background-image:url(../images/sprite.png);background-position: 4px -47px;}
+#mnuDirCopy,#mnuFileCopy{background-image:url(../images/sprite.png);background-position: 4px -20px;}
+#mnuDirPaste,#mnuFilePaste{background-image:url(../images/sprite.png);background-position: 4px -370px;}
 
 /* END OF Buttons */
 /* File list views */
@@ -209,6 +216,93 @@ ul#pnlFileList.thumbView .size{
   margin:0;
 }
 /* END OF File list views */
+#fileUploads{width:100%;}
+.uploadFilesList{
+  width:100%;
+  height:300px;
+  overflow:auto;
+}
+#uploadResult{
+
+}
 div.ui-tooltip {
     max-width: 90%;
 }
+/* Upload dialog */
+.uploadFilesList{
+  font-size: 11px;
+}
+.fileUpload{
+  margin: 8px 0 0 0;
+  position: relative;
+  border:1px solid #EEE;
+}
+.fileUpload .error{font-weight:bold;}
+.fileName{
+  z-index:2;
+  line-height: 20px;
+  height:20px;
+  overflow: hidden;
+  padding:0 13px 0 5px;
+}
+.progressPercent{z-index:2;}
+.stripes{
+  background: url('../images/stripes.gif') repeat-x;
+  -moz-opacity: 0.40;
+  -khtml-opacity: 0.40;
+  opacity: 0.40;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=40);
+  filter: alpha(opacity=40);
+  width:100%;
+  height:100%;
+  z-index:-1;
+  position: relative;
+}
+.uploadProgress{
+  position: absolute;
+  width:0;
+  height:100%;
+  top:0;
+  left:0;
+  z-index:-1;
+  background: #d3edff;
+  background: -moz-linear-gradient(top,  #d3edff 0%, #cbebff 47%, #a1dbff 100%); 
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d3edff), color-stop(47%,#cbebff), color-stop(100%,#a1dbff));
+  background: -webkit-linear-gradient(top,  #d3edff 0%,#cbebff 47%,#a1dbff 100%);
+  background: -o-linear-gradient(top,  #d3edff 0%,#cbebff 47%,#a1dbff 100%);
+  background: -ms-linear-gradient(top,  #d3edff 0%,#cbebff 47%,#a1dbff 100%);
+  background: linear-gradient(to bottom,  #d3edff 0%,#cbebff 47%,#a1dbff 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d3edff', endColorstr='#a1dbff',GradientType=0 );
+}
+.uploadError{
+  background: #ff8787;
+  background: -moz-linear-gradient(top,  #ff8787 0%, #ffa3a3 45%, #ff5e5e 100%); 
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff8787), color-stop(45%,#ffa3a3), color-stop(100%,#ff5e5e)); 
+  background: -webkit-linear-gradient(top,  #ff8787 0%,#ffa3a3 45%,#ff5e5e 100%);
+  background: -o-linear-gradient(top,  #ff8787 0%,#ffa3a3 45%,#ff5e5e 100%); 
+  background: -ms-linear-gradient(top,  #ff8787 0%,#ffa3a3 45%,#ff5e5e 100%);
+  background: linear-gradient(to bottom,  #ff8787 0%,#ffa3a3 45%,#ff5e5e 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff8787', endColorstr='#ff5e5e',GradientType=0 );
+}
+.uploadComplete{
+  background: #dbff87;
+  background: -moz-linear-gradient(top,  #dbff87 0%, #e0f49c 45%, #bddd49 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#dbff87), color-stop(45%,#e0f49c), color-stop(100%,#bddd49));
+  background: -webkit-linear-gradient(top,  #dbff87 0%,#e0f49c 45%,#bddd49 100%);
+  background: -o-linear-gradient(top,  #dbff87 0%,#e0f49c 45%,#bddd49 100%);
+  background: -ms-linear-gradient(top,  #dbff87 0%,#e0f49c 45%,#bddd49 100%);
+  background: linear-gradient(to bottom,  #dbff87 0%,#e0f49c 45%,#bddd49 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dbff87', endColorstr='#bddd49',GradientType=0 );
+}
+.uploadError .stripes,.uploadComplete .stripes{display:none;}
+.removeUpload{
+  background:url(../images/sprite.png) no-repeat 6px -421px;
+  position:absolute;
+  right:0;
+  top:0;
+  height: 100%;
+  width:20px;
+  cursor:pointer;
+}
+/* END OF Upload dialog */

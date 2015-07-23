@@ -48,7 +48,9 @@ function Directory(fullPath, numDirs, numFiles){
   };
   this.SetEvents = function(){
     var el = this.GetElement();
-    el.draggable({helper:makeDragDir,start:startDragDir,cursorAt: { left: 10 ,top:10},delay:200});
+    if(RoxyFilemanConf.MOVEDIR){
+      el.draggable({helper:makeDragDir,start:startDragDir,cursorAt: { left: 10 ,top:10},delay:200});
+    }
     el = el.children('div');
     el.click(function(e){
        selectDir(this);
@@ -89,7 +91,15 @@ function Directory(fullPath, numDirs, numFiles){
   this.SetStatusBar = function(){
     $('#pnlStatus').html(this.files+' '+(this.files == 1?t('file'):t('files')));
   };
-  this.Select = function(){
+  this.SetSelectedFile = function(path){
+    if(path){
+      var f = File.Parse(path);
+      if(f){
+        selectFile(f.GetElement()); 
+      }
+    }
+  };
+  this.Select = function(selectedFile){
     var el = this.GetElement();
     el.children('div').addClass('selected');
     $('#pnlDirList li[data-path!="'+this.fullPath+'"] > div').removeClass('selected');
@@ -101,7 +111,8 @@ function Directory(fullPath, numDirs, numFiles){
       p = p.GetParent();
     }
     this.Expand(true);
-    this.ListFiles(true);
+    this.ListFiles(true, selectedFile);
+    setLastDir(this.fullPath);
   };
   this.GetElement = function(){
     return  $('li[data-path="'+this.fullPath+'"]');
@@ -179,8 +190,10 @@ function Directory(fullPath, numDirs, numFiles){
     var dir = this;
     $.ajax({
         url: dirListURL,
+        type:'POST',
         dataType: 'json',
-        async:true,
+        async: false,
+        cache: false,
         success: function(dirs){
             $('#pnlDirList').children('li').remove();
             for(i = 0; i < dirs.length; i++){
@@ -224,8 +237,11 @@ function Directory(fullPath, numDirs, numFiles){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {d: this.fullPath, n: newName},
         dataType: 'json',
         async:false,
+        cache: false,
         success: function(data){
             if(data.res.toLowerCase() == 'ok'){
               item.LoadAll(RoxyUtils.MakePath(item.fullPath, newName));
@@ -251,8 +267,11 @@ function Directory(fullPath, numDirs, numFiles){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {d: this.fullPath},
         dataType: 'json',
         async:false,
+        cache: false,
         success: function(data){
             if(data.res.toLowerCase() == 'ok'){
               var parent = item.GetParent();
@@ -284,8 +303,11 @@ function Directory(fullPath, numDirs, numFiles){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {d: this.fullPath, n: newName},
         dataType: 'json',
         async:false,
+        cache: false,
         success: function(data){
             if(data.res.toLowerCase() == 'ok'){
               var newPath = RoxyUtils.MakePath(item.path, newName);
@@ -313,8 +335,11 @@ function Directory(fullPath, numDirs, numFiles){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {d: this.fullPath, n: newPath},
         dataType: 'json',
         async:false,
+        cache: false,
         success: function(data){
             if(data.res.toLowerCase() == 'ok'){
               var d = Directory.Parse(newPath);
@@ -345,8 +370,11 @@ function Directory(fullPath, numDirs, numFiles){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {d: this.fullPath, n: newPath},
         dataType: 'json',
         async:false,
+        cache: false,
         success: function(data){
             if(data.res.toLowerCase() == 'ok'){
               item.LoadAll(RoxyUtils.MakePath(newPath, item.name));
@@ -361,14 +389,14 @@ function Directory(fullPath, numDirs, numFiles){
     });
     return ret;
   };
-  this.ListFiles = function(refresh){
+  this.ListFiles = function(refresh, selectedFile){
     $('#pnlLoading').show();
     $('#pnlEmptyDir').hide();
     $('#pnlFileList').hide();
     $('#pnlSearchNoFiles').hide();
-    this.LoadFiles(refresh);
+    this.LoadFiles(refresh, selectedFile);
   };
-  this.FilesLoaded = function(filesList){
+  this.FilesLoaded = function(filesList, selectedFile){
     filesList = this.SortFiles(filesList);
     $('#pnlFileList').html('');
     for(i = 0; i < filesList.length; i++){
@@ -385,8 +413,9 @@ function Directory(fullPath, numDirs, numFiles){
     filterFiles();
     switchView();
     $('#pnlFileList').show();
+    this.SetSelectedFile(selectedFile);
   };
-  this.LoadFiles = function(refresh){
+  this.LoadFiles = function(refresh, selectedFile){
     if(!RoxyFilemanConf.FILESLIST){
       alert(t('E_ActionDisabled'));
       return;
@@ -400,13 +429,16 @@ function Directory(fullPath, numDirs, numFiles){
 
       $.ajax({
           url: fileURL,
+          type: 'POST',
+          data: {d: this.fullPath, type: RoxyUtils.GetUrlParam('type')},
           dataType: 'json',
           async:true,
+          cache: false,
           success: function(files){
               for(i = 0; i < files.length; i++){
                 ret.push(new File(files[i].p, files[i].s, files[i].t, files[i].w, files[i].h));
               }
-              item.FilesLoaded(ret);
+              item.FilesLoaded(ret, selectedFile);
           },
           error: function(data){
               alert(t('E_LoadingAjax')+' '+fileURL);
@@ -417,7 +449,7 @@ function Directory(fullPath, numDirs, numFiles){
       $('#pnlFileList li').each(function(){
         ret.push(new File($(this).attr('data-path'), $(this).attr('data-size'), $(this).attr('data-time'), $(this).attr('data-w'), $(this).attr('data-h')));
       });
-      item.FilesLoaded(ret);
+      item.FilesLoaded(ret, selectedFile);
     }
 
     return ret;

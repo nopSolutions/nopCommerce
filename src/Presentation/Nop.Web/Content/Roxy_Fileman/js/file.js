@@ -41,7 +41,9 @@ function File(filePath, fileSize, modTime, w, h){
     html += '</li>';
     $('#pnlFileList').append(html);
     var li = $("#pnlFileList li:last");
-    li.draggable({helper:makeDragFile,start:startDragFile,cursorAt: { left: 10 ,top:10},delay:200});
+    if(RoxyFilemanConf.MOVEFILE){
+      li.draggable({helper:makeDragFile,start:startDragFile,cursorAt: { left: 10 ,top:10},delay:200});
+    }
     li.click(function(e){
        selectFile(this);
     });
@@ -86,6 +88,8 @@ function File(filePath, fileSize, modTime, w, h){
     var item = this;
     $.ajax({
         url: deleteUrl,
+        type: 'POST',
+        data: {f: this.fullPath},
         dataType: 'json',
         async:false,
         success: function(data){
@@ -120,6 +124,8 @@ function File(filePath, fileSize, modTime, w, h){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {f: this.fullPath, n: newName},
         dataType: 'json',
         async:false,
         success: function(data){
@@ -150,6 +156,8 @@ function File(filePath, fileSize, modTime, w, h){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {f: this.fullPath, n: newPath},
         dataType: 'json',
         async:false,
         success: function(data){
@@ -184,6 +192,8 @@ function File(filePath, fileSize, modTime, w, h){
     var ret = false;
     $.ajax({
         url: url,
+        type: 'POST',
+        data: {f: this.fullPath, n: newFullPath},
         dataType: 'json',
         async:false,
         success: function(data){

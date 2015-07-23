@@ -39,7 +39,7 @@ RoxyUtils.FormatDate = function(date){
     ret = $.format.date(date, RoxyFilemanConf.DATEFORMAT);
   }
   catch(ex){
-    alert(ex);
+    //alert(ex);
     ret = date.toString();
     ret = ret.substr(0, ret.indexOf('UTC'));
   }
@@ -116,9 +116,9 @@ RoxyUtils.FileExists = function(path) {
   return ret;
 };
 RoxyUtils.GetFileIcon = function(path){
-  ret = 'images/filetypes/file_extension_' + RoxyUtils.GetFileExt(path).toLowerCase() + '.png';
-  if(!fileTypeIcons[RoxyUtils.GetFileExt(path).toLowerCase()]){
-    ret = 'images/filetypes/unknown.png';
+  ret = 'images/filetypes/unknown.png';//'images/filetypes/file_extension_' + RoxyUtils.GetFileExt(path).toLowerCase() + '.png';
+  if(fileTypeIcons[RoxyUtils.GetFileExt(path).toLowerCase()]){
+    ret = 'images/filetypes/' + fileTypeIcons[RoxyUtils.GetFileExt(path).toLowerCase()];
   }
 
   return ret;
@@ -168,7 +168,7 @@ RoxyUtils.FormatFileSize = function(x){
   return x.toFixed(2) + ' ' + suffix;
 };
 RoxyUtils.AddParam = function(url, n, v){
-  url += (url.indexOf('?') > -1?'&':'?') + n + '='+escape(v);
+  url += (url.indexOf('?') > -1?'&':'?') + n + '='+encodeURIComponent(v);
 
   return url;
 };
@@ -209,8 +209,13 @@ function RoxyLang(){}
 RoxyUtils.LoadLang = function(){
   var langUrl = '';
   if(RoxyFilemanConf.LANG && RoxyFilemanConf.LANG.toLowerCase() == 'auto'){
-    var language = window.navigator.userLanguage || window.navigator.language;
-    langUrl = 'lang/' + language.substr(0, 2) + '.json';
+    if(RoxyUtils.GetUrlParam('langCode')){
+      langUrl = 'lang/' + RoxyUtils.GetUrlParam('langCode').substr(0, 2).toLowerCase() + '.json';
+    }
+    else {
+      var language = window.navigator.userLanguage || window.navigator.language;
+      langUrl = 'lang/' + language.substr(0, 2) + '.json';
+    }
     if(!RoxyUtils.FileExists(langUrl))
       langUrl = '';
   }
@@ -252,6 +257,49 @@ RoxyUtils.Translate = function(){
     $(this).html(t(key));
   });
 };
+RoxyUtils.GetCookies = function() {
+  var ret = new Object();
+  var tmp = document.cookie.replace(' ','');
+  tmp = tmp.split(';');
+
+  for(i in tmp){
+    var s = tmp[i].split('=');
+    if(s.length > 1){
+      ret[$.trim(s[0].toString())] = decodeURIComponent($.trim(s[1].toString())) || '';
+    }
+  }
+
+  return ret;
+}
+RoxyUtils.GetCookie = function(key) {
+  var tmp = RoxyUtils.GetCookies();
+
+  return tmp[key] || '';
+}
+RoxyUtils.SetCookie = function(key, val, hours, path) {
+  var expires = new Date();
+  if(hours){
+    expires.setTime(expires.getTime() + (hours * 3600 * 1000));
+  }
+  
+  if(!path){
+     path = '/';
+  }
+  
+  document.cookie = key + '=' + encodeURIComponent(val) + '; path=' + path + (hours?'; expires=' + expires.toGMTString():'');
+}
+RoxyUtils.ToBool = function(val){
+  var ret = false;
+  val = val.toString().toLowerCase();
+  if(val == 'true' || val == 'on' || val == 'yes' || val == '1')
+    ret = true;
+  
+  return ret;
+}
+RoxyUtils.UnsetCookie = function(key) {
+  document.cookie = key + "=; expires=Thu, 01 Jan 1972 00:00:00 UTC"; 
+}
+
 function t(tag){
   var ret = tag;
   if(RoxyLang && RoxyLang[tag])

@@ -23,6 +23,7 @@
 "LoadingFiles":"Dateien laden...",
 "DirIsEmpty":"Ordner ist leer",
 "NoFilesFound":"Keine Datei gefunden",
+"Upload":"Upload",
 "T_CreateDir":"Neuen Ordner erstellen",
 "T_RenameDir":"Ordner umbenennen",
 "T_DeleteDir":"Gewählte ordner löschen",
@@ -75,5 +76,6 @@
 "E_CopyFile":"Fehler beim Dateikopieren",
 "E_CopyFileInvalisPath":"Datei kann nicht kopiert werden - Pfad existiert nicht",
 "E_CopyDirInvalidPath":"Verzeichnis kann nicht kopiert werden - Pfad existiert nicht",
-"E_CreateArchive":"Error creating zip archive."
+"E_CreateArchive":"Error creating zip archive.",
+"E_UploadingFile":"fehler"
 }

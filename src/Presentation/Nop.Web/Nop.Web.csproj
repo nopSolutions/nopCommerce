@@ -624,7 +624,6 @@
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite.png" />
     <Content Include="Content\kendo\2014.1.318\Uniform\sprite_2x.png" />
     <Content Include="Content\magnific-popup\magnific-popup.css" />
-    <Content Include="Content\Roxy_Fileman\conf.json" />
     <Content Include="Content\Roxy_Fileman\css\images\animated-overlay.gif" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\Roxy_Fileman\css\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -711,6 +710,7 @@
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mid.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mov.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mp2.png" />
+    <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mp3.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mp4.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mpeg.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\big\file_extension_mpg.png" />
@@ -810,6 +810,7 @@
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mid.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mov.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mp2.png" />
+    <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mp3.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mp4.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mpeg.png" />
     <Content Include="Content\Roxy_Fileman\images\filetypes\file_extension_mpg.png" />
@@ -866,9 +867,14 @@
     <Content Include="Content\Roxy_Fileman\images\loading.gif" />
     <Content Include="Content\Roxy_Fileman\images\paste.png" />
     <Content Include="Content\Roxy_Fileman\images\preview.png" />
+    <Content Include="Content\Roxy_Fileman\images\remove-upload - Copy.png" />
+    <Content Include="Content\Roxy_Fileman\images\remove-upload.png" />
     <Content Include="Content\Roxy_Fileman\images\rename.png" />
     <Content Include="Content\Roxy_Fileman\images\search.png" />
     <Content Include="Content\Roxy_Fileman\images\select.png" />
+    <Content Include="Content\Roxy_Fileman\images\sprite.png" />
+    <Content Include="Content\Roxy_Fileman\images\stripes-reverse.gif" />
+    <Content Include="Content\Roxy_Fileman\images\stripes.gif" />
     <Content Include="Content\Roxy_Fileman\images\upload-big.png" />
     <Content Include="Content\Roxy_Fileman\images\view-list.png" />
     <Content Include="Content\Roxy_Fileman\images\view-tile.png" />
@@ -878,6 +884,8 @@
     <Content Include="Content\Roxy_Fileman\js\file.js" />
     <Content Include="Content\Roxy_Fileman\js\filetypes.js" />
     <Content Include="Content\Roxy_Fileman\js\jquery-1.10.2.min.js" />
+    <Content Include="Content\Roxy_Fileman\js\jquery-1.11.1.min.js" />
+    <Content Include="Content\Roxy_Fileman\js\jquery-2.1.1.min.js" />
     <Content Include="Content\Roxy_Fileman\js\jquery-dateFormat.min.js" />
     <Content Include="Content\Roxy_Fileman\js\jquery-ui-1.10.4.custom.min.js" />
     <Content Include="Content\Roxy_Fileman\js\main.js" />
@@ -885,10 +893,8 @@
     <Content Include="Content\Roxy_Fileman\js\mini-main.js" />
     <Content Include="Content\Roxy_Fileman\js\tiny_mce_popup.js" />
     <Content Include="Content\Roxy_Fileman\js\utils.js" />
-    <Content Include="Content\Roxy_Fileman\lang\bg.json" />
-    <Content Include="Content\Roxy_Fileman\lang\de.json" />
-    <Content Include="Content\Roxy_Fileman\lang\en.json" />
     <Content Include="Content\Roxy_Fileman\LICENSE.txt" />
+    <Content Include="Content\Roxy_Fileman\third-party.txt" />
     <Content Include="Content\samples\category_accessories.jpg" />
     <Content Include="Content\samples\category_apparel.jpeg" />
     <Content Include="Content\samples\category_apparel_accessories.jpg" />
@@ -1092,14 +1098,24 @@
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.eot" />
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.ttf" />
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.woff" />
-    <Content Include="Content\Roxy_Fileman\js\fileman-modified.zip" />
-    <Content Include="Content\Roxy_Fileman\lang\fr.json" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.woff" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.ttf" />
     <Content Include="App_Data\uas_20140809-02.ini" />
     <Content Include="Content\samples\product_IfYouWait_1.zip" />
     <Content Include="Content\samples\product_NightVision_1.zip" />
     <Content Include="Content\samples\product_ScienceAndFaith_1.zip" />
+    <Content Include="Content\Roxy_Fileman\conf.json" />
+    <Content Include="Content\Roxy_Fileman\lang\bg.json" />
+    <Content Include="Content\Roxy_Fileman\lang\cs.json" />
+    <Content Include="Content\Roxy_Fileman\lang\cs1.json" />
+    <Content Include="Content\Roxy_Fileman\lang\de.json" />
+    <Content Include="Content\Roxy_Fileman\lang\en.json" />
+    <Content Include="Content\Roxy_Fileman\lang\es.json" />
+    <Content Include="Content\Roxy_Fileman\lang\fr.json" />
+    <Content Include="Content\Roxy_Fileman\lang\hu.json" />
+    <Content Include="Content\Roxy_Fileman\lang\it.json" />
+    <Content Include="Content\Roxy_Fileman\lang\pl.json" />
+    <Content Include="Content\Roxy_Fileman\lang\pt.json" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\fineuploader\iframe.xss.response-4.2.2.js" />
     <Content Include="Scripts\fineuploader\jquery.fineuploader-4.2.2.js" />
@@ -1979,6 +1995,7 @@
     <Content Include="Views\Catalog\_CatalogSelectors.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Content\Roxy_Fileman\tmp\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>

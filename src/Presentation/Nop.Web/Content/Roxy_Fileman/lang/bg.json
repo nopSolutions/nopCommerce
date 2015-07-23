@@ -23,6 +23,7 @@
 "LoadingFiles":"Зареждане на файловете...",
 "DirIsEmpty":"Тази папка е празна",
 "NoFilesFound":"Няма намерени файлове",
+"Upload":"Качване",
 "T_CreateDir":"Добави папка",
 "T_RenameDir":"Преименувай папка",
 "T_DeleteDir":"Изтрий избраната папка",
@@ -75,5 +76,6 @@
 "E_CopyFile":"Грешка при копиране на файла",
 "E_CopyFileInvalisPath":"Файлът не може да бъде копиран - несъществуващ път",
 "E_CopyDirInvalidPath":"Папката не може да бъде копирана - несъществуващ път",
-"E_CreateArchive":"Error creating zip archive."
+"E_CreateArchive":"Error creating zip archive.",
+"E_UploadingFile":"грешка"
 }

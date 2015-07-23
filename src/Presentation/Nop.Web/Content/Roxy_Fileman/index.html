@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <!--
@@ -26,13 +26,12 @@
 <title>Roxy file manager</title>
 <link href="css/jquery-ui-1.10.4.custom.min.css" rel="stylesheet" type="text/css" />
 <link href="css/main.min.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.10.4.custom.min.js"></script>
 <script type="text/javascript" src="js/custom.js"></script>
 <script type="text/javascript" src="js/main.min.js"></script>
 <script type="text/javascript" src="js/jquery-dateFormat.min.js"></script>
 </head>
-
 <body>
 <table cellpadding="0" cellspacing="0" id="wraper">
   <tr>
@@ -54,14 +53,14 @@
    <input type="hidden" id="hdViewType" value="list">
    <input type="hidden" id="hdOrder" value="asc">
     <div class="actions">
-      <input type="button" id="btnAddFile" value="Add file" title="Upload files" onclick="addFile()" data-lang-v="AddFile" data-lang-t="T_AddFile" />
+      <input type="button" id="btnAddFile" value="Add file" title="Upload files" onclick="addFileClick()" data-lang-v="AddFile" data-lang-t="T_AddFile" />
       <input type="button" id="btnPreviewFile" value="Preview" title="Preview selected file" onclick="previewFile()" data-lang-v="Preview" data-lang-t="T_Preview" />
       <input type="button" id="btnRenameFile" value="Rename" title="Rename selected file" onclick="renameFile()" data-lang-v="RenameFile" data-lang-t="T_RenameFile" />
       <input type="button" id="btnDownloadFile" value="Download" title="Download selected file" onclick="downloadFile()" data-lang-v="DownloadFile" data-lang-t="T_DownloadFile" />
       <input type="button" id="btnDeleteFile" value="Delete" title="Delete selected file" onclick="deleteFile()" data-lang-v="DeleteFile" data-lang-t="T_DeleteFile" />
       <input type="button" id="btnSelectFile" value="Select" title="Select highlighted file" onclick="setFile()" data-lang-v="SelectFile" data-lang-t="T_SelectFile" />
       <br>
-      Order by:
+      <span data-lang="OrderBy">Order by</span>:
       <select id="ddlOrder" onchange="sortFiles()">
         <option value="name" data-lang="Name_asc">&uarr;&nbsp;&nbsp;Name</option>
         <option value="size" data-lang="Size_asc">&uarr;&nbsp;&nbsp;Size</option>
@@ -105,11 +104,13 @@
 <iframe name="frmUploadFile" width="0" height="0" style="display:none;border:0;"></iframe>
 <div id="dlgAddFile">
   <form name="addfile" id="frmUpload" method="post" target="frmUploadFile" enctype="multipart/form-data">
-    <input type="hidden" name="action" value="upload" />
     <input type="hidden" name="d" id="hdDir" />
-    <div class="form">
-      Select files to upload<br />
-      <input type="file" name="files[]" id="fileUploads" multiple="multiple" />
+    <div class="form"><br />
+      <input type="file" name="files[]" id="fileUploads" onchange="listUploadFiles(this.files)" multiple="multiple" />
+      <div id="uploadResult"></div>
+      <div class="uploadFilesList">
+        <div id="uploadFilesList"></div>
+      </div>
     </div>
   </form>
 </div>

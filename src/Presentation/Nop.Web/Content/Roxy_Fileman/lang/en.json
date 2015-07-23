@@ -23,6 +23,7 @@
 "LoadingFiles":"Loading files...",
 "DirIsEmpty":"This folder is empty",
 "NoFilesFound":"No files found",
+"Upload":"Upload",
 "T_CreateDir":"Create new folder",
 "T_RenameDir":"Rename folder",
 "T_DeleteDir":"Delete selected folder",
@@ -75,5 +76,6 @@
 "E_CopyFile":"Error copying file",
 "E_CopyFileInvalisPath":"Cannot copy file - path doesn't exist",
 "E_CopyDirInvalidPath":"Cannot copy directory - path doesn't exist",
-"E_CreateArchive":"Error creating zip archive."
+"E_CreateArchive":"Error creating zip archive.",
+"E_UploadingFile":"error"
 }

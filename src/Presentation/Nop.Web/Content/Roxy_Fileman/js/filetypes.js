@@ -74,6 +74,7 @@ fileTypeIcons['mdb'] = 'file_extension_mdb.png';
 fileTypeIcons['mid'] = 'file_extension_mid.png';
 fileTypeIcons['mov'] = 'file_extension_mov.png';
 fileTypeIcons['mp2'] = 'file_extension_mp2.png';
+fileTypeIcons['mp3'] = 'file_extension_mp3.png';
 fileTypeIcons['mp4'] = 'file_extension_mp4.png';
 fileTypeIcons['mpeg'] = 'file_extension_mpeg.png';
 fileTypeIcons['mpg'] = 'file_extension_mpg.png';
