@@ -179,6 +179,13 @@
             <param name="message">A message that describes the error.</param>
             <param name="innerException">The inner exception.</param>
         </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.GeoIP2Exception.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
         <member name="T:MaxMind.GeoIP2.Exceptions.HttpException">
             <summary>
                 This class represents an HTTP transport error. This is not an error returned
@@ -203,6 +210,13 @@
             <param name="uri">The URL queried.</param>
             <param name="innerException">The underlying exception that caused this one.</param>
         </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
         <member name="P:MaxMind.GeoIP2.Exceptions.HttpException.HttpStatus">
             <summary>
                 The HTTP status code returned by the web service.
@@ -212,6 +226,13 @@
             <summary>
                 The URI queried by the web service.
             </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.HttpException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Populates a SerializationInfo with the data needed to serialize the target object.
+            </summary>
+            <param name="info">The SerializationInfo to populate with data.</param>
+            <param name="context">The destination (see StreamingContext) for this serialization.</param>
         </member>
         <member name="T:MaxMind.GeoIP2.Exceptions.InvalidRequestException">
             <summary>
@@ -228,6 +249,13 @@
             <param name="code">The error code returned by the web service.</param>
             <param name="uri">The URL queried.</param>
         </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.InvalidRequestException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Constructor for deserialization.
+            </summary>
+            <param name="info">The SerializationInfo with data.</param>
+            <param name="context">The source for this deserialization.</param>
+        </member>
         <member name="P:MaxMind.GeoIP2.Exceptions.InvalidRequestException.Code">
             <summary>
                 The error code returned by the web service.
@@ -237,6 +265,13 @@
             <summary>
                 The URI queried by the web service.
             </summary>
+        </member>
+        <member name="M:MaxMind.GeoIP2.Exceptions.InvalidRequestException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Populates a SerializationInfo with the data needed to serialize the target object.
+            </summary>
+            <param name="info">The SerializationInfo to populate with data.</param>
+            <param name="context">The destination (see StreamingContext) for this serialization.</param>
         </member>
         <member name="T:MaxMind.GeoIP2.Exceptions.OutOfQueriesException">
             <summary>
