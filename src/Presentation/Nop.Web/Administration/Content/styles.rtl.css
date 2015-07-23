@@ -88,6 +88,7 @@ a img{border:0;}
 .messageBox{background-color:#F4F4F4;background-position:7px 5px;background-repeat:no-repeat;color:#333;font-family:Tahoma;font-size:11px;margin:5px 0;padding:8px 30px 8px 8px;}
 .messageBoxError{background-color:#FFECEC;background-image:url(images/error-message.gif);}
 .messageBoxSuccess{background-image:url(images/success-message.gif);}
+.field-validation-error,.validation-summary-errors {color:red;}
 /* MASTER CONTENT */
 .content .cph{padding:20px 15px 5px;}
 /* DASHBOARD */
@@ -155,5 +156,4 @@ body .k-button{font-weight:400;color:inherit!important;text-decoration:none;}
 .customer-info-tab .gender{display:inline-block;}
 .customer-info-tab ul.option-list{padding:0px;margin:0px;}
 .customer-info-tab ul.option-list li{list-style:none;}
-.field-validation-error{color:red;}
 .required-product-names{display:block;margin-top:5px;}
