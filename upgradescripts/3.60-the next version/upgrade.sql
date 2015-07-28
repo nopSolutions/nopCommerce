@@ -62,6 +62,9 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint">
     <Value>Check to hide delivery information as description of returned shipping methods.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.StartDateShouldBeFuture">
+    <Value>Rental start date should be the future date</Value>
+  </LocaleResource>
 </Language>
 '
 

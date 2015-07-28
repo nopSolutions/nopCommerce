@@ -13959,6 +13959,9 @@
   <LocaleResource Name="ShoppingCart.Rental.StartDateLessEndDate">
     <Value>Rental start date should be less than end date</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Rental.StartDateShouldBeFuture">
+    <Value>Rental start date should be the future date</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.RequiredProductWarning">
     <Value>This product requires the following product is added to the cart: {0}</Value>
   </LocaleResource>
