@@ -5044,9 +5044,11 @@ pre {
     height: 40px;
 }
 .item-box .product-title {
-    height: 42px;
+    min-height: 42px;
     margin: 0 0 5px;
 }
+
+
 /*** PRODUCT PAGE ***/
 
 
