@@ -809,6 +809,11 @@ namespace Nop.Web.Controllers
                 //already accepted
                 return Content("");
 
+            //ignore notification?
+            //right now it's used during logout so popup window is not displayed twice
+            if (TempData["nop.IgnoreEuCookieLawWarning"] != null && Convert.ToBoolean(TempData["nop.IgnoreEuCookieLawWarning"]))
+                return Content("");
+
             return PartialView();
         }
         [HttpPost]

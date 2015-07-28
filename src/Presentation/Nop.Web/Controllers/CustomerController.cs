@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -83,6 +84,7 @@ namespace Nop.Web.Controllers
         private readonly CaptchaSettings _captchaSettings;
         private readonly SecuritySettings _securitySettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
 
@@ -126,7 +128,8 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings,
             SecuritySettings securitySettings,
-            ExternalAuthenticationSettings externalAuthenticationSettings)
+            ExternalAuthenticationSettings externalAuthenticationSettings,
+            StoreInformationSettings storeInformationSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -167,6 +170,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
             this._securitySettings = securitySettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -699,6 +703,19 @@ namespace Nop.Web.Controllers
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();
+
+            //EU Cookie
+            if (_storeInformationSettings.DisplayEuCookieLawWarning)
+            {
+                //the cookie law message should not pop up immediately after logout.
+                //otherwise, the user will have to click it again...
+                //and thus next visitor will not click it... so violation for that cookie law..
+                //the only good solution in this case is to store a temporary variable
+                //indicating that the EU cookie popup window should not be displayed on the next page open (after logout redirection to homepage)
+                //but it'll be displayed for further page loads
+                TempData["nop.IgnoreEuCookieLawWarning"] = true;
+            }
+
             return RedirectToRoute("HomePage");
         }
 
