@@ -4705,6 +4705,7 @@ namespace Nop.Services.Installation
                     AssociatedProductPictureSize = 220,
                     CategoryThumbPictureSize = 450,
                     ManufacturerThumbPictureSize = 420,
+                    VendorThumbPictureSize = 450,
                     CartThumbPictureSize = 80,
                     MiniCartThumbPictureSize = 70,
                     AutoCompleteSearchThumbPictureSize = 20,

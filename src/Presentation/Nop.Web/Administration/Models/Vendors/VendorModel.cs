@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Vendors;
@@ -32,6 +33,10 @@ namespace Nop.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
+
+        [UIHint("Picture")]
+        [NopResourceDisplayName("Admin.Vendors.Fields.Picture")]
+        public int PictureId { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.AdminComment")]
         [AllowHtml]

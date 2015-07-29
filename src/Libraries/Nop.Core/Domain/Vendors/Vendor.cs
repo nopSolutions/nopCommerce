@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the description
         /// </summary>
         public string Description { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the picture identifier
+        /// </summary>
+        public int PictureId { get; set; }
 
         /// <summary>
         /// Gets or sets the admin comment

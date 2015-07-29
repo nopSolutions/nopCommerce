@@ -108,6 +108,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.VendorThumbPictureSize_OverrideForStore, model => model.VendorThumbPictureSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.VendorThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.VendorThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.VendorThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.CartThumbPictureSize_OverrideForStore, model => model.CartThumbPictureSize, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.CartThumbPictureSize):
             </td>

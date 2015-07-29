@@ -16,6 +16,7 @@ namespace Nop.Data.Tests.Vendors
                 Email = "Email 1",
                 Description = "Description 1",
                 AdminComment = "AdminComment 1",
+                PictureId = 1,
                 Active = true,
                 Deleted = true,
                 DisplayOrder = 2,
@@ -33,6 +34,7 @@ namespace Nop.Data.Tests.Vendors
             fromDb.Email.ShouldEqual("Email 1");
             fromDb.Description.ShouldEqual("Description 1");
             fromDb.AdminComment.ShouldEqual("AdminComment 1");
+            fromDb.PictureId.ShouldEqual(1);
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(2);

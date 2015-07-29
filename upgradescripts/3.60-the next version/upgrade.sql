@@ -65,6 +65,24 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Rental.StartDateShouldBeFuture">
     <Value>Rental start date should be the future date</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Picture.Hint">
+    <Value>The vendor picture.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.VendorThumbPictureSize">
+    <Value>Vendor thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.VendorThumbPictureSize.Hint">
+    <Value>The default size (pixels) for vendor thumbnail images.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Vendor.ImageAlternateTextFormat">
+    <Value>Picture for vendor {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Vendor.ImageLinkTitleFormat">
+    <Value>Show products of vendor {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -191,5 +209,31 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.dateofb
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customersettings.dateofbirthminimumage', N'', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Vendor]') and NAME='PictureId')
+BEGIN
+	ALTER TABLE [Vendor]
+	ADD [PictureId] int NULL
+END
+GO
+
+UPDATE [Vendor]
+SET [PictureId] = 0
+WHERE [PictureId] IS NULL
+GO
+
+ALTER TABLE [Vendor] ALTER COLUMN [PictureId] int NOT NULL
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.vendorthumbpicturesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'mediasettings.vendorthumbpicturesize', N'450', 0)
 END
 GO

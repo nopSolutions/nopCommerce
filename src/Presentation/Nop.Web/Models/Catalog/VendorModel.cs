@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -7,6 +8,7 @@ namespace Nop.Web.Models.Catalog
     {
         public VendorModel()
         {
+            PictureModel = new PictureModel();
             Products = new List<ProductOverviewModel>();
             PagingFilteringContext = new CatalogPagingFilteringModel();
         }
@@ -18,6 +20,8 @@ namespace Nop.Web.Models.Catalog
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
         public bool AllowCustomersToContactVendors { get; set; }
+
+        public PictureModel PictureModel { get; set; }
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
 

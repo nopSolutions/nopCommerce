@@ -1015,6 +1015,21 @@ namespace Nop.Web.Controllers
                     SeName = vendor.GetSeName(),
                     AllowCustomersToContactVendors = _vendorSettings.AllowCustomersToContactVendors
                 };
+                //prepare picture model
+                int pictureSize = _mediaSettings.VendorThumbPictureSize;
+                var pictureCacheKey = string.Format(ModelCacheEventConsumer.VENDOR_PICTURE_MODEL_KEY, vendor.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured(), _storeContext.CurrentStore.Id);
+                vendorModel.PictureModel = _cacheManager.Get(pictureCacheKey, () =>
+                {
+                    var picture = _pictureService.GetPictureById(vendor.PictureId);
+                    var pictureModel = new PictureModel
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
+                    };
+                    return pictureModel;
+                });
                 model.Add(vendorModel);
             }
 

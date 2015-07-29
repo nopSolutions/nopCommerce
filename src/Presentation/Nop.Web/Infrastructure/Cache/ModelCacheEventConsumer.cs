@@ -516,6 +516,20 @@ namespace Nop.Web.Infrastructure.Cache
         public const string MANUFACTURER_PICTURE_PATTERN_KEY = "Nop.pres.manufacturer.picture";
 
         /// <summary>
+        /// Key for vendor picture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : vendor id
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : language ID ("alt" and "title" can depend on localized category name)
+        /// {4} : is connection SSL secured?
+        /// {5} : current store ID
+        /// </remarks>
+        public const string VENDOR_PICTURE_MODEL_KEY = "Nop.pres.vendor.picture-{0}-{1}-{2}-{3}-{4}-{5}";
+        public const string VENDOR_PICTURE_PATTERN_KEY = "Nop.pres.vendor.picture";
+
+        /// <summary>
         /// Key for cart picture caching
         /// </summary>
         /// <remarks>
@@ -1014,6 +1028,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Picture> eventMessage)
@@ -1025,6 +1040,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Picture> eventMessage)
@@ -1036,6 +1052,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(VENDOR_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
 

@@ -840,6 +840,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AssociatedProductPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CategoryThumbPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ManufacturerThumbPictureSize_OverrideForStore, mo => mo.Ignore())
+                .ForMember(dest => dest.VendorThumbPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CartThumbPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MiniCartThumbPictureSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.MaximumImageSize_OverrideForStore, mo => mo.Ignore())

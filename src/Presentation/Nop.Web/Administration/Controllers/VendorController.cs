@@ -5,6 +5,7 @@ using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
@@ -24,6 +25,7 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly IPictureService _pictureService;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -37,6 +39,7 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService,
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
+            IPictureService pictureService,
             VendorSettings vendorSettings)
         {
             this._customerService = customerService;
@@ -46,12 +49,21 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._pictureService = pictureService;
             this._vendorSettings = vendorSettings;
         }
 
         #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected virtual void UpdatePictureSeoNames(Vendor vendor)
+        {
+            var picture = _pictureService.GetPictureById(vendor.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(vendor.Name));
+        }
 
         [NonAction]
         protected virtual void UpdateLocales(Vendor vendor, VendorModel model)
@@ -166,6 +178,8 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
                 //locales
                 UpdateLocales(vendor, model);
+                //update picture seo file name
+                UpdatePictureSeoNames(vendor);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = vendor.Id }) : RedirectToAction("List");
@@ -220,6 +234,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                int prevPictureId = vendor.PictureId;
                 vendor = model.ToEntity(vendor);
                 _vendorService.UpdateVendor(vendor);
                 //search engine name
@@ -227,6 +242,15 @@ namespace Nop.Admin.Controllers
                 _urlRecordService.SaveSlug(vendor, model.SeName, 0);
                 //locales
                 UpdateLocales(vendor, model);
+                //delete an old picture (if deleted or updated)
+                if (prevPictureId > 0 && prevPictureId != vendor.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
+                //update picture seo file name
+                UpdatePictureSeoNames(vendor);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Updated"));
                 if (continueEditing)

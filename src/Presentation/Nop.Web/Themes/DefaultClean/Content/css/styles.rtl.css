@@ -1486,7 +1486,8 @@ label, label + * {
 
 .home-page-category-grid,
 .sub-category-grid,
-.manufacturer-grid {
+.manufacturer-grid,
+.vendor-grid {
 	margin: 0 0 20px;
 }
 .home-page-category-grid .title,
@@ -1539,28 +1540,18 @@ label, label + * {
 	border: 1px solid #ddd;
 }
 
-.vendor-list li {
-	display: inline-block;
-	margin: 0 0 0 25px;
-}
-.vendor-list li a {
-	display: block;
-	position: relative;
-	padding: 5px 0;
+
+
+.vendor-grid .title {
+	margin: 0 0 15px;
+	text-align: center;
 	font-size: 16px;
+}
+.vendor-grid .title a:hover {
 	color: #4ab2f1;
 }
-.vendor-list li a:before {
-	content: "";
-	position: absolute;
-	top: 13px;
-	right: -15px;
-	width: 5px;
-	height: 5px;
-	background-color: #ddd;   
-}
-.vendor-list li a:hover {
-	text-decoration: underline;
+.vendor-grid .picture {
+	border: 1px solid #ddd;
 }
 
 .pager {

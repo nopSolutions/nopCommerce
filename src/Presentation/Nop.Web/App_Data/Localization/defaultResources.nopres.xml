@@ -5706,6 +5706,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.CategoryThumbPictureSize.Hint">
     <Value>The default size (pixels) for product thumbnail images on category pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality">
+    <Value>Default image quality (0 - 100)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
+    <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize">
     <Value>Manufacturer thumbnail image size</Value>
   </LocaleResource>
@@ -5766,11 +5772,11 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage.Hint">
     <Value>The default size (pixels) for product thumbnail images displayed on product details page when you have more than one product image.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality">
-    <Value>Default image quality (0 - 100)</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.VendorThumbPictureSize">
+    <Value>Vendor thumbnail image size</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
-    <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.VendorThumbPictureSize.Hint">
+    <Value>The default size (pixels) for vendor thumbnail images.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News">
     <Value>News settings</Value>
@@ -10968,6 +10974,12 @@
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Picture">
+    <Value>Picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.Picture.Hint">
+    <Value>The vendor picture.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>
@@ -12323,6 +12335,12 @@
   </LocaleResource>
   <LocaleResource Name="Media.Product.ImageLinkTitleFormat.Details">
     <Value>Picture of {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Vendor.ImageAlternateTextFormat">
+    <Value>Picture for vendor {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Media.Vendor.ImageLinkTitleFormat">
+    <Value>Show products of vendor {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Menu">
     <Value>Menu</Value>

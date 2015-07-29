@@ -40,6 +40,10 @@ namespace Nop.Admin.Models.Settings
         public int ManufacturerThumbPictureSize { get; set; }
         public bool ManufacturerThumbPictureSize_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.VendorThumbPictureSize")]
+        public int VendorThumbPictureSize { get; set; }
+        public bool VendorThumbPictureSize_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.CartThumbPictureSize")]
         public int CartThumbPictureSize { get; set; }
         public bool CartThumbPictureSize_OverrideForStore { get; set; }

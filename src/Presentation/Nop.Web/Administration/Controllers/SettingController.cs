@@ -1824,6 +1824,7 @@ namespace Nop.Admin.Controllers
                 model.AssociatedProductPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.AssociatedProductPictureSize, storeScope);
                 model.CategoryThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CategoryThumbPictureSize, storeScope);
                 model.ManufacturerThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope);
+                model.VendorThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.VendorThumbPictureSize, storeScope);
                 model.CartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.CartThumbPictureSize, storeScope);
                 model.MiniCartThumbPictureSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MiniCartThumbPictureSize, storeScope);
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
@@ -1882,6 +1883,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(mediaSettings, x => x.ManufacturerThumbPictureSize, storeScope);
+
+            if (model.VendorThumbPictureSize_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.VendorThumbPictureSize, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.VendorThumbPictureSize, storeScope);
             
             if (model.CartThumbPictureSize_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(mediaSettings, x => x.CartThumbPictureSize, storeScope, false);
