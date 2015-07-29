@@ -32,13 +32,10 @@
         function newsletter_subscribe(subscribe) {
             var subscribeProgress = $("#subscribe-loading-progress");
             subscribeProgress.show();
-
             var postData = {
                 subscribe: subscribe,
                 email: $("#newsletter-email").val()
             };
-            addAntiForgeryToken(postData);
-
             $.ajax({
                 cache: false,
                 type: "POST",

@@ -49,7 +49,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult SubscribeNewsletter(string email, bool subscribe)
         {
