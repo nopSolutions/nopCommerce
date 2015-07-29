@@ -87,10 +87,14 @@
                 <script type="text/javascript">
                 $(function () {
                     $('#watch-topic-bottom').click(function () {
+                        var postData = {};
+                        addAntiForgeryToken(postData);
+
                         $.ajax({
                             cache: false,
                             type: 'POST',
                             url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                            data: postData,
                             dataType: 'json',
                             success: function (data) {
                                 $('#watch-topic-top').text(data.Text);

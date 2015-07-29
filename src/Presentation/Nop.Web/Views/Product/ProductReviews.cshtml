@@ -27,6 +27,7 @@
                 </div>
                 @using (Html.BeginForm())
                 {
+                    @Html.AntiForgeryToken()
                     var validationSummary = Html.ValidationSummary(true);
                     if (!MvcHtmlString.IsNullOrEmpty(validationSummary))
                     {

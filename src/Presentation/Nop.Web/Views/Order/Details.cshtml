@@ -168,6 +168,7 @@
                    <li class="repost">
                        @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                        {
+                           @Html.AntiForgeryToken()
                            <input type="submit" name="repost-payment" value="@T("Order.RetryPayment")" class="button-2 re-order-button" />
                            <p class="hint">
                                <em>@T("Order.RetryPayment.Hint")</em>

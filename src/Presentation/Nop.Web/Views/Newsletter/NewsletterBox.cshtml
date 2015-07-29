@@ -30,14 +30,20 @@
     <div class="newsletter-result" id="newsletter-result-block"></div>
     <script type="text/javascript">
         function newsletter_subscribe(subscribe) {
-            var email = $("#newsletter-email").val();
             var subscribeProgress = $("#subscribe-loading-progress");
             subscribeProgress.show();
+
+            var postData = {
+                subscribe: subscribe,
+                email: $("#newsletter-email").val()
+            };
+            addAntiForgeryToken(postData);
+
             $.ajax({
                 cache: false,
                 type: "POST",
                 url: "@(Url.RouteUrl("SubscribeNewsletter"))",
-                data: { "subscribe": subscribe, "email": email },
+                data: postData,
                 success: function(data) {
                     subscribeProgress.hide();
                     $("#newsletter-result-block").html(data.Result);

@@ -2204,8 +2204,9 @@ namespace Nop.Web.Controllers
             PrepareShoppingCartModel(model, cart);
             return View(model);
         }
-        
+
         [ValidateInput(false)]
+        [PublicAntiForgery]
         [HttpPost, ActionName("Cart")]
         [FormValueRequired("estimateshipping")]
         public ActionResult GetEstimateShipping(EstimateShippingModel shippingModel, FormCollection form)
@@ -2542,6 +2543,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("EmailWishlist")]
+        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [CaptchaValidator]
         public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)

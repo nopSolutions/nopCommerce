@@ -1234,6 +1234,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductReviews")]
+        [PublicAntiForgery]
         [FormValueRequired("add-review")]
         [CaptchaValidator]
         public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
@@ -1391,6 +1392,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ProductEmailAFriend")]
+        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         [CaptchaValidator]
         public ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)

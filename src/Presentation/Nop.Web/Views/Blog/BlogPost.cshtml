@@ -67,6 +67,7 @@
                 </div>
                 @using (Html.BeginForm())
                 {
+                    @Html.AntiForgeryToken()
                     <div class="form-fields">
                         <div class="inputs">
                             @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")

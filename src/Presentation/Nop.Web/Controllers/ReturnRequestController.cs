@@ -196,6 +196,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ReturnRequest")]
         [ValidateInput(false)]
+        [PublicAntiForgery]
         public ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
         {
             var order = _orderService.GetOrderById(orderId);

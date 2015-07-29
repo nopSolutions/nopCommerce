@@ -262,6 +262,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("BlogPost")]
+        [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [CaptchaValidator]
         public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)

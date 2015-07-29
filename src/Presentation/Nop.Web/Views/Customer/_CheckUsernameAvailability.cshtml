@@ -11,11 +11,17 @@
             if ($("#Username").val().length > 0) {
                 $('#availability-check-progress').show();
                 $('#check-availability-button').attr('disabled', 'disabled');
+
+                var postData = {
+                    Username: $('#Username').val()
+                };
+                addAntiForgeryToken(postData);
+
                 $.ajax({
                     cache: false,
                     type: 'POST',
                     url: '@Url.RouteUrl("CheckUsernameAvailability")',
-                    data: $('#Username').serialize(),
+                    data: postData,
                     dataType: 'json',
                     success: function (data) {
                         $('#check-availability-button').removeAttr('disabled');

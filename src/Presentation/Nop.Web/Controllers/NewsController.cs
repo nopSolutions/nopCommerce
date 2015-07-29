@@ -245,6 +245,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("NewsItem")]
+        [PublicAntiForgery]
         [FormValueRequired("add-comment")]
         [CaptchaValidator]
         public ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)

@@ -13,6 +13,7 @@
     <div class="page-body">
         @using (Html.BeginForm())
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
             <div class="fieldset">
                 <div class="form-fields">

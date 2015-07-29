@@ -7,6 +7,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="page private-messages private-message-send-page">
         <div class="page-title">
             <h1>@T("PrivateMessages.Send.PostMessage")</h1>

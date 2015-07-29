@@ -12,6 +12,7 @@
 }
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     <div class="page account-page address-edit-page">
         <div class="page-title">
             <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses.Edit")</h1>

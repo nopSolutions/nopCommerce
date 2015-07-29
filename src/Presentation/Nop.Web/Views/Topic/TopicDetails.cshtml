@@ -41,13 +41,18 @@
     <script type="text/javascript">
         $(function () {
             $('#button-password').click(function () {
-                var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
-                var password = $('#password').val();
+                var postData = {
+                    id: $("#@Html.FieldIdFor(model => model.Id)").val(),
+                    password: $('#password').val()
+                };
+                addAntiForgeryToken(postData);
+
+
                 $.ajax({
                     cache: false,
                     type: 'POST',
                     url: '@Url.RouteUrl("TopicAuthenticate")',
-                    data: { "id": topicId, "password": password },
+                    data: postData,
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {

@@ -632,6 +632,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         public ActionResult TopicMove(TopicMoveModel model)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -718,6 +719,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult TopicCreate(EditForumTopicModel model)
         {
@@ -891,6 +893,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult TopicEdit(EditForumTopicModel model)
         {
@@ -1132,6 +1135,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult PostCreate(EditForumPostModel model)
         {
@@ -1294,6 +1298,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult PostEdit(EditForumPostModel model)
         {

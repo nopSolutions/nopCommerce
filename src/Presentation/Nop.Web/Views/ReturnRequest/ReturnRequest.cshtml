@@ -21,6 +21,7 @@
         {
             using (Html.BeginForm())
             {
+                @Html.AntiForgeryToken()
             <div class="section">
                 <div class="title">
                     <strong>@T("ReturnRequests.SelectProduct(s)")</strong>

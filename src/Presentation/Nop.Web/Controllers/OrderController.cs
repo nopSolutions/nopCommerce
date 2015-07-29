@@ -532,6 +532,7 @@ namespace Nop.Web.Controllers
 
         //My account / Orders / Cancel recurring order
         [HttpPost, ActionName("CustomerOrders")]
+        [PublicAntiForgery]
         [FormValueRequired(FormValueRequirement.StartsWith, "cancelRecurringPayment")]
         public ActionResult CancelRecurringPayment(FormCollection form)
         {
@@ -661,6 +662,7 @@ namespace Nop.Web.Controllers
 
         //My account / Order details page / Complete payment
         [HttpPost, ActionName("Details")]
+        [PublicAntiForgery]
         [FormValueRequired("repost-payment")]
         public ActionResult RePostPayment(int orderId)
         {

@@ -731,6 +731,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecovery")]
+        [PublicAntiForgery]
         [FormValueRequired("send-email")]
         public ActionResult PasswordRecoverySend(PasswordRecoveryModel model)
         {
@@ -790,6 +791,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
+        [PublicAntiForgery]
         [FormValueRequired("set-password")]
         public ActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
         {
@@ -1104,6 +1106,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult CheckUsernameAvailability(string username)
         {
@@ -1435,6 +1438,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult AddressAdd(CustomerAddressEditModel model, FormCollection form)
         {
@@ -1509,6 +1513,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [PublicAntiForgery]
         [ValidateInput(false)]
         public ActionResult AddressEdit(CustomerAddressEditModel model, int addressId, FormCollection form)
         {
@@ -1677,6 +1682,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
+        [PublicAntiForgery]
         [FormValueRequired("upload-avatar")]
         public ActionResult UploadAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
         {
@@ -1734,6 +1740,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("Avatar")]
+        [PublicAntiForgery]
         [FormValueRequired("remove-avatar")]
         public ActionResult RemoveAvatar(CustomerAvatarModel model, HttpPostedFileBase uploadedFile)
         {

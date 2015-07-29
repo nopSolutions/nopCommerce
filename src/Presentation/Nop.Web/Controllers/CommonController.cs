@@ -480,6 +480,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactUs")]
+        [PublicAntiForgery]
         [CaptchaValidator]
         //available even when a store is closed
         [StoreClosed(true)] 
@@ -572,6 +573,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         [HttpPost, ActionName("ContactVendor")]
+        [PublicAntiForgery]
         [CaptchaValidator]
         public ActionResult ContactVendorSend(ContactVendorModel model, bool captchaValid)
         {

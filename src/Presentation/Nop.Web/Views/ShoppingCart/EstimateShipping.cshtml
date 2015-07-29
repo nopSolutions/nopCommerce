@@ -4,8 +4,8 @@
 {
     <div class="shipping">
         <script type="text/javascript">
-            $(function () {
-                $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+            $(function() {
+                $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                     var selectedItem = $(this).val();
                     var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
                     var estimateProgress = $("#estimate-shipping-loading-progress");
@@ -15,18 +15,18 @@
                         type: "GET",
                         url: "@(Url.RouteUrl("GetStatesByCountryId"))",
                         data: { "countryId": selectedItem, "addSelectStateItem": "false" },
-                 success: function (data) {
-                     ddlStates.html('');
-                     $.each(data, function (id, option) {
-                         ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                     });
-                     estimateProgress.hide();
-                 },
-                 error: function (xhr, ajaxOptions, thrownError) {
-                     alert('Failed to retrieve states.');
-                     estimateProgress.hide();
-                 }
-             });
+                        success: function(data) {
+                            ddlStates.html('');
+                            $.each(data, function(id, option) {
+                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                            estimateProgress.hide();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to retrieve states.');
+                            estimateProgress.hide();
+                        }
+                    });
                 });
             });
         </script>
