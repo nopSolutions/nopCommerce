@@ -95,7 +95,6 @@ namespace Nop.Services.Catalog
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="workContext">Work context</param>
-        /// <param name="storeContext">Store context</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="commonSettings">Common settings</param>
         /// <param name="catalogSettings">Catalog settings</param>
@@ -121,7 +120,6 @@ namespace Nop.Services.Catalog
             IDataProvider dataProvider, 
             IDbContext dbContext,
             IWorkContext workContext,
-            IStoreContext storeContext,
             LocalizationSettings localizationSettings, 
             CommonSettings commonSettings,
             CatalogSettings catalogSettings,
