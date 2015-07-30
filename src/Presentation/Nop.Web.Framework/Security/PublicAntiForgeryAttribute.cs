@@ -12,7 +12,7 @@ namespace Nop.Web.Framework.Security
         private readonly bool _ignore;
 
         /// <summary>
-        /// Anti-fogery security attribute
+        /// Anti-forgery security attribute
         /// </summary>
         /// <param name="ignore">Pass false in order to ignore this security validation</param>
         public PublicAntiForgeryAttribute(bool ignore = false)
