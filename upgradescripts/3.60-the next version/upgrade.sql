@@ -83,6 +83,15 @@ set @resources='
   <LocaleResource Name="Media.Vendor.ImageLinkTitleFormat">
     <Value>Show products of vendor {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.GroupedProduct">
+    <Value>Grouped (product with variants)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.SimpleProduct">
+    <Value>Simple</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
+    <Value>Associated products (variants)</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -236,4 +245,10 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'mediasettings.vendorthumbpicturesize', N'450', 0)
 END
+GO
+
+--rename some product templates
+UPDATE [ProductTemplate]
+SET [Name] = 'Grouped product (with variants)'
+WHERE [ViewPath] = N'ProductTemplate.Grouped'
 GO

@@ -6,11 +6,11 @@ namespace Nop.Core.Domain.Catalog
     public enum ProductType
     {
         /// <summary>
-        /// Simple product
+        /// Simple
         /// </summary>
         SimpleProduct = 5,
         /// <summary>
-        /// Grouped product
+        /// Grouped (product with variants)
         /// </summary>
         GroupedProduct = 10,
     }

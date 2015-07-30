@@ -2062,7 +2062,7 @@
     <Value>Add a new product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
-    <Value>Associated products</Value>
+    <Value>Associated products (variants)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts.AddNew">
     <Value>Add new associated product</Value>
@@ -11623,10 +11623,10 @@
     <Value>Price: High to Low</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.GroupedProduct">
-    <Value>Grouped product</Value>
+    <Value>Grouped (product with variants)</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductType.SimpleProduct">
-    <Value>Simple product</Value>
+    <Value>Simple</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.RecurringProductCyclePeriod.Days">
     <Value>Days</Value>

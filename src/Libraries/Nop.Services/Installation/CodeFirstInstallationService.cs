@@ -9739,7 +9739,7 @@ namespace Nop.Services.Installation
                                        },
                                    new ProductTemplate
                                        {
-                                           Name = "Grouped product",
+                                           Name = "Grouped product (with variants)",
                                            ViewPath = "ProductTemplate.Grouped",
                                            DisplayOrder = 100
                                        },
