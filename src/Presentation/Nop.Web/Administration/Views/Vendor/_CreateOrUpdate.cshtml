@@ -128,7 +128,32 @@
                 @Html.EditorFor(model => model.Email)
                 @Html.ValidationMessageFor(model => model.Email)
             </td>
-        </tr>
+        </tr>       
+        @if (Model.Id > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AssociatedCustomers):
+                </td>
+                <td class="adminData">
+                    @if (Model.AssociatedCustomers.Count > 0)
+                    {
+                        for (int i = 0; i < Model.AssociatedCustomers.Count; i++)
+                        {
+                            @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new {})
+                            if (i != Model.AssociatedCustomers.Count - 1)
+                            {
+                                <text>, </text>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
+                    }
+                </td>
+            </tr>
+        }
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PictureId)
@@ -192,31 +217,6 @@
                 @Html.ValidationMessageFor(model => model.DisplayOrder)
             </td>
         </tr>
-        @if (Model.Id > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AssociatedCustomerEmails):
-                </td>
-                <td class="adminData">
-                    @if (Model.AssociatedCustomerEmails.Count > 0)
-                    {
-                        for (int i = 0; i < Model.AssociatedCustomerEmails.Count; i++)
-                        {
-                            @Model.AssociatedCustomerEmails[i]
-                            if (i != Model.AssociatedCustomerEmails.Count - 1)
-                            {
-                                <text>, </text>
-                            }
-                        }
-                    }
-                    else
-                    {
-                        @T("Admin.Vendors.Fields.AssociatedCustomerEmails.None")
-                    }
-                </td>
-            </tr>
-        }
     </table>
 }
 @helper TabSeo()

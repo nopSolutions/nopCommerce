@@ -213,10 +213,14 @@ namespace Nop.Admin.Controllers
                 locale.SeName = vendor.GetSeName(languageId, false, false);
             });
             //associated customer emails
-            model.AssociatedCustomerEmails = _customerService
-                    .GetAllCustomers(vendorId: vendor.Id)
-                    .Select(c => c.Email)
-                    .ToList();
+            model.AssociatedCustomers = _customerService
+                .GetAllCustomers(vendorId: vendor.Id)
+                .Select(c => new VendorModel.AssociatedCustomerInfo()
+                {
+                    Id = c.Id,
+                    Email = c.Email
+                })
+                .ToList();
 
             return View(model);
         }
@@ -266,10 +270,15 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //associated customer emails
-            model.AssociatedCustomerEmails = _customerService
-                    .GetAllCustomers(vendorId: vendor.Id)
-                    .Select(c => c.Email)
-                    .ToList();
+            model.AssociatedCustomers = _customerService
+                .GetAllCustomers(vendorId: vendor.Id)
+                .Select(c => new VendorModel.AssociatedCustomerInfo()
+                {
+                    Id = c.Id,
+                    Email = c.Email
+                })
+                .ToList();
+
             return View(model);
         }
 

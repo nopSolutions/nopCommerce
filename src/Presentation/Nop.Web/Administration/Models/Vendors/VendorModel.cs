@@ -18,8 +18,9 @@ namespace Nop.Admin.Models.Vendors
             {
                 PageSize = 5;
             }
+
             Locales = new List<VendorLocalizedModel>();
-            AssociatedCustomerEmails = new List<string>();
+            AssociatedCustomers = new List<AssociatedCustomerInfo>();
         }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.Name")]
@@ -77,7 +78,16 @@ namespace Nop.Admin.Models.Vendors
         public IList<VendorLocalizedModel> Locales { get; set; }
 
         [NopResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
-        public IList<string> AssociatedCustomerEmails { get; set; }
+        public IList<AssociatedCustomerInfo> AssociatedCustomers { get; set; }
+
+        #region Nested classes
+
+        public class AssociatedCustomerInfo : BaseNopEntityModel
+        {
+            public string Email { get; set; }
+        }
+
+        #endregion
 
     }
 

@@ -220,7 +220,7 @@ namespace Nop.Admin.Infrastructure
 
             //vendors
             Mapper.CreateMap<Vendor, VendorModel>()
-                .ForMember(dest => dest.AssociatedCustomerEmails, mo => mo.Ignore())
+                .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
