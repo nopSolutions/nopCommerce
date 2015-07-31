@@ -63,16 +63,16 @@
                 <strong>@T("Footer.MyAccount")</strong>
             </div>
             <ul class="list">
-                <li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@T("Account.MyAccount")</a></li>
+                <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
                 <li><a href="@Url.RouteUrl("CustomerOrders")">@T("Account.CustomerOrders")</a></li>
-                <li><a href="@Url.RouteUrl("CustomerAddresses")" class="">@T("Account.CustomerAddresses")</a></li>
+                <li><a href="@Url.RouteUrl("CustomerAddresses")">@T("Account.CustomerAddresses")</a></li>
                 @if (Model.ShoppingCartEnabled)
                 {
-                    <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a></li>
+                    <li><a href="@Url.RouteUrl("ShoppingCart")">@T("ShoppingCart")</a></li>
                 }
                 @if (Model.WishlistEnabled)
                 {
-                    <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a></li>
+                    <li><a href="@Url.RouteUrl("Wishlist")">@T("Wishlist")</a></li>
                 }
                 @if (Model.AllowCustomersToApplyForVendorAccount)
                 {
