@@ -38,11 +38,13 @@
                             <div class="inputs">
                                 @Html.LabelFor(model => model.AddProductReview.Title, new { }, ":")
                                 @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.AddProductReview.Title)
                             </div>
                             <div class="inputs">
                                 @Html.LabelFor(model => model.AddProductReview.ReviewText, new { }, ":")
                                 @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
                             </div>
                             <div class="review-rating">

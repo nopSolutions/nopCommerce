@@ -36,11 +36,13 @@
                         <div class="inputs">
                             @Html.LabelFor(model => model.FriendEmail)
                             @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email", placeholder = T("Products.EmailAFriend.FriendEmail.Hint") })
+                            @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.FriendEmail)
                         </div>
                         <div class="inputs">
                             @Html.LabelFor(model => model.YourEmailAddress)
                             @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email", placeholder = T("Products.EmailAFriend.YourEmailAddress.Hint") })
+                            @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.YourEmailAddress)
                         </div>
                         <div class="inputs">

@@ -34,11 +34,13 @@
                         <div class="inputs">
                             @Html.LabelFor(model => model.FullName)
                             @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
+                            @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.FullName)
                         </div>
                         <div class="inputs">
                             @Html.LabelFor(model => model.Email)
                             @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
+                            @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Email)
                         </div>
                         @if (Model.SubjectEnabled)
@@ -46,12 +48,14 @@
                             <div class="inputs">
                                 @Html.LabelFor(model => model.Subject)
                                 @Html.TextBoxFor(model => model.Subject, new { @class = "subject", placeholder = T("ContactUs.Subject.Hint") })
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.Subject)
                             </div>
                         }
                         <div class="inputs">
                             @Html.LabelFor(model => model.Enquiry)
                             @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
+                            @Html.RequiredHint()
                             @Html.ValidationMessageFor(model => model.Enquiry)
                         </div>
                         @if (Model.DisplayCaptcha)
