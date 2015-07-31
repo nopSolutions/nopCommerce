@@ -152,7 +152,7 @@ namespace Nop.Admin.Controllers
             //locales
             AddLocales(_languageService, model.Locales);
             //default values
-            model.PageSize = 4;
+            model.PageSize = 6;
             model.Active = true;
             model.AllowCustomersToSelectPageSize = true;
             model.PageSizeOptions = _vendorSettings.DefaultVendorPageSizeOptions;
@@ -294,7 +294,17 @@ namespace Nop.Admin.Controllers
                 //No vendor found with the specified id
                 return RedirectToAction("List");
 
+            //clear associated customer references
+            var associatedCustomers = _customerService.GetAllCustomers(vendorId: vendor.Id);
+            foreach (var customer in associatedCustomers)
+            {
+                customer.VendorId = 0;
+                _customerService.UpdateCustomer(customer);
+            }
+
+            //delete a vendor
             _vendorService.DeleteVendor(vendor);
+
             SuccessNotification(_localizationService.GetResource("Admin.Vendors.Deleted"));
             return RedirectToAction("List");
         }

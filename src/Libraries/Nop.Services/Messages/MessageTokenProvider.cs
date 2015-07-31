@@ -16,6 +16,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Vendors;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
@@ -747,6 +748,15 @@ namespace Nop.Services.Messages
             _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
+        public virtual void AddVendorTokens(IList<Token> tokens, Vendor vendor)
+        {
+            tokens.Add(new Token("Vendor.Name", vendor.Name));
+            tokens.Add(new Token("Vendor.Email", vendor.Email));
+
+            //event notification
+            _eventPublisher.EntityTokensAdded(vendor, tokens);
+        }
+
         public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
         {
             tokens.Add(new Token("NewsLetterSubscription.Email", subscription.Email));
@@ -985,6 +995,8 @@ namespace Nop.Services.Messages
                 "%Customer.VatNumberStatus%", 
                 "%Customer.PasswordRecoveryURL%", 
                 "%Customer.AccountActivationURL%", 
+                "%Vendor.Name%",
+                "%Vendor.Email%",
                 "%Wishlist.URLForCustomer%", 
                 "%NewsLetterSubscription.Email%", 
                 "%NewsLetterSubscription.ActivationUrl%",

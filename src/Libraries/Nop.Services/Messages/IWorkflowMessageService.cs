@@ -284,6 +284,15 @@ namespace Nop.Services.Messages
         #region Misc
 
         /// <summary>
+        /// Sends 'New vendor account submitted' message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId);
+
+        /// <summary>
         /// Sends a product review notification message to a store owner
         /// </summary>
         /// <param name="productReview">Product review</param>

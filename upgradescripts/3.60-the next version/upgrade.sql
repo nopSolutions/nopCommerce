@@ -92,6 +92,45 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.AssociatedProducts">
     <Value>Associated products (variants)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount">
+    <Value>Allow customers to apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount.Hint">
+    <Value>Check to allow customers users to fill a form to become a new vendor. Then a store owner will have to manually approve it.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount">
+    <Value>Apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name.Hint">
+    <Value>Enter vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Submitted">
+    <Value>Your request has been submitted successfully. We''ll contact you soon.</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Vendors.Apply">
+    <Value>Apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AlreadyApplied">
+    <Value>You already applied for a vendor account. Please register as a new customer in order to apply for one more vendor account.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -251,4 +290,36 @@ GO
 UPDATE [ProductTemplate]
 SET [Name] = 'Grouped product (with variants)'
 WHERE [ViewPath] = N'ProductTemplate.Grouped'
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowcustomerstoapplyforvendoraccount')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'vendorsettings.allowcustomerstoapplyforvendoraccount', N'false', 0)
+END
+GO
+
+--new topic
+IF NOT EXISTS (
+  SELECT 1
+  FROM [dbo].[Topic]
+  WHERE [SystemName] = N'ApplyVendor')
+BEGIN
+	INSERT [dbo].[Topic] ([SystemName], [TopicTemplateId], [IncludeInSitemap], [AccessibleWhenStoreClosed], [LimitedToStores], [IncludeInFooterColumn1], [IncludeInFooterColumn2], [IncludeInFooterColumn3], [IncludeInTopMenu], [IsPasswordProtected], [DisplayOrder] , [Title], [Body])
+	VALUES (N'ApplyVendor', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, N'', N'<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>')
+END
+GO
+
+
+--'New vendor account submitted' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'VendorAccountApply.StoreOwnerNotification')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
+	VALUES (N'VendorAccountApply.StoreOwnerNotification', null, N'%Store.Name%. New vendor account submitted.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>', 1, 0, 0, 0)
+END
 GO

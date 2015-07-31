@@ -4329,6 +4329,14 @@ namespace Nop.Services.Installation
                                            //this template is disabled by default
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
+                                       },
+                                   new MessageTemplate
+                                       {
+                                           Name = "VendorAccountApply.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. New vendor account submitted.",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
                                        }
                                };
             _messageTemplateRepository.Insert(messageTemplates);
@@ -4447,6 +4455,16 @@ namespace Nop.Services.Installation
                                            Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
                                        },
+                                   new Topic
+                                       {
+                                           SystemName = "ApplyVendor",
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
+                                           DisplayOrder = 1,
+                                           Title = "",
+                                           Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
+                                           TopicTemplateId = defaultTopicTemplate.Id
+                                       },
                                };
             _topicRepository.Insert(topics);
 
@@ -4529,7 +4547,7 @@ namespace Nop.Services.Installation
                         "wishlist", 
                         "emailwishlist", 
                         "checkout", 
-                        "onepagecheckout", 
+                        "onepagecheckout",
                         "contactus", 
                         "passwordrecovery", 
                         "subscribenewsletter",
@@ -4952,7 +4970,8 @@ namespace Nop.Services.Installation
                 DefaultVendorPageSizeOptions = "6, 3, 9",
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
-                AllowCustomersToContactVendors = true
+                AllowCustomersToContactVendors = true,
+                AllowCustomersToApplyForVendorAccount = false
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();

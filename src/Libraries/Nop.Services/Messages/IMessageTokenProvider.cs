@@ -8,6 +8,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Stores;
+using Nop.Core.Domain.Vendors;
 
 namespace Nop.Services.Messages
 {
@@ -30,6 +31,8 @@ namespace Nop.Services.Messages
         void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard);
 
         void AddCustomerTokens(IList<Token> tokens, Customer customer);
+
+        void AddVendorTokens(IList<Token> tokens, Vendor vendor);
 
         void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription);
 

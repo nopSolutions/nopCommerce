@@ -457,6 +457,7 @@ namespace Nop.Web.Controllers
                 RecentlyViewedProductsEnabled = _catalogSettings.RecentlyViewedProductsEnabled,
                 RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
                 DisplayTaxShippingInfoFooter = _catalogSettings.DisplayTaxShippingInfoFooter,
+                AllowCustomersToApplyForVendorAccount = _vendorSettings.AllowCustomersToApplyForVendorAccount,
                 Topics = cachedTopicModel
             };
 

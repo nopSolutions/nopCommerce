@@ -6369,6 +6369,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor">
     <Value>Vendor settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount">
+    <Value>Allow customers to apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount.Hint">
+    <Value>Check to allow customers users to fill a form to become a new vendor. Then a store owner will have to manually approve it.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors">
     <Value>Allow customers to contact vendors</Value>
   </LocaleResource>
@@ -12816,6 +12822,9 @@
   <LocaleResource Name="PageTitle.Vendors">
     <Value>Vendors</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.Vendors.Apply">
+    <Value>Apply for vendor account</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.ViewPM">
     <Value>View the private message</Value>
   </LocaleResource>
@@ -14117,6 +14126,36 @@
   </LocaleResource>
   <LocaleResource Name="Vendors">
     <Value>Vendors</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount">
+    <Value>Apply for vendor account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.AlreadyApplied">
+    <Value>You already applied for a vendor account. Please register as a new customer in order to apply for one more vendor account.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Button">
+    <Value>Submit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name">
+    <Value>Vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name.Hint">
+    <Value>Enter vendor name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Name.Required">
+    <Value>Vendor name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Vendors.ApplyAccount.Submitted">
+    <Value>Your request has been submitted successfully. We'll contact you soon.</Value>
   </LocaleResource>
   <LocaleResource Name="Vendors.List">
     <Value>Vendor List</Value>

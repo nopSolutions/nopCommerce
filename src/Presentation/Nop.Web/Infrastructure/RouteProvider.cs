@@ -454,6 +454,11 @@ namespace Nop.Web.Infrastructure
                             "contactvendor/{vendorId}",
                             new { controller = "Common", action = "ContactVendor" },
                             new[] { "Nop.Web.Controllers" });
+            //apply for vendor account
+            routes.MapLocalizedRoute("ApplyVendorAccount",
+                            "vendor/apply",
+                            new { controller = "Vendor", action = "ApplyVendor" },
+                            new[] { "Nop.Web.Controllers" });
 
             //poll vote AJAX link
             routes.MapLocalizedRoute("PollVote",

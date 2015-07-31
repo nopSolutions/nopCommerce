@@ -2609,22 +2609,26 @@ label, label + * {
 }
 
 
-/*********** CONTACT & EMAIL A FRIEND ***********/
+/*********** CONTACT & EMAIL A FRIEND & APPLY FOR VENDOR ACCOUNT ***********/
 
 
 
 .contact-page .page-title,
-.email-a-friend-page .page-title {
+.email-a-friend-page .page-title,
+.apply-vendor-page .page-title {
 	margin: 0 0 -1px;
 }
 .contact-page .result,
 .contact-page .message-error,
 .email-a-friend-page .result,
-.email-a-friend-page .message-error {
+.email-a-friend-page .message-error,
+.apply-vendor-page .result,
+.apply-vendor-page .message-error {
 	margin: 20px 0;
 }
 .contact-page .button-1,
-.email-a-friend-page .button-1 {
+.email-a-friend-page .button-1,
+.apply-vendor-page .button-1 {
 	min-width: 140px;
 	border: none;
 	background-color: #4ab2f1;
@@ -2635,11 +2639,13 @@ label, label + * {
 	text-transform: uppercase;
 }
 .contact-page .button-1:hover,
-.email-a-friend-page .button-1:hover {
+.email-a-friend-page .button-1:hover,
+.apply-vendor-page .button-1:hover {
 	background-color: #248ece;
 }
 .contact-page .topic-block,
-.email-a-friend-page .title {
+.email-a-friend-page .title,
+.apply-vendor-page .title {
 	margin: 25px 0;
 }
 .email-a-friend-page .title h2 {

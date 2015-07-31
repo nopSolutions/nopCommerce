@@ -11,6 +11,7 @@ namespace Nop.Web.Models.Common
         }
 
         public string StoreName { get; set; }
+
         public string FacebookLink { get; set; }
         public string TwitterLink { get; set; }
         public string YoutubeLink { get; set; }
@@ -27,7 +28,10 @@ namespace Nop.Web.Models.Common
         public bool AllowPrivateMessages { get; set; }
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool RecentlyAddedProductsEnabled { get; set; }
+        public bool AllowCustomersToApplyForVendorAccount { get; set; }
+
         public bool DisplayTaxShippingInfoFooter { get; set; }
+
         public int WorkingLanguageId { get; set; }
 
         public IList<FooterTopicModel> Topics { get; set; }

@@ -1220,6 +1220,47 @@ namespace Nop.Services.Messages
         #region Misc
 
         /// <summary>
+        /// Sends 'New vendor account submitted' message to a store owner
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="vendor">Vendor</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewVendorAccountApplyStoreOwnerNotification(Customer customer, Vendor vendor, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            if (vendor == null)
+                throw new ArgumentNullException("vendor");
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("VendorAccountApply.StoreOwnerNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            _messageTokenProvider.AddVendorTokens(tokens, vendor);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
         /// Sends a gift card notification
         /// </summary>
         /// <param name="giftCard">Gift card</param>
