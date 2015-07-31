@@ -5555,9 +5555,9 @@ namespace Nop.Services.Installation
             var productTemplateSimple = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Simple product");
             if (productTemplateSimple == null)
                 throw new Exception("Simple product template could not be loaded");
-            var productTemplateGrouped = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product");
+            var productTemplateGrouped = _productTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Grouped product (with variants)");
             if (productTemplateGrouped == null)
-                throw new Exception("Simple product template could not be loaded");
+                throw new Exception("Grouped product template could not be loaded");
 
             //delivery date
             var deliveryDate = _deliveryDateRepository.Table.FirstOrDefault();
