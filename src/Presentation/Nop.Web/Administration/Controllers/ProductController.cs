@@ -625,12 +625,13 @@ namespace Nop.Admin.Controllers
             {
                 var sa = specificationAttributes[i];
                 model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
-                if (i == 0)
-                {
-                    //attribute options
-                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(sa.Id))
-                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
-                }
+            }
+            //preselected attribute options
+            if (model.AddSpecificationAttributeModel.AvailableAttributes.Any())
+            {
+                var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
+                foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId))
+                    model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
             }
             //default specs values
             model.AddSpecificationAttributeModel.ShowOnProductPage = true;
