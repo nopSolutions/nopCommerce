@@ -474,6 +474,7 @@ namespace Nop.Admin.Controllers
             //anyway they're not used (you need to save a product before you map add them)
             if (product != null)
             {
+                //product attributes
                 foreach (var productAttribute in _productAttributeService.GetAllProductAttributes())
                 {
                     model.AvailableProductAttributes.Add(new SelectListItem
@@ -482,6 +483,8 @@ namespace Nop.Admin.Controllers
                         Value = productAttribute.Id.ToString()
                     });
                 }
+
+                //manufacturers
                 foreach (var manufacturer in _manufacturerService.GetAllManufacturers(showHidden: true))
                 {
                     model.AvailableManufacturers.Add(new SelectListItem
@@ -490,6 +493,8 @@ namespace Nop.Admin.Controllers
                         Value = manufacturer.Id.ToString()
                     });
                 }
+
+                //categories
                 var allCategories = _categoryService.GetAllCategories(showHidden: true);
                 foreach (var category in allCategories)
                 {
@@ -499,7 +504,24 @@ namespace Nop.Admin.Controllers
                         Value = category.Id.ToString()
                     });
                 }
+
+                //specification attributes
+                var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
+                foreach (var sa in specificationAttributes)
+                {
+                    model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
+                }
+                //options of preselected specification attribute
+                if (model.AddSpecificationAttributeModel.AvailableAttributes.Any())
+                {
+                    var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
+                    foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId))
+                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
+                }
+                //default specs values
+                model.AddSpecificationAttributeModel.ShowOnProductPage = true;
             }
+
 
             //copy product
             if (product != null)
@@ -618,23 +640,6 @@ namespace Nop.Admin.Controllers
                 model.AvailableBasepriceUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceUnitId });
             foreach (var mw in measureWeights)
                 model.AvailableBasepriceBaseUnits.Add(new SelectListItem { Text = mw.Name, Value = mw.Id.ToString(), Selected = product != null && !setPredefinedValues && mw.Id == product.BasepriceBaseUnitId });
-
-            //specification attributes
-            var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
-            for (int i = 0; i < specificationAttributes.Count; i++)
-            {
-                var sa = specificationAttributes[i];
-                model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
-            }
-            //preselected attribute options
-            if (model.AddSpecificationAttributeModel.AvailableAttributes.Any())
-            {
-                var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
-                foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId))
-                    model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
-            }
-            //default specs values
-            model.AddSpecificationAttributeModel.ShowOnProductPage = true;
 
             //discounts
             model.AvailableDiscounts = _discountService
