@@ -22,6 +22,8 @@ namespace Nop.Admin.Infrastructure
             //we cache presentation models between requests
             builder.RegisterType<HomeController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+            builder.RegisterType<ProductController>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
         }
 
         /// <summary>

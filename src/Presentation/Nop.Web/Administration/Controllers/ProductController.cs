@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
+using Nop.Admin.Infrastructure.Cache;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
@@ -36,6 +37,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Core.Caching;
 
 namespace Nop.Admin.Controllers
 {
@@ -74,7 +76,7 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
-        private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly ICacheManager _cacheManager;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IDiscountService _discountService;
         private readonly IProductAttributeService _productAttributeService;
@@ -119,7 +121,7 @@ namespace Nop.Admin.Controllers
             CurrencySettings currencySettings,
             IMeasureService measureService,
             MeasureSettings measureSettings,
-            AdminAreaSettings adminAreaSettings,
+            ICacheManager cacheManager,
             IDateTimeHelper dateTimeHelper,
             IDiscountService discountService,
             IProductAttributeService productAttributeService,
@@ -160,7 +162,7 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
-            this._adminAreaSettings = adminAreaSettings;
+            this._cacheManager = cacheManager;
             this._dateTimeHelper = dateTimeHelper;
             this._discountService = discountService;
             this._productAttributeService = productAttributeService;
@@ -506,17 +508,31 @@ namespace Nop.Admin.Controllers
                 }
 
                 //specification attributes
-                var specificationAttributes = _specificationAttributeService.GetSpecificationAttributes();
-                foreach (var sa in specificationAttributes)
-                {
-                    model.AddSpecificationAttributeModel.AvailableAttributes.Add(new SelectListItem { Text = sa.Name, Value = sa.Id.ToString() });
-                }
+                model.AddSpecificationAttributeModel.AvailableAttributes = _cacheManager
+                    .Get(ModelCacheEventConsumer.SPEC_ATTRIBUTES_MODEL_KEY, () =>
+                    {
+                        var availableSpecificationAttributes = new List<SelectListItem>();
+                        foreach (var sa in _specificationAttributeService.GetSpecificationAttributes())
+                        {
+                            availableSpecificationAttributes.Add(new SelectListItem
+                            {
+                                Text = sa.Name, 
+                                Value = sa.Id.ToString()
+                            });
+                        }
+                        return availableSpecificationAttributes;
+                    });
+                
                 //options of preselected specification attribute
                 if (model.AddSpecificationAttributeModel.AvailableAttributes.Any())
                 {
                     var selectedAttributeId = int.Parse(model.AddSpecificationAttributeModel.AvailableAttributes.First().Value);
                     foreach (var sao in _specificationAttributeService.GetSpecificationAttributeOptionsBySpecificationAttribute(selectedAttributeId))
-                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem { Text = sao.Name, Value = sao.Id.ToString() });
+                        model.AddSpecificationAttributeModel.AvailableOptions.Add(new SelectListItem
+                        {
+                            Text = sao.Name,
+                            Value = sao.Id.ToString()
+                        });
                 }
                 //default specs values
                 model.AddSpecificationAttributeModel.ShowOnProductPage = true;
