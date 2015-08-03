@@ -131,6 +131,21 @@ set @resources='
   <LocaleResource Name="Vendors.ApplyAccount.AlreadyApplied">
     <Value>You already applied for a vendor account. Please register as a new customer in order to apply for one more vendor account.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores">
+    <Value>Points accumulated for all stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores.Hint">
+    <Value>Check to accumulate all reward points in one balance for all stores so they can be used in any store. Otherwise, each store has its own rewards points and they can only be used in that store. WARNING: not recommended to change in production environment with several stores already created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore.Hint">
+    <Value>Choose a store. It''s useful only when you have "Points accumulated for all stores" setting disabled.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -321,5 +336,33 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
 	VALUES (N'VendorAccountApply.StoreOwnerNotification', null, N'%Store.Name%. New vendor account submitted.', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted for a vendor account. Details are below:<br />Vendor name: %Vendor.Name%<br />Vendor email: %Vendor.Email%<br /><br />You can activate it in admin area.</p>', 1, 0, 0, 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[RewardPointsHistory]') and NAME='StoreId')
+BEGIN
+	ALTER TABLE [RewardPointsHistory]
+	ADD [StoreId] int NULL
+END
+GO
+
+--just use the first store
+--we cannot find original store IDs of some orders
+--furthermore, it won't work for points granted for registration (if enabled)
+UPDATE [RewardPointsHistory]
+SET [StoreId] = (SELECT TOP 1 [Id] from [Store])
+WHERE [StoreId] IS NULL
+GO
+
+
+ALTER TABLE [RewardPointsHistory] ALTER COLUMN [StoreId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.pointsaccumulatedforallstores')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.pointsaccumulatedforallstores', N'true', 0)
 END
 GO

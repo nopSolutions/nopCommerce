@@ -950,7 +950,7 @@ namespace Nop.Services.Orders
                 customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
                     _genericAttributeService, _storeContext.CurrentStore.Id))
             {
-                int rewardPointsBalance = customer.GetRewardPointsBalance();
+                int rewardPointsBalance = customer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);

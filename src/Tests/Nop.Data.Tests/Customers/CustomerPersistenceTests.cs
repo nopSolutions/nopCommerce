@@ -97,7 +97,7 @@ namespace Nop.Data.Tests.Customers
         {
             var customer = GetTestCustomer();
             
-            customer.AddRewardPointsHistoryEntry(1, "Points for registration");
+            customer.AddRewardPointsHistoryEntry(1, 0, "Points for registration");
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();

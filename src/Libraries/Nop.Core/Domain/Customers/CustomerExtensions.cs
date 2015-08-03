@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Stores;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Domain.Customers
 {
@@ -137,15 +140,16 @@ namespace Nop.Core.Domain.Customers
 
         #region Reward points
 
-        public static void AddRewardPointsHistoryEntry(this Customer customer, 
-            int points, string message = "", 
+        public static void AddRewardPointsHistoryEntry(this Customer customer,
+            int points, int storeId, string message = "", 
             Order usedWithOrder = null, decimal usedAmount = 0M)
         {
-            int newPointsBalance = customer.GetRewardPointsBalance() + points;
+            int newPointsBalance = customer.GetRewardPointsBalance(storeId) + points;
 
             var rewardPointsHistory = new RewardPointsHistory
             {
                 Customer = customer,
+                StoreId = storeId,
                 UsedWithOrder = usedWithOrder,
                 Points = points,
                 PointsBalance = newPointsBalance,
@@ -160,16 +164,36 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets reward points balance
         /// </summary>
-        public static int GetRewardPointsBalance(this Customer customer)
+        /// <param name="customer">Customer</param>
+        /// <param name="storeId">Limit to store (if this option is enabled)</param>
+        /// <returns>Balance</returns>
+        public static int GetRewardPointsBalance(this Customer customer, int storeId)
         {
             int result = 0;
             var lastRph = customer.RewardPointsHistory
-                    .OrderByDescending(rph => rph.CreatedOnUtc)
-                    .ThenByDescending(rph => rph.Id)
-                    .FirstOrDefault();
+                .LimitPerStore(storeId)
+                .OrderByDescending(rph => rph.CreatedOnUtc)
+                .ThenByDescending(rph => rph.Id)
+                .FirstOrDefault();
             if (lastRph != null)
                 result = lastRph.PointsBalance;
             return result;
+        }
+
+        /// <summary>
+        /// Limit reward points history per store (in this option is enabled)
+        /// </summary>
+        /// <param name="points">Points</param>
+        /// <param name="storeId">Store identifier</param>
+        /// <returns>Points</returns>
+        public static IEnumerable<RewardPointsHistory> LimitPerStore(this IEnumerable<RewardPointsHistory> points, int storeId)
+        {
+            if (points == null)
+                throw new ArgumentNullException("points");
+
+            var rewardPointsSettings = EngineContext.Current.Resolve<RewardPointsSettings>();
+
+            return points.Where(rph => rewardPointsSettings.PointsAccumulatedForAllStores || rph.StoreId == storeId);
         }
 
         #endregion

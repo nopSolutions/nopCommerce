@@ -1424,7 +1424,9 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
-                
+
+                _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, 0, false);
+
                 //now clear settings cache
                 _settingService.ClearCache();
 

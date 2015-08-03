@@ -216,7 +216,9 @@ namespace Nop.Services.Customers
             //Add reward points for customer registration (if enabled)
             if (_rewardPointsSettings.Enabled &&
                 _rewardPointsSettings.PointsForRegistration > 0)
-                request.Customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
+                request.Customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration,
+                    request.StoreId,
+                    _localizationService.GetResource("RewardPoints.Message.EarnedForRegistration"));
 
             _customerService.UpdateCustomer(request.Customer);
             return result;

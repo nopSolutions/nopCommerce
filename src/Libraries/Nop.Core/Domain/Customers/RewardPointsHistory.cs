@@ -14,6 +14,11 @@ namespace Nop.Core.Domain.Customers
         public int CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the store identifier in which these reward points were awarded or redeemed
+        /// </summary>
+        public int StoreId { get; set; }
+
+        /// <summary>
         /// Gets or sets the points redeemed/added
         /// </summary>
         public int Points { get; set; }

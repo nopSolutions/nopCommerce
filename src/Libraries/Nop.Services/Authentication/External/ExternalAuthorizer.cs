@@ -4,6 +4,7 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
@@ -27,6 +28,7 @@ namespace Nop.Services.Authentication.External
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IShoppingCartService _shoppingCartService;
@@ -40,11 +42,15 @@ namespace Nop.Services.Authentication.External
             IOpenAuthenticationService openAuthenticationService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService, 
-            ICustomerActivityService customerActivityService, ILocalizationService localizationService,
-            IWorkContext workContext, CustomerSettings customerSettings,
+            ICustomerActivityService customerActivityService, 
+            ILocalizationService localizationService,
+            IWorkContext workContext,
+            IStoreContext storeContext,
+            CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IShoppingCartService shoppingCartService,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
+            IWorkflowMessageService workflowMessageService, 
+            LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
             this._openAuthenticationService = openAuthenticationService;
@@ -53,6 +59,7 @@ namespace Nop.Services.Authentication.External
             this._customerActivityService = customerActivityService;
             this._localizationService = localizationService;
             this._workContext = workContext;
+            this._storeContext = storeContext;
             this._customerSettings = customerSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._shoppingCartService = shoppingCartService;
@@ -131,8 +138,13 @@ namespace Nop.Services.Authentication.External
                         (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation &&
                          !_externalAuthenticationSettings.RequireEmailValidation);
 
-                    var registrationRequest = new CustomerRegistrationRequest(currentCustomer, details.EmailAddress,
-                        _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress, randomPassword, PasswordFormat.Clear, isApproved);
+                    var registrationRequest = new CustomerRegistrationRequest(currentCustomer, 
+                        details.EmailAddress,
+                        _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress, 
+                        randomPassword,
+                        PasswordFormat.Clear,
+                        _storeContext.CurrentStore.Id,
+                        isApproved);
                     var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                     if (registrationResult.Success)
                     {

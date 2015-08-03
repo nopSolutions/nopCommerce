@@ -189,12 +189,6 @@ namespace Nop.Services.Tests.Customers
             result.ShouldEqual(CustomerLoginResults.Successful);
         }
 
-        //private CustomerRegistrationRequest CreateCustomerRegistrationRequest(Customer customer) 
-        //{
-        //    return new CustomerRegistrationRequest(customer, "test.user@domain.com", "test.user@domain.com", 
-        //        "password", PasswordFormat.Encrypted);
-        //}
-
         private void AddCustomerToRegisteredRole(Customer customer)
         {
             customer.CustomerRoles.Add(new CustomerRole

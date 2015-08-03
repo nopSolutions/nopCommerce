@@ -6009,6 +6009,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse.Hint">
     <Value>Customers won't be able to use reward points before they have X amount of points. Set to 0 if you do not want to use this setting.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores">
+    <Value>Points accumulated for all stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores.Hint">
+    <Value>Check to accumulate all reward points in one balance for all stores so they can be used in any store. Otherwise, each store has its own rewards points and they can only be used in that store. WARNING: not recommended to change in production environment with several stores already created.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsForPurchases_Amount">
     <Value>Points for purchases</Value>
   </LocaleResource>
@@ -8166,6 +8172,12 @@
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage.Hint">
     <Value>Enter message (comment)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore.Hint">
+    <Value>Choose a store. It's useful only when you have "Points accumulated for all stores" setting disabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue">
     <Value>Value</Value>
   </LocaleResource>
@@ -8183,6 +8195,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.PointsBalance">
     <Value>Points balance</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Store">
+    <Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendEmail">
     <Value>Send email</Value>

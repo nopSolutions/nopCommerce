@@ -24,6 +24,8 @@ namespace Nop.Admin.Models.Customers
             this.AvailableStates = new List<SelectListItem>();
             this.AvailableVendors = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
+
+            this.RewardPointsAvailableStores = new List<SelectListItem>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -187,14 +189,18 @@ namespace Nop.Admin.Models.Customers
 
         //reward points history
         public bool DisplayRewardPointsHistory { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue")]
         public int AddRewardPointsValue { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
         [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
-        
+        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
+        public IList<SelectListItem> AddRewardPointsStoreId { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
+        public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
+
+
+
         //send email model
         public SendEmailModel SendEmail { get; set; }
         //send PM model
@@ -224,6 +230,9 @@ namespace Nop.Admin.Models.Customers
 
         public partial class RewardPointsHistoryModel : BaseNopEntityModel
         {
+            [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Store")]
+            public string StoreName { get; set; }
+
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
             public int Points { get; set; }
 

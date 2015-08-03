@@ -4763,6 +4763,7 @@ namespace Nop.Services.Installation
                     PointsForPurchases_Awarded = OrderStatus.Complete,
                     PointsForPurchases_Canceled = OrderStatus.Cancelled,
                     DisplayHowMuchWillBeEarned = true,
+                    PointsAccumulatedForAllStores = true,
                 });
 
             settingService.SaveSetting(new CurrencySettings

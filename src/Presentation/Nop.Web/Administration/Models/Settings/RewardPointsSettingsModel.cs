@@ -44,6 +44,9 @@ namespace Nop.Admin.Models.Settings
         public bool DisplayHowMuchWillBeEarned { get; set; }
         public bool DisplayHowMuchWillBeEarned_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores")]
+        public bool PointsAccumulatedForAllStores { get; set; }
+
         public string PrimaryStoreCurrencyCode { get; set; }
     }
 }

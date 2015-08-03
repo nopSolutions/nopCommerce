@@ -579,7 +579,10 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerRewardPointsModel();
-            foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
+            foreach (var rph in customer.RewardPointsHistory
+                .LimitPerStore(_storeContext.CurrentStore.Id)
+                .OrderByDescending(rph => rph.CreatedOnUtc)
+                .ThenByDescending(rph => rph.Id))
             {
                 model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
@@ -590,7 +593,7 @@ namespace Nop.Web.Controllers
                 });
             }
             //current amount/balance
-            int rewardPointsBalance = customer.GetRewardPointsBalance();
+            int rewardPointsBalance = customer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
             decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
             decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance;

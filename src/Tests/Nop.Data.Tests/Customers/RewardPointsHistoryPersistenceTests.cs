@@ -17,18 +17,20 @@ namespace Nop.Data.Tests.Customers
             var rewardPointsHistory = new RewardPointsHistory
             {
                 Customer = GetTestCustomer(),
-                Points = 1,
+                StoreId = 1,
+                Points = 2,
                 Message = "Points for registration",
-                PointsBalance = 2,
+                PointsBalance = 3,
                 UsedAmount = 3.1M,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
 
             var fromDb = SaveAndLoadEntity(rewardPointsHistory);
             fromDb.ShouldNotBeNull();
-            fromDb.Points.ShouldEqual(1);
+            fromDb.StoreId.ShouldEqual(1);
+            fromDb.Points.ShouldEqual(2);
             fromDb.Message.ShouldEqual("Points for registration");
-            fromDb.PointsBalance.ShouldEqual(2);
+            fromDb.PointsBalance.ShouldEqual(3);
             fromDb.UsedAmount.ShouldEqual(3.1M);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
 
@@ -41,10 +43,11 @@ namespace Nop.Data.Tests.Customers
             {
                 Customer = GetTestCustomer(),
                 UsedWithOrder = GetTestOrder(),
-                Points = 1,
+                StoreId = 1,
+                Points = 2,
                 Message = "Points for registration",
-                PointsBalance = 2,
-                UsedAmount = 3,
+                PointsBalance = 3,
+                UsedAmount = 4,
                 CreatedOnUtc = new DateTime(2010, 01, 01)
             };
 

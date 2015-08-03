@@ -687,6 +687,9 @@
                 },
                 scrollable: false,
                 columns: [{
+                    field: "StoreName",
+                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
+                },{
                     field: "Points",
                     title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
                 }, {
@@ -730,6 +733,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddRewardPointsStoreId)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddRewardPointsStoreId, Model.RewardPointsAvailableStores)
+                @Html.ValidationMessageFor(model => model.AddRewardPointsStoreId)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" align="left">
                 <input type="button" id="addRewardPoints" class="k-button" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
             </td>
@@ -741,11 +753,13 @@
             $('#addRewardPoints').click(function () {
                 var rewardPointsValue = $("#@Html.FieldIdFor(model => model.AddRewardPointsValue)").val();
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
+                var rewardPointsStoreId = $("#@Html.FieldIdFor(model => model.AddRewardPointsStoreId)").val();
                 $('#addRewardPoints').attr('disabled', true);
                 
                 var postData = {
                     addRewardPointsValue: rewardPointsValue,
                     addRewardPointsMessage: rewardPointsMessage,
+                    storeId: rewardPointsStoreId,
                     customerId: @Model.Id
                 };
                 addAntiForgeryToken(postData);

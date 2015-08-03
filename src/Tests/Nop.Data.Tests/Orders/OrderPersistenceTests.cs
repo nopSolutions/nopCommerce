@@ -161,6 +161,7 @@ namespace Nop.Data.Tests.Orders
                 RedeemedRewardPointsEntry = new RewardPointsHistory
                 {
                     Customer = GetTestCustomer(),
+                    StoreId = 1,
                     Points = -1,
                     Message = "Used with order",
                     PointsBalance = 2,

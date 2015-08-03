@@ -119,5 +119,14 @@
                 @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PointsAccumulatedForAllStores):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PointsAccumulatedForAllStores)
+                @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
+            </td>
+        </tr>
     </table>
 }

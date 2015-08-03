@@ -607,13 +607,24 @@ namespace Nop.Admin.Controllers
             if (customer != null)
             {
                 model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
+                model.AddRewardPointsValue = 0;
+                model.AddRewardPointsMessage = "Some comment here...";
+
+                //stores
+                foreach (var store in _storeService.GetAllStores())
+                {
+                    model.RewardPointsAvailableStores.Add(new SelectListItem
+                    {
+                        Text = store.Name,
+                        Value = store.Id.ToString(),
+                        Selected = (store.Id == _storeContext.CurrentStore.Id)
+                    });
+                }
             }
             else
             {
                 model.DisplayRewardPointsHistory = false;
             }
-            model.AddRewardPointsValue = 0;
-            model.AddRewardPointsMessage = "Some comment here...";
             //external authentication records
             if (customer != null)
             {
@@ -1415,10 +1426,14 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id");
 
             var model = new List<CustomerModel.RewardPointsHistoryModel>();
-            foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
+            foreach (var rph in customer.RewardPointsHistory
+                .OrderByDescending(rph => rph.CreatedOnUtc)
+                .ThenByDescending(rph => rph.Id))
             {
+                var store = _storeService.GetStoreById(rph.StoreId);
                 model.Add(new CustomerModel.RewardPointsHistoryModel
                     {
+                        StoreName = store != null ? store.Name : "Unknown",
                         Points = rph.Points,
                         PointsBalance = rph.PointsBalance,
                         Message = rph.Message,
@@ -1435,7 +1450,7 @@ namespace Nop.Admin.Controllers
         }
 
         [ValidateInput(false)]
-        public ActionResult RewardPointsHistoryAdd(int customerId, int addRewardPointsValue, string addRewardPointsMessage)
+        public ActionResult RewardPointsHistoryAdd(int customerId, int storeId, int addRewardPointsValue, string addRewardPointsMessage)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1444,7 +1459,7 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
-            customer.AddRewardPointsHistoryEntry(addRewardPointsValue, addRewardPointsMessage);
+            customer.AddRewardPointsHistoryEntry(addRewardPointsValue, storeId, addRewardPointsMessage);
             _customerService.UpdateCustomer(customer);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);

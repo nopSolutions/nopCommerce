@@ -669,7 +669,9 @@ namespace Nop.Services.Orders
                 return;
 
             //add reward points
-            order.Customer.AddRewardPointsHistoryEntry(points, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
+            order.Customer.AddRewardPointsHistoryEntry(points,
+                order.StoreId,
+                string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
             order.RewardPointsWereAdded = true;
             _orderService.UpdateOrder(order);
         }
@@ -689,7 +691,9 @@ namespace Nop.Services.Orders
                 return;
 
             //reduce reward points
-            order.Customer.AddRewardPointsHistoryEntry(-points, string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            order.Customer.AddRewardPointsHistoryEntry(-points,
+                order.StoreId, 
+                string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
             _orderService.UpdateOrder(order);
         }
 
@@ -1377,6 +1381,7 @@ namespace Nop.Services.Orders
                     if (details.RedeemedRewardPointsAmount > decimal.Zero)
                     {
                         details.Customer.AddRewardPointsHistoryEntry(-details.RedeemedRewardPoints,
+                            order.StoreId,
                             string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.Id),
                             order,
                             details.RedeemedRewardPointsAmount);

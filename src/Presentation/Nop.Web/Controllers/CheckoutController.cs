@@ -335,7 +335,7 @@ namespace Nop.Web.Controllers
             //reward points
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
-                int rewardPointsBalance = _workContext.CurrentCustomer.GetRewardPointsBalance();
+                int rewardPointsBalance = _workContext.CurrentCustomer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
                 decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
                 decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 
