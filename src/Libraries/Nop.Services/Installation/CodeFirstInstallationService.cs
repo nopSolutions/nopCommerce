@@ -4574,6 +4574,7 @@ namespace Nop.Services.Installation
 
             settingService.SaveSetting(new CatalogSettings
                 {
+                    AllowViewUnpublishedProductPage = true,
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,
                     ShowGtin = false,

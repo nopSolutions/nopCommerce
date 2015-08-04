@@ -984,6 +984,7 @@ namespace Nop.Admin.Controllers
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
             {
+                model.AllowViewUnpublishedProductPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeScope);     
                 model.ShowProductSku_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductSku, storeScope);
                 model.ShowManufacturerPartNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowManufacturerPartNumber, storeScope);
                 model.ShowGtin_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowGtin, storeScope);
@@ -1055,6 +1056,11 @@ namespace Nop.Admin.Controllers
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
              * and loaded from database after each update */
+            if (model.AllowViewUnpublishedProductPage_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.AllowViewUnpublishedProductPage, storeScope);
+            
             if (model.ShowProductSku_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.ShowProductSku, storeScope, false);
             else if (storeScope > 0)

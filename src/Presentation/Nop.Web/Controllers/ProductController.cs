@@ -915,11 +915,14 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 return InvokeHttp404();
 
-            //Is published?
-            //Check whether the current user has a "Manage catalog" permission
-            //It allows him to preview a product before publishing
-            if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
-                return InvokeHttp404();
+            //published?
+            if (!_catalogSettings.AllowViewUnpublishedProductPage)
+            {
+                //Check whether the current user has a "Manage catalog" permission
+                //It allows him to preview a product before publishing
+                if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                    return InvokeHttp404();
+            }
 
             //ACL (access control list)
             if (!_aclService.Authorize(product))

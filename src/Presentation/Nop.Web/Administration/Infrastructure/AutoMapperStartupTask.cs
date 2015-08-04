@@ -701,6 +701,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.UseCubeRootMethod, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettings, CatalogSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
+                .ForMember(dest => dest.AllowViewUnpublishedProductPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowProductSku_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowManufacturerPartNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ShowGtin_OverrideForStore, mo => mo.Ignore())

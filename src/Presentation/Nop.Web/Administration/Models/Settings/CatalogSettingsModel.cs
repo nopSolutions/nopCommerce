@@ -11,6 +11,10 @@ namespace Nop.Admin.Models.Settings
 
 
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
+        public bool AllowViewUnpublishedProductPage { get; set; }
+        public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductSku")]
         public bool ShowProductSku { get; set; }
         public bool ShowProductSku_OverrideForStore { get; set; }

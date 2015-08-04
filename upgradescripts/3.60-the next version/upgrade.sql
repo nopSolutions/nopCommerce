@@ -146,6 +146,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore.Hint">
     <Value>Choose a store. It''s useful only when you have "Points accumulated for all stores" setting disabled.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage">
+    <Value>Allow viewing of unpublished product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
+    <Value>Check to allow viewing of unpublished product details page. This way SEO won''t be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -364,5 +370,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.poi
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'rewardpointssettings.pointsaccumulatedforallstores', N'true', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.allowviewunpublishedproductpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.allowviewunpublishedproductpage', N'true', 0)
 END
 GO

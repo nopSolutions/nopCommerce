@@ -4458,6 +4458,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging.Hint">
     <Value>Check to enable the option to change view mode on category/manufacturer details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage">
+    <Value>Allow viewing of unpublished product details page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
+    <Value>Check to allow viewing of unpublished product details page. This way SEO won't be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CacheProductPrices">
     <Value>Cache product prices</Value>
   </LocaleResource>

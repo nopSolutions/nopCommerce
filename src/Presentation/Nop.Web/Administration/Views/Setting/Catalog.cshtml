@@ -185,6 +185,16 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowViewUnpublishedProductPage_OverrideForStore, model => model.AllowViewUnpublishedProductPage, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AllowViewUnpublishedProductPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowViewUnpublishedProductPage)
+                @Html.ValidationMessageFor(model => model.AllowViewUnpublishedProductPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductSku):
             </td>

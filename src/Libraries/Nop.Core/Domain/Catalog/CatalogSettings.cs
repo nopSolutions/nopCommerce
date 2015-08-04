@@ -2,8 +2,16 @@
 
 namespace Nop.Core.Domain.Catalog
 {
+    /// <summary>
+    /// Catalog settings
+    /// </summary>
     public class CatalogSettings : ISettings
     {
+        /// <summary>
+        /// Gets or sets a value indicating details pages of unpublished product details pages could be open (for SEO optimization)
+        /// </summary>
+        public bool AllowViewUnpublishedProductPage { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to display product SKU
         /// </summary>
@@ -103,17 +111,14 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a number of "Recently viewed products"
         /// </summary>
         public int RecentlyViewedProductsNumber { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether "Recently viewed products" feature is enabled
         /// </summary>
         public bool RecentlyViewedProductsEnabled { get; set; }
-
         /// <summary>
         /// Gets or sets a number of "Recently added products"
         /// </summary>
         public int RecentlyAddedProductsNumber { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether "Recently added products" feature is enabled
         /// </summary>
@@ -123,7 +128,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether "Compare products" feature is enabled
         /// </summary>
         public bool CompareProductsEnabled { get; set; }
-
         /// <summary>
         /// Gets or sets an allowed number of products to be compared
         /// </summary>
@@ -133,17 +137,14 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether autocomplete is enabled
         /// </summary>
         public bool ProductSearchAutoCompleteEnabled { get; set; }
-
         /// <summary>
         /// Gets or sets a number of products to return when using "autocomplete" feature
         /// </summary>
         public int ProductSearchAutoCompleteNumberOfProducts { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to show product images in the auto complete search
         /// </summary>
         public bool ShowProductImagesInSearchAutoComplete { get; set; }
-
         /// <summary>
         /// Gets or sets a minimum search term length
         /// </summary>
@@ -153,7 +154,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to show bestsellers on home page
         /// </summary>
         public bool ShowBestsellersOnHomepage { get; set; }
-
         /// <summary>
         /// Gets or sets a number of bestsellers on home page
         /// </summary>
@@ -216,12 +216,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to include "Short description" in compare products
         /// </summary>
         public bool IncludeShortDescriptionInCompareProducts { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to include "Full description" in compare products
         /// </summary>
         public bool IncludeFullDescriptionInCompareProducts { get; set; }
-        
         /// <summary>
         /// An option indicating whether products on category and manufacturer pages should include featured products as well
         /// </summary>
@@ -236,22 +234,18 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether to ignore discounts (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreDiscounts { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to ignore featured products (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreFeaturedProducts { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to ignore ACL rules (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreAcl { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to ignore "limit per store" rules (side-wide). It can significantly improve performance when enabled.
         /// </summary>
         public bool IgnoreStoreLimitations { get; set; }
-
         /// <summary>
         /// Gets or sets a value indicating whether to cache product prices. It can significantly improve performance when enabled.
         /// </summary>
