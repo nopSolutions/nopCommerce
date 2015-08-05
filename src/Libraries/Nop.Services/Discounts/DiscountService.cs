@@ -91,50 +91,6 @@ namespace Nop.Services.Discounts
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Checks discount limitation for customer
-        /// </summary>
-        /// <param name="discount">Discount</param>
-        /// <param name="customer">Customer</param>
-        /// <returns>Value indicating whether discount can be used</returns>
-        protected virtual bool CheckDiscountLimitations(Discount discount, Customer customer)
-        {
-            if (discount == null)
-                throw new ArgumentNullException("discount");
-
-            switch (discount.DiscountLimitation)
-            {
-                case DiscountLimitationType.Unlimited:
-                    {
-                        return true;
-                    }
-                case DiscountLimitationType.NTimesOnly:
-                    {
-                        var totalDuh = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
-                        return totalDuh < discount.LimitationTimes;
-                    }
-                case DiscountLimitationType.NTimesPerCustomer:
-                    {
-                        if (customer != null && !customer.IsGuest())
-                        {
-                            //registered customer
-                            var totalDuh = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
-                            return totalDuh < discount.LimitationTimes;
-                        }
-
-                        //guest
-                        return true;
-                    }
-                default:
-                    break;
-            }
-            return false;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -338,6 +294,9 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
             //check coupon code
             if (discount.RequiresCouponCode)
             {
@@ -362,8 +321,30 @@ namespace Nop.Services.Discounts
                     return false;
             }
 
-            if (!CheckDiscountLimitations(discount, customer))
-                return false;
+            //discount limitation
+            switch (discount.DiscountLimitation)
+            {
+                case DiscountLimitationType.NTimesOnly:
+                    {
+                        var usedTimes = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
+                        if (usedTimes >= discount.LimitationTimes)
+                            return false;
+                    }
+                    break;
+                case DiscountLimitationType.NTimesPerCustomer:
+                    {
+                        if (customer.IsRegistered())
+                        {
+                            var usedTimes = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
+                            if (usedTimes >= discount.LimitationTimes)
+                                return false;
+                        }
+                    }
+                    break;
+                case DiscountLimitationType.Unlimited:
+                default:
+                    break;
+            }
 
             //discount requirements
             var requirements = discount.DiscountRequirements;
