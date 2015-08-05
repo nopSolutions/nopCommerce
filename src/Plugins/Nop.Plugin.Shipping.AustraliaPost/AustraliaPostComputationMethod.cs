@@ -310,7 +310,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                         height, 
                         totalPackages));
                 }
-                catch (Exception ex)
+                catch
                 {
                     //If this plugin doesn't allow some method (e.g. sea freight) to the selected country (e.g. New Zealand),
                     //the AusPost API returns an err_msg.

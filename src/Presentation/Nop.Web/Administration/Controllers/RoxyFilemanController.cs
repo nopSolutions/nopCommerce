@@ -209,7 +209,7 @@ namespace Nop.Admin.Controllers
             try{
                 json = System.IO.File.ReadAllText(_context.Server.MapPath(file), System.Text.Encoding.UTF8);
             }
-            catch(Exception ex){}
+            catch{}
 
             json = json.Trim();
             if(json != ""){
@@ -226,7 +226,7 @@ namespace Nop.Admin.Controllers
                            ret.Add(tmp[0], tmp[1]);
                         }
                     }
-                    catch(Exception ex){}
+                    catch{}
                 }
             }
             return ret;
@@ -348,7 +348,7 @@ namespace Nop.Admin.Controllers
                     System.IO.File.Copy(file.FullName, Path.Combine(newPath, newName));
                     _r.Write(GetSuccessRes());
                 }
-                catch(Exception ex){
+                catch{
                     throw new Exception(LangRes("E_CopyFile"));
                 }
             }
@@ -367,7 +367,7 @@ namespace Nop.Admin.Controllers
                         Directory.CreateDirectory(path);
                     _r.Write(GetSuccessRes());
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception(LangRes("E_CreateDirFailed"));
                 }
@@ -390,7 +390,7 @@ namespace Nop.Admin.Controllers
                     Directory.Delete(path);
                     _r.Write(GetSuccessRes());
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception(LangRes("E_CannotDeleteDir"));
                 }
@@ -409,7 +409,7 @@ namespace Nop.Admin.Controllers
                     System.IO.File.Delete(path);
                     _r.Write(GetSuccessRes());
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception(LangRes("E_DeletеFile"));
                 }
@@ -542,7 +542,7 @@ namespace Nop.Admin.Controllers
                     source.MoveTo(dest.FullName);
                     _r.Write(GetSuccessRes());
                 }
-                catch(Exception ex){
+                catch{
                     throw new Exception(LangRes("E_MoveDir") + " \"" + path + "\"");
                 }
             }
@@ -565,7 +565,7 @@ namespace Nop.Admin.Controllers
                     source.MoveTo(dest.FullName);
                     _r.Write(GetSuccessRes());
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception(LangRes("E_MoveFile") + " \"" + path + "\"");
                 }
@@ -589,7 +589,7 @@ namespace Nop.Admin.Controllers
                     source.MoveTo(dest.FullName);
                     _r.Write(GetSuccessRes());
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw new Exception(LangRes("E_RenameDir") + " \"" + path + "\"");
                 }
