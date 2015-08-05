@@ -11,6 +11,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Discounts
         private IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
         private IEventPublisher _eventPublisher;
         private IGenericAttributeService _genericAttributeService;
+        private ILocalizationService _localizationService;
         private IDiscountService _discountService;
         private IStoreContext _storeContext;
         
@@ -69,8 +71,10 @@ namespace Nop.Services.Tests.Discounts
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder();
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
+            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, _storeContext, _genericAttributeService, pluginFinder, _eventPublisher);
+                _discountUsageHistoryRepo, _storeContext, _genericAttributeService, 
+                _localizationService, pluginFinder, _eventPublisher);
         }
 
         [Test]
@@ -133,8 +137,7 @@ namespace Nop.Services.Tests.Discounts
                                     }
                             });
 
-            var result1 = _discountService.IsDiscountValid(discount, customer);
-            result1.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(true);
         }
 
 
@@ -174,8 +177,7 @@ namespace Nop.Services.Tests.Discounts
                                         Value = "CouponCode 2"
                                     }
                             });
-            var result2 = _discountService.IsDiscountValid(discount, customer);
-            result2.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(false);
         }
 
         [Test]
@@ -204,12 +206,10 @@ namespace Nop.Services.Tests.Discounts
                 LastActivityDateUtc = new DateTime(2010, 01, 02)
             };
 
-            var result1 = _discountService.IsDiscountValid(discount, customer);
-            result1.ShouldEqual(true);
+            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(true);
 
             discount.StartDateUtc = DateTime.UtcNow.AddDays(1);
-            var result2 = _discountService.IsDiscountValid(discount, customer);
-            result2.ShouldEqual(false);
+            _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(false);
         }
     }
 }

@@ -13848,6 +13848,18 @@
   <LocaleResource Name="ShoppingCart.CustomerEnteredPrice.RangeError">
     <Value>The price must be from {0} to {1}</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
+    <Value>Sorry, you've used this discount already</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithGiftCards">
+    <Value>Sorry, this discount cannot be used with gift cards in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.Expired">
+    <Value>Sorry, this offer is expired</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.NotStartedYet">
+    <Value>Sorry, this offer is not started yet</Value>
+  </LocaleResource>
   <LocaleResource Name="ShoppingCart.DiscountCouponCode">
     <Value>Discount Code</Value>
   </LocaleResource>

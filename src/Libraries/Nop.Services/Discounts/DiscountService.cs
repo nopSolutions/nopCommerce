@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 
 namespace Nop.Services.Discounts
@@ -52,6 +53,7 @@ namespace Nop.Services.Discounts
         private readonly ICacheManager _cacheManager;
         private readonly IStoreContext _storeContext;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly ILocalizationService _localizationService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
 
@@ -68,6 +70,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
         /// <param name="storeContext">Store context</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="localizationService">Localization service</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher">Event published</param>
         public DiscountService(ICacheManager cacheManager,
@@ -76,6 +79,7 @@ namespace Nop.Services.Discounts
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
             IStoreContext storeContext,
             IGenericAttributeService genericAttributeService,
+            ILocalizationService localizationService,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
@@ -85,6 +89,7 @@ namespace Nop.Services.Discounts
             this._discountUsageHistoryRepository = discountUsageHistoryRepository;
             this._storeContext = storeContext;
             this._genericAttributeService = genericAttributeService;
+            this._localizationService = localizationService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
         }
@@ -265,12 +270,12 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
-        /// Check discount requirements
+        /// Validate discount
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        public virtual bool IsDiscountValid(Discount discount, Customer customer)
+        /// <returns>Discount validation result</returns>
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -279,17 +284,17 @@ namespace Nop.Services.Discounts
             if (customer != null)
                 couponCodeToValidate = customer.GetAttribute<string>(SystemCustomerAttributeNames.DiscountCouponCode, _genericAttributeService);
 
-            return IsDiscountValid(discount, customer, couponCodeToValidate);
+            return ValidateDiscount(discount, customer, couponCodeToValidate);
         }
 
         /// <summary>
-        /// Check discount requirements
+        /// Validate discount
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        public virtual bool IsDiscountValid(Discount discount, Customer customer, string couponCodeToValidate)
+        /// <returns>Discount validation result</returns>
+        public virtual DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate)
         {
             if (discount == null)
                 throw new ArgumentNullException("discount");
@@ -297,13 +302,16 @@ namespace Nop.Services.Discounts
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            //invalid by default
+            var result = new DiscountValidationResult();
+
             //check coupon code
             if (discount.RequiresCouponCode)
             {
                 if (String.IsNullOrEmpty(discount.CouponCode))
-                    return false;
+                    return result;
                 if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
-                    return false;
+                    return result;
             }
 
             //check date range
@@ -312,13 +320,19 @@ namespace Nop.Services.Discounts
             {
                 DateTime startDate = DateTime.SpecifyKind(discount.StartDateUtc.Value, DateTimeKind.Utc);
                 if (startDate.CompareTo(now) > 0)
-                    return false;
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.NotStartedYet");
+                    return result;
+                }
             }
             if (discount.EndDateUtc.HasValue)
             {
                 DateTime endDate = DateTime.SpecifyKind(discount.EndDateUtc.Value, DateTimeKind.Utc);
                 if (endDate.CompareTo(now) < 0)
-                    return false;
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.Expired");
+                    return result;
+                }
             }
 
             //discount limitation
@@ -328,7 +342,7 @@ namespace Nop.Services.Discounts
                     {
                         var usedTimes = GetAllDiscountUsageHistory(discount.Id, null, null, 0, 1).TotalCount;
                         if (usedTimes >= discount.LimitationTimes)
-                            return false;
+                            return result;
                     }
                     break;
                 case DiscountLimitationType.NTimesPerCustomer:
@@ -337,7 +351,10 @@ namespace Nop.Services.Discounts
                         {
                             var usedTimes = GetAllDiscountUsageHistory(discount.Id, customer.Id, null, 0, 1).TotalCount;
                             if (usedTimes >= discount.LimitationTimes)
-                                return false;
+                            {
+                                result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedAnymore");
+                                return result;
+                            }
                         }
                     }
                     break;
@@ -356,14 +373,18 @@ namespace Nop.Services.Discounts
                 if (!_pluginFinder.AuthenticateStore(requirementRule.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
 
-                var request = new CheckDiscountRequirementRequest
+                var ruleRequest = new DiscountRequirementValidationRequest
                 {
                     DiscountRequirement = req,
                     Customer = customer,
                     Store = _storeContext.CurrentStore
                 };
-                if (!requirementRule.CheckRequirement(request))
-                    return false;
+                var ruleResult = requirementRule.CheckRequirement(ruleRequest);
+                if (!ruleResult.IsValid)
+                {
+                    result.UserError = ruleResult.UserError;
+                    return result;
+                }
             }
 
             //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
@@ -378,10 +399,14 @@ namespace Nop.Services.Discounts
 
                 var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
                 if (hasGiftCards)
-                    return false;
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
+                    return result;
+                }
             }
 
-            return true;
+            result.IsValid = true;
+            return result;
         }
 
         /// <summary>

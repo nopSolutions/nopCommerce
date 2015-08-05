@@ -118,7 +118,7 @@ namespace Nop.Services.Orders
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.IsDiscountValid(discount, customer) &&
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToOrderSubTotal &&
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
@@ -151,7 +151,7 @@ namespace Nop.Services.Orders
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.IsDiscountValid(discount, customer) &&
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToShipping &&
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
@@ -189,7 +189,7 @@ namespace Nop.Services.Orders
             var allowedDiscounts = new List<Discount>();
             if (allDiscounts != null)
                 foreach (var discount in allDiscounts)
-                    if (_discountService.IsDiscountValid(discount, customer) &&
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                discount.DiscountType == DiscountType.AssignedToOrderTotal &&
                                !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);

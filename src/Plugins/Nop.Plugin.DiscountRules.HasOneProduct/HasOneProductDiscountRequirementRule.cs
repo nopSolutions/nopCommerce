@@ -23,8 +23,8 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
         /// Check discount requirement
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        public bool CheckRequirement(CheckDiscountRequirementRequest request)
+        /// <returns>Result</returns>
+        public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
         {
             if (request == null)
                 throw new ArgumentNullException("request");
@@ -32,13 +32,19 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             if (request.DiscountRequirement == null)
                 throw new NopException("Discount requirement is not set");
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirement.Id));
+            //invalid by default
+            var result = new DiscountRequirementValidationResult();
 
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirement.Id));
             if (String.IsNullOrWhiteSpace(restrictedProductIds))
-                return true;
+            {
+                //valid
+                result.IsValid = true;
+                return result;
+            }
 
             if (request.Customer == null)
-                return false;
+                return result;
 
             //we support three ways of specifying products:
             //1. The comma-separated list of product identifiers (e.g. 77, 123, 156).
@@ -51,7 +57,7 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                 .Select(x => x.Trim())
                 .ToList();
             if (restrictedProducts.Count == 0)
-                return false;
+                return result;
             
             //group products in the cart by product ID
             //it could be the same product with distinct product attributes
@@ -80,15 +86,15 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                             int restrictedProductId;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
                                 //parsing error; exit;
-                                return false;
+                                return result;
                             int quantityMin;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
                                 //parsing error; exit;
-                                return false;
+                                return result;
                             int quantityMax;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
                                 //parsing error; exit;
-                                return false;
+                                return result;
 
                             if (sci.ProductId == restrictedProductId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
                             {
@@ -103,11 +109,11 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
                             int restrictedProductId;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[0], out restrictedProductId))
                                 //parsing error; exit;
-                                return false;
+                                return result;
                             int quantity;
                             if (!int.TryParse(restrictedProduct.Split(new[] { ':' })[1], out quantity))
                                 //parsing error; exit;
-                                return false;
+                                return result;
 
                             if (sci.ProductId == restrictedProductId && sci.TotalQuantity == quantity)
                             {
@@ -138,9 +144,13 @@ namespace Nop.Plugin.DiscountRules.HasOneProduct
             }
 
             if (found)
-                return true;
+            {
+                //valid
+                result.IsValid = true;
+                return result;
+            }
 
-            return false;
+            return result;
         }
 
         /// <summary>

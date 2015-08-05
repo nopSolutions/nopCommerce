@@ -10,10 +10,13 @@ namespace Nop.Services.Tests.Discounts
         /// Check discount requirement
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        public bool CheckRequirement(CheckDiscountRequirementRequest request)
+        /// <returns>Result</returns>
+        public DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request)
         {
-            return true;
+            return new DiscountRequirementValidationResult
+            {
+                IsValid = true
+            };
         }
 
         /// <summary>

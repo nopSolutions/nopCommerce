@@ -325,7 +325,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
             };
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() { IsValid = true });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
@@ -398,7 +398,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
             };
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() { IsValid = true });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
@@ -806,7 +806,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
             };
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() { IsValid = true });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToShipping)).Return(new List<Discount> { discount1 });
 
 
@@ -887,7 +887,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
             };
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() { IsValid = true });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToShipping)).Return(new List<Discount> { discount1 });
 
 
@@ -1307,7 +1307,7 @@ namespace Nop.Services.Tests.Orders
                 DiscountAmount = 3,
                 DiscountLimitation = DiscountLimitationType.Unlimited,
             };
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() { IsValid = true });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderTotal)).Return(new List<Discount> { discount1 });
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());

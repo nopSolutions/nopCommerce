@@ -204,6 +204,8 @@
     <Compile Include="Customers\ICustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeService.cs" />
     <Compile Include="Customers\CustomerAttributeExtensions.cs" />
+    <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
+    <Compile Include="Discounts\DiscountValidationResult.cs" />
     <Compile Include="Helpers\IUserAgentHelper.cs" />
     <Compile Include="Helpers\UserAgentHelper.cs" />
     <Compile Include="Logging\ClearLogTask.cs" />
@@ -239,7 +241,7 @@
     <Compile Include="Customers\CustomerExtensions.cs" />
     <Compile Include="Directory\UpdateExchangeRateTask.cs" />
     <Compile Include="Directory\IExchangeRateProvider.cs" />
-    <Compile Include="Discounts\CheckDiscountRequirementRequest.cs" />
+    <Compile Include="Discounts\DiscountRequirementValidationRequest.cs" />
     <Compile Include="Discounts\DiscountExtensions.cs" />
     <Compile Include="Discounts\DiscountService.cs" />
     <Compile Include="Discounts\IDiscountRequirementRule.cs" />

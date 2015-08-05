@@ -210,7 +210,7 @@ namespace Nop.Web.Controllers
             });
             return model;
         }
-
+        
         /// <summary>
         /// Prepare shopping cart model
         /// </summary>
@@ -263,7 +263,7 @@ namespace Nop.Web.Controllers
             var discount = _discountService.GetDiscountByCouponCode(discountCouponCode);
             if (discount != null &&
                 discount.RequiresCouponCode &&
-                _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer))
+                _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer).IsValid)
                 model.DiscountBox.CurrentCode = discount.CouponCode;
             model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
@@ -2129,25 +2129,44 @@ namespace Nop.Web.Controllers
             var model = new ShoppingCartModel();
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
-                var discount = _discountService.GetDiscountByCouponCode(discountcouponcode);
-                bool isDiscountValid = discount != null &&
-                    discount.RequiresCouponCode &&
-                    _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer, discountcouponcode);
-                if (isDiscountValid)
+                //we find even hidden records here. this way we can display a user-friendly message if it's expired
+                var discount = _discountService.GetDiscountByCouponCode(discountcouponcode, true);
+                if (discount != null && discount.RequiresCouponCode)
                 {
-                    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                        SystemCustomerAttributeNames.DiscountCouponCode, discountcouponcode);
-                    model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
-                    model.DiscountBox.IsApplied = true;
+                    var validationResult = _discountService.ValidateDiscount(discount, _workContext.CurrentCustomer, discountcouponcode);
+                    if (validationResult.IsValid)
+                    {
+                        //valid
+                        _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.DiscountCouponCode, discountcouponcode);
+                        model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
+                        model.DiscountBox.IsApplied = true;
+                    }
+                    else
+                    {
+                        if (!String.IsNullOrEmpty(validationResult.UserError))
+                        {
+                            //some user error
+                            model.DiscountBox.Message = validationResult.UserError;
+                            model.DiscountBox.IsApplied = false;
+                        }
+                        else
+                        {
+                            //general error text
+                            model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                            model.DiscountBox.IsApplied = false;
+                        }
+                    }
                 }
                 else
                 {
+                    //discount cannot be found
                     model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
                     model.DiscountBox.IsApplied = false;
                 }
             }
             else
             {
+                //empty coupon code
                 model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
                 model.DiscountBox.IsApplied = false;
             }

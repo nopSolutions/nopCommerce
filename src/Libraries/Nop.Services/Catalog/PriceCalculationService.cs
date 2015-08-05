@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
                 //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
                 foreach (var discount in product.AppliedDiscounts)
                 {
-                    if (_discountService.IsDiscountValid(discount, customer) &&
+                    if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                         discount.DiscountType == DiscountType.AssignedToSkus &&
                         !allowedDiscounts.ContainsDiscount(discount))
                         allowedDiscounts.Add(discount);
@@ -113,7 +113,7 @@ namespace Nop.Services.Catalog
                         var categoryDiscounts = category.AppliedDiscounts;
                         foreach (var discount in categoryDiscounts)
                         {
-                            if (_discountService.IsDiscountValid(discount, customer) &&
+                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToCategories &&
                                 !allowedDiscounts.ContainsDiscount(discount))
                                 allowedDiscounts.Add(discount);
@@ -136,7 +136,7 @@ namespace Nop.Services.Catalog
                         var manufacturerDiscounts = manufacturer.AppliedDiscounts;
                         foreach (var discount in manufacturerDiscounts)
                         {
-                            if (_discountService.IsDiscountValid(discount, customer) &&
+                            if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToManufacturers &&
                                 !allowedDiscounts.ContainsDiscount(discount))
                                 allowedDiscounts.Add(discount);

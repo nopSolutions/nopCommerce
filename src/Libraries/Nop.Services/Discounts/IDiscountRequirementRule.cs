@@ -12,8 +12,8 @@ namespace Nop.Services.Discounts
         /// Check discount requirement
         /// </summary>
         /// <param name="request">Object that contains all information required to check the requirement (Current customer, discount, etc)</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        bool CheckRequirement(CheckDiscountRequirementRequest request);
+        /// <returns>Result</returns>
+        DiscountRequirementValidationResult CheckRequirement(DiscountRequirementValidationRequest request);
 
         /// <summary>
         /// Get URL for rule configuration

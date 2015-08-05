@@ -75,21 +75,21 @@ namespace Nop.Services.Discounts
         Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
 
         /// <summary>
-        /// Check discount requirements
+        /// Validate discount
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        bool IsDiscountValid(Discount discount, Customer customer);
+        /// <returns>Discount validation result</returns>
+        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer);
 
         /// <summary>
-        /// Check discount requirements
+        /// Validate discount
         /// </summary>
         /// <param name="discount">Discount</param>
         /// <param name="customer">Customer</param>
         /// <param name="couponCodeToValidate">Coupon code to validate</param>
-        /// <returns>true - requirement is met; otherwise, false</returns>
-        bool IsDiscountValid(Discount discount, Customer customer, string couponCodeToValidate);
+        /// <returns>Discount validation result</returns>
+        DiscountValidationResult ValidateDiscount(Discount discount, Customer customer, string couponCodeToValidate);
 
         /// <summary>
         /// Gets a discount usage history record

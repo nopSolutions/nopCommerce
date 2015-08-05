@@ -1,7 +1,7 @@
 ﻿Group: Discount requirements
 FriendlyName: Customer has all of these products in the cart
 SystemName: DiscountRequirement.HasAllProducts
-Version: 1.17
+Version: 1.18
 SupportedVersions: 3.70
 Author: nopCommerce team
 DisplayOrder: 1

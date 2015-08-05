@@ -237,7 +237,7 @@ namespace Nop.Services.Tests.Catalog
             product.AppliedDiscounts.Add(discount1);
             //set HasDiscountsApplied property
             product.HasDiscountsApplied = true;
-            _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
+            _discountService.Expect(ds => ds.ValidateDiscount(discount1, customer)).Return(new DiscountValidationResult() {IsValid = true});
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToCategories)).Return(new List<Discount>());
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToManufacturers)).Return(new List<Discount>());
 

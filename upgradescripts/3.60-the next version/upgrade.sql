@@ -152,6 +152,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage.Hint">
     <Value>Check to allow viewing of unpublished product details page. This way SEO won''t be affected by search crawlers when a product is temporary unpublished. Please note that a store owner always has access to unpublished products.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedAnymore">
+    <Value>Sorry, you''ve used this discount already</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.CannotBeUsedWithGiftCards">
+    <Value>Sorry, this discount cannot be used with gift cards in the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.Expired">
+    <Value>Sorry, this offer is expired</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Discount.NotStartedYet">
+    <Value>Sorry, this offer is not started yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HadSpentAmount.NotEnough">
+    <Value>Sorry, this offer requires more money spent (previously placed orders)</Value>
+  </LocaleResource>
 </Language>
 '
 
