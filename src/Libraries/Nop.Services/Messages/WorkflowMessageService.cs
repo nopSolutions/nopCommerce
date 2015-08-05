@@ -713,6 +713,45 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends an order refunded notification to a store owner
+        /// </summary>
+        /// <param name="order">Order instance</param>
+        /// <param name="refundedAmount">Amount refunded</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendOrderRefundedStoreOwnerNotification(Order order, decimal refundedAmount, int languageId)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            var store = _storeService.GetStoreById(order.StoreId) ?? _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("OrderRefunded.StoreOwnerNotification", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            _messageTokenProvider.AddOrderRefundedTokens(tokens, order, refundedAmount);
+            _messageTokenProvider.AddCustomerTokens(tokens, order.Customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
         /// Sends an order refunded notification to a customer
         /// </summary>
         /// <param name="order">Order instance</param>

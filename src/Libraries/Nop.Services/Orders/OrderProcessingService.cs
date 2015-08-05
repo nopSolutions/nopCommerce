@@ -2290,6 +2290,17 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //notifications
+                    var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, request.AmountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
+                    {
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+                    }
                     var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, request.AmountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
@@ -2399,6 +2410,17 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //notifications
+            var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
+            {
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+            }
             var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {
@@ -2496,6 +2518,17 @@ namespace Nop.Services.Orders
                     CheckOrderStatus(order);
 
                     //notifications
+                    var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+                    if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
+                    {
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
+                    }
                     var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
                     if (orderRefundedCustomerNotificationQueuedEmailId > 0)
                     {
@@ -2612,6 +2645,17 @@ namespace Nop.Services.Orders
             CheckOrderStatus(order);
 
             //notifications
+            var orderRefundedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedStoreOwnerNotification(order, amountToRefund, _localizationSettings.DefaultAdminLanguageId);
+            if (orderRefundedStoreOwnerNotificationQueuedEmailId > 0)
+            {
+                order.OrderNotes.Add(new OrderNote
+                {
+                    Note = string.Format("\"Order refunded\" email (to store owner) has been queued. Queued email identifier: {0}.", orderRefundedStoreOwnerNotificationQueuedEmailId),
+                    DisplayToCustomer = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                _orderService.UpdateOrder(order);
+            }
             var orderRefundedCustomerNotificationQueuedEmailId = _workflowMessageService.SendOrderRefundedCustomerNotification(order, amountToRefund, order.CustomerLanguageId);
             if (orderRefundedCustomerNotificationQueuedEmailId > 0)
             {

@@ -395,3 +395,15 @@ BEGIN
 	VALUES (N'catalogsettings.allowviewunpublishedproductpage', N'true', 0)
 END
 GO
+
+
+--'Order refunded' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [MessageTemplate]
+		WHERE [Name] = N'OrderRefunded.StoreOwnerNotification')
+BEGIN
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId], [LimitedToStores], [AttachedDownloadId])
+	VALUES (N'OrderRefunded.StoreOwnerNotification', null, N'%Store.Name%. Order #%Order.OrderNumber% refunded', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just refunded<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0, 0)
+END
+GO

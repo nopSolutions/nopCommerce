@@ -4303,6 +4303,15 @@ namespace Nop.Services.Installation
                                            IsActive = false,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                    new MessageTemplate
+                                        {
+                                           Name = "OrderRefunded.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Order #%Order.OrderNumber% refunded",
+                                           Body = "%Store.Name%. Order #%Order.OrderNumber% refunded', N'<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just refunded<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Date Ordered: %Order.CreatedOn%</p>",
+                                           //this template is disabled by default
+                                           IsActive = false,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                    new MessageTemplate
                                        {
                                            Name = "OrderPaid.StoreOwnerNotification",
