@@ -2524,11 +2524,23 @@ namespace Nop.Web.Controllers
             if (numberOfAddedItems > 0)
             {
                 //redirect to the shopping cart page
+
+                if (allWarnings.Count > 0)
+                {
+                    ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), true);
+                }
+
                 return RedirectToRoute("ShoppingCart");
             }
             else
             {
                 //no items added. redisplay the wishlist page
+
+                if (allWarnings.Count > 0)
+                {
+                    ErrorNotification(_localizationService.GetResource("Wishlist.AddToCart.Error"), false);
+                }
+
                 var cart = pageCustomer.ShoppingCartItems
                     .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
                     .LimitPerStore(_storeContext.CurrentStore.Id)

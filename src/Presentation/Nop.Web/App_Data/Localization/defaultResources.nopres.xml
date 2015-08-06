@@ -14199,6 +14199,9 @@
   <LocaleResource Name="Wishlist">
     <Value>Wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.AddToCart.Error">
+    <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
+  </LocaleResource>
   <LocaleResource Name="Wishlist.CartIsEmpty">
     <Value>The wishlist is empty!</Value>
   </LocaleResource>

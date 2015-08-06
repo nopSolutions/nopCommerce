@@ -167,6 +167,9 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.HadSpentAmount.NotEnough">
     <Value>Sorry, this offer requires more money spent (previously placed orders)</Value>
   </LocaleResource>
+  <LocaleResource Name="Wishlist.AddToCart.Error">
+    <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
+  </LocaleResource>
 </Language>
 '
 
