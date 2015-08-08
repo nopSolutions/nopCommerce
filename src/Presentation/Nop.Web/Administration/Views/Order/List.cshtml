@@ -176,7 +176,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.GoDirectlyToNumber)
-                <input type="submit" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
+                <input type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="k-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
@@ -345,6 +345,13 @@
                         $("#@Html.FieldIdFor(model => model.OrderNotes)").keydown(function (event) {
                             if (event.keyCode == 13) {
                                 $("#search-orders").click();
+                                return false;
+                            }
+                        });
+
+                        $("#@Html.FieldIdFor(model => model.GoDirectlyToNumber)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#go-to-order-by-number").click();
                                 return false;
                             }
                         });
