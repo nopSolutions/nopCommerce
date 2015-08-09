@@ -96,9 +96,21 @@ namespace Nop.Data.Tests.Customers
         public void Can_save_customer_with_rewardPointsHistoryEntry()
         {
             var customer = GetTestCustomer();
-            
-            customer.AddRewardPointsHistoryEntry(1, 0, "Points for registration");
 
+            customer.RewardPointsHistory.Add
+            (
+                new RewardPointsHistory
+                {
+                    StoreId = 0,
+                    Points = 1,
+                    PointsBalance = 2,
+                    UsedAmount = 3,
+                    Message = "4",
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UsedWithOrder = null
+                }
+            );
+            
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
             fromDb.RewardPointsHistory.Count.ShouldEqual(1);

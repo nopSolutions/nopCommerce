@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Stores;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Domain.Customers
