@@ -422,7 +422,9 @@ namespace Nop.Web.Controllers
         {
             //footer topics
             string topicCacheKey = string.Format(ModelCacheEventConsumer.TOPIC_FOOTER_MODEL_KEY,
-                _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
+                _workContext.WorkingLanguage.Id, 
+                _storeContext.CurrentStore.Id,
+                string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()));
             var cachedTopicModel = _cacheManager.Get(topicCacheKey, () =>
                 _topicService.GetAllTopics(_storeContext.CurrentStore.Id)
                 .Where(t => t.IncludeInFooterColumn1 || t.IncludeInFooterColumn2 || t.IncludeInFooterColumn3)

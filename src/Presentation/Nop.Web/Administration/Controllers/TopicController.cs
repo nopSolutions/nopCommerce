@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Services.Seo;
@@ -27,6 +28,8 @@ namespace Nop.Admin.Controllers
         private readonly IStoreMappingService _storeMappingService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly ITopicTemplateService _topicTemplateService;
+        private readonly ICustomerService _customerService;
+        private readonly IAclService _aclService;
 
         #endregion Fields
 
@@ -40,7 +43,9 @@ namespace Nop.Admin.Controllers
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IUrlRecordService urlRecordService,
-            ITopicTemplateService topicTemplateService)
+            ITopicTemplateService topicTemplateService,
+            ICustomerService customerService,
+            IAclService aclService)
         {
             this._topicService = topicService;
             this._languageService = languageService;
@@ -51,6 +56,8 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._urlRecordService = urlRecordService;
             this._topicTemplateService = topicTemplateService;
+            this._customerService = customerService;
+            this._aclService = aclService;
         }
 
         #endregion
@@ -107,6 +114,48 @@ namespace Nop.Admin.Controllers
                 //search engine name
                 var seName = topic.ValidateSeName(localized.SeName, localized.Title, false);
                 _urlRecordService.SaveSlug(topic, seName, localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        protected virtual void PrepareAclModel(TopicModel model, Topic topic, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (topic != null)
+                {
+                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(topic);
+                }
+            }
+        }
+
+        [NonAction]
+        protected virtual void SaveTopicAcl(Topic topic, TopicModel model)
+        {
+            var existingAclRecords = _aclService.GetAclRecords(topic);
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    //new role
+                    if (existingAclRecords.Count(acl => acl.CustomerRoleId == customerRole.Id) == 0)
+                        _aclService.InsertAclRecord(topic, customerRole.Id);
+                }
+                else
+                {
+                    //remove role
+                    var aclRecordToDelete = existingAclRecords.FirstOrDefault(acl => acl.CustomerRoleId == customerRole.Id);
+                    if (aclRecordToDelete != null)
+                        _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
             }
         }
 
@@ -181,7 +230,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId)
+            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
                 .Select(x =>x.ToModel())
                 .ToList();
             //little hack here:
@@ -213,6 +262,8 @@ namespace Nop.Admin.Controllers
             var model = new TopicModel();
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, null, false);
             //Stores
             PrepareStoresMappingModel(model, null, false);
             //locales
@@ -242,6 +293,8 @@ namespace Nop.Admin.Controllers
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                //ACL (customer roles)
+                SaveTopicAcl(topic, model);
                 //Stores
                 SaveStoreMappings(topic, model);
                 //locales
@@ -255,6 +308,8 @@ namespace Nop.Admin.Controllers
 
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, null, true);
             //Stores
             PrepareStoresMappingModel(model, null, true);
             return View(model);
@@ -274,6 +329,8 @@ namespace Nop.Admin.Controllers
             model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, topic, false);
             //Store
             PrepareStoresMappingModel(model, topic, false);
             //locales
@@ -313,6 +370,8 @@ namespace Nop.Admin.Controllers
                 //search engine name
                 model.SeName = topic.ValidateSeName(model.SeName, topic.Title ?? topic.SystemName, true);
                 _urlRecordService.SaveSlug(topic, model.SeName, 0);
+                //ACL (customer roles)
+                SaveTopicAcl(topic, model);
                 //Stores
                 SaveStoreMappings(topic, model);
                 //locales
@@ -336,6 +395,8 @@ namespace Nop.Admin.Controllers
             model.Url = Url.RouteUrl("Topic", new { SeName = topic.GetSeName() }, "http");
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, topic, true);
             //Store
             PrepareStoresMappingModel(model, topic, true);
             return View(model);

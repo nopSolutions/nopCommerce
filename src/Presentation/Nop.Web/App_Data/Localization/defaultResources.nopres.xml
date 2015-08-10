@@ -7350,6 +7350,9 @@
   <LocaleResource Name="Admin.ContentManagement.Topics">
     <Value>Topics (pages)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Added">
     <Value>The new topic has been added successfully.</Value>
   </LocaleResource>
@@ -7370,6 +7373,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AccessibleWhenStoreClosed.Hint">
     <Value>Check to allow customer to view this topic details page when the store is closed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the topic will be shown.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AvailableStores">
     <Value>Stores</Value>
@@ -7469,6 +7478,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Store.Hint">
     <Value>Choose a store this topic is assigned to.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the topic is subject to ACL (access control list).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SystemName">
     <Value>System name</Value>

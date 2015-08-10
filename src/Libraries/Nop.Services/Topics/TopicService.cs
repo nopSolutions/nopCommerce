@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
+using Nop.Services.Customers;
 using Nop.Services.Events;
+using Nop.Services.Security;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Topics
@@ -23,8 +27,9 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <remarks>
         /// {0} : store ID
+        /// {1} : ignore ACL?
         /// </remarks>
-        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}";
+        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}-{1}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -44,6 +49,8 @@ namespace Nop.Services.Topics
         private readonly IRepository<Topic> _topicRepository;
         private readonly IRepository<StoreMapping> _storeMappingRepository;
         private readonly IStoreMappingService _storeMappingService;
+        private readonly IWorkContext _workContext;
+        private readonly IRepository<AclRecord> _aclRepository;
         private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
@@ -55,6 +62,8 @@ namespace Nop.Services.Topics
         public TopicService(IRepository<Topic> topicRepository, 
             IRepository<StoreMapping> storeMappingRepository,
             IStoreMappingService storeMappingService,
+            IWorkContext workContext,
+            IRepository<AclRecord> aclRepository,
             CatalogSettings catalogSettings,
             IEventPublisher eventPublisher,
             ICacheManager cacheManager)
@@ -62,6 +71,8 @@ namespace Nop.Services.Topics
             this._topicRepository = topicRepository;
             this._storeMappingRepository = storeMappingRepository;
             this._storeMappingService = storeMappingService;
+            this._workContext = workContext;
+            this._aclRepository = aclRepository;
             this._catalogSettings = catalogSettings;
             this._eventPublisher = eventPublisher;
             this._cacheManager = cacheManager;
@@ -81,6 +92,9 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException("topic");
 
             _topicRepository.Delete(topic);
+
+            //cache
+            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityDeleted(topic);
@@ -126,31 +140,47 @@ namespace Nop.Services.Topics
         /// Gets all topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
+        /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(int storeId)
+        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false)
         {
-            string key = string.Format(TOPICS_ALL_KEY, storeId);
+            string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
 
-                //Store mapping
-                if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
+                if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
+                    (!ignorAcl && !_catalogSettings.IgnoreAcl))
                 {
-                    query = from t in query
-                            join sm in _storeMappingRepository.Table
-                            on new { c1 = t.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into t_sm
-                            from sm in t_sm.DefaultIfEmpty()
-                            where !t.LimitedToStores || storeId == sm.StoreId
-                            select t;
+                    if (!ignorAcl && !_catalogSettings.IgnoreAcl)
+                    {
+                        //ACL (access control list)
+                        var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
+                        query = from c in query
+                                join acl in _aclRepository.Table
+                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = acl.EntityId, c2 = acl.EntityName } into c_acl
+                                from acl in c_acl.DefaultIfEmpty()
+                                where !c.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
+                                select c;
+                    }
+                    if (!_catalogSettings.IgnoreStoreLimitations && storeId > 0)
+                    {
+                        //Store mapping
+                        query = from c in query
+                                join sm in _storeMappingRepository.Table
+                                on new { c1 = c.Id, c2 = "Topic" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into c_sm
+                                from sm in c_sm.DefaultIfEmpty()
+                                where !c.LimitedToStores || storeId == sm.StoreId
+                                select c;
+                    }
 
-                    //only distinct items (group by ID)
+                    //only distinct topics (group by ID)
                     query = from t in query
                             group t by t.Id
-                                into tGroup
-                                orderby tGroup.Key
-                                select tGroup.FirstOrDefault();
+                            into tGroup
+                            orderby tGroup.Key
+                            select tGroup.FirstOrDefault();
                     query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
                 }
 
@@ -169,6 +199,9 @@ namespace Nop.Services.Topics
 
             _topicRepository.Insert(topic);
 
+            //cache
+            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
+
             //event notification
             _eventPublisher.EntityInserted(topic);
         }
@@ -183,6 +216,9 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException("topic");
 
             _topicRepository.Update(topic);
+
+            //cache
+            _cacheManager.RemoveByPattern(TOPICS_PATTERN_KEY);
 
             //event notification
             _eventPublisher.EntityUpdated(topic);

@@ -28,6 +28,7 @@ namespace Nop.Data.Tests.Topics
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
+                                   SubjectToAcl = true,
                                    LimitedToStores = true
                                };
 
@@ -49,6 +50,7 @@ namespace Nop.Data.Tests.Topics
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
             fromDb.MetaTitle.ShouldEqual("Meta title");
+            fromDb.SubjectToAcl.ShouldEqual(true);
             fromDb.LimitedToStores.ShouldEqual(true);
         }
     }

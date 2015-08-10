@@ -170,6 +170,21 @@ set @resources='
   <LocaleResource Name="Wishlist.AddToCart.Error">
     <Value>Some product(s) from wishlist could not be moved to the cart for some reasons.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Acl">
+    <Value>Access control list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the topic is subject to ACL (access control list).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the topic will be shown.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -410,3 +425,21 @@ BEGIN
 	VALUES (N'OrderRefunded.StoreOwnerNotification', null, N'%Store.Name%. Order #%Order.OrderNumber% refunded', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Order #%Order.OrderNumber% has been just refunded<br /><br />Amount refunded: %Order.AmountRefunded%<br /><br />Date Ordered: %Order.CreatedOn%</p>', 0, 0, 0, 0)
 END
 GO
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Topic]') and NAME='SubjectToAcl')
+BEGIN
+	ALTER TABLE [Topic]
+	ADD [SubjectToAcl] bit NULL
+END
+GO
+
+UPDATE [Topic]
+SET [SubjectToAcl] = 0
+WHERE [SubjectToAcl] IS NULL
+GO
+
+ALTER TABLE [Topic] ALTER COLUMN [SubjectToAcl] bit NOT NULL
+GO
+

@@ -1,4 +1,5 @@
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Stores;
 
@@ -7,7 +8,7 @@ namespace Nop.Core.Domain.Topics
     /// <summary>
     /// Represents a topic
     /// </summary>
-    public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported
+    public partial class Topic : BaseEntity, ILocalizedEntity, ISlugSupported, IStoreMappingSupported, IAclSupported
     {
         /// <summary>
         /// Gets or sets the name
@@ -18,7 +19,6 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic should be included in sitemap
         /// </summary>
         public bool IncludeInSitemap { get; set; }
-
         /// <summary>
         /// Gets or sets the value indicating whether this topic should be included in top menu
         /// </summary>
@@ -51,7 +51,6 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the value indicating whether this topic is password protected
         /// </summary>
         public bool IsPasswordProtected { get; set; }
-
         /// <summary>
         /// Gets or sets the password
         /// </summary>
@@ -86,6 +85,11 @@ namespace Nop.Core.Domain.Topics
         /// Gets or sets the meta title
         /// </summary>
         public string MetaTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+        /// </summary>
+        public bool SubjectToAcl { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is limited/restricted to certain stores

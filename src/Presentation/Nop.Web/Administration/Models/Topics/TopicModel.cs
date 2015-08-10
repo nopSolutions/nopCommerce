@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Topics;
 using Nop.Web.Framework;
@@ -18,14 +19,6 @@ namespace Nop.Admin.Models.Topics
             Locales = new List<TopicLocalizedModel>();
             AvailableStores = new List<StoreModel>();
         }
-
-        //Store mapping
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.LimitedToStores")]
-        public bool LimitedToStores { get; set; }
-        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStores")]
-        public List<StoreModel> AvailableStores { get; set; }
-        public int[] SelectedStoreIds { get; set; }
-
 
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SystemName")]
         [AllowHtml]
@@ -86,8 +79,23 @@ namespace Nop.Admin.Models.Topics
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SeName")]
         [AllowHtml]
         public string SeName { get; set; }
-        
+
         public IList<TopicLocalizedModel> Locales { get; set; }
+
+        //Store mapping
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.LimitedToStores")]
+        public bool LimitedToStores { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AvailableStores")]
+        public List<StoreModel> AvailableStores { get; set; }
+        public int[] SelectedStoreIds { get; set; }
+
+        //ACL
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public int[] SelectedCustomerRoleIds { get; set; }
+
     }
 
     public partial class TopicLocalizedModel : ILocalizedModelLocal

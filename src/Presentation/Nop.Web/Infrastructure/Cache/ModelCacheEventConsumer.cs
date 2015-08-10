@@ -345,8 +345,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : topic system name
         /// {1} : language id
         /// {2} : store id
+        /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Nop.pres.topic.details.bysystemname-{0}-{1}-{2}";
+        public const string TOPIC_MODEL_BY_SYSTEMNAME_KEY = "Nop.pres.topic.details.bysystemname-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
@@ -354,8 +355,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : topic id
         /// {1} : language id
         /// {2} : store id
+        /// {3} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_MODEL_BY_ID_KEY = "Nop.pres.topic.details.byid-{0}-{1}-{2}";
+        public const string TOPIC_MODEL_BY_ID_KEY = "Nop.pres.topic.details.byid-{0}-{1}-{2}-{3}";
         /// <summary>
         /// Key for TopicModel caching
         /// </summary>
@@ -371,16 +373,18 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : language id
         /// {1} : current store ID
+        /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_TOP_MENU_MODEL_KEY = "Nop.pres.topic.topmenu-{0}-{1}";
+        public const string TOPIC_TOP_MENU_MODEL_KEY = "Nop.pres.topic.topmenu-{0}-{1}-{2}";
         /// <summary>
         /// Key for TopMenuModel caching
         /// </summary>
         /// <remarks>
         /// {0} : language id
         /// {1} : current store ID
+        /// {2} : comma separated list of customer roles
         /// </remarks>
-        public const string TOPIC_FOOTER_MODEL_KEY = "Nop.pres.topic.footer-{0}-{1}";
+        public const string TOPIC_FOOTER_MODEL_KEY = "Nop.pres.topic.footer-{0}-{1}-{2}";
         public const string TOPIC_PATTERN_KEY = "Nop.pres.topic";
 
         /// <summary>
