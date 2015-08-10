@@ -199,8 +199,13 @@ namespace Nop.Web.Controllers
             var error = string.Empty;
 
             var topic = _topicService.GetTopicById(id);
-
-            if (topic != null)
+            if (topic != null &&
+                //password protected?
+                topic.IsPasswordProtected &&
+                //store mapping
+                _storeMappingService.Authorize(topic) &&
+                //ACL (access control list)
+                _aclService.Authorize(topic))
             {
                 if (topic.Password != null && topic.Password.Equals(password))
                 {
