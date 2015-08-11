@@ -69,6 +69,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderService _orderService;
         private readonly IExportManager _exportManager;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPermissionService _permissionService;
@@ -114,6 +115,7 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, 
             IExportManager exportManager,
             ICustomerActivityService customerActivityService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
             IPriceCalculationService priceCalculationService,
             IProductAttributeFormatter productAttributeFormatter,
             IPermissionService permissionService, 
@@ -155,6 +157,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._priceCalculationService = priceCalculationService;
             this._productAttributeFormatter = productAttributeFormatter;
             this._permissionService = permissionService;
@@ -1897,6 +1900,41 @@ namespace Nop.Admin.Controllers
 
                 }),
                 Total = activityLog.TotalCount
+            };
+
+            return Json(gridModel);
+        }
+
+        #endregion
+
+        #region Back in stock subscriptions
+
+        [HttpPost]
+        public ActionResult BackInStockSubscriptionList(DataSourceRequest command, int customerId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return Content("");
+
+            var subscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customerId,
+                0, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
+            {
+                Data = subscriptions.Select(x =>
+                {
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    var product = x.Product;
+                    var m = new CustomerModel.BackInStockSubscriptionModel
+                    {
+                        Id = x.Id,
+                        StoreName = store != null ? store.Name : "Unknown",
+                        ProductId = x.ProductId,
+                        ProductName = product != null ? product.Name : "Unknown",
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                    return m;
+
+                }),
+                Total = subscriptions.TotalCount
             };
 
             return Json(gridModel);

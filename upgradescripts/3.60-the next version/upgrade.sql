@@ -185,6 +185,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.AclCustomerRoles.Hint">
     <Value>Select customer roles for which the topic will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions">
+    <Value>Back in stock subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn">
+    <Value>Subscribed on</Value>
+  </LocaleResource>
 </Language>
 '
 

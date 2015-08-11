@@ -7815,6 +7815,18 @@
   <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Hint">
     <Value>A list of external authentication identifiers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions">
+    <Value>Back in stock subscriptions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.Product">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn">
+    <Value>Subscribed on</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.BackToList">
     <Value>back to customer list</Value>
   </LocaleResource>

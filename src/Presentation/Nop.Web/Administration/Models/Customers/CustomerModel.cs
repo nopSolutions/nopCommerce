@@ -301,6 +301,18 @@ namespace Nop.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
+        public partial class BackInStockSubscriptionModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Store")]
+            public string StoreName { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Product")]
+            public int ProductId { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.Product")]
+            public string ProductName { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+        }
+
         public partial class CustomerAttributeModel : BaseNopEntityModel
         {
             public CustomerAttributeModel()

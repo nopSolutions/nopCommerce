@@ -31,6 +31,9 @@
             <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
                 @T("Admin.Customers.Customers.Impersonate")
             </li>
+            <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
+                @T("Admin.Customers.Customers.BackInStockSubscriptions")
+            </li>
         }
         @if (Model.DisplayRewardPointsHistory)
         {
@@ -64,6 +67,9 @@
         </div>
         <div>
             @TabImpersonate()
+        </div>
+        <div>
+            @TabBackInStockSubscriptions()
         </div>
     }
     @if (Model.DisplayRewardPointsHistory)
@@ -1111,6 +1117,76 @@
                 <br />
                 <br />
                 <input type="submit" name="impersonate" class="k-button" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
+            </td>
+        </tr>
+    </table>
+}
+@helper TabBackInStockSubscriptions()
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="backinstock-subscriptions-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#backinstock-subscriptions-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("BackInStockSubscriptionList", "Customer", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "StoreName",
+                                title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Store")",
+                                width: 200,
+                            }, {
+                                field: "ProductId",
+                                title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.Product")",
+                                width: 300,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>'
+                            },{
+                                field: "CreatedOn",
+                                title: "@T("Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }]
+                        });
+                    });
+                </script>
             </td>
         </tr>
     </table>
