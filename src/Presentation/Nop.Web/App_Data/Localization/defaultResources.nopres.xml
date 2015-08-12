@@ -13791,6 +13791,9 @@
   <LocaleResource Name="Search.AdvancedSearch">
     <Value>Advanced search</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.Button">
+    <Value>Search</Value>
+  </LocaleResource>
   <LocaleResource Name="Search.Category">
     <Value>Category</Value>
   </LocaleResource>

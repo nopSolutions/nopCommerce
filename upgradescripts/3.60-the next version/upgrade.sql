@@ -197,6 +197,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.BackInStockSubscriptions.CreatedOn">
     <Value>Subscribed on</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.Button">
+    <Value>Search</Value>
+  </LocaleResource>
 </Language>
 '
 
