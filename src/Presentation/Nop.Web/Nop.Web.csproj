@@ -1130,6 +1130,7 @@
     <Content Include="Scripts\jquery-ui-1.10.3.custom.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="Scripts\jquery.magnific-popup.js" />
+    <Content Include="Scripts\jquery.magnific-popup.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\kendo\2014.1.318\cultures\kendo.culture.af-ZA.min.js" />

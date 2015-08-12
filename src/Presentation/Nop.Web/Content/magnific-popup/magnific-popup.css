@@ -157,7 +157,8 @@ button::-moz-focus-inner {
   right: 0;
   color: #cccccc;
   font-size: 12px;
-  line-height: 18px; }
+  line-height: 18px;
+  white-space: nowrap; }
 
 .mfp-arrow {
   position: absolute;
@@ -265,8 +266,7 @@ img.mfp-img {
     height: auto;
     z-index: -1;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
-    /*modified background property by nopCommerce team*/
-    background: #ffffff; }
+    background: #444444; }
   .mfp-figure small {
     color: #bdbdbd;
     display: block;
