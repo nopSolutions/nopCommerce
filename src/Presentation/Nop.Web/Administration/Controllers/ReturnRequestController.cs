@@ -22,6 +22,7 @@ namespace Nop.Admin.Controllers
     {
         #region Fields
 
+        private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerService _customerService;
@@ -36,12 +37,18 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ReturnRequestController(IOrderService orderService,
-            ICustomerService customerService, IDateTimeHelper dateTimeHelper,
-            ILocalizationService localizationService, IWorkContext workContext,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
-            ICustomerActivityService customerActivityService, IPermissionService permissionService)
+        public ReturnRequestController(IReturnRequestService returnRequestService,
+            IOrderService orderService,
+            ICustomerService customerService,
+            IDateTimeHelper dateTimeHelper,
+            ILocalizationService localizationService,
+            IWorkContext workContext,
+            IWorkflowMessageService workflowMessageService,
+            LocalizationSettings localizationSettings,
+            ICustomerActivityService customerActivityService, 
+            IPermissionService permissionService)
         {
+            this._returnRequestService = returnRequestService;
             this._orderService = orderService;
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -117,7 +124,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequests = _orderService.SearchReturnRequests(0, 0, 0, null, command.Page - 1, command.PageSize);
+            var returnRequests = _returnRequestService.SearchReturnRequests(0, 0, 0, null, command.Page - 1, command.PageSize);
             var returnRequestModels = new List<ReturnRequestModel>();
             foreach (var rr in returnRequests)
             {
@@ -140,7 +147,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequest = _orderService.GetReturnRequestById(id);
+            var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
@@ -157,7 +164,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequest = _orderService.GetReturnRequestById(model.Id);
+            var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
@@ -193,7 +200,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequest = _orderService.GetReturnRequestById(model.Id);
+            var returnRequest = _returnRequestService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
@@ -213,12 +220,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequest = _orderService.GetReturnRequestById(id);
+            var returnRequest = _returnRequestService.GetReturnRequestById(id);
             if (returnRequest == null)
                 //No return request found with the specified id
                 return RedirectToAction("List");
 
-            _orderService.DeleteReturnRequest(returnRequest);
+            _returnRequestService.DeleteReturnRequest(returnRequest);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteReturnRequest", _localizationService.GetResource("ActivityLog.DeleteReturnRequest"), returnRequest.Id);

@@ -210,6 +210,8 @@
     <Compile Include="Helpers\UserAgentHelper.cs" />
     <Compile Include="Logging\ClearLogTask.cs" />
     <Compile Include="Media\ResizeType.cs" />
+    <Compile Include="Orders\IReturnRequestService.cs" />
+    <Compile Include="Orders\ReturnRequestService.cs" />
     <Compile Include="Shipping\EventPublisherExtensions.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />
     <Compile Include="Topics\TopicTemplateService.cs" />

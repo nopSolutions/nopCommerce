@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
 
         private readonly IOrderService _orderService;
         private readonly IOrderReportService _orderReportService;
-        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IOrderProcessingService _orderProcessingService;        private readonly IReturnRequestService _returnRequestService;
 	    private readonly IPriceCalculationService _priceCalculationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
@@ -95,6 +95,7 @@ namespace Nop.Admin.Controllers
         public OrderController(IOrderService orderService, 
             IOrderReportService orderReportService, 
             IOrderProcessingService orderProcessingService,
+            IReturnRequestService returnRequestService,
             IPriceCalculationService priceCalculationService,
             IDateTimeHelper dateTimeHelper,
             IPriceFormatter priceFormatter,
@@ -139,6 +140,7 @@ namespace Nop.Admin.Controllers
             this._orderService = orderService;
             this._orderReportService = orderReportService;
             this._orderProcessingService = orderProcessingService;
+            this._returnRequestService = returnRequestService;
             this._priceCalculationService = priceCalculationService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
@@ -603,7 +605,7 @@ namespace Nop.Admin.Controllers
                 }
 
                 //return requests
-                orderItemModel.ReturnRequestIds = _orderService.SearchReturnRequests(orderItemId: orderItem.Id)
+                orderItemModel.ReturnRequestIds = _returnRequestService.SearchReturnRequests(orderItemId: orderItem.Id)
                     .Select(rr => rr.Id).ToList();
                 //gift cards
                 orderItemModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderItemId(orderItem.Id)

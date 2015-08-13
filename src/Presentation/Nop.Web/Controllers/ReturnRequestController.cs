@@ -22,6 +22,7 @@ namespace Nop.Web.Controllers
     {
 		#region Fields
 
+        private readonly IReturnRequestService _returnRequestService;
         private readonly IOrderService _orderService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
@@ -40,7 +41,8 @@ namespace Nop.Web.Controllers
 
 		#region Constructors
 
-        public ReturnRequestController(IOrderService orderService, 
+        public ReturnRequestController(IReturnRequestService returnRequestService,
+            IOrderService orderService, 
             IWorkContext workContext, 
             IStoreContext storeContext,
             ICurrencyService currencyService, 
@@ -53,6 +55,7 @@ namespace Nop.Web.Controllers
             LocalizationSettings localizationSettings,
             OrderSettings orderSettings)
         {
+            this._returnRequestService = returnRequestService;
             this._orderService = orderService;
             this._workContext = workContext;
             this._storeContext = storeContext;
@@ -150,7 +153,7 @@ namespace Nop.Web.Controllers
 
             var model = new CustomerReturnRequestsModel();
 
-            var returnRequests = _orderService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
+            var returnRequests = _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id, 
                 _workContext.CurrentCustomer.Id);
             foreach (var returnRequest in returnRequests)
             {

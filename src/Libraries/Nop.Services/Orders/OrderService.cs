@@ -25,7 +25,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
         private readonly IRepository<Customer> _customerRepository;
-        private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -41,7 +40,6 @@ namespace Nop.Services.Orders
         /// <param name="productRepository">Product repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
         /// <param name="customerRepository">Customer repository</param>
-        /// <param name="returnRequestRepository">Return request repository</param>
         /// <param name="eventPublisher">Event published</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderItem> orderItemRepository,
@@ -49,7 +47,6 @@ namespace Nop.Services.Orders
             IRepository<Product> productRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<Customer> customerRepository, 
-            IRepository<ReturnRequest> returnRequestRepository,
             IEventPublisher eventPublisher)
         {
             this._orderRepository = orderRepository;
@@ -58,7 +55,6 @@ namespace Nop.Services.Orders
             this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._customerRepository = customerRepository;
-            this._returnRequestRepository = returnRequestRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -536,71 +532,6 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Return requests
-
-        /// <summary>
-        /// Deletes a return request
-        /// </summary>
-        /// <param name="returnRequest">Return request</param>
-        public virtual void DeleteReturnRequest(ReturnRequest returnRequest)
-        {
-            if (returnRequest == null)
-                throw new ArgumentNullException("returnRequest");
-
-            _returnRequestRepository.Delete(returnRequest);
-
-            //event notification
-            _eventPublisher.EntityDeleted(returnRequest);
-        }
-
-        /// <summary>
-        /// Gets a return request
-        /// </summary>
-        /// <param name="returnRequestId">Return request identifier</param>
-        /// <returns>Return request</returns>
-        public virtual ReturnRequest GetReturnRequestById(int returnRequestId)
-        {
-            if (returnRequestId == 0)
-                return null;
-
-            return _returnRequestRepository.GetById(returnRequestId);
-        }
-
-        /// <summary>
-        /// Search return requests
-        /// </summary>
-        /// <param name="storeId">Store identifier; 0 to load all entries</param>
-        /// <param name="customerId">Customer identifier; null to load all entries</param>
-        /// <param name="orderItemId">Order item identifier; 0 to load all entries</param>
-        /// <param name="rs">Return request status; null to load all entries</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <returns>Return requests</returns>
-        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int storeId = 0, int customerId = 0,
-            int orderItemId = 0, ReturnRequestStatus? rs = null,
-            int pageIndex = 0, int pageSize = int.MaxValue)
-        {
-            var query = _returnRequestRepository.Table;
-            if (storeId > 0)
-                query = query.Where(rr => storeId == rr.StoreId);
-            if (customerId > 0)
-                query = query.Where(rr => customerId == rr.CustomerId);
-            if (rs.HasValue)
-            {
-                var returnStatusId = (int)rs.Value;
-                query = query.Where(rr => rr.ReturnRequestStatusId == returnStatusId);
-            }
-            if (orderItemId > 0)
-                query = query.Where(rr => rr.OrderItemId == orderItemId);
-
-            query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
-
-            var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
-            return returnRequests;
-        }
-
-        #endregion
-        
         #endregion
     }
 }
