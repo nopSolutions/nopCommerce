@@ -87,6 +87,7 @@ namespace Nop.Services.Tests.Orders
         private IAffiliateService _affiliateService;
         private IVendorService _vendorService;
         private IPdfService _pdfService;
+        private IRewardPointService _rewardPointService;
 
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
@@ -176,12 +177,13 @@ namespace Nop.Services.Tests.Orders
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _customerSettings, _addressSettings);
 
+            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _genericAttributeService, 
+                _genericAttributeService, _rewardPointService,
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _orderService = MockRepository.GenerateMock<IOrderService>();
@@ -214,6 +216,7 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
             _currencySettings = new CurrencySettings();
 
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
@@ -227,7 +230,7 @@ namespace Nop.Services.Tests.Orders
                 _encryptionService, _workContext, 
                 _workflowMessageService, _vendorService,
                 _customerActivityService, _currencyService, _affiliateService,
-                _eventPublisher,_pdfService, 
+                _eventPublisher,_pdfService, _rewardPointService,
                 _shippingSettings, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);

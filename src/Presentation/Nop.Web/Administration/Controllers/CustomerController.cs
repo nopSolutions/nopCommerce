@@ -88,6 +88,7 @@ namespace Nop.Admin.Controllers
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IAffiliateService _affiliateService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IRewardPointService _rewardPointService;
 
         #endregion
 
@@ -133,7 +134,8 @@ namespace Nop.Admin.Controllers
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
-            IWorkflowMessageService workflowMessageService)
+            IWorkflowMessageService workflowMessageService,
+            IRewardPointService rewardPointService)
         {
             this._customerService = customerService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
@@ -176,6 +178,7 @@ namespace Nop.Admin.Controllers
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._affiliateService = affiliateService;
             this._workflowMessageService = workflowMessageService;
+            this._rewardPointService = rewardPointService;
         }
 
         #endregion
@@ -1429,9 +1432,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No customer found with the specified id");
 
             var model = new List<CustomerModel.RewardPointsHistoryModel>();
-            foreach (var rph in customer.RewardPointsHistory
-                .OrderByDescending(rph => rph.CreatedOnUtc)
-                .ThenByDescending(rph => rph.Id))
+            foreach (var rph in _rewardPointService.GetRewardPointsHistory(customer.Id, true))
             {
                 var store = _storeService.GetStoreById(rph.StoreId);
                 model.Add(new CustomerModel.RewardPointsHistoryModel
@@ -1462,8 +1463,8 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
-            customer.AddRewardPointsHistoryEntry(addRewardPointsValue, storeId, addRewardPointsMessage);
-            _customerService.UpdateCustomer(customer);
+            _rewardPointService.AddRewardPointsHistoryEntry(customer,
+                addRewardPointsValue, storeId, addRewardPointsMessage);
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }

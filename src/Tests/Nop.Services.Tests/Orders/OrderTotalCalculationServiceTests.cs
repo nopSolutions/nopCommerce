@@ -63,6 +63,7 @@ namespace Nop.Services.Tests.Orders
         private ICountryService _countryService;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
+        private IRewardPointService _rewardPointService;
 
         [SetUp]
         public new void SetUp()
@@ -145,13 +146,15 @@ namespace Nop.Services.Tests.Orders
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address { Id = _taxSettings.DefaultTaxAddressId });
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
                 pluginFinder, _geoLookupService, _countryService, _customerSettings, _addressSettings);
+            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
 
             _rewardPointsSettings = new RewardPointsSettings();
 
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext, _storeContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService, _genericAttributeService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
+                _rewardPointService, _taxSettings, _rewardPointsSettings,
+                _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }
 
         [Test]
@@ -1160,7 +1163,7 @@ namespace Nop.Services.Tests.Orders
                 .ShouldEqual(94.6M);
         }
 
-        /*TODO temporary disabled until we can inject (not resolve using DI) "RewardPointsSettings" into "LimitPerStore" method of CustomerExtensions
+        /*TODO temporary disabled
         [Test]
         public void Can_get_shopping_cart_total_with_applied_reward_points()
         {

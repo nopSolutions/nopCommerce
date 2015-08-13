@@ -232,7 +232,6 @@ namespace Nop.Services.Customers
 
             return true;
         }
-
         /// <summary>
         /// Check whether password recovery link is expired
         /// </summary>

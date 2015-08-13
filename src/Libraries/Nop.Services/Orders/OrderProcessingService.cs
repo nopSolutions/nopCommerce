@@ -70,6 +70,7 @@ namespace Nop.Services.Orders
         private readonly IAffiliateService _affiliateService;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPdfService _pdfService;
+        private readonly IRewardPointService _rewardPointService;
 
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -115,6 +116,7 @@ namespace Nop.Services.Orders
         /// <param name="affiliateService">Affiliate service</param>
         /// <param name="eventPublisher">Event published</param>
         /// <param name="pdfService">PDF service</param>
+        /// <param name="rewardPointService">Reward point service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
@@ -151,6 +153,7 @@ namespace Nop.Services.Orders
             IAffiliateService affiliateService,
             IEventPublisher eventPublisher,
             IPdfService pdfService,
+            IRewardPointService rewardPointService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -188,6 +191,7 @@ namespace Nop.Services.Orders
             this._affiliateService = affiliateService;
             this._eventPublisher = eventPublisher;
             this._pdfService = pdfService;
+            this._rewardPointService = rewardPointService;
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -669,8 +673,7 @@ namespace Nop.Services.Orders
                 return;
 
             //add reward points
-            order.Customer.AddRewardPointsHistoryEntry(points,
-                order.StoreId,
+            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, points, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
             order.RewardPointsWereAdded = true;
             _orderService.UpdateOrder(order);
@@ -691,8 +694,7 @@ namespace Nop.Services.Orders
                 return;
 
             //reduce reward points
-            order.Customer.AddRewardPointsHistoryEntry(-points,
-                order.StoreId, 
+            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, - points,order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
             _orderService.UpdateOrder(order);
         }
@@ -1380,11 +1382,10 @@ namespace Nop.Services.Orders
                     //reward points history
                     if (details.RedeemedRewardPointsAmount > decimal.Zero)
                     {
-                        details.Customer.AddRewardPointsHistoryEntry(-details.RedeemedRewardPoints,
-                            order.StoreId,
+                        _rewardPointService.AddRewardPointsHistoryEntry(details.Customer,
+                            - details.RedeemedRewardPoints, order.StoreId,
                             string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.Id),
-                            order,
-                            details.RedeemedRewardPointsAmount);
+                            order, details.RedeemedRewardPointsAmount);
                         _customerService.UpdateCustomer(details.Customer);
                     }
 

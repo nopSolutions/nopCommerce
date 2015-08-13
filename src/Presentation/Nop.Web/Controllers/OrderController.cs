@@ -49,6 +49,7 @@ namespace Nop.Web.Controllers
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IStoreContext _storeContext;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IRewardPointService _rewardPointService;
 
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
@@ -80,6 +81,7 @@ namespace Nop.Web.Controllers
             IAddressAttributeFormatter addressAttributeFormatter,
             IStoreContext storeContext,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IRewardPointService rewardPointService,
             CatalogSettings catalogSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
@@ -106,6 +108,7 @@ namespace Nop.Web.Controllers
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._storeContext = storeContext;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._rewardPointService = rewardPointService;
 
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
@@ -579,10 +582,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerRewardPointsModel();
-            foreach (var rph in customer.RewardPointsHistory
-                .LimitPerStore(_storeContext.CurrentStore.Id)
-                .OrderByDescending(rph => rph.CreatedOnUtc)
-                .ThenByDescending(rph => rph.Id))
+            foreach (var rph in _rewardPointService.GetRewardPointsHistory(customer.Id))
             {
                 model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
@@ -593,7 +593,7 @@ namespace Nop.Web.Controllers
                 });
             }
             //current amount/balance
-            int rewardPointsBalance = customer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
+            int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
             decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
             decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
             model.RewardPointsBalance = rewardPointsBalance;

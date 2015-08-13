@@ -211,6 +211,8 @@
     <Compile Include="Logging\ClearLogTask.cs" />
     <Compile Include="Media\ResizeType.cs" />
     <Compile Include="Orders\IReturnRequestService.cs" />
+    <Compile Include="Orders\IRewardPointService.cs" />
+    <Compile Include="Orders\RewardPointService.cs" />
     <Compile Include="Orders\ReturnRequestService.cs" />
     <Compile Include="Shipping\EventPublisherExtensions.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />

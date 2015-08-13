@@ -53,6 +53,7 @@ namespace Nop.Web.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IPluginFinder _pluginFinder;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly IRewardPointService _rewardPointService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
@@ -90,6 +91,7 @@ namespace Nop.Web.Controllers
             IPaymentService paymentService,
             IPluginFinder pluginFinder,
             IOrderTotalCalculationService orderTotalCalculationService,
+            IRewardPointService rewardPointService,
             ILogger logger,
             IOrderService orderService,
             IWebHelper webHelper,
@@ -120,6 +122,7 @@ namespace Nop.Web.Controllers
             this._paymentService = paymentService;
             this._pluginFinder = pluginFinder;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._rewardPointService = rewardPointService;
             this._logger = logger;
             this._orderService = orderService;
             this._webHelper = webHelper;
@@ -335,7 +338,7 @@ namespace Nop.Web.Controllers
             //reward points
             if (_rewardPointsSettings.Enabled && !cart.IsRecurring())
             {
-                int rewardPointsBalance = _workContext.CurrentCustomer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
+                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
                 decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
                 decimal rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
                 if (rewardPointsAmount > decimal.Zero && 

@@ -13,7 +13,6 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
-        private ICollection<RewardPointsHistory> _rewardPointsHistory;
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
 
@@ -158,15 +157,6 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _shoppingCartItems ?? (_shoppingCartItems = new List<ShoppingCartItem>()); }
             protected set { _shoppingCartItems = value; }            
-        }
-
-        /// <summary>
-        /// Gets or sets reward points history
-        /// </summary>
-        public virtual ICollection<RewardPointsHistory> RewardPointsHistory
-        {
-            get { return _rewardPointsHistory ?? (_rewardPointsHistory = new List<RewardPointsHistory>()); }
-            protected set { _rewardPointsHistory = value; }            
         }
 
         /// <summary>

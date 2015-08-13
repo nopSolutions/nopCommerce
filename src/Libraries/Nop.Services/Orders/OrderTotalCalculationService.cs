@@ -35,6 +35,7 @@ namespace Nop.Services.Orders
         private readonly IDiscountService _discountService;
         private readonly IGiftCardService _giftCardService;
         private readonly IGenericAttributeService _genericAttributeService;
+        private readonly IRewardPointService _rewardPointService;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -57,6 +58,7 @@ namespace Nop.Services.Orders
         /// <param name="discountService">Discount service</param>
         /// <param name="giftCardService">Gift card service</param>
         /// <param name="genericAttributeService">Generic attribute service</param>
+        /// <param name="rewardPointService">Reward point service</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
@@ -72,6 +74,7 @@ namespace Nop.Services.Orders
             IDiscountService discountService,
             IGiftCardService giftCardService,
             IGenericAttributeService genericAttributeService,
+            IRewardPointService rewardPointService,
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
@@ -88,6 +91,7 @@ namespace Nop.Services.Orders
             this._discountService = discountService;
             this._giftCardService = giftCardService;
             this._genericAttributeService = genericAttributeService;
+            this._rewardPointService = rewardPointService;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
@@ -950,7 +954,7 @@ namespace Nop.Services.Orders
                 customer.GetAttribute<bool>(SystemCustomerAttributeNames.UseRewardPointsDuringCheckout,
                     _genericAttributeService, _storeContext.CurrentStore.Id))
             {
-                int rewardPointsBalance = customer.GetRewardPointsBalance(_storeContext.CurrentStore.Id);
+                int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
                 if (CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
                 {
                     decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);

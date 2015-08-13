@@ -12,6 +12,7 @@ using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Stores;
 using Nop.Tests;
@@ -40,6 +41,7 @@ namespace Nop.Services.Tests.Customers
         private IStoreService _storeService;
         private RewardPointsSettings _rewardPointsSettings;
         private SecuritySettings _securitySettings;
+        private IRewardPointService _rewardPointService;
 
         [SetUp]
         public new void SetUp()
@@ -124,7 +126,8 @@ namespace Nop.Services.Tests.Customers
 
             _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
-            
+            _rewardPointService = MockRepository.GenerateMock<IRewardPointService>();
+
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
                 _genericAttributeRepo, _orderRepo, _forumPostRepo, _forumTopicRepo,
@@ -132,7 +135,7 @@ namespace Nop.Services.Tests.Customers
                 _genericAttributeService, null, null, _eventPublisher, _customerSettings, null);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
-                _storeService, _rewardPointsSettings, _customerSettings);
+                _storeService, _rewardPointService, _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]
