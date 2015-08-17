@@ -348,7 +348,7 @@ namespace Nop.Web.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
+                foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -483,8 +483,8 @@ namespace Nop.Web.Controllers
             if (_customerSettings.CountryEnabled)
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                
-                foreach (var c in _countryService.GetAllCountries())
+
+                foreach (var c in _countryService.GetAllCountries(_workContext.WorkingLanguage.Id))
                 {
                     model.AvailableCountries.Add(new SelectListItem
                     {
@@ -1398,7 +1398,7 @@ namespace Nop.Web.Controllers
                     localizationService: _localizationService,
                     stateProvinceService: _stateProvinceService,
                     addressAttributeFormatter: _addressAttributeFormatter,
-                    loadCountries: () => _countryService.GetAllCountries());
+                    loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
                 model.Addresses.Add(addressModel);
             }
             return View(model);
@@ -1440,7 +1440,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries());
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
         }
@@ -1488,7 +1488,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries(),
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
 
             return View(model);
@@ -1515,7 +1515,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries());
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id));
 
             return View(model);
         }
@@ -1561,7 +1561,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountries(),
+                loadCountries: () => _countryService.GetAllCountries(_workContext.WorkingLanguage.Id),
                 overrideAttributesXml: customAttributes);
             return View(model);
         }

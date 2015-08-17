@@ -45,7 +45,8 @@ namespace Nop.Admin.Controllers
 
         private readonly IOrderService _orderService;
         private readonly IOrderReportService _orderReportService;
-        private readonly IOrderProcessingService _orderProcessingService;        private readonly IReturnRequestService _returnRequestService;
+        private readonly IOrderProcessingService _orderProcessingService;
+        private readonly IReturnRequestService _returnRequestService;
 	    private readonly IPriceCalculationService _priceCalculationService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
@@ -857,7 +858,7 @@ namespace Nop.Admin.Controllers
                 model.AvailablePaymentMethods.Add(new SelectListItem { Text = pm.PluginDescriptor.FriendlyName, Value = pm.PluginDescriptor.SystemName });
 
             //billing countries
-            foreach (var c in _countryService.GetAllCountriesForBilling(true))
+            foreach (var c in _countryService.GetAllCountriesForBilling(showHidden: true))
             {
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             }
@@ -2607,7 +2608,7 @@ namespace Nop.Admin.Controllers
 
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
@@ -2697,7 +2698,7 @@ namespace Nop.Admin.Controllers
             model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.Address.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == address.CountryId) });
             //states
             var states = address.Country != null ? _stateProvinceService.GetStateProvincesByCountryId(address.Country.Id, true).ToList() : new List<StateProvince>();
@@ -2726,7 +2727,7 @@ namespace Nop.Admin.Controllers
             var model = new ShipmentListModel();
             //countries
             model.AvailableCountries.Add(new SelectListItem { Text = "*", Value = "0" });
-            foreach (var c in _countryService.GetAllCountries(true))
+            foreach (var c in _countryService.GetAllCountries(showHidden: true))
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states
             model.AvailableStates.Add(new SelectListItem { Text = "*", Value = "0" });
@@ -3707,7 +3708,7 @@ namespace Nop.Admin.Controllers
                 model.AvailableManufacturers.Add(new SelectListItem { Text = m.Name, Value = m.Id.ToString() });
 
             //billing countries
-            foreach (var c in _countryService.GetAllCountriesForBilling(true))
+            foreach (var c in _countryService.GetAllCountriesForBilling(showHidden: true))
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             model.AvailableCountries.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 

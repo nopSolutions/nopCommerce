@@ -190,7 +190,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountriesForBilling(),
+                loadCountries: () => _countryService.GetAllCountriesForBilling(_workContext.WorkingLanguage.Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
                 overrideAttributesXml: overrideAttributesXml);
@@ -242,7 +242,7 @@ namespace Nop.Web.Controllers
                 stateProvinceService: _stateProvinceService,
                 addressAttributeService: _addressAttributeService,
                 addressAttributeParser: _addressAttributeParser,
-                loadCountries: () => _countryService.GetAllCountriesForShipping(),
+                loadCountries: () => _countryService.GetAllCountriesForShipping(_workContext.WorkingLanguage.Id),
                 prePopulateWithCustomerFields: prePopulateNewAddressWithCustomerFields,
                 customer: _workContext.CurrentCustomer,
                 overrideAttributesXml: overrideAttributesXml);

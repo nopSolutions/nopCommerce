@@ -67,7 +67,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem { Text = tc.Name, Value = tc.Id.ToString() });
             //countries
-            var countries = _countryService.GetAllCountries(true);
+            var countries = _countryService.GetAllCountries(showHidden: true);
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
             //states

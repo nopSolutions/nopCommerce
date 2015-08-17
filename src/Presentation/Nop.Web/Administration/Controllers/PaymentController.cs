@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
             var model = new PaymentMethodRestrictionModel();
 
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            var countries = _countryService.GetAllCountries(true);
+            var countries = _countryService.GetAllCountries(showHidden: true);
             foreach (var pm in paymentMethods)
             {
                 model.AvailablePaymentMethods.Add(pm.ToModel());
@@ -185,7 +185,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var paymentMethods = _paymentService.LoadAllPaymentMethods();
-            var countries = _countryService.GetAllCountries(true);
+            var countries = _countryService.GetAllCountries(showHidden: true);
 
             foreach (var pm in paymentMethods)
             {

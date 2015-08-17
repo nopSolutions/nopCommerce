@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Stores;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
 {
@@ -22,9 +23,10 @@ namespace Nop.Services.Directory
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {0} : show hidden records?
+        /// {0} : language ID
+        /// {10} : show hidden records?
         /// </remarks>
-        private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}";
+        private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}-{1}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -93,11 +95,12 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries
         /// </summary>
+        /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountries(bool showHidden = false)
+        public virtual IList<Country> GetAllCountries(int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(COUNTRIES_ALL_KEY, showHidden);
+            string key = string.Format(COUNTRIES_ALL_KEY, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _countryRepository.Table;
@@ -126,6 +129,15 @@ namespace Nop.Services.Directory
                 }
 
                 var countries = query.ToList();
+
+                if (languageId > 0)
+                {
+                    //we should sort countries by localized names when they have the same display order
+                    countries = countries
+                        .OrderBy(c => c.DisplayOrder)
+                        .ThenBy(c => c.GetLocalized(x => x.Name, languageId))
+                        .ToList();
+                }
                 return countries;
             });
         }
@@ -133,21 +145,23 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Gets all countries that allow billing
         /// </summary>
+        /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForBilling(bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForBilling(int languageId = 0, bool showHidden = false)
         {
-            return GetAllCountries(showHidden).Where(c => c.AllowsBilling).ToList();
+            return GetAllCountries(languageId, showHidden).Where(c => c.AllowsBilling).ToList();
         }
 
         /// <summary>
         /// Gets all countries that allow shipping
         /// </summary>
+        /// <param name="languageId">Language identifier. It's used to sort countries by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Countries</returns>
-        public virtual IList<Country> GetAllCountriesForShipping(bool showHidden = false)
+        public virtual IList<Country> GetAllCountriesForShipping(int languageId = 0, bool showHidden = false)
         {
-            return GetAllCountries(showHidden).Where(c => c.AllowsShipping).ToList();
+            return GetAllCountries(languageId, showHidden).Where(c => c.AllowsShipping).ToList();
         }
 
         /// <summary>
