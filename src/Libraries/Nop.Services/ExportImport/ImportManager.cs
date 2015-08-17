@@ -646,7 +646,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //import
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, true);
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true);
                     var state = states.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                     if (state != null)

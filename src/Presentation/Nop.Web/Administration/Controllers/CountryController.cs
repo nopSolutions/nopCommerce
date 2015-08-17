@@ -344,7 +344,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, true);
+            var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, showHidden: true);
 
             var gridModel = new DataSourceResult
             {
@@ -479,7 +479,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("countryId");
 
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, true).ToList() : new List<StateProvince>();
+            var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
             var result = (from s in states
                          select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)

@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Events;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Directory
 {
@@ -19,9 +20,11 @@ namespace Nop.Services.Directory
         /// Key for caching
         /// </summary>
         /// <remarks>
-        /// {1} : country ID
+        /// {0} : country ID
+        /// {1} : language ID
+        /// {2} : show hidden records?
         /// </remarks>
-        private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}";
+        private const string STATEPROVINCES_ALL_KEY = "Nop.stateprovince.all-{0}-{1}-{2}";
         /// <summary>
         /// Key pattern to clear cache
         /// </summary>
@@ -105,11 +108,12 @@ namespace Nop.Services.Directory
         /// Gets a state/province collection by country identifier
         /// </summary>
         /// <param name="countryId">Country identifier</param>
+        /// <param name="languageId">Language identifier. It's used to sort states by localized names (if specified); pass 0 to skip it</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>State/province collection</returns>
-        public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, bool showHidden = false)
+        /// <returns>States</returns>
+        public virtual IList<StateProvince> GetStateProvincesByCountryId(int countryId, int languageId = 0, bool showHidden = false)
         {
-            string key = string.Format(STATEPROVINCES_ALL_KEY, countryId);
+            string key = string.Format(STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
@@ -118,6 +122,15 @@ namespace Nop.Services.Directory
                             (showHidden || sp.Published)
                             select sp;
                 var stateProvinces = query.ToList();
+
+                if (languageId > 0)
+                {
+                    //we should sort states by localized names when they have the same display order
+                    stateProvinces = stateProvinces
+                        .OrderBy(c => c.DisplayOrder)
+                        .ThenBy(c => c.GetLocalized(x => x.Name, languageId))
+                        .ToList();
+                }
                 return stateProvinces;
             });
         }
@@ -126,7 +139,7 @@ namespace Nop.Services.Directory
         /// Gets all states/provinces
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>State/province collection</returns>
+        /// <returns>States</returns>
         public virtual IList<StateProvince> GetStateProvinces(bool showHidden = false)
         {
             var query = from sp in _stateProvinceRepository.Table
