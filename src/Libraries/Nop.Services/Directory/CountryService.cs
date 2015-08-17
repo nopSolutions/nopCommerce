@@ -24,7 +24,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <remarks>
         /// {0} : language ID
-        /// {10} : show hidden records?
+        /// {1} : show hidden records?
         /// </remarks>
         private const string COUNTRIES_ALL_KEY = "Nop.country.all-{0}-{1}";
         /// <summary>
