@@ -68,7 +68,7 @@ namespace Nop.Core.Infrastructure
             //sort
             drInstances = drInstances.AsQueryable().OrderBy(t => t.Order).ToList();
             foreach (var dependencyRegistrar in drInstances)
-                dependencyRegistrar.Register(builder, typeFinder);
+                dependencyRegistrar.Register(builder, typeFinder, config);
             builder.Update(container);
 
             //set dependency resolver

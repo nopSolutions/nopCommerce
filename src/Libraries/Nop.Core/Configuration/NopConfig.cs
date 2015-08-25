@@ -60,6 +60,18 @@ namespace Nop.Core.Configuration
                     config.UserAgentStringsPath = attribute.Value;
             }
 
+            var redisCachingNode = section.SelectSingleNode("RedisCaching");
+            if (redisCachingNode != null && redisCachingNode.Attributes != null)
+            {
+                var enabledAttribute = redisCachingNode.Attributes["Enabled"];
+                if (enabledAttribute != null)
+                    config.RedisCachingEnabled = Convert.ToBoolean(enabledAttribute.Value);
+
+                var connectionStringAttribute = redisCachingNode.Attributes["ConnectionString"];
+                if (connectionStringAttribute != null)
+                    config.RedisCachingConnectionString = connectionStringAttribute.Value;
+            }
+
             return config;
         }
         
@@ -87,5 +99,14 @@ namespace Nop.Core.Configuration
         /// Path to database with user agent strings
         /// </summary>
         public string UserAgentStringsPath { get; private set; }
+
+        /// <summary>
+        /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
+        /// </summary>
+        public bool RedisCachingEnabled { get; private set; }
+        /// <summary>
+        /// Redis connection string. Used when Redis caching is enabled
+        /// </summary>
+        public string RedisCachingConnectionString { get; private set; }
     }
 }

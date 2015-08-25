@@ -1,9 +1,11 @@
+using System;
+
 namespace Nop.Core.Caching
 {
     /// <summary>
     /// Cache manager interface
     /// </summary>
-    public interface ICacheManager
+    public interface ICacheManager : IDisposable
     {
         /// <summary>
         /// Gets or sets the value associated with the specified key.

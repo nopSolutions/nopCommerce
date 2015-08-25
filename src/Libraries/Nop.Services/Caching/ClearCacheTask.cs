@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Caching
@@ -13,7 +14,7 @@ namespace Nop.Services.Caching
         /// </summary>
         public void Execute()
         {
-            var cacheManager = new MemoryCacheManager();
+            var cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
             cacheManager.Clear();
         }
     }

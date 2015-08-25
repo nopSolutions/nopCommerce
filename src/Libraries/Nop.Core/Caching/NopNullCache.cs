@@ -58,5 +58,12 @@ namespace Nop.Core.Caching
         public virtual void Clear()
         {
         }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public virtual void Dispose()
+        {
+        }
     }
 }

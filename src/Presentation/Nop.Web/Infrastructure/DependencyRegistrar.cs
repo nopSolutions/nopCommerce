@@ -1,6 +1,7 @@
 using Autofac;
 using Autofac.Core;
 using Nop.Core.Caching;
+using Nop.Core.Configuration;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Controllers;
@@ -18,7 +19,8 @@ namespace Nop.Web.Infrastructure
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
+        /// <param name="config">Config</param>
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             //we cache presentation models between requests
             builder.RegisterType<BlogController>()

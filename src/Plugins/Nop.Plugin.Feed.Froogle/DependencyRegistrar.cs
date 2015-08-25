@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -21,7 +22,8 @@ namespace Nop.Plugin.Feed.Froogle
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
+        /// <param name="config">Config</param>
+        public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config)
         {
             builder.RegisterType<GoogleService>().As<IGoogleService>().InstancePerLifetimeScope();
 

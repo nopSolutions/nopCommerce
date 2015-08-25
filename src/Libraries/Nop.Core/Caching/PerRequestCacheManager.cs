@@ -144,5 +144,12 @@ namespace Nop.Core.Caching
                 items.Remove(key);
             }
         }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public virtual void Dispose()
+        {
+        }
     }
 }

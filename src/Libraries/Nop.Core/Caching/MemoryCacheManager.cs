@@ -94,5 +94,12 @@ namespace Nop.Core.Caching
             foreach (var item in Cache)
                 Remove(item.Key);
         }
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public virtual void Dispose()
+        {
+        }
     }
 }

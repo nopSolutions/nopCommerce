@@ -1,8 +1,6 @@
 //Contributor : MVCContrib
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Nop.Core;
 
 namespace Nop.Web.Framework.UI.Paging
@@ -10,11 +8,6 @@ namespace Nop.Web.Framework.UI.Paging
     public abstract class BasePageableModel : IPageableModel
     {
         #region Methods
-
-        public IEnumerator GetEnumerator()
-        {
-            return new List<string>().GetEnumerator();
-        }
 
         public virtual void LoadPagedList<T>(IPagedList<T> pagedList)
         {

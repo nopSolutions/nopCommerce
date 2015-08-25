@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -12,7 +13,8 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// </summary>
         /// <param name="builder">Container builder</param>
         /// <param name="typeFinder">Type finder</param>
-        void Register(ContainerBuilder builder, ITypeFinder typeFinder);
+        /// <param name="config">Config</param>
+        void Register(ContainerBuilder builder, ITypeFinder typeFinder, NopConfig config);
 
         /// <summary>
         /// Order of this dependency registrar implementation
