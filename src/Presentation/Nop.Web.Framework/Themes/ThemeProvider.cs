@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Configuration;
 
 namespace Nop.Web.Framework.Themes
 {
@@ -19,9 +18,9 @@ namespace Nop.Web.Framework.Themes
 
 		#region Constructors
 
-        public ThemeProvider(NopConfig nopConfig, IWebHelper webHelper)
+        public ThemeProvider(IWebHelper webHelper)
         {
-            _basePath = webHelper.MapPath(nopConfig.ThemeBasePath);
+            _basePath = webHelper.MapPath("~/Themes/");
             LoadConfigurations();
         }
 

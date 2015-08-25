@@ -283,8 +283,7 @@ namespace Nop.Web.Framework
             if (!databaseInstalled)
             {
                 //installation service
-                if (!String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
-                    Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]))
+                if (config.UseFastInstallationService)
                 {
                     builder.RegisterType<SqlFileInstallationService>().As<IInstallationService>().InstancePerLifetimeScope();
                 }

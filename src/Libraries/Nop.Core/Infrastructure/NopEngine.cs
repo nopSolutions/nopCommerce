@@ -52,7 +52,7 @@ namespace Nop.Core.Infrastructure
             //because Build() or Update() method can only be called once on a ContainerBuilder.
 
             //dependencies
-            var typeFinder = new WebAppTypeFinder(config);
+            var typeFinder = new WebAppTypeFinder();
             builder = new ContainerBuilder();
             builder.RegisterInstance(config).As<NopConfig>().SingleInstance();
             builder.RegisterInstance(this).As<IEngine>().SingleInstance();

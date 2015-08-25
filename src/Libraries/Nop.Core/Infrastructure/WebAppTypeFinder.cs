@@ -20,15 +20,6 @@ namespace Nop.Core.Infrastructure
 
         #endregion
 
-        #region Ctor
-
-        public WebAppTypeFinder(NopConfig config)
-        {
-            this._ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>

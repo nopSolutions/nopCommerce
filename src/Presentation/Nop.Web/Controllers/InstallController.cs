@@ -8,6 +8,7 @@ using System.Threading;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
@@ -24,14 +25,16 @@ namespace Nop.Web.Controllers
         #region Fields
 
         private readonly IInstallationLocalizationService _locService;
+        private readonly NopConfig _config;
 
         #endregion
 
         #region Ctor
 
-        public InstallController(IInstallationLocalizationService locService)
+        public InstallController(IInstallationLocalizationService locService, NopConfig config)
         {
             this._locService = locService;
+            this._config = config;
         }
 
         #endregion
@@ -162,10 +165,8 @@ namespace Nop.Web.Controllers
                 DatabaseConnectionString = "",
                 DataProvider = "sqlserver",
                 //fast installation service does not support SQL compact
-                DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
-                    Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]),
-                DisableSampleDataOption = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]) &&
-                    Convert.ToBoolean(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]),
+                DisableSqlCompact = _config.UseFastInstallationService,
+                DisableSampleDataOption = _config.DisableSampleDataDuringInstallation,
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
@@ -207,10 +208,9 @@ namespace Nop.Web.Controllers
                     Selected = _locService.GetCurrentLanguage().Code == lang.Code,
                 });
             }
-            model.DisableSqlCompact = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["UseFastInstallationService"]) &&
-                Convert.ToBoolean(ConfigurationManager.AppSettings["UseFastInstallationService"]);
-            model.DisableSampleDataOption = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]) &&
-                Convert.ToBoolean(ConfigurationManager.AppSettings["DisableSampleDataDuringInstallation"]);
+
+            model.DisableSqlCompact = _config.UseFastInstallationService;
+            model.DisableSampleDataOption = _config.DisableSampleDataDuringInstallation;
 
             //SQL Server
             if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
@@ -367,12 +367,12 @@ namespace Nop.Web.Controllers
                         .OrderBy(x => x.PluginDescriptor.Group)
                         .ThenBy(x => x.PluginDescriptor.DisplayOrder)
                         .ToList();
-                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]) ? 
-                        new List<string>(): 
-                        ConfigurationManager.AppSettings["PluginsIgnoredDuringInstallation"]
-                            .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
-                            .Select(x => x.Trim())
-                            .ToList();
+                    var pluginsIgnoredDuringInstallation = String.IsNullOrEmpty(_config.PluginsIgnoredDuringInstallation) ? 
+                        new List<string>():
+                        _config.PluginsIgnoredDuringInstallation
+                        .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Trim())
+                        .ToList();
                     foreach (var plugin in plugins)
                     {
                         if (pluginsIgnoredDuringInstallation.Contains(plugin.PluginDescriptor.SystemName))

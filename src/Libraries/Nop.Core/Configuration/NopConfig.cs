@@ -20,21 +20,6 @@ namespace Nop.Core.Configuration
         public object Create(object parent, object configContext, XmlNode section)
         {
             var config = new NopConfig();
-            var dynamicDiscoveryNode = section.SelectSingleNode("DynamicDiscovery");
-            if (dynamicDiscoveryNode != null && dynamicDiscoveryNode.Attributes != null)
-            {
-                var attribute = dynamicDiscoveryNode.Attributes["Enabled"];
-                if (attribute != null)
-                    config.DynamicDiscovery = Convert.ToBoolean(attribute.Value);
-            }
-
-            var engineNode = section.SelectSingleNode("Engine");
-            if (engineNode != null && engineNode.Attributes != null)
-            {
-                var attribute = engineNode.Attributes["Type"];
-                if (attribute != null)
-                    config.EngineType = attribute.Value;
-            }
 
             var startupNode = section.SelectSingleNode("Startup");
             if (startupNode != null && startupNode.Attributes != null)
@@ -42,22 +27,6 @@ namespace Nop.Core.Configuration
                 var attribute = startupNode.Attributes["IgnoreStartupTasks"];
                 if (attribute != null)
                     config.IgnoreStartupTasks = Convert.ToBoolean(attribute.Value);
-            }
-
-            var themeNode = section.SelectSingleNode("Themes");
-            if (themeNode != null && themeNode.Attributes != null)
-            {
-                var attribute = themeNode.Attributes["basePath"];
-                if (attribute != null)
-                    config.ThemeBasePath = attribute.Value;
-            }
-
-            var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
-            if (userAgentStringsNode != null && userAgentStringsNode.Attributes != null)
-            {
-                var attribute = userAgentStringsNode.Attributes["databasePath"];
-                if (attribute != null)
-                    config.UserAgentStringsPath = attribute.Value;
             }
 
             var redisCachingNode = section.SelectSingleNode("RedisCaching");
@@ -72,24 +41,41 @@ namespace Nop.Core.Configuration
                     config.RedisCachingConnectionString = connectionStringAttribute.Value;
             }
 
+            var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
+            if (userAgentStringsNode != null && userAgentStringsNode.Attributes != null)
+            {
+                var attribute = userAgentStringsNode.Attributes["databasePath"];
+                if (attribute != null)
+                    config.UserAgentStringsPath = attribute.Value;
+            }
+
+            var supportPreviousNopcommerceVersionsNode = section.SelectSingleNode("SupportPreviousNopcommerceVersions");
+            if (supportPreviousNopcommerceVersionsNode != null && supportPreviousNopcommerceVersionsNode.Attributes != null)
+            {
+                var attribute = supportPreviousNopcommerceVersionsNode.Attributes["Enabled"];
+                if (attribute != null)
+                    config.SupportPreviousNopcommerceVersions = Convert.ToBoolean(attribute.Value);
+            }
+
+            var installationNode = section.SelectSingleNode("Installation");
+            if (installationNode != null && installationNode.Attributes != null)
+            {
+                var disableSampleDataDuringInstallationAttribute = installationNode.Attributes["DisableSampleDataDuringInstallation"];
+                if (disableSampleDataDuringInstallationAttribute != null)
+                    config.DisableSampleDataDuringInstallation = Convert.ToBoolean(disableSampleDataDuringInstallationAttribute.Value);
+
+                var useFastInstallationServiceAttribute = installationNode.Attributes["UseFastInstallationService"];
+                if (useFastInstallationServiceAttribute != null)
+                    config.UseFastInstallationService = Convert.ToBoolean(useFastInstallationServiceAttribute.Value);
+
+                var pluginsIgnoredDuringInstallationAttribute = installationNode.Attributes["PluginsIgnoredDuringInstallation"];
+                if (pluginsIgnoredDuringInstallationAttribute != null)
+                    config.PluginsIgnoredDuringInstallation = pluginsIgnoredDuringInstallationAttribute.Value;
+            }
+
             return config;
         }
         
-        /// <summary>
-        /// In addition to configured assemblies examine and load assemblies in the bin directory.
-        /// </summary>
-        public bool DynamicDiscovery { get; private set; }
-
-        /// <summary>
-        /// A custom <see cref="IEngine"/> to manage the application instead of the default.
-        /// </summary>
-        public string EngineType { get; private set; }
-
-        /// <summary>
-        /// Specifices where the themes will be stored (~/Themes/)
-        /// </summary>
-        public string ThemeBasePath { get; private set; }
-
         /// <summary>
         /// Indicates whether we should ignore startup tasks
         /// </summary>
@@ -108,5 +94,23 @@ namespace Nop.Core.Configuration
         /// Redis connection string. Used when Redis caching is enabled
         /// </summary>
         public string RedisCachingConnectionString { get; private set; }
+
+        /// <summary>
+        /// Indicates whether we should support previous nopCommerce versions (it can slightly improve performance)
+        /// </summary>
+        public bool SupportPreviousNopcommerceVersions { get; private set; }
+
+        /// <summary>
+        /// A value indicating whether a store owner can install sample data during installation
+        /// </summary>
+        public bool DisableSampleDataDuringInstallation { get; private set; }
+        /// <summary>
+        /// By default this setting should always be set to "False" (only for advanced users)
+        /// </summary>
+        public bool UseFastInstallationService { get; private set; }
+        /// <summary>
+        /// A list of plugins ignored during nopCommerce installation
+        /// </summary>
+        public string PluginsIgnoredDuringInstallation { get; private set; }
     }
 }
