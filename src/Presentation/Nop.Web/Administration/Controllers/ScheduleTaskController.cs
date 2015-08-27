@@ -130,7 +130,7 @@ namespace Nop.Admin.Controllers
                 //ensure that the task is enabled
                 task.Enabled = true;
                 //do not dispose. otherwise, we can get exception that DbContext is disposed
-                task.Execute(true, false);
+                task.Execute(true, false, false);
                 SuccessNotification(_localizationService.GetResource("Admin.System.ScheduleTasks.RunNow.Done"));
             }
             catch (Exception exc)

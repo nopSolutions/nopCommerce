@@ -57,6 +57,18 @@ namespace Nop.Core.Configuration
                     config.SupportPreviousNopcommerceVersions = Convert.ToBoolean(attribute.Value);
             }
 
+            var webFarmsNode = section.SelectSingleNode("WebFarms");
+            if (webFarmsNode != null && webFarmsNode.Attributes != null)
+            {
+                var multipleInstancesEnabledAttribute = webFarmsNode.Attributes["MultipleInstancesEnabled"];
+                if (multipleInstancesEnabledAttribute != null)
+                    config.MultipleInstancesEnabled = Convert.ToBoolean(multipleInstancesEnabledAttribute.Value);
+
+                var runOnAzureWebsitesAttribute = webFarmsNode.Attributes["RunOnAzureWebsites"];
+                if (runOnAzureWebsitesAttribute != null)
+                    config.RunOnAzureWebsites = Convert.ToBoolean(runOnAzureWebsitesAttribute.Value);
+            }
+
             var installationNode = section.SelectSingleNode("Installation");
             if (installationNode != null && installationNode.Attributes != null)
             {
@@ -99,6 +111,17 @@ namespace Nop.Core.Configuration
         /// Indicates whether we should support previous nopCommerce versions (it can slightly improve performance)
         /// </summary>
         public bool SupportPreviousNopcommerceVersions { get; private set; }
+
+        /// <summary>
+        /// A value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
+        /// Do not enable it if you run on Azure but use one instance only
+        /// </summary>
+        public bool MultipleInstancesEnabled { get; private set; }
+
+        /// <summary>
+        /// A value indicating whether the site is run on Windows Azure Websites
+        /// </summary>
+        public bool RunOnAzureWebsites { get; private set; }
 
         /// <summary>
         /// A value indicating whether a store owner can install sample data during installation

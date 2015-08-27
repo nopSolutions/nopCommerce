@@ -1,7 +1,9 @@
 ﻿using System;
 using Autofac;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
+using Nop.Services.Infrastructure;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
@@ -11,6 +13,8 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class Task
     {
+        #region Ctor
+
         /// <summary>
         /// Ctor for Task
         /// </summary>
@@ -31,6 +35,10 @@ namespace Nop.Services.Tasks
             this.Name = task.Name;
         }
 
+        #endregion
+
+        #region Utilities
+
         private ITask CreateTask(ILifetimeScope scope)
         {
             ITask task = null;
@@ -50,16 +58,19 @@ namespace Nop.Services.Tasks
             }
             return task;
         }
-        
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Executes the task
         /// </summary>
         /// <param name="throwException">A value indicating whether exception should be thrown if some error happens</param>
-        /// <param name="dispose">A value indicating whether all instances hsould be disposed after task run</param>
-        public void Execute(bool throwException = false, bool dispose = true)
+        /// <param name="dispose">A value indicating whether all instances should be disposed after task run</param>
+        /// <param name="ensureRunOnOneWebFarmInstance">A value indicating whether we should ensure this task is run on one farm node at a time</param>
+        public void Execute(bool throwException = false, bool dispose = true, bool ensureRunOnOneWebFarmInstance = true)
         {
-            this.IsRunning = true;
-
             //background tasks has an issue with Autofac
             //because scope is generated each time it's requested
             //that's why we get one single scope here
@@ -70,6 +81,36 @@ namespace Nop.Services.Tasks
 
             try
             {
+                //task is run on one farm node at a time?
+                if (ensureRunOnOneWebFarmInstance)
+                {
+                    //is web farm enabled (multiple instances)?
+                    var nopConfig = EngineContext.Current.ContainerManager.Resolve<NopConfig>("", scope);
+                    if (nopConfig.MultipleInstancesEnabled)
+                    {
+                        var machineNameProvider = EngineContext.Current.ContainerManager.Resolve<IMachineNameProvider>("", scope);
+                        var machineName = machineNameProvider.GetMachineName();
+                        if (String.IsNullOrEmpty(machineName))
+                        {
+                            throw new Exception("Machine name cannot be detected. You cannot run in web farm.");
+                            //actually in this case we can generate some unique string (e.g. Guid) and store it in some "static" (!!!) variable
+                            //then it can be used as a machine name
+                        }
+
+                        //lease can't be aquired only if for a different machine and it has not expired
+                        if (scheduleTask.LeasedUntilUtc.HasValue &&
+                            scheduleTask.LeasedUntilUtc.Value >= DateTime.UtcNow &&
+                            scheduleTask.LeasedByMachineName != machineName)
+                            return;
+
+                        //lease the task. so it's run on one farm node at a time
+                        scheduleTask.LeasedByMachineName = machineName;
+                        scheduleTask.LeasedUntilUtc = DateTime.UtcNow.AddMinutes(30);
+                        scheduleTaskService.UpdateTask(scheduleTask);
+                    }
+                }
+
+                //initialize and execute
                 var task = this.CreateTask(scope);
                 if (task != null)
                 {
@@ -80,8 +121,6 @@ namespace Nop.Services.Tasks
                         scheduleTask.LastStartUtc = this.LastStartUtc;
                         scheduleTaskService.UpdateTask(scheduleTask);
                     }
-
-                    //execute task
                     task.Execute();
                     this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
                 }
@@ -111,14 +150,11 @@ namespace Nop.Services.Tasks
             {
                 scope.Dispose();
             }
-
-            this.IsRunning = false;
         }
 
-        /// <summary>
-        /// A value indicating whether a task is running
-        /// </summary>
-        public bool IsRunning { get; private set; }
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Datetime of the last start
@@ -154,5 +190,7 @@ namespace Nop.Services.Tasks
         /// A value indicating whether the task is enabled
         /// </summary>
         public bool Enabled { get; set; }
+
+        #endregion
     }
 }

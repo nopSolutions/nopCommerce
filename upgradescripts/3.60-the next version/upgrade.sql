@@ -458,3 +458,19 @@ GO
 ALTER TABLE [Topic] ALTER COLUMN [SubjectToAcl] bit NOT NULL
 GO
 
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ScheduleTask]') and NAME='LeasedByMachineName')
+BEGIN
+	ALTER TABLE [ScheduleTask]
+	ADD [LeasedByMachineName] nvarchar(MAX) NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ScheduleTask]') and NAME='LeasedUntilUtc')
+BEGIN
+	ALTER TABLE [ScheduleTask]
+	ADD [LeasedUntilUtc] datetime NULL
+END
+GO

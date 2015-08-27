@@ -206,6 +206,9 @@
     <Compile Include="Customers\CustomerAttributeExtensions.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
+    <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />
+    <Compile Include="Infrastructure\DefaultMachineNameProvider.cs" />
+    <Compile Include="Infrastructure\IMachineNameProvider.cs" />
     <Compile Include="Helpers\IUserAgentHelper.cs" />
     <Compile Include="Helpers\UserAgentHelper.cs" />
     <Compile Include="Logging\ClearLogTask.cs" />
@@ -464,6 +467,7 @@
       <CachedSettingsPropName>Nop_Services_EuropaCheckVatService_checkVatService</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

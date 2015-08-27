@@ -6,7 +6,7 @@
     public interface IStartupTask 
     {
         /// <summary>
-        /// Execute task
+        /// Executes a task
         /// </summary>
         void Execute();
 

@@ -1,5 +1,4 @@
-﻿
-namespace Nop.Services.Tasks
+﻿namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Interface that should be implemented by each task
@@ -7,7 +6,7 @@ namespace Nop.Services.Tasks
     public partial interface ITask
     {
         /// <summary>
-        /// Execute task
+        /// Executes a task
         /// </summary>
         void Execute();
     }
