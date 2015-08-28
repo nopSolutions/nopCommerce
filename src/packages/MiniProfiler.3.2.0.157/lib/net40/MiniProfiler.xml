@@ -3743,6 +3743,12 @@
             Allows switching out stopwatches for unit testing.
             </summary>
         </member>
+        <member name="P:StackExchange.Profiling.MiniProfiler.Settings.EnableCompression">
+            <summary>
+            By default, the output of the MiniProfilerHandler is compressed, if the request supports that.
+            If this setting is false, the output won't be compressed. (Only do this when you take care of compression yourself)
+            </summary>
+        </member>
         <member name="T:StackExchange.Profiling.ClientTimingHelper">
             <summary>
             Pro
