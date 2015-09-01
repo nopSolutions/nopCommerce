@@ -200,6 +200,12 @@ set @resources='
   <LocaleResource Name="Search.Button">
     <Value>Search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableCssBundling.Hint">
+    <Value>Enable to combine (bundle) multiple CSS files into a single file. Do not enable if you''re running nopCommerce in IIS virtual directory. Note that this functionality requires significant server resources (not recommended to use with cheap shared hosting plans).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EnableJsBundling.Hint">
+    <Value>Enable to combine (bundle) multiple JavaScript files into a single file. Note that this functionality requires significant server resources (not recommended to use with cheap shared hosting plans).</Value>
+  </LocaleResource>
 </Language>
 '
 
