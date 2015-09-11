@@ -183,9 +183,9 @@ namespace Nop.Core.Domain.Catalog
         public int ProductsAlsoPurchasedNumber { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether dynamic price update is enabled
+        /// Gets or sets a value indicating whether we should process attribute change using AJAX. It's used for dynamical attribute change, SKU/GTIN update of combinations, conditional attributes
         /// </summary>
-        public bool EnableDynamicPriceUpdate { get; set; }
+        public bool AjaxProcessAttributeChange { get; set; }
         
         /// <summary>
         /// Gets or sets a number of product tags that appear in the tag cloud

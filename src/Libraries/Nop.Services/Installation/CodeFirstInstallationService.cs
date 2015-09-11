@@ -4620,7 +4620,7 @@ namespace Nop.Services.Installation
                     SearchPagePageSizeOptions = "6, 3, 9, 18",
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
-                    EnableDynamicPriceUpdate = true,
+                    AjaxProcessAttributeChange = true,
                     NumberOfProductTags = 15,
                     ProductsByTagPageSize = 4,
                     IncludeShortDescriptionInCompareProducts = false,

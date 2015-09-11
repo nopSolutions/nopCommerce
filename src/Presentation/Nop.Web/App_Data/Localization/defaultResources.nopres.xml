@@ -4548,12 +4548,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled.Hint">
     <Value>Check to allow customers to use the 'Email a friend' option in your store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate">
-    <Value>Enable dynamic price update</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate.Hint">
-    <Value>Check if you want to enable dynamic price update on product details page in case a product has product attributes with price adjustments.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.General">
     <Value>General</Value>
   </LocaleResource>

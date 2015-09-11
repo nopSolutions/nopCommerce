@@ -385,16 +385,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EnableDynamicPriceUpdate_OverrideForStore, model => model.EnableDynamicPriceUpdate, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EnableDynamicPriceUpdate):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EnableDynamicPriceUpdate)
-                @Html.ValidationMessageFor(model => model.EnableDynamicPriceUpdate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.NumberOfProductTags_OverrideForStore, model => model.NumberOfProductTags, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.NumberOfProductTags):
             </td>

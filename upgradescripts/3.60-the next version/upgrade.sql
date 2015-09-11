@@ -233,6 +233,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -523,3 +529,16 @@ DELETE FROM [Setting]
 WHERE [name] = N'catalogsettings.dynamicpriceupdateajax'
 GO
 
+
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'catalogsettings.enabledynamicpriceupdate'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.ajaxprocessattributechange')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.ajaxprocessattributechange', N'true', 0)
+END
+GO

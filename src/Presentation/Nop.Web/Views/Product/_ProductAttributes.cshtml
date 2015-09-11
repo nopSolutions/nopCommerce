@@ -200,7 +200,7 @@
 {
     //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
-    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().AjaxProcessAttributeChange;
     var attributeChangeScriptsBuilder = new StringBuilder();
     var productId = Model.First().ProductId;
     var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);

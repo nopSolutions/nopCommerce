@@ -147,10 +147,6 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedNumber")]
         public int ProductsAlsoPurchasedNumber { get; set; }
         public bool ProductsAlsoPurchasedNumber_OverrideForStore { get; set; }
-
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate")]
-        public bool EnableDynamicPriceUpdate { get; set; }
-        public bool EnableDynamicPriceUpdate_OverrideForStore { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfProductTags")]
         public int NumberOfProductTags { get; set; }
