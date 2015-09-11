@@ -3656,8 +3656,7 @@ namespace Nop.Admin.Controllers
                 var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
                 if (attribute != null)
                 {
-
-                    string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                    string controlId = string.Format("product_attribute_{0}", attribute.Id);
                     switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -4396,7 +4395,7 @@ namespace Nop.Admin.Controllers
                 .ToList();
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

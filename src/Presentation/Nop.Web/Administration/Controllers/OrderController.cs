@@ -2287,7 +2287,7 @@ namespace Nop.Admin.Controllers
             var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in attributes)
             {
-                string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 switch (attribute.AttributeControlType)
                 {
                     case AttributeControlType.DropdownList:

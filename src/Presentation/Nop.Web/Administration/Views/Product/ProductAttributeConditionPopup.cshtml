@@ -106,7 +106,7 @@
                     <td class="adminData">
                         @foreach (var attribute in Model.ProductAttributes)
                         {
-                            string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                            string controlId = string.Format("product_attribute_{0}", attribute.Id);
                             <div id="@string.Format("pnl_attribute_values_{0}", attribute.Id)">
                                 @switch (attribute.AttributeControlType)
                                 {

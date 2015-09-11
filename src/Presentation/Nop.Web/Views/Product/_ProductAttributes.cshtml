@@ -10,7 +10,7 @@
         <dl>
             @foreach (var attribute in Model)
             {
-                string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+                string controlId = string.Format("product_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                 <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
                     <label class="text-prompt">
@@ -209,7 +209,7 @@
         //generate change event script
         foreach (var attribute in Model)
         {
-            string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+            string controlId = string.Format("product_attribute_{0}", attribute.Id);
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -295,7 +295,7 @@
     var pictureSizes = new [] { pictureDefaultSizePrefix, pictureFullSizePrefix };
     foreach (var attribute in Model)
     {
-        string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
+        string controlId = string.Format("product_attribute_{0}", attribute.Id);
 
         pictureAdjustmentTableName = string.Format("productAttributeValueAdjustmentTable_{0}", attribute.ProductId);
         pictureAdjustmentFuncName = string.Format("adjustProductAttributeValuePicture_{0}", attribute.ProductId);
