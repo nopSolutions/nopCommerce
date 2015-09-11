@@ -327,7 +327,7 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
-
+        
         [NonAction]
         protected virtual void PrepareAddProductAttributeCombinationModel(AddProductAttributeCombinationModel model, Product product)
         {
@@ -3312,6 +3312,8 @@ namespace Nop.Admin.Controllers
                     }
 
                     attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
+                    //currenty any attribute can have condition. why not?
+                    attributeModel.ConditionAllowed = true;
                     return attributeModel;
                 })
                 .ToList();
@@ -3436,8 +3438,10 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        #endregion
 
-        //edit
+        #region Product attributes. Validation rules
+
         public ActionResult ProductAttributeValidationRulesPopup(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -3470,7 +3474,6 @@ namespace Nop.Admin.Controllers
             };
             return View(model);
         }
-
         [HttpPost]
         public ActionResult ProductAttributeValidationRulesPopup(string btnId, string formId, ProductModel.ProductAttributeMappingModel model)
         {
@@ -3508,6 +3511,239 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.ValidationRulesAllowed = productAttributeMapping.ValidationRulesAllowed();
             model.AttributeControlTypeId = productAttributeMapping.AttributeControlTypeId;
+            return View(model);
+        }
+
+        #endregion
+
+        #region Product attributes. Condition
+
+        public ActionResult ProductAttributeConditionPopup(string btnId, string formId, int productAttributeMappingId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var productAttributeMapping = _productAttributeService.GetProductAttributeMappingById(productAttributeMappingId);
+            if (productAttributeMapping == null)
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
+
+            var model = new ProductAttributeConditionModel();
+            model.ProductAttributeMappingId = productAttributeMapping.Id;
+            model.EnableCondition = !String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml);
+
+
+            //pre-select attribute and values
+            var selectedPva = _productAttributeParser
+                .ParseProductAttributeMappings(productAttributeMapping.ConditionAttributeXml)
+                .FirstOrDefault();
+
+            var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id)
+                //ignore non-combinable attributes (should have selectable values)
+                .Where(x => x.CanBeUsedAsCondition())
+                //ignore this attribute (it cannot depend on itself)
+                .Where(x => x.Id != productAttributeMapping.Id)
+                .ToList();
+            foreach (var attribute in attributes)
+            {
+                var attributeModel = new ProductAttributeConditionModel.ProductAttributeModel
+                {
+                    Id = attribute.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = attribute.ProductAttribute.Name,
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var attributeValues = _productAttributeService.GetProductAttributeValues(attribute.Id);
+                    foreach (var attributeValue in attributeValues)
+                    {
+                        var attributeValueModel = new ProductAttributeConditionModel.ProductAttributeValueModel
+                        {
+                            Id = attributeValue.Id,
+                            Name = attributeValue.Name,
+                            IsPreSelected = attributeValue.IsPreSelected
+                        };
+                        attributeModel.Values.Add(attributeValueModel);
+                    }
+
+                    //pre-select attribute and value
+                    if (selectedPva != null && attribute.Id == selectedPva.Id)
+                    {
+                        //attribute
+                        model.SelectedProductAttributeId = selectedPva.Id;
+                        
+                        //values
+                        switch (attribute.AttributeControlType)
+                        {
+                            case AttributeControlType.DropdownList:
+                            case AttributeControlType.RadioList:
+                            case AttributeControlType.Checkboxes:
+                            case AttributeControlType.ColorSquares:
+                                {
+                                    if (!String.IsNullOrEmpty(productAttributeMapping.ConditionAttributeXml))
+                                    {
+                                        //clear default selection
+                                        foreach (var item in attributeModel.Values)
+                                            item.IsPreSelected = false;
+
+                                        //select new values
+                                        var selectedValues = _productAttributeParser.ParseProductAttributeValues(productAttributeMapping.ConditionAttributeXml);
+                                        foreach (var attributeValue in selectedValues)
+                                            foreach (var item in attributeModel.Values)
+                                                if (attributeValue.Id == item.Id)
+                                                    item.IsPreSelected = true;
+                                    }
+                                }
+                                break;
+                            case AttributeControlType.ReadonlyCheckboxes:
+                            case AttributeControlType.TextBox:
+                            case AttributeControlType.MultilineTextbox:
+                            case AttributeControlType.Datepicker:
+                            case AttributeControlType.FileUpload:
+                            default:
+                                //these attribute types are supported as conditions
+                                break;
+                        }
+                    }
+                }
+
+                model.ProductAttributes.Add(attributeModel);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ProductAttributeConditionPopup(string btnId, string formId,
+            ProductAttributeConditionModel model, FormCollection form)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                return AccessDeniedView();
+
+            var productAttributeMapping =
+                _productAttributeService.GetProductAttributeMappingById(model.ProductAttributeMappingId);
+            if (productAttributeMapping == null)
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
+            var product = _productService.GetProductById(productAttributeMapping.ProductId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
+            //a vendor should have access only to his products
+            if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
+                return RedirectToAction("List", "Product");
+
+            string attributesXml = null;
+            if (model.EnableCondition)
+            {
+                var attribute = _productAttributeService.GetProductAttributeMappingById(model.SelectedProductAttributeId);
+                if (attribute != null)
+                {
+
+                    string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                    switch (attribute.AttributeControlType)
+                    {
+                        case AttributeControlType.DropdownList:
+                        case AttributeControlType.RadioList:
+                        case AttributeControlType.ColorSquares:
+                            {
+                                var ctrlAttributes = form[controlId];
+                                if (!String.IsNullOrEmpty(ctrlAttributes))
+                                {
+                                    int selectedAttributeId = int.Parse(ctrlAttributes);
+                                    if (selectedAttributeId > 0)
+                                    {
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, selectedAttributeId.ToString());
+                                    }
+                                    else
+                                    {
+                                        //for conditions we should empty values save even when nothing is selected
+                                        //otherwise "attributesXml" will be empty
+                                        //hence we won't be able to find a selected attribute
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, "");
+                                    }
+                                }
+                                else
+                                {
+                                    //for conditions we should empty values save even when nothing is selected
+                                    //otherwise "attributesXml" will be empty
+                                    //hence we won't be able to find a selected attribute
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                        attribute, "");
+                                }
+                            }
+                            break;
+                        case AttributeControlType.Checkboxes:
+                            {
+                                var cblAttributes = form[controlId];
+                                if (!String.IsNullOrEmpty(cblAttributes))
+                                {
+                                    bool anyValueSelected = false;
+                                    foreach (var item in cblAttributes.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                                    {
+                                        int selectedAttributeId = int.Parse(item);
+                                        if (selectedAttributeId > 0)
+                                        {
+                                            attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                                attribute, selectedAttributeId.ToString());
+                                            anyValueSelected = true;
+                                        }
+                                    }
+                                    if (!anyValueSelected)
+                                    {
+                                        //for conditions we should save empty values even when nothing is selected
+                                        //otherwise "attributesXml" will be empty
+                                        //hence we won't be able to find a selected attribute
+                                        attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, "");
+                                    }
+                                }
+                                else
+                                {
+                                    //for conditions we should save empty values even when nothing is selected
+                                    //otherwise "attributesXml" will be empty
+                                    //hence we won't be able to find a selected attribute
+                                    attributesXml = _productAttributeParser.AddProductAttribute(attributesXml,
+                                            attribute, "");
+                                }
+                            }
+                            break;
+                        case AttributeControlType.ReadonlyCheckboxes:
+                        case AttributeControlType.TextBox:
+                        case AttributeControlType.MultilineTextbox:
+                        case AttributeControlType.Datepicker:
+                        case AttributeControlType.FileUpload:
+                        default:
+                            //these attribute types are supported as conditions
+                            break;
+                    }
+                }
+            }
+            productAttributeMapping.ConditionAttributeXml = attributesXml;
+            _productAttributeService.UpdateProductAttributeMapping(productAttributeMapping);
+
+            ViewBag.RefreshPage = true;
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
             return View(model);
         }
 
@@ -4108,7 +4344,6 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
-        //edit
         public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
@@ -4129,7 +4364,6 @@ namespace Nop.Admin.Controllers
             PrepareAddProductAttributeCombinationModel(model, product);
             return View(model);
         }
-
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productId,
@@ -4278,6 +4512,15 @@ namespace Nop.Admin.Controllers
                         break;
                     default:
                         break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in attributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
             }
 

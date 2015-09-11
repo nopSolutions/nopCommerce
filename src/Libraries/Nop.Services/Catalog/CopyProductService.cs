@@ -404,6 +404,7 @@ namespace Nop.Services.Catalog
                     ValidationFileAllowedExtensions = productAttributeMapping.ValidationFileAllowedExtensions,
                     ValidationFileMaximumSize = productAttributeMapping.ValidationFileMaximumSize,
                     DefaultValue = productAttributeMapping.DefaultValue,
+                    //UNDONE copy ConditionAttributeXml (we should replace attribute IDs with new values)
                 };
                 _productAttributeService.InsertProductAttributeMapping(productAttributeMappingCopy);
                 //save associated value (used for combinations copying)

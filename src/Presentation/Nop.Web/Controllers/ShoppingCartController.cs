@@ -1161,6 +1161,7 @@ namespace Nop.Web.Controllers
             string attributesXml = "";
 
             #region Product attributes
+
             var productAttributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
             foreach (var attribute in productAttributes)
             {
@@ -1254,6 +1255,15 @@ namespace Nop.Web.Controllers
                         break;
                     default:
                         break;
+                }
+            }
+            //validate conditional attributes (if specified)
+            foreach (var attribute in productAttributes)
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributesXml);
+                if (conditionMet.HasValue && !conditionMet.Value)
+                {
+                    attributesXml = _productAttributeParser.RemoveProductAttribute(attributesXml, attribute);
                 }
             }
 
@@ -1752,7 +1762,7 @@ namespace Nop.Web.Controllers
         //currently we use this method on the product details pages
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult ProductDetails_AttributeChange(int productId, FormCollection form)
+        public ActionResult ProductDetails_AttributeChange(int productId, bool validateAttributeConditions, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -1768,13 +1778,14 @@ namespace Nop.Web.Controllers
                 ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
             }
 
+            //sku, mpn, gtin
             string sku = product.FormatSku(attributeXml, _productAttributeParser);
             string mpn = product.FormatMpn(attributeXml, _productAttributeParser);
             string gtin = product.FormatGtin(attributeXml, _productAttributeParser);
 
-
+            //price
             string price = "";
-            if (!product.CustomerEntersPrice)
+            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices) && !product.CustomerEntersPrice)
             {
                 //we do not calculate price of "customer enters price" option is enabled
                 Discount scDiscount;
@@ -1791,12 +1802,33 @@ namespace Nop.Web.Controllers
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
 
+            //conditional attributes
+            var enabledAttributeMappingIds = new List<int>();
+            var disabledAttributeMappingIds = new List<int>();
+            if (validateAttributeConditions)
+            {
+                var attributes = _productAttributeService.GetProductAttributeMappingsByProductId(product.Id);
+                foreach (var attribute in attributes)
+                {
+                    var conditionMet = _productAttributeParser.IsConditionMet(attribute, attributeXml);
+                    if (conditionMet.HasValue)
+                    {
+                        if (conditionMet.Value)
+                            enabledAttributeMappingIds.Add(attribute.Id);
+                        else
+                            disabledAttributeMappingIds.Add(attribute.Id);
+                    }
+                }
+            }
+
             return Json(new
             {
                 gtin = gtin,
                 mpn = mpn,
                 sku = sku,
-                price = price
+                price = price,
+                enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
+                disabledattributemappingids = disabledAttributeMappingIds.ToArray()
             });
         }
 

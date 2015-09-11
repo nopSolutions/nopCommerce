@@ -38,8 +38,16 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="value">Value</param>
-        /// <returns>Attributes</returns>
+        /// <returns>Updated result (XML format)</returns>
         string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value);
+
+        /// <summary>
+        /// Remove an attribute
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
+        /// <returns>Updated result (XML format)</returns>
+        string RemoveProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping);
 
         /// <summary>
         /// Are attributes equal
@@ -49,6 +57,14 @@ namespace Nop.Services.Catalog
         /// <param name="ignoreNonCombinableAttributes">A value indicating whether we should ignore non-combinable attributes</param>
         /// <returns>Result</returns>
         bool AreProductAttributesEqual(string attributesXml1, string attributesXml2, bool ignoreNonCombinableAttributes);
+
+        /// <summary>
+        /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
+        /// </summary>
+        /// <param name="pam">Product attribute</param>
+        /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
+        /// <returns>Result</returns>
+        bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml);
 
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 

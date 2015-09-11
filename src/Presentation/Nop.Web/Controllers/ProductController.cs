@@ -628,6 +628,7 @@ namespace Nop.Web.Controllers
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType,
                     DefaultValue = updatecartitem != null ? null : attribute.DefaultValue,
+                    HasCondition = !String.IsNullOrEmpty(attribute.ConditionAttributeXml)
                 };
                 if (!String.IsNullOrEmpty(attribute.ValidationFileAllowedExtensions))
                 {

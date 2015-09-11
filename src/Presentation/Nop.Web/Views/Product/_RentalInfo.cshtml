@@ -53,19 +53,17 @@
             function onRentalDatePickerSelect() {
                 @{
                     //dynamic price update support
-                    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
                     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
                     var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
                     var productId = Model.Id;
-                    var priceVarClass = string.Format("price-value-{0}", productId);
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
-                    
-                    if (dynamicPriceUpdate && dynamicPriceUpdateAjax && !hidePrices)
+
+                    if (dynamicPriceUpdate && dynamicPriceUpdateAjax)
                     {
                         <text>
                         $.ajax({
                             cache: false,
-                            url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
+                            url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = false })',
                             data: $('#product-details-form').serialize(),
                             type: 'post',
                             success: function(data) {
@@ -79,11 +77,11 @@
                                     $('#gtin-@productId').text(data.gtin);
                                 }
                                 if (data.price) {
-                                    $(".@(priceVarClass)").text(data.price);
+                                    $('.price-value-@productId').text(data.price);
                                 }
                             }
                         });
-                        
+
                         </text>
                     }
                 }

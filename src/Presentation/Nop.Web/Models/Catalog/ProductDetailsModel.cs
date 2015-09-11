@@ -252,6 +252,11 @@ namespace Nop.Web.Models.Catalog
             public int? SelectedYear { get; set; }
 
             /// <summary>
+            /// A value indicating whether this attribute depends on some other attribute
+            /// </summary>
+            public bool HasCondition { get; set; }
+
+            /// <summary>
             /// Allowed file extensions for customer uploaded files
             /// </summary>
             public IList<string> AllowedFileExtensions { get; set; }

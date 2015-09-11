@@ -240,6 +240,32 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
+        public void Can_add_and_remove_productAttributes()
+        {
+            string attributes = "";
+            //color: green
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam1_1, pav1_1.Id.ToString());
+            //custom option: option 1, option 2
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_1.Id.ToString());
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam2_1, pav2_2.Id.ToString());
+            //custom text
+            attributes = _productAttributeParser.AddProductAttribute(attributes, pam3_1, "Some custom text goes here");
+            //delete some of them
+            attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam2_1);
+            attributes = _productAttributeParser.RemoveProductAttribute(attributes, pam3_1);
+
+            var parsed_attributeValues = _productAttributeParser.ParseProductAttributeValues(attributes);
+            parsed_attributeValues.Contains(pav1_1).ShouldEqual(true);
+            parsed_attributeValues.Contains(pav1_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(pav2_1).ShouldEqual(false);
+            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+            parsed_attributeValues.Contains(pav2_2).ShouldEqual(false);
+
+            var parsedValues = _productAttributeParser.ParseValues(attributes, pam3_1.Id);
+            parsedValues.Count.ShouldEqual(0);
+        }
+
+        [Test]
         public void Can_add_and_parse_giftCardAttributes()
         {
             string attributes = "";

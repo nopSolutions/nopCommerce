@@ -4,7 +4,6 @@
 @using Nop.Core.Infrastructure;
 @using System.Text;
 @using System.Globalization;
-@using Nop.Services.Security;
 @if (Model.Count > 0)
 {
     <div class="attributes">
@@ -13,7 +12,7 @@
             {
                 string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt>
+                <dt id="@string.Format("product_attribute_label_{0}", attribute.Id)">
                     <label class="text-prompt">
                         @textPrompt
                     </label>
@@ -28,7 +27,7 @@
                         </div>
                     }
                 </dt>
-                <dd>
+                <dd id="@string.Format("product_attribute_input_{0}", attribute.Id)">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -201,22 +200,20 @@
 @if (Model.Count > 0)
 {
     //dynamic price update support
-    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
     var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
     var priceAdjustmentTableScripts = new StringBuilder();
     var priceAttributeScripts = new StringBuilder();
+    var attributesHaveConditions = Model.Any(x => x.HasCondition);
 
     var productId = Model.Any() ? Model.First().ProductId : 0;
     var priceAdjustmentTableName = string.Format("priceAdjustmentTable_{0}", productId);
     var priceAdjustmentFuncName = string.Format("adjustPrice_{0}", productId);
-    if (dynamicPriceUpdate && !hidePrices)
+    if (dynamicPriceUpdate)
     {
         foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
-
-
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -273,30 +270,24 @@
         }
     }
 
-    if (dynamicPriceUpdate && !hidePrices)
+    if (dynamicPriceUpdate)
     {
         <script type="text/javascript">
             //Price adjustment table
             var @(priceAdjustmentTableName) = new Array();
             //Price adjustment table initialize
             @Html.Raw(priceAdjustmentTableScripts.ToString())
-
             //Price adjustment function
             function @(priceAdjustmentFuncName)() {
-
-                
                 @if (dynamicPriceUpdateAjax)
                 {
                     //load using AJAX
                     //this way we also load GTIN, SKU, MPN
-                    var priceVarClass = string.Format("price-value-{0}", productId);
-                    
                     //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
-                    
                     <text>
                     $.ajax({
                         cache: false,
-                        url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId})',
+                        url: '@Html.Raw(Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
                         data: $('#product-details-form').serialize(),
                         type: 'post',
                         success: function(data) {
@@ -310,7 +301,15 @@
                                 $('#gtin-@productId').text(data.gtin);
                             }
                             if (data.price) {
-                                $(".@(priceVarClass)").text(data.price);
+                                $('.price-value-@productId').text(data.price);
+                            }
+                            for (var i = 0; i < data.enabledattributemappingids.length; i++) {
+                                $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();
+                                $('#product_attribute_input_' + data.enabledattributemappingids[i]).show();
+                            }
+                            for (var i = 0; i < data.disabledattributemappingids.length; i++) {
+                                $('#product_attribute_label_' + data.disabledattributemappingids[i]).hide();
+                                $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
                     });
@@ -321,8 +320,8 @@
                     //calculate new price using java-script (no AJAX)
                     var priceVarName = string.Format("priceValForDynUpd_{0}", productId);
                     var priceVarClass = string.Format("price-val-for-dyn-upd-{0}", productId);
-                    
-                    <text>                        
+
+                    <text>
                     var sum = 0;
                     for (var i in @(priceAdjustmentTableName)) {
                         var ctrl = $('#' + i);
@@ -340,7 +339,7 @@
                     </text>
                 }
             }
-            
+
             //Price attributes handlers
             $(document).ready(function() {
                 @(priceAdjustmentFuncName)();
@@ -349,10 +348,6 @@
         </script>
     }
 }
-
-
-
-
 
 
 @if (Model.Count > 0)
@@ -461,7 +456,6 @@
                 break;
         }
     }
-    
     if (!String.IsNullOrEmpty(pictureAttributeScripts.ToString()))
     {
     <script type="text/javascript">

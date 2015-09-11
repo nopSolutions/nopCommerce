@@ -1,0 +1,183 @@
+﻿@using Nop.Core.Domain.Catalog
+@model ProductAttributeConditionModel
+@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition").Text;
+}
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
+@using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
+    new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+    FormMethod.Post,
+    new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")
+        </div>
+        <div class="options">
+            
+        </div>
+    </div>
+    
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+        </script>
+    }
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.EnableCondition)").click(toggleEnableCondition);
+
+            toggleEnableCondition();
+        });
+
+        function toggleEnableCondition() {
+            if ($('#@Html.FieldIdFor(model => model.EnableCondition)').is(':checked')) {
+                $('#pnlAttributes').show();
+            } else {
+                $('#pnlAttributes').hide();
+            }
+        }
+    </script>
+    <p>
+        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Description")
+    </p>
+    <div>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.EnableCondition):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.EnableCondition)
+                    @Html.ValidationMessageFor(model => model.EnableCondition)
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="pnlAttributes">
+        @if (Model.ProductAttributes.Count > 0)
+        {
+            var attributesList = new List<SelectListItem>();
+            foreach (var attribute in Model.ProductAttributes)
+            {
+                attributesList.Add(new SelectListItem {Text = attribute.Name, Value = attribute.Id.ToString()});
+            }
+            <table class="adminContent">
+                <tr id="pnlBasepriceUnit">
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.SelectedProductAttributeId):
+                    </td>
+                    <td class="adminData">
+                        @Html.DropDownListFor(model => model.SelectedProductAttributeId, attributesList)
+
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").change(toggleProductAttributes);
+
+                                toggleProductAttributes();
+                            });
+
+                            function toggleProductAttributes() {
+                                var selectedProductAttributeId = $("#@Html.FieldIdFor(model => model.SelectedProductAttributeId)").val();
+                                $('[id^="pnl_attribute_values_"]').hide();
+                                $('#pnl_attribute_values_' + selectedProductAttributeId).show();
+                            }
+                        </script>
+                    </td>
+                </tr>
+                <tr class="product-attributes-input">
+                    <td class="adminTitle">
+                        &nbsp;
+                    </td>
+                    <td class="adminData">
+                        @foreach (var attribute in Model.ProductAttributes)
+                        {
+                            string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                            <div id="@string.Format("pnl_attribute_values_{0}", attribute.Id)">
+                                @switch (attribute.AttributeControlType)
+                                {
+                                    case AttributeControlType.DropdownList:
+                                    {
+                                        <select name="@(controlId)" id="@(controlId)">
+                                            @if (!attribute.IsRequired)
+                                            {
+                                                <option value="0">---</option>
+                                            }
+                                            @foreach (var attributeValue in attribute.Values)
+                                            {
+                                                <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">
+                                                    @attributeValue.Name
+                                                </option>
+                                            }
+                                        </select>
+                                    }
+                                        break;
+                                    case AttributeControlType.RadioList:
+                                    case AttributeControlType.ColorSquares:
+                                    {
+                                        <ul class="option-list">
+                                            @foreach (var attributeValue in attribute.Values)
+                                            {
+                                                <li>
+                                                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected"/>
+                                                    <label for="@(controlId)">@attributeValue.Name</label>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                        break;
+                                    case AttributeControlType.Checkboxes:
+                                    {
+                                        <ul class="option-list">
+                                            @foreach (var attributeValue in attribute.Values)
+                                            {
+                                                <li>
+                                                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null)/>
+                                                    <label for="@(controlId)">@attributeValue.Name</label>
+                                                </li>
+                                            }
+                                        </ul>
+                                        }
+                                        break;
+                                    case AttributeControlType.ReadonlyCheckboxes:
+                                    case AttributeControlType.TextBox:
+                                    case AttributeControlType.MultilineTextbox:
+                                    case AttributeControlType.Datepicker:
+                                    case AttributeControlType.FileUpload:
+                                    default:
+                                        //not supported as conditions
+                                        break;
+                                }
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </table>
+        }
+        else
+        {
+            <div>No attribute exists that could be used as condition</div>
+        }
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td colspan="2" align="left">
+                <input type="submit" class="k-button" value="@T("Admin.Common.Save")"/>
+            </td>
+        </tr>
+    </table>
+}

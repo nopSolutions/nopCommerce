@@ -167,7 +167,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <param name="productAttributeMapping">Product attribute mapping</param>
         /// <param name="value">Value</param>
-        /// <returns>Attributes</returns>
+        /// <returns>Updated result (XML format)</returns>
         public virtual string AddProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping, string value)
         {
             string result = string.Empty;
@@ -212,13 +212,70 @@ namespace Nop.Services.Catalog
                     attributeElement.SetAttribute("ID", productAttributeMapping.Id.ToString());
                     rootElement.AppendChild(attributeElement);
                 }
-
                 var attributeValueElement = xmlDoc.CreateElement("ProductAttributeValue");
                 attributeElement.AppendChild(attributeValueElement);
 
                 var attributeValueValueElement = xmlDoc.CreateElement("Value");
                 attributeValueValueElement.InnerText = value;
                 attributeValueElement.AppendChild(attributeValueValueElement);
+
+                result = xmlDoc.OuterXml;
+            }
+            catch (Exception exc)
+            {
+                Debug.Write(exc.ToString());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Remove an attribute
+        /// </summary>
+        /// <param name="attributesXml">Attributes in XML format</param>
+        /// <param name="productAttributeMapping">Product attribute mapping</param>
+        /// <returns>Updated result (XML format)</returns>
+        public virtual string RemoveProductAttribute(string attributesXml, ProductAttributeMapping productAttributeMapping)
+        {
+            string result = string.Empty;
+            try
+            {
+                var xmlDoc = new XmlDocument();
+                if (String.IsNullOrEmpty(attributesXml))
+                {
+                    var element1 = xmlDoc.CreateElement("Attributes");
+                    xmlDoc.AppendChild(element1);
+                }
+                else
+                {
+                    xmlDoc.LoadXml(attributesXml);
+                }
+                var rootElement = (XmlElement)xmlDoc.SelectSingleNode(@"//Attributes");
+
+                XmlElement attributeElement = null;
+                //find existing
+                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/ProductAttribute");
+                foreach (XmlNode node1 in nodeList1)
+                {
+                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    {
+                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        int id;
+                        if (int.TryParse(str1, out id))
+                        {
+                            if (id == productAttributeMapping.Id)
+                            {
+                                attributeElement = (XmlElement)node1;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                //found
+                if (attributeElement != null)
+                {
+                    rootElement.RemoveChild(attributeElement);
+                }
 
                 result = xmlDoc.OuterXml;
             }
@@ -303,6 +360,53 @@ namespace Nop.Services.Catalog
             return attributesEqual;
         }
 
+        /// <summary>
+        /// Check whether condition of some attribute is met (if specified). Return "null" if not condition is specified
+        /// </summary>
+        /// <param name="pam">Product attribute</param>
+        /// <param name="selectedAttributesXml">Selected attributes (XML format)</param>
+        /// <returns>Result</returns>
+        public virtual bool? IsConditionMet(ProductAttributeMapping pam, string selectedAttributesXml)
+        {
+            if (pam == null)
+                throw new ArgumentNullException("pam");
+
+            var conditionAttributeXml = pam.ConditionAttributeXml;
+            if (String.IsNullOrEmpty(conditionAttributeXml))
+                //no condition
+                return null;
+
+            //load an attribute this one depends on
+            var dependOnAttribute = ParseProductAttributeMappings(conditionAttributeXml).FirstOrDefault();
+            if (dependOnAttribute == null)
+                return true;
+
+            var valuesThatShouldBeSelected = ParseValues(conditionAttributeXml, dependOnAttribute.Id)
+                //a workaround here:
+                //ConditionAttributeXml can contain "empty" values (nothing is selected)
+                //but in other cases (like below) we do not store empty values
+                //that's why we remove empty values here
+                .Where(x => !String.IsNullOrEmpty(x))
+                .ToList();
+            var selectedValues = ParseValues(selectedAttributesXml, dependOnAttribute.Id);
+            if (valuesThatShouldBeSelected.Count != selectedValues.Count)
+                return false;
+
+            //compare values
+            var allFound = true;
+            foreach (var t1 in valuesThatShouldBeSelected)
+            {
+                bool found = false;
+                foreach (var t2 in selectedValues)
+                    if (t1 == t2)
+                        found = true;
+                if (!found)
+                    allFound = false;
+            }
+
+            return allFound;
+        }
+        
         /// <summary>
         /// Finds a product attribute combination by attributes stored in XML 
         /// </summary>

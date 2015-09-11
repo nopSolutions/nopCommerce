@@ -4,7 +4,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
 }
-@*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
     new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
     FormMethod.Post,

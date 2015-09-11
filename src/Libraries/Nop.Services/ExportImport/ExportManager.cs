@@ -381,6 +381,8 @@ namespace Nop.Services.ExportImport
                         }
                         xmlWriter.WriteElementString("DefaultValue", null, productAttributeMapping.DefaultValue);
                     }
+                    //conditions
+                    xmlWriter.WriteElementString("ConditionAttributeXml", null, productAttributeMapping.ConditionAttributeXml);
 
 
                     xmlWriter.WriteStartElement("ProductAttributeValues");

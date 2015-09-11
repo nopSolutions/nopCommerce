@@ -69,6 +69,15 @@ namespace Nop.Core.Domain.Catalog
 
 
 
+        /// <summary>
+        /// Gets or sets a condition (depending on other attribute) when this attribute should be enabled (visible).
+        /// Leave empty (or null) to enable this attribute.
+        /// Conditional attributes that only appear if a previous attribute is selected, such as having an option 
+        /// for personalizing clothing with a name and only providing the text input box if the "Personalize" radio button is checked.
+        /// </summary>
+        public string ConditionAttributeXml { get; set; }
+
+
 
         /// <summary>
         /// Gets the attribute control type

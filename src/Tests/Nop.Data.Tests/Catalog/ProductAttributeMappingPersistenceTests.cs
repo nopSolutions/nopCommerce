@@ -22,6 +22,7 @@ namespace Nop.Data.Tests.Catalog
                           ValidationFileAllowedExtensions = "ValidationFileAllowedExtensions 1",
                           ValidationFileMaximumSize = 4,
                           DefaultValue = "DefaultValue 1",
+                          ConditionAttributeXml = "ConditionAttributeXml 1",
                           Product = GetTestProduct(),
                           ProductAttribute = new ProductAttribute
                           {
@@ -41,6 +42,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ValidationFileAllowedExtensions.ShouldEqual("ValidationFileAllowedExtensions 1");
             fromDb.ValidationFileMaximumSize.ShouldEqual(4);
             fromDb.DefaultValue.ShouldEqual("DefaultValue 1");
+            fromDb.ConditionAttributeXml.ShouldEqual("ConditionAttributeXml 1");
 
             fromDb.Product.ShouldNotBeNull();
 
