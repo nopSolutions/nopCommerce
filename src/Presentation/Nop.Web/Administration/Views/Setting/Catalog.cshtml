@@ -97,7 +97,6 @@
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
             $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
             $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
-            $("#@Html.FieldIdFor(model => model.EnableDynamicPriceUpdate)").click(toggleEnableDynamicPriceUpdate);
 
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
@@ -106,7 +105,6 @@
             toggleBestsellersOnHomepage();
             toggleProductsAlsoPurchasedNumber();
             toggleProductsByTagPageSize();
-            toggleEnableDynamicPriceUpdate();
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -173,14 +171,6 @@
             }
         }
 
-        function toggleEnableDynamicPriceUpdate() {
-            if ($('#@Html.FieldIdFor(model => model.EnableDynamicPriceUpdate)').is(':checked')) {
-                $('#pnlDynamicPriceUpdateAjax').show();
-            }
-            else {
-                $('#pnlDynamicPriceUpdateAjax').hide();
-            }
-        }
     </script>
     <table class="adminContent">
         <tr>
@@ -401,16 +391,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.EnableDynamicPriceUpdate)
                 @Html.ValidationMessageFor(model => model.EnableDynamicPriceUpdate)
-            </td>
-        </tr>
-        <tr id="pnlDynamicPriceUpdateAjax">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DynamicPriceUpdateAjax_OverrideForStore, model => model.DynamicPriceUpdateAjax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DynamicPriceUpdateAjax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DynamicPriceUpdateAjax)
-                @Html.ValidationMessageFor(model => model.DynamicPriceUpdateAjax)
             </td>
         </tr>
         <tr>

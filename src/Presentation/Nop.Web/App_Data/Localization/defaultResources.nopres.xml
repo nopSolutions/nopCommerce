@@ -4542,12 +4542,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoWishlist.Hint">
     <Value>Check to display tax and shipping info on the wishlist page. This option is used in Germany.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax">
-    <Value>Use AJAX to dynamically update prices</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax.Hint">
-    <Value>Check if you want to dynamically update prices using AJAX. This settings calculates prices more carefully (consider attribute combinations, discounts). It also updates SKU, MPN, GTIN values overridden in attribute combinations. But this method can slightly affect performance.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EmailAFriendEnabled">
     <Value>'Email a friend' enabled</Value>
   </LocaleResource>

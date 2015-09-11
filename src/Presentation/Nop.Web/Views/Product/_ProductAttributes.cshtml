@@ -196,21 +196,17 @@
         </dl>
     </div>
 }
-
 @if (Model.Count > 0)
 {
-    //dynamic price update support
-    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
-    var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
-    var priceAdjustmentTableScripts = new StringBuilder();
-    var priceAttributeScripts = new StringBuilder();
+    //dynamic update support
     var attributesHaveConditions = Model.Any(x => x.HasCondition);
-
-    var productId = Model.Any() ? Model.First().ProductId : 0;
-    var priceAdjustmentTableName = string.Format("priceAdjustmentTable_{0}", productId);
-    var priceAdjustmentFuncName = string.Format("adjustPrice_{0}", productId);
+    var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
+    var attributeChangeScriptsBuilder = new StringBuilder();
+    var productId = Model.First().ProductId;
+    var attributeChangeHandlerFuncName = string.Format("attribute_change_handler_{0}", productId);
     if (dynamicPriceUpdate)
     {
+        //generate change event script
         foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductId, attribute.ProductAttributeId, attribute.Id);
@@ -218,29 +214,7 @@
             {
                 case AttributeControlType.DropdownList:
                     {
-                        priceAdjustmentTableScripts.AppendFormat("{0}['{1}'] = new Array(", priceAdjustmentTableName, controlId);
-                        priceAttributeScripts.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, priceAdjustmentFuncName);
-                        int numberOfJsArrayItems = 0;
-                        if (!attribute.IsRequired)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
-                            numberOfJsArrayItems++;
-                        }
-
-                        foreach (var attributeValue in attribute.Values)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)attributeValue.PriceAdjustmentValue);
-                            numberOfJsArrayItems++;
-                        }
-
-                        //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
-                        //so have a little hack here (we need at least two elements)
-                        if (numberOfJsArrayItems == 1)
-                        {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", decimal.Zero);
-                        }
-                        priceAdjustmentTableScripts.Length -= 1;
-                        priceAdjustmentTableScripts.Append(");\n");
+                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{{1}();}});\n", controlId, attributeChangeHandlerFuncName);
                     }
                     break;
                 case AttributeControlType.RadioList:
@@ -248,8 +222,7 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, attributeValue.Id, (float)attributeValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, priceAdjustmentFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
@@ -258,98 +231,58 @@
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
-                            priceAdjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0}['{1}_{2}'] = {3};\n", priceAdjustmentTableName, controlId, attributeValue.Id, (float)attributeValue.PriceAdjustmentValue);
-                            priceAttributeScripts.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, priceAdjustmentFuncName);
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{{2}();}});\n", controlId, attributeValue.Id, attributeChangeHandlerFuncName);
                         }
                     }
                     break;
                 default:
                     break;
             }
-
         }
-    }
-
-    if (dynamicPriceUpdate)
-    {
+        //render scripts
+        //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
         <script type="text/javascript">
-            //Price adjustment table
-            var @(priceAdjustmentTableName) = new Array();
-            //Price adjustment table initialize
-            @Html.Raw(priceAdjustmentTableScripts.ToString())
-            //Price adjustment function
-            function @(priceAdjustmentFuncName)() {
-                @if (dynamicPriceUpdateAjax)
-                {
-                    //load using AJAX
-                    //this way we also load GTIN, SKU, MPN
-                    //almost the same implementation is used in the \Views\Product\_RentalInfo.cshtml file
-                    <text>
-                    $.ajax({
-                        cache: false,
-                        url: '@Html.Raw(Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
-                        data: $('#product-details-form').serialize(),
-                        type: 'post',
-                        success: function(data) {
-                            if (data.sku) {
-                                $('#sku-@productId').text(data.sku);
-                            }
-                            if (data.mpn) {
-                                $('#mpn-@productId').text(data.mpn);
-                            }
-                            if (data.gtin) {
-                                $('#gtin-@productId').text(data.gtin);
-                            }
-                            if (data.price) {
-                                $('.price-value-@productId').text(data.price);
-                            }
+            function @(attributeChangeHandlerFuncName)() {
+                $.ajax({
+                    cache: false,
+                    url: '@Html.Raw(Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                    data: $('#product-details-form').serialize(),
+                    type: 'post',
+                    success: function(data) {
+                        if (data.price) {
+                            $('.price-value-@productId').text(data.price);
+                        }
+                        if (data.sku) {
+                            $('#sku-@productId').text(data.sku);
+                        }
+                        if (data.mpn) {
+                            $('#mpn-@productId').text(data.mpn);
+                        }
+                        if (data.gtin) {
+                            $('#gtin-@productId').text(data.gtin);
+                        }
+                        if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
                                 $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();
                                 $('#product_attribute_input_' + data.enabledattributemappingids[i]).show();
                             }
+                        }
+                        if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.disabledattributemappingids.length; i++) {
                                 $('#product_attribute_label_' + data.disabledattributemappingids[i]).hide();
                                 $('#product_attribute_input_' + data.disabledattributemappingids[i]).hide();
                             }
                         }
-                    });
-                    </text>
-                }
-                else
-                {
-                    //calculate new price using java-script (no AJAX)
-                    var priceVarName = string.Format("priceValForDynUpd_{0}", productId);
-                    var priceVarClass = string.Format("price-val-for-dyn-upd-{0}", productId);
-
-                    <text>
-                    var sum = 0;
-                    for (var i in @(priceAdjustmentTableName)) {
-                        var ctrl = $('#' + i);
-                        if ((ctrl.is(':radio') && ctrl.is(':checked')) || (ctrl.is(':checkbox') && ctrl.is(':checked'))) {
-                            sum += @(priceAdjustmentTableName)[i];
-                        } else if (ctrl.is('select')) {
-                            var idx = $('#' + i + " option").index($('#' + i + " option:selected"));
-                            if (idx != -1) {
-                                sum += @(priceAdjustmentTableName)[i][idx];
-                            }
-                        }
                     }
-                    var res = (@(priceVarName) + sum).toFixed(2);
-                    $(".@(priceVarClass)").text(res);
-                    </text>
-                }
+                });
             }
-
-            //Price attributes handlers
             $(document).ready(function() {
-                @(priceAdjustmentFuncName)();
-                @Html.Raw(priceAttributeScripts.ToString())
+                @(attributeChangeHandlerFuncName)();
+                @Html.Raw(attributeChangeScriptsBuilder.ToString())
             });
         </script>
     }
 }
-
-
 @if (Model.Count > 0)
 {
     //attribute picture update

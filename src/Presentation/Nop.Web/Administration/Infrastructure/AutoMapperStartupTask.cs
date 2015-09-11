@@ -738,7 +738,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ProductsAlsoPurchasedEnabled_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsAlsoPurchasedNumber_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.EnableDynamicPriceUpdate_OverrideForStore, mo => mo.Ignore())
-                .ForMember(dest => dest.DynamicPriceUpdateAjax_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.NumberOfProductTags_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsByTagPageSize_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, mo => mo.Ignore())

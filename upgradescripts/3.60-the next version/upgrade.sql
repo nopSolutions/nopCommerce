@@ -227,6 +227,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition.Attributes.Hint">
     <Value>Choose an attribute.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DynamicPriceUpdateAjax.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -511,3 +517,9 @@ BEGIN
 	ADD [ConditionAttributeXml] nvarchar(MAX) NULL
 END
 GO
+
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'catalogsettings.dynamicpriceupdateajax'
+GO
+

@@ -54,16 +54,14 @@
                 @{
                     //dynamic price update support
                     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
-                    var dynamicPriceUpdateAjax = EngineContext.Current.Resolve<CatalogSettings>().DynamicPriceUpdateAjax;
                     var productId = Model.Id;
                     //almost the same implementation is used in the \Views\Product\_ProductAttributes.cshtml file
-
-                    if (dynamicPriceUpdate && dynamicPriceUpdateAjax)
+                    if (dynamicPriceUpdate)
                     {
                         <text>
                         $.ajax({
                             cache: false,
-                            url: '@Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = false })',
+                            url: '@Html.Raw(Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = false}))',
                             data: $('#product-details-form').serialize(),
                             type: 'post',
                             success: function(data) {
@@ -81,7 +79,6 @@
                                 }
                             }
                         });
-
                         </text>
                     }
                 }
