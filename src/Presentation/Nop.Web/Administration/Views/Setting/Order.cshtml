@@ -106,6 +106,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.MinOrderTotalAmount):
             </td>

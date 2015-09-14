@@ -1458,6 +1458,7 @@ namespace Nop.Admin.Controllers
             {
                 model.IsReOrderAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.IsReOrderAllowed, storeScope);
                 model.MinOrderSubtotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmount, storeScope);
+                model.MinOrderSubtotalAmountIncludingTax_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeScope);
                 model.MinOrderTotalAmount_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.MinOrderTotalAmount, storeScope);
                 model.AnonymousCheckoutAllowed_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.AnonymousCheckoutAllowed, storeScope);
                 model.TermsOfServiceOnShoppingCartPage_OverrideForStore = _settingService.SettingExists(orderSettings, x => x.TermsOfServiceOnShoppingCartPage, storeScope);
@@ -1528,7 +1529,12 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(orderSettings, x => x.MinOrderSubtotalAmount, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(orderSettings, x => x.MinOrderSubtotalAmount, storeScope);
-                
+
+                if (model.MinOrderSubtotalAmountIncludingTax_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(orderSettings, x => x.MinOrderSubtotalAmountIncludingTax, storeScope);
+
                 if (model.MinOrderTotalAmount_OverrideForStore || storeScope == 0)
                     _settingService.SaveSetting(orderSettings, x => x.MinOrderTotalAmount, storeScope, false);
                 else if (storeScope > 0)

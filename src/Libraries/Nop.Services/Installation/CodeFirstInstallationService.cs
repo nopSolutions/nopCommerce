@@ -4827,6 +4827,7 @@ namespace Nop.Services.Installation
                 {
                     IsReOrderAllowed = true,
                     MinOrderSubtotalAmount = 0,
+                    MinOrderSubtotalAmountIncludingTax = false,
                     MinOrderTotalAmount = 0,
                     AnonymousCheckoutAllowed = true,
                     TermsOfServiceOnShoppingCartPage = true,

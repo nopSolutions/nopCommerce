@@ -27,6 +27,10 @@ namespace Nop.Admin.Models.Settings
         public decimal MinOrderSubtotalAmount { get; set; }
         public bool MinOrderSubtotalAmount_OverrideForStore { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.MinOrderSubtotalAmountIncludingTax")]
+        public bool MinOrderSubtotalAmountIncludingTax { get; set; }
+        public bool MinOrderSubtotalAmountIncludingTax_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.MinOrderTotalAmount")]
         public decimal MinOrderTotalAmount { get; set; }
         public bool MinOrderTotalAmount_OverrideForStore { get; set; }

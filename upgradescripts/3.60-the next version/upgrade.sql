@@ -239,6 +239,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderSubtotalAmountIncludingTax">
+    <Value>Calculate ''Min order sub-total amount'' including tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.MinOrderSubtotalAmountIncludingTax.Hint">
+    <Value>Check to calculate ''Min order sub-total amount'' value including tax; otherwise excluding tax.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -540,5 +546,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.ajaxproc
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.ajaxprocessattributechange', N'true', 0)
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.minordersubtotalamountincludingtax')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'ordersettings.minordersubtotalamountincludingtax', N'false', 0)
 END
 GO

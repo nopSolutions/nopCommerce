@@ -2885,7 +2885,7 @@ namespace Nop.Services.Orders
                 Discount orderSubTotalAppliedDiscount;
                 decimal subTotalWithoutDiscountBase;
                 decimal subTotalWithDiscountBase;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, false,
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart, _orderSettings.MinOrderSubtotalAmountIncludingTax,
                     out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
                     out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
