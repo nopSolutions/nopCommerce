@@ -195,7 +195,7 @@ namespace Nop.Admin.Models.Customers
         [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
-        public IList<SelectListItem> AddRewardPointsStoreId { get; set; }
+        public int AddRewardPointsStoreId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsStore")]
         public IList<SelectListItem> RewardPointsAvailableStores { get; set; }
 
