@@ -159,13 +159,20 @@ namespace Nop.Core.Plugins
                         }
                         catch (ReflectionTypeLoadException ex)
                         {
-                            var msg = string.Empty;
+                            //add a plugin name. this way we can easily identify a problematic plugin
+                            var msg = string.Format("Plugin '{0}'. ", pluginDescriptor.FriendlyName);
                             foreach (var e in ex.LoaderExceptions)
                                 msg += e.Message + Environment.NewLine;
 
                             var fail = new Exception(msg, ex);
-                            Debug.WriteLine(fail.Message, fail);
+                            throw fail;
+                        }
+                        catch (Exception ex)
+                        {
+                            //add a plugin name. this way we can easily identify a problematic plugin
+                            var msg = string.Format("Plugin '{0}'. {1}", pluginDescriptor.FriendlyName, ex.Message);
 
+                            var fail = new Exception(msg, ex);
                             throw fail;
                         }
                     }
@@ -177,8 +184,6 @@ namespace Nop.Core.Plugins
                         msg += e.Message + Environment.NewLine;
 
                     var fail = new Exception(msg, ex);
-                    Debug.WriteLine(fail.Message, fail);
-
                     throw fail;
                 }
 

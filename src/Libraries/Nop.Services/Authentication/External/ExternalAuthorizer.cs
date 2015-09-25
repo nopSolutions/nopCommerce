@@ -4,7 +4,6 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Stores;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
