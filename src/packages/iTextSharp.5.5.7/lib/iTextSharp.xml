@@ -792,6 +792,13 @@
             </summary>
             <param name="message">error message</param>
         </member>
+        <member name="M:iTextSharp.text.DocumentException.#ctor(System.String,System.Exception)">
+            <summary>
+            Constructs a DocumentException with a message and a Exception.
+            </summary>
+            <param name="message">a message describing the exception</param>
+            <param name="ex">an exception that has to be turned into a DocumentException</param>
+        </member>
         <member name="T:iTextSharp.text.BaseColor">
             <summary>
             Base class for Color, serves as wrapper class for <see cref="T:System.Drawing.Color"/>
@@ -1572,6 +1579,11 @@
             Checks the attributes of this Chunk.
             </summary>
             <returns>false if there aren't any.</returns>
+        </member>
+        <member name="M:iTextSharp.text.Chunk.HasAccessibleAttributes">
+             Checks  the accessible attributes of this <CODE>Chunk</CODE>.
+            
+             @return false if there aren't any.
         </member>
         <member name="M:iTextSharp.text.Chunk.SetAttribute(System.String,System.Object)">
             <summary>
@@ -3133,14 +3145,7 @@
             </summary>
             <returns>a boolean</returns>
         </member>
-        <member name="M:iTextSharp.text.Font.Difference(iTextSharp.text.Font)">
-            <summary>
-            Replaces the attributes that are equal to null with
-            the attributes of a given font.
-            </summary>
-            <param name="font">the font of a bigger element class</param>
-            <returns>a Font</returns>
-        </member>
+        <!-- Badly formed XML comment ignored for member "M:iTextSharp.text.Font.Difference(iTextSharp.text.Font)" -->
         <member name="P:iTextSharp.text.Font.Family">
             <summary>
             Gets the family of this font.
@@ -3444,6 +3449,7 @@
             to this class first and then create fonts in your code using one of the getFont method
             without having to enter a path as parameter.
             </summary>
+            
         </member>
         <member name="T:iTextSharp.text.IFontProvider">
             These two methods are used by FactoryProperties (for HTMLWorker).
@@ -7019,6 +7025,16 @@
             @return <CODE>true</CODE> if the field was found and changed,
             <CODE>false</CODE> otherwise
         </member>
+        <member name="M:iTextSharp.text.pdf.AcroFields.SetField(System.String,System.String,System.Boolean)">
+            Sets the field value.
+            @param name the fully qualified field name or the partial name in the case of XFA forms
+            @param value the field value
+            @param saveAppearance save the current appearance of the field or not
+            @throws IOException on error
+            @throws DocumentException on error
+            @return <CODE>true</CODE> if the field was found and changed,
+            <CODE>false</CODE> otherwise
+        </member>
         <member name="M:iTextSharp.text.pdf.AcroFields.SetFieldRichValue(System.String,System.String)">
             Sets the rich value for the given field.  See <a href="http://www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/PDF32000_2008.pdf">PDF Reference</a> chapter 
             12.7.3.4 (Rich Text) and 12.7.4.3 (Text Fields) for further details. Note that iText doesn't create an appearance for Rich Text fields.
@@ -7040,6 +7056,21 @@
             @param value the field value
             @param display the string that is used for the appearance. If <CODE>null</CODE>
             the <CODE>value</CODE> parameter will be used
+            @return <CODE>true</CODE> if the field was found and changed,
+            <CODE>false</CODE> otherwise
+            @throws IOException on error
+            @throws DocumentException on error
+        </member>
+        <member name="M:iTextSharp.text.pdf.AcroFields.SetField(System.String,System.String,System.String,System.Boolean)">
+            Sets the field value and the display string. The display string
+            is used to build the appearance in the cases where the value
+            is modified by Acrobat with JavaScript and the algorithm is
+            known.
+            @param name the fully qualified field name or the partial name in the case of XFA forms
+            @param value the field value
+            @param display the string that is used for the appearance. If <CODE>null</CODE>
+            the <CODE>value</CODE> parameter will be used
+            @param saveAppearance save the current appearance of the field or not
             @return <CODE>true</CODE> if the field was found and changed,
             <CODE>false</CODE> otherwise
             @throws IOException on error
@@ -9371,6 +9402,13 @@
             @param lastIdx the last inclusive index to calculate
             @return the sum of all widths
         </member>
+        <member name="M:iTextSharp.text.pdf.BidiLine.GetWidth(System.Int32,System.Int32,System.Single)">
+            Gets the width of a range of characters.
+            @param startIdx the first index to calculate
+            @param lastIdx the last inclusive index to calculate
+            @param originalWidth the full width of the line. It is used in case of RTL and tab stops
+            @return the sum of all widths
+        </member>
         <member name="M:iTextSharp.text.pdf.BidiLine.ProcessLTR(System.String,System.Int32,System.Int32)">
             Method that changes a String with Arabic characters into a String in which the ligatures are made.
             @param s	the original String
@@ -10671,7 +10709,7 @@
             Returns the offset of the next IFD after the IFD corresponding to this
             <code>TIFFDirectory</code>.
         </member>
-        <member name="M:iTextSharp.text.pdf.codec.TIFFFaxDecoder.#ctor(System.Int32,System.Int32,System.Int32)">
+        <member name="M:iTextSharp.text.pdf.codec.TIFFFaxDecoder.#ctor(System.Int64,System.Int32,System.Int32)">
             @param fillOrder   The fill order of the compressed data bytes.
             @param w
             @param h
@@ -11228,6 +11266,8 @@
         <member name="F:iTextSharp.text.pdf.ColumnText.splittedRow">
             The index of the last row that needed to be splitted.
             @since 5.0.1 changed a boolean into an int
+            -2 value mean it is the first attempt to split the first row.
+            -1 means that we try to avoid splitting current row.
         </member>
         <member name="F:iTextSharp.text.pdf.ColumnText.useAscender">
             if true, first line height is adjusted so that the max ascender touches the top 
@@ -11771,8 +11811,13 @@
             This name is usually extracted from the table 'name' with
             the 'Name ID' 6.
         </member>
+        <member name="F:iTextSharp.text.pdf.TrueTypeFont.subFamily">
+            The font subfamily
+            This subFamily name is usually extracted from the table 'name' with
+            the 'Name ID' 2 or 'Name ID' 17.
+        </member>
         <member name="F:iTextSharp.text.pdf.TrueTypeFont.fullName">
-            The full name of the font
+            The full name of the font 'Name ID' 1 or 'Name ID' 16 
         </member>
         <member name="F:iTextSharp.text.pdf.TrueTypeFont.allNameEntries">
             All the names auf the Names-Table
@@ -11971,6 +12016,7 @@
             @return the code pages supported by the font
         </member>
         <!-- Badly formed XML comment ignored for member "P:iTextSharp.text.pdf.TrueTypeFont.FullFontName" -->
+        <!-- Badly formed XML comment ignored for member "P:iTextSharp.text.pdf.TrueTypeFont.Subfamily" -->
         <!-- Badly formed XML comment ignored for member "P:iTextSharp.text.pdf.TrueTypeFont.AllNameEntries" -->
         <!-- Badly formed XML comment ignored for member "P:iTextSharp.text.pdf.TrueTypeFont.FamilyFontName" -->
         <member name="T:iTextSharp.text.pdf.TrueTypeFont.FontHeader">
@@ -12808,7 +12854,7 @@
             @param pageNum the page number. 1 is the first
             @throws IOException on error
         </member>
-        <member name="M:iTextSharp.text.pdf.PdfReader.SetPageContent(System.Int32,System.Byte[],System.Int32)">
+        <member name="M:iTextSharp.text.pdf.PdfReader.SetPageContent(System.Int32,System.Byte[],System.Int32,System.Boolean)">
             Sets the contents of the page.
             @param content the new page content
             @param pageNum the page number. 1 is the first
@@ -13079,6 +13125,9 @@
             it will return <CODE>true</CODE>.
             @return <CODE>true</CODE> if the document was opened with the owner password or if it's not encrypted,
             <CODE>false</CODE> if the document was opened with the user password
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfReader.PageRefs.pagesNodes">
+            Keeps track of all pages nodes to avoid circular references.
         </member>
         <member name="M:iTextSharp.text.pdf.PdfReader.PageRefs.GetPageN(System.Int32)">
             Gets the dictionary that represents a page.
@@ -15667,8 +15716,8 @@
             Represents image data from a PDF
             @since 5.0.1
         </member>
-        <member name="F:iTextSharp.text.pdf.parser.ImageRenderInfo.ctm">
-            The coordinate transformation matrix that was in effect when the image was rendered 
+        <member name="F:iTextSharp.text.pdf.parser.ImageRenderInfo.gs">
+            The graphics state that was in effect when the image was rendered 
         </member>
         <member name="F:iTextSharp.text.pdf.parser.ImageRenderInfo.refi">
             A reference to the image XObject 
@@ -15682,14 +15731,14 @@
         <member name="F:iTextSharp.text.pdf.parser.ImageRenderInfo.imageObject">
             the image object to be rendered, if it has been parsed already.  Null otherwise. 
         </member>
-        <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.CreateForXObject(iTextSharp.text.pdf.parser.Matrix,iTextSharp.text.pdf.PdfIndirectReference,iTextSharp.text.pdf.PdfDictionary)">
+        <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.CreateForXObject(iTextSharp.text.pdf.parser.GraphicsState,iTextSharp.text.pdf.PdfIndirectReference,iTextSharp.text.pdf.PdfDictionary)">
             Create an ImageRenderInfo object based on an XObject (this is the most common way of including an image in PDF)
             @param ctm the coordinate transformation matrix at the time the image is rendered
             @param ref a reference to the image XObject
             @return the ImageRenderInfo representing the rendered XObject
             @since 5.0.1
         </member>
-        <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.CreateForEmbeddedImage(iTextSharp.text.pdf.parser.Matrix,iTextSharp.text.pdf.parser.InlineImageInfo,iTextSharp.text.pdf.PdfDictionary)">
+        <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.CreateForEmbeddedImage(iTextSharp.text.pdf.parser.GraphicsState,iTextSharp.text.pdf.parser.InlineImageInfo,iTextSharp.text.pdf.PdfDictionary)">
             Create an ImageRenderInfo object based on inline image data.  This is nowhere near completely thought through
             and really just acts as a placeholder.
             @param ctm the coordinate transformation matrix at the time the image is rendered
@@ -15715,6 +15764,10 @@
         <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.GetRef">
             @return an indirect reference to the image
             @since 5.0.2
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.ImageRenderInfo.GetCurrentFillColor">
+            @return the current fill color from the graphics state at the time this render operation occured
+            @since 5.5.7
         </member>
         <member name="T:iTextSharp.text.pdf.parser.LineSegment">
             Represents a line segment in a particular coordinate system.  This class is immutable.
@@ -16292,10 +16345,10 @@
             A content operator implementation (RG).
         </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.SetColorSpaceFill">
-            A content operator implementation (CS).
+            A content operator implementation (cs).
         </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.SetColorSpaceStroke">
-            A content operator implementation (cs).
+            A content operator implementation (CS).
         </member>
         <member name="T:iTextSharp.text.pdf.parser.PdfContentStreamProcessor.SetColorFill">
             A content operator implementation (sc / scn).
@@ -17779,6 +17832,21 @@
             @param inlineImage <CODE>true</CODE> to place this image inline, <CODE>false</CODE> otherwise
             @throws DocumentException on error
         </member>
+        <member name="M:iTextSharp.text.pdf.PdfContentByte.AddImage(iTextSharp.text.Image,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
+            Adds an <CODE>Image</CODE> to the page. The positioning of the <CODE>Image</CODE>
+            is done with the transformation matrix. To position an <CODE>image</CODE> at (x,y)
+            The image can be placed inline.
+            @param image the <CODE>Image</CODE> object
+            @param a an element of the transformation matrix
+            @param b an element of the transformation matrix
+            @param c an element of the transformation matrix
+            @param d an element of the transformation matrix
+            @param e an element of the transformation matrix
+            @param f an element of the transformation matrix
+            @param inlineImage <CODE>true</CODE> to place this image inline, <CODE>false</CODE> otherwise
+            @param isMCBlockOpened <CODE>true</CODE> not to open MCBlock, <CODE>false</CODE> otherwise
+            @throws DocumentException on error
+        </member>
         <member name="M:iTextSharp.text.pdf.PdfContentByte.Reset">
             Makes this <CODE>PdfContentByte</CODE> empty.
             Calls <code>reset( true )</code>
@@ -18445,6 +18513,12 @@
             @param af the transformation
         </member>
         <member name="M:iTextSharp.text.pdf.PdfContentByte.BeginMarkedContentSequence(iTextSharp.text.pdf.PdfStructureElement)">
+            Begins a marked content sequence. This sequence will be tagged with the structure <CODE>struc</CODE>.
+            The same structure can be used several times to connect text that belongs to the same logical segment
+            but is in a different location, like the same paragraph crossing to another page, for example.
+            @param struc the tagging structure
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfContentByte.BeginMarkedContentSequence(iTextSharp.text.pdf.PdfStructureElement,System.String)">
             Begins a marked content sequence. This sequence will be tagged with the structure <CODE>struc</CODE>.
             The same structure can be used several times to connect text that belongs to the same logical segment
             but is in a different location, like the same paragraph crossing to another page, for example.
@@ -24138,6 +24212,10 @@
         <member name="F:iTextSharp.text.pdf.PdfPCell.minimumHeight">
             Holds value of property minimumHeight. 
         </member>
+        <member name="F:iTextSharp.text.pdf.PdfPCell.cachedMaxHeight">
+            This field is used to cache the height which is calculated on getMaxHeight() method call;
+            this helps to avoid unnecessary recalculations on table drawing.
+        </member>
         <member name="F:iTextSharp.text.pdf.PdfPCell.colspan">
             Holds value of property colspan. 
         </member>
@@ -24304,6 +24382,11 @@
         <member name="P:iTextSharp.text.pdf.PdfPCell.FixedHeight">
             Getter for property fixedHeight.
             @return Value of property fixedHeight.
+        </member>
+        <member name="P:iTextSharp.text.pdf.PdfPCell.CachedMaxHeight">
+            Gets the height which was calculated on last call of getMaxHeight().
+            If cell's bBox and content wasn't changed this value is actual maxHeight of the cell.
+            @return max height which was calculated on last call of getMaxHeight(); if getMaxHeight() wasn't called the return value is 0
         </member>
         <member name="P:iTextSharp.text.pdf.PdfPCell.NoWrap">
             Setter for property noWrap.
@@ -25393,6 +25476,11 @@
         <member name="F:iTextSharp.text.pdf.PdfSignatureAppearance.preClosed">
             Indicates if the stamper has already been pre-closed. 
         </member>
+        <member name="F:iTextSharp.text.pdf.PdfSignatureAppearance.fieldLock">
+            <summary>
+            Signature field lock dictionary.
+            </summary>
+        </member>
         <member name="M:iTextSharp.text.pdf.PdfSignatureAppearance.IsPreClosed">
             Checks if the document is in the process of closing.
             @return <CODE>true</CODE> if the document is in the process of closing,
@@ -25537,6 +25625,15 @@
         <member name="P:iTextSharp.text.pdf.PdfSignatureAppearance.TempFile">
             Gets the temporary file.
             @return the temporary file or <CODE>null</CODE> is the document is created in memory
+        </member>
+        <member name="P:iTextSharp.text.pdf.PdfSignatureAppearance.FieldLockDict">
+            <summary>
+            Signature field lock dictionary.
+            </summary>
+            <remarks>
+            If a signature is created on an existing signature field, then its /Lock dictionary 
+            takes the precedence (if it exists).
+            </remarks>
         </member>
         <member name="T:iTextSharp.text.pdf.PdfSignatureAppearance.ISignatureEvent">
             An interface to retrieve the signature dictionary for modification.
@@ -25773,7 +25870,8 @@
         </member>
         <member name="M:iTextSharp.text.pdf.PdfStamper.SetFullCompression">
             Sets the document's compression to the new 1.5 mode with object streams and xref
-            streams. It can be set at any time but once set it can't be unset.
+            streams. Be attentive!!! If you want set full compression , you should set immediately after creating PdfStamper,
+            before editing the document.It can be set once and it can't be unset.
         </member>
         <member name="M:iTextSharp.text.pdf.PdfStamper.SetPageAction(iTextSharp.text.pdf.PdfName,iTextSharp.text.pdf.PdfAction,System.Int32)">
             Sets the open and close page additional action.
@@ -27251,6 +27349,13 @@
              Escapes a <CODE>byte</CODE> array according to the PDF conventions.
             
              @param b the <CODE>byte</CODE> array to escape
+        </member>
+        <member name="M:iTextSharp.text.pdf.StringUtils.ConvertCharsToBytes(System.Char[])">
+            Converts an array of unsigned 16bit numbers to an array of bytes.
+            The input values are presented as chars for convenience.
+            
+            @param chars the array of 16bit numbers that should be converted
+            @return the resulting byte array, twice as large as the input
         </member>
         <member name="T:iTextSharp.text.pdf.TextField">
             Supports text, combo and list fields generating the correct appearances.
@@ -49107,7 +49212,7 @@
              @since 5.5.6
         </member>
         <member name="M:iTextSharp.text.pdf.parser.IExtRenderListener.ModifyPath(iTextSharp.text.pdf.parser.PathConstructionRenderInfo)">
-             Called when the current path is being modifying. E.g. new segment is being added,
+             Called when the current path is being modified. E.g. new segment is being added,
              new subpath is being started etc.
             
              @param renderInfo Contains information about the path segment being added to the current path.
@@ -49234,6 +49339,12 @@
             Calculates and returns the next element which is either gap or dash.
             @return The next dash array's element.
         </member>
+        <member name="M:iTextSharp.text.pdf.parser.LineDashPattern.IsSolid">
+            Checks whether the dashed pattern is solid or not. It's solid when the
+            size of a dash array is even and sum of all the units off in the array
+            is 0.<br/>
+            For example: [3 0 4 0 5 0 6 0] (sum is 0), [3 0 4 0 5 1] (sum is 1).
+        </member>
         <member name="M:iTextSharp.text.pdf.parser.LineDashPattern.Reset">
             Resets the dash array so that the {@link #next()} method will start
             from the beginning of the dash array.
@@ -49267,6 +49378,16 @@
              may connect to one another or may be disconnected.
             
              @since 5.5.6
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.Path.AddSubpath(iTextSharp.text.pdf.parser.Subpath)">
+             Adds the subpath to this path.
+            
+             @param subpath The subpath to be added to this path.
+        </member>
+        <member name="M:iTextSharp.text.pdf.parser.Path.AddSubpaths(System.Collections.Generic.IList{iTextSharp.text.pdf.parser.Subpath})">
+             Adds the subpaths to this path.
+            
+             @param subpaths {@link java.util.List} of subpaths to be added to this path.
         </member>
         <member name="M:iTextSharp.text.pdf.parser.Path.MoveTo(System.Single,System.Single)">
             Begins a new subpath by moving the current point to coordinates <CODE>(x, y)</CODE>.
@@ -49523,6 +49644,12 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfDiv.spacingAfter">
             The spacing after the table.
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfDiv.keepTogether">
+            Defines if the div should be kept on one page if possible
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfDiv.SetBackgroundImage(iTextSharp.text.Image,System.Single,System.Single)">
+            Image will be scaled to fit in the div occupied area.
         </member>
         <member name="M:iTextSharp.text.pdf.PdfDiv.IsContent">
             @see com.itextpdf.text.Element#isContent()
@@ -50049,7 +50176,7 @@
             	     * Gets an encoded byte array with OCSP validation. The method should not throw an exception.
                      * @param checkCert to certificate to check
                      * @param rootCert the parent certificate
-                     * @param the url to get the verification. It it's null it will be taken
+                     * @param url the url to get the verification. It it's null it will be taken
                      * from the check cert or from other implementation specific source
             	     * @return	a byte array with the validation or null if the validation could not be obtained
         </member>
@@ -50559,19 +50686,17 @@
             Gets the bytes for the PKCS7SignedData object.
             @return the bytes for the PKCS7SignedData object
         </member>
-        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetEncodedPKCS7(System.Byte[],System.DateTime)">
+        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetEncodedPKCS7(System.Byte[])">
             Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
             in the signerInfo can also be set. If either of the parameters is <CODE>null</CODE>, none will be used.
             @param secondDigest the digest in the authenticatedAttributes
-            @param signingTime the signing time in the authenticatedAttributes
             @return the bytes for the PKCS7SignedData object
         </member>
-        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetEncodedPKCS7(System.Byte[],System.DateTime,iTextSharp.text.pdf.security.ITSAClient,System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)">
+        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetEncodedPKCS7(System.Byte[],iTextSharp.text.pdf.security.ITSAClient,System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)">
             Gets the bytes for the PKCS7SignedData object. Optionally the authenticatedAttributes
             in the signerInfo can also be set, OR a time-stamp-authority client
             may be provided.
             @param secondDigest the digest in the authenticatedAttributes
-            @param signingTime the signing time in the authenticatedAttributes
             @param tsaClient TSAClient - null or an optional time stamp authority client
             @return byte[] the bytes for the PKCS7SignedData object
             @since   2.1.6
@@ -50585,13 +50710,12 @@
             @return ASN1EncodableVector
             @throws IOException
         </member>
-        <!-- Badly formed XML comment ignored for member "M:iTextSharp.text.pdf.security.PdfPKCS7.getAuthenticatedAttributeBytes(System.Byte[],System.DateTime,System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)" -->
-        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetAuthenticatedAttributeSet(System.Byte[],System.DateTime,System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)">
+        <!-- Badly formed XML comment ignored for member "M:iTextSharp.text.pdf.security.PdfPKCS7.getAuthenticatedAttributeBytes(System.Byte[],System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)" -->
+        <member name="M:iTextSharp.text.pdf.security.PdfPKCS7.GetAuthenticatedAttributeSet(System.Byte[],System.Byte[],System.Collections.Generic.ICollection{System.Byte[]},iTextSharp.text.pdf.security.CryptoStandard)">
             This method provides that encoding and the parameters must be
             exactly the same as in {@link #getEncodedPKCS7(byte[],Calendar)}.
             
             @param secondDigest the content digest
-            @param signingTime the signing time
             @return the byte array representation of the authenticatedAttributes ready to be signed
         </member>
         <member name="F:iTextSharp.text.pdf.security.PdfPKCS7.sigAttr">
