@@ -722,6 +722,8 @@ namespace Nop.Web.Controllers
 
         //SEO sitemap page
         [NopHttpsRequirement(SslRequirement.No)]
+        //available even when a store is closed
+        [StoreClosed(true)]
         public ActionResult SitemapXml()
         {
             if (!_commonSettings.SitemapEnabled)
@@ -836,6 +838,8 @@ namespace Nop.Web.Controllers
         }
 
         //robots.txt file
+        //available even when a store is closed
+        [StoreClosed(true)]
         public ActionResult RobotsTextFile()
         {
             var disallowPaths = new List<string>
