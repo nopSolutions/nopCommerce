@@ -387,12 +387,7 @@ namespace Nop.Services.Tax
             if (priceIncludesTax)
             {
                 //"price" already includes tax
-                if (!includingTax)
-                {
-                    //we should calculated price WITHOUT tax
-                    price = CalculatePrice(price, taxRate, false);
-                }
-                else
+                if (includingTax)
                 {
                     //we should calculated price WITH tax
                     if (!isTaxable)
@@ -401,6 +396,11 @@ namespace Nop.Services.Tax
                         //hence we should calculated price WITHOUT tax
                         price = CalculatePrice(price, taxRate, false);
                     }
+                }
+                else
+                {
+                    //we should calculated price WITHOUT tax
+                    price = CalculatePrice(price, taxRate, false);
                 }
             }
             else
