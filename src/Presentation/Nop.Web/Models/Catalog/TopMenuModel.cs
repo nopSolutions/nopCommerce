@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Catalog
         public IList<TopMenuTopicModel> Topics { get; set; }
 
         public bool BlogEnabled { get; set; }
-        public bool RecentlyAddedProductsEnabled { get; set; }
+        public bool NewProductsEnabled { get; set; }
         public bool ForumEnabled { get; set; }
 
         #region Nested classes

@@ -32,6 +32,7 @@
         $("#@Html.FieldIdFor(model => model.UseMultipleWarehouses)").click(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
+        $("#@Html.FieldIdFor(model => model.MarkAsNew)").click(toggleMarkAsNew);
 
         @if (!Model.IsLoggedInAsVendor)
         {
@@ -49,6 +50,7 @@
         toggleShipping();
         toggleTax();
         toggleManageStock();
+        toggleMarkAsNew();
     });
 
     function toggleShowOnHomePage() {
@@ -137,7 +139,7 @@
             $('#pnlBasepriceBaseUnit').hide();
         }
     }
-    
+
     function toggleDownloadableProduct() {
         if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
 
@@ -295,6 +297,16 @@
     }
     }
 
+    function toggleMarkAsNew() {
+        if ($('#@Html.FieldIdFor(model => model.MarkAsNew)').is(':checked')) {
+            $('#pnlMarkAsNewStartDateTimeUtc').show();
+            $('#pnlMarkAsNewEndDateTimeUtc').show();
+        } else {
+            $('#pnlMarkAsNewStartDateTimeUtc').hide();
+            $('#pnlMarkAsNewEndDateTimeUtc').hide();
+        }
+    }
+
     @{
         //TODO move to Model
         var productTags = EngineContext.Current.Resolve<IProductTagService>().GetAllProductTags();
@@ -341,7 +353,7 @@
         if (inputValue) {
             //load friendly names
             $('#required-products-check-progress').show();
-            
+
             var postData = {
                 productIds: inputValue
             };
@@ -1379,6 +1391,33 @@
         <td class="adminData">
             @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
             @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.MarkAsNew):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarkAsNew)
+            @Html.ValidationMessageFor(model => model.MarkAsNew)
+        </td>
+    </tr>
+    <tr id="pnlMarkAsNewStartDateTimeUtc">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.MarkAsNewStartDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarkAsNewStartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.MarkAsNewStartDateTimeUtc)
+        </td>
+    </tr>
+    <tr id="pnlMarkAsNewEndDateTimeUtc">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.MarkAsNewEndDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.MarkAsNewEndDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.MarkAsNewEndDateTimeUtc)
         </td>
     </tr>
     <tr>

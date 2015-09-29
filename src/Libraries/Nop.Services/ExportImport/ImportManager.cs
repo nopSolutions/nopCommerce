@@ -197,6 +197,9 @@ namespace Nop.Services.ExportImport
                     "BasepriceUnitId",
                     "BasepriceBaseAmount",
                     "BasepriceBaseUnitId",
+                    "MarkAsNew",
+                    "MarkAsNewStartDateTimeUtc",
+                    "MarkAsNewEndDateTimeUtc",
                     "Weight",
                     "Length",
                     "Width",
@@ -321,6 +324,15 @@ namespace Nop.Services.ExportImport
                     int basepriceUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceUnitId")].Value);
                     decimal basepriceBaseAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseAmount")].Value);
                     int basepriceBaseUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseUnitId")].Value);
+                    bool markAsNew = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNew")].Value);
+                    DateTime? markAsNewStartDateTimeUtc = null;
+                    var markAsNewStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewStartDateTimeUtc")].Value;
+                    if (markAsNewStartDateTimeUtcExcel != null)
+                        markAsNewStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewStartDateTimeUtcExcel));
+                    DateTime? markAsNewEndDateTimeUtc = null;
+                    var markAsNewEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewEndDateTimeUtc")].Value;
+                    if (markAsNewEndDateTimeUtcExcel != null)
+                        markAsNewEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewEndDateTimeUtcExcel));
                     decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
@@ -421,6 +433,9 @@ namespace Nop.Services.ExportImport
                     product.BasepriceUnitId = basepriceUnitId;
                     product.BasepriceBaseAmount = basepriceBaseAmount;
                     product.BasepriceBaseUnitId = basepriceBaseUnitId;
+                    product.MarkAsNew = markAsNew;
+                    product.MarkAsNewStartDateTimeUtc = markAsNewStartDateTimeUtc;
+                    product.MarkAsNewEndDateTimeUtc = markAsNewEndDateTimeUtc;
                     product.Weight = weight;
                     product.Length = length;
                     product.Width = width;

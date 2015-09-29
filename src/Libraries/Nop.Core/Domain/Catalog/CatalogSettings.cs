@@ -116,13 +116,13 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool RecentlyViewedProductsEnabled { get; set; }
         /// <summary>
-        /// Gets or sets a number of "Recently added products"
+        /// Gets or sets a number of products on the "New products" page
         /// </summary>
-        public int RecentlyAddedProductsNumber { get; set; }
+        public int NewProductsNumber { get; set; }
         /// <summary>
-        /// Gets or sets a value indicating whether "Recently added products" feature is enabled
+        /// Gets or sets a value indicating whether "New products" page is enabled
         /// </summary>
-        public bool RecentlyAddedProductsEnabled { get; set; }
+        public bool NewProductsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether "Compare products" feature is enabled

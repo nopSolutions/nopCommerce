@@ -4605,8 +4605,8 @@ namespace Nop.Services.Installation
                     AllowAnonymousUsersToEmailAFriend = false,
                     RecentlyViewedProductsNumber = 3,
                     RecentlyViewedProductsEnabled = true,
-                    RecentlyAddedProductsNumber = 6,
-                    RecentlyAddedProductsEnabled = true,
+                    NewProductsNumber = 6,
+                    NewProductsEnabled = true,
                     CompareProductsEnabled = true,
                     CompareProductsNumber = 4,
                     ProductSearchAutoCompleteEnabled = true,
@@ -5642,6 +5642,7 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 ShowOnHomePage = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductAttributeMappings =
@@ -6849,6 +6850,7 @@ namespace Nop.Services.Installation
                 OrderMaximumQuantity = 10000,
                 Published = true,
                 ShowOnHomePage = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -6900,6 +6902,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -7010,6 +7013,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 TierPrices =
@@ -8364,6 +8368,7 @@ namespace Nop.Services.Installation
                 OrderMinimumQuantity = 1,
                 OrderMaximumQuantity = 10000,
                 Published = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =
@@ -8565,6 +8570,7 @@ namespace Nop.Services.Installation
                 NotifyAdminForQuantityBelow = 1,
                 AllowBackInStockSubscriptions = false,
                 Published = true,
+                MarkAsNew = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow,
                 ProductCategories =

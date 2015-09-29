@@ -676,7 +676,7 @@ namespace Nop.Web.Controllers
             {
                 Categories = cachedCategoriesModel,
                 Topics = cachedTopicModel,
-                RecentlyAddedProductsEnabled = _catalogSettings.RecentlyAddedProductsEnabled,
+                NewProductsEnabled = _catalogSettings.NewProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 ForumEnabled = _forumSettings.ForumsEnabled
             };

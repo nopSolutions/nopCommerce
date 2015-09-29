@@ -27,6 +27,7 @@
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>f94c814a</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -2104,7 +2105,7 @@
     <Content Include="Views\ReturnRequest\CustomerReturnRequests.cshtml" />
     <Content Include="Views\Product\RecentlyViewedProducts.cshtml" />
     <Content Include="Views\Product\RecentlyViewedProductsBlock.cshtml" />
-    <Content Include="Views\Product\RecentlyAddedProducts.cshtml" />
+    <Content Include="Views\Product\NewProducts.cshtml" />
     <Content Include="Views\Product\_ProductReviewHelpfulness.cshtml" />
     <Content Include="Views\Product\_CompareProductsButton.cshtml" />
     <Content Include="Views\Product\CompareProducts.cshtml" />

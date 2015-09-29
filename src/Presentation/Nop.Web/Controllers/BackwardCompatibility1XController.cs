@@ -127,7 +127,7 @@ namespace Nop.Web.Controllers
                     }
                 case "recentlyaddedproducts":
                     {
-                        return RedirectToRoutePermanent("RecentlyAddedProducts");
+                        return RedirectToRoutePermanent("NewProducts");
                     }
                 case "shoppingcart":
                     {

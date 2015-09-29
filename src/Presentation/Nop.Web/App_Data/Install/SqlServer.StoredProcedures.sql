@@ -72,6 +72,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@WarehouseId		int = 0,
 	@ProductTypeId		int = null, --product type identifier, null - load all products
 	@VisibleIndividuallyOnly bit = 0, 	--0 - load all products , 1 - "visible indivially" only
+	@MarkedAsNewOnly	bit = 0, 	--0 - load all products , 1 - "marked as new" only
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
@@ -464,11 +465,19 @@ BEGIN
 		AND p.ProductTypeId = ' + CAST(@ProductTypeId AS nvarchar(max))
 	END
 	
-	--filter by parent product identifer
+	--filter by "visible individually"
 	IF @VisibleIndividuallyOnly = 1
 	BEGIN
 		SET @sql = @sql + '
 		AND p.VisibleIndividually = 1'
+	END
+	
+	--filter by "marked as new"
+	IF @MarkedAsNewOnly = 1
+	BEGIN
+		SET @sql = @sql + '
+		AND p.MarkAsNew = 1
+		AND (getutcdate() BETWEEN ISNULL(p.MarkAsNewStartDateTimeUtc, ''1/1/1900'') and ISNULL(p.MarkAsNewEndDateTimeUtc, ''1/1/2999''))'
 	END
 	
 	--filter by product tag

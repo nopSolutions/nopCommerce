@@ -2457,6 +2457,24 @@
   <LocaleResource Name="Admin.Catalog.Products.Fields.ManufacturerPartNumber.Hint">
     <Value>The manufacturer's part number for this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew">
+    <Value>Mark as new</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNew.Hint">
+    <Value>Check to mark this product as New</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc">
+    <Value>Mark as new. Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewStartDateTimeUtc.Hint">
+    <Value>Set Product as New from Date in Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc">
+    <Value>Mark as new. End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.MarkAsNewEndDateTimeUtc.Hint">
+    <Value>Set Product as New to Date in Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.MaximumCustomerEnteredPrice">
     <Value>Maximum amount</Value>
   </LocaleResource>
@@ -4599,6 +4617,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NotifyStoreOwnerAboutNewProductReviews.Hint">
     <Value>Check to notify store owner about new product reviews.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled">
+    <Value>'New products' page enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsEnabled.Hint">
+    <Value>Check to enable the 'New products' page in your store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber">
+    <Value>Number of products on 'New products' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.NewProductsNumber.Hint">
+    <Value>The number of products to display when 'New products' page is enabled.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.NumberOfBestsellersOnHomepage">
     <Value>Number of best sellers on home page</Value>
   </LocaleResource>
@@ -4676,18 +4706,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchTermMinimumLength.Hint">
     <Value>Specify minimum length of search term.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsEnabled">
-    <Value>'Recently added products' enabled</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsEnabled.Hint">
-    <Value>Check to allow customers to use the 'Recently added products' feature in your store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsNumber">
-    <Value>Number of 'Recently added products'</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsNumber.Hint">
-    <Value>The number of 'Recently added products' to display when 'Recently added products' option is enabled.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyViewedProductsEnabled">
     <Value>'Recently viewed products' enabled</Value>
@@ -12825,6 +12843,9 @@
   <LocaleResource Name="PageTitle.Manufacturers">
     <Value>Manufacturers</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.NewProducts">
+    <Value>New Products</Value>
+  </LocaleResource>
   <LocaleResource Name="PageTitle.NewsArchive">
     <Value>News Archive</Value>
   </LocaleResource>
@@ -12851,9 +12872,6 @@
   </LocaleResource>
   <LocaleResource Name="PageTitle.Profile">
     <Value>Profile</Value>
-  </LocaleResource>
-  <LocaleResource Name="PageTitle.RecentlyAddedProducts">
-    <Value>Recently Added Products</Value>
   </LocaleResource>
   <LocaleResource Name="PageTitle.RecentlyViewedProducts">
     <Value>Recently Viewed Products</Value>

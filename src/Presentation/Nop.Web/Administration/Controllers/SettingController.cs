@@ -1004,8 +1004,8 @@ namespace Nop.Admin.Controllers
                 model.AllowAnonymousUsersToEmailAFriend_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.AllowAnonymousUsersToEmailAFriend, storeScope);
                 model.RecentlyViewedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsNumber, storeScope);
                 model.RecentlyViewedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
-                model.RecentlyAddedProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyAddedProductsNumber, storeScope);
-                model.RecentlyAddedProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.RecentlyAddedProductsEnabled, storeScope);
+                model.NewProductsNumber_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsNumber, storeScope);
+                model.NewProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NewProductsEnabled, storeScope);
                 model.CompareProductsEnabled_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.CompareProductsEnabled, storeScope);
                 model.ShowBestsellersOnHomepage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowBestsellersOnHomepage, storeScope);
                 model.NumberOfBestsellersOnHomepage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.NumberOfBestsellersOnHomepage, storeScope);
@@ -1154,15 +1154,15 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.RecentlyViewedProductsEnabled, storeScope);
             
-            if (model.RecentlyAddedProductsNumber_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(catalogSettings, x => x.RecentlyAddedProductsNumber, storeScope, false);
+            if (model.NewProductsNumber_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.NewProductsNumber, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(catalogSettings, x => x.RecentlyAddedProductsNumber, storeScope);
+                _settingService.DeleteSetting(catalogSettings, x => x.NewProductsNumber, storeScope);
             
-            if (model.RecentlyAddedProductsEnabled_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(catalogSettings, x => x.RecentlyAddedProductsEnabled, storeScope, false);
+            if (model.NewProductsEnabled_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.NewProductsEnabled, storeScope, false);
             else if (storeScope > 0)
-                _settingService.DeleteSetting(catalogSettings, x => x.RecentlyAddedProductsEnabled, storeScope);
+                _settingService.DeleteSetting(catalogSettings, x => x.NewProductsEnabled, storeScope);
             
             if (model.CompareProductsEnabled_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(catalogSettings, x => x.CompareProductsEnabled, storeScope, false);

@@ -330,6 +330,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
+        /// <param name="markedAsNewOnly">A values indicating whether to load only products marked as "new"; "false" to load all records; "true" to load "marked as new" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -358,6 +359,7 @@ namespace Nop.Services.Catalog
             int warehouseId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
+            bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -376,7 +378,7 @@ namespace Nop.Services.Catalog
             return SearchProducts(out filterableSpecificationAttributeOptionIds, false,
                 pageIndex, pageSize, categoryIds, manufacturerId,
                 storeId, vendorId, warehouseId,
-                productType, visibleIndividuallyOnly, featuredProducts,
+                productType, visibleIndividuallyOnly, markedAsNewOnly, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, searchSku,
                 searchProductTags, languageId, filteredSpecs, 
                 orderBy, showHidden, overridePublished);
@@ -396,6 +398,7 @@ namespace Nop.Services.Catalog
         /// <param name="warehouseId">Warehouse identifier; 0 to load all records</param>
         /// <param name="productType">Product type; 0 to load all records</param>
         /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
+        /// <param name="markedAsNewOnly">A values indicating whether to load only products marked as "new"; "false" to load all records; "true" to load "marked as new" only</param>
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
@@ -426,6 +429,7 @@ namespace Nop.Services.Catalog
             int warehouseId = 0,
             ProductType? productType = null,
             bool visibleIndividuallyOnly = false,
+            bool markedAsNewOnly = false,
             bool? featuredProducts = null,
             decimal? priceMin = null,
             decimal? priceMax = null,
@@ -527,6 +531,11 @@ namespace Nop.Services.Catalog
                 pVisibleIndividuallyOnly.ParameterName = "VisibleIndividuallyOnly";
                 pVisibleIndividuallyOnly.Value = visibleIndividuallyOnly;
                 pVisibleIndividuallyOnly.DbType = DbType.Int32;
+
+                var pMarkedAsNewOnly = _dataProvider.GetParameter();
+                pMarkedAsNewOnly.ParameterName = "MarkedAsNewOnly";
+                pMarkedAsNewOnly.Value = markedAsNewOnly;
+                pMarkedAsNewOnly.DbType = DbType.Int32;
 
                 var pProductTagId = _dataProvider.GetParameter();
                 pProductTagId.ParameterName = "ProductTagId";
@@ -644,6 +653,7 @@ namespace Nop.Services.Catalog
                     pWarehouseId,
                     pProductTypeId,
                     pVisibleIndividuallyOnly,
+                    pMarkedAsNewOnly,
                     pProductTagId,
                     pFeaturedProducts,
                     pPriceMin,
@@ -712,15 +722,22 @@ namespace Nop.Services.Catalog
                 {
                     query = query.Where(p => p.VisibleIndividually);
                 }
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
+                if (markedAsNewOnly)
+                {
+                    query = query.Where(p => p.MarkAsNew);
+                    query = query.Where(p =>
+                        (!p.MarkAsNewStartDateTimeUtc.HasValue || p.MarkAsNewStartDateTimeUtc.Value < nowUtc) &&
+                        (!p.MarkAsNewEndDateTimeUtc.HasValue || p.MarkAsNewEndDateTimeUtc.Value > nowUtc));
+                }
                 if (productType.HasValue)
                 {
                     var productTypeId = (int) productType.Value;
                     query = query.Where(p => p.ProductTypeId == productTypeId);
                 }
 
-                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-                //That's why we pass the date value
-                var nowUtc = DateTime.UtcNow;
                 if (priceMin.HasValue)
                 {
                     //min price

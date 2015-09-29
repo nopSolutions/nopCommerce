@@ -93,7 +93,7 @@
             $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
             $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
-            $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
+            $("#@Html.FieldIdFor(model => model.NewProductsEnabled)").click(toggleNewProducts);
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
             $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
             $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(toggleProductsByTagPageSize);
@@ -101,7 +101,7 @@
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
             toggleRecentlyViewedProducts();
-            toggleRecentlyAddedProducts();
+            toggleNewProducts();
             toggleBestsellersOnHomepage();
             toggleProductsAlsoPurchasedNumber();
             toggleProductsByTagPageSize();
@@ -134,12 +134,12 @@
             }
         }
 
-        function toggleRecentlyAddedProducts() {
-            if ($('#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)').is(':checked')) {
-                $('#pnlRecentlyAddedProductsNumber').show();
+        function toggleNewProducts() {
+            if ($('#@Html.FieldIdFor(model => model.NewProductsEnabled)').is(':checked')) {
+                $('#pnlNewProductsNumber').show();
             }
             else {
-                $('#pnlRecentlyAddedProductsNumber').hide();
+                $('#pnlNewProductsNumber').hide();
             }
         }
 
@@ -325,22 +325,22 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.RecentlyAddedProductsEnabled_OverrideForStore, model => model.RecentlyAddedProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.RecentlyAddedProductsEnabled):
+                @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.NewProductsEnabled):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.RecentlyAddedProductsEnabled)
-                @Html.ValidationMessageFor(model => model.RecentlyAddedProductsEnabled)
+                @Html.EditorFor(model => model.NewProductsEnabled)
+                @Html.ValidationMessageFor(model => model.NewProductsEnabled)
             </td>
         </tr>
-        <tr id="pnlRecentlyAddedProductsNumber">
+        <tr id="pnlNewProductsNumber">
             <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.RecentlyAddedProductsNumber_OverrideForStore, model => model.RecentlyAddedProductsNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.RecentlyAddedProductsNumber):
+                @Html.OverrideStoreCheckboxFor(model => model.NewProductsNumber_OverrideForStore, model => model.NewProductsNumber, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.NewProductsNumber):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.RecentlyAddedProductsNumber)
-                @Html.ValidationMessageFor(model => model.RecentlyAddedProductsNumber)
+                @Html.EditorFor(model => model.NewProductsNumber)
+                @Html.ValidationMessageFor(model => model.NewProductsNumber)
             </td>
         </tr>
         <tr>

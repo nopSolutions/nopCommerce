@@ -312,6 +312,9 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("BasepriceUnitId", null, product.BasepriceUnitId.ToString());
                 xmlWriter.WriteElementString("BasepriceBaseAmount", null, product.BasepriceBaseAmount.ToString());
                 xmlWriter.WriteElementString("BasepriceBaseUnitId", null, product.BasepriceBaseUnitId.ToString());
+                xmlWriter.WriteElementString("MarkAsNew", null, product.MarkAsNew.ToString());
+                xmlWriter.WriteElementString("MarkAsNewStartDateTimeUtc", null, product.MarkAsNewStartDateTimeUtc.HasValue ? product.MarkAsNewStartDateTimeUtc.ToString() : "");
+                xmlWriter.WriteElementString("MarkAsNewEndDateTimeUtc", null, product.MarkAsNewEndDateTimeUtc.HasValue ? product.MarkAsNewEndDateTimeUtc.ToString() : "");
                 xmlWriter.WriteElementString("Weight", null, product.Weight.ToString());
                 xmlWriter.WriteElementString("Length", null, product.Length.ToString());
                 xmlWriter.WriteElementString("Width", null, product.Width.ToString());
@@ -590,6 +593,9 @@ namespace Nop.Services.ExportImport
                     "BasepriceUnitId",
                     "BasepriceBaseAmount",
                     "BasepriceBaseUnitId",
+                    "MarkAsNew",
+                    "MarkAsNewStartDateTimeUtc",
+                    "MarkAsNewEndDateTimeUtc",
                     "Weight",
                     "Length",
                     "Width",
@@ -859,6 +865,15 @@ namespace Nop.Services.ExportImport
                     col++;
 
                     worksheet.Cells[row, col].Value = p.BasepriceBaseUnitId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.MarkAsNew;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.MarkAsNewStartDateTimeUtc;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = p.MarkAsNewEndDateTimeUtc;
                     col++;
 
                     worksheet.Cells[row, col].Value = p.Weight;

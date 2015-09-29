@@ -92,13 +92,13 @@ namespace Nop.Admin.Models.Settings
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RecentlyAddedProductsNumber")]
-        public int RecentlyAddedProductsNumber { get; set; }
-        public bool RecentlyAddedProductsNumber_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsNumber")]
+        public int NewProductsNumber { get; set; }
+        public bool NewProductsNumber_OverrideForStore { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.RecentlyAddedProductsEnabled")]
-        public bool RecentlyAddedProductsEnabled { get; set; }
-        public bool RecentlyAddedProductsEnabled_OverrideForStore { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NewProductsEnabled")]
+        public bool NewProductsEnabled { get; set; }
+        public bool NewProductsEnabled_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CompareProductsEnabled")]
         public bool CompareProductsEnabled { get; set; }

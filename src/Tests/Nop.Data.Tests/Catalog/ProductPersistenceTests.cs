@@ -101,6 +101,9 @@ namespace Nop.Data.Tests.Catalog
                 BasepriceUnitId = 4,
                 BasepriceBaseAmount = 34.1M,
                 BasepriceBaseUnitId = 5,
+                MarkAsNew = true,
+                MarkAsNewStartDateTimeUtc = new DateTime(2010, 01, 07),
+                MarkAsNewEndDateTimeUtc = new DateTime(2010, 01, 08),
                 HasTierPrices = true,
                 HasDiscountsApplied = true,
                 Weight = 26.1M,
@@ -206,6 +209,9 @@ namespace Nop.Data.Tests.Catalog
             fromDb.BasepriceUnitId.ShouldEqual(4);
             fromDb.BasepriceBaseAmount.ShouldEqual(34.1M);
             fromDb.BasepriceBaseUnitId.ShouldEqual(5);
+            fromDb.MarkAsNew.ShouldEqual(true);
+            fromDb.MarkAsNewStartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 07));
+            fromDb.MarkAsNewEndDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 08));
             fromDb.HasTierPrices.ShouldEqual(true);
             fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Weight.ShouldEqual(26.1M);

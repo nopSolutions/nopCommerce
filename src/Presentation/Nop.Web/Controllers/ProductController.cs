@@ -1109,19 +1109,20 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Recently added products
+        #region New (recently added) products page
 
         [NopHttpsRequirement(SslRequirement.No)]
-        public ActionResult RecentlyAddedProducts()
+        public ActionResult NewProducts()
         {
-            if (!_catalogSettings.RecentlyAddedProductsEnabled)
+            if (!_catalogSettings.NewProductsEnabled)
                 return Content("");
 
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
+                markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.RecentlyAddedProductsNumber);
+                pageSize: _catalogSettings.NewProductsNumber);
 
             var model = new List<ProductOverviewModel>();
             model.AddRange(PrepareProductOverviewModels(products));
@@ -1129,16 +1130,16 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        public ActionResult RecentlyAddedProductsRss()
+        public ActionResult NewProductsRss()
         {
             var feed = new SyndicationFeed(
-                                    string.Format("{0}: Recently added products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
+                                    string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "RecentlyAddedProductsRSS",
+                                    "NewProductsRSS",
                                     DateTime.UtcNow);
 
-            if (!_catalogSettings.RecentlyAddedProductsEnabled)
+            if (!_catalogSettings.NewProductsEnabled)
                 return new RssActionResult { Feed = feed };
 
             var items = new List<SyndicationItem>();
@@ -1146,14 +1147,15 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 visibleIndividuallyOnly: true,
+                markedAsNewOnly: true,
                 orderBy: ProductSortingEnum.CreatedOn,
-                pageSize: _catalogSettings.RecentlyAddedProductsNumber);
+                pageSize: _catalogSettings.NewProductsNumber);
             foreach (var product in products)
             {
                 string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, "http");
                 string productName = product.GetLocalized(x => x.Name);
                 string productDescription = product.GetLocalized(x => x.ShortDescription);
-                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("RecentlyAddedProduct:{0}", product.Id), product.CreatedOnUtc);
+                var item = new SyndicationItem(productName, productDescription, new Uri(productUrl), String.Format("NewProduct:{0}", product.Id), product.CreatedOnUtc);
                 items.Add(item);
                 //uncomment below if you want to add RSS enclosure for pictures
                 //var picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();

@@ -111,10 +111,10 @@ namespace Nop.Web.Infrastructure
                             "recentlyviewedproducts/",
                             new { controller = "Product", action = "RecentlyViewedProducts" },
                             new[] { "Nop.Web.Controllers" });
-            //recently added products
-            routes.MapLocalizedRoute("RecentlyAddedProducts",
+            //new products
+            routes.MapLocalizedRoute("NewProducts",
                             "newproducts/",
-                            new { controller = "Product", action = "RecentlyAddedProducts" },
+                            new { controller = "Product", action = "NewProducts" },
                             new[] { "Nop.Web.Controllers" });
             //blog
             routes.MapLocalizedRoute("Blog",
@@ -476,10 +476,10 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Product", action = "ClearCompareList" },
                             new[] { "Nop.Web.Controllers" });
 
-            //recently added products RSS
-            routes.MapLocalizedRoute("RecentlyAddedProductsRSS",
+            //new RSS
+            routes.MapLocalizedRoute("NewProductsRSS",
                             "newproducts/rss",
-                            new { controller = "Product", action = "RecentlyAddedProductsRss" },
+                            new { controller = "Product", action = "NewProductsRss" },
                             new[] { "Nop.Web.Controllers" });
             
             //get state list by country ID  (AJAX link)

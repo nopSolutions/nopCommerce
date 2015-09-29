@@ -54,9 +54,9 @@
     {
         //no categories or topis to display? in this case let's diplay some default menu items (should we?)
         <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-        if (Model.RecentlyAddedProductsEnabled)
+        if (Model.NewProductsEnabled)
         {
-            <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
+            <li><a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
             </li>
         }
         <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a></li>
@@ -93,10 +93,10 @@
         {
             //no categories or topis to display? in this case let's diplay some default menu items (should we?)
             <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
-            if (Model.RecentlyAddedProductsEnabled)
+            if (Model.NewProductsEnabled)
             {
                 <li>
-                    <a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
+                    <a href="@Url.RouteUrl("NewProducts")">@T("Products.NewProducts")</a>
                 </li>
             }
             <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
