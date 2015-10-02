@@ -10,7 +10,7 @@
 }
 @if (Model.AllowCustomerReviews)
 {
-    <div class="product-reviews-overview" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <div class="product-reviews-overview" @if (Model.TotalReviews > 0) { <text>itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"</text>}>
         <div class="product-review-box">
             <div class="rating">
                 <div style="width: @(ratingPercent)%">
