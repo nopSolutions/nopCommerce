@@ -497,6 +497,7 @@ namespace Nop.Web.Controllers
                         Id = x.Id,
                         Name = x.GetLocalized(y => y.Name),
                         SeName = x.GetSeName(),
+                        Description = x.GetLocalized(y => y.Description)
                     };
 
                     //prepare picture model

@@ -49,6 +49,8 @@ namespace Nop.Web.Models.Catalog
 
             public string SeName { get; set; }
 
+            public string Description { get; set; }
+
             public PictureModel PictureModel { get; set; }
         }
 
