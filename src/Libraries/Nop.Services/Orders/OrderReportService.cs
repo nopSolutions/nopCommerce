@@ -439,7 +439,7 @@ namespace Nop.Services.Orders
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
-            //this inner query should retrieve all purchased order product varint identifiers
+            //this inner query should retrieve all purchased product identifiers
             var query1 = (from orderItem in _orderItemRepository.Table
                           join o in _orderRepository.Table on orderItem.OrderId equals o.Id
                           where (!createdFromUtc.HasValue || createdFromUtc.Value <= o.CreatedOnUtc) &&
