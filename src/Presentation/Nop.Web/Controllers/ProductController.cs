@@ -216,7 +216,7 @@ namespace Nop.Web.Controllers
                 ManufacturerPartNumber = product.ManufacturerPartNumber,
                 ShowGtin = _catalogSettings.ShowGtin,
                 Gtin = product.Gtin,
-                StockAvailability = product.FormatStockMessage(_localizationService),
+                StockAvailability = product.FormatStockMessage("", _localizationService, _productAttributeParser),
                 HasSampleDownload = product.IsDownload && product.HasSampleDownload,
             };
 

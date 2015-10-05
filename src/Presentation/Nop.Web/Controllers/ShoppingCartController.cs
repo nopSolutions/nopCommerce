@@ -1802,6 +1802,9 @@ namespace Nop.Web.Controllers
                 price = _priceFormatter.FormatPrice(finalPriceWithDiscount);
             }
 
+            //stock
+            var stockAvailability = product.FormatStockMessage(attributeXml, _localizationService, _productAttributeParser);
+
             //conditional attributes
             var enabledAttributeMappingIds = new List<int>();
             var disabledAttributeMappingIds = new List<int>();
@@ -1827,6 +1830,7 @@ namespace Nop.Web.Controllers
                 mpn = mpn,
                 sku = sku,
                 price = price,
+                stockAvailability = stockAvailability,
                 enabledattributemappingids = enabledAttributeMappingIds.ToArray(),
                 disabledattributemappingids = disabledAttributeMappingIds.ToArray()
             });

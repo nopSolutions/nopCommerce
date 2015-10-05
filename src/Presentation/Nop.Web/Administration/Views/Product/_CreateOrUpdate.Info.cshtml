@@ -261,7 +261,6 @@
             }
 
             $('#pnlDisplayStockAvailability').show();
-
             if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
                 $('#pnlDisplayStockQuantity').show();
             } else {
@@ -286,8 +285,12 @@
             $('#pnlWarehouse').show();
             $('#pnlMultipleWarehouses').hide();
             $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').show();
+            if ($('#@Html.FieldIdFor(model => model.DisplayStockAvailability)').is(':checked')) {
+                $('#pnlDisplayStockQuantity').show();
+            } else {
+                $('#pnlDisplayStockQuantity').hide();
+            }
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();

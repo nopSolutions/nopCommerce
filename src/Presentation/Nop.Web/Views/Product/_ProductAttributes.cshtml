@@ -261,6 +261,9 @@
                         if (data.gtin) {
                             $('#gtin-@productId').text(data.gtin);
                         }
+                        if (data.stockAvailability) {
+                            $('#stock-availability-value-@productId').text(data.stockAvailability);
+                        }
                         if (data.enabledattributemappingids) {
                             for (var i = 0; i < data.enabledattributemappingids.length; i++) {
                                 $('#product_attribute_label_' + data.enabledattributemappingids[i]).show();

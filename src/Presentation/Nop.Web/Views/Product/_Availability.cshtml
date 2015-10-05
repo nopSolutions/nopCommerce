@@ -7,7 +7,7 @@
         {
             <div class="stock">
                 <span class="label">@T("Products.Availability"):</span>
-                <span class="value">@Model.StockAvailability</span>
+                <span class="value" id="stock-availability-value-@Model.Id">@Model.StockAvailability</span>
             </div>
         }
         @Html.Partial("_BackInStockSubscription", Model)
