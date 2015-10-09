@@ -293,6 +293,12 @@ set @resources='
   <LocaleResource Name="PageTitle.NewProducts">
     <Value>New Products</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter">
+    <Value>Newsletter</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
+    <Value>Check to subscribe to newsletter.</Value>
+  </LocaleResource>
 </Language>
 '
 

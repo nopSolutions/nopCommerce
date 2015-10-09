@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
@@ -486,6 +487,7 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected virtual void PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties)
         {
+            var allStores = _storeService.GetAllStores();
             if (customer != null)
             {
                 model.Id = customer.Id;
@@ -515,6 +517,20 @@ namespace Nop.Admin.Controllers
                     model.LastVisitedPage = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
 
                     model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+
+                    //newsletter subscriptions
+                    if (!String.IsNullOrEmpty(customer.Email))
+                    {
+                        var newsletterSubscriptionStoreIds = new List<int>();
+                        foreach (var store in allStores)
+                        {
+                            var newsletterSubscription = _newsLetterSubscriptionService
+                                .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                            if (newsletterSubscription != null)
+                                newsletterSubscriptionStoreIds.Add(store.Id);
+                            model.SelectedNewsletterSubscriptionStoreIds = newsletterSubscriptionStoreIds.ToArray();
+                        }
+                    }
 
                     //form fields
                     model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
@@ -604,6 +620,11 @@ namespace Nop.Admin.Controllers
                 }
             }
 
+            //newsletter subscriptions
+            model.AvailableNewsletterSubscriptionStores = allStores
+                .Select(s => new CustomerModel.StoreModel() {Id = s.Id, Name = s.Name })
+                .ToList();
+
             //customer roles
             model.AvailableCustomerRoles = _customerService
                 .GetAllCustomerRoles(true)
@@ -617,7 +638,7 @@ namespace Nop.Admin.Controllers
                 model.AddRewardPointsMessage = "Some comment here...";
 
                 //stores
-                foreach (var store in _storeService.GetAllStores())
+                foreach (var store in allStores)
                 {
                     model.RewardPointsAvailableStores.Add(new SelectListItem
                     {
@@ -871,7 +892,43 @@ namespace Nop.Admin.Controllers
                 //custom customer attributes
                 var customerAttributes = ParseCustomCustomerAttributes(customer, form);
                 _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
-                    
+
+
+                //newsletter subscriptions
+                if (!String.IsNullOrEmpty(customer.Email))
+                {
+                    var allStores = _storeService.GetAllStores();
+                    foreach (var store in allStores)
+                    {
+                        var newsletterSubscription = _newsLetterSubscriptionService
+                            .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                        if (model.SelectedNewsletterSubscriptionStoreIds != null &&
+                            model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
+                        {
+                            //subscribed
+                            if (newsletterSubscription == null)
+                            {
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                {
+                                    NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                    Email = customer.Email,
+                                    Active = true,
+                                    StoreId = store.Id,
+                                    CreatedOnUtc = DateTime.UtcNow
+                                });
+                            }
+                        }
+                        else
+                        {
+                            //not subscribed
+                            if (newsletterSubscription != null)
+                            {
+                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
+                            }
+                        }
+                    }
+                }
+
                 //password
                 if (!String.IsNullOrWhiteSpace(model.Password))
                 {
@@ -928,7 +985,6 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             PrepareCustomerModel(model, null, true);
             return View(model);
-
         }
 
         public ActionResult Edit(int id)
@@ -1060,7 +1116,42 @@ namespace Nop.Admin.Controllers
                     //custom customer attributes
                     var customerAttributes = ParseCustomCustomerAttributes(customer, form);
                     _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.CustomCustomerAttributes, customerAttributes);
-                    
+
+                    //newsletter subscriptions
+                    if (!String.IsNullOrEmpty(customer.Email))
+                    {
+                        var allStores = _storeService.GetAllStores();
+                        foreach (var store in allStores)
+                        {
+                            var newsletterSubscription = _newsLetterSubscriptionService
+                                .GetNewsLetterSubscriptionByEmailAndStoreId(customer.Email, store.Id);
+                            if (model.SelectedNewsletterSubscriptionStoreIds != null &&
+                                model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))
+                            {
+                                //subscribed
+                                if (newsletterSubscription == null)
+                                {
+                                    _newsLetterSubscriptionService.InsertNewsLetterSubscription(new NewsLetterSubscription
+                                    {
+                                        NewsLetterSubscriptionGuid = Guid.NewGuid(),
+                                        Email = customer.Email,
+                                        Active = true,
+                                        StoreId = store.Id,
+                                        CreatedOnUtc = DateTime.UtcNow
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                //not subscribed
+                                if (newsletterSubscription != null)
+                                {
+                                    _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletterSubscription);
+                                }
+                            }
+                        }
+                    }
+
 
                     //customer roles
                     foreach (var customerRole in allCustomerRoles)

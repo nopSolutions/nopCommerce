@@ -24,7 +24,7 @@ namespace Nop.Admin.Models.Customers
             this.AvailableStates = new List<SelectListItem>();
             this.AvailableVendors = new List<SelectListItem>();
             this.CustomerAttributes = new List<CustomerAttributeModel>();
-
+            this.AvailableNewsletterSubscriptionStores = new List<StoreModel>();
             this.RewardPointsAvailableStores = new List<SelectListItem>();
         }
 
@@ -183,7 +183,11 @@ namespace Nop.Admin.Models.Customers
         public int[] SelectedCustomerRoleIds { get; set; }
 
 
-
+        //newsletter subscriptions (per store)
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
+        public List<StoreModel> AvailableNewsletterSubscriptionStores { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Newsletter")]
+        public int[] SelectedNewsletterSubscriptionStoreIds { get; set; }
 
 
 
@@ -213,8 +217,13 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
         public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
 
-        
+
         #region Nested classes
+
+        public partial class StoreModel : BaseNopEntityModel
+        {
+            public string Name { get; set; }
+        }
 
         public partial class AssociatedExternalAuthModel : BaseNopEntityModel
         {

@@ -2,7 +2,6 @@
 @using Nop.Core.Domain.Orders;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 <div id="customer-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -138,33 +137,33 @@
             });
         });
     </script>
-        }
+}
     <table class="adminContent customer-info-tab">
         @if (Model.UsernamesEnabled)
         {
             if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
             {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Username):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Username)
-                    @Html.ValidationMessageFor(model => model.Username)
-                </td>
-            </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Username):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.Username)
+                        @Html.ValidationMessageFor(model => model.Username)
+                    </td>
+                </tr>
             }
             else
             {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Username):
-                </td>
-                <td class="adminData">
-                    @Model.Username
-                    @Html.HiddenFor(model => model.Username)
-                </td>
-            </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Username):
+                    </td>
+                    <td class="adminData">
+                        @Model.Username
+                        @Html.HiddenFor(model => model.Username)
+                    </td>
+                </tr>
             }
         }
         <tr>
@@ -210,7 +209,7 @@
     {
         AuthMethodName: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.AuthMethodName)))",
         Email: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.Email)))",
-    ExternalIdentifier: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.ExternalIdentifier)))"
+        ExternalIdentifier: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.ExternalIdentifier)))"
     }
 </text>
                                 if (i != Model.AssociatedExternalAuthRecords.Count - 1)
@@ -287,8 +286,8 @@
                 <td class="adminData">
                     <div class="gender">
                         @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
-                    <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
-                        </div>
+                        <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
+                    </div>
                     <div class="gender">
                         @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
                         <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
@@ -494,6 +493,27 @@
                     @Html.ValidationMessageFor(model => model.VatNumber)
                 </td>
             </tr>
+        }
+        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SelectedNewsletterSubscriptionStoreIds):
+                </td>
+                <td class="adminData">
+                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                    {
+                        <div>
+                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))    
+                        </div>
+                        
+                    }
+                </td>
+            </tr>
+        }
+        else
+        {
+        @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
         }
         <tr>
             <td class="adminTitle">
