@@ -842,119 +842,142 @@ namespace Nop.Web.Controllers
         [StoreClosed(true)]
         public ActionResult RobotsTextFile()
         {
-            var disallowPaths = new List<string>
-                                    {
-                                        "/bin/",
-                                        "/content/files/",
-                                        "/content/files/exportimport/",
-                                        "/country/getstatesbycountryid",
-                                        "/install",
-                                        "/setproductreviewhelpfulness",
-                                    };
-            var localizableDisallowPaths = new List<string>
-                                               {
-                                                   "/addproducttocart/catalog/",
-                                                   "/addproducttocart/details/",
-                                                   "/backinstocksubscriptions/manage",
-                                                   "/boards/forumsubscriptions",
-                                                   "/boards/forumwatch",
-                                                   "/boards/postedit",
-                                                   "/boards/postdelete",
-                                                   "/boards/postcreate",
-                                                   "/boards/topicedit",
-                                                   "/boards/topicdelete",
-                                                   "/boards/topiccreate",
-                                                   "/boards/topicmove",
-                                                   "/boards/topicwatch",
-                                                   "/cart",
-                                                   "/checkout",
-                                                   "/checkout/billingaddress",
-                                                   "/checkout/completed",
-                                                   "/checkout/confirm",
-                                                   "/checkout/shippingaddress",
-                                                   "/checkout/shippingmethod",
-                                                   "/checkout/paymentinfo",
-                                                   "/checkout/paymentmethod",
-                                                   "/clearcomparelist",
-                                                   "/compareproducts",
-                                                   "/compareproducts/add/*",
-                                                   "/customer/avatar",
-                                                   "/customer/activation",
-                                                   "/customer/addresses",
-                                                   "/customer/changepassword",
-                                                   "/customer/checkusernameavailability",
-                                                   "/customer/downloadableproducts",
-                                                   "/customer/info",
-                                                   "/deletepm",
-                                                   "/emailwishlist",
-                                                   "/inboxupdate",
-                                                   "/newsletter/subscriptionactivation",
-                                                   "/onepagecheckout",
-                                                   "/order/history",
-                                                   "/orderdetails",
-                                                   "/passwordrecovery/confirm",
-                                                   "/poll/vote",
-                                                   "/privatemessages",
-                                                   "/returnrequest",
-                                                   "/returnrequest/history",
-                                                   "/rewardpoints/history",
-                                                   "/sendpm",
-                                                   "/sentupdate",
-                                                   "/shoppingcart/*",
-                                                   "/subscribenewsletter",
-                                                   "/topic/authenticate",
-                                                   "/viewpm",
-                                                   "/uploadfileproductattribute",
-                                                   "/uploadfilecheckoutattribute",
-                                                   "/wishlist",
-                                               };
-
-
-            const string newLine = "\r\n"; //Environment.NewLine
             var sb = new StringBuilder();
-            sb.Append("User-agent: *");
-            sb.Append(newLine);
-            //sitemaps
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+
+            //if robots.txt exists, let's use it
+            string robotsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.custom.txt");
+            if (System.IO.File.Exists(robotsFile))
             {
-                //URLs are localizable. Append SEO code
-                foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
-                {
-                    sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
-                    sb.Append(newLine);
-                }
+                //the robots.txt file exists
+                string robotsFileContent = System.IO.File.ReadAllText(robotsFile);
+                sb.Append(robotsFileContent);
             }
             else
             {
-                //localizable paths (without SEO code)
-                sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
-                sb.Append(newLine);
-            }
+                //doesn't exist. Let's generate it (default behavior)
 
-            //usual paths
-            foreach (var path in disallowPaths)
-            {
-                sb.AppendFormat("Disallow: {0}", path);
-                sb.Append(newLine);
-            }
-            //localizable paths (without SEO code)
-            foreach (var path in localizableDisallowPaths)
-            {
-                sb.AppendFormat("Disallow: {0}", path);
-                sb.Append(newLine);
-            }
-            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-            {
-                //URLs are localizable. Append SEO code
-                foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                var disallowPaths = new List<string>
                 {
-                    foreach (var path in localizableDisallowPaths)
+                    "/bin/",
+                    "/content/files/",
+                    "/content/files/exportimport/",
+                    "/country/getstatesbycountryid",
+                    "/install",
+                    "/setproductreviewhelpfulness",
+                };
+                var localizableDisallowPaths = new List<string>
+                {
+                    "/addproducttocart/catalog/",
+                    "/addproducttocart/details/",
+                    "/backinstocksubscriptions/manage",
+                    "/boards/forumsubscriptions",
+                    "/boards/forumwatch",
+                    "/boards/postedit",
+                    "/boards/postdelete",
+                    "/boards/postcreate",
+                    "/boards/topicedit",
+                    "/boards/topicdelete",
+                    "/boards/topiccreate",
+                    "/boards/topicmove",
+                    "/boards/topicwatch",
+                    "/cart",
+                    "/checkout",
+                    "/checkout/billingaddress",
+                    "/checkout/completed",
+                    "/checkout/confirm",
+                    "/checkout/shippingaddress",
+                    "/checkout/shippingmethod",
+                    "/checkout/paymentinfo",
+                    "/checkout/paymentmethod",
+                    "/clearcomparelist",
+                    "/compareproducts",
+                    "/compareproducts/add/*",
+                    "/customer/avatar",
+                    "/customer/activation",
+                    "/customer/addresses",
+                    "/customer/changepassword",
+                    "/customer/checkusernameavailability",
+                    "/customer/downloadableproducts",
+                    "/customer/info",
+                    "/deletepm",
+                    "/emailwishlist",
+                    "/inboxupdate",
+                    "/newsletter/subscriptionactivation",
+                    "/onepagecheckout",
+                    "/order/history",
+                    "/orderdetails",
+                    "/passwordrecovery/confirm",
+                    "/poll/vote",
+                    "/privatemessages",
+                    "/returnrequest",
+                    "/returnrequest/history",
+                    "/rewardpoints/history",
+                    "/sendpm",
+                    "/sentupdate",
+                    "/shoppingcart/*",
+                    "/subscribenewsletter",
+                    "/topic/authenticate",
+                    "/viewpm",
+                    "/uploadfileproductattribute",
+                    "/uploadfilecheckoutattribute",
+                    "/wishlist",
+                };
+
+
+                const string newLine = "\r\n"; //Environment.NewLine
+                sb.Append("User-agent: *");
+                sb.Append(newLine);
+                //sitemaps
+                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                {
+                    //URLs are localizable. Append SEO code
+                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
                     {
-                        sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                        sb.AppendFormat("Sitemap: {0}{1}/sitemap.xml", _storeContext.CurrentStore.Url, language.UniqueSeoCode);
                         sb.Append(newLine);
                     }
                 }
+                else
+                {
+                    //localizable paths (without SEO code)
+                    sb.AppendFormat("Sitemap: {0}sitemap.xml", _storeContext.CurrentStore.Url);
+                    sb.Append(newLine);
+                }
+
+                //usual paths
+                foreach (var path in disallowPaths)
+                {
+                    sb.AppendFormat("Disallow: {0}", path);
+                    sb.Append(newLine);
+                }
+                //localizable paths (without SEO code)
+                foreach (var path in localizableDisallowPaths)
+                {
+                    sb.AppendFormat("Disallow: {0}", path);
+                    sb.Append(newLine);
+                }
+                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                {
+                    //URLs are localizable. Append SEO code
+                    foreach (var language in _languageService.GetAllLanguages(storeId: _storeContext.CurrentStore.Id))
+                    {
+                        foreach (var path in localizableDisallowPaths)
+                        {
+                            sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                            sb.Append(newLine);
+                        }
+                    }
+                }
+
+                //load and add robots.txt additions to the end of file.
+                string robotsAdditionsFile = System.IO.Path.Combine(_webHelper.MapPath("~/"), "robots.additions.txt");
+                if (System.IO.File.Exists(robotsAdditionsFile))
+                {
+                    string robotsFileContent = System.IO.File.ReadAllText(robotsAdditionsFile);
+                    sb.Append(robotsFileContent);
+                }
             }
+
 
             Response.ContentType = "text/plain";
             Response.Write(sb.ToString());
