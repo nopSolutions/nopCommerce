@@ -299,6 +299,24 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Newsletter.Hint">
     <Value>Check to subscribe to newsletter.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingLastName">
+    <Value>Billing last name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingLastName.Hint">
+    <Value>Filter by customer billing last name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.CustomerEmail">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.CustomerEmail.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingEmail">
+    <Value>Billing email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingEmail.Hint">
+    <Value>Filter by customer billing email address.</Value>
+  </LocaleResource>
 </Language>
 '
 

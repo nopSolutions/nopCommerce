@@ -45,14 +45,6 @@
                 @Html.EditorFor(model => model.EndDate)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CustomerEmail)
-            </td>
-        </tr>
         <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.OrderStatusId):
@@ -99,6 +91,22 @@
             </td>
             <td class="adminData">
                 @Html.DropDownList("WarehouseId", Model.AvailableWarehouses)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BillingEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.BillingEmail)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BillingLastName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.BillingLastName)
             </td>
         </tr>
         <tr>
@@ -335,7 +343,14 @@
                             return false;
                         });
 
-                        $("#@Html.FieldIdFor(model => model.CustomerEmail)").keydown(function (event) {
+                        $("#@Html.FieldIdFor(model => model.BillingEmail)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-orders").click();
+                                return false;
+                            }
+                        });
+
+                        $("#@Html.FieldIdFor(model => model.BillingLastName)").keydown(function (event) {
                             if (event.keyCode == 13) {
                                 $("#search-orders").click();
                                 return false;
@@ -355,7 +370,7 @@
                                 return false;
                             }
                         });
-                        
+
                         $('#mastercheckbox').click(function () {
                             $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                         });
@@ -387,13 +402,14 @@
                         var data = {
                             StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                             EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                            CustomerEmail: $('#@Html.FieldIdFor(model => model.CustomerEmail)').val(),
                             OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
                             PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
                             ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
                             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),
+                            BillingEmail: $('#@Html.FieldIdFor(model => model.BillingEmail)').val(),
+                            BillingLastName: $('#@Html.FieldIdFor(model => model.BillingLastName)').val(),
                             BillingCountryId: $('#@Html.FieldIdFor(model => model.BillingCountryId)').val(),
                             PaymentMethodSystemName: $('#@Html.FieldIdFor(model => model.PaymentMethodSystemName)').val(),
                             ProductId: $('#@Html.FieldIdFor(model => model.ProductId)').val(),
@@ -425,7 +441,7 @@
                             }
                         }
                     }
-                    
+
                     function updateMasterCheckbox() {
                         var numChkBoxes = $('#orders-grid input[type=checkbox][id!=mastercheckbox]').length;
                         var numChkBoxesChecked = $('#orders-grid input[type=checkbox][id!=mastercheckbox]:checked').length;

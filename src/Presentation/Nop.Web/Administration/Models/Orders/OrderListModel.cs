@@ -28,11 +28,6 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.List.EndDate")]
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
-
-        [NopResourceDisplayName("Admin.Orders.List.CustomerEmail")]
-        [AllowHtml]
-        public string CustomerEmail { get; set; }
-
         [NopResourceDisplayName("Admin.Orders.List.OrderStatus")]
         public int OrderStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.List.PaymentStatus")]
@@ -54,6 +49,14 @@ namespace Nop.Admin.Models.Orders
 
         [NopResourceDisplayName("Admin.Orders.List.Product")]
         public int ProductId { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.List.BillingEmail")]
+        [AllowHtml]
+        public string BillingEmail { get; set; }
+
+        [NopResourceDisplayName("Admin.Orders.List.BillingLastName")]
+        [AllowHtml]
+        public string BillingLastName { get; set; }
 
         [NopResourceDisplayName("Admin.Orders.List.BillingCountry")]
         public int BillingCountryId { get; set; }

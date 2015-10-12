@@ -149,6 +149,7 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all orders</param>
         /// <param name="ss">Order shipment status; null to load all orders</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <param name="orderGuid">Search by order GUID (Global unique identifier) or part of GUID. Leave empty to load all orders.</param>
         /// <param name="pageIndex">Page index</param>
@@ -160,7 +161,8 @@ namespace Nop.Services.Orders
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
-            string billingEmail = null, string orderNotes = null, string orderGuid = null,
+            string billingEmail = null, string billingLastName = "",
+            string orderNotes = null, string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
             int? orderStatusId = null;
@@ -229,6 +231,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => shippingStatusId.Value == o.ShippingStatusId);
             if (!String.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!String.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
             if (!String.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             query = query.Where(o => !o.Deleted);

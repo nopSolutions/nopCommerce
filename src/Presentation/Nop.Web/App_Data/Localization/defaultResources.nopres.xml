@@ -9072,11 +9072,17 @@
   <LocaleResource Name="Admin.Orders.List.BillingCountry.Hint">
     <Value>Filter by order billing country.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.List.CustomerEmail">
+  <LocaleResource Name="Admin.Orders.List.BillingEmail">
     <Value>Billing email address</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.List.CustomerEmail.Hint">
-    <Value>A billing email address.</Value>
+  <LocaleResource Name="Admin.Orders.List.BillingEmail.Hint">
+    <Value>Filter by customer billing email address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingLastName">
+    <Value>Billing last name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.BillingLastName.Hint">
+    <Value>Filter by customer billing last name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.EndDate">
     <Value>End date</Value>

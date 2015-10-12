@@ -126,6 +126,7 @@ namespace Nop.Services.Orders
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
@@ -134,7 +135,8 @@ namespace Nop.Services.Orders
             int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, bool ignoreCancelledOrders = false, string orderNotes = null)
+            string billingEmail = null, string billingLastName = "", 
+            bool ignoreCancelledOrders = false, string orderNotes = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -181,6 +183,8 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
             if (!String.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            if (!String.IsNullOrEmpty(billingLastName))
+                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName));
             if (!String.IsNullOrEmpty(orderNotes))
                 query = query.Where(o => o.OrderNotes.Any(on => on.Note.Contains(orderNotes)));
             
@@ -477,13 +481,14 @@ namespace Nop.Services.Orders
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
         /// <returns>Result</returns>
         public virtual decimal ProfitReport(int storeId = 0, int vendorId = 0,
             int billingCountryId = 0, int orderId = 0, string paymentMethodSystemName = null,
             OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
             DateTime? startTimeUtc = null, DateTime? endTimeUtc = null,
-            string billingEmail = null, string orderNotes = null)
+            string billingEmail = null, string billingLastName = "", string orderNotes = null)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -496,11 +501,13 @@ namespace Nop.Services.Orders
             int? shippingStatusId = null;
             if (ss.HasValue)
                 shippingStatusId = (int)ss.Value;
-            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            //We cannot use String.IsNullOrEmpty() in SQL Compact
             bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
-            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            //We cannot use String.IsNullOrEmpty() in SQL Compact
+            bool dontSearchLastName = String.IsNullOrEmpty(billingLastName);
+            //We cannot use String.IsNullOrEmpty() in SQL Compact
             bool dontSearchOrderNotes = String.IsNullOrEmpty(orderNotes);
-            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            //We cannot use String.IsNullOrEmpty() in SQL Compact
             bool dontSearchPaymentMethods = String.IsNullOrEmpty(paymentMethodSystemName);
             var query = from orderItem in _orderItemRepository.Table
                         join o in _orderRepository.Table on orderItem.OrderId equals o.Id
@@ -518,6 +525,7 @@ namespace Nop.Services.Orders
                               //we do not ignore deleted products when calculating order reports
                               //(!p.Deleted)
                               (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail))) &&
+                              (dontSearchLastName || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.LastName) && o.BillingAddress.LastName.Contains(billingLastName))) &&
                               (dontSearchOrderNotes || o.OrderNotes.Any(oNote => oNote.Note.Contains(orderNotes)))
                         select orderItem;
 
@@ -535,6 +543,7 @@ namespace Nop.Services.Orders
                 startTimeUtc: startTimeUtc,
                 endTimeUtc: endTimeUtc,
                 billingEmail: billingEmail,
+                billingLastName: billingLastName,
                 orderNotes: orderNotes);
             var profit = reportSummary.SumOrders - reportSummary.SumShippingExclTax - reportSummary.SumTax - productCost;
             return profit;
