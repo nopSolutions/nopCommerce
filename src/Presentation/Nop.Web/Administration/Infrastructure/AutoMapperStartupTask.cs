@@ -196,7 +196,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CategoryModel, Category>()
-                .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore())
@@ -214,7 +213,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ManufacturerModel, Manufacturer>()
-                .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore())

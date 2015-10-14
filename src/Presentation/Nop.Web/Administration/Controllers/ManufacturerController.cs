@@ -348,8 +348,6 @@ namespace Nop.Admin.Controllers
                         manufacturer.AppliedDiscounts.Add(discount);
                 }
                 _manufacturerService.UpdateManufacturer(manufacturer);
-                //update "HasDiscountsApplied" property
-                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
                 //ACL (customer roles)
@@ -450,8 +448,6 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _manufacturerService.UpdateManufacturer(manufacturer);
-                //update "HasDiscountsApplied" property
-                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
                 {

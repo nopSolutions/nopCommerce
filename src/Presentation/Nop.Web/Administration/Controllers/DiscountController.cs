@@ -259,23 +259,15 @@ namespace Nop.Admin.Controllers
                     && discount.DiscountType != DiscountType.AssignedToCategories)
                 {
                     //applied to categories
-                    var categories = discount.AppliedToCategories.ToList();
                     discount.AppliedToCategories.Clear();
                     _discountService.UpdateDiscount(discount);
-                    //update "HasDiscountsApplied" property
-                    foreach (var category in categories)
-                        _categoryService.UpdateHasDiscountsApplied(category);
                 }
                 if (prevDiscountType == DiscountType.AssignedToManufacturers
                     && discount.DiscountType != DiscountType.AssignedToManufacturers)
                 {
                     //applied to manufacturers
-                    var manufacturers = discount.AppliedToManufacturers.ToList();
                     discount.AppliedToManufacturers.Clear();
                     _discountService.UpdateDiscount(discount);
-                    //update "HasDiscountsApplied" property
-                    foreach (var manufacturer in manufacturers)
-                        _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                 }
                 if (prevDiscountType == DiscountType.AssignedToSkus
                     && discount.DiscountType != DiscountType.AssignedToSkus)
@@ -320,21 +312,13 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 //No discount found with the specified id
                 return RedirectToAction("List");
-
-            //applied to categories
-            var categories = discount.AppliedToCategories.ToList();
-            //applied to manufacturers
-            var manufacturers = discount.AppliedToManufacturers.ToList();
+            
             //applied to products
             var products = discount.AppliedToProducts.ToList();
 
             _discountService.DeleteDiscount(discount);
             
             //update "HasDiscountsApplied" properties
-            foreach (var category in categories)
-                _categoryService.UpdateHasDiscountsApplied(category);
-            foreach (var manufacturer in manufacturers)
-                _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
             foreach (var p in products)
                 _productService.UpdateHasDiscountsApplied(p);
 
@@ -605,7 +589,6 @@ namespace Nop.Admin.Controllers
                 category.AppliedDiscounts.Remove(discount);
 
             _categoryService.UpdateCategory(category);
-            _categoryService.UpdateHasDiscountsApplied(category);
 
             return new NullJsonResult();
         }
@@ -663,7 +646,6 @@ namespace Nop.Admin.Controllers
                             category.AppliedDiscounts.Add(discount);
 
                         _categoryService.UpdateCategory(category);
-                        _categoryService.UpdateHasDiscountsApplied(category);
                     }
                 }
             }
@@ -723,7 +705,6 @@ namespace Nop.Admin.Controllers
                 manufacturer.AppliedDiscounts.Remove(discount);
 
             _manufacturerService.UpdateManufacturer(manufacturer);
-            _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
 
             return new NullJsonResult();
         }
@@ -776,7 +757,6 @@ namespace Nop.Admin.Controllers
                             manufacturer.AppliedDiscounts.Add(discount);
 
                         _manufacturerService.UpdateManufacturer(manufacturer);
-                        _manufacturerService.UpdateHasDiscountsApplied(manufacturer);
                     }
                 }
             }

@@ -9738,6 +9738,12 @@
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords">
     <Value>No categories selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories">
+    <Value>Apply to subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories.Hint">
+    <Value>Check to apply discount to subcategories of the selected parent. But please note that it can affect performance if you have a lot of nested subcategories.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.CouponCode">
     <Value>Coupon code</Value>
   </LocaleResource>

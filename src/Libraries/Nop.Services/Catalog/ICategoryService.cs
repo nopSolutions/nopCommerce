@@ -31,9 +31,10 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
         IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden = false);
+            bool showHidden = false, bool includeAllLevels = false);
 
         /// <summary>
         /// Gets all categories displayed on the home page
@@ -60,13 +61,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="category">Category</param>
         void UpdateCategory(Category category);
-
-        /// <summary>
-        /// Update HasDiscountsApplied property (used for performance optimization)
-        /// </summary>
-        /// <param name="category">Category</param>
-        void UpdateHasDiscountsApplied(Category category);
-
+        
         /// <summary>
         /// Deletes a product category mapping
         /// </summary>

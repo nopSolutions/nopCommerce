@@ -87,6 +87,7 @@ namespace Nop.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
+            //discounts applied to products
             if (product.HasDiscountsApplied)
             {
                 //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
@@ -99,19 +100,43 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            //performance optimization
-            //load all category discounts just to ensure that we have at least one
-            if (_discountService.GetAllDiscounts(DiscountType.AssignedToCategories).Any())
+            //discounts applied to categories
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories))
             {
-                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                foreach (var productCategory in productCategories)
+                //load identifier of categories with this discount applied to
+                var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_CATEGORY_IDS_MODEL_KEY,
+                    discount.Id,
+                    string.Join(",", customer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                var appliedToCategoryIds = _cacheManager.Get(cacheKey, () =>
                 {
-                    var category = productCategory.Category;
-                    if (category.HasDiscountsApplied)
+                    var categoryIds = new List<int>();
+                    foreach (var category in discount.AppliedToCategories)
                     {
-                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                        var categoryDiscounts = category.AppliedDiscounts;
-                        foreach (var discount in categoryDiscounts)
+                        if (!categoryIds.Contains(category.Id))
+                            categoryIds.Add(category.Id);
+                        if (discount.AppliedToSubCategories)
+                        {
+                            //include subcategories
+                            foreach (var childCategoryId in _categoryService
+                                .GetAllCategoriesByParentCategoryId(category.Id, false, true)
+                                .Select(x => x.Id))
+                            {
+                                if (!categoryIds.Contains(childCategoryId))
+                                    categoryIds.Add(childCategoryId);
+                            }
+                        }
+                    }
+                    return categoryIds;
+                });
+                
+                //compare with categories of this product
+                if (appliedToCategoryIds.Any())
+                {
+                    var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                    foreach (var productCategory in productCategories)
+                    {
+                        if (appliedToCategoryIds.Contains(productCategory.CategoryId))
                         {
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToCategories &&
@@ -122,19 +147,24 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            //performance optimization
-            //load all manufacturer discounts just to ensure that we have at least one
-            if (_discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers).Any())
+            //discounts applied to manufacturers
+            foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers))
             {
-                var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id);
-                foreach (var productManufacturer in productManufacturers)
+                //load identifier of categories with this discount applied to
+                var cacheKey = string.Format(PriceCacheEventConsumer.DISCOUNT_MANUFACTURER_IDS_MODEL_KEY,
+                    discount.Id,
+                    string.Join(",", customer.GetCustomerRoleIds()),
+                    _storeContext.CurrentStore.Id);
+                var appliedToManufacturerIds = _cacheManager.Get(cacheKey,
+                    () => discount.AppliedToManufacturers.Select(x => x.Id).ToList());
+
+                //compare with manufacturers of this product
+                if (appliedToManufacturerIds.Any())
                 {
-                    var manufacturer = productManufacturer.Manufacturer;
-                    if (manufacturer.HasDiscountsApplied)
+                    var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id);
+                    foreach (var productManufacturer in productManufacturers)
                     {
-                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
-                        var manufacturerDiscounts = manufacturer.AppliedDiscounts;
-                        foreach (var discount in manufacturerDiscounts)
+                        if (appliedToManufacturerIds.Contains(productManufacturer.ManufacturerId))
                         {
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToManufacturers &&
@@ -144,6 +174,7 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
+
             return allowedDiscounts;
         }
         

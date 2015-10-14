@@ -35,8 +35,9 @@ namespace Nop.Services.Catalog
         /// {1} : show hidden records?
         /// {2} : current customer ID
         /// {3} : store ID
+        /// {3} : include all levels (child)
         /// </remarks>
-        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}";
+        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}-{4}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -223,11 +224,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="parentCategoryId">Parent category identifier</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="includeAllLevels">A value indicating whether we should load all child levels</param>
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
-            bool showHidden = false)
+            bool showHidden = false, bool includeAllLevels = false)
         {
-            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
+            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden, _workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id, includeAllLevels);
             return _cacheManager.Get(key, () =>
             {
                 var query = _categoryRepository.Table;
@@ -271,9 +273,18 @@ namespace Nop.Services.Catalog
                 }
 
                 var categories = query.ToList();
+                if (includeAllLevels)
+                {
+                    var childCategories = new List<Category>();
+                    //add child levels
+                    foreach (var category in categories)
+                    {
+                        childCategories.AddRange(GetAllCategoriesByParentCategoryId(category.Id, showHidden, includeAllLevels));
+                    }
+                    categories.AddRange(childCategories);
+                }
                 return categories;
             });
-
         }
         
         /// <summary>
@@ -365,19 +376,7 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(category);
         }
         
-        /// <summary>
-        /// Update HasDiscountsApplied property (used for performance optimization)
-        /// </summary>
-        /// <param name="category">Category</param>
-        public virtual void UpdateHasDiscountsApplied(Category category)
-        {
-            if (category == null)
-                throw new ArgumentNullException("category");
-
-            category.HasDiscountsApplied = category.AppliedDiscounts.Count > 0;
-            UpdateCategory(category);
-        }
-
+        
         /// <summary>
         /// Deletes a product category mapping
         /// </summary>

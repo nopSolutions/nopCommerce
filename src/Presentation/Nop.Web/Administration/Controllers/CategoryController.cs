@@ -398,8 +398,6 @@ namespace Nop.Admin.Controllers
                         category.AppliedDiscounts.Add(discount);
                 }
                 _categoryService.UpdateCategory(category);
-                //update "HasDiscountsApplied" property
-                _categoryService.UpdateHasDiscountsApplied(category);
                 //update picture seo file name
                 UpdatePictureSeoNames(category);
                 //ACL (customer roles)
@@ -503,8 +501,6 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _categoryService.UpdateCategory(category);
-                //update "HasDiscountsApplied" property
-                _categoryService.UpdateHasDiscountsApplied(category);
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != category.PictureId)
                 {

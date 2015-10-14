@@ -27,7 +27,6 @@ namespace Nop.Data.Tests.Catalog
                                    PriceRanges = "1-3;",
                                    ShowOnHomePage = false,
                                    IncludeInTopMenu = true,
-                                   HasDiscountsApplied = true,
                                    Published = true,
                                    SubjectToAcl = true,
                                    LimitedToStores = true,
@@ -52,7 +51,6 @@ namespace Nop.Data.Tests.Catalog
             fromDb.PriceRanges.ShouldEqual("1-3;");
             fromDb.ShowOnHomePage.ShouldEqual(false);
             fromDb.IncludeInTopMenu.ShouldEqual(true);
-            fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.SubjectToAcl.ShouldEqual(true);
             fromDb.LimitedToStores.ShouldEqual(true);

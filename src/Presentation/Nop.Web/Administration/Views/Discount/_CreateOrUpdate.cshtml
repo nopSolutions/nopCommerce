@@ -106,26 +106,30 @@
                 var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
                 if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
                     $('#tab-applied-to-categories').show();
-                $('#tab-applied-to-manufacturers').hide();
+                    $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').show();
+                    $('#pnlAppliedToSubCategories').show();
                 }
                 else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToManufacturers).ToString())) {
                     $('#tab-applied-to-categories').hide();
                     $('#tab-applied-to-manufacturers').show();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').show();
+                    $('#pnlAppliedToSubCategories').hide();
                 } else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
                     $('#tab-applied-to-categories').hide();
                     $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').show();
                     $('#pnlMaximumDiscountedQuantity').show();
+                    $('#pnlAppliedToSubCategories').hide();
                 }
                 else {
                     $('#tab-applied-to-categories').hide();
                     $('#tab-applied-to-manufacturers').hide();
                     $('#tab-applied-to-products').hide();
                     $('#pnlMaximumDiscountedQuantity').hide();
+                    $('#pnlAppliedToSubCategories').hide();
                 }
             }
 
@@ -176,6 +180,15 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
                 @Html.ValidationMessageFor(model => model.DiscountTypeId)
+            </td>
+        </tr>
+        <tr id="pnlAppliedToSubCategories">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AppliedToSubCategories):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AppliedToSubCategories)
+                @Html.ValidationMessageFor(model => model.AppliedToSubCategories)
             </td>
         </tr>
         <tr>

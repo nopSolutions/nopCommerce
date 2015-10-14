@@ -46,12 +46,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="manufacturer">Manufacturer</param>
         void UpdateManufacturer(Manufacturer manufacturer);
-
-        /// <summary>
-        /// Update HasDiscountsApplied property (used for performance optimization)
-        /// </summary>
-        /// <param name="manufacturer">Manufacturer</param>
-        void UpdateHasDiscountsApplied(Manufacturer manufacturer);
+        
 
         /// <summary>
         /// Deletes a product manufacturer mapping

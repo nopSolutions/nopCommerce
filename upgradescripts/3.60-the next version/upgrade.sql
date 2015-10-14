@@ -317,6 +317,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.BillingEmail.Hint">
     <Value>Filter by customer billing email address.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories">
+    <Value>Apply to subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories.Hint">
+    <Value>Check to apply discount to subcategories of the selected parent. But please note that it can affect performance if you have a lot of nested subcategories.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1312,4 +1318,34 @@ GO
 UPDATE [Setting]
 SET [Name] = N'catalogsettings.newproductsenabled'
 WHERE [Name] = N'catalogsettings.recentlyaddedproductsenabled'
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Discount]') and NAME='AppliedToSubCategories')
+BEGIN
+	ALTER TABLE [Discount]
+	ADD [AppliedToSubCategories] bit NULL
+END
+GO
+
+UPDATE [Discount]
+SET [AppliedToSubCategories] = 0
+WHERE [AppliedToSubCategories] IS NULL
+GO
+
+ALTER TABLE [Discount] ALTER COLUMN [AppliedToSubCategories] bit NOT NULL
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Category]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [Category] DROP COLUMN [HasDiscountsApplied]
+END
+GO
+
+--drop column
+IF EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Manufacturer]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [Manufacturer] DROP COLUMN [HasDiscountsApplied]
+END
 GO

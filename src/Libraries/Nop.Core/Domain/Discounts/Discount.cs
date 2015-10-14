@@ -81,6 +81,12 @@ namespace Nop.Core.Domain.Discounts
         public int? MaximumDiscountedQuantity { get; set; }
 
         /// <summary>
+        /// Gets or sets value indicating whether it should be applied to all subcategories or the selected one
+        /// Used with "Assigned to categories" type only.
+        /// </summary>
+        public bool AppliedToSubCategories { get; set; }
+
+        /// <summary>
         /// Gets or sets the discount type
         /// </summary>
         public DiscountType DiscountType
