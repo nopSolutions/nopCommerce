@@ -145,10 +145,19 @@ namespace Nop.Services.Catalog
                 //compare with categories of this product
                 if (appliedToCategoryIds.Any())
                 {
-                    var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                    foreach (var productCategory in productCategories)
+                    //load identifier of categories with this discount applied to
+                    var cacheKey2 = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_CATEGORY_IDS_MODEL_KEY,
+                        product.Id,
+                        string.Join(",", customer.GetCustomerRoleIds()),
+                        _storeContext.CurrentStore.Id);
+                    var categoryIds = _cacheManager.Get(cacheKey2, () =>
+                        _categoryService
+                        .GetProductCategoriesByProductId(product.Id)
+                        .Select(x => x.CategoryId)
+                        .ToList());
+                    foreach (var id in categoryIds)
                     {
-                        if (appliedToCategoryIds.Contains(productCategory.CategoryId))
+                        if (appliedToCategoryIds.Contains(id))
                         {
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToCategories &&
@@ -187,10 +196,19 @@ namespace Nop.Services.Catalog
                 //compare with manufacturers of this product
                 if (appliedToManufacturerIds.Any())
                 {
-                    var productManufacturers = _manufacturerService.GetProductManufacturersByProductId(product.Id);
-                    foreach (var productManufacturer in productManufacturers)
+                    //load identifier of categories with this discount applied to
+                    var cacheKey2 = string.Format(PriceCacheEventConsumer.DISCOUNT_PRODUCT_MANUFACTURER_IDS_MODEL_KEY,
+                        product.Id,
+                        string.Join(",", customer.GetCustomerRoleIds()),
+                        _storeContext.CurrentStore.Id);
+                    var manufacturerIds = _cacheManager.Get(cacheKey2, () =>
+                        _manufacturerService
+                        .GetProductManufacturersByProductId(product.Id)
+                        .Select(x => x.ManufacturerId)
+                        .ToList());
+                    foreach (var id in manufacturerIds)
                     {
-                        if (appliedToManufacturerIds.Contains(productManufacturer.ManufacturerId))
+                        if (appliedToManufacturerIds.Contains(id))
                         {
                             if (_discountService.ValidateDiscount(discount, customer).IsValid &&
                                 discount.DiscountType == DiscountType.AssignedToManufacturers &&
