@@ -42,7 +42,8 @@ namespace Nop.Web.Framework
             //we validate all controllers (in case of inheritance)
             var controllerTypes = new List<string>();
             controllerTypes.Add(filterContext.Controller.ToString());
-            controllerTypes.AddRange(BaseTypes(filterContext.Controller.GetType()));
+            controllerTypes.AddRange(BaseTypes(filterContext.Controller.GetType()));
+
 
             var permissionService = EngineContext.Current.Resolve<IPermissionService>();
             var publicStoreAllowNavigation = permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation);
@@ -66,7 +67,13 @@ namespace Nop.Web.Framework
                 //ensure it's not the GetStatesByCountryId ajax method (can be used during registration)
                 !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CountryController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("GetStatesByCountryId", StringComparison.InvariantCultureIgnoreCase))) &&
                 //ensure it's not the method (AJAX) for accepting EU Cookie law
-                !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase))))
+                !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase))) &&
+                //ensure it's "change language" method
+                !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("SetLanguage", StringComparison.InvariantCultureIgnoreCase))) &&
+                //ensure it's "change currency" method
+                !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("SetCurrency", StringComparison.InvariantCultureIgnoreCase))) &&
+                //ensure it's "change tax" method
+                !(controllerTypes.Any(x => x.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("SetTaxType", StringComparison.InvariantCultureIgnoreCase))))
             {
                 //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 //var loginPageUrl = webHelper.GetStoreLocation() + "login";
