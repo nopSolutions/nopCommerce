@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog.Cache;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using OfficeOpenXml.ConditionalFormatting;
 
 namespace Nop.Services.Catalog
 {
@@ -75,19 +76,17 @@ namespace Nop.Services.Catalog
         #region Utilities
 
         /// <summary>
-        /// Gets allowed discounts
+        /// Gets allowed discounts applied to product
         /// </summary>
         /// <param name="product">Product</param>
         /// <param name="customer">Customer</param>
         /// <returns>Discounts</returns>
-        protected virtual IList<Discount> GetAllowedDiscounts(Product product, 
-            Customer customer)
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToProduct(Product product, Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            //discounts applied to products
             if (product.HasDiscountsApplied)
             {
                 //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
@@ -100,7 +99,21 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            //discounts applied to categories
+            return allowedDiscounts;
+        }
+
+        /// <summary>
+        /// Gets allowed discounts applied to categories
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Discounts</returns>
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToCategories(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
             foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToCategories))
             {
                 //load identifier of categories with this discount applied to
@@ -129,7 +142,7 @@ namespace Nop.Services.Catalog
                     }
                     return categoryIds;
                 });
-                
+
                 //compare with categories of this product
                 if (appliedToCategoryIds.Any())
                 {
@@ -147,7 +160,21 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            //discounts applied to manufacturers
+            return allowedDiscounts;
+        }
+
+        /// <summary>
+        /// Gets allowed discounts applied to manufacturers
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Discounts</returns>
+        protected virtual IList<Discount> GetAllowedDiscountsAppliedToManufacturers(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
             foreach (var discount in _discountService.GetAllDiscounts(DiscountType.AssignedToManufacturers))
             {
                 //load identifier of categories with this discount applied to
@@ -174,6 +201,36 @@ namespace Nop.Services.Catalog
                     }
                 }
             }
+
+            return allowedDiscounts;
+        }
+
+        /// <summary>
+        /// Gets allowed discounts
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>Discounts</returns>
+        protected virtual IList<Discount> GetAllowedDiscounts(Product product, Customer customer)
+        {
+            var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
+
+            //discounts applied to products
+            foreach (var discount in GetAllowedDiscountsAppliedToProduct(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
+
+            //discounts applied to categories
+            foreach (var discount in GetAllowedDiscountsAppliedToCategories(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
+
+            //discounts applied to manufacturers
+            foreach (var discount in GetAllowedDiscountsAppliedToManufacturers(product, customer))
+                if (!allowedDiscounts.ContainsDiscount(discount))
+                    allowedDiscounts.Add(discount);
 
             return allowedDiscounts;
         }
