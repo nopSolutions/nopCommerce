@@ -11,7 +11,6 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog.Cache;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
-using OfficeOpenXml.ConditionalFormatting;
 
 namespace Nop.Services.Catalog
 {
