@@ -43,6 +43,9 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
+            //disable "X-AspNetMvc-Version" header name
+            MvcHandler.DisableMvcResponseHeader = true;
+
             //initialize engine context
             EngineContext.Initialize(false);
 
