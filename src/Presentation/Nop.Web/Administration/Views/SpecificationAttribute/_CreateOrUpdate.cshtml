@@ -2,6 +2,18 @@
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
+<script>
+    $(document).ready(function () {
+        $("#specificationattribute-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="specificationattribute-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -18,18 +30,6 @@
         @TabOptions()
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#specificationattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

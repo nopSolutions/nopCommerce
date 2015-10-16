@@ -19,6 +19,18 @@
     
     @Html.ValidationSummary(false)
 
+    <script>
+        $(document).ready(function() {
+            $("#customersettings-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
     <div id="customersettings-edit">
         <ul>
             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -53,18 +65,6 @@
             @TabExternalAuthenticationSettings()
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $("#customersettings-edit").kendoTabStrip({
-                animation:  {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
 
     {
         //custom tabs

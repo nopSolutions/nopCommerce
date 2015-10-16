@@ -5,6 +5,17 @@
 {
     if (Model.AvailableProductAttributes.Count > 0)
     {
+        <script>
+            $(document).ready(function() {
+                $("#productattribute-edit").kendoTabStrip({
+                    animation: {
+                        open: {
+                            effects: "fadeIn"
+                        }
+                    }
+                });
+            });
+        </script>
         <div id="productattribute-edit">
             <ul>
                 <li @Html.RenderSelectedTabIndex(0, 0)>
@@ -21,17 +32,6 @@
                 @TabAttributeCombinations()
             </div>
         </div>
-        <script>
-            $(document).ready(function() {
-                $("#productattribute-edit").kendoTabStrip({
-                    animation: {
-                        open: {
-                            effects: "fadeIn"
-                        }
-                    }
-                });
-            });
-        </script>
     }
     else
     {

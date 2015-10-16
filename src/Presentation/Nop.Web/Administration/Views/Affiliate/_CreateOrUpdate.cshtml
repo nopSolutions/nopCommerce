@@ -2,6 +2,18 @@
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
+<script>
+    $(document).ready(function() {
+        $("#affiliate-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="affiliate-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -30,18 +42,6 @@
         </div>
     }
 </div>
-<script>
-    $(document).ready(function() {
-        $("#affiliate-edit").kendoTabStrip({
-            animation:  {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

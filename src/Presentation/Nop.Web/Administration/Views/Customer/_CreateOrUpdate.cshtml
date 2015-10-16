@@ -2,6 +2,19 @@
 @using Nop.Core.Domain.Orders;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+
+<script>
+    $(document).ready(function() {
+        $("#customer-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="customer-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -78,18 +91,6 @@
         </div>
     }
 </div>
-<script>
-    $(document).ready(function() {
-        $("#customer-edit").kendoTabStrip({
-            animation:  {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

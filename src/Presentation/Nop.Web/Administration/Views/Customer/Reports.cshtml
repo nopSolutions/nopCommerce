@@ -12,6 +12,18 @@
     <div class="options">
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#customer-reports").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="customer-reports">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -34,18 +46,6 @@
         @TabRegisteredCustomers()
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#customer-reports").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

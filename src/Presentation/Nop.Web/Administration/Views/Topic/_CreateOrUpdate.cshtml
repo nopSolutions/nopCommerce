@@ -1,6 +1,18 @@
 ﻿@model TopicModel
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+<script>
+    $(document).ready(function () {
+        $("#topic-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
 <div id="topic-edit">
     <ul>
         <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -29,18 +41,6 @@
         @TabStores()
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $("#topic-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 @{
     //custom tabs

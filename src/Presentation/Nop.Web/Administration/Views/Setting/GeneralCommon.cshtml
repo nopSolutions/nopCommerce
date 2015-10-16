@@ -17,8 +17,19 @@
     </div>
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
-    
 
+    <script>
+        $(document).ready(function() {
+            $("#generalsettings-edit").kendoTabStrip({
+                animation:  {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
     <div id="generalsettings-edit">
         <ul>
             <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
@@ -59,18 +70,6 @@
             @TabFullTextSettings()
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $("#generalsettings-edit").kendoTabStrip({
-                animation:  {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
-    </script>
 
     {
         //custom tabs
