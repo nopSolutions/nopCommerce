@@ -44,7 +44,7 @@ namespace Nop.Core.Domain.Customers
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the order for which points were redeemed as a payment
+        /// Gets or sets the order for which points were redeemed as a payment (spent by a customer when placing this order)
         /// </summary>
         public virtual Order UsedWithOrder { get; set; }
 

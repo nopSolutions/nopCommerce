@@ -680,7 +680,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Award reward points
+        /// Reduce reward points (previously awarded for placing an order)
         /// </summary>
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
@@ -694,7 +694,7 @@ namespace Nop.Services.Orders
                 return;
 
             //reduce reward points
-            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, - points,order.StoreId,
+            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -points, order.StoreId,
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
             _orderService.UpdateOrder(order);
         }
@@ -1383,7 +1383,7 @@ namespace Nop.Services.Orders
                     if (details.RedeemedRewardPointsAmount > decimal.Zero)
                     {
                         _rewardPointService.AddRewardPointsHistoryEntry(details.Customer,
-                            - details.RedeemedRewardPoints, order.StoreId,
+                            -details.RedeemedRewardPoints, order.StoreId,
                             string.Format(_localizationService.GetResource("RewardPoints.Message.RedeemedForOrder", order.CustomerLanguageId), order.Id),
                             order, details.RedeemedRewardPointsAmount);
                         _customerService.UpdateCustomer(details.Customer);

@@ -80,7 +80,7 @@ namespace Nop.Services.Orders
         /// <param name="points">Number of points to add</param>
         /// <param name="storeId">Store identifier</param>
         /// <param name="message">Message</param>
-        /// <param name="usedWithOrder">the order for which points were redeemed as a payment</param>
+        /// <param name="usedWithOrder">The order for which points were redeemed (spent) as a payment</param>
         /// <param name="usedAmount">Used amount</param>
         public virtual void AddRewardPointsHistoryEntry(Customer customer,
             int points, int storeId, string message = "",
