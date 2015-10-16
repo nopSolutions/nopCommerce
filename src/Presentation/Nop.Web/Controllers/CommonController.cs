@@ -224,7 +224,9 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
         //available even when a store is closed
-        [StoreClosed(true)] 
+        [StoreClosed(true)]
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         public ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
@@ -295,6 +297,8 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         public ActionResult SetCurrency(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
@@ -326,6 +330,8 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         public ActionResult SetTaxType(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
@@ -825,7 +831,9 @@ namespace Nop.Web.Controllers
         }
         [HttpPost]
         //available even when a store is closed
-        [StoreClosed(true)] 
+        [StoreClosed(true)]
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         public ActionResult EuCookieLawAccept()
         {
             if (!_storeInformationSettings.DisplayEuCookieLawWarning)
@@ -840,6 +848,8 @@ namespace Nop.Web.Controllers
         //robots.txt file
         //available even when a store is closed
         [StoreClosed(true)]
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         public ActionResult RobotsTextFile()
         {
             var sb = new StringBuilder();

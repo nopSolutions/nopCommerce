@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Web.Framework;
 using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Controllers
@@ -40,6 +41,8 @@ namespace Nop.Web.Controllers
 
         #region States / provinces
 
+        //available even when navigation is not allowed
+        [PublicStoreAllowNavigation(true)]
         [AcceptVerbs(HttpVerbs.Get)]
         public ActionResult GetStatesByCountryId(string countryId, bool addSelectStateItem)
         {

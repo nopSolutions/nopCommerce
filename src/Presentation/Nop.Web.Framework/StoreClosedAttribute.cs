@@ -18,11 +18,11 @@ namespace Nop.Web.Framework
     public class StoreClosedAttribute : ActionFilterAttribute
     {
         private readonly bool _ignore;
-        
+
         /// <summary>
         /// Contructor
         /// </summary>
-        /// <param name="ignore">Pass false in order to ignore this functionality for certain method</param>
+        /// <param name="ignore">Pass false in order to ignore this functionality for a certain action method</param>
         public StoreClosedAttribute(bool ignore = false)
         {
             this._ignore = ignore;
