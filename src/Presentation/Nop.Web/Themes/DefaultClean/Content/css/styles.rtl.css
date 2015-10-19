@@ -995,10 +995,10 @@ label, label + * {
 .footer-powered-by a:hover {
 	text-decoration: underline;
 }
-.footer-store-theme {
+.theme-selector {
 	margin: 10px 0 0;
 }
-.footer-store-theme select {
+.theme-selector select {
 	width: 170px;
 }
 
@@ -6128,7 +6128,7 @@ pre {
 	margin: 0;
 	line-height: 32px;
 }
-.footer-store-theme {
+.theme-selector {
 	float: right;
 	margin: 0 15px 0 0;
 }

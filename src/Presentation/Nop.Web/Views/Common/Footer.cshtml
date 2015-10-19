@@ -3,7 +3,6 @@
 @using Nop.Core.Domain.Tax
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.Common;
-
 <div class="footer">
     <div class="footer-upper">
         <div class="footer-block information">
@@ -115,7 +114,6 @@
             @Html.Action("NewsletterBox", "Newsletter")
         </div>
     </div>
-
     <div class="footer-lower">
         <div class="footer-info">
             <span class="footer-disclaimer">@T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)</span>
@@ -130,15 +128,12 @@
         <div class="footer-powered-by">
             Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
             @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-            Find more info here http://www.nopcommerce.com/copyrightremoval.aspx*@
+            Find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
         </div>
-        <div class="footer-store-theme">
-            @Html.Action("StoreThemeSelector", "Common")
-        </div>
+        @Html.Action("StoreThemeSelector", "Common")
     </div>
     @Html.Widget("footer")
 </div>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $('.footer-block .title').click(function () {
@@ -147,16 +142,13 @@
                 a = 'client';
                 e = document.documentElement || document.body;
             }
-
             var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
-
             if (result.width < 769) {
                 $(this).siblings('.list').slideToggle('slow');
             }
         });
     });
 </script>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $('.block .title').click(function () {
@@ -165,9 +157,7 @@
                 a = 'client';
                 e = document.documentElement || document.body;
             }
-
             var result = { width: e[a + 'Width'], height: e[a + 'Height'] };
-
             if (result.width < 1001) {
                 $(this).siblings('.listbox').slideToggle('slow');
             }
