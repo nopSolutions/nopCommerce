@@ -4982,7 +4982,7 @@ namespace Nop.Services.Installation
                 VendorsBlockItemsToDisplay = 0,
                 ShowVendorOnProductDetailsPage = true,
                 AllowCustomersToContactVendors = true,
-                AllowCustomersToApplyForVendorAccount = false
+                AllowCustomersToApplyForVendorAccount = true
             });
 
             var eaGeneral = _emailAccountRepository.Table.FirstOrDefault();
