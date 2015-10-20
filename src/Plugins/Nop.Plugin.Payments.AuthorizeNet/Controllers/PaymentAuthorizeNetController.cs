@@ -129,28 +129,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
         {
             var model = new PaymentInfoModel();
             
-            //CC types
-            model.CreditCardTypes.Add(new SelectListItem
-                {
-                    Text = "Visa",
-                    Value = "Visa",
-                });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Master card",
-                Value = "MasterCard",
-            });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Discover",
-                Value = "Discover",
-            });
-            model.CreditCardTypes.Add(new SelectListItem
-            {
-                Text = "Amex",
-                Value = "Amex",
-            });
-            
             //years
             for (int i = 0; i < 15; i++)
             {
@@ -178,9 +156,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             model.CardholderName = form["CardholderName"];
             model.CardNumber = form["CardNumber"];
             model.CardCode = form["CardCode"];
-            var selectedCcType = model.CreditCardTypes.FirstOrDefault(x => x.Value.Equals(form["CreditCardType"], StringComparison.InvariantCultureIgnoreCase));
-            if (selectedCcType != null)
-                selectedCcType.Selected = true;
             var selectedMonth = model.ExpireMonths.FirstOrDefault(x => x.Value.Equals(form["ExpireMonth"], StringComparison.InvariantCultureIgnoreCase));
             if (selectedMonth != null)
                 selectedMonth.Selected = true;
@@ -217,7 +192,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
         public override ProcessPaymentRequest GetPaymentInfo(FormCollection form)
         {
             var paymentInfo = new ProcessPaymentRequest();
-            paymentInfo.CreditCardType = form["CreditCardType"];
+            //CreditCardType is not used by Authorize.NET
             paymentInfo.CreditCardName = form["CardholderName"];
             paymentInfo.CreditCardNumber = form["CardNumber"];
             paymentInfo.CreditCardExpireMonth = int.Parse(form["ExpireMonth"]);

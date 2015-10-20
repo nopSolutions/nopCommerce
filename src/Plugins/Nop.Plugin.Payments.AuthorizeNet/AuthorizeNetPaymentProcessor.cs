@@ -457,10 +457,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
 
                 var subscription = new ARBSubscriptionType();
-                var creditCard = new net.authorize.api.CreditCardType();
-
                 subscription.name = processPaymentRequest.OrderGuid.ToString();
 
+                var creditCard = new net.authorize.api.CreditCardType();
                 creditCard.cardNumber = processPaymentRequest.CreditCardNumber;
                 creditCard.expirationDate = processPaymentRequest.CreditCardExpireYear + "-" + processPaymentRequest.CreditCardExpireMonth; // required format for API is YYYY-MM
                 creditCard.cardCode = processPaymentRequest.CreditCardCvv2;

@@ -45,7 +45,7 @@ namespace Nop.Services.Payments
         #region Payment method specific properties 
 
         /// <summary>
-        /// Gets or sets a credit card type (Visa, Master Card, etc...)
+        /// Gets or sets a credit card type (Visa, Master Card, etc...). We leave it empty if not used by a payment gateway
         /// </summary>
         public string CreditCardType { get; set; }
 

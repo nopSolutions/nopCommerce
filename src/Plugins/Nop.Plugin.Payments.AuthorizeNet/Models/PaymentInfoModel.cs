@@ -9,16 +9,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Models
     {
         public PaymentInfoModel()
         {
-            CreditCardTypes = new List<SelectListItem>();
             ExpireMonths = new List<SelectListItem>();
             ExpireYears = new List<SelectListItem>();
         }
-
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
-        [AllowHtml]
-        public string CreditCardType { get; set; }
-        [NopResourceDisplayName("Payment.SelectCreditCard")]
-        public IList<SelectListItem> CreditCardTypes { get; set; }
 
         [NopResourceDisplayName("Payment.CardholderName")]
         [AllowHtml]
