@@ -312,8 +312,8 @@ namespace Nop.Web.Controllers
                                     throw new Exception(errorCreatingDatabase);
                                 
                                 //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
-                                //that's just wait 3 seconds
-                                Thread.Sleep(3000);
+                                //that's just wait 5 seconds (3 seconds is not enough for some reasons)
+                                Thread.Sleep(5000);
                             }
                         }
                         else
