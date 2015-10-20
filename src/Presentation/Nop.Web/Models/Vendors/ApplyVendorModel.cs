@@ -17,6 +17,8 @@ namespace Nop.Web.Models.Vendors
         [AllowHtml]
         public string Email { get; set; }
 
+        public bool DisplayCaptcha { get; set; }
+
         public bool DisableFormInput { get; set; }
         public string Result { get; set; }
     }

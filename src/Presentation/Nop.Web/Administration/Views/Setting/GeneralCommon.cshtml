@@ -395,6 +395,7 @@
             $('#ssCaptchaShowOnBlogCommentPagepnl').show();
             $('#ssCaptchaShowOnNewsCommentPagepnl').show();
             $('#ssCaptchaShowOnProductReviewPagepnl').show();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').show();
             $('#ssReCaptchaPublicKeypnl').show();
             $('#ssReCaptchaPrivateKeypnl').show();
         }
@@ -407,6 +408,7 @@
             $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
             $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
             $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+            $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
             $('#ssReCaptchaPublicKeypnl').hide();
             $('#ssReCaptchaPrivateKeypnl').hide();
         }
@@ -560,6 +562,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnApplyVendorPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
             </td>
         </tr>
         <tr id="ssReCaptchaPublicKeypnl">

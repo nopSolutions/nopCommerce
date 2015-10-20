@@ -43,6 +43,10 @@ namespace Nop.Web.Framework.Security.Captcha
         /// A value indicating whether CAPTCHA should be displayed on the product reviews page
         /// </summary>
         public bool ShowOnProductReviewPage { get; set; }
+        /// <summary>
+        /// A value indicating whether CAPTCHA should be displayed on the "Apply for vendor account" page
+        /// </summary>
+        public bool ShowOnApplyVendorPage { get; set; }
 
         /// <summary>
         /// reCAPTCHA public key

@@ -323,6 +323,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToSubCategories.Hint">
     <Value>Check to apply discount to subcategories of the selected parent. But please note that it can affect performance if you have a lot of nested subcategories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage">
+    <Value>Show on apply for vendor account page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage.Hint">
+    <Value>Check to show CAPTCHA on apply for vendor account page.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -209,7 +209,10 @@ namespace Nop.Admin.Models.Settings
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage")]
             public bool CaptchaShowOnProductReviewPage { get; set; }
-            
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage")]
+            public bool CaptchaShowOnApplyVendorPage { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
             [AllowHtml]
             public string ReCaptchaPublicKey { get; set; }

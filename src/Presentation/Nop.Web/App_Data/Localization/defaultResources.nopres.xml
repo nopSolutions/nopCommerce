@@ -5367,6 +5367,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled.Hint">
     <Value>Check to enable CAPTCHA</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage">
+    <Value>Show on apply for vendor account page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage.Hint">
+    <Value>Check to show CAPTCHA on apply for vendor account page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage">
     <Value>Show on blog page (comments)</Value>
   </LocaleResource>

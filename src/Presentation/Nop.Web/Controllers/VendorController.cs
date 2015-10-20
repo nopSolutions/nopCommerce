@@ -9,6 +9,7 @@ using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Security;
+using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Controllers
@@ -26,10 +27,11 @@ namespace Nop.Web.Controllers
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public VendorController(IWorkContext workContext, 
             ILocalizationService localizationService,
@@ -38,7 +40,8 @@ namespace Nop.Web.Controllers
             IVendorService vendorService,
             IUrlRecordService urlRecordService,
             LocalizationSettings localizationSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            CaptchaSettings captchaSettings)
         {
             this._workContext = workContext;
             this._localizationService = localizationService;
@@ -49,6 +52,7 @@ namespace Nop.Web.Controllers
 
             this._localizationSettings = localizationSettings;
             this._vendorSettings = vendorSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -73,19 +77,27 @@ namespace Nop.Web.Controllers
                 return View(model);
             }
 
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             model.Email = _workContext.CurrentCustomer.Email;
             return View(model);
         }
 
         [HttpPost, ActionName("ApplyVendor")]
         [PublicAntiForgery]
-        public ActionResult ApplyVendorSubmit(ApplyVendorModel model)
+        [CaptchaValidator]
+        public ActionResult ApplyVendorSubmit(ApplyVendorModel model, bool captchaValid)
         {
             if (!_vendorSettings.AllowCustomersToApplyForVendorAccount)
                 return RedirectToRoute("HomePage");
 
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
 
             if (ModelState.IsValid)
             {
@@ -120,6 +132,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnApplyVendorPage;
             return View(model);
         }
 
