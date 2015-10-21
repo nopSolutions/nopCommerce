@@ -9050,8 +9050,7 @@ namespace Nop.Services.Installation
             _relatedProductRepository.Insert(relatedProducts);
 
             #endregion
-
-
+            
             #region Product Tags
 
             //product tags
@@ -9270,7 +9269,7 @@ namespace Nop.Services.Installation
             _discountRepository.Insert(discounts);
         }
 
-        protected virtual void InstallBlogPosts()
+        protected virtual void InstallBlogPosts(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var blogPosts = new List<BlogPost>
@@ -9310,9 +9309,28 @@ namespace Nop.Services.Installation
                     Slug = blogPost.ValidateSeName("", blogPost.Title, true)
                 });
             }
+
+            //comments
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+            foreach (var blogPost in blogPosts)
+            {
+                blogPost.BlogComments.Add(new BlogComment
+                {
+                    BlogPostId = blogPost.Id,
+                    CustomerId = defaultCustomer.Id,
+                    CommentText = "This is a sample comment for this blog post",
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                //update totals
+                blogPost.CommentCount = blogPost.BlogComments.Count;
+
+            }
+            _blogPostRepository.Update(blogPosts);
         }
 
-        protected virtual void InstallNews()
+        protected virtual void InstallNews(string defaultUserEmail)
         {
             var defaultLanguage = _languageRepository.Table.FirstOrDefault();
             var news = new List<NewsItem>
@@ -9363,6 +9381,26 @@ namespace Nop.Services.Installation
                     Slug = newsItem.ValidateSeName("", newsItem.Title, true)
                 });
             }
+
+            //comments
+            var defaultCustomer = _customerRepository.Table.FirstOrDefault(x => x.Email == defaultUserEmail);
+            if (defaultCustomer == null)
+                throw new Exception("Cannot load default customer");
+            foreach (var newsItem in news)
+            {
+                newsItem.NewsComments.Add(new NewsComment
+                {
+                    NewsItemId = newsItem.Id,
+                    CustomerId = defaultCustomer.Id,
+                    CommentTitle = "Sample comment title",
+                    CommentText = "This is a sample comment...",
+                    CreatedOnUtc = DateTime.UtcNow
+                });
+                //update totals
+                newsItem.CommentCount = newsItem.NewsComments.Count;
+
+            }
+            _newsItemRepository.Update(news);
         }
 
         protected virtual void InstallPolls()
@@ -9937,8 +9975,8 @@ namespace Nop.Services.Installation
                 InstallProducts(defaultUserEmail);
                 InstallForums();
                 InstallDiscounts();
-                InstallBlogPosts();
-                InstallNews();
+                InstallBlogPosts(defaultUserEmail);
+                InstallNews(defaultUserEmail);
                 InstallPolls();
             }
         }
