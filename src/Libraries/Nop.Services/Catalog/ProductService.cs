@@ -1182,11 +1182,12 @@ namespace Nop.Services.Catalog
 
             if (quantityToChange == 0)
                 return;
-
-            //var prevStockQuantity = product.GetTotalStockQuantity();
-
+            
             if (product.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
             {
+                //previous stock
+                var prevStockQuantity = product.GetTotalStockQuantity();
+
                 //update stock quantity
                 if (product.UseMultipleWarehouses)
                 {
@@ -1204,9 +1205,10 @@ namespace Nop.Services.Catalog
                     UpdateProduct(product);
                 }
 
-                //check if minimum quantity is reached
+                //qty is reduced. check if minimum stock quantity is reached
                 if (quantityToChange < 0 && product.MinStockQuantity >= product.GetTotalStockQuantity())
                 {
+                    //what should we do now? disable buy button, unpublish the product, or do nothing? check "Low stock activity" property
                     switch (product.LowStockActivity)
                     {
                         case LowStockActivity.DisableBuyButton:
@@ -1220,6 +1222,27 @@ namespace Nop.Services.Catalog
                             break;
                         default:
                             break;
+                    }
+                }
+                //qty is increased. product is back in stock (minimum stock quantity is reached again)?
+                if (_catalogSettings.PublishBackProductWhenCancellingOrders)
+                {
+                    if (quantityToChange > 0 && prevStockQuantity <= product.MinStockQuantity && product.MinStockQuantity < product.GetTotalStockQuantity())
+                    {
+                        switch (product.LowStockActivity)
+                        {
+                            case LowStockActivity.DisableBuyButton:
+                                product.DisableBuyButton = false;
+                                product.DisableWishlistButton = false;
+                                UpdateProduct(product);
+                                break;
+                            case LowStockActivity.Unpublish:
+                                product.Published = true;
+                                UpdateProduct(product);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
 

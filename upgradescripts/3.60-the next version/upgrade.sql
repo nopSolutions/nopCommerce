@@ -1355,3 +1355,11 @@ BEGIN
 	ALTER TABLE [Manufacturer] DROP COLUMN [HasDiscountsApplied]
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.publishbackproductwhencancellingorders')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.publishbackproductwhencancellingorders', N'false', 0)
+END
+GO

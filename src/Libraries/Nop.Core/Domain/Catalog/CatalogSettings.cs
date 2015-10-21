@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating details pages of unpublished product details pages could be open (for SEO optimization)
         /// </summary>
         public bool AllowViewUnpublishedProductPage { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether "Published" or "Disable buy/wishlist buttons" flags should be updated after order cancellation (deletion).
+        /// Of course, when qty > configured minimum stock level
+        /// </summary>
+        public bool PublishBackProductWhenCancellingOrders { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to display product SKU
