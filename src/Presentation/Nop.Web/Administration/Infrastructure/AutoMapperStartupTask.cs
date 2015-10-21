@@ -755,6 +755,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()
+                .ForMember(dest => dest.PublishBackProductWhenCancellingOrders, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.IncludeFeaturedProductsInNormalLists, mo => mo.Ignore())
