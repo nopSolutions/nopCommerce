@@ -521,7 +521,7 @@ namespace Nop.Services.ExportImport
                                 var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
                                 //picture binary after validation (like in database)
                                 var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                                if (existingBinary.SequenceEqual(validatedPictureBinary))
+                                if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
                                 {
                                     //the same picture content
                                     pictureAlreadyExists = true;
