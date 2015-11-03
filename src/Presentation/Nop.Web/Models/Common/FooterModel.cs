@@ -26,8 +26,8 @@ namespace Nop.Web.Models.Common
         public bool RecentlyViewedProductsEnabled { get; set; }
         public bool NewProductsEnabled { get; set; }
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
-
         public bool DisplayTaxShippingInfoFooter { get; set; }
+        public bool HidePoweredByNopCommerce { get; set; }
 
         public int WorkingLanguageId { get; set; }
 

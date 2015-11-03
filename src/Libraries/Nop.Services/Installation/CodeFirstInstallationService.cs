@@ -4652,7 +4652,7 @@ namespace Nop.Services.Installation
                     DefaultCategoryPageSizeOptions = "6, 3, 9",
                     DefaultCategoryPageSize = 6,
                     DefaultManufacturerPageSizeOptions = "6, 3, 9",
-                    DefaultManufacturerPageSize = 6,
+                    DefaultManufacturerPageSize = 6
                 });
 
             settingService.SaveSetting(new LocalizationSettings
@@ -4761,6 +4761,7 @@ namespace Nop.Services.Installation
                     TwitterLink = "https://twitter.com/nopCommerce",
                     YoutubeLink = "http://www.youtube.com/user/nopCommerce",
                     GooglePlusLink = "https://plus.google.com/+nopcommerce",
+                    HidePoweredByNopCommerce = false
                 });
 
             settingService.SaveSetting(new ExternalAuthenticationSettings
