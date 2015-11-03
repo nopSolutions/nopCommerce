@@ -219,6 +219,8 @@
     <Compile Include="Models\Payments\PaymentMethodRestrictionModel.cs" />
     <Compile Include="Models\Plugins\OfficialFeedListModel.cs" />
     <Compile Include="Models\Plugins\PluginListModel.cs" />
+    <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
+    <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />
@@ -334,6 +336,8 @@
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
+    <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
+    <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
     <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ProductTemplateValidator.cs" />
     <Compile Include="Validators\Templates\ManufacturerTemplateValidator.cs" />
@@ -930,6 +934,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Product\_ProductAttributes.cshtml" />
+    <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
+    <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />
+    <Content Include="Views\Setting\ReturnRequestReasonCreate.cshtml" />
+    <Content Include="Views\Setting\_CreateOrUpdate.ReturnRequestReason.cshtml" />
+    <Content Include="Views\Setting\_CreateOrUpdate.ReturnRequestAction.cshtml" />
+    <Content Include="Views\Setting\_ReturnRequestActions.cshtml" />
+    <Content Include="Views\Setting\ReturnRequestActionCreate.cshtml" />
+    <Content Include="Views\Setting\ReturnRequestActionEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Product\AddAttributeCombinationPopup.cshtml" />

@@ -20,12 +20,12 @@ namespace Nop.Web.Models.Order
         
         [AllowHtml]
         [NopResourceDisplayName("ReturnRequests.ReturnReason")]
-        public string ReturnReason { get; set; }
+        public int ReturnRequestReasonId { get; set; }
         public IList<SelectListItem> AvailableReturnReasons { get; set; }
 
         [AllowHtml]
         [NopResourceDisplayName("ReturnRequests.ReturnAction")]
-        public string ReturnAction { get; set; }
+        public int ReturnRequestActionId { get; set; }
         public IList<SelectListItem> AvailableReturnActions { get; set; }
 
         [AllowHtml]

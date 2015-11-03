@@ -329,6 +329,84 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage.Hint">
     <Value>Check to show CAPTCHA on apply for vendor account page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons">
+    <Value>Return request reasons</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Added">
+	<Value>The new return request reason has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew">
+	<Value>Add new return request reason</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList">
+	<Value>back to return request reason list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted">
+	<Value>The return request reason has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder.Hint">
+	<Value>The return request reason display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails">
+	<Value>Edit return request reason details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Hint">
+    <Value>List of reasons a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Hint">
+	<Value>The return request reason name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated">
+	<Value>The return request reason has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions">
+    <Value>Return request actions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Added">
+	<Value>The new return request action has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew">
+	<Value>Add new return request action</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList">
+	<Value>back to return request action list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted">
+	<Value>The return request action has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder">
+	<Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder.Hint">
+	<Value>The return request action display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.EditDetails">
+	<Value>Edit return request action details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Hint">
+    <Value>List of actions a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name.Required">
+	<Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name">
+	<Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name.Hint">
+	<Value>The return request action name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Updated">
+	<Value>The return request action has been updated successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1361,5 +1439,53 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.publishb
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.publishbackproductwhencancellingorders', N'false', 0)
+END
+GO
+
+
+--move return request actions to table (this way we can localize them)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReturnRequestAction]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ReturnRequestAction](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] [nvarchar](400) NOT NULL,
+		[DisplayOrder] [int] NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+	
+	DECLARE @ReturnRequestActions nvarchar(1000)
+	SELECT @ReturnRequestActions = [Value] FROM [Setting] WHERE [name] = N'ordersettings.returnrequestactions'
+	SET @ReturnRequestActions = isnull(@ReturnRequestActions, '')
+	INSERT INTO [ReturnRequestAction] ([Name], [DisplayOrder])
+	SELECT [data], 1 FROM [nop_splitstring_to_table](@ReturnRequestActions, ',')
+
+	DELETE FROM [Setting] WHERE [name] = N'ordersettings.returnrequestactions'
+END
+GO
+
+
+--move return request reasons to table (this way we can localize them)
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ReturnRequestReason]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[ReturnRequestReason](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[Name] [nvarchar](400) NOT NULL,
+		[DisplayOrder] [int] NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+	
+	DECLARE @ReturnRequestReasons nvarchar(1000)
+	SELECT @ReturnRequestReasons = [Value] FROM [Setting] WHERE [name] = N'ordersettings.returnrequestreasons'
+	SET @ReturnRequestReasons = isnull(@ReturnRequestReasons, '')
+	INSERT INTO [ReturnRequestReason] ([Name], [DisplayOrder])
+	SELECT [data], 1 FROM [nop_splitstring_to_table](@ReturnRequestReasons, ',')
+
+	DELETE FROM [Setting] WHERE [name] = N'ordersettings.returnrequestreasons'
 END
 GO

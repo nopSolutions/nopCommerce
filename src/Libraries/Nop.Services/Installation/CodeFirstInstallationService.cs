@@ -80,6 +80,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<TopicTemplate> _topicTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
+        private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
+        private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -123,6 +125,8 @@ namespace Nop.Services.Installation
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<TopicTemplate> topicTemplateRepository,
             IRepository<ScheduleTask> scheduleTaskRepository,
+            IRepository<ReturnRequestReason> returnRequestReasonRepository,
+            IRepository<ReturnRequestAction> returnRequestActionRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -162,6 +166,8 @@ namespace Nop.Services.Installation
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._topicTemplateRepository = topicTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
+            this._returnRequestReasonRepository = returnRequestReasonRepository;
+            this._returnRequestActionRepository = returnRequestActionRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -4841,8 +4847,6 @@ namespace Nop.Services.Installation
                     AttachPdfInvoiceToOrderCompletedEmail = false,
                     AttachPdfInvoiceToOrderPaidEmail = false,
                     ReturnRequestsEnabled = true,
-                    ReturnRequestActions = new List<string> { "Repair", "Replacement", "Store Credit" },
-                    ReturnRequestReasons = new List<string> { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
                     NumberOfDaysReturnRequestAvailable = 365,
                     MinimumOrderPlacementInterval = 30,
                 });
@@ -9922,6 +9926,51 @@ namespace Nop.Services.Installation
             _scheduleTaskRepository.Insert(tasks);
         }
 
+        protected virtual void InstallReturnRequestReasons()
+        {
+            var returnRequestReasons = new List<ReturnRequestReason>
+                                {
+                                    new ReturnRequestReason
+                                        {
+                                            Name = "Received Wrong Product",
+                                            DisplayOrder = 1
+                                        },
+                                    new ReturnRequestReason
+                                        {
+                                            Name = "Wrong Product Ordered",
+                                            DisplayOrder = 2
+                                        },
+                                    new ReturnRequestReason
+                                        {
+                                            Name = "There Was A Problem With The Product",
+                                            DisplayOrder = 3
+                                        }
+                                };
+            _returnRequestReasonRepository.Insert(returnRequestReasons);
+        }
+        protected virtual void InstallReturnRequestActions()
+        {
+            var returnRequestActions = new List<ReturnRequestAction>
+                                {
+                                    new ReturnRequestAction
+                                        {
+                                            Name = "Repair",
+                                            DisplayOrder = 1
+                                        },
+                                    new ReturnRequestAction
+                                        {
+                                            Name = "Replacement",
+                                            DisplayOrder = 2
+                                        },
+                                    new ReturnRequestAction
+                                        {
+                                            Name = "Store Credit",
+                                            DisplayOrder = 3
+                                        }
+                                };
+            _returnRequestActionRepository.Insert(returnRequestActions);
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
@@ -9964,6 +10013,8 @@ namespace Nop.Services.Installation
             InstallCategoryTemplates();
             InstallManufacturerTemplates();
             InstallScheduleTasks();
+            InstallReturnRequestReasons();
+            InstallReturnRequestActions();
 
             if (installSampleData)
             {

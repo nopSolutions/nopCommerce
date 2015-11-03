@@ -107,6 +107,8 @@
     <Compile Include="Domain\Customers\CustomerLoginResults.cs" />
     <Compile Include="Domain\Messages\QueuedEmailPriority.cs" />
     <Compile Include="Domain\Orders\OrderByCountryReportLine.cs" />
+    <Compile Include="Domain\Orders\ReturnRequestReason.cs" />
+    <Compile Include="Domain\Orders\ReturnRequestAction.cs" />
     <Compile Include="Domain\Seo\WwwRequirement.cs" />
     <Compile Include="Domain\Shipping\Events.cs" />
     <Compile Include="Domain\Shipping\Warehouse.cs" />

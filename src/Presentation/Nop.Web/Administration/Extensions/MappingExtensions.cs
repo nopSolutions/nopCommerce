@@ -1098,5 +1098,43 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Return request reason
+
+        public static ReturnRequestReasonModel ToModel(this ReturnRequestReason entity)
+        {
+            return entity.MapTo<ReturnRequestReason, ReturnRequestReasonModel>();
+        }
+
+        public static ReturnRequestReason ToEntity(this ReturnRequestReasonModel model)
+        {
+            return model.MapTo<ReturnRequestReasonModel, ReturnRequestReason>();
+        }
+
+        public static ReturnRequestReason ToEntity(this ReturnRequestReasonModel model, ReturnRequestReason destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
+        #region Return request action
+
+        public static ReturnRequestActionModel ToModel(this ReturnRequestAction entity)
+        {
+            return entity.MapTo<ReturnRequestAction, ReturnRequestActionModel>();
+        }
+
+        public static ReturnRequestAction ToEntity(this ReturnRequestActionModel model)
+        {
+            return model.MapTo<ReturnRequestActionModel, ReturnRequestAction>();
+        }
+
+        public static ReturnRequestAction ToEntity(this ReturnRequestActionModel model, ReturnRequestAction destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
+
     }
 }

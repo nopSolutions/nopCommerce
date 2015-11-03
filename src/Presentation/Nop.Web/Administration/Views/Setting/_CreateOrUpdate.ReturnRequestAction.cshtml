@@ -1,0 +1,46 @@
+﻿@model ReturnRequestActionModel
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@(Html.LocalizedEditor<ReturnRequestActionModel, ReturnRequestActionLocalizedModel>("returnrequestaction-localized",
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Locales[item].Name)
+                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>
+    ,
+    @<table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Name):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Name)
+                @Html.ValidationMessageFor(model => model.Name)
+            </td>
+        </tr>
+    </table>
+    ))
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+</table>
+      

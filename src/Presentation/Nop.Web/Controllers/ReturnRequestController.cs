@@ -33,9 +33,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDateTimeHelper _dateTimeHelper;
-
         private readonly LocalizationSettings _localizationSettings;
-        private readonly OrderSettings _orderSettings;
 
         #endregion
 
@@ -52,8 +50,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper,
-            LocalizationSettings localizationSettings,
-            OrderSettings orderSettings)
+            LocalizationSettings localizationSettings)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -66,9 +63,7 @@ namespace Nop.Web.Controllers
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
             this._dateTimeHelper = dateTimeHelper;
-
             this._localizationSettings = localizationSettings;
-            this._orderSettings = orderSettings;
         }
 
         #endregion
@@ -87,26 +82,24 @@ namespace Nop.Web.Controllers
             model.OrderId = order.Id;
 
             //return reasons
-            if (_orderSettings.ReturnRequestReasons != null)
-                foreach (var rrr in _orderSettings.ReturnRequestReasons)
+            foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
+            {
+                model.AvailableReturnReasons.Add(new SelectListItem
                 {
-                    model.AvailableReturnReasons.Add(new SelectListItem
-                        {
-                            Text = rrr,
-                            Value = rrr
-                        });
-                }
+                    Text = rrr.GetLocalized(x => x.Name),
+                    Value = rrr.Id.ToString()
+                });
+            }
 
             //return actions
-            if (_orderSettings.ReturnRequestActions != null)
-                foreach (var rra in _orderSettings.ReturnRequestActions)
+            foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
+            {
+                model.AvailableReturnActions.Add(new SelectListItem
                 {
-                    model.AvailableReturnActions.Add(new SelectListItem
-                    {
-                        Text = rra,
-                        Value = rra
-                    });
-                }
+                    Text = rra.GetLocalized(x => x.Name),
+                    Value = rra.Id.ToString()
+                });
+            }
 
             //products
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
@@ -221,14 +214,17 @@ namespace Nop.Web.Controllers
                     }
                 if (quantity > 0)
                 {
+                    var rrr = _returnRequestService.GetReturnRequestReasonById(model.ReturnRequestReasonId);
+                    var rra = _returnRequestService.GetReturnRequestActionById(model.ReturnRequestActionId);
+
                     var rr = new ReturnRequest
                     {
                         StoreId = _storeContext.CurrentStore.Id,
                         OrderItemId = orderItem.Id,
                         Quantity = quantity,
                         CustomerId = _workContext.CurrentCustomer.Id,
-                        ReasonForReturn = model.ReturnReason,
-                        RequestedAction = model.ReturnAction,
+                        ReasonForReturn = rrr != null ? rrr.GetLocalized(x => x.Name) : "not available",
+                        RequestedAction = rra != null ? rra.GetLocalized(x => x.Name) : "not available",
                         CustomerComments = model.Comments,
                         StaffNotes = string.Empty,
                         ReturnRequestStatus = ReturnRequestStatus.Pending,

@@ -781,8 +781,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<RewardPointsSettingsModel, RewardPointsSettings>();
             Mapper.CreateMap<OrderSettings, OrderSettingsModel>()
-                .ForMember(dest => dest.ReturnRequestReasonsParsed, mo => mo.Ignore())
-                .ForMember(dest => dest.ReturnRequestActionsParsed, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCards_Activated_OrderStatuses, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCards_Deactivated_OrderStatuses, mo => mo.Ignore())
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
@@ -806,8 +804,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<OrderSettingsModel, OrderSettings>()
-                .ForMember(dest => dest.ReturnRequestReasons, mo => mo.Ignore())
-                .ForMember(dest => dest.ReturnRequestActions, mo => mo.Ignore())
                 .ForMember(dest => dest.MinimumOrderPlacementInterval, mo => mo.Ignore());
             Mapper.CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>()
                 .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
@@ -865,6 +861,16 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
 
+            //return request reasons
+            Mapper.CreateMap<ReturnRequestReason, ReturnRequestReasonModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<ReturnRequestReasonModel, ReturnRequestReason>();
+            //return request actions
+            Mapper.CreateMap<ReturnRequestAction, ReturnRequestActionModel>()
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<ReturnRequestActionModel, ReturnRequestAction>();
 
             //category template
             Mapper.CreateMap<CategoryTemplate, CategoryTemplateModel>()

@@ -5971,16 +5971,82 @@
     <Value>Order settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions">
-    <Value>Return action</Value>
+    <Value>Return request actions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Added">
+    <Value>The new return request action has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.AddNew">
+    <Value>Add new return request action</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.BackToList">
+    <Value>back to return request action list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Deleted">
+    <Value>The return request action has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.DisplayOrder.Hint">
+    <Value>The return request action display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.EditDetails">
+    <Value>Edit return request action details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Hint">
-    <Value>A comma-separated list of actions a customer will be able to choose when submitting a return request.</Value>
+    <Value>List of actions a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Name.Hint">
+    <Value>The return request action name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Updated">
+    <Value>The return request action has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons">
-    <Value>Return reasons</Value>
+    <Value>Return request reasons</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Added">
+    <Value>The new return request reason has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.AddNew">
+    <Value>Add new return request reason</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList">
+    <Value>back to return request reason list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Deleted">
+    <Value>The return request reason has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.DisplayOrder.Hint">
+    <Value>The return request reason display order. 1 represents the first item in the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails">
+    <Value>Edit return request reason details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Hint">
-    <Value>A comma-separated list of reasons a customer will be able to choose when submitting a return request.</Value>
+    <Value>List of reasons a customer will be able to choose when submitting a return request.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Name.Hint">
+    <Value>The return request reason name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestReasons.Updated">
+    <Value>The return request reason has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestsDescription1">
     <Value>The returns system will allow your customers to request a return on items they've purchased. These are also known as RMA requests.</Value>

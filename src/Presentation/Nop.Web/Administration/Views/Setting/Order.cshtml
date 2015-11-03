@@ -260,8 +260,8 @@
         <tr>
             <td class="adminTitle" colspan="2">
                 @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
-                <br />
-                <br />
+                <br/>
+                <br/>
                 @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
             </td>
         </tr>
@@ -285,23 +285,7 @@
                 @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ReturnRequestReasonsParsed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ReturnRequestReasonsParsed)
-                @Html.ValidationMessageFor(model => model.ReturnRequestReasonsParsed)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ReturnRequestActionsParsed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ReturnRequestActionsParsed)
-                @Html.ValidationMessageFor(model => model.ReturnRequestActionsParsed)
-            </td>
-        </tr>
     </table>
+    @Html.Partial("_ReturnRequestReasons")
+    @Html.Partial("_ReturnRequestActions")
 }
