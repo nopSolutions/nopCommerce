@@ -1022,7 +1022,7 @@ namespace Nop.Services.Installation
             cCanada.StateProvinces.Add(new StateProvince
             {
                 Name = "Yukon Territory",
-                Abbreviation = "YU",
+                Abbreviation = "YT",
                 Published = true,
                 DisplayOrder = 1,
             });

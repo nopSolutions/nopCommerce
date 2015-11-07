@@ -1498,3 +1498,9 @@ BEGIN
 	VALUES (N'storeinformationsettings.hidepoweredbynopCommerce', N'false', 0)
 END
 GO
+
+--update a state abbreviation
+UPDATE [StateProvince]
+SET [Abbreviation] = N'YT'
+WHERE [Name] = N'Yukon Territory'
+GO
