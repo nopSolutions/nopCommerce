@@ -86,7 +86,7 @@
                 previousNext: false,
                 info: false
             },
-            toolbar: ["create"],
+            toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
             editable: {
                 confirmation: false,
                 mode: "inline"
@@ -133,7 +133,11 @@
             }, {
                 command: [{
                     name: "edit",
-                    text: "@T("Admin.Common.Edit")"
+                    text: {
+                        edit: "@T("Admin.Common.Edit")",
+                        update: "@T("Admin.Common.Update")",
+                        cancel: "@T("Admin.Common.Cancel")"
+                    }
                 }, {
                     name: "destroy",
                     text: "@T("Admin.Common.Delete")"

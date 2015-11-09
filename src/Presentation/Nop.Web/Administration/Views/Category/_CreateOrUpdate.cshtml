@@ -425,10 +425,14 @@
                                         template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
                                     }, {
                                         command: [{
-                                            name: "edit", 
-                                            text: "@T("Admin.Common.Edit")"
+                                            name: "edit",
+                                            text: {
+                                                edit: "@T("Admin.Common.Edit")",
+                                                update: "@T("Admin.Common.Update")",
+                                                cancel: "@T("Admin.Common.Cancel")"
+                                            }
                                         }, {
-                                            name: "destroy", 
+                                            name: "destroy",
                                             text: "@T("Admin.Common.Delete")"
                                         }],
                                         width: 200

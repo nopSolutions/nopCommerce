@@ -81,14 +81,21 @@
                                         });
                             }
                         }, {
-                            command: {name: "edit", text: "@T("Admin.Common.Edit")"},
+                            command: {
+                                name: "edit",
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
+                            },
                             title: "@T("Admin.Common.Edit")",
                             width: 150
                         }]
                     });
                 });
 
-                
+
             </script>
         </td>
     </tr>

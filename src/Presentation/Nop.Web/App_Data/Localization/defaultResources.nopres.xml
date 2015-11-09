@@ -3330,6 +3330,9 @@
   <LocaleResource Name="Admin.Common.AddNew">
     <Value>Add new</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.AddNewRecord">
+    <Value>Add new record</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.All">
     <Value>All</Value>
   </LocaleResource>

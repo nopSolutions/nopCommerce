@@ -121,7 +121,7 @@ else
                     previousNext: false,
                     info: false
                 },
-                toolbar: ["create"],
+                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                 edit: function(e) {
                     if (e.model.isNew()) {
                         //little hack here
@@ -195,7 +195,11 @@ else
                         command: [
                             {
                                 name: "edit",
-                                text: "@T("Admin.Common.Edit")"
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
                             }, {
                                 name: "destroy",
                                 text: "@T("Admin.Common.Delete")"
@@ -414,7 +418,11 @@ else
                             command: [
                                 {
                                     name: "edit",
-                                    text: "@T("Admin.Common.Edit")"
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
+                                    }
                                 }, {
                                     name: "destroy",
                                     text: "@T("Admin.Common.Delete")"

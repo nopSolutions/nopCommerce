@@ -407,6 +407,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.ReturnRequestActions.Updated">
 	<Value>The return request action has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.AddNewRecord">
+	<Value>Add new record</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -99,7 +99,7 @@
                             pageSizes: [@(gridPageSizes)]
                         },
                         sortable: true,
-                        toolbar: ["create"],
+                        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                         editable: {
                             confirmation: false,
                             mode: "inline"
@@ -131,14 +131,18 @@
                             field: "StoreId",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
                             width: 150,
-                            editor: storeDropDownEditor, 
+                            editor: storeDropDownEditor,
                             template: "#:Store#",
                             filterable: false,
                             sortable: false
                         }, {
                             command: [{
                                 name: "edit",
-                                text: "@T("Admin.Common.Edit")"
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
                             }, {
                                 name: "destroy",
                                 text: "@T("Admin.Common.Delete")"
@@ -148,7 +152,7 @@
                         }]
                     });
                 });
-                
+
                 //local datasource
                 var allStores = [
                     {

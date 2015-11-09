@@ -129,7 +129,14 @@
                             width: 100,
                             template: '<a href="@Url.Content("~/Admin/ScheduleTask/RunNow/")#=Id#" class="k-button run-now">@T("Admin.System.ScheduleTasks.RunNow")</a>'
                         }, {
-                            command: { name: "edit", text: "@T("Admin.Common.Edit")" },
+                            command: {
+                                name: "edit",
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
+                            },
                             title: "@T("Admin.Common.Edit")",
                             width: 100
                         }]
