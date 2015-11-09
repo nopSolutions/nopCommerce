@@ -158,7 +158,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("changepassword")]
         public ActionResult ChangePassword(EmailAccountModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
                 return AccessDeniedView();
 
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
