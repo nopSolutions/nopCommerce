@@ -242,7 +242,6 @@ namespace Nop.Web.Framework.UI
 
                 if (partsToBundle.Length > 0)
                 {
-                    //IMPORTANT: Do not use bundling in web farms or Windows Azure
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", partsToBundle);
                     //create bundle
                     lock (s_lock)
@@ -330,7 +329,6 @@ namespace Nop.Web.Framework.UI
                 var partsToBundle = distinctParts.ToArray();
                 if (partsToBundle.Length > 0)
                 {
-                    //IMPORTANT: Do not use bundling in web farms or Windows Azure
                     //IMPORTANT: Do not use CSS bundling in virtual categories
                     string bundleVirtualPath = GetBundleVirtualPath("~/bundles/styles/", ".css", partsToBundle);
 
