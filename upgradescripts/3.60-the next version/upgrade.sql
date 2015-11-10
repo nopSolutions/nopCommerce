@@ -416,6 +416,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins.Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.Store.Hint">
+    <Value>Filter report by orders placed in a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 

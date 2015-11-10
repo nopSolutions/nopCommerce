@@ -33,6 +33,14 @@
             @Html.EditorFor(model => model.EndDate)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("StoreId", Model.AvailableStores)
+        </td>
+    </tr>
     <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.OrderStatusId):
@@ -165,6 +173,7 @@
                     var data = {
                         StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                         EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                        StoreId: $('#StoreId').val(),
                         OrderStatusId: $('#OrderStatusId').val(),
                         PaymentStatusId: $('#PaymentStatusId').val(),
                         CategoryId: $('#CategoryId').val(),

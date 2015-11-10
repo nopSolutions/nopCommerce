@@ -3703,6 +3703,11 @@ namespace Nop.Admin.Controllers
             //vendor
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
+            //stores
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var s in _storeService.GetAllStores())
+                model.AvailableStores.Add(new SelectListItem { Text = s.Name, Value = s.Id.ToString() });
+
             //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3766,6 +3771,7 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 categoryId: model.CategoryId,
                 manufacturerId: model.ManufacturerId,
+                storeId: model.StoreId,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize,
                 showHidden: true);
