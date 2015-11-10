@@ -410,6 +410,12 @@ set @resources='
   <LocaleResource Name="Admin.Common.AddNewRecord">
 	<Value>Add new record</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1506,4 +1512,35 @@ GO
 UPDATE [StateProvince]
 SET [Abbreviation] = N'YT'
 WHERE [Name] = N'Yukon Territory'
+GO
+
+
+--new permission
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'AccessClosedStore')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Public store. Access a closed store', N'AccessClosedStore', N'PublicStore')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role by default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+
+
+--delete setting
+DELETE FROM [Setting] 
+WHERE [name] = N'storeinformationsettings.storeclosedallowforadmins'
 GO

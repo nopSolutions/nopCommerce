@@ -5670,12 +5670,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed.Hint">
     <Value>Check to close the store. Uncheck to re-open.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins">
-    <Value>Allow an admin to view the closed store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins.Hint">
-    <Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings">
     <Value>Store information</Value>
   </LocaleResource>

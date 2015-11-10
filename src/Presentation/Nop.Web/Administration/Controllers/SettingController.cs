@@ -2290,7 +2290,6 @@ namespace Nop.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             model.StoreInformationSettings.StoreClosed = storeInformationSettings.StoreClosed;
-            model.StoreInformationSettings.StoreClosedAllowForAdmins = storeInformationSettings.StoreClosedAllowForAdmins;
             //themes
             model.StoreInformationSettings.DefaultStoreTheme = storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
@@ -2320,7 +2319,6 @@ namespace Nop.Admin.Controllers
             if (storeScope > 0)
             {
                 model.StoreInformationSettings.StoreClosed_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosed, storeScope);
-                model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
                 model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DefaultStoreTheme, storeScope);
                 model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.AllowCustomerToSelectTheme, storeScope);
                 model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore = _settingService.SettingExists(storeInformationSettings, x => x.DisplayEuCookieLawWarning, storeScope);
@@ -2445,7 +2443,6 @@ namespace Nop.Admin.Controllers
             var storeInformationSettings = _settingService.LoadSetting<StoreInformationSettings>(storeScope);
             var commonSettings = _settingService.LoadSetting<CommonSettings>(storeScope);
             storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
-            storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             //EU Cookie law
@@ -2467,12 +2464,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(storeInformationSettings, x => x.StoreClosed, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(storeInformationSettings, x => x.StoreClosed, storeScope);
-
-            if (model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope, false);
-            else if (storeScope > 0)
-                _settingService.DeleteSetting(storeInformationSettings, x => x.StoreClosedAllowForAdmins, storeScope);
-
+            
             if (model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(storeInformationSettings, x => x.DefaultStoreTheme, storeScope, false);
             else if (storeScope > 0)

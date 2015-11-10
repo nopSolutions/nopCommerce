@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Security;
 using Nop.Services.Topics;
 
 namespace Nop.Web.Framework
@@ -75,9 +76,9 @@ namespace Nop.Web.Framework
                     return;
             }
 
-            //allow admin access
-            if (storeInformationSettings.StoreClosedAllowForAdmins &&
-                EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
+            //access to a closed store?
+            var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+            if (permissionService.Authorize(StandardPermissionProvider.AccessClosedStore))
                 return;
 
             var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");

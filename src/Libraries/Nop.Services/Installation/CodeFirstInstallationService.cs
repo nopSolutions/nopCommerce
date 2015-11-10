@@ -4752,7 +4752,6 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new StoreInformationSettings
                 {
                     StoreClosed = false,
-                    StoreClosedAllowForAdmins = false,
                     DefaultStoreTheme = "DefaultClean",
                     AllowCustomerToSelectTheme = true,
                     DisplayMiniProfilerInPublicStore = false,

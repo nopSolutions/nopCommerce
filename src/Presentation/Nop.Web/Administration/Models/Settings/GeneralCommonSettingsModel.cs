@@ -41,11 +41,7 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosed")]
             public bool StoreClosed { get; set; }
             public bool StoreClosed_OverrideForStore { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins")]
-            public bool StoreClosedAllowForAdmins { get; set; }
-            public bool StoreClosedAllowForAdmins_OverrideForStore { get; set; }
-
+            
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
             [AllowHtml]
             public string DefaultStoreTheme { get; set; }

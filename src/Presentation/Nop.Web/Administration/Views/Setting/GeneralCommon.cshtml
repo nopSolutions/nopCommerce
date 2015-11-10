@@ -90,25 +90,6 @@
 }
 @helper TabStoreInformationSettings()
 {
-    <script type="text/javascript">
-    $(document).ready(function () {
-
-        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
-
-        toggleStoreClosed();
-    });
-
-    function toggleStoreClosed() {
-        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
-            $('#pnlStoreClosedAllowForAdmins').show();
-        }
-        else {
-            $('#pnlStoreClosedAllowForAdmins').hide();
-        }
-    }
-
-    </script>
-
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -118,16 +99,6 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.StoreInformationSettings.StoreClosed)
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
-            </td>
-        </tr>
-        <tr id="pnlStoreClosedAllowForAdmins">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins_OverrideForStore, model => model.StoreInformationSettings.StoreClosedAllowForAdmins, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
             </td>
         </tr>
         <tr>
