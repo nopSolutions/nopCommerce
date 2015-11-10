@@ -1544,3 +1544,9 @@ GO
 DELETE FROM [Setting] 
 WHERE [name] = N'storeinformationsettings.storeclosedallowforadmins'
 GO
+
+
+UPDATE [ScheduleTask]
+SET [Seconds] = 3600
+WHERE [Type] = N'Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services'
+GO

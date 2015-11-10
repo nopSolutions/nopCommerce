@@ -4788,8 +4788,7 @@ namespace Nop.Services.Installation
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                     PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Single(c => c.CurrencyCode == "USD").Id,
                     ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
-                    AutoUpdateEnabled = false,
-                    LastUpdateTime = 0
+                    AutoUpdateEnabled = false
                 });
 
             settingService.SaveSetting(new MeasureSettings
@@ -9916,7 +9915,8 @@ namespace Nop.Services.Installation
                 new ScheduleTask
                 {
                     Name = "Update currency exchange rates",
-                    Seconds = 900,
+                    //60 minutes
+                    Seconds = 3600,
                     Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
                     Enabled = true,
                     StopOnError = false,
