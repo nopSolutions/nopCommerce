@@ -31,6 +31,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Services.Tax;
 using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -48,6 +49,7 @@ namespace Nop.Admin.Controllers
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IReturnRequestService _returnRequestService;
 	    private readonly IPriceCalculationService _priceCalculationService;
+        private readonly ITaxService _taxService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IDiscountService _discountService;
@@ -98,6 +100,7 @@ namespace Nop.Admin.Controllers
             IOrderProcessingService orderProcessingService,
             IReturnRequestService returnRequestService,
             IPriceCalculationService priceCalculationService,
+            ITaxService taxService,
             IDateTimeHelper dateTimeHelper,
             IPriceFormatter priceFormatter,
             IDiscountService discountService,
@@ -143,6 +146,7 @@ namespace Nop.Admin.Controllers
             this._orderProcessingService = orderProcessingService;
             this._returnRequestService = returnRequestService;
             this._priceCalculationService = priceCalculationService;
+            this._taxService = taxService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
             this._discountService = discountService;
@@ -625,17 +629,27 @@ namespace Nop.Admin.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            var presetQty = 1;
+            var presetPrice = _priceCalculationService.GetFinalPrice(product, order.Customer, decimal.Zero, true, presetQty);
+            decimal taxRate;
+            decimal presetPriceInclTax = _taxService.GetProductPrice(product, presetPrice, true, order.Customer, out taxRate);
+            decimal presetPriceExclTax = _taxService.GetProductPrice(product, presetPrice, false, order.Customer, out taxRate);
+
             var model = new OrderModel.AddOrderProductModel.ProductDetailsModel
             {
                 ProductId = productId,
                 OrderId = orderId,
                 Name = product.Name,
                 ProductType = product.ProductType,
-                UnitPriceExclTax = decimal.Zero,
-                UnitPriceInclTax = decimal.Zero,
-                Quantity = 1,
-                SubTotalExclTax = decimal.Zero,
-                SubTotalInclTax = decimal.Zero
+                UnitPriceExclTax = presetPriceExclTax,
+                UnitPriceInclTax = presetPriceInclTax,
+                Quantity = presetQty,
+                SubTotalExclTax = presetPriceExclTax,
+                SubTotalInclTax = presetPriceInclTax
             };
 
             //attributes
