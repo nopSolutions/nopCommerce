@@ -314,6 +314,24 @@ namespace Nop.Services.Discounts
                     return result;
             }
 
+            //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
+            //Otherwise, this customer can purchase gift cards with discount and get more than paid ("free money").
+            if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
+                discount.DiscountType == DiscountType.AssignedToOrderTotal)
+            {
+                var cart = customer.ShoppingCartItems
+                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .LimitPerStore(_storeContext.CurrentStore.Id)
+                    .ToList();
+
+                var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
+                if (hasGiftCards)
+                {
+                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
+                    return result;
+                }
+            }
+
             //check date range
             DateTime now = DateTime.UtcNow;
             if (discount.StartDateUtc.HasValue)
@@ -334,7 +352,7 @@ namespace Nop.Services.Discounts
                     return result;
                 }
             }
-
+            
             //discount limitation
             switch (discount.DiscountLimitation)
             {
@@ -383,24 +401,6 @@ namespace Nop.Services.Discounts
                 if (!ruleResult.IsValid)
                 {
                     result.UserError = ruleResult.UserError;
-                    return result;
-                }
-            }
-
-            //Do not allow discounts applied to order subtotal or total when a customer has gift cards in the cart.
-            //Otherwise, this customer can purchase gift cards with discount and get more than paid ("free money").
-            if (discount.DiscountType == DiscountType.AssignedToOrderSubTotal ||
-                discount.DiscountType == DiscountType.AssignedToOrderTotal)
-            {
-                var cart = customer.ShoppingCartItems
-                    .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                    .LimitPerStore(_storeContext.CurrentStore.Id)
-                    .ToList();
-
-                var hasGiftCards = cart.Any(x => x.Product.IsGiftCard);
-                if (hasGiftCards)
-                {
-                    result.UserError = _localizationService.GetResource("ShoppingCart.Discount.CannotBeUsedWithGiftCards");
                     return result;
                 }
             }
