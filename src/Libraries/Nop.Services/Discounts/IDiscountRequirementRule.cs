@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Plugins;
+﻿using Nop.Core.Plugins;
 
 namespace Nop.Services.Discounts
 {

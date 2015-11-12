@@ -7,8 +7,10 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
+using Nop.Services.Discounts.Cache;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -92,6 +94,17 @@ namespace Nop.Services.Discounts
             this._localizationService = localizationService;
             this._pluginFinder = pluginFinder;
             this._eventPublisher = eventPublisher;
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        [Serializable]
+        public class DiscountRequirementForCaching
+        {
+            public int Id { get; set; }
+            public string SystemName { get; set; }
         }
 
         #endregion
@@ -382,22 +395,38 @@ namespace Nop.Services.Discounts
             }
 
             //discount requirements
-            var requirements = discount.DiscountRequirements;
+            //UNDONE we should inject static cache manager into constructor. we we already have "per request" cache manager injected. better way to do it?
+            //we cache meta info of rdiscount requirements. this way we should not load them for each HTTP request
+            var staticCacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            string key = string.Format(DiscountRequirementEventConsumer.DISCOUNT_REQUIREMENT_MODEL_KEY, discount.Id);
+            //var requirements = discount.DiscountRequirements;
+            var requirements = staticCacheManager.Get(key, () =>
+            {
+                var cachedRequirements = new List<DiscountRequirementForCaching>();
+                foreach (var dr in discount.DiscountRequirements)
+                    cachedRequirements.Add(new DiscountRequirementForCaching
+                    {
+                        Id = dr.Id,
+                        SystemName = dr.DiscountRequirementRuleSystemName
+                    });
+                return cachedRequirements;
+            });
             foreach (var req in requirements)
             {
-                var requirementRule = LoadDiscountRequirementRuleBySystemName(req.DiscountRequirementRuleSystemName);
-                if (requirementRule == null)
+                //load a plugin
+                var requirementRulePlugin = LoadDiscountRequirementRuleBySystemName(req.SystemName);
+                if (requirementRulePlugin == null)
                     continue;
-                if (!_pluginFinder.AuthenticateStore(requirementRule.PluginDescriptor, _storeContext.CurrentStore.Id))
+                if (!_pluginFinder.AuthenticateStore(requirementRulePlugin.PluginDescriptor, _storeContext.CurrentStore.Id))
                     continue;
 
                 var ruleRequest = new DiscountRequirementValidationRequest
                 {
-                    DiscountRequirement = req,
+                    DiscountRequirementId = req.Id,
                     Customer = customer,
                     Store = _storeContext.CurrentStore
                 };
-                var ruleResult = requirementRule.CheckRequirement(ruleRequest);
+                var ruleResult = requirementRulePlugin.CheckRequirement(ruleRequest);
                 if (!ruleResult.IsValid)
                 {
                     result.UserError = ruleResult.UserError;
@@ -462,7 +491,6 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityInserted(discountUsageHistory);
         }
-
 
         /// <summary>
         /// Update discount usage history record

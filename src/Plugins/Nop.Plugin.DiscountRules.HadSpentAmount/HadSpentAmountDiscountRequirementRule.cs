@@ -36,13 +36,10 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            if (request.DiscountRequirement == null)
-                throw new NopException("Discount requirement is not set");
-
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var spentAmountRequirement = _settingService.GetSettingByKey<decimal>(string.Format("DiscountRequirement.HadSpentAmount-{0}", request.DiscountRequirement.Id));
+            var spentAmountRequirement = _settingService.GetSettingByKey<decimal>(string.Format("DiscountRequirement.HadSpentAmount-{0}", request.DiscountRequirementId));
             if (spentAmountRequirement == decimal.Zero)
             {
                 //valid

@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Stores;
 
 namespace Nop.Services.Discounts
@@ -10,9 +9,9 @@ namespace Nop.Services.Discounts
     public partial class DiscountRequirementValidationRequest
     {
         /// <summary>
-        /// Gets or sets the discount
+        /// Gets or sets the appropriate discount requirement ID (identifier)
         /// </summary>
-        public DiscountRequirement DiscountRequirement { get; set; }
+        public int DiscountRequirementId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer

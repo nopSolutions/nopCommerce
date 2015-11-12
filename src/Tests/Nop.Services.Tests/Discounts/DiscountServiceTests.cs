@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Discounts;
@@ -137,6 +138,13 @@ namespace Nop.Services.Tests.Discounts
                                     }
                             });
 
+            //UNDONE: little workaround here
+            //we have to register "nop_cache_static" cache manager (null manager) from DependencyRegistrar.cs
+            //because DiscountService right now dynamically Resolve<ICacheManager>("nop_cache_static")
+            //we cannot inject it because DiscountService already has "per-request" cache manager injected 
+            EngineContext.Initialize(false);
+            //EngineContext.Current.ContainerManager.Expect(x => x.Resolve<ICacheManager>("nop_cache_static")).Return(new NopNullCache());
+            
             _discountService.ValidateDiscount(discount, customer).IsValid.ShouldEqual(true);
         }
 

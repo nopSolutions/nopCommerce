@@ -28,14 +28,11 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
         {
             if (request == null)
                 throw new ArgumentNullException("request");
-
-            if (request.DiscountRequirement == null)
-                throw new NopException("Discount requirement is not set");
-
+            
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
-            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirement.Id));
+            var restrictedProductIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductIds-{0}", request.DiscountRequirementId));
             if (String.IsNullOrWhiteSpace(restrictedProductIds))
             {
                 //valid

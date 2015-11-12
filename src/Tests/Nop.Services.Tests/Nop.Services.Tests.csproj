@@ -101,6 +101,7 @@
     <Compile Include="Configuration\ConfigurationProviderTests.cs" />
     <Compile Include="Customers\CustomerExtensionTests.cs" />
     <Compile Include="Customers\CustomerRegistrationServiceTests.cs" />
+    <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Directory\CurrencyServiceTests.cs" />
     <Compile Include="Directory\TestExchangeRateProvider.cs" />
     <Compile Include="Directory\MeasureServiceTests.cs" />

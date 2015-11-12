@@ -27,16 +27,13 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (request == null)
                 throw new ArgumentNullException("request");
 
-            if (request.DiscountRequirement == null)
-                throw new NopException("Discount requirement is not set");
-
             //invalid by default
             var result = new DiscountRequirementValidationResult();
 
             if (request.Customer == null)
                 return result;
 
-            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", request.DiscountRequirement.Id));
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", request.DiscountRequirementId));
             if (restrictedToCustomerRoleId == 0)
                 return result;
 
