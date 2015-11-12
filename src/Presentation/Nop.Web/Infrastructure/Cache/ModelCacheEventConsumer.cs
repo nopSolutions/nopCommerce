@@ -111,6 +111,13 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<StateProvince>>,
         IConsumer<EntityUpdated<StateProvince>>,
         IConsumer<EntityDeleted<StateProvince>>,
+        //return requests
+        IConsumer<EntityInserted<ReturnRequestAction>>,
+        IConsumer<EntityUpdated<ReturnRequestAction>>,
+        IConsumer<EntityDeleted<ReturnRequestAction>>,
+        IConsumer<EntityInserted<ReturnRequestReason>>,
+        IConsumer<EntityUpdated<ReturnRequestReason>>,
+        IConsumer<EntityDeleted<ReturnRequestReason>>,
         //templates
         IConsumer<EntityInserted<CategoryTemplate>>,
         IConsumer<EntityUpdated<CategoryTemplate>>,
@@ -284,7 +291,6 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string PRODUCT_BREADCRUMB_MODEL_KEY = "Nop.pres.product.breadcrumb-{0}-{1}-{2}-{3}";
         public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "Nop.pres.product.breadcrumb";
-
 
         /// <summary>
         /// Key for ProductTagModel caching
@@ -604,6 +610,24 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "Nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
         public const string STATEPROVINCES_PATTERN_KEY = "Nop.pres.stateprovinces";
+
+        /// <summary>
+        /// Key for return request reasons
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string RETURNREQUESTREASONS_MODEL_KEY = "Nop.pres.returnrequesreasons-{0}";
+        public const string RETURNREQUESTREASONS_PATTERN_KEY = "Nop.pres.returnrequesreasons";
+
+        /// <summary>
+        /// Key for return request actions
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string RETURNREQUESTACTIONS_MODEL_KEY = "Nop.pres.returnrequestactions-{0}";
+        public const string RETURNREQUESTACTIONS_PATTERN_KEY = "Nop.pres.returnrequestactions";
 
         /// <summary>
         /// Key for available languages
@@ -1021,7 +1045,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
-
         //Pictures
         public void HandleEvent(EntityInserted<Picture> eventMessage)
         {
@@ -1137,6 +1160,32 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<StateProvince> eventMessage)
         {
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+        }
+
+        //retunr requests
+        public void HandleEvent(EntityInserted<ReturnRequestAction> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ReturnRequestAction> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ReturnRequestAction> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTACTIONS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityInserted<ReturnRequestReason> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ReturnRequestReason> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ReturnRequestReason> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(RETURNREQUESTREASONS_PATTERN_KEY);
         }
 
         //templates

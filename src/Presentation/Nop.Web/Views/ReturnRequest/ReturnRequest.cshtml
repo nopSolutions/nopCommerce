@@ -83,12 +83,26 @@
                 </div>
                 <div class="form-fields">
                     <div class="inputs">
-                        @Html.LabelFor(model => model.ReturnRequestReasonId, new { }, ":")
-                        @Html.DropDownListFor(model => model.ReturnRequestReasonId, Model.AvailableReturnReasons, new { @class = "return-reasons" })
+                        @{
+                            var reasonsSelectList = Model.AvailableReturnReasons.Select(x => new SelectListItem
+                            {
+                                Text = x.Name,
+                                Value = x.Id.ToString()
+                            }).ToList();
+                        }
+                        @Html.LabelFor(model => model.ReturnRequestReasonId, new {}, ":")
+                        @Html.DropDownListFor(model => model.ReturnRequestReasonId, reasonsSelectList, new {@class = "return-reasons"})
                     </div>
                     <div class="inputs">
+                        @{
+                            var actionsSelectList = Model.AvailableReturnActions.Select(x => new SelectListItem
+                            {
+                                Text = x.Name,
+                                Value = x.Id.ToString()
+                            }).ToList();
+                        }
                         @Html.LabelFor(model => model.ReturnRequestActionId, new { }, ":")
-                        @Html.DropDownListFor(model => model.ReturnRequestActionId, Model.AvailableReturnActions, new { @class = "return-actions" })
+                        @Html.DropDownListFor(model => model.ReturnRequestActionId, actionsSelectList, new { @class = "return-actions" })
                     </div>
                     <div class="inputs">
                         @Html.LabelFor(model => model.Comments, new { }, ":")

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
@@ -14,6 +16,7 @@ using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Web.Framework.Security;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
@@ -34,10 +37,11 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
-		#region Constructors
+        #region Constructors
 
         public ReturnRequestController(IReturnRequestService returnRequestService,
             IOrderService orderService, 
@@ -50,7 +54,8 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,
             IWorkflowMessageService workflowMessageService,
             IDateTimeHelper dateTimeHelper,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings,
+            ICacheManager cacheManager)
         {
             this._returnRequestService = returnRequestService;
             this._orderService = orderService;
@@ -64,6 +69,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationSettings = localizationSettings;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -82,24 +88,32 @@ namespace Nop.Web.Controllers
             model.OrderId = order.Id;
 
             //return reasons
-            foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
-            {
-                model.AvailableReturnReasons.Add(new SelectListItem
+            model.AvailableReturnReasons = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+                () =>
                 {
-                    Text = rrr.GetLocalized(x => x.Name),
-                    Value = rrr.Id.ToString()
+                    var reasons = new List<SubmitReturnRequestModel.ReturnRequestReasonModel>();
+                    foreach (var rrr in _returnRequestService.GetAllReturnRequestReasons())
+                        reasons.Add(new SubmitReturnRequestModel.ReturnRequestReasonModel()
+                        {
+                            Id = rrr.Id,
+                            Name = rrr.GetLocalized(x => x.Name)
+                        });
+                    return reasons;
                 });
-            }
 
             //return actions
-            foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
-            {
-                model.AvailableReturnActions.Add(new SelectListItem
+            model.AvailableReturnActions = _cacheManager.Get(string.Format(ModelCacheEventConsumer.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+                () =>
                 {
-                    Text = rra.GetLocalized(x => x.Name),
-                    Value = rra.Id.ToString()
+                    var actions = new List<SubmitReturnRequestModel.ReturnRequestActionModel>();
+                    foreach (var rra in _returnRequestService.GetAllReturnRequestActions())
+                        actions.Add(new SubmitReturnRequestModel.ReturnRequestActionModel()
+                        {
+                            Id = rra.Id,
+                            Name = rra.GetLocalized(x => x.Name)
+                        });
+                    return actions;
                 });
-            }
 
             //products
             var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
