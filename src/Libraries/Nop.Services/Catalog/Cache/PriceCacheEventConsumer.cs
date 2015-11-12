@@ -10,7 +10,7 @@ using Nop.Services.Events;
 namespace Nop.Services.Catalog.Cache
 {
     /// <summary>
-    /// Prica cache event consumer (used for caching of prices)
+    /// Price cache event consumer (used for caching of prices)
     /// </summary>
     public partial class PriceCacheEventConsumer: 
         //settings
