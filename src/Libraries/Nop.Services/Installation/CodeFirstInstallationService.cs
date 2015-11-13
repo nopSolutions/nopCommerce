@@ -5,6 +5,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
@@ -85,6 +86,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Address> _addressRepository;
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<Vendor> _vendorRepository;
+        private readonly IRepository<Affiliate> _affiliateRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -133,6 +135,7 @@ namespace Nop.Services.Installation
             IRepository<Address> addressRepository,
             IRepository<Warehouse> warehouseRepository,
             IRepository<Vendor> vendorRepository,
+            IRepository<Affiliate> affiliateRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -177,6 +180,7 @@ namespace Nop.Services.Installation
             this._addressRepository = addressRepository;
             this._warehouseRepository = warehouseRepository;
             this._vendorRepository = vendorRepository;
+            this._affiliateRepository = affiliateRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -10054,6 +10058,31 @@ namespace Nop.Services.Installation
             _vendorRepository.Insert(vendors);
         }
 
+        protected virtual void InstallAffiliates()
+        {
+            var affiliateAddress = new Address
+            {
+                FirstName = "John",
+                LastName = "Smith",
+                Email = "affiliate_email@gmail.com",
+                Company = "Company name here...",
+                City = "New York",
+                Address1 = "21 West 52nd Street",
+                ZipPostalCode = "10021",
+                PhoneNumber = "123456789",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _addressRepository.Insert(affiliateAddress);
+            var affilate = new Affiliate
+            {
+                Active = true,
+                Address = affiliateAddress
+            };
+            _affiliateRepository.Insert(affilate);
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
@@ -10114,6 +10143,7 @@ namespace Nop.Services.Installation
                 InstallPolls();
                 InstallWarehouses();
                 InstallVendors();
+                InstallAffiliates();
             }
         }
 
