@@ -82,6 +82,9 @@ namespace Nop.Services.Installation
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly IRepository<ReturnRequestReason> _returnRequestReasonRepository;
         private readonly IRepository<ReturnRequestAction> _returnRequestActionRepository;
+        private readonly IRepository<Address> _addressRepository;
+        private readonly IRepository<Warehouse> _warehouseRepository;
+        private readonly IRepository<Vendor> _vendorRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -127,6 +130,9 @@ namespace Nop.Services.Installation
             IRepository<ScheduleTask> scheduleTaskRepository,
             IRepository<ReturnRequestReason> returnRequestReasonRepository,
             IRepository<ReturnRequestAction> returnRequestActionRepository,
+            IRepository<Address> addressRepository,
+            IRepository<Warehouse> warehouseRepository,
+            IRepository<Vendor> vendorRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -168,6 +174,9 @@ namespace Nop.Services.Installation
             this._scheduleTaskRepository = scheduleTaskRepository;
             this._returnRequestReasonRepository = returnRequestReasonRepository;
             this._returnRequestActionRepository = returnRequestActionRepository;
+            this._addressRepository = addressRepository;
+            this._warehouseRepository = warehouseRepository;
+            this._vendorRepository = vendorRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -4629,7 +4638,7 @@ namespace Nop.Services.Installation
                     ProductsAlsoPurchasedNumber = 3,
                     AjaxProcessAttributeChange = true,
                     NumberOfProductTags = 15,
-                    ProductsByTagPageSize = 4,
+                    ProductsByTagPageSize = 6,
                     IncludeShortDescriptionInCompareProducts = false,
                     IncludeFullDescriptionInCompareProducts = false,
                     IncludeFeaturedProductsInNormalLists = false,
@@ -9971,6 +9980,80 @@ namespace Nop.Services.Installation
             _returnRequestActionRepository.Insert(returnRequestActions);
         }
 
+        protected virtual void InstallWarehouses()
+        {
+            var warehouse1address = new Address
+            {
+                Address1 = "21 West 52nd Street",
+                City = "New York",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "New York"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "10021",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _addressRepository.Insert(warehouse1address);
+            var warehouse2address = new Address
+            {
+                Address1 = "300 South Spring Stree",
+                City = "Los Angeles",
+                StateProvince = _stateProvinceRepository.Table.FirstOrDefault(sp => sp.Name == "California"),
+                Country = _countryRepository.Table.FirstOrDefault(c => c.ThreeLetterIsoCode == "USA"),
+                ZipPostalCode = "90013",
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            _addressRepository.Insert(warehouse2address);
+            var warehouses = new List<Warehouse>
+            {
+                new Warehouse
+                {
+                    Name = "Warehouse 1 (New York)",
+                    AddressId = warehouse1address.Id
+                },
+                new Warehouse
+                {
+                    Name = "Warehouse 2 (Los Angeles)",
+                    AddressId = warehouse2address.Id
+                }
+            };
+
+            _warehouseRepository.Insert(warehouses);
+        }
+
+        protected virtual void InstallVendors()
+        {
+            var vendors = new List<Vendor>
+            {
+                new Vendor
+                {
+                    Name = "Vendor 1",
+                    Email = "vendor1email@gmail.com",
+                    Description = "Some description...",
+                    AdminComment = "",
+                    PictureId = 0,
+                    Active = true,
+                    DisplayOrder = 1,
+                    PageSize = 6,
+                    AllowCustomersToSelectPageSize = true,
+                    PageSizeOptions = "6, 3, 9, 18",
+                },
+                new Vendor
+                {
+                    Name = "Vendor 2",
+                    Email = "vendor2email@gmail.com",
+                    Description = "Some description...",
+                    AdminComment = "",
+                    PictureId = 0,
+                    Active = true,
+                    DisplayOrder = 2,
+                    PageSize = 6,
+                    AllowCustomersToSelectPageSize = true,
+                    PageSizeOptions = "6, 3, 9, 18",
+                }
+            };
+
+            _vendorRepository.Insert(vendors);
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
@@ -10029,6 +10112,8 @@ namespace Nop.Services.Installation
                 InstallBlogPosts(defaultUserEmail);
                 InstallNews(defaultUserEmail);
                 InstallPolls();
+                InstallWarehouses();
+                InstallVendors();
             }
         }
 
