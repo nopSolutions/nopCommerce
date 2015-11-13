@@ -22,6 +22,19 @@ namespace Nop.Core
 
         #endregion
 
+        #region Constructor
+
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="httpContext">HTTP context</param>
+        public WebHelper(HttpContextBase httpContext)
+        {
+            this._httpContext = httpContext;
+        }
+
+        #endregion
+
         #region Utilities
 
         protected virtual Boolean IsRequestAvailable(HttpContextBase httpContext)
@@ -80,16 +93,7 @@ namespace Nop.Core
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="httpContext">HTTP context</param>
-        public WebHelper(HttpContextBase httpContext)
-        {
-            this._httpContext = httpContext;
-        }
-
+        
         /// <summary>
         /// Get URL referrer
         /// </summary>
