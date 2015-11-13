@@ -2073,6 +2073,9 @@ namespace Nop.Web.Controllers
                         }
                 }
             }
+            
+            //parse and save checkout attributes
+            ParseAndSaveCheckoutAttributes(cart, form);
 
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems
