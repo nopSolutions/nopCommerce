@@ -217,10 +217,18 @@ namespace Nop.Core
             bool useSsl = false;
             if (IsRequestAvailable(_httpContext))
             {
-                useSsl = _httpContext.Request.IsSecureConnection;
-                //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true, use the statement below
-                //just uncomment it
-                //useSSL = _httpContext.Request.ServerVariables["HTTP_CLUSTER_HTTPS"] == "on" ? true : false;
+                //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true
+                //in such cases we use HTTP_CLUSTER_HTTPS"
+                var useHttpClusterHttps = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]) &&
+                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]);
+                if (useHttpClusterHttps)
+                {
+                    useSsl = _httpContext.Request.ServerVariables["HTTP_CLUSTER_HTTPS"] == "on";
+                }
+                else
+                {
+                    useSsl = _httpContext.Request.IsSecureConnection;
+                }
             }
 
             return useSsl;
