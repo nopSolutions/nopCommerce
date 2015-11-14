@@ -71,6 +71,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IPdfService _pdfService;
         private readonly IRewardPointService _rewardPointService;
+        private readonly IGenericAttributeService _genericAttributeService;
 
         private readonly ShippingSettings _shippingSettings;
         private readonly PaymentSettings _paymentSettings;
@@ -117,6 +118,7 @@ namespace Nop.Services.Orders
         /// <param name="eventPublisher">Event published</param>
         /// <param name="pdfService">PDF service</param>
         /// <param name="rewardPointService">Reward point service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
@@ -154,6 +156,7 @@ namespace Nop.Services.Orders
             IEventPublisher eventPublisher,
             IPdfService pdfService,
             IRewardPointService rewardPointService,
+            IGenericAttributeService genericAttributeService,
             ShippingSettings shippingSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -192,6 +195,8 @@ namespace Nop.Services.Orders
             this._eventPublisher = eventPublisher;
             this._pdfService = pdfService;
             this._rewardPointService = rewardPointService;
+            this._genericAttributeService = genericAttributeService;
+
             this._paymentSettings = paymentSettings;
             this._shippingSettings = shippingSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -2832,6 +2837,7 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
+            //move shopping cart items (if possible)
             foreach (var orderItem in order.OrderItems)
             {
                 _shoppingCartService.AddToCart(orderItem.Order.Customer, orderItem.Product,
@@ -2840,6 +2846,10 @@ namespace Nop.Services.Orders
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                     orderItem.Quantity, false);
             }
+
+            //set checkout attributes
+            //comment the code below if you want to disable this functionality
+            _genericAttributeService.SaveAttribute(order.Customer, SystemCustomerAttributeNames.CheckoutAttributes, order.CheckoutAttributesXml, order.StoreId);
         }
         
         /// <summary>
