@@ -2840,8 +2840,8 @@ namespace Nop.Services.Orders
             //move shopping cart items (if possible)
             foreach (var orderItem in order.OrderItems)
             {
-                _shoppingCartService.AddToCart(orderItem.Order.Customer, orderItem.Product,
-                    ShoppingCartType.ShoppingCart, orderItem.Order.StoreId, 
+                _shoppingCartService.AddToCart(order.Customer, orderItem.Product,
+                    ShoppingCartType.ShoppingCart, order.StoreId, 
                     orderItem.AttributesXml, orderItem.UnitPriceExclTax,
                     orderItem.RentalStartDateUtc, orderItem.RentalEndDateUtc,
                     orderItem.Quantity, false);
