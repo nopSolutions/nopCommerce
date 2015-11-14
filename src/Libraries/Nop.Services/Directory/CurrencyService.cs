@@ -225,7 +225,7 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("sourceCurrencyCode");
 
             if (targetCurrencyCode == null)
-                throw new ArgumentNullException("sourceCurrencyCode");
+                throw new ArgumentNullException("targetCurrencyCode");
 
             decimal result = amount;
             if (sourceCurrencyCode.Id == targetCurrencyCode.Id)
