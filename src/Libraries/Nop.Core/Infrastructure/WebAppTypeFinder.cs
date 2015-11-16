@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Web;
 using System.Web.Hosting;
-using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
 {
