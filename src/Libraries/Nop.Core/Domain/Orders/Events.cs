@@ -10,6 +10,9 @@ namespace Nop.Core.Domain.Orders
             this.Order = order;
         }
 
+        /// <summary>
+        /// Order
+        /// </summary>
         public Order Order { get; private set; }
     }
 
@@ -23,6 +26,9 @@ namespace Nop.Core.Domain.Orders
             this.Order = order;
         }
 
+        /// <summary>
+        /// Order
+        /// </summary>
         public Order Order { get; private set; }
     }
 
@@ -36,6 +42,9 @@ namespace Nop.Core.Domain.Orders
             this.Order = order;
         }
 
+        /// <summary>
+        /// Order
+        /// </summary>
         public Order Order { get; private set; }
     }
 
@@ -50,8 +59,14 @@ namespace Nop.Core.Domain.Orders
             this.Amount = amount;
         }
 
+        /// <summary>
+        /// Order
+        /// </summary>
         public Order Order { get; private set; }
 
+        /// <summary>
+        /// Amount
+        /// </summary>
         public decimal Amount { get; private set; }
     }
 
