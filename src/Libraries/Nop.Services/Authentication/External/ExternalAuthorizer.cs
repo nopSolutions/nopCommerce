@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
@@ -32,6 +33,7 @@ namespace Nop.Services.Authentication.External
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IEventPublisher _eventPublisher;
         private readonly LocalizationSettings _localizationSettings;
         #endregion
 
@@ -48,7 +50,8 @@ namespace Nop.Services.Authentication.External
             CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IShoppingCartService shoppingCartService,
-            IWorkflowMessageService workflowMessageService, 
+            IWorkflowMessageService workflowMessageService,
+            IEventPublisher eventPublisher,
             LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
@@ -63,6 +66,7 @@ namespace Nop.Services.Authentication.External
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._shoppingCartService = shoppingCartService;
             this._workflowMessageService = workflowMessageService;
+            this._eventPublisher = eventPublisher;
             this._localizationSettings = localizationSettings;
         }
         
@@ -167,6 +171,9 @@ namespace Nop.Services.Authentication.External
                         //notifications
                         if (_customerSettings.NotifyNewCustomerRegistration)
                             _workflowMessageService.SendCustomerRegisteredNotificationMessage(currentCustomer, _localizationSettings.DefaultAdminLanguageId);
+
+                        //raise event       
+                        _eventPublisher.Publish(new CustomerRegisteredEvent(currentCustomer));
 
                         if (isApproved)
                         {

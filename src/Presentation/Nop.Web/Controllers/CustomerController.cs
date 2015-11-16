@@ -20,6 +20,7 @@ using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -78,6 +79,7 @@ namespace Nop.Web.Controllers
         private readonly IAddressAttributeService _addressAttributeService;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
         private readonly IReturnRequestService _returnRequestService;
+        private readonly IEventPublisher _eventPublisher;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -125,6 +127,7 @@ namespace Nop.Web.Controllers
             IAddressAttributeService addressAttributeService,
             IAddressAttributeFormatter addressAttributeFormatter,
             IReturnRequestService returnRequestService,
+            IEventPublisher eventPublisher,
             MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService,
             LocalizationSettings localizationSettings,
@@ -167,6 +170,7 @@ namespace Nop.Web.Controllers
             this._addressAttributeService = addressAttributeService;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._returnRequestService = returnRequestService;
+            this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
@@ -1061,7 +1065,10 @@ namespace Nop.Web.Controllers
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)
                         _workflowMessageService.SendCustomerRegisteredNotificationMessage(customer, _localizationSettings.DefaultAdminLanguageId);
-                    
+
+                    //raise event       
+                    _eventPublisher.Publish(new CustomerRegisteredEvent(customer));
+
                     switch (_customerSettings.UserRegistrationType)
                     {
                         case UserRegistrationType.EmailValidation:
