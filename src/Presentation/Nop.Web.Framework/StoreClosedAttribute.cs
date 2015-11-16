@@ -33,7 +33,7 @@ namespace Nop.Web.Framework
             if (filterContext == null || filterContext.HttpContext == null)
                 return;
 
-            //search the solution by "[StoreClosedAttribute(true)]" keyword 
+            //search the solution by "[StoreClosed(true)]" keyword 
             //in order to find method available even when a store is closed
             if (_ignore)
                 return;

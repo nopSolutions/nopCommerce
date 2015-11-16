@@ -615,7 +615,7 @@ namespace Nop.Web.Controllers
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         //available even when a store is closed
-        [StoreClosedAttribute(true)]
+        [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public ActionResult Login(bool? checkoutAsGuest)
@@ -697,7 +697,7 @@ namespace Nop.Web.Controllers
         }
 
         //available even when a store is closed
-        [StoreClosedAttribute(true)]
+        [StoreClosed(true)]
         //available even when navigation is not allowed
         [PublicStoreAllowNavigation(true)]
         public ActionResult Logout()
