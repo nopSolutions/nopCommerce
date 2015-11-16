@@ -10,6 +10,9 @@ namespace Nop.Core.Domain.Catalog
             this.ProductReview = productReview;
         }
 
+        /// <summary>
+        /// Product review
+        /// </summary>
         public ProductReview ProductReview { get; private set; }
     }
 }

@@ -10,6 +10,9 @@ namespace Nop.Core.Domain.Customers
             this.Customer = customer;
         }
 
+        /// <summary>
+        /// Customer
+        /// </summary>
         public Customer Customer
         {
             get; private set;
@@ -26,6 +29,9 @@ namespace Nop.Core.Domain.Customers
             this.Customer = customer;
         }
 
+        /// <summary>
+        /// Customer
+        /// </summary>
         public Customer Customer
         {
             get; private set;
