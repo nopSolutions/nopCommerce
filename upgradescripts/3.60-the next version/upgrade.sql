@@ -431,6 +431,12 @@ set @resources='
   <LocaleResource Name="Products.Discontinued">
     <Value>Sorry - this product is no longer available</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.RemoveDownload">
+    <Value>Remove</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.DownloadUploadedFile">
+    <Value>Download</Value>
+  </LocaleResource>
 </Language>
 '
 

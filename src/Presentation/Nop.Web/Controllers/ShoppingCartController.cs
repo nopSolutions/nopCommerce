@@ -385,6 +385,19 @@ namespace Nop.Web.Controllers
                             
                         }
                         break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
+                            {
+                                var downloadGuidStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id).FirstOrDefault();
+                                Guid downloadGuid;
+                                Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                if (download != null)
+                                    attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -1915,6 +1928,7 @@ namespace Nop.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             }, "text/plain");
         }
@@ -1998,6 +2012,7 @@ namespace Nop.Web.Controllers
             {
                 success = true,
                 message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
             }, "text/plain");
         }

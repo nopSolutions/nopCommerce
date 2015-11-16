@@ -11511,11 +11511,17 @@
   <LocaleResource Name="Common.FileUploader.Delete">
     <Value>Delete</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.DownloadUploadedFile">
+    <Value>Download</Value>
+  </LocaleResource>
   <LocaleResource Name="Common.FileUploader.DropFiles">
     <Value>Drop files here to upload</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Processing">
     <Value>Processing dropped files...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.RemoveDownload">
+    <Value>Remove</Value>
   </LocaleResource>
   <LocaleResource Name="Common.FileUploader.Retry">
     <Value>Retry</Value>

@@ -1,5 +1,7 @@
 ﻿@model IList<Nop.Web.Models.ShoppingCart.ShoppingCartModel.CheckoutAttributeModel>
 @using Nop.Core.Domain.Catalog;
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure;
 @if (Model.Count > 0)
 {
     <div class="checkout-attributes">
@@ -86,15 +88,29 @@
                             break;
                         case AttributeControlType.FileUpload:
                             {
-                                
+                                var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
+                                Download download = null;
+                                if (!String.IsNullOrEmpty(attribute.DefaultValue))
+                                {
+                                    download = downloadService.GetDownloadByGuid(new Guid(attribute.DefaultValue));
+                                }
+
                                 //register CSS and JS
                                 Html.AddCssFileParts("~/Scripts/fineuploader/fineuploader-4.2.2.min.css");
                                 Html.AddScriptParts("~/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
-                            
-                        <input id="@(controlId)" name="@(controlId)" type="hidden" />
+
+                                if (download != null)
+                                {
+                                    <input id="@(controlId)" name="@(controlId)" type="hidden" value="@download.DownloadGuid" />
+                                }
+                                else
+                                {
+                                    <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                                }
+                       
                         @*fine uploader container*@
                         <div id="@(controlId)uploader"></div>
                         @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
@@ -128,26 +144,51 @@
                                 </ul>
                             </div>
                         </script>
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $("#@(controlId)uploader").fineUploader({
-                                    request: {
-                                        endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new { attributeId = attribute.Id }))'
-                                    },
-                                    template: "@(controlId)-qq-template",
-                                    multiple: false,
-                                    validation: {
-                                        allowedExtensions: [@Html.Raw(allowedFileExtensions)]
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $("#@(controlId)uploader").fineUploader({
+                                            request: {
+                                                endpoint: '@(Url.RouteUrl("UploadFileCheckoutAttribute", new {attributeId = attribute.Id}))'
+                                            },
+                                            template: "@(controlId)-qq-template",
+                                            multiple: false,
+                                            validation: {
+                                                allowedExtensions: [@Html.Raw(allowedFileExtensions)]
+                                            }
+                                        }).on("complete", function(event, id, name, responseJSON, xhr) {
+                                            $("#@(controlId)").val(responseJSON.downloadGuid);
+                                            if (responseJSON.success) {
+                                                $("#@(controlId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Common.FileUploader.DownloadUploadedFile")</a>");
+                                                $("#@(controlId + "remove")").show();
+                                            }
+                                            if (responseJSON.message) {
+                                                alert(responseJSON.message);
+                                            }
+                                        });
+
+                                        $("#@(controlId + "remove")").click(function(e) {
+                                            $("#@(controlId + "downloadurl")").html("");
+                                            $("#@(controlId)").val('');
+                                            $(this).hide();
+                                        });
+                                    });
+                                </script>
+                                <div id="@(controlId + "downloadurl")">
+                                    @if (download != null)
+                                    {
+                                        <a href="@(Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }))" class="download-uploaded-file">@T("Common.FileUploader.DownloadUploadedFile")</a>
                                     }
-                                }).on("complete", function(event, id, name, responseJSON, xhr) {
-                                    $("#@(controlId)").val(responseJSON.downloadGuid);
-                                    if (responseJSON.message) {
-                                        alert(responseJSON.message);
+                                </div>
+                                <div>
+                                    @if (download != null)
+                                    {
+                                        <a id="@(controlId + "remove")" class="remove-download-button">@T("Common.FileUploader.RemoveDownload")</a>
                                     }
-                                });
-                            });
-                        </script>
-                    
+                                    else
+                                    {
+                                        <a id="@(controlId + "remove")" class="remove-download-buttonn" style="display:none;">@T("Common.FileUploader.RemoveDownload")</a>
+                                    }
+                                </div>
                             }
                             break;
                         case AttributeControlType.ColorSquares:

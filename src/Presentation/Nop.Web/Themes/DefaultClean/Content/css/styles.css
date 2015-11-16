@@ -3038,7 +3038,12 @@ label, label + * {
 	margin: 10px 0 0;
 	text-align: left;
 }
-
+.shopping-cart-page .checkout-attributes a {
+	color: #4ab3f1;
+}
+.shopping-cart-page .checkout-attributes a:hover {
+	text-decoration: underline;
+}
 .shopping-cart-page .tax-shipping-info {
 	margin: 20px 0;
 	text-align: center;

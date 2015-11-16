@@ -70,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IPermissionService _permissionService;
+        private readonly IDownloadService _downloadService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IShippingService _shippingService;
@@ -113,7 +114,8 @@ namespace Nop.Web.Controllers
             IOrderReportService orderReportService, 
             IAclService aclService,
             IStoreMappingService storeMappingService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
+            IDownloadService downloadService,
             ICustomerActivityService customerActivityService,
             IProductAttributeParser productAttributeParser,
             IShippingService shippingService,
@@ -154,6 +156,7 @@ namespace Nop.Web.Controllers
             this._aclService = aclService;
             this._storeMappingService = storeMappingService;
             this._permissionService = permissionService;
+            this._downloadService = downloadService;
             this._customerActivityService = customerActivityService;
             this._productAttributeParser = productAttributeParser;
             this._shippingService = shippingService;
@@ -751,6 +754,19 @@ namespace Nop.Web.Controllers
                                     }
                                 }
 
+                            }
+                            break;
+                        case AttributeControlType.FileUpload:
+                            {
+                                if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
+                                {
+                                    var downloadGuidStr = _productAttributeParser.ParseValues(updatecartitem.AttributesXml, attribute.Id).FirstOrDefault();
+                                    Guid downloadGuid;
+                                    Guid.TryParse(downloadGuidStr, out downloadGuid);
+                                    var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                                    if (download != null)
+                                        attributeModel.DefaultValue = download.DownloadGuid.ToString();
+                                }
                             }
                             break;
                         default:
