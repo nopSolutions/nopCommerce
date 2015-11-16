@@ -5,16 +5,11 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public class ProductReviewApprovedEvent
     {
-        private readonly ProductReview _productReview;
-
         public ProductReviewApprovedEvent(ProductReview productReview)
         {
-            this._productReview = productReview;
+            this.ProductReview = productReview;
         }
 
-        public ProductReview ProductReview
-        {
-            get { return _productReview; }
-        }
+        public ProductReview ProductReview { get; private set; }
     }
 }
