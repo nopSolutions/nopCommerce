@@ -10,7 +10,6 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Events;
-using Nop.Services.Security;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Topics

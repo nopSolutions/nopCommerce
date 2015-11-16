@@ -1,6 +1,5 @@
 ﻿using System;
 using Nop.Core.Domain.Directory;
-using Nop.Services.Configuration;
 using Nop.Services.Tasks;
 
 namespace Nop.Services.Directory
