@@ -5,7 +5,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
-using Nop.Web.Framework.Security;
 using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Controllers
