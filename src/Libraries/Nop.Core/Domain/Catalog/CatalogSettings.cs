@@ -12,6 +12,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool AllowViewUnpublishedProductPage { get; set; }
         /// <summary>
+        /// Gets or sets a value indicating customers should see "discontinued" message when visibting details pages of unpublished products (if "AllowViewUnpublishedProductPage" is "true)
+        /// </summary>
+        public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
+        /// <summary>
         /// Gets or sets a value indicating whether "Published" or "Disable buy/wishlist buttons" flags should be updated after order cancellation (deletion).
         /// Of course, when qty > configured minimum stock level
         /// </summary>

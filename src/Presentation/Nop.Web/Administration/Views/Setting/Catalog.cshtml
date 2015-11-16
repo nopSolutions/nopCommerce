@@ -185,6 +185,16 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, model => model.DisplayDiscontinuedMessageForUnpublishedProducts, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                @Html.ValidationMessageFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
                 @Html.NopLabelFor(model => model.ShowProductSku):
             </td>

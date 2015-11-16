@@ -2012,6 +2012,7 @@
     <Content Include="Views\Product\_Availability.cshtml" />
     <Content Include="Views\Catalog\_CatalogSelectors.cshtml" />
     <Content Include="Views\Vendor\ApplyVendor.cshtml" />
+    <Content Include="Views\Product\_Discontinued.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Roxy_Fileman\tmp\" />

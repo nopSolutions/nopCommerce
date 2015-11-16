@@ -4603,6 +4603,7 @@ namespace Nop.Services.Installation
             settingService.SaveSetting(new CatalogSettings
                 {
                     AllowViewUnpublishedProductPage = true,
+                    DisplayDiscontinuedMessageForUnpublishedProducts = true,
                     PublishBackProductWhenCancellingOrders = false,
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,

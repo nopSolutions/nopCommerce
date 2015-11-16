@@ -8,12 +8,14 @@ namespace Nop.Admin.Models.Settings
     {
         public int ActiveStoreScopeConfiguration { get; set; }
 
-
-
-
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowViewUnpublishedProductPage")]
         public bool AllowViewUnpublishedProductPage { get; set; }
         public bool AllowViewUnpublishedProductPage_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts")]
+        public bool DisplayDiscontinuedMessageForUnpublishedProducts { get; set; }
+        public bool DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductSku")]
         public bool ShowProductSku { get; set; }

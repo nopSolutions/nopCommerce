@@ -4527,6 +4527,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.CompareProductsEnabled.Hint">
     <Value>Check to allow customers to use the 'Compare Products' option in your store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts">
+    <Value>Discontinued message for unpublished products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts.Hint">
+    <Value>Check to display "a product has been discontinued" message when viewing details pages of unpublished products.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayTaxShippingInfoFooter">
     <Value>Display tax/shipping info (footer)</Value>
   </LocaleResource>
@@ -13517,6 +13523,9 @@
   </LocaleResource>
   <LocaleResource Name="Products.Details">
     <Value>Details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Discontinued">
+    <Value>Sorry - this product is no longer available</Value>
   </LocaleResource>
   <LocaleResource Name="Products.DownloadSample">
     <Value>Download sample</Value>

@@ -422,6 +422,15 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.Bestsellers.Store.Hint">
     <Value>Filter report by orders placed in a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts">
+    <Value>Discontinued message for unpublished products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.DisplayDiscontinuedMessageForUnpublishedProducts.Hint">
+    <Value>Check to display "a product has been discontinued" message when viewing details pages of unpublished products.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Discontinued">
+    <Value>Sorry - this product is no longer available</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1555,4 +1564,14 @@ GO
 UPDATE [ScheduleTask]
 SET [Seconds] = 3600
 WHERE [Type] = N'Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services'
+GO
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaydiscontinuedmessageforunpublishedproducts')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.displaydiscontinuedmessageforunpublishedproducts', N'true', 0)
+END
 GO
