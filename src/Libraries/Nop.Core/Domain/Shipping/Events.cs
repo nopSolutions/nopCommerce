@@ -10,6 +10,9 @@ namespace Nop.Core.Domain.Shipping
             this.Shipment = shipment;
         }
 
+        /// <summary>
+        /// Shipment
+        /// </summary>
         public Shipment Shipment { get; private set; }
     }
 
@@ -23,6 +26,9 @@ namespace Nop.Core.Domain.Shipping
             this.Shipment = shipment;
         }
 
+        /// <summary>
+        /// Shipment
+        /// </summary>
         public Shipment Shipment { get; private set; }
     }
 }
