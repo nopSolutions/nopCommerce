@@ -5,17 +5,12 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public class ShipmentSentEvent
     {
-        private readonly Shipment _shipment;
-
         public ShipmentSentEvent(Shipment shipment)
         {
-            this._shipment = shipment;
+            this.Shipment = shipment;
         }
 
-        public Shipment Shipment
-        {
-            get { return _shipment; }
-        }
+        public Shipment Shipment { get; private set; }
     }
 
     /// <summary>
@@ -23,16 +18,11 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public class ShipmentDeliveredEvent
     {
-        private readonly Shipment _shipment;
-
         public ShipmentDeliveredEvent(Shipment shipment)
         {
-            this._shipment = shipment;
+            this.Shipment = shipment;
         }
 
-        public Shipment Shipment
-        {
-            get { return _shipment; }
-        }
+        public Shipment Shipment { get; private set; }
     }
 }
