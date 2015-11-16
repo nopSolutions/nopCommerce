@@ -236,6 +236,8 @@ namespace Nop.Services.Authentication.External
             _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, userFound ?? userLoggedIn, true);
             //authenticate
             _authenticationService.SignIn(userFound ?? userLoggedIn, false);
+            //raise event       
+            _eventPublisher.Publish(new CustomerLoggedinEvent(userFound ?? userLoggedIn));
             //activity log
             _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), 
                 userFound ?? userLoggedIn);

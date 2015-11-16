@@ -660,6 +660,9 @@ namespace Nop.Web.Controllers
                             //sign in new customer
                             _authenticationService.SignIn(customer, model.RememberMe);
 
+                            //raise event       
+                            _eventPublisher.Publish(new CustomerLoggedinEvent(customer));
+
                             //activity log
                             _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
