@@ -956,6 +956,10 @@ label, label + * {
 .newsletter-subscribe-button:hover {
 	background-color: #248ece;
 }
+.newsletter-email .options {
+    clear: both;
+    padding: 10px 0 0;
+}
 .newsletter-validation, 
 .newsletter-result { 
 	width: 100%;
