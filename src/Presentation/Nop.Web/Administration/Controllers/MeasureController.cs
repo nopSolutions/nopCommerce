@@ -128,6 +128,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
         public ActionResult MarkAsPrimaryWeight(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
@@ -140,7 +141,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(_measureSettings);
             }
 
-            return RedirectToAction("Weights");
+            return Json(new { result = true });
         }
 
         #endregion
@@ -231,6 +232,7 @@ namespace Nop.Admin.Controllers
             return new NullJsonResult();
         }
 
+        [HttpPost]
         public ActionResult MarkAsPrimaryDimension(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
@@ -242,8 +244,10 @@ namespace Nop.Admin.Controllers
                 _measureSettings.BaseDimensionId = id;
                 _settingService.SaveSetting(_measureSettings);
             }
-            return RedirectToAction("Dimensions");
+
+            return Json(new { result = true });
         }
+
         #endregion
 
         #endregion
