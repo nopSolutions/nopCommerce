@@ -190,7 +190,8 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
+        [HttpPost]
         public ActionResult ApplyRate(string currencyCode, decimal rate)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
@@ -206,6 +207,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List","Currency", new { liveRates = true });
         }
 
+        [HttpPost]
         public ActionResult MarkAsPrimaryExchangeRateCurrency(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
@@ -216,6 +218,7 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
         public ActionResult MarkAsPrimaryStoreCurrency(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))

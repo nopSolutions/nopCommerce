@@ -81,59 +81,103 @@
                         },
                         scrollable: false,
                         columns: [
-                        {
-                            field: "Name",
-                            title: "@T("Admin.Configuration.Currencies.Fields.Name")"
-                        }, {
-                            field: "CurrencyCode",
-                            title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
-                            width: 200
-                        }, {
-                            field: "Rate",
-                            title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
-                            width: 200
-                        }, {
-                            field: "IsPrimaryExchangeRateCurrency",
-                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
-                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryExchangeRateCurrency/")#=Id#" class="k-button" onclick="return confirm(\'@T("Admin.Common.AreYouSure")\');">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
-                        }, {
-                            field: "IsPrimaryStoreCurrency",
-                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
-                            template: '<a href="@Url.Content("~/Admin/Currency/MarkAsPrimaryStoreCurrency/")#=Id#" class="k-button" onclick="return confirm(\'@T("Admin.Common.AreYouSure")\');">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.Configuration.Currencies.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                            {
+                                field: "Name",
+                                title: "@T("Admin.Configuration.Currencies.Fields.Name")"
+                            }, {
+                                field: "CurrencyCode",
+                                title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                                width: 200
+                            }, {
+                                field: "Rate",
+                                title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                                width: 200
+                            }, {
+                                field: "IsPrimaryExchangeRateCurrency",
+                                title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
+                                template: '<a onclick="markAsPrimaryExchangeRateCurrency(#=Id#)" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
+                            }, {
+                                field: "IsPrimaryStoreCurrency",
+                                title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
+                                template: '<a onclick="markAsPrimaryStoreCurrency(#=Id#)" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
+                            }, {
+                                field: "Published",
+                                title: "@T("Admin.Configuration.Currencies.Fields.Published")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
                             }
                         ]
                     });
                 });
+            </script>
+            <script>
+                function markAsPrimaryExchangeRateCurrency(id) {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        var postData = {
+                            id: id
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
+                            data: postData,
+                        success: function(data) {
+                            var grid = $("#currencies-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to update currency');
+                        }
+                    });
+                    }
+                };
+                function markAsPrimaryStoreCurrency(id) {
+                    if (confirm('@T("Admin.Common.AreYouSure")')) {
+                        var postData = {
+                            id: id
+                        };
+                        addAntiForgeryToken(postData);
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
+                            data: postData,
+                        success: function(data) {
+                            var grid = $("#currencies-grid").data('kendoGrid');
+                            grid.dataSource.read();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to update currency');
+                        }
+                    });
+                }
+                };
             </script>
         </td>
     </tr>
@@ -144,7 +188,6 @@
     <table class="adminContent" style="width: 300px">
         <tr>
             <td>
-
                 <div id="rate-grid"></div>
                 <script>
                     //local datasource
@@ -164,8 +207,7 @@
                             }
                         }
                     ];
-
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#rate-grid").kendoGrid({
                             dataSource: {
                                 data: rates,
@@ -177,7 +219,7 @@
                                         }
                                     }
                                 },
-                                error: function (e) {
+                                error: function(e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -199,10 +241,10 @@
                                     field: "Rate",
                                     title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
                                     width: 100
-                                },{
+                                }, {
                                     field: "CurrencyCode",
                                     title: "@T("Admin.Configuration.Currencies.ApplyRate")",
-                                    template: '<a href="@Url.Action("ApplyRate")?rate=#=Rate#&currencyCode=#=CurrencyCode#">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
+                                    template: '<a onclick="applyCurrencyRate(\'#=Rate#\', \'#=CurrencyCode#\')" class="k-button">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
                                 }
                             ]
                         });
@@ -211,4 +253,26 @@
             </td>
         </tr>
     </table>
+    <script>
+        function applyCurrencyRate(rate, currencyCode) {
+            var postData = {
+                rate: rate,
+                currencyCode: currencyCode
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("ApplyRate"))",
+                data: postData,
+                success: function(data) {
+                    var grid = $("#currencies-grid").data('kendoGrid');
+                    grid.dataSource.read();
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to update currency');
+                }
+            });
+        };
+    </script>
 }
