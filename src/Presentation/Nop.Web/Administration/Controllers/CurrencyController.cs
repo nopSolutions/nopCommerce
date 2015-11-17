@@ -204,7 +204,8 @@ namespace Nop.Admin.Controllers
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
             }
-            return RedirectToAction("List","Currency", new { liveRates = true });
+
+            return Json(new { result = true });
         }
 
         [HttpPost]
@@ -215,7 +216,8 @@ namespace Nop.Admin.Controllers
 
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
-            return RedirectToAction("List");
+
+            return Json(new { result = true });
         }
 
         [HttpPost]
@@ -226,7 +228,8 @@ namespace Nop.Admin.Controllers
 
             _currencySettings.PrimaryStoreCurrencyId = id;
             _settingService.SaveSetting(_currencySettings);
-            return RedirectToAction("List");
+
+            return Json(new { result = true });
         }
 
         #endregion
