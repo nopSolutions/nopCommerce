@@ -278,7 +278,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
             builder.RegisterType<TaxService>().As<ITaxService>().InstancePerLifetimeScope();
-            builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerLifetimeScope();
 
             builder.RegisterType<DefaultLogger>().As<ILogger>().InstancePerLifetimeScope();
 
