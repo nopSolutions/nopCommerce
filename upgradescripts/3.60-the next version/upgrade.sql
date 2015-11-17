@@ -437,6 +437,12 @@ set @resources='
   <LocaleResource Name="Common.FileUploader.DownloadUploadedFile">
     <Value>Download</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn.Required">
+    <Value>Reason for return is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Required">
+    <Value>Requested action is required</Value>
+  </LocaleResource>
 </Language>
 '
 

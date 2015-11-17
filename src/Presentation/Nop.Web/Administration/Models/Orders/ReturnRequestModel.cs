@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
+    [Validator(typeof(ReturnRequestValidator))]
     public partial class ReturnRequestModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.ID")]

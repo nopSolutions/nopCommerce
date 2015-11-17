@@ -336,6 +336,7 @@
     <Compile Include="Validators\Customers\CustomerAttributeValidator.cs" />
     <Compile Include="Validators\Customers\CustomerAttributeValueValidator.cs" />
     <Compile Include="Validators\Messages\TestMessageTemplateValidator.cs" />
+    <Compile Include="Validators\Orders\ReturnRequestValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestActionValidator.cs" />
     <Compile Include="Validators\Settings\ReturnRequestReasonValidator.cs" />
     <Compile Include="Validators\Templates\TopicTemplateValidator.cs" />

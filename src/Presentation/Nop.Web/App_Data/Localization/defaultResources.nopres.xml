@@ -10197,11 +10197,17 @@
   <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn.Hint">
     <Value>Chosen reason for return.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.ReasonForReturn.Required">
+    <Value>Reason for return is required</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction">
     <Value>Requested action</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Hint">
     <Value>Chosen requested action.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Required">
+    <Value>Requested action is required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ReturnRequests.Fields.StaffNotes">
     <Value>Staff notes</Value>
