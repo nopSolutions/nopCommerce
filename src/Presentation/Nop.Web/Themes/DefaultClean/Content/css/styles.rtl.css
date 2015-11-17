@@ -3132,6 +3132,11 @@ label, label + * {
 	padding: 8px 10px;
 	font-size: 14px; /*reset zeroing*/
 }
+.checkout-attributes .color-squares li {
+     border: none;
+     padding: 0;
+     line-height: 0;
+}
 .checkout-attributes li label {
 	display: inline-block;
 	margin: 0 5px 0 0;
