@@ -10,7 +10,6 @@
     //store name
     var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
 }
-
 <div class="header">
     @Html.Widget("header")
     <div class="header-upper">
@@ -35,7 +34,7 @@
                 <img title="" alt="@storeName" src="@Url.Content(logoPath)">
             </a>
         </div>
-        <div class="search-box">
+        <div class="search-box store-search-box">
             @Html.Action("SearchBox", "Catalog")
         </div>
     </div>
