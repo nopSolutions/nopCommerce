@@ -664,7 +664,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Award reward points
+        /// Award (earn) reward points (for placing a new order)
         /// </summary>
         /// <param name="order">Order</param>
         protected virtual void AwardRewardPoints(Order order)
@@ -673,7 +673,7 @@ namespace Nop.Services.Orders
             if (points == 0)
                 return;
 
-            //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
+            //Ensure that reward points were not added (earned) before. We should not add reward points if they were already earned for this order
             if (order.RewardPointsWereAdded)
                 return;
 
@@ -685,7 +685,7 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Reduce reward points (previously awarded for placing an order)
+        /// Reduce (cancel) reward points (previously awarded for placing an order)
         /// </summary>
         /// <param name="order">Order</param>
         protected virtual void ReduceRewardPoints(Order order)
@@ -703,7 +703,7 @@ namespace Nop.Services.Orders
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
             _orderService.UpdateOrder(order);
         }
-
+        
         /// <summary>
         /// Set IsActivated value for purchase gift cards for particular order
         /// </summary>
