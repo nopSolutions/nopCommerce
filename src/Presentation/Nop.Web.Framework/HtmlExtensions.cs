@@ -412,9 +412,9 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
         }
 
-        public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null)
+        public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone, object additionalData = null, string area = null)
         {
-            return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData });
+            return helper.Action("WidgetsByZone", "Widget", new { widgetZone = widgetZone, additionalData = additionalData, area = area });
         }
 
         /// <summary>
