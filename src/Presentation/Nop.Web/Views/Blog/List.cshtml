@@ -44,29 +44,31 @@
                     <div class="post-body">
                         @Html.Raw(!String.IsNullOrEmpty(item.BodyOverview) ? item.BodyOverview : item.Body)
                     </div>
-                    @if (item.Tags.Count > 0)
-                    {
-                        <div class="tags">
-                            <label>@T("Blog.Tags"):</label>
-                            <ul>
-                                @for (int i = 0; i < item.Tags.Count; i++)
-                                {
-                                    var tag = item.Tags[i];
-                                    <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
-                                    if (i != item.Tags.Count - 1)
-                                    {
-                                        <li class="separator">,</li>
-                                    }
-                                }
-                            </ul>
-                        </div>
-                    }
-                    <div class="buttons">
-                        @if (item.AllowComments)
+                    <div class="blog-details">
+                        @if (item.Tags.Count > 0)
                         {
-                            <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            <div class="tags">
+                                <label>@T("Blog.Tags"):</label>
+                                <ul>
+                                    @for (int i = 0; i < item.Tags.Count; i++)
+                                    {
+                                        var tag = item.Tags[i];
+                                        <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
+                                        if (i != item.Tags.Count - 1)
+                                        {
+                                            <li class="separator">,</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
                         }
-                        <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="read-more">@T("Blog.MoreInfo")</a>
+                        <div class="buttons">
+                            @if (item.AllowComments)
+                            {
+                                <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                            }
+                            <a href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })" class="read-more">@T("Blog.MoreInfo")</a>
+                        </div>
                     </div>
                     @Html.Widget("bloglist_page_inside_post", item.Id)
                 </div>
