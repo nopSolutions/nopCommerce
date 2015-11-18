@@ -1068,7 +1068,10 @@ namespace Nop.Admin.Controllers
                 {
                     model.ShowOnHomePage = product.ShowOnHomePage;
                 }
+                //some previously used values
                 var prevStockQuantity = product.GetTotalStockQuantity();
+                int prevDownloadId = product.DownloadId;
+                int prevSampleDownloadId = product.SampleDownloadId;
 
                 //product
                 product = model.ToEntity(product);
@@ -1118,6 +1121,20 @@ namespace Nop.Admin.Controllers
                     !product.Deleted)
                 {
                     _backInStockSubscriptionService.SendNotificationsToSubscribers(product);
+                }
+                //delete an old "download" file (if deleted or updated)
+                if (prevDownloadId > 0 && prevDownloadId != product.DownloadId)
+                {
+                    var prevDownload = _downloadService.GetDownloadById(prevDownloadId);
+                    if (prevDownload != null)
+                        _downloadService.DeleteDownload(prevDownload);
+                }
+                //delete an old "sample download" file (if deleted or updated)
+                if (prevSampleDownloadId > 0 && prevSampleDownloadId != product.SampleDownloadId)
+                {
+                    var prevSampleDownload = _downloadService.GetDownloadById(prevSampleDownloadId);
+                    if (prevSampleDownload != null)
+                        _downloadService.DeleteDownload(prevSampleDownload);
                 }
 
                 //activity log
