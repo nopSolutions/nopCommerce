@@ -218,12 +218,18 @@ namespace Nop.Core
             if (IsRequestAvailable(_httpContext))
             {
                 //when your hosting uses a load balancer on their server then the Request.IsSecureConnection is never got set to true
-                //in such cases we use HTTP_CLUSTER_HTTPS"
-                var useHttpClusterHttps = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]) &&
-                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]);
-                if (useHttpClusterHttps)
+
+                //1. use HTTP_CLUSTER_HTTPS?
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]) &&
+                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_CLUSTER_HTTPS"]))
                 {
-                    useSsl = _httpContext.Request.ServerVariables["HTTP_CLUSTER_HTTPS"] == "on";
+                    useSsl = ServerVariables("HTTP_CLUSTER_HTTPS") == "on";
+                }
+                //2. use HTTP_X_FORWARDED_PROTO?
+                else if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["Use_HTTP_X_FORWARDED_PROTO"]) &&
+                   Convert.ToBoolean(ConfigurationManager.AppSettings["Use_HTTP_X_FORWARDED_PROTO"]))
+                {
+                    useSsl = string.Equals(ServerVariables("HTTP_X_FORWARDED_PROTO"), "https", StringComparison.OrdinalIgnoreCase);
                 }
                 else
                 {
