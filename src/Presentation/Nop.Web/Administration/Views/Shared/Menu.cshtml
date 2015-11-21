@@ -57,7 +57,7 @@
     @{
         //standard (default) items
         var rootNode = siteMap.RootNode;
-        
+
         //plugins
         var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>()
             .GetPlugins<IAdminMenuPlugin>()
@@ -70,7 +70,9 @@
         var pluginNode = rootNode.ChildNodes.FirstOrDefault(x => x.SystemName == "Third party plugins");
         if (pluginNode != null && pluginNode.Visible)
         {
-            pluginNode.Visible = pluginNode.ChildNodes.Any(x => x.Visible);
+            var permissionService = EngineContext.Current.Resolve<Nop.Services.Security.IPermissionService>();
+            var hasManagePluginsPermission = permissionService.Authorize(Nop.Services.Security.StandardPermissionProvider.ManagePlugins);
+            pluginNode.Visible = hasManagePluginsPermission && pluginNode.ChildNodes.Any(x => x.Visible);
         }
     }
     @foreach (var item in rootNode.ChildNodes.Where(x => x.Visible))
