@@ -506,6 +506,12 @@ namespace Nop.Services.Orders
             {
                 attributes2 = attributes2.Where(x => !x.IsNonCombinable()).ToList();
             }
+            //validate conditional attributes only (if specified)
+            attributes2 = attributes2.Where(x =>
+            {
+                var conditionMet = _productAttributeParser.IsConditionMet(x, attributesXml);
+                return !conditionMet.HasValue || conditionMet.Value;
+            }).ToList();
             foreach (var a2 in attributes2)
             {
                 if (a2.IsRequired)
