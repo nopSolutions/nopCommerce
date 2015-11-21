@@ -470,7 +470,6 @@ label, label + * {
 	background-color: #e4444c;
 }
 .bar-notification .content {
-	float: right;
 	margin: 0 0 0 10px;
 }
 .bar-notification .content a {
