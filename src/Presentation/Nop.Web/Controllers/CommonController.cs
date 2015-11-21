@@ -771,9 +771,6 @@ namespace Nop.Web.Controllers
         {
             _themeContext.WorkingThemeName = themeName;
 
-            //clear cache
-            _cacheManager.RemoveByPattern(ModelCacheEventConsumer.WIDGET_PATTERN_KEY);
-
             //home page
             if (String.IsNullOrEmpty(returnUrl))
                 returnUrl = Url.RouteUrl("HomePage");
