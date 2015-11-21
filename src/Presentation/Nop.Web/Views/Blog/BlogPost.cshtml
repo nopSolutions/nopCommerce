@@ -9,8 +9,11 @@
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
 @section left {
+    @Html.Widget("left_side_column_blog_before")
     @Html.Action("BlogMonths", "Blog")
+    @Html.Widget("left_side_column_after_blog_archive")
     @Html.Action("BlogTags", "Blog")
+    @Html.Widget("left_side_column_blog_after")
 }
 <div class="page blogpost-page">
     <div class="page-title">
