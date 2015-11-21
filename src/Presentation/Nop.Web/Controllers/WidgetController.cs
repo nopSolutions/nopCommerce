@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Services.Cms;
+using Nop.Web.Framework.Themes;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Cms;
 
@@ -15,6 +16,7 @@ namespace Nop.Web.Controllers
 
         private readonly IWidgetService _widgetService;
         private readonly IStoreContext _storeContext;
+        private readonly IThemeContext _themeContext;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -23,10 +25,12 @@ namespace Nop.Web.Controllers
 
         public WidgetController(IWidgetService widgetService, 
             IStoreContext storeContext,
+            IThemeContext themeContext,
             ICacheManager cacheManager)
         {
             this._widgetService = widgetService;
             this._storeContext = storeContext;
+            this._themeContext = themeContext;
             this._cacheManager = cacheManager;
         }
 
@@ -37,7 +41,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult WidgetsByZone(string widgetZone, object additionalData = null)
         {
-            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY, _storeContext.CurrentStore.Id, widgetZone);
+            var cacheKey = string.Format(ModelCacheEventConsumer.WIDGET_MODEL_KEY, _storeContext.CurrentStore.Id, widgetZone, _themeContext.WorkingThemeName);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 //model

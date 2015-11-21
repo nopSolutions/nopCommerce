@@ -684,8 +684,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// <remarks>
         /// {0} : current store ID
         /// {1} : widget zone
+        /// {2} : current theme name
         /// </remarks>
-        public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}";
+        public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}-{2}";
         public const string WIDGET_PATTERN_KEY = "Nop.pres.widget";
 
         private readonly ICacheManager _cacheManager;
