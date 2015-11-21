@@ -477,7 +477,6 @@ table.stats td.bestsellers{
 /* ORDER AND PRODUCT EDITING */
 table.order-edit{
     width: 100%;
-    border: solid 1px #000;
     padding: 5px;
 }
 table.order-edit td{
