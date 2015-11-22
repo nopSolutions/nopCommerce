@@ -1543,6 +1543,7 @@ namespace Nop.Services.Orders
                 }
                 else
                 {
+                    //payment errors
                     foreach (var paymentError in processPaymentResult.Errors)
                         result.AddError(string.Format(_localizationService.GetResource("Checkout.PaymentError"), paymentError));
                 }
@@ -1566,7 +1567,8 @@ namespace Nop.Services.Orders
             {
                 //log it
                 string logError = string.Format("Error while placing order. {0}", error);
-                _logger.Error(logError);
+                var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+                _logger.Error(logError, customer: customer);
             }
 
             #endregion
