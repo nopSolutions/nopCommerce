@@ -279,16 +279,10 @@ namespace Nop.Services.Media
         /// Get picture local path. Used when images stored on file system (not in the database)
         /// </summary>
         /// <param name="fileName">Filename</param>
-        /// <param name="imagesDirectoryPath">Directory path with images; if null, then default one is used</param>
         /// <returns>Local picture path</returns>
-        protected virtual string GetPictureLocalPath(string fileName, string imagesDirectoryPath = null)
+        protected virtual string GetPictureLocalPath(string fileName)
         {
-            if (String.IsNullOrEmpty(imagesDirectoryPath))
-            {
-                imagesDirectoryPath = _webHelper.MapPath("~/content/images/");
-            }
-            var filePath = Path.Combine(imagesDirectoryPath, fileName);
-            return filePath;
+            return Path.Combine(_webHelper.MapPath("~/content/images/"), fileName);
         }
 
         /// <summary>
@@ -355,8 +349,7 @@ namespace Nop.Services.Media
                     break;
             }
 
-            string filePath = GetPictureLocalPath(defaultImageFileName,
-                imagesDirectoryPath: _settingService.GetSettingByKey<string>("Media.DefaultImageDirectoryPath"));
+            string filePath = GetPictureLocalPath(defaultImageFileName);
 
             if (!File.Exists(filePath))
             {
