@@ -92,7 +92,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<SpecificationAttribute> GetSpecificationAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = from sa in _specificationAttributeRepository.Table
-                        orderby sa.DisplayOrder
+                        orderby sa.DisplayOrder, sa.Id
                         select sa;
             var specificationAttributes = new PagedList<SpecificationAttribute>(query, pageIndex, pageSize);
             return specificationAttributes;
