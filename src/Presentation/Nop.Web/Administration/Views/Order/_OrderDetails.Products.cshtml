@@ -100,60 +100,63 @@
                                     <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
-                                        <br />
-                                        @Html.Raw(item.AttributeInfo)
+                                        <p>
+                                            @Html.Raw(item.AttributeInfo)
+                                        </p>
                                     }
                                     @if (!String.IsNullOrEmpty(item.RecurringInfo))
                                     {
-                                        <br />
-                                        @Html.Raw(item.RecurringInfo)
+                                        <p>
+                                            @Html.Raw(item.RecurringInfo)
+                                        </p>
                                     }
                                     @if (!String.IsNullOrEmpty(item.RentalInfo))
                                     {
-                                        <br />
-                                        @Html.Raw(item.RentalInfo)
+                                        <p>
+                                            @Html.Raw(item.RentalInfo)
+                                        </p>
                                     }
                                     @if (!String.IsNullOrEmpty(item.Sku))
                                     {
-                                        <br />
-                                        <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
-                                        @item.Sku
+                                        <p>
+                                            <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
+                                            @item.Sku
+                                        </p>
                                     }
                                     @if (!String.IsNullOrEmpty(item.VendorName))
                                     {
-                                        <br />
-                                        <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
-                                        @item.VendorName
+                                        <p>
+                                            <strong>@T("Admin.Orders.Products.Vendor")</strong><text>:</text>
+                                            @item.VendorName
+                                        </p>
                                     }
                                     @if (item.ReturnRequestIds.Count > 0)
                                     {
-                                        <br />
-                                        <br />
-                                        <hr />
-                                        @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
-                                        for (int i = 0; i < item.ReturnRequestIds.Count; i++)
-                                        {
-                                        <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
-                                            if (i != item.ReturnRequestIds.Count - 1)
+                                        <p>
+                                            @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
+                                            @for (int i = 0; i < item.ReturnRequestIds.Count; i++)
                                             {
-                                        <text>,</text>
+                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
+                                                if (i != item.ReturnRequestIds.Count - 1)
+                                                {
+                                                <text>,</text>
+                                                }
                                             }
-                                        }
+                                        </p>
                                     }
                                     @if (item.PurchasedGiftCardIds.Count > 0)
                                     {
-                                        <br />
-                                        <br />
-                                        <hr />
-                                        @T("Admin.Orders.Products.GiftCards")<text>:</text>
-                                        for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
-                                        {
-                                        <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
-                                            if (i != item.PurchasedGiftCardIds.Count - 1)
+                                        <p>
+                                            @T("Admin.Orders.Products.GiftCards")<text>:</text>
+                                            @for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
                                             {
-                                        <text>,</text>
+                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
+                                                if (i != item.PurchasedGiftCardIds.Count - 1)
+                                                {
+                                                <text>,</text>
+                                                }
                                             }
-                                        }
+                                        </p>
                                     }
                                 </div>
                             </td>

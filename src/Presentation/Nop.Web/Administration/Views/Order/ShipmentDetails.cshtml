@@ -177,13 +177,15 @@
                                         <em><a href="@Url.Action("Edit", "Product", new { id = item.ProductId })">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
+                                            <p>
+                                                @Html.Raw(item.AttributeInfo)
+                                            </p>
                                         }
                                         @if (!String.IsNullOrEmpty(item.RentalInfo))
                                         {
-                                            <br />
-                                            @Html.Raw(item.RentalInfo)
+                                            <p>
+                                                @Html.Raw(item.RentalInfo)
+                                            </p>
                                         }
                                     </div>
                                 </td>

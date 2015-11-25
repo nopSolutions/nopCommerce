@@ -130,14 +130,16 @@
                                         <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
+                                            <p>
+                                                @Html.Raw(item.AttributeInfo)
+                                            </p>
                                         }
                                         @if (item.ShipSeparately)
                                         {
-                                            <br />
-                                            <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
-                                            @T("Admin.Orders.Shipments.Products.ShipSeparately")
+                                            <p>
+                                                <strong>@T("Admin.Orders.Shipments.Products.ShipSeparately.Warning")</strong>
+                                                @T("Admin.Orders.Shipments.Products.ShipSeparately")
+                                            </p>
                                         }
                                     </div>
                                 </td>
