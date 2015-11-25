@@ -11,8 +11,8 @@
     var kendoVersion = "2014.1.318";
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
-        
-        
+
+
     //CSS resources
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion));
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
@@ -55,6 +55,8 @@
     }
 
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
+    //info: we specify "Admin" area for actions adn widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
@@ -87,11 +89,11 @@
                     <div class="header">
                         <div class="logo">
                         </div>
-                        @Html.Widget("admin_header_before")
+                        @Html.Widget("admin_header_before", area: "Admin")
                         <div class="languageselector">
-                            @Html.Action("LanguageSelector", "Common")
+                            @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
                         </div>
-                        @Html.Widget("admin_header_middle")
+                        @Html.Widget("admin_header_middle", area: "Admin")
                         <div class="links">
                             @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
                             @if (canManageMaintenance)
@@ -112,7 +114,7 @@
                         <div class="version">
                             <span>nopCommerce @currentVersion</span>
                         </div>
-                        @Html.Widget("admin_header_after")
+                        @Html.Widget("admin_header_after", area: "Admin")
                     </div>
                 }
                 @if (IsSectionDefined("headermenu"))
