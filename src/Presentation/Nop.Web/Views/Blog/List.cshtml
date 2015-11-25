@@ -71,7 +71,7 @@
                         <div class="buttons">
                             @if (item.AllowComments)
                             {
-                                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
+                                <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})#comments" class="read-comments">@string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)</a>
                             }
                             <a href="@Url.RouteUrl("BlogPost", new {SeName = item.SeName})" class="read-more">@T("Blog.MoreInfo")</a>
                         </div>

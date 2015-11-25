@@ -23,7 +23,7 @@
         @Html.Widget("newsitem_page_before_comments", Model.Id)
         @if (Model.AllowComments)
         {
-            <div class="fieldset new-comment">
+            <div class="fieldset new-comment" id="comments">
                 <div class="title">
                     <strong>@T("News.Comments.LeaveYourComment")</strong>
                 </div>
