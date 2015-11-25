@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
@@ -80,6 +81,16 @@ namespace Nop.Admin.Models.Vendors
         [NopResourceDisplayName("Admin.Vendors.Fields.AssociatedCustomerEmails")]
         public IList<AssociatedCustomerInfo> AssociatedCustomers { get; set; }
 
+
+
+        //vendor notes
+        [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
+        [AllowHtml]
+        public string AddVendorNoteMessage { get; set; }
+
+
+
+
         #region Nested classes
 
         public class AssociatedCustomerInfo : BaseNopEntityModel
@@ -87,6 +98,15 @@ namespace Nop.Admin.Models.Vendors
             public string Email { get; set; }
         }
 
+
+        public partial class VendorNote : BaseNopEntityModel
+        {
+            public int VendorId { get; set; }
+            [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.Note")]
+            public string Note { get; set; }
+            [NopResourceDisplayName("Admin.Vendors.VendorNotes.Fields.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+        }
         #endregion
 
     }

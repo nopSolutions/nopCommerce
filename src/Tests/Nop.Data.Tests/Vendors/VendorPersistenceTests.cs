@@ -1,4 +1,6 @@
-﻿using Nop.Core.Domain.Vendors;
+﻿using System;
+using System.Linq;
+using Nop.Core.Domain.Vendors;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -45,5 +47,43 @@ namespace Nop.Data.Tests.Vendors
             fromDb.AllowCustomersToSelectPageSize.ShouldEqual(true);
             fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
         }
+
+        [Test]
+        public void Can_save_and_load_vendor_with_vendorNotes()
+        {
+            var vendor = new Vendor
+            {
+                Name = "Name 1",
+                Email = "Email 1",
+                Description = "Description 1",
+                AdminComment = "AdminComment 1",
+                PictureId = 1,
+                Active = true,
+                Deleted = true,
+                DisplayOrder = 2,
+                MetaKeywords = "Meta keywords",
+                MetaDescription = "Meta description",
+                MetaTitle = "Meta title",
+                PageSize = 4,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "4, 2, 8, 12",
+            };
+
+            vendor.VendorNotes.Add
+                (
+                    new VendorNote
+                    {
+                        Note = "Note 1",
+                        CreatedOnUtc = new DateTime(2010, 01, 01),
+                    }
+                );
+            var fromDb = SaveAndLoadEntity(vendor);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.VendorNotes.ShouldNotBeNull();
+            fromDb.VendorNotes.Count.ShouldEqual(1);
+            fromDb.VendorNotes.First().Note.ShouldEqual("Note 1");
+        }
+
     }
 }

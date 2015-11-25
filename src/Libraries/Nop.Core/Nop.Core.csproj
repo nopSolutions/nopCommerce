@@ -116,6 +116,7 @@
     <Compile Include="Domain\Shipping\Warehouse.cs" />
     <Compile Include="Domain\Shipping\DeliveryDate.cs" />
     <Compile Include="Domain\Topics\TopicTemplate.cs" />
+    <Compile Include="Domain\Vendors\VendorNote.cs" />
     <Compile Include="Domain\Vendors\VendorSettings.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
     <Compile Include="IStoreContext.cs" />

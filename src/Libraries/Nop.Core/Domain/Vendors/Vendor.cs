@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Seo;
 
@@ -8,6 +9,8 @@ namespace Nop.Core.Domain.Vendors
     /// </summary>
     public partial class Vendor : BaseEntity, ILocalizedEntity, ISlugSupported
     {
+        private ICollection<VendorNote> _vendorNotes;
+
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -78,6 +81,15 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets the available customer selectable page size options
         /// </summary>
         public string PageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets vendor notes
+        /// </summary>
+        public virtual ICollection<VendorNote> VendorNotes
+        {
+            get { return _vendorNotes ?? (_vendorNotes = new List<VendorNote>()); }
+            protected set { _vendorNotes = value; }
+        }
 
     }
 }

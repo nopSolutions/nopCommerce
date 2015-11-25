@@ -85,6 +85,7 @@
     <Compile Include="Shipping\DeliveryDatePersistenceTests.cs" />
     <Compile Include="Shipping\WarehousePersistenceTests.cs" />
     <Compile Include="Topics\TopicTemplatePersistenceTests.cs" />
+    <Compile Include="Vendors\VendorNotePersistenceTests.cs" />
     <Compile Include="Vendors\VendorPersistenceTests.cs" />
     <Compile Include="Stores\StoreMappingPersistenceTests.cs" />
     <Compile Include="Stores\StorePersistenceTests.cs" />

@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Vendors;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Customers;
+using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Security;
@@ -11,6 +14,7 @@ using Nop.Services.Seo;
 using Nop.Services.Vendors;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -26,6 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IPictureService _pictureService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly VendorSettings _vendorSettings;
 
         #endregion
@@ -40,6 +45,7 @@ namespace Nop.Admin.Controllers
             ILanguageService languageService,
             ILocalizedEntityService localizedEntityService,
             IPictureService pictureService,
+            IDateTimeHelper dateTimeHelper,
             VendorSettings vendorSettings)
         {
             this._customerService = customerService;
@@ -50,6 +56,7 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
             this._pictureService = pictureService;
+            this._dateTimeHelper = dateTimeHelper;
             this._vendorSettings = vendorSettings;
         }
 
@@ -103,7 +110,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        #region Methods
+        #region Vendors
 
         //list
         public ActionResult Index()
@@ -310,5 +317,82 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+
+        #region Vendor notes
+
+        [HttpPost]
+        public ActionResult VendorNotesSelect(int vendorId, DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                return AccessDeniedView();
+
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null)
+                throw new ArgumentException("No vendor found with the specified id");
+
+            var vendorNoteModels = new List<VendorModel.VendorNote>();
+            foreach (var vendorNote in vendor.VendorNotes
+                .OrderByDescending(vn => vn.CreatedOnUtc))
+            {
+                vendorNoteModels.Add(new VendorModel.VendorNote
+                {
+                    Id = vendorNote.Id,
+                    VendorId = vendorNote.VendorId,
+                    Note = vendorNote.FormatVendorNoteText(),
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(vendorNote.CreatedOnUtc, DateTimeKind.Utc)
+                });
+            }
+
+            var gridModel = new DataSourceResult
+            {
+                Data = vendorNoteModels,
+                Total = vendorNoteModels.Count
+            };
+
+            return Json(gridModel);
+        }
+
+        [ValidateInput(false)]
+        public ActionResult VendorNoteAdd(int vendorId, string message)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                return AccessDeniedView();
+
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null)
+                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
+
+            var vendorNote = new VendorNote
+            {
+                Note = message,
+                CreatedOnUtc = DateTime.UtcNow,
+            };
+            vendor.VendorNotes.Add(vendorNote);
+            _vendorService.UpdateVendor(vendor);
+
+            return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult VendorNoteDelete(int id, int vendorId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                return AccessDeniedView();
+
+            var vendor = _vendorService.GetVendorById(vendorId);
+            if (vendor == null)
+                throw new ArgumentException("No vendor found with the specified id");
+
+            var vendorNote = vendor.VendorNotes.FirstOrDefault(vn => vn.Id == id);
+            if (vendorNote == null)
+                throw new ArgumentException("No vendor note found with the specified id");
+            _vendorService.DeleteVendorNote(vendorNote);
+
+            return new NullJsonResult();
+        }
+
+        #endregion
+
     }
 }

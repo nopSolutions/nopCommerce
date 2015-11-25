@@ -443,6 +443,24 @@ set @resources='
   <LocaleResource Name="Admin.ReturnRequests.Fields.RequestedAction.Required">
     <Value>Requested action is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes">
+    <Value>Vendor notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddButton">
+    <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle">
+    <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Hint">
+    <Value>Enter this vendor note message.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1586,4 +1604,37 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'catalogsettings.displaydiscontinuedmessageforunpublishedproducts', N'true', 0)
 END
+GO
+
+
+
+
+--new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[VendorNote]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[VendorNote](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[VendorId] [int] NOT NULL,
+		[Note] [nvarchar](MAX) NOT NULL,
+		[CreatedOnUtc] [datetime] NOT NULL
+		PRIMARY KEY CLUSTERED 
+		(
+			[Id] ASC
+		)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+
+IF EXISTS (SELECT 1
+           FROM   sys.objects
+           WHERE  name = 'VendorNote_Vendor'
+           AND parent_object_id = Object_id('VendorNote')
+           AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.VendorNote
+DROP CONSTRAINT VendorNote_Vendor
+GO
+ALTER TABLE [dbo].[VendorNote]  WITH CHECK ADD  CONSTRAINT [VendorNote_Vendor] FOREIGN KEY([VendorId])
+REFERENCES [dbo].[Vendor] ([Id])
+ON DELETE CASCADE
 GO

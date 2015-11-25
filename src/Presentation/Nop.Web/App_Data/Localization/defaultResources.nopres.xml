@@ -11190,6 +11190,24 @@
   <LocaleResource Name="Admin.Vendors.Updated">
     <Value>The vendor has been updated successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes">
+    <Value>Vendor notes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddButton">
+    <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.AddTitle">
+    <Value>Add vendor note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note">
+    <Value>Note</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Hint">
+    <Value>Enter this vendor note message.</Value>
+  </LocaleResource>
   <LocaleResource Name="BackInStockSubscriptions.AlreadySubscribed">
     <Value>You're already subscribed for this product back in stock notification</Value>
   </LocaleResource>

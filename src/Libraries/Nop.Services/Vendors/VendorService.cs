@@ -15,6 +15,7 @@ namespace Nop.Services.Vendors
         #region Fields
 
         private readonly IRepository<Vendor> _vendorRepository;
+        private readonly IRepository<VendorNote> _vendorNoteRepository;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -25,11 +26,14 @@ namespace Nop.Services.Vendors
         /// Ctor
         /// </summary>
         /// <param name="vendorRepository">Vendor repository</param>
+        /// <param name="vendorNoteRepository">Vendor note repository</param>
         /// <param name="eventPublisher">Event published</param>
         public VendorService(IRepository<Vendor> vendorRepository,
+            IRepository<VendorNote> vendorNoteRepository,
             IEventPublisher eventPublisher)
         {
             this._vendorRepository = vendorRepository;
+            this._vendorNoteRepository = vendorNoteRepository;
             this._eventPublisher = eventPublisher;
         }
 
@@ -114,6 +118,36 @@ namespace Nop.Services.Vendors
 
             //event notification
             _eventPublisher.EntityUpdated(vendor);
+        }
+
+
+
+        /// <summary>
+        /// Gets a vendor note note
+        /// </summary>
+        /// <param name="vendorNoteId">The vendor note identifier</param>
+        /// <returns>Vendor note</returns>
+        public virtual VendorNote GetVendorNoteById(int vendorNoteId)
+        {
+            if (vendorNoteId == 0)
+                return null;
+
+            return _vendorNoteRepository.GetById(vendorNoteId);
+        }
+
+        /// <summary>
+        /// Deletes a vendor note
+        /// </summary>
+        /// <param name="vendorNote">The vendor note</param>
+        public virtual void DeleteVendorNote(VendorNote vendorNote)
+        {
+            if (vendorNote == null)
+                throw new ArgumentNullException("vendorNote");
+
+            _vendorNoteRepository.Delete(vendorNote);
+
+            //event notification
+            _eventPublisher.EntityDeleted(vendorNote);
         }
 
         #endregion

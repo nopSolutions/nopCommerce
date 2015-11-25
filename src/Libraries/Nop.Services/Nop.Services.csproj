@@ -235,6 +235,7 @@
     <Compile Include="Shipping\EventPublisherExtensions.cs" />
     <Compile Include="Topics\ITopicTemplateService.cs" />
     <Compile Include="Topics\TopicTemplateService.cs" />
+    <Compile Include="Vendors\VendorExtensions.cs" />
     <Compile Include="Vendors\VendorService.cs" />
     <Compile Include="Vendors\IVendorService.cs" />
     <Compile Include="Customers\ICustomerRegistrationService.cs" />

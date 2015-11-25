@@ -43,5 +43,20 @@ namespace Nop.Services.Vendors
         /// </summary>
         /// <param name="vendor">Vendor</param>
         void UpdateVendor(Vendor vendor);
+
+
+
+        /// <summary>
+        /// Gets a vendor note note
+        /// </summary>
+        /// <param name="vendorNoteId">The vendor note identifier</param>
+        /// <returns>Vendor note</returns>
+        VendorNote GetVendorNoteById(int vendorNoteId);
+
+        /// <summary>
+        /// Deletes a vendor note
+        /// </summary>
+        /// <param name="vendorNote">The vendor note</param>
+        void DeleteVendorNote(VendorNote vendorNote);
     }
 }
