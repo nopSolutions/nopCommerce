@@ -221,10 +221,12 @@ namespace Nop.Admin.Infrastructure
             //vendors
             Mapper.CreateMap<Vendor, VendorModel>()
                 .ForMember(dest => dest.AssociatedCustomers, mo => mo.Ignore())
+                .ForMember(dest => dest.AddVendorNoteMessage, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<VendorModel, Vendor>()
+                .ForMember(dest => dest.VendorNotes, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
 
             //products
