@@ -83,7 +83,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
 	@UseFullTextSearch  bit = 0,
 	@FullTextMode		int = 0, --0 - using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
-	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
+	@FilteredSpecs		nvarchar(MAX) = null,	--filter by specification attribute options (comma-separated list of IDs). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 - position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
 	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
@@ -335,17 +335,6 @@ BEGIN
 	DECLARE @CategoryIdsCount int	
 	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
 
-	--filter by attributes
-	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
-	CREATE TABLE #FilteredSpecs
-	(
-		SpecificationAttributeOptionId int not null
-	)
-	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')
-	DECLARE @SpecAttributesCount int	
-	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
-
 	--filter by customer role IDs (access control list)
 	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
 	CREATE TABLE #FilteredCustomerRoleIds
@@ -585,19 +574,34 @@ BEGIN
 			))'
 	END
 	
-	--filter by specs
+	--filter by specification attribution options
+	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
+	CREATE TABLE #FilteredSpecs
+	(
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')
+	DECLARE @SpecAttributesCount int	
+	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
 	IF @SpecAttributesCount > 0
 	BEGIN
-		SET @sql = @sql + '
-		AND NOT EXISTS (
-			SELECT 1 FROM #FilteredSpecs [fs]
-			WHERE
-				[fs].SpecificationAttributeOptionId NOT IN (
-					SELECT psam.SpecificationAttributeOptionId
-					FROM Product_SpecificationAttribute_Mapping psam with (NOLOCK)
-					WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
-				)
-			)'
+		--do it for each specified specification option
+		DECLARE @SpecificationAttributeOptionId int
+		DECLARE cur_SpecificationAttributeOption CURSOR FOR
+		SELECT [SpecificationAttributeOptionId]
+		FROM [#FilteredSpecs]
+		OPEN cur_SpecificationAttributeOption
+		FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			SET @sql = @sql + '
+			AND p.Id in (select psam.ProductId from [Product_SpecificationAttribute_Mapping] psam with (NOLOCK) where psam.AllowFiltering = 1 and psam.SpecificationAttributeOptionId = ' + CAST(@SpecificationAttributeOptionId AS nvarchar(max)) + ')'
+			--fetch next identifier
+			FETCH NEXT FROM cur_SpecificationAttributeOption INTO @SpecificationAttributeOptionId
+		END
+		CLOSE cur_SpecificationAttributeOption
+		DEALLOCATE cur_SpecificationAttributeOption
 	END
 	
 	--sorting
