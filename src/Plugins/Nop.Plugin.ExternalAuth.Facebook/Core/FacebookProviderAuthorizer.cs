@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using DotNetOpenAuth.AspNet;
 using DotNetOpenAuth.AspNet.Clients;
+using Newtonsoft.Json.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Authentication.External;
@@ -44,6 +47,25 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
         #region Utilities
 
+        private string RequestEmailFromFacebook(string accessToken)
+        {
+            var request = WebRequest.Create("https://graph.facebook.com/me?fields=email&access_token=" + EscapeUriDataStringRfc3986(accessToken));
+            using (var response = request.GetResponse())
+            {
+                using (var responseStream = response.GetResponseStream())
+                {
+                    var reader = new StreamReader(responseStream);
+                    var responseFromServer = reader.ReadToEnd();
+                    var userInfo = JObject.Parse(responseFromServer);
+                    if (userInfo["email"] != null)
+                    {
+                        return userInfo["email"].ToString();
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
         private FacebookClient FacebookApplication
         {
             get { return _facebookApplication ?? (_facebookApplication = new FacebookClient(_facebookExternalAuthSettings.ClientKeyIdentifier, _facebookExternalAuthSettings.ClientSecret)); }
@@ -87,7 +109,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             var claims = new UserClaims();
             claims.Contact = new ContactClaims();
             if (authenticationResult.ExtraData.ContainsKey("username"))
+            {
                 claims.Contact.Email = authenticationResult.ExtraData["username"];
+            }
+            else
+            {
+                //request email
+                claims.Contact.Email = RequestEmailFromFacebook(authenticationResult.ExtraData["accesstoken"]);
+            }
             claims.Name = new NameClaims();
             if (authenticationResult.ExtraData.ContainsKey("name"))
             {
