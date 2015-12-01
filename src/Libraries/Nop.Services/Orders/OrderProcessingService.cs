@@ -703,7 +703,24 @@ namespace Nop.Services.Orders
                 string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
             _orderService.UpdateOrder(order);
         }
-        
+
+        /// <summary>
+        /// Return back redeemded reward points to a customer (spent when placing an order)
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected virtual void ReturnBackRedeemedRewardPoints(Order order)
+        {
+            //were some points redeemed when placing an order?
+            if (order.RedeemedRewardPointsEntry == null)
+                return;
+
+            //return back
+            _rewardPointService.AddRewardPointsHistoryEntry(order.Customer, -order.RedeemedRewardPointsEntry.Points, order.StoreId,
+                string.Format(_localizationService.GetResource("RewardPoints.Message.ReturnedForOrder"), order.Id));
+            _orderService.UpdateOrder(order);
+        }
+
+
         /// <summary>
         /// Set IsActivated value for purchase gift cards for particular order
         /// </summary>
@@ -1591,7 +1608,9 @@ namespace Nop.Services.Orders
             //they already was done when cancelling the order
             if (order.OrderStatus != OrderStatus.Cancelled)
             {
-                //reward points
+                //return (add) back redeemded reward points
+                ReturnBackRedeemedRewardPoints(order);
+                //reduce (cancel) back reward points (previously awarded for this order)
                 ReduceRewardPoints(order);
 
                 //cancel recurring payments
@@ -1991,6 +2010,9 @@ namespace Nop.Services.Orders
                 CreatedOnUtc = DateTime.UtcNow
             });
             _orderService.UpdateOrder(order);
+
+            //return (add) back redeemded reward points
+            ReturnBackRedeemedRewardPoints(order);
 
             //cancel recurring payments
             var recurringPayments = _orderService.SearchRecurringPayments(initialOrderId: order.Id);

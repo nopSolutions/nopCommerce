@@ -13944,6 +13944,9 @@
   <LocaleResource Name="RewardPoints.Message.ReducedForOrder">
     <Value>Reduced promotion for order #{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.ReturnedForOrder">
+    <Value>Returned back for order #{0}</Value>
+  </LocaleResource>
   <LocaleResource Name="RewardPoints.MinimumBalance">
     <Value>Minimum balance allowed to use is {0} reward points ({1}).</Value>
   </LocaleResource>

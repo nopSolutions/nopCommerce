@@ -461,6 +461,9 @@ set @resources='
   <LocaleResource Name="Admin.Vendors.VendorNotes.Fields.Note.Hint">
     <Value>Enter this vendor note message.</Value>
   </LocaleResource>
+  <LocaleResource Name="RewardPoints.Message.ReturnedForOrder">
+    <Value>Returned back for order #{0}</Value>
+  </LocaleResource>
 </Language>
 '
 
