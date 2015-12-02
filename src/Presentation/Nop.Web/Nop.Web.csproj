@@ -1666,6 +1666,7 @@
     <Content Include="Themes\DefaultClean\Content\images\close.png" />
     <Content Include="Themes\DefaultClean\Content\images\compare-button.png" />
     <Content Include="Themes\DefaultClean\Content\images\details.png" />
+    <Content Include="Themes\DefaultClean\Content\images\discontinued-product-icon.png" />
     <Content Include="Themes\DefaultClean\Content\images\download-button.png" />
     <Content Include="Themes\DefaultClean\Content\images\edit.png" />
     <Content Include="Themes\DefaultClean\Content\images\edit_.png" />

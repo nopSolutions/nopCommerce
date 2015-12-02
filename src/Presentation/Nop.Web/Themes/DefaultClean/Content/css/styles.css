@@ -1667,11 +1667,15 @@ label, label + * {
 	margin: 0 0 50px;
 }
 .overview .discontinued-product {
-    background: no-repeat scroll 12px 10px #ffc;
-    min-height: 30px;
-	margin: 0 0 5px;
-    padding: 5px;
-	border: 1px solid #faf076;
+    background: #f3f3f3;
+    margin: 0 0 20px;
+}
+.overview .discontinued-product h4 {
+    display: inline-block;
+    font-size: 14px;
+    padding: 17px 17px 17px 40px;
+    background: url('../images/discontinued-product-icon.png') no-repeat 13px center;
+    color: #de444c;
 }
 .overview .product-name {
 	margin: 0 0 25px;
