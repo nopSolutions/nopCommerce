@@ -12639,6 +12639,13 @@
             @param ownerPassword the password or <CODE>null</CODE> for no password
             @throws IOException on error
         </member>
+        <member name="M:iTextSharp.text.pdf.PdfReader.#ctor(iTextSharp.text.pdf.RandomAccessFileOrArray,System.Byte[],System.Boolean)">
+            Reads and parses a pdf document.
+            @param raf the document location
+            @param ownerPassword the password or <CODE>null</CODE> for no password
+            @param partial indicates if the reader needs to read the document only partially. See {@link PdfReader#PdfReader(RandomAccessFileOrArray, byte[])}
+            @throws IOException on error
+        </member>
         <member name="M:iTextSharp.text.pdf.PdfReader.#ctor(iTextSharp.text.pdf.PdfReader)">
             Creates an independent duplicate.
             @param reader the <CODE>PdfReader</CODE> to duplicate
@@ -19774,7 +19781,7 @@
         <member name="M:iTextSharp.text.pdf.PdfDocument.NewPage">
              Makes a new page and sends it to the <CODE>PdfWriter</CODE>.
             
-             @return a <CODE>bool</CODE>
+             @return true if new page was added
              @throws DocumentException on error
         </member>
         <member name="M:iTextSharp.text.pdf.PdfDocument.SetPageSize(iTextSharp.text.Rectangle)">
@@ -21299,6 +21306,10 @@
             Use ALTERNATE only in ICC profiles. It specifies an alternative color
             space, in case the primary one is not supported, for legacy purposes.
             For various types of alternate texts in Tagged PDF, use {@link #ALT}
+        </member>
+        <member name="F:iTextSharp.text.pdf.PdfName.AF">
+            A name
+            @since 5.5.8
         </member>
         <member name="F:iTextSharp.text.pdf.PdfName.ALTERNATEPRESENTATION">
             A name
@@ -48830,6 +48841,16 @@
             @param compareByContentMaxErrorCount the errors count.
             @return Returns this.
         </member>
+        <member name="M:iTextSharp.testutils.CompareTool.SetFloatAbsoluteError(System.Single)">
+            Sets the absolute error parameter which will be used in floating point numbers comparison.
+            @param error the epsilon new value.
+            @return Returns this.
+        </member>
+        <member name="M:iTextSharp.testutils.CompareTool.SetFloatRelativeError(System.Single)">
+            Sets the relative error parameter which will be used in floating point numbers comparison.
+            @param error the epsilon new value.
+            @return Returns this.
+        </member>
         <member name="T:iTextSharp.text.pdf.fonts.cmaps.AbstractCMap">
             
              @author psoares
@@ -50505,6 +50526,26 @@
             OcspClient implementation using BouncyCastle.
             @author Paulo Soares
         </member>
+        <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.#ctor">
+            Create default implemention of {@code OcspClient}.
+            Note, if you use this constructor, OCSP response will not be verified.
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.#ctor(iTextSharp.text.pdf.security.OcspVerifier)">
+            Create {@code OcspClient}
+            @param verifier will be used for response verification. {@see OCSPVerifier}.
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.GetBasicOCSPResp(Org.BouncyCastle.X509.X509Certificate,Org.BouncyCastle.X509.X509Certificate,System.String)">
+            Gets OCSP response. If {@see OCSPVerifier} was set, the response will be checked.
+        </member>
+        <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.GetEncoded(Org.BouncyCastle.X509.X509Certificate,Org.BouncyCastle.X509.X509Certificate,System.String)">
+             Gets an encoded byte array with OCSP validation. The method should not throw an exception.
+            
+             @param checkCert to certificate to check
+             @param rootCert  the parent certificate
+             @param url       to get the verification. It it's null it will be taken
+                              from the check cert or from other implementation specific source
+             @return a byte array with the validation or null if the validation could not be obtained
+        </member>
         <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.GenerateOCSPRequest(Org.BouncyCastle.X509.X509Certificate,Org.BouncyCastle.Math.BigInteger)">
             Generates an OCSP request using BouncyCastle.
             @param issuerCert	certificate of the issues
@@ -50512,14 +50553,6 @@
             @return	an OCSP request
             @throws OCSPException
             @throws IOException
-        </member>
-        <member name="M:iTextSharp.text.pdf.security.OcspClientBouncyCastle.GetEncoded(Org.BouncyCastle.X509.X509Certificate,Org.BouncyCastle.X509.X509Certificate,System.String)">
-            Gets an encoded byte array with OCSP validation. The method should not throw an exception.
-            @param checkCert to certificate to check
-            @param rootCert the parent certificate
-            @param the url to get the verification. It it's null it will be taken
-            from the check cert or from other implementation specific source
-            @return  a byte array with the validation or null if the validation could not be obtained
         </member>
         <member name="F:iTextSharp.text.pdf.security.OcspVerifier.LOGGER">
             The Logger instance 
@@ -50545,25 +50578,29 @@
         <member name="M:iTextSharp.text.pdf.security.OcspVerifier.Verify(Org.BouncyCastle.Ocsp.BasicOcspResp,Org.BouncyCastle.X509.X509Certificate,Org.BouncyCastle.X509.X509Certificate,System.DateTime)">
             Verifies a certificate against a single OCSP response
             @param ocspResp	the OCSP response
-            @param issuerCert
-            @param signDate
-            @return
+            @param signCert  the certificate that needs to be checked
+            @param issuerCert  the certificate of CA
+            @param signDate  sign date
+            @return {@code true}, in case successful check, otherwise false.
             @throws GeneralSecurityException
             @throws IOException
         </member>
         <member name="M:iTextSharp.text.pdf.security.OcspVerifier.IsValidResponse(Org.BouncyCastle.Ocsp.BasicOcspResp,Org.BouncyCastle.X509.X509Certificate)">
             Verifies if an OCSP response is genuine
+             If it doesn't verify against the issuer certificate and response's certificates, it may verify
+            using a trusted anchor or cert.
             @param ocspResp	the OCSP response
             @param issuerCert	the issuer certificate
             @throws GeneralSecurityException
             @throws IOException
         </member>
         <member name="M:iTextSharp.text.pdf.security.OcspVerifier.VerifyResponse(Org.BouncyCastle.Ocsp.BasicOcspResp,Org.BouncyCastle.X509.X509Certificate)">
-            Verifies if the signature of the response is valid.
-            If it doesn't verify against the responder certificate, it may verify
-            using a trusted anchor.
+            Verifies if the response is valid.
+            If it doesn't verify against the issuer certificate and response's certificates, it may verify
+            using a trusted anchor or cert.
+            NOTE. Use {@code isValidResponse()} instead.
             @param ocspResp	the response object
-            @param responderCert	the certificate that may be used to sign the response
+            @param issuerCert the issuer certificate
             @return	true if the response can be trusted
         </member>
         <member name="M:iTextSharp.text.pdf.security.OcspVerifier.IsSignatureValid(Org.BouncyCastle.Ocsp.BasicOcspResp,Org.BouncyCastle.X509.X509Certificate)">
