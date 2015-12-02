@@ -238,7 +238,18 @@ namespace Nop.Web.Framework
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerLifetimeScope();
 
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerLifetimeScope();
-            builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
+            //picture service
+            var useAzureBlobStorage = !String.IsNullOrEmpty(config.AzureBlobStorageConnectionString);
+            if (useAzureBlobStorage)
+            {
+                //Windows Azure BLOB
+                builder.RegisterType<AzurePictureService>().As<IPictureService>().InstancePerLifetimeScope();
+            }
+            else
+            {
+                //standard file system
+                builder.RegisterType<PictureService>().As<IPictureService>().InstancePerLifetimeScope();
+            }
 
             builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerLifetimeScope();
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerLifetimeScope();

@@ -68,6 +68,23 @@ namespace Nop.Core.Configuration
                     config.RunOnAzureWebsites = Convert.ToBoolean(runOnAzureWebsitesAttribute.Value);
             }
 
+            var azureBlobStorageNode = section.SelectSingleNode("AzureBlobStorage");
+            if (azureBlobStorageNode != null && azureBlobStorageNode.Attributes != null)
+            {
+                var azureConnectionStringAttribute = azureBlobStorageNode.Attributes["ConnectionString"];
+                if (azureConnectionStringAttribute != null)
+                    config.AzureBlobStorageConnectionString = azureConnectionStringAttribute.Value;
+
+                var azureContainerNameAttribute = azureBlobStorageNode.Attributes["ContainerName"];
+                if (azureContainerNameAttribute != null)
+                    config.AzureBlobStorageContainerName = azureContainerNameAttribute.Value;
+
+                var azureEndPointAttribute = azureBlobStorageNode.Attributes["EndPoint"];
+                if (azureEndPointAttribute != null)
+                    config.AzureBlobStorageEndPoint = azureEndPointAttribute.Value;
+
+            }
+
             var installationNode = section.SelectSingleNode("Installation");
             if (installationNode != null && installationNode.Attributes != null)
             {
@@ -97,6 +114,8 @@ namespace Nop.Core.Configuration
         /// </summary>
         public string UserAgentStringsPath { get; private set; }
 
+
+
         /// <summary>
         /// Indicates whether we should use Redis server for caching (instead of default in-memory caching)
         /// </summary>
@@ -106,10 +125,14 @@ namespace Nop.Core.Configuration
         /// </summary>
         public string RedisCachingConnectionString { get; private set; }
 
+
+
         /// <summary>
         /// Indicates whether we should support previous nopCommerce versions (it can slightly improve performance)
         /// </summary>
         public bool SupportPreviousNopcommerceVersions { get; private set; }
+
+
 
         /// <summary>
         /// A value indicating whether the site is run on multiple instances (e.g. web farm, Windows Azure with multiple instances, etc).
@@ -121,6 +144,20 @@ namespace Nop.Core.Configuration
         /// A value indicating whether the site is run on Windows Azure Websites
         /// </summary>
         public bool RunOnAzureWebsites { get; private set; }
+
+        /// <summary>
+        /// Connection string for Azure BLOB storage
+        /// </summary>
+        public string AzureBlobStorageConnectionString { get; private set; }
+        /// <summary>
+        /// Container name for Azure BLOB storage
+        /// </summary>
+        public string AzureBlobStorageContainerName { get; private set; }
+        /// <summary>
+        /// End point for Azure BLOB storage
+        /// </summary>
+        public string AzureBlobStorageEndPoint { get; private set; }
+
 
         /// <summary>
         /// A value indicating whether a store owner can install sample data during installation

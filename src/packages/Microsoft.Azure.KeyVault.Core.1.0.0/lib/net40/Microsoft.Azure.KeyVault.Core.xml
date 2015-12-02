@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Azure.KeyVault.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Azure.KeyVault.Core.IKey">
+            <summary>
+            Interface for Keys
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.DecryptAsync(System.Byte[],System.Byte[],System.Byte[],System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Decrypts the specified cipher text.
+            </summary>
+            <param name="ciphertext">The cipher text to decrypt</param>
+            <param name="iv">The initialization vector</param>
+            <param name="authenticationData">The authentication data</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>The plain text</returns>
+            <remarks>If algorithm is not specified, an implementation should use its default algorithm.
+            Not all algorithms require, or support, all parameters.</remarks>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.EncryptAsync(System.Byte[],System.Byte[],System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Encrypts the specified plain text.
+            </summary>
+            <param name="plaintext">The plain text to encrypt</param>
+            <param name="iv">The initialization vector</param>
+            <param name="authenticationData">The authentication data</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>A Tuple consisting of the cipher text, the authentication tag (if applicable), the algorithm used</returns>
+            <remarks>If the algorithm is not specified, an implementation should use its default algorithm.
+            Not all algorithyms require, or support, all parameters.</remarks>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.WrapKeyAsync(System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Encrypts the specified key material.
+            </summary>
+            <param name="key">The key material to encrypt</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>A Tuple consisting of the encrypted key and the algorithm used</returns>
+            <remarks>If the algorithm is not specified, an implementation should use its default algorithm</remarks>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.UnwrapKeyAsync(System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Decrypts the specified key material.
+            </summary>
+            <param name="encryptedKey">The encrypted key material</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>The decrypted key material</returns>
+            <remarks>If the algorithm is not specified, an implementation should use its default algorithm</remarks>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.SignAsync(System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Signs the specified digest.
+            </summary>
+            <param name="digest">The digest to sign</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>A Tuple consisting of the signature and the algorithm used</returns>
+            <remarks>If the algorithm is not specified, an implementation should use its default algorithm</remarks>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKey.VerifyAsync(System.Byte[],System.Byte[],System.String,System.Threading.CancellationToken)">
+            <summary>
+            Verifies the specified signature value
+            </summary>
+            <param name="digest">The digest</param>
+            <param name="signature">The signature value</param>
+            <param name="algorithm">The algorithm to use</param>
+            <param name="token">Cancellation token</param>
+            <returns>A bool indicating whether the signature was successfully verified</returns>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultEncryptionAlgorithm">
+            <summary>
+            The default encryption algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultKeyWrapAlgorithm">
+            <summary>
+            The default key wrap algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.DefaultSignatureAlgorithm">
+            <summary>
+            The default signature algorithm for this key
+            </summary>
+        </member>
+        <member name="P:Microsoft.Azure.KeyVault.Core.IKey.Kid">
+            <summary>
+            The key identifier
+            </summary>
+        </member>
+        <member name="T:Microsoft.Azure.KeyVault.Core.IKeyResolver">
+            <summary>
+            Interface for key resolvers.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Azure.KeyVault.Core.IKeyResolver.ResolveKeyAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Provides an IKey implementation for the specified key identifier.
+            </summary>
+            <param name="kid">The key identifier to resolve</param>
+            <param name="token">Cancellation token</param>
+            <returns>The resolved IKey implementation or null</returns>
+            <remarks>Implementations should check the format of the kid to ensure that it is recognized. Null, rather than 
+            an exception, should be returned for unrecognized key identifiers to enable chaining of key resolvers.</remarks>
+        </member>
+    </members>
+</doc>
