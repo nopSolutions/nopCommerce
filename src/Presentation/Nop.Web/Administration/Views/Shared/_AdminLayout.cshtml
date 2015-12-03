@@ -99,9 +99,9 @@
                             @if (canManageMaintenance)
                             {
                                 <span class="separator">|</span>
-                                <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common"), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">@T("Admin.Header.ClearCache")</a>
+                                <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{ "area", "Admin" }}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">@T("Admin.Header.ClearCache")</a>
                                 <span class="separator">|</span>
-                                <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common"), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" id="restart-application">@T("Admin.Header.RestartApplication")</a>
+                                <a href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{ "area", "Admin" }}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" id="restart-application">@T("Admin.Header.RestartApplication")</a>
                             }
                         </div>
                         <div class="login-info">
