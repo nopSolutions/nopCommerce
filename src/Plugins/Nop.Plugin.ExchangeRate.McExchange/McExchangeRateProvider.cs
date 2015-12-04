@@ -62,6 +62,8 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                         try
                         {
                             var rate = new Core.Domain.Directory.ExchangeRate();
+
+                            bool rateFound = false;
                             foreach (XmlNode detailNode in node.ChildNodes)
                             {
                                 switch (detailNode.Name)
@@ -86,6 +88,8 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                                         // y = 30
                                         string rateText = description.Substring(x + 1, y - x - 1).Trim();
                                         rate.Rate = decimal.Parse(rateText, CultureInfo.InvariantCulture);
+
+                                        rateFound = true;
                                         break;
 
                                     default:
@@ -94,7 +98,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                             }
 
                             // Update the Rate in the collection if its already in there
-                            if (rate.CurrencyCode != null)
+                            if (rate.CurrencyCode != null && rateFound)
                             {
                                 exchangeRates.Add(rate);
                             }
