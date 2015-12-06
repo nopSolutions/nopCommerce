@@ -1,8 +1,0 @@
-﻿Group: Exchange rate providers
-FriendlyName: Money converter exchange rate provider
-SystemName: CurrencyExchange.MoneyConverter
-Version: 1.09
-SupportedVersions: 3.70
-Author: nopCommerce team
-DisplayOrder: 1
-FileName: Nop.Plugin.ExchangeRate.McExchange.dll

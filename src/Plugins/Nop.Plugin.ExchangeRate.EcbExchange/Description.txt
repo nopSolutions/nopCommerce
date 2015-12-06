@@ -1,0 +1,8 @@
+﻿Group: Exchange rate providers
+FriendlyName: ECB exchange rate provider
+SystemName: CurrencyExchange.ECB
+Version: 1.03
+SupportedVersions: 3.70
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.ExchangeRate.EcbExchange.dll
