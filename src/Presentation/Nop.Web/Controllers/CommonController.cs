@@ -926,6 +926,7 @@ namespace Nop.Web.Controllers
                     "/sendpm",
                     "/sentupdate",
                     "/shoppingcart/*",
+                    "/storeclosed",
                     "/subscribenewsletter",
                     "/topic/authenticate",
                     "/viewpm",
