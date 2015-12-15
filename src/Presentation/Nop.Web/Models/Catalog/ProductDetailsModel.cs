@@ -100,6 +100,8 @@ namespace Nop.Web.Models.Catalog
 
         public bool DisplayDiscontinuedMessage { get; set; }
 
+        public string CurrentStoreName { get; set; }
+
         #region Nested Classes
 
         public partial class ProductBreadcrumbModel : BaseNopModel

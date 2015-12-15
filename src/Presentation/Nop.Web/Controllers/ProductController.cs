@@ -248,6 +248,8 @@ namespace Nop.Web.Controllers
             model.EmailAFriendEnabled = _catalogSettings.EmailAFriendEnabled;
             //compare products
             model.CompareProductsEnabled = _catalogSettings.CompareProductsEnabled;
+            //store name
+            model.CurrentStoreName = _storeContext.CurrentStore.GetLocalized(x => x.Name);
 
             #endregion
 
