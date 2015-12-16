@@ -1201,9 +1201,10 @@ namespace Nop.Web.Controllers
 
             //load and cache report
             var report = _cacheManager.Get(string.Format(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), 
-                () =>
-                    _orderReportService.BestSellersReport(storeId: _storeContext.CurrentStore.Id,
-                    pageSize: _catalogSettings.NumberOfBestsellersOnHomepage));
+                () => _orderReportService.BestSellersReport(
+                    storeId: _storeContext.CurrentStore.Id, 
+                    pageSize: _catalogSettings.NumberOfBestsellersOnHomepage)
+                    .ToList());
 
 
             //load products
