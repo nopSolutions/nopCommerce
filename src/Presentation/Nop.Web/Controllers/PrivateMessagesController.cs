@@ -328,6 +328,7 @@ namespace Nop.Web.Controllers
 
             if (replyToMessageId.HasValue)
             {
+                //reply to a previous PM
                 var replyToPM = _forumService.GetPrivateMessageById(replyToMessageId.Value);
                 if (replyToPM == null)
                 {
@@ -365,9 +366,13 @@ namespace Nop.Web.Controllers
             var replyToPM = _forumService.GetPrivateMessageById(model.ReplyToMessageId);
             if (replyToPM != null)
             {
+                //reply to a previous PM
                 if (replyToPM.ToCustomerId == _workContext.CurrentCustomer.Id || replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
                 {
-                    toCustomer = replyToPM.FromCustomer;
+                    //Reply to already sent PM (by current customer) should not be sent to yourself
+                    toCustomer = replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id
+                        ? replyToPM.ToCustomer
+                        : replyToPM.FromCustomer;
                 }
                 else
                 {
@@ -376,6 +381,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
+                //first PM
                 toCustomer = _customerService.GetCustomerById(model.ToCustomerId);
             }
 
