@@ -5299,7 +5299,7 @@
     <Value>Notify about private messages</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
-    <Value>Indicates whether a customer should be notified about new private messages.</Value>
+    <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.PostsPageSize">
     <Value>Posts page size</Value>
