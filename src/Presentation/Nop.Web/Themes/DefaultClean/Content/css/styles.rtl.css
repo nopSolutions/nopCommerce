@@ -4592,8 +4592,11 @@ label, label + * {
 }
 
 .private-message-send-page a {
-	font-size: 18px;
+	font-size: 14px;
 	color: #4ab2f1;
+}
+.private-message-send-page span {
+	font-size: 14px;
 }
 
 /* jQuery tabs */
