@@ -23896,6 +23896,14 @@
             table operations, with the requirement that each operation entity must have same partition key. A batch with a retrieve operation cannot contain any other operations. 
             Note that the total payload of a batch operation is limited to 4MB.</para></remarks>
         </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableBatchOperation.Retrieve``1(System.String,System.String)">
+            <summary>
+            Inserts a <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> into the batch that retrieves an entity based on its row key and partition key. The entity will be deserialized into the specified class type which extends <see cref="T:Microsoft.WindowsAzure.Storage.Table.ITableEntity"/>.
+            </summary>
+            <typeparam name="TElement">The class of type for the entity to retrieve.</typeparam>
+            <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
+            <param name="rowKey">A string containing the row key of the entity to retrieve.</param>
+        </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableBatchOperation.Retrieve``1(System.String,System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Inserts a <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> into the batch that retrieves an entity based on its row key and partition key. The entity will be deserialized into the specified class type which extends <see cref="T:Microsoft.WindowsAzure.Storage.Table.ITableEntity"/>.
@@ -23904,6 +23912,15 @@
             <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
             <param name="rowKey">A string containing the row key of the entity to retrieve.</param>
             <param name="selectedColumns">List of column names for projection.</param>
+        </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableBatchOperation.Retrieve``1(System.String,System.String,Microsoft.WindowsAzure.Storage.Table.EntityResolver{``0})">
+            <summary>
+            Adds a table operation to retrieve an entity of the specified class type with the specified partition key and row key to the batch operation.
+            </summary>
+            <typeparam name="TResult">The return type which the specified <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityResolver`1"/> will resolve the given entity to.</typeparam>
+            <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
+            <param name="rowKey">A string containing the row key of the entity to retrieve.</param>
+            <param name="resolver">The <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityResolver`1"/> implementation to project the entity to retrieve as a particular type in the result.</param>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableBatchOperation.Retrieve``1(System.String,System.String,Microsoft.WindowsAzure.Storage.Table.EntityResolver{``0},System.Collections.Generic.List{System.String})">
             <summary>
@@ -24167,6 +24184,16 @@
             <param name="entity">The <see cref="T:Microsoft.WindowsAzure.Storage.Table.ITableEntity"/> object to be replaced.</param>
             <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
         </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve``1(System.String,System.String)">
+            <summary>
+            Creates a new table operation that retrieves the contents of
+            the given entity in a table.
+            </summary>
+            <typeparam name="TElement">The class of type for the entity to retrieve.</typeparam>
+            <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
+            <param name="rowkey">A string containing the row key of the entity to retrieve.</param>
+            <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
+        </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve``1(System.String,System.String,System.Collections.Generic.List{System.String})">
             <summary>
             Creates a new table operation that retrieves the contents of
@@ -24176,6 +24203,17 @@
             <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
             <param name="rowkey">A string containing the row key of the entity to retrieve.</param>
             <param name="selectColumns">List of column names for projection.</param>
+            <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
+        </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve``1(System.String,System.String,Microsoft.WindowsAzure.Storage.Table.EntityResolver{``0})">
+            <summary>
+            Creates a new table operation that retrieves the contents of
+            the given entity in a table.
+            </summary>
+            <typeparam name="TResult">The return type which the specified <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityResolver`1"/> will resolve the given entity to.</typeparam>
+            <param name="partitionKey">A string containing the partition key of the entity to retrieve.</param>
+            <param name="rowkey">A string containing the row key of the entity to retrieve.</param>
+            <param name="resolver">The <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityResolver`1"/> implementation to project the entity to retrieve as a particular type in the result.</param>
             <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve``1(System.String,System.String,Microsoft.WindowsAzure.Storage.Table.EntityResolver{``0},System.Collections.Generic.List{System.String})">
@@ -24188,6 +24226,15 @@
             <param name="rowkey">A string containing the row key of the entity to retrieve.</param>
             <param name="resolver">The <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityResolver`1"/> implementation to project the entity to retrieve as a particular type in the result.</param>
             <param name="selectedColumns">List of column names for projection.</param>
+            <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
+        </member>
+        <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve(System.String,System.String)">
+            <summary>
+            Creates a new table operation that retrieves the contents of
+            the given entity in a table.
+            </summary>
+            <param name="partitionKey">A string containing the partition key of the entity to be retrieved.</param>
+            <param name="rowkey">A string containing the row key of the entity to be retrieved.</param>
             <returns>The <see cref="T:Microsoft.WindowsAzure.Storage.Table.TableOperation"/> object.</returns>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.TableOperation.Retrieve(System.String,System.String,System.Collections.Generic.List{System.String})">
@@ -33422,6 +33469,7 @@
             </summary>
             <param name="properties">A collection containing the <see cref="T:System.Collections.Generic.IDictionary`2"/> of string property names mapped to values of type <see cref="T:Microsoft.WindowsAzure.Storage.Table.EntityProperty"/> to store in this <see cref="T:Microsoft.WindowsAzure.Storage.Table.DynamicTableEntity"/> instance.</param>
             <param name="operationContext">An <see cref="T:Microsoft.WindowsAzure.Storage.OperationContext"/> object that represents the context for the current operation.</param>
+            <remarks>The properties dictionary passed to this API is stored internally as a reference, not a copy.</remarks>
         </member>
         <member name="M:Microsoft.WindowsAzure.Storage.Table.DynamicTableEntity.WriteEntity(Microsoft.WindowsAzure.Storage.OperationContext)">
             <summary>
