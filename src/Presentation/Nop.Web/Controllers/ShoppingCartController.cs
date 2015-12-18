@@ -693,6 +693,16 @@ namespace Nop.Web.Controllers
                     AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
                 };
 
+                //allow editing?
+                //1. setting enabled?
+                //2. simple product?
+                //3. has attribute or gift card?
+                //4. visible individually?
+                cartItemModel.AllowItemEditing = _shoppingCartSettings.AllowCartItemEditing &&
+                    sci.Product.ProductType == ProductType.SimpleProduct &&
+                    (!String.IsNullOrEmpty(cartItemModel.AttributeInfo) || sci.Product.IsGiftCard) &&
+                    sci.Product.VisibleIndividually;
+
                 //allowed quantities
                 var allowedQuantities = sci.Product.ParseAllowedQuantities();
                 foreach (var qty in allowedQuantities)
@@ -1570,8 +1580,9 @@ namespace Nop.Web.Controllers
                     message = "Only simple products could be added to the cart"
                 });
             }
-
+            
             #region Update existing shopping cart item?
+
             int updatecartitemid = 0;
             foreach (string formKey in form.AllKeys)
                 if (formKey.Equals(string.Format("addtocart_{0}.UpdatedShoppingCartItemId", productId), StringComparison.InvariantCultureIgnoreCase))
@@ -1582,22 +1593,23 @@ namespace Nop.Web.Controllers
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
+                //search with the same cart type as specified
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.ShoppingCartTypeId == shoppingCartTypeId)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);
-                //not found?
-                if (updatecartitem == null)
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        message = "No shopping cart item found to update"
-                    });
-                }
+                //not found? let's ignore it. in this case we'll add a new item
+                //if (updatecartitem == null)
+                //{
+                //    return Json(new
+                //    {
+                //        success = false,
+                //        message = "No shopping cart item found to update"
+                //    });
+                //}
                 //is it this product?
-                if (product.Id != updatecartitem.ProductId)
+                if (updatecartitem != null && product.Id != updatecartitem.ProductId)
                 {
                     return Json(new
                     {
@@ -1606,6 +1618,7 @@ namespace Nop.Web.Controllers
                     });
                 }
             }
+
             #endregion
 
             #region Customer entered price
@@ -1648,9 +1661,12 @@ namespace Nop.Web.Controllers
                 ParseRentalDates(product, form, out rentalStartDate, out rentalEndDate);
             }
 
+            var cartType = updatecartitem == null ? (ShoppingCartType)shoppingCartTypeId :
+                //if the item to update is found, then we ignore the specified "shoppingCartTypeId" parameter
+                updatecartitem.ShoppingCartType;
+
             //save item
             var addToCartWarnings = new List<string>();
-            var cartType = (ShoppingCartType)shoppingCartTypeId;
             if (updatecartitem == null)
             {
                 //add to the cart
@@ -1662,16 +1678,16 @@ namespace Nop.Web.Controllers
             else
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                    .Where(x => x.ShoppingCartType == updatecartitem.ShoppingCartType)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 var otherCartItemWithSameParameters = _shoppingCartService.FindShoppingCartItemInTheCart(
-                    cart, cartType, product, attributes, customerEnteredPriceConverted,
+                    cart, updatecartitem.ShoppingCartType, product, attributes, customerEnteredPriceConverted,
                     rentalStartDate, rentalEndDate);
                 if (otherCartItemWithSameParameters != null &&
                     otherCartItemWithSameParameters.Id == updatecartitem.Id)
                 {
-                    //ensure it's other shopping cart cart item
+                    //ensure it's some other shopping cart item
                     otherCartItemWithSameParameters = null;
                 }
                 //update existing item

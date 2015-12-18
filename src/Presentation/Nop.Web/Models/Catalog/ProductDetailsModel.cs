@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Orders;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Media;
@@ -149,8 +150,9 @@ namespace Nop.Web.Models.Catalog
             public bool AvailableForPreOrder { get; set; }
             public DateTime? PreOrderAvailabilityStartDateTimeUtc { get; set; }
 
-            //updating existing shopping cart item?
+            //updating existing shopping cart or wishlist item?
             public int UpdatedShoppingCartItemId { get; set; }
+            public ShoppingCartType? UpdateShoppingCartItemType { get; set; }
         }
 
         public partial class ProductPriceModel : BaseNopModel

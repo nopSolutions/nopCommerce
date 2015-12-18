@@ -4,10 +4,12 @@
 @using Nop.Core.Infrastructure
 @using Nop.Web.Models.ShoppingCart
 @{
-   Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
-   //title
-   Html.AddTitleParts(T("PageTitle.Wishlist").Text);
+    //title
+    Html.AddTitleParts(T("PageTitle.Wishlist").Text);
+
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 }
 <div class="page wishlist-page">
    <div class="page-title">
@@ -152,6 +154,14 @@
                                        {
                                            <div class="rental-info">
                                                @Html.Raw(item.RentalInfo)
+                                           </div>
+                                       }
+                                       @if (Model.IsEditable && item.AllowItemEditing)
+                                       {
+                                           var editCartItemUrl = Url.RouteUrl("Product", new { SeName = item.ProductSeName });
+                                           editCartItemUrl = webHelper.ModifyQueryString(editCartItemUrl, "updatecartitemid=" + item.Id, null);
+                                           <div class="edit-item">
+                                               <a href="@editCartItemUrl">@T("Common.Edit")</a>
                                            </div>
                                        }
                                        @if (item.Warnings.Count > 0)

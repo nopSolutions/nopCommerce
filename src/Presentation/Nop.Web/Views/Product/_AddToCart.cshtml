@@ -1,13 +1,13 @@
 ﻿@model ProductDetailsModel.AddToCartModel
 @using Nop.Web.Models.Catalog;
 @using Nop.Core.Domain.Orders;
+@if (Model.UpdatedShoppingCartItemId > 0)
+{
+    @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
+}
 @if (!Model.DisableBuyButton || Model.CustomerEntersPrice)
 {
     <div class="add-to-cart">
-        @if (Model.UpdatedShoppingCartItemId > 0)
-        {
-            @Html.HiddenFor(x => x.UpdatedShoppingCartItemId)
-        }
         @if (Model.CustomerEntersPrice)
         {
             <div class="customer-entered-price">
@@ -36,7 +36,6 @@
                 else
                 {
                     @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
-
                     //when a customer clicks 'Enter' button we submit the "add to cart" button (if visible)
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -48,11 +47,10 @@
                             });
                         });
                     </script>
-
                 }
                 @{
                     var addToCartText = "";
-                    if (Model.UpdatedShoppingCartItemId > 0)
+                    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.ShoppingCart)
                     {
                         addToCartText = T("ShoppingCart.AddToCart.Update").Text;
                     }

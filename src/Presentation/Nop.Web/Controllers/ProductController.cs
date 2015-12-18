@@ -513,7 +513,11 @@ namespace Nop.Web.Controllers
             #region 'Add to cart' model
 
             model.AddToCart.ProductId = product.Id;
-            model.AddToCart.UpdatedShoppingCartItemId = updatecartitem != null ? updatecartitem.Id : 0;
+            if (updatecartitem != null)
+            {
+                model.AddToCart.UpdatedShoppingCartItemId = updatecartitem.Id;
+                model.AddToCart.UpdateShoppingCartItemType = updatecartitem.ShoppingCartType;
+            }
 
             //quantity
             model.AddToCart.EnteredQuantity = updatecartitem != null ? updatecartitem.Quantity : product.OrderMinimumQuantity;
@@ -967,12 +971,11 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("Product", new { SeName = parentGroupedProduct.GetSeName() });
             }
 
-            //update existing shopping cart item?
+            //update existing shopping cart or wishlist  item?
             ShoppingCartItem updatecartitem = null;
             if (_shoppingCartSettings.AllowCartItemEditing && updatecartitemid > 0)
             {
                 var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                    .Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart)
                     .LimitPerStore(_storeContext.CurrentStore.Id)
                     .ToList();
                 updatecartitem = cart.FirstOrDefault(x => x.Id == updatecartitemid);

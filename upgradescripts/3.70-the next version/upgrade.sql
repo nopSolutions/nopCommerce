@@ -8,6 +8,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowCartItemEditing.Hint">
+    <Value>Check to allow customers to edit items already placed in the cart or wishlist. It could be useful when your products have attributes or any other fields entered by a customer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AddToWishlist.Update">
+    <Value>Update</Value>
+  </LocaleResource>
 </Language>
 '
 

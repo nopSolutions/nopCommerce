@@ -68,6 +68,8 @@ namespace Nop.Web.Models.ShoppingCart
 
             public string RentalInfo { get; set; }
 
+            public bool AllowItemEditing { get; set; }
+
             public IList<string> Warnings { get; set; }
 
         }
