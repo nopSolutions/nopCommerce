@@ -676,6 +676,7 @@ namespace Nop.Services.Messages
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
+            tokens.Add(new Token("Order.OrderNoteAttachmentUrl", string.Format("{0}download/ordernotefile/{1}", GetStoreUrl(orderNote.Order.StoreId), orderNote.Id), true));
 
             //event notification
             _eventPublisher.EntityTokensAdded(orderNote, tokens);
@@ -963,6 +964,7 @@ namespace Nop.Services.Messages
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
                 "%Order.NewNoteText%",
+                "%Order.OrderNoteAttachmentUrl%",
                 "%Order.AmountRefunded%",
                 "%RecurringPayment.ID%",
                 "%Shipment.ShipmentNumber%",
