@@ -7,10 +7,6 @@ namespace Nop.Services.Shipping
     public enum ShippingRateComputationMethodType
     {
         /// <summary>
-        /// Unknown
-        /// </summary>
-        Unknown = 0,
-        /// <summary>
         /// Offline
         /// </summary>
         Offline = 10,
