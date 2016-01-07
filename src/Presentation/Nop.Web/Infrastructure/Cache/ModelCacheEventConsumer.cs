@@ -498,6 +498,17 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY = "Nop.pres.productattribute.picture";
 
         /// <summary>
+        /// Key for product attribute picture caching on the product details page
+        /// </summary>
+        /// <remarks>
+        /// {0} : picture id
+        /// {1} : is connection SSL secured?
+        /// {2} : current store ID
+        /// </remarks>
+        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY = "Nop.pres.productattribute.imagesquare.picture-{0}-{1}-{2}";
+        public const string PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY = "Nop.pres.productattribute.imagesquare.picture";
+
+        /// <summary>
         /// Key for category picture caching
         /// </summary>
         /// <remarks>
@@ -1010,6 +1021,7 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<ProductAttributeValue> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_PATTERN_KEY);
         }
 
         //Topics

@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Catalog
                 AssociatedProductId = 10,
                 Name = "Name 1",
                 ColorSquaresRgb = "12FF33",
+                ImageSquaresPictureId = 1,
                 PriceAdjustment = 1.1M,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
@@ -44,6 +45,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.AssociatedProductId.ShouldEqual(10);
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ColorSquaresRgb.ShouldEqual("12FF33");
+            fromDb.ImageSquaresPictureId.ShouldEqual(1);
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.Cost.ShouldEqual(3.1M);

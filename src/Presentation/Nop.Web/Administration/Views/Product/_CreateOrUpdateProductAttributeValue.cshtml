@@ -8,6 +8,7 @@
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.ProductAttributeMappingId)
 @Html.HiddenFor(model => model.DisplayColorSquaresRgb)
+@Html.HiddenFor(model => model.DisplayImageSquaresPicture)
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -119,6 +120,18 @@
                     });
                 </script>
                 @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+            </td>
+        </tr>
+    }
+    @if (Model.DisplayImageSquaresPicture)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ImageSquaresPictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ImageSquaresPictureId)
+                @Html.ValidationMessageFor(model => model.ImageSquaresPictureId)
             </td>
         </tr>
     }

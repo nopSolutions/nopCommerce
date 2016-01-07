@@ -193,7 +193,13 @@
                 @Html.NopLabelFor(model => model.AttributeControlTypeId):
             </td>
             <td class="adminData">
-                @Html.DropDownListFor(model => model.AttributeControlTypeId, ((AttributeControlType)Model.AttributeControlTypeId).ToSelectList())
+                @{
+                    var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                        .ToSelectList(valuesToExclude:
+                        //these attributes don't support some control types
+                        new[] { (int)AttributeControlType.ImageSquares });
+                }
+                @Html.DropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
                 @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
             </td>
         </tr>

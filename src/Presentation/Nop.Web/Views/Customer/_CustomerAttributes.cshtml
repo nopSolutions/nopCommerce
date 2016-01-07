@@ -59,15 +59,16 @@
             case AttributeControlType.MultilineTextbox:
             {
             <textarea id="@(controlId)" name="@(controlId)">@attribute.DefaultValue</textarea>
-            }
-            break;
+                }
+                break;
             case AttributeControlType.Datepicker:
             case AttributeControlType.FileUpload:
             case AttributeControlType.ColorSquares:
-            {
-                //not support attribute type
-            }
-            break;
+            case AttributeControlType.ImageSquares:
+                {
+                    //not support attribute type
+                }
+                break;
         }
         @if (attribute.IsRequired)
         {

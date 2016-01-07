@@ -389,8 +389,9 @@ namespace Nop.Admin.Controllers
                             }
                         }
                             break;
-                        case AttributeControlType.ColorSquares:
                         case AttributeControlType.Datepicker:
+                        case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
                         case AttributeControlType.FileUpload:
                         default:
                             //not supported attribute control types
@@ -474,6 +475,7 @@ namespace Nop.Admin.Controllers
                         break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
                     case AttributeControlType.FileUpload:
                     //not supported customer attributes
                     default:

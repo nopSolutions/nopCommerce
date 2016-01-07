@@ -232,6 +232,36 @@
                         </script>
                             }
                             break;
+                        case AttributeControlType.ImageSquares:
+                            {
+                                <ul class="option-list color-squares" id="color-squares-@(attribute.Id)">
+                                    @foreach (var attributeValue in attribute.Values)
+                                    {
+                                        var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
+                                            attributeValue.Name :
+                                            T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
+                                            <label for="@(controlId)_@(attributeValue.Id)">
+                                                <span class="color-container" title="@attributeName">
+                                                    <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
+                                                </span>
+                                                <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
+                                                @*uncomment below to display attribute value name*@
+                                                @*<span class="name">@attributeName</span>*@
+                                            </label>
+                                        </li>
+                                    }
+                                </ul>
+                                <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('.attributes #color-squares-@(attribute.Id)').delegate('input', 'click', function(event) {
+                                    $('.attributes #color-squares-@(attribute.Id)').find('li').removeClass('selected-value');
+                                    $(this).closest('li').addClass('selected-value');
+                                });
+                            });
+                                </script>
+                            }
+                            break;
                     }
                 </dd>
             }
@@ -261,6 +291,7 @@
                     break;
                 case AttributeControlType.RadioList:
                 case AttributeControlType.ColorSquares:
+                case AttributeControlType.ImageSquares:
                     {
                         foreach (var attributeValue in attribute.Values)
                         {
@@ -388,6 +419,7 @@
                 break;
             case AttributeControlType.RadioList:
             case AttributeControlType.ColorSquares:
+            case AttributeControlType.ImageSquares:
                 {
                     foreach (var attributeValue in attribute.Values)
                     {

@@ -677,7 +677,29 @@ namespace Nop.Web.Controllers
                             valueModel.PriceAdjustmentValue = priceAdjustment;
                         }
 
-                        //picture
+                        //"image square" picture (with with "image squares" attribute type only)
+                        if (attributeValue.ImageSquaresPictureId > 0)
+                        {
+                            var productAttributeImageSquarePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_IMAGESQUARE_PICTURE_MODEL_KEY,
+                                   attributeValue.ImageSquaresPictureId,
+                                   _webHelper.IsCurrentConnectionSecured(),
+                                   _storeContext.CurrentStore.Id);
+                            valueModel.ImageSquaresPictureModel = _cacheManager.Get(productAttributeImageSquarePictureCacheKey, () =>
+                            {
+                                var imageSquaresPicture = _pictureService.GetPictureById(attributeValue.ImageSquaresPictureId);
+                                if (imageSquaresPicture != null)
+                                {
+                                    return new PictureModel
+                                    {
+                                        FullSizeImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture),
+                                        ImageUrl = _pictureService.GetPictureUrl(imageSquaresPicture, _mediaSettings.ImageSquarePictureSize)
+                                    };
+                                }
+                                return new PictureModel();
+                            });
+                        }
+
+                        //picture of a product attribute value
                         if (attributeValue.PictureId > 0)
                         {
                             var productAttributePictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCTATTRIBUTE_PICTURE_MODEL_KEY,
@@ -710,6 +732,7 @@ namespace Nop.Web.Controllers
                         case AttributeControlType.RadioList:
                         case AttributeControlType.Checkboxes:
                         case AttributeControlType.ColorSquares:
+                        case AttributeControlType.ImageSquares:
                             {
                                 if (!String.IsNullOrEmpty(updatecartitem.AttributesXml))
                                 {

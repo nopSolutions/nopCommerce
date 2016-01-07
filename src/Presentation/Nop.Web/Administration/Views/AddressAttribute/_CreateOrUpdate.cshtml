@@ -97,8 +97,8 @@
                 @{
                     var attributeControlTypes = ((AttributeControlType) Model.AttributeControlTypeId)
                         .ToSelectList(valuesToExclude:
-                        //custom address attributes don't support some attribute control types
-                        new [] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares });
+                        //these attributes don't support some control types
+                        new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
                 }
                 @Html.DropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
                 @Html.ValidationMessageFor(model => model.AttributeControlTypeId)

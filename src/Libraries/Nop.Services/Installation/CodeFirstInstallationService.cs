@@ -4757,6 +4757,7 @@ namespace Nop.Services.Installation
                     CartThumbPictureSize = 80,
                     MiniCartThumbPictureSize = 70,
                     AutoCompleteSearchThumbPictureSize = 20,
+                    ImageSquarePictureSize = 32,
                     MaximumImageSize = 1980,
                     DefaultPictureZoomEnabled = false,
                     DefaultImageQuality = 80,

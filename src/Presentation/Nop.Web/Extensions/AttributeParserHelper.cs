@@ -81,6 +81,7 @@ namespace Nop.Web.Extensions
                         break;
                     case AttributeControlType.Datepicker:
                     case AttributeControlType.ColorSquares:
+                    case AttributeControlType.ImageSquares:
                     case AttributeControlType.FileUpload:
                     //not supported address attributes
                     default:

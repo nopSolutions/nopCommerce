@@ -437,6 +437,24 @@ namespace Nop.Services.Catalog
                         DisplayOrder = productAttributeValue.DisplayOrder,
                         PictureId = attributeValuePictureId,
                     };
+                    //picture associated to "iamge square" attribute type (if exists)
+                    if (productAttributeValue.ImageSquaresPictureId > 0)
+                    {
+                        var origImageSquaresPicture = _pictureService.GetPictureById(productAttributeValue.ImageSquaresPictureId);
+                        if (origImageSquaresPicture != null)
+                        {
+                            //copy the picture
+                            var imageSquaresPictureCopy = _pictureService.InsertPicture(
+                                _pictureService.LoadPictureBinary(origImageSquaresPicture),
+                                origImageSquaresPicture.MimeType,
+                                origImageSquaresPicture.SeoFilename,
+                                origImageSquaresPicture.AltAttribute,
+                                origImageSquaresPicture.TitleAttribute);
+                            attributeValueCopy.ImageSquaresPictureId = imageSquaresPictureCopy.Id;
+                        }
+                    }
+
+
                     _productAttributeService.InsertProductAttributeValue(attributeValueCopy);
 
                     //save associated value (used for combinations copying)

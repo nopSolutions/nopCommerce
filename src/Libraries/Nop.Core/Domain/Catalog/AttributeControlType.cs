@@ -38,6 +38,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         ColorSquares = 40,
         /// <summary>
+        /// Image squares
+        /// </summary>
+        ImageSquares = 45,
+        /// <summary>
         /// Read-only checkboxes
         /// </summary>
         ReadonlyCheckboxes = 50,

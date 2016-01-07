@@ -14,6 +14,15 @@ set @resources='
   <LocaleResource Name="ShoppingCart.AddToWishlist.Update">
     <Value>Update</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.Hint">
+    <Value>Choose a picture associated to this attribute value. This picture will replace the main product image when this product attribute value is clicked (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture">
+    <Value>Square picture</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture.Hint">
+    <Value>Upload a picture to be used with the image squares attribute control</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -89,3 +98,28 @@ DROP TABLE #LocaleStringResourceTmp
 GO
 
 
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductAttributeValue]') and NAME='ImageSquaresPictureId')
+BEGIN
+	ALTER TABLE [ProductAttributeValue]
+	ADD [ImageSquaresPictureId] int NULL
+END
+GO
+
+UPDATE [ProductAttributeValue]
+SET [ImageSquaresPictureId] = 0
+WHERE [ImageSquaresPictureId] IS NULL
+GO
+
+ALTER TABLE [ProductAttributeValue] ALTER COLUMN [ImageSquaresPictureId] int NOT NULL
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquarepicturesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'mediasettings.imagesquarepicturesize', N'32', 0)
+END
+GO

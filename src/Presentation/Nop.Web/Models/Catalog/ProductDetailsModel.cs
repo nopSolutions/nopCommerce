@@ -277,12 +277,16 @@ namespace Nop.Web.Models.Catalog
         {
             public ProductAttributeValueModel()
             {
+                ImageSquaresPictureModel = new PictureModel();
                 PictureModel = new PictureModel();
             }
 
             public string Name { get; set; }
 
             public string ColorSquaresRgb { get; set; }
+
+            //picture model is used with "image square" attribute type
+            public PictureModel ImageSquaresPictureModel { get; set; }
 
             public string PriceAdjustment { get; set; }
 
