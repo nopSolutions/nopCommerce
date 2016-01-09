@@ -393,10 +393,10 @@ namespace Nop.Web.Controllers
                             {
                                 Year = date.Year
                             };
-                            model.Add(yearModel);
+                            model.Insert(0, yearModel);
                         }
 
-                        model.Last().Months.Add(new BlogPostMonthModel
+                        model.First().Months.Insert(0, new BlogPostMonthModel
                         {
                             Month = date.Month,
                             BlogPostCount = blogPostCount
