@@ -1,4 +1,4 @@
-EPPlus 4.0.4
+EPPlus 4.0.5
 
 Visit epplus.codeplex.com for the latest information
 
@@ -7,11 +7,11 @@ EPPlus-Create Advanced Excel spreadsheet.
 New features
 
 Replaced Packaging API with DotNetZip
-* This will remove any problems with Isolated Storage and enable multi threading
+* This will remove any problems with Isolated Storage and enable multithreading
 
 
 New Cell store
-* Less memory consumtion
+* Less memory consumption
 * Insert columns (not on the range level)
 * Faster row inserts,
 
@@ -19,7 +19,7 @@ Formula Parser
 * Calculates all formulas in a workbook, a worksheet or in a specified range
 * 100+ functions implemented
 * Access via Calculate methods on Workbook, Worksheet and Range objects.
-* Add custom/missing Excel functions via Workbook.FormulaParserManager.
+* Add custom/missing Excel functions via Workbook. FormulaParserManager.
 * Samples added to the EPPlusSamples project.
 
 The formula parser does not support Array Formulas
@@ -27,8 +27,8 @@ The formula parser does not support Array Formulas
 * References to external workbooks
 * And probably a whole lot of other stuff as well :)
 
-Perfomance
-*Of course the performance of the formula parser is nowhere near Excels.Our focus has been functionality.
+Performance
+*Of course the performance of the formula parser is nowhere near Excels. Our focus has been functionality.
 
 Agile Encryption (Office 2012-)
 * Support for newer type of encryption.
@@ -38,34 +38,34 @@ Minor new features
 * New Chart Types Bubblecharts
 * Radar Charts
 * Area Charts
-* And lots of bugfixes...
+* And lots of bug fixes...
 
 Beta 2 Changes
 * Fixed bug when using RepeatColumns & RepeatRows at the same time.
-* VBA project will be left untouched if its not accessed.
+* VBA project will be left untouched if it’s not accessed.
 * Fixed problem with strings on save.
-* Added locks to the cellstore for access by mulitple threads.
+* Added locks to the cell store for access by multiple threads.
 * Implemented Indirect function
 * Used DisplayNameAttribute to generate column headers from LoadFromCollection
 * Rewrote ExcelRangeBase.Copy function. 
 * Added caching to Save ZipStream for Cells and shared strings to speed up the Save method.
 * Added Missing InsertColumn and DeleteColumn
 * Added pull request to support Date1904 
-* Added pull request ExcelWorksheet.LoadFromDataReader
+* Added pull request ExcelWorksheet. LoadFromDataReader
 
-Release Candidare changes
+Release Candidate changes
 * Fixed some problems with Range.Copy Function
 * InsertColumn and Delete column didn't work in some cases
 * Chart.DisplayBlankAs had the wrong default type in Excel 2010+
-* Datavalidation list overflow cauesed corruption of the package
-* Fixed a few Calculation when refering ranges (for example If)  function and some 
+* Datavalidation list overflow caused corruption of the package
+* Fixed a few Calculation when referring ranges (for example If function)
 * Added ChartAxis.DisplayUnit
 * Fixed a bug related to shared formulas
-* Named styles faild in some cases.
+* Named styles failed in some cases.
 * Style.Indent got an invalid value in some cases.
 * Fixed a problem with AutofitColumns method.
 * Performance fix.
-* An a whole lot of other small fixes.
+* A whole lot of other small fixes.
 
 4.0.1 Fixes
 * VBA unreadable content
@@ -77,7 +77,7 @@ Release Candidare changes
 * Better exception when accessing a worksheet out of range in the Excelworksheets indexer.
 * Added Small and Large function to formula parser. Performance fix when encountering an unknown function.
 * Fixed handling strings in formulas
-* Calculate hanges if formula start with a parenthes.
+* Calculate hangs if formula start with a parenthes.
 * Worksheet.Dimension returned an invalid range in some cases.
 * Rowheight was wrong in some cases.
 * ExcelSeries.Header had an incorrect validation check.
@@ -87,7 +87,7 @@ Release Candidare changes
 * Added functions Acos, Acosh, Asinh, Atanh, Atan, CountBlank, CountIfs, Mina, Offset, Median, Hyperlink, Rept
 * Fix for reading Excel comment content from the t-element.
 * Fix to make Range.LoadFromCollection work better with inheritence
-* And alot of other smal fixes
+* And alot of other small fixes
 
 4.0.3 Fixes
 * Added compilation directive for MONO (Thanks Danny)
@@ -97,4 +97,12 @@ Release Candidare changes
 4.0.4 Fixes
 * Added functions Daverage, Dvar Dvarp, DMax, DMin DSum,  DGet, DCount and DCountA 
 * Exposed the formula parser logging functionality via FormulaParserManager.
+* And fixed a lot of issues. See http://epplus.codeplex.com/SourceControl/list/changesets for more details
+
+4.0.5 Fixes
+* Switched to Visual Studio 2015 for code and sample projects.
+* Added LineColor, MarkerSize, LineWidth and MarkerLineColor properties to line charts
+* Added LineEnd properties to shapes
+* Added functions Value, DateValue, TimeValue
+* Removed WPF depedency.
 * And fixed a lot of issues. See http://epplus.codeplex.com/SourceControl/list/changesets for more details
