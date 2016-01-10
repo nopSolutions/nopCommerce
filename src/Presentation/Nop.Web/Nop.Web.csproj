@@ -1972,7 +1972,6 @@
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
-    <Content Include="license.txt" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
