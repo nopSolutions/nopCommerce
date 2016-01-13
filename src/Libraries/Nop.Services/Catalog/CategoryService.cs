@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// {1} : show hidden records?
         /// {2} : current customer ID
         /// {3} : store ID
-        /// {3} : include all levels (child)
+        /// {4} : include all levels (child)
         /// </remarks>
         private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}-{2}-{3}-{4}";
         /// <summary>
