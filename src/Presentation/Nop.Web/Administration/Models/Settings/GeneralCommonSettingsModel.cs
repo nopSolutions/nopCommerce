@@ -234,10 +234,12 @@ namespace Nop.Admin.Models.Settings
             public bool DisablePdfInvoicesForPendingOrders_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn1")]
+            [AllowHtml]
             public string InvoiceFooterTextColumn1 { get; set; }
             public bool InvoiceFooterTextColumn1_OverrideForStore { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.InvoiceFooterTextColumn2")]
+            [AllowHtml]
             public string InvoiceFooterTextColumn2 { get; set; }
             public bool InvoiceFooterTextColumn2_OverrideForStore { get; set; }
 
