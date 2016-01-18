@@ -824,7 +824,8 @@ namespace Nop.Services.Shipping
                     .ToList();
             }
             if (shippingRateComputationMethods.Count == 0)
-                throw new NopException("Shipping rate computation method could not be loaded");
+                //throw new NopException("Shipping rate computation method could not be loaded");
+                return result;
 
 
 
