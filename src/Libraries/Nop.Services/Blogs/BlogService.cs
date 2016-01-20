@@ -119,7 +119,7 @@ namespace Nop.Services.Blogs
                         select bpGroup.FirstOrDefault();
             }
 
-            query = query.OrderByDescending(b => b.CreatedOnUtc);
+            query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
             
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
             return blogPosts;

@@ -94,7 +94,7 @@ namespace Nop.Services.News
                 query = query.Where(n => !n.StartDateUtc.HasValue || n.StartDateUtc <= utcNow);
                 query = query.Where(n => !n.EndDateUtc.HasValue || n.EndDateUtc >= utcNow);
             }
-            query = query.OrderByDescending(n => n.CreatedOnUtc);
+            query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
 
             //Store mapping
             if (storeId > 0 && !_catalogSettings.IgnoreStoreLimitations)
@@ -112,7 +112,7 @@ namespace Nop.Services.News
                         into nGroup
                         orderby nGroup.Key
                         select nGroup.FirstOrDefault();
-                query = query.OrderByDescending(n => n.CreatedOnUtc);
+                query = query.OrderByDescending(n => n.StartDateUtc ?? n.CreatedOnUtc);
             }
 
             var news = new PagedList<NewsItem>(query, pageIndex, pageSize);
