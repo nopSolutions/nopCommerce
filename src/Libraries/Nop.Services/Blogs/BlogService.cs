@@ -89,9 +89,9 @@ namespace Nop.Services.Blogs
         {
             var query = _blogPostRepository.Table;
             if (dateFrom.HasValue)
-                query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
+                query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
             if (dateTo.HasValue)
-                query = query.Where(b => dateTo.Value >= b.CreatedOnUtc);
+                query = query.Where(b => dateTo.Value >= (b.StartDateUtc ?? b.CreatedOnUtc));
             if (languageId > 0)
                 query = query.Where(b => languageId == b.LanguageId);
             if (!showHidden)
