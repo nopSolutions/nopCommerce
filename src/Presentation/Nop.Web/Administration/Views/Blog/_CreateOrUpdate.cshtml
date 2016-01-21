@@ -55,8 +55,9 @@
 
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagit/jquery.tagit.css");
-    Html.AppendScriptParts("~/Scripts/tag-it.min.js");
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
 }
 @helper TabInfo()
 {
@@ -64,28 +65,33 @@
 <script type="text/javascript">
     @{
         //TODO move to Model
-        var productTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags(0, 0, true);
-        var productTagsSb = new StringBuilder();
-        productTagsSb.Append("var sampleTags = [");
-        for (int i = 0; i < productTags.Count; i++)
+        var blogTags = EngineContext.Current.Resolve<IBlogService>().GetAllBlogPostTags(0, 0, true);
+        var blogTagsSb = new StringBuilder();
+        blogTagsSb.Append("var initialBlogTags = [");
+        for (int i = 0; i < blogTags.Count; i++)
         {
-            var tag = productTags[i];
-            productTagsSb.Append("'");
-            productTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
-            productTagsSb.Append("'");
-            if (i != productTags.Count - 1)
+            var tag = blogTags[i];
+            blogTagsSb.Append("'");
+            blogTagsSb.Append(HttpUtility.JavaScriptStringEncode(tag.Name));
+            blogTagsSb.Append("'");
+            if (i != blogTags.Count - 1)
             {
-                productTagsSb.Append(",");
+                blogTagsSb.Append(",");
             }
         }
-        productTagsSb.Append("]");
+        blogTagsSb.Append("]");
     }
-    //product tags
+    //tags
     $(document).ready(function () {          
-        @Html.Raw(productTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.Tags)").tagit({
-            availableTags: sampleTags,
-            allowSpaces: true
+        @Html.Raw(blogTagsSb.ToString())
+        $("#@Html.FieldIdFor(model => model.Tags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: initialBlogTags
+            },
+            delimiter: ',',
+            placeholder: 'Enter tags ...'
         });
     });
 </script>
