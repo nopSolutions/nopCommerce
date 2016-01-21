@@ -373,11 +373,6 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Boards", action = "CustomerForumSubscriptions", page = UrlParameter.Optional },
                             new { page = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("CustomerAddressDelete",
-                            "customer/addressdelete/{addressId}",
-                            new { controller = "Customer", action = "AddressDelete" },
-                            new { addressId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CustomerAddressEdit",
                             "customer/addressedit/{addressId}",
                             new { controller = "Customer", action = "AddressEdit" },

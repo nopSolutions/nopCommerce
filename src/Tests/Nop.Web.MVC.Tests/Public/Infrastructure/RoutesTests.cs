@@ -109,7 +109,6 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             //"~/customer/activation?token=cc74c80f-1edd-43f7-85df-a3cccc1b47b9&email=test@test.com".ShouldMapTo<CustomerController>(c => c.AccountActivation("cc74c80f-1edd-43f7-85df-a3cccc1b47b9", "test@test.com"));
             "~/boards/forumsubscriptions".ShouldMapTo<BoardsController>(c => c.CustomerForumSubscriptions(null));
             "~/boards/forumsubscriptions/4".ShouldMapTo<BoardsController>(c => c.CustomerForumSubscriptions(4));
-            "~/customer/addressdelete/6".ShouldMapTo<CustomerController>(c => c.AddressDelete(6));
             "~/customer/addressedit/7".ShouldMapTo<CustomerController>(c => c.AddressEdit(7));
             "~/customer/addressadd".ShouldMapTo<CustomerController>(c => c.AddressAdd());
         }
