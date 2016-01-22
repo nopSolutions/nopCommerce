@@ -301,7 +301,16 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                     {
                         string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", mc_gross, order.OrderTotal);
+                        //log
                         _logger.Error(errorStr);
+                        //order note
+                        order.OrderNotes.Add(new OrderNote
+                        {
+                            Note = errorStr,
+                            DisplayToCustomer = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        });
+                        _orderService.UpdateOrder(order);
 
                         return RedirectToAction("Index", "Home", new { area = "" });
                     }
