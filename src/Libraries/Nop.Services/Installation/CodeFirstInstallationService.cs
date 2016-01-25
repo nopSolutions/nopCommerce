@@ -10058,6 +10058,19 @@ namespace Nop.Services.Installation
             };
 
             _vendorRepository.Insert(vendors);
+
+            //search engine names
+            foreach (var vendor in vendors)
+            {
+                _urlRecordRepository.Insert(new UrlRecord
+                {
+                    EntityId = vendor.Id,
+                    EntityName = "Vendor",
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = vendor.ValidateSeName("", vendor.Name, true)
+                });
+            }
         }
 
         protected virtual void InstallAffiliates()
