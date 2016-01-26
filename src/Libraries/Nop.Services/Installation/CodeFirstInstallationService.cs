@@ -9529,6 +9529,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewTopic",
+                                                  Enabled = true,
+                                                  Name = "Add a new topic"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "AddNewWidget",
                                                   Enabled = true,
                                                   Name = "Add a new widget"
@@ -9604,6 +9610,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Delete a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteTopic",
+                                                  Enabled = true,
+                                                  Name = "Delete a topic"
                                               },
                                           new ActivityLogType
                                               {
@@ -9688,6 +9700,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Edit a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditTopic",
+                                                  Enabled = true,
+                                                  Name = "Edit a topic"
                                               },
                                           new ActivityLogType
                                               {

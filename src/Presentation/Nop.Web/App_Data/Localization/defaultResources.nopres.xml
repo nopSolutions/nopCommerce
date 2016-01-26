@@ -618,6 +618,9 @@
   <LocaleResource Name="ActivityLog.AddNewSpecAttribute">
     <Value>Added a new specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewTopic">
+    <Value>Added a new topic ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.AddNewWidget">
     <Value>Added a new widget (ID = {0})</Value>
   </LocaleResource>
@@ -657,6 +660,9 @@
   <LocaleResource Name="ActivityLog.DeleteSpecAttribute">
     <Value>Deleted a specification attribute ('{0}')</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteTopic">
+    <Value>Deleted a topic ('{0}')</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteWidget">
     <Value>Deleted a widget (ID = {0})</Value>
   </LocaleResource>
@@ -695,6 +701,9 @@
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditSpecAttribute">
     <Value>Edited a specification attribute ('{0}')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditTopic">
+    <Value>Edited a topic ('{0}')</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
