@@ -23,6 +23,15 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture.Hint">
     <Value>Upload a picture to be used with the image squares attribute control</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.AddNewTopic">
+    <Value>Added a new topic (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditTopic">
+    <Value>Edited a topic (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteTopic">
+    <Value>Deleted a topic (''{0}'')</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -121,5 +130,27 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquar
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'mediasettings.imagesquarepicturesize', N'32', 0)
+END
+GO
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'AddNewTopic')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'AddNewTopic', N'Add a new topic', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteTopic')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteTopic', N'Delete a topic', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditTopic')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditTopic', N'Edit a topic', N'true')
 END
 GO

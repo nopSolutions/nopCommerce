@@ -6,6 +6,7 @@ using Nop.Admin.Models.Topics;
 using Nop.Core.Domain.Topics;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Stores;
@@ -29,6 +30,7 @@ namespace Nop.Admin.Controllers
         private readonly IUrlRecordService _urlRecordService;
         private readonly ITopicTemplateService _topicTemplateService;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerActivityService _customerActivityService;
         private readonly IAclService _aclService;
 
         #endregion Fields
@@ -45,6 +47,7 @@ namespace Nop.Admin.Controllers
             IUrlRecordService urlRecordService,
             ITopicTemplateService topicTemplateService,
             ICustomerService customerService,
+            ICustomerActivityService customerActivityService,
             IAclService aclService)
         {
             this._topicService = topicService;
@@ -57,6 +60,7 @@ namespace Nop.Admin.Controllers
             this._urlRecordService = urlRecordService;
             this._topicTemplateService = topicTemplateService;
             this._customerService = customerService;
+            this._customerActivityService = customerActivityService;
             this._aclService = aclService;
         }
 
@@ -301,6 +305,10 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(topic, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Added"));
+
+                //activity log
+                _customerActivityService.InsertActivity("AddNewTopic", _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
+
                 return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
             }
 
@@ -379,6 +387,9 @@ namespace Nop.Admin.Controllers
                 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Updated"));
                 
+                //activity log
+                _customerActivityService.InsertActivity("EditTopic", _localizationService.GetResource("ActivityLog.EditTopic"), topic.Title ?? topic.SystemName);
+
                 if (continueEditing)
                 {
                     //selected tab
@@ -416,6 +427,10 @@ namespace Nop.Admin.Controllers
             _topicService.DeleteTopic(topic);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteTopic", _localizationService.GetResource("ActivityLog.DeleteTopic"), topic.Title ?? topic.SystemName);
+
             return RedirectToAction("List");
         }
         
