@@ -38,6 +38,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
+    <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
+    <Value>Restricted products [and quantity range]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
+    <Value>Restricted products [and quantity range]</Value>
+  </LocaleResource>
 </Language>
 '
 
