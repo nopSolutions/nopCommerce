@@ -24,6 +24,7 @@ using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -84,6 +85,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -135,6 +137,7 @@ namespace Nop.Admin.Controllers
             IAddressAttributeFormatter addressAttributeFormatter,
             IAffiliateService affiliateService,
             IPictureService pictureService,
+            ICustomerActivityService customerActivityService,
             CurrencySettings currencySettings, 
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
@@ -181,7 +184,7 @@ namespace Nop.Admin.Controllers
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._affiliateService = affiliateService;
             this._pictureService = pictureService;
-
+            this._customerActivityService = customerActivityService;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
@@ -1235,6 +1238,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.CancelOrder(order, true);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 return View(model);
@@ -1268,6 +1272,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Capture(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 foreach (var error in errors)
@@ -1304,6 +1309,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.MarkOrderAsPaid(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 return View(model);
@@ -1337,6 +1343,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Refund(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 foreach (var error in errors)
@@ -1372,6 +1379,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.RefundOffline(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 return View(model);
@@ -1405,6 +1413,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var errors = _orderProcessingService.Void(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 foreach (var error in errors)
@@ -1440,6 +1449,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.VoidOffline(order);
+                LogEditOrder(order.Id);
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
                 return View(model);
@@ -1506,6 +1516,8 @@ namespace Nop.Admin.Controllers
                 else
                     _orderProcessingService.PartiallyRefundOffline(order, amountToRefund);
 
+                LogEditOrder(order.Id);
+
                 if (errors.Count == 0)
                 {
                     //success
@@ -1560,6 +1572,7 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
 
                 model = new OrderModel();
@@ -1616,6 +1629,10 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", "Order", new { id = id });
 
             _orderProcessingService.DeleteOrder(order);
+
+            //activity log
+            _customerActivityService.InsertActivity("DeleteOrder", _localizationService.GetResource("ActivityLog.DeleteOrder"), order.Id);
+
             return RedirectToAction("List");
         }
 
@@ -1774,6 +1791,7 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
+            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
 
             PrepareOrderDetailsModel(model, order);
@@ -1817,6 +1835,7 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
+            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
 
             PrepareOrderDetailsModel(model, order);
@@ -1849,6 +1868,7 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
+            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
 
             PrepareOrderDetailsModel(model, order);
@@ -1937,6 +1957,7 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
+            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
 
             var model = new OrderModel();
@@ -2006,6 +2027,7 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
 
 
@@ -2048,6 +2070,7 @@ namespace Nop.Admin.Controllers
 
             orderItem.DownloadCount = 0;
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -2087,6 +2110,7 @@ namespace Nop.Admin.Controllers
 
             orderItem.IsDownloadActivated = !orderItem.IsDownloadActivated;
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -2154,6 +2178,7 @@ namespace Nop.Admin.Controllers
             else
                 orderItem.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             //success
             ViewBag.RefreshPage = true;
@@ -2186,6 +2211,7 @@ namespace Nop.Admin.Controllers
             //attach license
             orderItem.LicenseDownloadId = null;
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             //success
             ViewBag.RefreshPage = true;
@@ -2550,6 +2576,7 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
 
                 //gift cards
@@ -2696,6 +2723,7 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
@@ -3115,6 +3143,7 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
+                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
@@ -3180,6 +3209,7 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
+            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
@@ -3249,6 +3279,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.Ship(shipment, true);
+                LogEditOrder(shipment.OrderId);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -3312,6 +3343,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 _orderProcessingService.Deliver(shipment, true);
+                LogEditOrder(shipment.OrderId);
                 return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
             }
             catch (Exception exc)
@@ -4013,6 +4045,16 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
 
+
+        #endregion
+
+        #region Activity log
+
+        [NonAction]
+        protected void LogEditOrder(int orderId)
+        {
+            _customerActivityService.InsertActivity("EditOrder", _localizationService.GetResource("ActivityLog.EditOrder"), orderId);
+        }
 
         #endregion
     }
