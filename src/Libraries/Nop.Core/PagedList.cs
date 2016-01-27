@@ -19,16 +19,7 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            int total = source.Count();
-            this.TotalCount = total;
-            this.TotalPages = total / pageSize;
-
-            if (total % pageSize > 0)
-                TotalPages++;
-
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+            Init(source, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -39,15 +30,7 @@ namespace Nop.Core
         /// <param name="pageSize">Page size</param>
         public PagedList(IList<T> source, int pageIndex, int pageSize)
         {
-            TotalCount = source.Count();
-            TotalPages = TotalCount / pageSize;
-
-            if (TotalCount % pageSize > 0)
-                TotalPages++;
-
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
+            Init(source, pageIndex, pageSize);
         }
 
         /// <summary>
@@ -59,15 +42,27 @@ namespace Nop.Core
         /// <param name="totalCount">Total count</param>
         public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
         {
-            TotalCount = totalCount;
+            Init(source, pageIndex, pageSize, totalCount);
+        }
+
+        /// <summary>
+        /// Initialize
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="totalCount">Total count</param>
+        private void Init(IEnumerable<T> source, int pageIndex, int pageSize, int? totalCount = null)
+        {
+            TotalCount = totalCount ?? source.Count();
             TotalPages = TotalCount / pageSize;
 
             if (TotalCount % pageSize > 0)
                 TotalPages++;
 
-            this.PageSize = pageSize;
-            this.PageIndex = pageIndex;
-            this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize));
+            PageSize = pageSize;
+            PageIndex = pageIndex;
+            AddRange(source.Skip(pageIndex * pageSize).Take(pageSize));
         }
 
         public int PageIndex { get; private set; }
