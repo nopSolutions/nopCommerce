@@ -1572,8 +1572,8 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
+                LogEditOrder(order.Id);
 
                 model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
@@ -1791,8 +1791,8 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             PrepareOrderDetailsModel(model, order);
             return View(model);
@@ -1835,8 +1835,8 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             PrepareOrderDetailsModel(model, order);
             return View(model);
@@ -1868,8 +1868,8 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             PrepareOrderDetailsModel(model, order);
 
@@ -1957,8 +1957,8 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -2027,9 +2027,8 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
-
+                LogEditOrder(order.Id);
 
                 var model = new OrderModel();
                 PrepareOrderDetailsModel(model, order);
@@ -2576,8 +2575,8 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
+                LogEditOrder(order.Id);
 
                 //gift cards
                 if (product.IsGiftCard)
@@ -2723,8 +2722,8 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
+                LogEditOrder(order.Id);
 
                 return RedirectToAction("AddressEdit", new { addressId = model.Address.Id, orderId = model.OrderId });
             }
@@ -3143,8 +3142,8 @@ namespace Nop.Admin.Controllers
                     DisplayToCustomer = false,
                     CreatedOnUtc = DateTime.UtcNow
                 });
-                LogEditOrder(order.Id);
                 _orderService.UpdateOrder(order);
+                LogEditOrder(order.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
@@ -3209,8 +3208,8 @@ namespace Nop.Admin.Controllers
                 DisplayToCustomer = false,
                 CreatedOnUtc = DateTime.UtcNow
             });
-            LogEditOrder(order.Id);
             _orderService.UpdateOrder(order);
+            LogEditOrder(order.Id);
 
             SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Deleted"));
             return RedirectToAction("Edit", new { id = orderId });
