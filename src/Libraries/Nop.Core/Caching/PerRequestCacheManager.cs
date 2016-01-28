@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Web;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Nop.Core.Caching
 {
@@ -104,7 +107,21 @@ namespace Nop.Core.Caching
             if (items == null)
                 return;
 
-            this.RemoveByPattern(pattern, items.Keys.Cast<string>());            
+            var enumerator = items.GetEnumerator();
+            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var keysToRemove = new List<string>();
+            while (enumerator.MoveNext())
+            {
+                if (regex.IsMatch(enumerator.Key.ToString()))
+                {
+                    keysToRemove.Add(enumerator.Key.ToString());
+                }
+            }
+
+            foreach (string key in keysToRemove)
+            {
+                items.Remove(key);
+            }
         }
 
         /// <summary>
