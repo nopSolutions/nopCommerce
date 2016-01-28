@@ -44,6 +44,12 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
     <Value>Restricted products [and quantity range]</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
+    <Value>Page size is for history of reward points in account page</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -178,5 +184,13 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditOrd
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'EditOrder', N'Edit an order', N'true')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.pagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'rewardpointssettings.pagesize', N'10', 0)
 END
 GO

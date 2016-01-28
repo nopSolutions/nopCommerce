@@ -103,7 +103,8 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/backinstocksubscriptions/manage/".ShouldMapTo<BackInStockSubscriptionController>(c => c.CustomerSubscriptions(null));
             "~/backinstocksubscriptions/manage/3".ShouldMapTo<BackInStockSubscriptionController>(c => c.CustomerSubscriptions(3));
 
-            "~/rewardpoints/history/".ShouldMapTo<OrderController>(c => c.CustomerRewardPoints());
+            "~/rewardpoints/history/".ShouldMapTo<OrderController>(c => c.CustomerRewardPoints(null));
+            "~/rewardpoints/history/page/2".ShouldMapTo<OrderController>(c => c.CustomerRewardPoints(2));
             "~/customer/changepassword/".ShouldMapTo<CustomerController>(c => c.ChangePassword());
             "~/customer/avatar/".ShouldMapTo<CustomerController>(c => c.Avatar());
             //"~/customer/activation?token=cc74c80f-1edd-43f7-85df-a3cccc1b47b9&email=test@test.com".ShouldMapTo<CustomerController>(c => c.AccountActivation("cc74c80f-1edd-43f7-85df-a3cccc1b47b9", "test@test.com"));

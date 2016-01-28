@@ -4795,6 +4795,7 @@ namespace Nop.Services.Installation
                     PointsForPurchases_Canceled = OrderStatus.Cancelled,
                     DisplayHowMuchWillBeEarned = true,
                     PointsAccumulatedForAllStores = true,
+                    PageSize = 10
                 });
 
             settingService.SaveSetting(new CurrencySettings

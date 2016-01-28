@@ -54,5 +54,10 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether all reward points are accumulated in one balance for all stores and they can be used in any store. Otherwise, each store has its own rewards points and they can only be used in that store.
         /// </summary>
         public bool PointsAccumulatedForAllStores { get; set; }
+
+        /// <summary>
+        /// Gets or sets the page size is for history of reward points in account page
+        /// </summary>
+        public int PageSize { get; set; }
     }
 }
