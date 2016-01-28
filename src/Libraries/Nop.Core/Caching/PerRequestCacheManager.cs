@@ -101,7 +101,8 @@ namespace Nop.Core.Caching
         public virtual void RemoveByPattern(string pattern)
         {
             var items = GetItems();
-            if (items == null) return;
+            if (items == null)
+                return;
 
             this.RemoveByPattern(pattern, items.Keys.Cast<string>());            
         }
