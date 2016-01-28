@@ -95,7 +95,9 @@ namespace Nop.Core
 
             if (str.Length > maxLength)
             {
-                var result = str.Substring(0, maxLength);
+                var pLen = postfix == null ? 0 : postfix.Length;
+
+                var result = str.Substring(0, maxLength - pLen);
                 if (!String.IsNullOrEmpty(postfix))
                 {
                     result += postfix;
