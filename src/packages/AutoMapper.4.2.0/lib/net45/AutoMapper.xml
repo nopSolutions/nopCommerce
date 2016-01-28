@@ -32,24 +32,48 @@
         </member>
         <member name="M:AutoMapper.IConfiguration.ConstructServicesUsing(System.Func{System.Type,System.Object})">
             <summary>
-            Supply a factory method callback for creating formatters, resolvers and type converters
+            Supply a factory method callback for creating resolvers and type converters
             </summary>
             <param name="constructor">Factory method</param>
         </member>
-        <member name="M:AutoMapper.IConfiguration.DisableConstructorMapping">
+        <member name="M:AutoMapper.IConfiguration.CreateMap``2(System.String)">
             <summary>
-            Disable constructor mapping. Use this if you don't intend to have AutoMapper try to map to constructors
+            Creates a mapping configuration from the <typeparamref name="TSource"/> type to the <typeparamref name="TDestination"/> type.
+            Specify the member list to validate against during configuration validation.
             </summary>
+            <typeparam name="TSource">Source type</typeparam>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="profileName">Profile name</param>
+            <returns>Mapping expression for more configuration options</returns>
         </member>
-        <member name="M:AutoMapper.IConfiguration.Seal">
+        <member name="M:AutoMapper.IConfiguration.CreateMap``2(System.String,AutoMapper.MemberList)">
             <summary>
-            Seal the configuration and optimize maps
+            Creates a mapping configuration from the <typeparamref name="TSource"/> type to the <typeparamref name="TDestination"/> type.
+            Specify the member list to validate against during configuration validation.
             </summary>
+            <typeparam name="TSource">Source type</typeparam>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="profileName">Profile name</param>
+            <param name="memberList">Member list to validate</param>
+            <returns>Mapping expression for more configuration options</returns>
         </member>
-        <member name="M:AutoMapper.IConfiguration.EnableYieldReturnForDataReaderMapper">
+        <member name="M:AutoMapper.IConfiguration.ForAllMaps(System.String,System.Action{AutoMapper.TypeMap,AutoMapper.IMappingExpression})">
             <summary>
-            Mapping via a data reader will yield return each item, keeping a data reader open instead of eagerly evaluating
+            Apply a mapping configuration for all maps in a profile
             </summary>
+            <param name="profileName">Profile name</param>
+            <param name="configuration">Configuration to apply</param>
+        </member>
+        <member name="M:AutoMapper.IConfiguration.CreateMap(System.Type,System.Type,AutoMapper.MemberList,System.String)">
+            <summary>
+            Creates a mapping configuration from the source type to the destination type.
+            Specify the member list to validate against during configuration validation.
+            </summary>
+            <param name="sourceType">Source type</param>
+            <param name="destinationType">Destination type</param>
+            <param name="memberList">Member list to validate</param>
+            <param name="profileName">Profile name</param>
+            <returns>Mapping expression for more configuration options</returns>
         </member>
         <member name="M:AutoMapper.IConfigurationProvider.GetAllTypeMaps">
             <summary>
@@ -70,6 +94,14 @@
             Find the <see cref="T:AutoMapper.TypeMap"/> for the configured type pair
             </summary>
             <param name="typePair">Type pair</param>
+            <returns>Type map configuration</returns>
+        </member>
+        <member name="M:AutoMapper.IConfigurationProvider.FindTypeMapFor``2">
+            <summary>
+            Find the <see cref="T:AutoMapper.TypeMap"/> for the configured source and destination type
+            </summary>
+            <typeparam name="TSource">Source type</typeparam>
+            <typeparam name="TDestination">Destination type</typeparam>
             <returns>Type map configuration</returns>
         </member>
         <member name="M:AutoMapper.IConfigurationProvider.ResolveTypeMap(System.Object,System.Object,System.Type,System.Type)">
@@ -141,33 +173,25 @@
             </summary>
             <returns>List of mappers</returns>
         </member>
-        <member name="M:AutoMapper.IConfigurationProvider.CreateTypeMap(System.Type,System.Type,System.String)">
+        <member name="M:AutoMapper.IConfigurationProvider.GetTypeMapMappers">
             <summary>
-            Creates a <see cref="T:AutoMapper.TypeMap"/> based on a source and destination type
+            Get all configured mappers
             </summary>
-            <param name="sourceType">Source type</param>
-            <param name="destinationType">Destination type</param>
-            <param name="profileName">Profile name, defaults to the default profile</param>
-            <returns>Type map configuration</returns>
-        </member>
-        <member name="E:AutoMapper.IConfigurationProvider.TypeMapCreated">
-            <summary>
-            Fired each time a type map is created
-            </summary>
+            <returns>List of mappers</returns>
         </member>
         <member name="P:AutoMapper.IConfigurationProvider.ServiceCtor">
             <summary>
             Factory method to create formatters, resolvers and type converters
             </summary>
         </member>
-        <member name="M:AutoMapper.IConfigurationProvider.FindClosedGenericTypeMapFor(AutoMapper.ResolutionContext)">
+        <member name="P:AutoMapper.IConfigurationProvider.AllowNullDestinationValues">
             <summary>
-            Find the closed generic type map for an item that maps to an open generic type map
+            Allow null destination values. If false, destination objects will be created for deep object graphs.
             </summary>
         </member>
-        <member name="M:AutoMapper.IConfigurationProvider.HasOpenGenericTypeMapDefined(AutoMapper.ResolutionContext)">
+        <member name="P:AutoMapper.IConfigurationProvider.AllowNullCollections">
             <summary>
-            Determines if a context has an open generic type map defined
+            Allow null destination collections. If true, null source collections result in null destination collections.
             </summary>
         </member>
         <member name="M:AutoMapper.ICtorParamConfigurationExpression`1.MapFrom``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
@@ -196,17 +220,54 @@
             <param name="source">Source object</param>
             <param name="destination">Destination object</param>
         </member>
-        <member name="T:AutoMapper.IMappingEngine">
+        <member name="M:AutoMapper.IDynamicMapper.DynamicMap``2(``0)">
             <summary>
-            Performs mapping based on configuration
+            Create a map between the <typeparamref name="TSource"/> and <typeparamref name="TDestination"/> types and execute the map
             </summary>
+            <typeparam name="TSource">Source type to use</typeparam>
+            <typeparam name="TDestination">Destination type to use</typeparam>
+            <param name="source">Source object to map from</param>
+            <returns>Mapped destination object</returns>
         </member>
-        <member name="P:AutoMapper.IMappingEngine.ConfigurationProvider">
+        <member name="M:AutoMapper.IDynamicMapper.DynamicMap``1(System.Object)">
             <summary>
-            Configuration provider for performaing maps
+            Create a map between the <paramref name="source"/> object and <typeparamref name="TDestination"/> types and execute the map.
+            Source type is inferred from the source object .
             </summary>
+            <typeparam name="TDestination">Destination type to use</typeparam>
+            <param name="source">Source object to map from</param>
+            <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``1(System.Object)">
+        <member name="M:AutoMapper.IDynamicMapper.DynamicMap(System.Object,System.Type,System.Type)">
+            <summary>
+            Create a map between the <paramref name="sourceType"/> and <paramref name="destinationType"/> types and execute the map.
+            Use this method when the source and destination types are not known until runtime.
+            </summary>
+            <param name="source">Source object to map from</param>
+            <param name="sourceType">Source type to use</param>
+            <param name="destinationType">Destination type to use</param>
+            <returns>Mapped destination object</returns>
+        </member>
+        <member name="M:AutoMapper.IDynamicMapper.DynamicMap``2(``0,``1)">
+            <summary>
+            Create a map between the <typeparamref name="TSource"/> and <typeparamref name="TDestination"/> types and execute the map to the existing destination object
+            </summary>
+            <typeparam name="TSource">Source type to use</typeparam>
+            <typeparam name="TDestination">Destination type to use</typeparam>
+            <param name="source">Source object to map from</param>
+            <param name="destination">Destination object to map into</param>
+        </member>
+        <member name="M:AutoMapper.IDynamicMapper.DynamicMap(System.Object,System.Object,System.Type,System.Type)">
+            <summary>
+            Create a map between the <paramref name="sourceType"/> and <paramref name="destinationType"/> types and execute the map to the existing destination object.
+            Use this method when the source and destination types are not known until runtime.
+            </summary>
+            <param name="source">Source object to map from</param>
+            <param name="destination"></param>
+            <param name="sourceType">Source type to use</param>
+            <param name="destinationType">Destination type to use</param>
+        </member>
+        <member name="M:AutoMapper.IMapper.Map``1(System.Object)">
             <summary>
             Execute a mapping from the source object to a new destination object.
             The source type is inferred from the source object.
@@ -215,7 +276,7 @@
             <param name="source">Source object to map from</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``1(System.Object,System.Action{AutoMapper.IMappingOperationOptions})">
+        <member name="M:AutoMapper.IMapper.Map``1(System.Object,System.Action{AutoMapper.IMappingOperationOptions})">
             <summary>
             Execute a mapping from the source object to a new destination object with supplied mapping options.
             </summary>
@@ -224,7 +285,7 @@
             <param name="opts">Mapping options</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``2(``0)">
+        <member name="M:AutoMapper.IMapper.Map``2(``0)">
             <summary>
             Execute a mapping from the source object to a new destination object.
             </summary>
@@ -233,7 +294,7 @@
             <param name="source">Source object to map from</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``2(``0,System.Action{AutoMapper.IMappingOperationOptions{``0,``1}})">
+        <member name="M:AutoMapper.IMapper.Map``2(``0,System.Action{AutoMapper.IMappingOperationOptions{``0,``1}})">
             <summary>
             Execute a mapping from the source object to a new destination object with supplied mapping options.
             </summary>
@@ -243,7 +304,7 @@
             <param name="opts">Mapping options</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``2(``0,``1)">
+        <member name="M:AutoMapper.IMapper.Map``2(``0,``1)">
             <summary>
             Execute a mapping from the source object to the existing destination object.
             </summary>
@@ -253,7 +314,7 @@
             <param name="destination">Destination object to map into</param>
             <returns>The mapped destination object, same instance as the <paramref name="destination"/> object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map``2(``0,``1,System.Action{AutoMapper.IMappingOperationOptions{``0,``1}})">
+        <member name="M:AutoMapper.IMapper.Map``2(``0,``1,System.Action{AutoMapper.IMappingOperationOptions{``0,``1}})">
             <summary>
             Execute a mapping from the source object to the existing destination object with supplied mapping options.
             </summary>
@@ -264,7 +325,7 @@
             <param name="opts">Mapping options</param>
             <returns>The mapped destination object, same instance as the <paramref name="destination"/> object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map(System.Object,System.Type,System.Type)">
+        <member name="M:AutoMapper.IMapper.Map(System.Object,System.Type,System.Type)">
             <summary>
             Execute a mapping from the source object to a new destination object with explicit <see cref="T:System.Type"/> objects
             </summary>
@@ -273,7 +334,7 @@
             <param name="destinationType">Destination type to create</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map(System.Object,System.Type,System.Type,System.Action{AutoMapper.IMappingOperationOptions})">
+        <member name="M:AutoMapper.IMapper.Map(System.Object,System.Type,System.Type,System.Action{AutoMapper.IMappingOperationOptions})">
             <summary>
             Execute a mapping from the source object to a new destination object with explicit <see cref="T:System.Type"/> objects and supplied mapping options.
             </summary>
@@ -283,7 +344,7 @@
             <param name="opts">Mapping options</param>
             <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map(System.Object,System.Object,System.Type,System.Type)">
+        <member name="M:AutoMapper.IMapper.Map(System.Object,System.Object,System.Type,System.Type)">
             <summary>
             Execute a mapping from the source object to existing destination object with explicit <see cref="T:System.Type"/> objects
             </summary>
@@ -293,7 +354,7 @@
             <param name="destinationType">Destination type to use</param>
             <returns>Mapped destination object, same instance as the <paramref name="destination"/> object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.Map(System.Object,System.Object,System.Type,System.Type,System.Action{AutoMapper.IMappingOperationOptions})">
+        <member name="M:AutoMapper.IMapper.Map(System.Object,System.Object,System.Type,System.Type,System.Action{AutoMapper.IMappingOperationOptions})">
             <summary>
             Execute a mapping from the source object to existing destination object with supplied mapping options and explicit <see cref="T:System.Type"/> objects
             </summary>
@@ -304,56 +365,14 @@
             <param name="opts">Mapping options</param>
             <returns>Mapped destination object, same instance as the <paramref name="destination"/> object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.DynamicMap``2(``0)">
+        <member name="P:AutoMapper.IMapper.ConfigurationProvider">
             <summary>
-            Create a map between the <typeparamref name="TSource"/> and <typeparamref name="TDestination"/> types and execute the map
+            Configuration provider for performaing maps
             </summary>
-            <typeparam name="TSource">Source type to use</typeparam>
-            <typeparam name="TDestination">Destination type to use</typeparam>
-            <param name="source">Source object to map from</param>
-            <returns>Mapped destination object</returns>
         </member>
-        <member name="M:AutoMapper.IMappingEngine.DynamicMap``1(System.Object)">
+        <member name="T:AutoMapper.IMappingEngine">
             <summary>
-            Create a map between the <paramref name="source"/> object and <typeparamref name="TDestination"/> types and execute the map.
-            Source type is inferred from the source object .
-            </summary>
-            <typeparam name="TDestination">Destination type to use</typeparam>
-            <param name="source">Source object to map from</param>
-            <returns>Mapped destination object</returns>
-        </member>
-        <member name="M:AutoMapper.IMappingEngine.DynamicMap(System.Object,System.Type,System.Type)">
-            <summary>
-            Create a map between the <paramref name="sourceType"/> and <paramref name="destinationType"/> types and execute the map.
-            Use this method when the source and destination types are not known until runtime.
-            </summary>
-            <param name="source">Source object to map from</param>
-            <param name="sourceType">Source type to use</param>
-            <param name="destinationType">Destination type to use</param>
-            <returns>Mapped destination object</returns>
-        </member>
-        <member name="M:AutoMapper.IMappingEngine.DynamicMap``2(``0,``1)">
-            <summary>
-            Create a map between the <typeparamref name="TSource"/> and <typeparamref name="TDestination"/> types and execute the map to the existing destination object
-            </summary>
-            <typeparam name="TSource">Source type to use</typeparam>
-            <typeparam name="TDestination">Destination type to use</typeparam>
-            <param name="source">Source object to map from</param>
-            <param name="destination">Destination object to map into</param>
-        </member>
-        <member name="M:AutoMapper.IMappingEngine.DynamicMap(System.Object,System.Object,System.Type,System.Type)">
-            <summary>
-            Create a map between the <paramref name="sourceType"/> and <paramref name="destinationType"/> types and execute the map to the existing destination object.
-            Use this method when the source and destination types are not known until runtime.
-            </summary>
-            <param name="source">Source object to map from</param>
-            <param name="destination"></param>
-            <param name="sourceType">Source type to use</param>
-            <param name="destinationType">Destination type to use</param>
-        </member>
-        <member name="T:AutoMapper.IMappingEngineRunner">
-            <summary>
-            Main entry point for executing maps
+            Performs mapping based on configuration
             </summary>
         </member>
         <member name="T:AutoMapper.IMappingExpression">
@@ -762,11 +781,6 @@
             </summary>
             <param name="constructor"></param>
         </member>
-        <member name="P:AutoMapper.IMappingOperationOptions.CreateMissingTypeMaps">
-            <summary>
-            Create any missing type maps, if found
-            </summary>
-        </member>
         <member name="P:AutoMapper.IMappingOperationOptions.Items">
             <summary>
             Add context items to be accessed at map time inside an <see cref="T:AutoMapper.IValueResolver"/> or <see cref="T:AutoMapper.ITypeConverter`2"/>
@@ -861,11 +875,6 @@
         <member name="P:AutoMapper.IMappingOptions.ConstructorMappingEnabled">
             <summary>
             Allow mapping to constructors that accept arguments
-            </summary>
-        </member>
-        <member name="P:AutoMapper.IMappingOptions.DataReaderMapperYieldReturnEnabled">
-            <summary>
-            For mapping via data readers, enable lazy returning of values instead of immediate evalaution
             </summary>
         </member>
         <member name="P:AutoMapper.IMappingOptions.SourceExtensionMethods">
@@ -1036,15 +1045,14 @@
             Mapping execution strategy, as a chain of responsibility
             </summary>
         </member>
-        <member name="M:AutoMapper.IObjectMapper.Map(AutoMapper.ResolutionContext,AutoMapper.IMappingEngineRunner)">
+        <member name="M:AutoMapper.IObjectMapper.Map(AutoMapper.ResolutionContext)">
             <summary>
             Performs a map
             </summary>
             <param name="context">Resolution context</param>
-            <param name="mapper">Mapping engine runner</param>
             <returns>Mapped object</returns>
         </member>
-        <member name="M:AutoMapper.IObjectMapper.IsMatch(AutoMapper.ResolutionContext)">
+        <member name="M:AutoMapper.IObjectMapper.IsMatch(AutoMapper.TypePair)">
             <summary>
             When true, the mapping engine will use this mapper as the strategy
             </summary>
@@ -1078,6 +1086,11 @@
             Configuration for profile-specific maps
             </summary>
         </member>
+        <member name="M:AutoMapper.IProfileExpression.DisableConstructorMapping">
+            <summary>
+            Disable constructor mapping. Use this if you don't intend to have AutoMapper try to map to constructors
+            </summary>
+        </member>
         <member name="M:AutoMapper.IProfileExpression.CreateMap``2">
             <summary>
             Creates a mapping configuration from the <typeparamref name="TSource"/> type to the <typeparamref name="TDestination"/> type
@@ -1093,17 +1106,6 @@
             </summary>
             <typeparam name="TSource">Source type</typeparam>
             <typeparam name="TDestination">Destination type</typeparam>
-            <param name="memberList">Member list to validate</param>
-            <returns>Mapping expression for more configuration options</returns>
-        </member>
-        <member name="M:AutoMapper.IProfileExpression.CreateMap``2(System.String,AutoMapper.MemberList)">
-            <summary>
-            Creates a mapping configuration from the <typeparamref name="TSource"/> type to the <typeparamref name="TDestination"/> type.
-            Specify the member list to validate against during configuration validation.
-            </summary>
-            <typeparam name="TSource">Source type</typeparam>
-            <typeparam name="TDestination">Destination type</typeparam>
-            <param name="profileName">Profile name</param>
             <param name="memberList">Member list to validate</param>
             <returns>Mapping expression for more configuration options</returns>
         </member>
@@ -1124,17 +1126,6 @@
             <param name="sourceType">Source type</param>
             <param name="destinationType">Destination type</param>
             <param name="memberList">Member list to validate</param>
-            <returns>Mapping expression for more configuration options</returns>
-        </member>
-        <member name="M:AutoMapper.IProfileExpression.CreateMap(System.Type,System.Type,AutoMapper.MemberList,System.String)">
-            <summary>
-            Creates a mapping configuration from the source type to the destination type.
-            Specify the member list to validate against during configuration validation.
-            </summary>
-            <param name="sourceType">Source type</param>
-            <param name="destinationType">Destination type</param>
-            <param name="memberList">Member list to validate</param>
-            <param name="profileName">Profile name</param>
             <returns>Mapping expression for more configuration options</returns>
         </member>
         <member name="M:AutoMapper.IProfileExpression.ClearPrefixes">
@@ -1204,6 +1195,11 @@
         <member name="P:AutoMapper.IProfileExpression.DestinationMemberNamingConvention">
             <summary>
             Naming convention for destination members
+            </summary>
+        </member>
+        <member name="P:AutoMapper.IProfileExpression.CreateMissingTypeMaps">
+            <summary>
+            Create missing type maps during mapping, if necessary
             </summary>
         </member>
         <member name="M:AutoMapper.IProfileExpression.ForAllMaps(System.Action{AutoMapper.TypeMap,AutoMapper.IMappingExpression})">
@@ -1481,7 +1477,7 @@
             <param name="sourceType">Source type to use</param>
             <param name="destinationType">Destination type to use</param>
         </member>
-        <member name="M:AutoMapper.Mapper.Initialize(System.Action{AutoMapper.IConfiguration})">
+        <member name="M:AutoMapper.Mapper.Initialize(System.Action{AutoMapper.IMapperConfiguration})">
             <summary>
             Initializes the mapper with the supplied configuration. Runtime optimization complete after this method is called.
             This is the preferred means to configure AutoMapper.
@@ -1713,6 +1709,16 @@
             Current mapping engine
             </summary>
         </member>
+        <member name="P:AutoMapper.ResolutionContext.ConfigurationProvider">
+            <summary>
+            Current configuration
+            </summary>
+        </member>
+        <member name="P:AutoMapper.ResolutionContext.Types">
+            <summary>
+            Source and destination type pair
+            </summary>
+        </member>
         <member name="T:AutoMapper.ResolutionResult">
             <summary>
             Represents the result of resolving a value
@@ -1849,31 +1855,7 @@
             Queryable extensions for AutoMapper
             </summary>
         </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.CreateMapExpression``2(AutoMapper.IMappingEngine,System.Collections.Generic.IDictionary{System.String,System.Object},System.Reflection.MemberInfo[])">
-            <summary>
-            Create an expression tree representing a mapping from the <typeparamref name="TSource"/> type to <typeparamref name="TDestination"/> type
-            Includes flattening and expressions inside MapFrom member configuration
-            </summary>
-            <typeparam name="TSource">Source Type</typeparam>
-            <typeparam name="TDestination">Destination Type</typeparam>
-            <param name="mappingEngine">Mapping engine instance</param>
-            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
-            <param name="membersToExpand">Expand members explicitly previously marked as members to explicitly expand</param>
-            <returns>Expression tree mapping source to destination type</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.CreateMapExpression(AutoMapper.IMappingEngine,System.Type,System.Type,System.Collections.Generic.IDictionary{System.String,System.Object},System.Reflection.MemberInfo[])">
-            <summary>
-            Create an expression tree representing a mapping from the source type to destination type
-            Includes flattening and expressions inside MapFrom member configuration
-            </summary>
-            <param name="mappingEngine">Mapping engine instance</param>
-            <param name="sourceType">Source Type</param>
-            <param name="destinationType">Destination Type</param>
-            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
-            <param name="membersToExpand">Expand members explicitly previously marked as members to explicitly expand</param>
-            <returns>Expression tree mapping source to destination type</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.Map``2(System.Linq.IQueryable{``0},System.Linq.IQueryable{``1})">
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.Map``2(System.Linq.IQueryable{``0},System.Linq.IQueryable{``1},AutoMapper.IConfigurationProvider)">
             <summary>
             Maps a queryable expression of a source type to a queryable expression of a destination type
             </summary>
@@ -1881,90 +1863,39 @@
             <typeparam name="TDestination">Destination type</typeparam>
             <param name="sourceQuery">Source queryable</param>
             <param name="destQuery">Destination queryable</param>
+            <param name="config"></param>
             <returns>Mapped destination queryable</returns>
         </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.Map``2(System.Linq.IQueryable{``0},System.Linq.IQueryable{``1},AutoMapper.IMappingEngine)">
-            <summary>
-            Maps a queryable expression of a source type to a queryable expression of a destination type
-            </summary>
-            <typeparam name="TSource">Source type</typeparam>
-            <typeparam name="TDestination">Destination type</typeparam>
-            <param name="sourceQuery">Source queryable</param>
-            <param name="destQuery">Destination queryable</param>
-            <param name="mappingEngine">Mapping engine instance</param>
-            <returns>Mapped destination queryable</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.Project``1(System.Linq.IQueryable{``0})">
-            <summary>
-            Extension method to project from a queryable using the static <see cref="P:AutoMapper.Mapper.Engine"/> property.
-            Due to generic parameter inference, you need to call Project().To to execute the map
-            </summary>
-            <remarks>Projections are only calculated once and cached</remarks>
-            <typeparam name="TSource">Source type</typeparam>
-            <param name="source">Queryable source</param>
-            <returns>Expression to project into</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.Project``1(System.Linq.IQueryable{``0},AutoMapper.IMappingEngine)">
-            <summary>
-            Extension method to project from a queryable using the provided mapping engine
-            Due to generic parameter inference, you need to call Project().To to execute the map
-            </summary>
-            <remarks>Projections are only calculated once and cached</remarks>
-            <typeparam name="TSource">Source type</typeparam>
-            <param name="source">Queryable source</param>
-            <param name="mappingEngine">Mapping engine instance</param>
-            <returns>Expression to project into</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Object,AutoMapper.IMappingEngine,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,AutoMapper.IConfigurationProvider,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
             <summary>
             Extension method to project from a queryable using the provided mapping engine
             </summary>
             <remarks>Projections are only calculated once and cached</remarks>
             <typeparam name="TDestination">Destination type</typeparam>
             <param name="source">Queryable source</param>
-            <param name="mappingEngine">Mapping engine instance</param>
+            <param name="configuration">Maper configuration</param>
             <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
             <param name="membersToExpand">Explicit members to expand</param>
             <returns>Expression to project into</returns>
         </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,AutoMapper.IConfigurationProvider,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
             <summary>
             Extension method to project from a queryable using the provided mapping engine
             </summary>
             <remarks>Projections are only calculated once and cached</remarks>
             <typeparam name="TDestination">Destination type</typeparam>
             <param name="source">Queryable source</param>
-            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
+            <param name="configuration">Mapper configuration</param>
             <param name="membersToExpand">Explicit members to expand</param>
             <returns>Expression to project into</returns>
         </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
-            <summary>
-            Extension method to project from a queryable using the provided mapping engine
-            </summary>
-            <remarks>Projections are only calculated once and cached</remarks>
-            <typeparam name="TDestination">Destination type</typeparam>
-            <param name="source">Queryable source</param>
-            <param name="membersToExpand">Explicit members to expand</param>
-            <returns>Expression to project into</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Collections.Generic.IDictionary{System.String,System.Object},AutoMapper.IMappingEngine,System.String[])">
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,AutoMapper.IConfigurationProvider,System.Collections.Generic.IDictionary{System.String,System.Object},System.String[])">
             <summary>
             Projects the source type to the destination type given the mapping configuration
             </summary>
             <typeparam name="TDestination">Destination type to map to</typeparam>
             <param name="source">Queryable source</param>
-            <param name="mappingEngine">Mapping engine instance</param>
-            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
-            <param name="membersToExpand">Explicit members to expand</param>
-            <returns>Queryable result, use queryable extension methods to project and execute result</returns>
-        </member>
-        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Collections.Generic.IDictionary{System.String,System.Object},System.String[])">
-            <summary>
-            Projects the source type to the destination type given the mapping configuration
-            </summary>
-            <typeparam name="TDestination">Destination type to map to</typeparam>
-            <param name="source">Queryable source</param>
+            <param name="configuration">Mapper configuration</param>
             <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
             <param name="membersToExpand">Explicit members to expand</param>
             <returns>Queryable result, use queryable extension methods to project and execute result</returns>
@@ -2025,63 +1956,6 @@
             <param name="membersToExpand">>Explicit members to expand</param>
             <param name="parameters">Parameters for parameterized mapping expressions</param>
             <returns>Queryable result, use queryable extension methods to project and execute result</returns>
-        </member>
-        <member name="T:System.AggregateException">
-            <summary>Represents one or more errors that occur during application execution.</summary>
-            <remarks>
-            <see cref="T:System.AggregateException"/> is used to consolidate multiple failures into a single, throwable
-            exception object.
-            </remarks>
-        </member>
-        <member name="M:System.AggregateException.#ctor(System.Collections.Generic.IEnumerable{System.Exception})">
-            <summary>
-            Initializes a new instance of the <see cref="T:System.AggregateException"/> class with
-            references to the inner exceptions that are the cause of this exception.
-            </summary>
-            <param name="innerExceptions">The exceptions that are the cause of the current exception.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="innerExceptions"/> argument
-            is null.</exception>
-            <exception cref="T:System.ArgumentException">An element of <paramref name="innerExceptions"/> is
-            null.</exception>
-        </member>
-        <member name="M:System.AggregateException.#ctor(System.String,System.Collections.Generic.IList{System.Exception})">
-            <summary>
-            Allocates a new aggregate exception with the specified message and list of inner exceptions.
-            </summary>
-            <param name="message">The error message that explains the reason for the exception.</param>
-            <param name="innerExceptions">The exceptions that are the cause of the current exception.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="innerExceptions"/> argument
-            is null.</exception>
-            <exception cref="T:System.ArgumentException">An element of <paramref name="innerExceptions"/> is
-            null.</exception>
-        </member>
-        <member name="M:System.AggregateException.GetBaseException">
-            <summary>
-            Returns the <see cref="T:System.AggregateException"/> that is the root cause of this exception.
-            </summary>
-        </member>
-        <member name="P:System.AggregateException.InnerExceptions">
-            <summary>
-            Gets a read-only collection of the <see cref="T:System.Exception"/> instances that caused the
-            current exception.
-            </summary>
-        </member>
-        <member name="M:System.AggregateException.ToString">
-            <summary>
-            Creates and returns a string representation of the current <see cref="T:System.AggregateException"/>.
-            </summary>
-            <returns>A string representation of the current exception.</returns>
-        </member>
-        <member name="P:System.AggregateException.InnerExceptionCount">
-            <summary>
-            This helper property is used by the DebuggerDisplay.
-            
-            Note that we don't want to remove this property and change the debugger display to {InnerExceptions.Count} 
-            because DebuggerDisplay should be a single property access or parameterless method call, so that the debugger 
-            can use a fast path without using the expression evaluator.
-            
-            See http://msdn.microsoft.com/en-us/library/x810d419.aspx
-            </summary>
         </member>
     </members>
 </doc>
