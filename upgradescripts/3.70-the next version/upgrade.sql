@@ -1,4 +1,4 @@
-﻿--upgrade scripts from nopCommerce 3.60 to 3.70
+﻿--upgrade scripts from nopCommerce 3.70 to next version
 
 --new locale resources
 declare @resources xml
@@ -31,6 +31,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="ActivityLog.DeleteTopic">
     <Value>Deleted a topic (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.DeleteOrder">
+    <Value>Deleted an order (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.EditOrder">
+    <Value>Edited an order (ID = {0}). See order notes for details</Value>
+  </LocaleResource>
+    <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
+    <Value>Restricted products [and quantity range]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
+    <Value>Restricted products [and quantity range]</Value>
   </LocaleResource>
 </Language>
 '
@@ -152,5 +164,19 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditTop
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'EditTopic', N'Edit a topic', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'DeleteOrder')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'DeleteOrder', N'Delete an order', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'EditOrder')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'EditOrder', N'Edit an order', N'true')
 END
 GO

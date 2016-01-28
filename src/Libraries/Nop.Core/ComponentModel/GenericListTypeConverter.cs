@@ -31,16 +31,7 @@ namespace Nop.Core.ComponentModel
         /// <returns>Array</returns>
         protected virtual string[] GetStringArray(string input)
         {
-            if (!String.IsNullOrEmpty(input))
-            {
-                var result = input
-                    .Split(',')
-                    .Select(x => x.Trim())
-                    .ToArray();
-                return result;
-            }
-
-            return new string[0];
+            return string.IsNullOrEmpty(input) ? new string[0] : input.Split(',').Select(x => x.Trim()).ToArray();
         }
 
         /// <summary>
@@ -53,7 +44,6 @@ namespace Nop.Core.ComponentModel
         /// <returns>Result</returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-
             if (sourceType == typeof(string))
             {
                 string[] items = GetStringArray(sourceType.ToString());

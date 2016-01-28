@@ -9583,6 +9583,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteOrder",
+                                                  Enabled = true,
+                                                  Name = "Delete an order"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteProduct",
                                                   Enabled = true,
                                                   Name = "Delete a product"
@@ -9664,6 +9670,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditManufacturer",
                                                   Enabled = true,
                                                   Name = "Edit a manufacturer"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditOrder",
+                                                  Enabled = true,
+                                                  Name = "Edit an order"
                                               },
                                           new ActivityLogType
                                               {

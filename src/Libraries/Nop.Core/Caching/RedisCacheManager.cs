@@ -119,6 +119,7 @@ namespace Nop.Core.Caching
         public virtual void Remove(string key)
         {
             _db.KeyDelete(key);
+            _perRequestCacheManager.Remove(key);
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace Nop.Core.Caching
                 var server = _muxer.GetServer(ep);
                 var keys = server.Keys(pattern: "*" + pattern + "*");
                 foreach (var key in keys)
-                    _db.KeyDelete(key);
+                    Remove(key);
             }
         }
 
@@ -151,7 +152,7 @@ namespace Nop.Core.Caching
                 //that's why we simply interate through all elements now
                 var keys = server.Keys();
                 foreach (var key in keys)
-                    _db.KeyDelete(key);
+                    Remove(key);
             }
         }
 
