@@ -44,5 +44,15 @@ namespace Nop.Core.Caching
                 cacheManager.Set(key, result, cacheTime);
             return result;
         }
+
+        public static void RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
+        {
+            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            var keysToRemove = keys.Where(key => key != null && regex.IsMatch(key)).Select(key => key).ToList();
+            foreach (var key in keysToRemove)
+            {
+                obj.Remove(key);
+            }
+        }
     }
 }

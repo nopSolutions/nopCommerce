@@ -74,17 +74,7 @@ namespace Nop.Core.Caching
         /// <param name="pattern">pattern</param>
         public virtual void RemoveByPattern(string pattern)
         {
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var keysToRemove = new List<string>();
-
-            foreach (var item in Cache)
-                if (regex.IsMatch(item.Key))
-                    keysToRemove.Add(item.Key);
-
-            foreach (string key in keysToRemove)
-            {
-                Remove(key);
-            }
+            this.RemoveByPattern(pattern, Cache.Select(p => p.Key));
         }
 
         /// <summary>
