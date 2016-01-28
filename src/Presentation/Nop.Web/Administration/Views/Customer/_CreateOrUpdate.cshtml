@@ -673,68 +673,76 @@
 }
 @helper TabRewardPoints()
     {
-    <div id="customer-rewardpoints-grid"></div>
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="customer-rewardpoints-grid"></div>
         
-    <script>
-        $(document).ready(function () {
-            $("#customer-rewardpoints-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    numeric: false,
-                    previousNext: false,
-                    info: false
-                },
-                editable: {
-                    confirmation: false,
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "StoreName",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
-                },{
-                    field: "Points",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
-                }, {
-                    field: "PointsBalance",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
-                },{
-                    field: "Message",
-                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
-                },{
-                    field: "CreatedOn",
-                    title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                    width: 200,
-                    type: "date",
-                    format: "{0:G}"
-                }]
-            });
-        });
-    </script>
+                    <script>
+                        $(document).ready(function () {
+                            $("#customer-rewardpoints-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "StoreName",
+                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
+                                },{
+                                    field: "Points",
+                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
+                                }, {
+                                    field: "PointsBalance",
+                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
+                                },{
+                                    field: "Message",
+                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
+                                },{
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }]
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>
     <p>
         <strong>
             @T("Admin.Customers.Customers.RewardPoints.AddTitle")

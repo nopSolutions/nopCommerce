@@ -1515,7 +1515,7 @@ namespace Nop.Admin.Controllers
         #region Reward points history
 
         [HttpPost]
-        public ActionResult RewardPointsHistorySelect(int customerId)
+        public ActionResult RewardPointsHistorySelect(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1524,23 +1524,22 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
 
-            var model = new List<CustomerModel.RewardPointsHistoryModel>();
-            foreach (var rph in _rewardPointService.GetRewardPointsHistory(customer.Id, true))
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, true, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
             {
-                var store = _storeService.GetStoreById(rph.StoreId);
-                model.Add(new CustomerModel.RewardPointsHistoryModel
+                Data = rewardPoints.Select(rph =>
+                {
+                    var store = _storeService.GetStoreById(rph.StoreId);
+                    return new CustomerModel.RewardPointsHistoryModel
                     {
                         StoreName = store != null ? store.Name : "Unknown",
                         Points = rph.Points,
                         PointsBalance = rph.PointsBalance,
                         Message = rph.Message,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                    });
-            } 
-            var gridModel = new DataSourceResult
-            {
-                Data = model,
-                Total = model.Count
+                    };
+                }),
+                Total = rewardPoints.TotalCount
             };
 
             return Json(gridModel);

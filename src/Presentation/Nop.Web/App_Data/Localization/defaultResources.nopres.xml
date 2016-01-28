@@ -6144,6 +6144,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse.Hint">
     <Value>Customers won't be able to use reward points before they have X amount of points. Set to 0 if you do not want to use this setting.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize">
+    <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
+    <Value>Page size is for history of reward points in account page.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PointsAccumulatedForAllStores">
     <Value>Points accumulated for all stores</Value>
   </LocaleResource>
