@@ -13,6 +13,7 @@ using Nop.Services.Stores;
 using Nop.Services.Topics;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -280,6 +281,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [AdminAntiForgery]
         public ActionResult Create(TopicModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
@@ -356,6 +358,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
+        [AdminAntiForgery]
         public ActionResult Edit(TopicModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
@@ -414,6 +417,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
+        [AdminAntiForgery]
         public ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
