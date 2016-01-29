@@ -45,11 +45,17 @@ namespace Nop.Core.Caching
             return result;
         }
 
-        public static void RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
+        /// <summary>
+        /// Removes items by pattern
+        /// </summary>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="pattern">Pattern</param>
+        /// <param name="keys">All keys in the cache</param>
+        public static void RemoveByPattern(this ICacheManager cacheManager, string pattern, IEnumerable<string> keys)
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
             foreach (var key in keys.Where(p => regex.IsMatch(p.ToString())).ToList())
-                obj.Remove(key);
+                cacheManager.Remove(key);
         }
     }
 }
