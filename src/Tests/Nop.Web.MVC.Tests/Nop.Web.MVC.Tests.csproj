@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Admin\Controllers\CategoryControllerTests.cs" />
     <Compile Include="Admin\Infrastructure\AutoMapperConfigurationTest.cs" />
+    <Compile Include="Admin\Validators\Category\CategoryValidatorTests.cs" />
     <Compile Include="Events\DateTimeConsumer.cs" />
     <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Framework\Controllers\AdminAuthorizeAttributeTests.cs" />
@@ -130,8 +131,8 @@
     <Compile Include="Public\Validators\Blogs\BlogPostValidatorTests.cs" />
     <Compile Include="Public\Validators\Boards\EditForumTopicValidatorTests.cs" />
     <Compile Include="Public\Validators\Boards\EditForumPostValidatorTests.cs" />
-    <Compile Include="Public\Validators\Catalog\ProductReviewsValidatorTests.cs" />
     <Compile Include="Public\Validators\Catalog\ProductEmailAFriendValidatorTests.cs" />
+    <Compile Include="Public\Validators\Catalog\ProductReviewsValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\AddressValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\ContactVendorValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\ContactUsValidatorTests.cs" />
