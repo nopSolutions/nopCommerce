@@ -48,7 +48,7 @@ namespace Nop.Core.Caching
         public static void RemoveByPattern(this ICacheManager obj, string pattern, IEnumerable<string> keys)
         {
             var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            foreach (var key in keys.Where(p => regex.IsMatch(p.ToString())))
+            foreach (var key in keys.Where(p => regex.IsMatch(p.ToString())).ToList())
                 obj.Remove(key);
         }
     }
