@@ -4,7 +4,7 @@ using Nop.Admin.Validators.Catalog;
 using Nop.Web.MVC.Tests.Public.Validators;
 using NUnit.Framework;
 
-namespace Nop.Web.MVC.Tests.Admin.Validators.Category
+namespace Nop.Web.MVC.Tests.Admin.Validators.Catalog
 {
     [TestFixture]
     public class CategoryValidatorTests : BaseValidatorTests
@@ -25,6 +25,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Category
             _validator.ShouldHaveValidationErrorFor(x => x.PageSizeOptions, model);
         }
 
+        [Test]
         public void Should_not_have_error_when_pageSizeOptions_has_not_duplicate_items()
         {
             var model = new CategoryModel();
@@ -32,6 +33,7 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Category
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
         }
 
+        [Test]
         public void Should_not_have_error_when_pageSizeOptions_is_null_or_empty()
         {
             var model = new CategoryModel();
@@ -40,7 +42,5 @@ namespace Nop.Web.MVC.Tests.Admin.Validators.Category
             model.PageSizeOptions = "";
             _validator.ShouldNotHaveValidationErrorFor(x => x.PageSizeOptions, model);
         }
-
-
     }
 }
