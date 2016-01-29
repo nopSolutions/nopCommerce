@@ -12,7 +12,7 @@ namespace Nop.Admin.Validators.Catalog
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.Name.Required"));
 
-            RuleFor(x => x.PageSizeOptions).Must(UniqueOptionValidator).WithMessage("Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems");
+            RuleFor(x => x.PageSizeOptions).Must(UniqueOptionValidator).WithMessage(localizationService.GetResource("Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems"));
         }
 
         private bool UniqueOptionValidator(string input)
