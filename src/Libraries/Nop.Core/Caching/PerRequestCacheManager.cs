@@ -107,21 +107,7 @@ namespace Nop.Core.Caching
             if (items == null)
                 return;
 
-            var enumerator = items.GetEnumerator();
-            var regex = new Regex(pattern, RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            var keysToRemove = new List<string>();
-            while (enumerator.MoveNext())
-            {
-                if (regex.IsMatch(enumerator.Key.ToString()))
-                {
-                    keysToRemove.Add(enumerator.Key.ToString());
-                }
-            }
-
-            foreach (string key in keysToRemove)
-            {
-                items.Remove(key);
-            }
+            this.RemoveByPattern(pattern, items.Keys.Cast<object>().Select(p => p.ToString()));
         }
 
         /// <summary>
