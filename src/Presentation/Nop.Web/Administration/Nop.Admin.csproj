@@ -374,6 +374,7 @@
     <Compile Include="Validators\Common\AddressValidator.cs" />
     <Compile Include="Validators\Shipping\WarehouseValidator.cs" />
     <Compile Include="Validators\Shipping\DeliveryDateValidator.cs" />
+    <Compile Include="Validators\ValidatorUtilities.cs" />
     <Compile Include="Validators\Vendors\VendorValidator.cs" />
     <Compile Include="Validators\Stores\StoreValidator.cs" />
     <Compile Include="Validators\Tasks\ScheduleTaskValidator.cs" />
