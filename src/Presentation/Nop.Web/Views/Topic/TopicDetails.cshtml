@@ -82,6 +82,7 @@
     <div class="topic-password" id="ph-password">
         @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
+            @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.Id)
             <div class="enter-password-title">
                 @T("Topic.EnterPassword")
