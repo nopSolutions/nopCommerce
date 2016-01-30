@@ -1,4 +1,4 @@
-﻿using System.Xml;
+﻿﻿using System.Xml;
 
 namespace Nop.Core
 {
@@ -7,7 +7,7 @@ namespace Nop.Core
         public static bool IsNullOrDefault<T>(this T? value) where T : struct
         {
             return default(T).Equals(value.GetValueOrDefault());
-        }
+        }  
 
         public static string ElText(this XmlNode node, string elName)
         {

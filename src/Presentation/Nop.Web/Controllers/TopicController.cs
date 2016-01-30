@@ -191,6 +191,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
+        [PublicAntiForgery]
         public ActionResult Authenticate(int id, string password)
         {
             var authResult = false;
