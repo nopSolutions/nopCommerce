@@ -633,7 +633,7 @@ namespace Nop.Admin.Controllers
                 .Select(cr => cr.ToModel())
                 .ToList();
 
-            // Precheck Registered Role as a default role while creating a new customer
+            // Precheck Registered Role as a default role while creating a new customer through admin
             if(model.SelectedCustomerRoleIds==null && customer==null && model.AvailableCustomerRoles.Count>0)
             {
                 model.SelectedCustomerRoleIds = new[] {model.AvailableCustomerRoles
