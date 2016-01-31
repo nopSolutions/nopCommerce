@@ -32,11 +32,13 @@ namespace Nop.Web.Models.Customer
         public bool CheckUsernameAvailabilityEnabled { get; set; }
 
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.Fields.Password")]
         [AllowHtml]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.Fields.ConfirmPassword")]
         [AllowHtml]
         public string ConfirmPassword { get; set; }
