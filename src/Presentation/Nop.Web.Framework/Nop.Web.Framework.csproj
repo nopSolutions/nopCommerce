@@ -155,6 +155,7 @@
     <Compile Include="Kendoui\QueryableExtensions.cs" />
     <Compile Include="Menu\SiteMapNode.cs" />
     <Compile Include="Menu\XmlSiteMap.cs" />
+    <Compile Include="Mvc\NoTrimAttribute.cs" />
     <Compile Include="Mvc\DependencyRegistrarExtensions.cs" />
     <Compile Include="Mvc\NullJsonResult.cs" />
     <Compile Include="Security\Honeypot\HoneypotValidatorAttribute.cs" />
