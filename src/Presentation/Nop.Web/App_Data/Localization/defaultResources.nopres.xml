@@ -853,91 +853,91 @@
     <Value>Address</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes">
-	<Value>Custom address attributes</Value>
+    <Value>Custom address attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.AddNew">
-	<Value>Add a new address attribute</Value>
+    <Value>Add a new address attribute</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.BackToList">
-	<Value>back to address attribute list</Value>
+    <Value>back to address attribute list</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Description">
-	<Value>If the default form fields are not enough for your needs, then you can manage additional address attributes below.</Value>
+    <Value>If the default form fields are not enough for your needs, then you can manage additional address attributes below.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.EditAttributeDetails">
-	<Value>Edit address attribute details</Value>
+    <Value>Edit address attribute details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Info">
-	<Value>Attribute info</Value>
+    <Value>Attribute info</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Added">
-	<Value>The new attribute has been added successfully.</Value>
+    <Value>The new attribute has been added successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Deleted">
-	<Value>The attribute has been deleted successfully.</Value>
+    <Value>The attribute has been deleted successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Updated">
-	<Value>The attribute has been updated successfully.</Value>
+    <Value>The attribute has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name">
-	<Value>Name</Value>
+    <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name.Required">
-	<Value>Please provide a name.</Value>
+    <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.Name.Hint">
-	<Value>The name of the address attribute.</Value>
+    <Value>The name of the address attribute.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired">
-	<Value>Required</Value>
+    <Value>Required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.IsRequired.Hint">
-	<Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
+    <Value>When an attribute is required, the customer must choose an appropriate attribute value before they can continue.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.AttributeControlType">
-	<Value>Control type</Value>
+    <Value>Control type</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.AttributeControlType.Hint">
-	<Value>Choose how to display your attribute values.</Value>
+    <Value>Choose how to display your attribute values.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.DisplayOrder">
-	<Value>Display order</Value>
+    <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Fields.DisplayOrder.Hint">
-	<Value>The address attribute display order. 1 represents the first item in the list.</Value>
+    <Value>The address attribute display order. 1 represents the first item in the list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values">
-	<Value>Attribute values</Value>
+    <Value>Attribute values</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.AddNew">
-	<Value>Add a new address value</Value>
+    <Value>Add a new address value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.EditValueDetails">
-	<Value>Edit address value details</Value>
+    <Value>Edit address value details</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.SaveBeforeEdit">
-	<Value>You need to save the address attribute before you can add values for this address attribute page.</Value>
+    <Value>You need to save the address attribute before you can add values for this address attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name">
-	<Value>Name</Value>
+    <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name.Required">
-	<Value>Please provide a name.</Value>
+    <Value>Please provide a name.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.Name.Hint">
-	<Value>The name of the address value.</Value>
+    <Value>The name of the address value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.IsPreSelected">
-	<Value>Pre-selected</Value>
+    <Value>Pre-selected</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.IsPreSelected.Hint">
-	<Value>Determines whether this attribute value is pre selected for the address.</Value>
+    <Value>Determines whether this attribute value is pre selected for the address.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.DisplayOrder">
-	<Value>Display order</Value>
+    <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.AddressAttributes.Values.Fields.DisplayOrder.Hint">
-	<Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
+    <Value>The display order of the attribute value. 1 represents the first item in attribute value list.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Address.Fields.Address1">
     <Value>Address 1</Value>
@@ -4089,17 +4089,11 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Localization">
-    <Value>Localization</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources">
-    <Value>Language resources</Value>
+    <Value>String resources</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
     <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.LanguageName">
-    <Value>Language</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name">
     <Value>Resource name</Value>
@@ -4116,11 +4110,8 @@
   <LocaleResource Name="Admin.Configuration.Languages.Resources.NameAlreadyExists">
     <Value>A resource already exists with the name: {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
-    <Value>View string resources</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Select">
-    <Value>Select a language</Value>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
+    <Value>You need to save the language before you can make or change resources for this language.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Stores">
     <Value>Stores</Value>
@@ -7195,34 +7186,34 @@
     <Value>Stores</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test">
-	<Value>Test template</Value>
+    <Value>Test template</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.BackToTemplate">
-	<Value>back to template</Value>
+    <Value>back to template</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Send">
-	<Value>Send</Value>
+    <Value>Send</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo">
-	<Value>Send email to</Value>
+    <Value>Send email to</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.SendTo.Hint">
-	<Value>Send test email to ensure that everything is properly configured.</Value>
+    <Value>Send test email to ensure that everything is properly configured.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Success">
     <Value>Email has been successfully queued.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens">
-	<Value>Tokens</Value>
+    <Value>Tokens</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Description">
-	<Value>Please enter tokens you want to be replaced below</Value>
+    <Value>Please enter tokens you want to be replaced below</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Test.Tokens.Hint">
-	<Value>Enter tokens.</Value>
+    <Value>Enter tokens.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.TestDetails">
-	<Value>Send test email</Value>
+    <Value>Send test email</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Updated">
     <Value>The message template has been updated successfully.</Value>

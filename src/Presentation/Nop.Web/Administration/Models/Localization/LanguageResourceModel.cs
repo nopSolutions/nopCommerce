@@ -17,10 +17,6 @@ namespace Nop.Admin.Models.Localization
         [AllowHtml]
         public string Value { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Languages.Resources.Fields.LanguageName")]
-        [AllowHtml]
-        public string LanguageName { get; set; }
-
         public int LanguageId { get; set; }
     }
 }
