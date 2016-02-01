@@ -27,7 +27,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         {
             return new List<string>
             { 
-                "body_end_html_tag_before"
+                "head_html_tag"
             };
         }
 
