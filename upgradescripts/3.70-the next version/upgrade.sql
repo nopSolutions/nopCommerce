@@ -62,6 +62,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.StringResources">
     <Value>String resources</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
+    <Value></Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
     <Value></Value>
   </LocaleResource>

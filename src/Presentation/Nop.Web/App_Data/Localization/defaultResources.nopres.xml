@@ -4089,9 +4089,6 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources">
-    <Value>Language resources</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
     <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
   </LocaleResource>
