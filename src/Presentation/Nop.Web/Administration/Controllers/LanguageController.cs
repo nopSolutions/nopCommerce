@@ -320,30 +320,10 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-		#endregion
+        #endregion
 
-		#region Resources
-
-		public ActionResult Resources(int languageId)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
-                return AccessDeniedView();
-
-            //TODO do not use ViewBag, create a model
-			ViewBag.AllLanguages = _languageService.GetAllLanguages(true)
-                .Select(x => new SelectListItem
-                {
-                    Selected = (x.Id.Equals(languageId)),
-                    Text = x.Name,
-                    Value = x.Id.ToString()
-                }).ToList();
-		    var language = _languageService.GetLanguageById(languageId);
-		    ViewBag.LanguageId = languageId;
-		    ViewBag.LanguageName = language.Name;
-
-			return View();
-		}
-
+        #region Resources
+        
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
