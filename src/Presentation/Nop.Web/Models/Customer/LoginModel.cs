@@ -22,6 +22,7 @@ namespace Nop.Web.Models.Customer
         public string Username { get; set; }
 
         [DataType(DataType.Password)]
+        [NoTrim]
         [NopResourceDisplayName("Account.Login.Fields.Password")]
         [AllowHtml]
         public string Password { get; set; }
