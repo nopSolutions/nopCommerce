@@ -24,7 +24,7 @@
             @T("Admin.Configuration.Languages.Stores")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.Resources.View")
+            @T("Admin.Configuration.Languages.StringResources")
         </li>
     </ul>
     <div>
@@ -225,7 +225,7 @@
                 }
                 else
                 {
-                    @T("Admin.Configuration.Languages.Resources.BeforeSaveNewLanguageInformation")
+                    @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
                 }
             </td>
         </tr>
@@ -253,7 +253,7 @@
                                             //data: addAntiForgeryToken
                                         },
                                         create: {
-                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = ViewBag.LanguageId}))",
+                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id}))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
