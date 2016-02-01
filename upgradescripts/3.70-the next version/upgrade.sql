@@ -50,6 +50,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.PageSize.Hint">
     <Value>Page size is for history of reward points on my account page</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
+    <Value>You need to save the language before you can make or change resources for this language.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
+    <Value>String resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Localization">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Select">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.LanguageName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
