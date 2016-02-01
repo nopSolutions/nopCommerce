@@ -4113,7 +4113,7 @@
   <LocaleResource Name="Admin.Configuration.Languages.Resources.NameAlreadyExists">
     <Value>A resource already exists with the name: {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
     <Value>String resources</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Stores">

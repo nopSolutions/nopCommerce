@@ -57,7 +57,13 @@ set @resources='
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
     <Value>String resources</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.BeforeSaveNewLanguageInformation">
+    <Value>You need to save the language before you can make or change resources for this languge.</Value>
   </LocaleResource>
 </Language>
 '
