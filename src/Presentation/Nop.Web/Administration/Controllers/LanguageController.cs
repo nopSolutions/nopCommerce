@@ -344,6 +344,17 @@ namespace Nop.Admin.Controllers
 			return View();
 		}
 
+        public ActionResult ResourcesPartial(int languageId)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
+                return AccessDeniedView();
+
+            var language = _languageService.GetLanguageById(languageId);
+            ViewBag.LanguageId = languageId;
+            //ViewBag.LanguageName = language.Name;
+            return PartialView("_Resources", language);
+        }
+
         [HttpPost]
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
