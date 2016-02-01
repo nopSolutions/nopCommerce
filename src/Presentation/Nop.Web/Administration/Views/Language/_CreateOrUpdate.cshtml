@@ -24,7 +24,7 @@
             @T("Admin.Configuration.Languages.Stores")
         </li>
         <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.StringResources")
+            @T("Admin.Configuration.Languages.Resources")
         </li>
     </ul>
     <div>
@@ -231,7 +231,6 @@
         </tr>
         <tr>
             <td>
-                @* Show grid after language create and save *@
                 @if (Model.Id > 0)
                 {
                     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;

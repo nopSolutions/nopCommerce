@@ -59,10 +59,10 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Select">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.StringResources">
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
     <Value>String resources</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources">
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.LanguageName">
     <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.View">

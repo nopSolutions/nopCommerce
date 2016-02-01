@@ -4089,11 +4089,11 @@
   <LocaleResource Name="Admin.Configuration.Languages.Info">
     <Value>Info</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources">
+    <Value>String resources</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
     <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.LanguageName">
-    <Value>Language</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name">
     <Value>Resource name</Value>
@@ -4115,9 +4115,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Stores">
     <Value>Stores</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.StringResources">
-    <Value>String resources</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Updated">
     <Value>The language has been updated successfully.</Value>
