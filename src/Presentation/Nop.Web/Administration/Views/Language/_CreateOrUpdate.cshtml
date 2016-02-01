@@ -34,7 +34,7 @@
         @TabStores()
     </div>
     <div>
-        @TabResources(Model.Id)
+        @TabResources()
     </div>
 </div>
 
@@ -214,7 +214,158 @@
     </table>
 }
 
-@helper TabResources(int languageId)
+@helper TabResources()
 {
-   @Html.Action("ResourcesPartial", new { languageId = languageId })
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <table class="adminContent">
+        <tr>
+            <td>
+                @if (Model.Id > 0)
+                {
+                    @T("Admin.Configuration.Languages.Resources.Description")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Languages.Resources.BeforeSaveNewLanguageInformation")
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @* Show grid after language crete and save *@
+                @if (Model.Id > 0)
+                {
+                    <div id="resources-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#resources-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id }))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            contentType: "application/json"
+                                            //any-forgery does not work with this contentType for some reasons
+                                            //data: addAntiForgeryToken
+                                        },
+                                        create: {
+                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = ViewBag.LanguageId}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("ResourceUpdate", "Language"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ResourceDelete", "Language"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        parameterMap: function(data, operation) {
+                                            if (operation != "read") {
+                                                return data;
+                                            } else {
+                                                //for some reasons only such "Filter" data be parsed
+                                                return JSON.stringify(data);
+                                            }
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                Value: { editable: true, type: "string" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function(e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                sortable: true,
+                                toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                filterable: {
+                                    extra: false,
+                                    operators: {
+                                        string: {
+                                            contains: "Contains",
+                                            eq: "Is equal to",
+                                            startswith: "Starts with"
+                                        }
+                                    }
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
+                                        width: 300,
+                                        filterable: true,
+                                        sortable: true
+                                    }, {
+                                        field: "Value",
+                                        title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
+                                        width: 300,
+                                        filterable: true,
+                                        sortable: true
+
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200,
+                                        filterable: false
+                                    }
+                                ]
+                            });
+                        });
+
+                    </script>
+                }
+            </td>
+        </tr>
+    </table>
 }

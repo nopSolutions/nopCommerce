@@ -467,7 +467,6 @@
     <Content Include="Views\Language\Create.cshtml" />
     <Content Include="Views\Language\Edit.cshtml" />
     <Content Include="Views\Language\List.cshtml" />
-    <Content Include="Views\Language\Resources.cshtml" />
     <Content Include="Views\Language\_CreateOrUpdate.cshtml" />
     <Content Include="Views\Log\List.cshtml" />
     <Content Include="Views\Shared\Delete.cshtml" />
