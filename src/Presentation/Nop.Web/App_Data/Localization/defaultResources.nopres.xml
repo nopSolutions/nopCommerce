@@ -4113,11 +4113,14 @@
   <LocaleResource Name="Admin.Configuration.Languages.Resources.NameAlreadyExists">
     <Value>A resource already exists with the name: {0}</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources">
-    <Value>String resources</Value>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
+    <Value>You need to save the language before you can make or change resources for this language.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Stores">
     <Value>Stores</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.StringResources">
+    <Value>String resources</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Updated">
     <Value>The language has been updated successfully.</Value>
@@ -4130,9 +4133,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.XmlFile.Note2">
     <Value>NOTE: DO NOT click twice.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.BeforeSaveNewLanguageInformation">
-    <Value>You need to save the language before you can make or change resources for this languge.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Measures">
     <Value>Measures</Value>
