@@ -17,9 +17,11 @@ namespace Nop.Web.Models.Install
         [AllowHtml]
         public string AdminEmail { get; set; }
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string AdminPassword { get; set; }
         [AllowHtml]
+        [NoTrim]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
