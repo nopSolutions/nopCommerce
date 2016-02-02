@@ -79,7 +79,7 @@
                     }
                     @if (Model.IsCurrentCustomerAllowedToDeletePost)
                     {
-                        @Html.RouteLink(T("Forum.DeletePost").Text, "PostDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-post-button" })
+                        <a href="#" class="delete-post-button" onclick="deletepost(@(Model.Id))">@T("Forum.DeletePost").Text</a>
                     }
                 </div>
                 <div class="quote-post">
