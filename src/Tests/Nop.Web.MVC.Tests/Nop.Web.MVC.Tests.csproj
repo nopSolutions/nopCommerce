@@ -117,6 +117,9 @@
   <ItemGroup>
     <Compile Include="Admin\Controllers\CategoryControllerTests.cs" />
     <Compile Include="Admin\Infrastructure\AutoMapperConfigurationTest.cs" />
+    <Compile Include="Admin\Validators\Catalog\CategoryValidatorTests.cs" />
+    <Compile Include="Admin\Validators\Catalog\ManufacturerValidatorTests.cs" />
+    <Compile Include="Admin\Validators\Vendors\VendorValidatorTests.cs" />
     <Compile Include="Events\DateTimeConsumer.cs" />
     <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Framework\Controllers\AdminAuthorizeAttributeTests.cs" />

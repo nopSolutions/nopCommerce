@@ -1698,6 +1698,9 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size Options should not have duplicate items.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize">
     <Value>Page size</Value>
   </LocaleResource>
@@ -1901,6 +1904,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize">
     <Value>Page size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Hint">
     <Value>Set the page size for products in this manufacturer e.g. '4' products per page.</Value>
@@ -11171,6 +11177,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Name.Required">
     <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSize">
     <Value>Page size</Value>

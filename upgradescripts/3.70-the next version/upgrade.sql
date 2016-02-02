@@ -5,6 +5,15 @@ declare @resources xml
 --a resource will be deleted if its value is empty
 set @resources='
 <Language>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size Options should not have duplicate items.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
   </LocaleResource>
