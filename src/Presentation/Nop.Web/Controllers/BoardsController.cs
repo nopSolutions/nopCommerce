@@ -658,11 +658,16 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
         }
 
+        [HttpPost]
+        [PublicAntiForgery]
         public ActionResult TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("HomePage"),
+                });
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -678,11 +683,17 @@ namespace Nop.Web.Controllers
 
                 if (forum != null)
                 {
-                    return RedirectToRoute("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() });
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() }),
+                    });
                 }
             }
 
-            return RedirectToRoute("Boards");
+            return Json(new
+            {
+                redirect = Url.RouteUrl("Boards"),
+            });
         }
 
         public ActionResult TopicCreate(int id)
@@ -1029,11 +1040,16 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [PublicAntiForgery]
         public ActionResult PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("HomePage"),
+                });
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -1055,12 +1071,21 @@ namespace Nop.Web.Controllers
                 forumTopic = _forumService.GetTopicById(forumPost.TopicId);
                 if (forumTopic == null)
                 {
-                    return RedirectToRoute("ForumSlug", new { id = forumId, slug = forumSlug });
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forumId, slug = forumSlug }),
+                    });
                 }
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() }),
+                });
             }
 
-            return RedirectToRoute("Boards");
+            return Json(new
+            {
+                redirect = Url.RouteUrl("Boards"),
+            });
         }
 
         public ActionResult PostCreate(int id, int? quote)
