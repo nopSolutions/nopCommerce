@@ -1,4 +1,5 @@
 ﻿@model ForumTopicPageModel
+@using Nop.Core.Domain.Customers
 @using Nop.Web.Models.Boards;
 @using Nop.Web.Models.Common;
 @{
@@ -7,8 +8,9 @@
     Html.AddTitleParts(Model.Subject);
 }
 <div class="page forum-topic-page">
-    @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
+    @Html.Action("ForumBreadcrumb", new {forumTopicId = Model.Id})
     @Html.Partial("_ForumHeader")
+    @Html.AntiForgeryToken()
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
@@ -16,33 +18,56 @@
         <div class="actions">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new {id = Model.Id}, new {@class = "edit-topic-button"})
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
-            {                
-                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-button" })
+            {
+                <a href="#" class="delete-topic-button" onclick="deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
+                <script type="text/javascript">
+                    function deletetopic(topicId) {
+                        if (confirm('@T("Common.AreYouSure")')) {
+                            var postData = {
+                                id: topicId
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("TopicDelete", "Boards")',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    location.href = data.redirect;
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to delete');
+                                }
+                            });
+                        }
+                    }
+                </script>
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-button" })
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new {id = Model.Id}, new {@class = "move-topic-button"})
             }
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#watch-topic-top').click(function () {
+                    $(document).ready(function() {
+                        $('#watch-topic-top').click(function() {
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                                url: '@Url.RouteUrl("TopicWatch", new {id = Model.Id})',
                                 dataType: 'json',
-                                success: function (data) {
+                                success: function(data) {
                                     $('#watch-topic-top').text(data.Text);
                                     $('#watch-topic-bottom').text(data.Text);
                                 },
-                                error: function (xhr, ajaxOptions, thrownError) {
+                                error: function(xhr, ajaxOptions, thrownError) {
                                     alert('Failed to watch');
                                 }
                             });
@@ -60,7 +85,7 @@
                 ShowTotalSummary = false,
                 RouteActionName = "TopicSlugPaged",
                 UseRouteLinks = true,
-                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                RouteValues = new RouteValues {id = Model.Id, slug = Model.SeName}
             });
         }
         @if (!MvcHtmlString.IsNullOrEmpty(pager))
@@ -80,32 +105,32 @@
 
     <div class="topic-actions lower">
         <div class="actions">
-            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new {id = Model.Id}, new {@class = "reply-topic-button"})
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                    $('#watch-topic-bottom').click(function () {
-                        var postData = {};
-                        addAntiForgeryToken(postData);
+                    $(document).ready(function() {
+                        $('#watch-topic-bottom').click(function() {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
 
-                        $.ajax({
-                            cache: false,
-                            type: 'POST',
-                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                            data: postData,
-                            dataType: 'json',
-                            success: function (data) {
-                                $('#watch-topic-top').text(data.Text);
-                                $('#watch-topic-bottom').text(data.Text);
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to watch');
-                            }
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new {id = Model.Id})',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
                         });
                     });
-                });
                 </script>
             }
         </div>
@@ -117,3 +142,27 @@
         }
     </div>
 </div>
+
+<script type="text/javascript">
+    function deletepost(postId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: postId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("PostDelete", "Boards")',
+                data: postData,
+                dataType: 'json',
+                success: function (data) {
+                    location.href = data.redirect;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to delete');
+                }
+            });
+        }
+    }
+</script>
