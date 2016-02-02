@@ -1325,6 +1325,7 @@ namespace Nop.Web.Controllers
                     HelpfulNoTotal = 0,
                     IsApproved = isApproved,
                     CreatedOnUtc = DateTime.UtcNow,
+                    StoreId = _storeContext.CurrentStore.Id,
                 };
                 product.ProductReviews.Add(productReview);
                 _productService.UpdateProduct(product);
