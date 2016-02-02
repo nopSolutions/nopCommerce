@@ -62,6 +62,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             model.EcommerceScript = googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = googleAnalyticsSettings.EcommerceDetailScript;
             model.IncludingTax = googleAnalyticsSettings.IncludingTax;
+            model.ZoneId = googleAnalyticsSettings.WidgetZone;
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before body end html tag", Value = "body_end_html_tag_before" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Head html tag", Value = "head_html_tag" });
 
             model.ActiveStoreScopeConfiguration = storeScope;
             if (storeScope > 0)
@@ -71,6 +74,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 model.EcommerceScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceScript, storeScope);
                 model.EcommerceDetailScript_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.EcommerceDetailScript, storeScope);
                 model.IncludingTax_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+                model.ZoneId_OverrideForStore = _settingService.SettingExists(googleAnalyticsSettings, x => x.WidgetZone, storeScope);
             }
 
             return View("~/Plugins/Widgets.GoogleAnalytics/Views/WidgetsGoogleAnalytics/Configure.cshtml", model);
@@ -89,6 +93,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
             googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
             googleAnalyticsSettings.IncludingTax = model.IncludingTax;
+            googleAnalyticsSettings.WidgetZone = model.ZoneId;
 
             /* We do not clear cache after each setting update.
              * This behavior can increase performance because cached settings will not be cleared 
@@ -117,6 +122,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
                 _settingService.SaveSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(googleAnalyticsSettings, x => x.IncludingTax, storeScope);
+
+            if (model.ZoneId_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(googleAnalyticsSettings, x => x.WidgetZone, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(googleAnalyticsSettings, x => x.WidgetZone, storeScope);
             
             //now clear settings cache
             _settingService.ClearCache();
