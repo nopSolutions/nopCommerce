@@ -10,5 +10,6 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         public string EcommerceScript { get; set; }
         public string EcommerceDetailScript { get; set; }
         public bool IncludingTax { get; set; }
+        public string WidgetZone { get; set; }
     }
 }

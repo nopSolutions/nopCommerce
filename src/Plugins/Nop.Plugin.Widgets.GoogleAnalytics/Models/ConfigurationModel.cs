@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -7,7 +8,17 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
     public class ConfigurationModel : BaseNopModel
     {
         public int ActiveStoreScopeConfiguration { get; set; }
-        
+
+        public ConfigurationModel()
+        {
+            AvailableZones = new List<SelectListItem>();
+        }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Widgets.ChooseZone")]
+        public string ZoneId { get; set; }
+        public IList<SelectListItem> AvailableZones { get; set; }
+        public bool ZoneId_OverrideForStore { get; set; }
+
         [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.GoogleId")]
         [AllowHtml]
         public string GoogleId { get; set; }
