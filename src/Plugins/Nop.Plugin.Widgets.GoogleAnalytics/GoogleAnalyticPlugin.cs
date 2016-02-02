@@ -13,10 +13,12 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     public class GoogleAnalyticPlugin : BasePlugin, IWidgetPlugin
     {
         private readonly ISettingService _settingService;
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
-        public GoogleAnalyticPlugin(ISettingService settingService)
+        public GoogleAnalyticPlugin(ISettingService settingService, GoogleAnalyticsSettings googleAnalyticsSettings)
         {
             this._settingService = settingService;
+            this._googleAnalyticsSettings = googleAnalyticsSettings;
         }
 
         /// <summary>
@@ -25,10 +27,9 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
         /// <returns>Widget zones</returns>
         public IList<string> GetWidgetZones()
         {
-            return new List<string>
-            { 
-                "head_html_tag"
-            };
+            return !string.IsNullOrWhiteSpace(_googleAnalyticsSettings.WidgetZone)
+                       ? new List<string>() { _googleAnalyticsSettings.WidgetZone }
+                       : new List<string>() { "body_end_html_tag_before" };
         }
 
         /// <summary>

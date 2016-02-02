@@ -157,6 +157,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ZoneId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.ZoneId, Model.AvailableZones)
+                @Html.ValidationMessageFor(model => model.ZoneId)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
             </td>
