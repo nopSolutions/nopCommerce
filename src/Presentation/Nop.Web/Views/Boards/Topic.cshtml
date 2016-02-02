@@ -21,7 +21,7 @@
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {
-                <a href="#" class="delete-topic-button" onclick="deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
+                <a href="#topic-@Model.Id" id="topic-@Model.Id" class="delete-topic-button" onclick="deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
                 <script type="text/javascript">
                     function deletetopic(topicId) {
                         if (confirm('@T("Common.AreYouSure")')) {
@@ -35,13 +35,17 @@
                                 url: '@Url.Action("TopicDelete", "Boards")',
                                 data: postData,
                                 dataType: 'json',
-                                success: function(data) {
+                                success: function (data) {
                                     location.href = data.redirect;
                                 },
-                                error: function(xhr, ajaxOptions, thrownError) {
+                                error: function (xhr, ajaxOptions, thrownError) {
                                     alert('Failed to delete');
                                 }
                             });
+                        }
+                        else {
+                            //do not scroll to top
+                            return false;
                         }
                     }
                 </script>
@@ -110,26 +114,26 @@
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script type="text/javascript">
                     $(document).ready(function () {
-                    $('#watch-topic-bottom').click(function () {
-                        var postData = {};
-                        addAntiForgeryToken(postData);
+                        $('#watch-topic-bottom').click(function () {
+                            var postData = {};
+                            addAntiForgeryToken(postData);
 
-                        $.ajax({
-                            cache: false,
-                            type: 'POST',
-                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
-                            data: postData,
-                            dataType: 'json',
-                            success: function (data) {
-                                $('#watch-topic-top').text(data.Text);
-                                $('#watch-topic-bottom').text(data.Text);
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
-                                alert('Failed to watch');
-                            }
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
+                                data: postData,
+                                dataType: 'json',
+                                success: function (data) {
+                                    $('#watch-topic-top').text(data.Text);
+                                    $('#watch-topic-bottom').text(data.Text);
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to watch');
+                                }
+                            });
                         });
                     });
-                });
                 </script>
             }
         </div>
@@ -161,6 +165,9 @@
                     alert('Failed to delete');
                 }
             });
+        } else {
+            //do not scroll to top
+            return false;
         }
     }
 </script>

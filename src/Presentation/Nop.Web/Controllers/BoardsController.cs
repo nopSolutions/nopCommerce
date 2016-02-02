@@ -660,7 +660,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
@@ -1043,7 +1042,6 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [PublicAntiForgery]
-        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
