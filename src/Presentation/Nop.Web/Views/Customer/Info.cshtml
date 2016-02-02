@@ -385,7 +385,7 @@
                                                 @CommonHelper.EnsureMaximumLength(item.ExternalIdentifier, 40, "...")
                                             </td>
                                             <td class="remove">
-                                                <a href="@Url.Action("RemoveExternalAssociation", "Customer", new { id = item.Id })">@T("Account.AssociatedExternalAuth.Remove")</a>
+                                                <a href="#" onclick="return removeexternalassociation(@item.Id)">@T("Account.AssociatedExternalAuth.Remove")</a>
                                             </td>
                                         </tr>
                                     }
@@ -409,3 +409,28 @@
         }
     </div>
 </div>
+<script type="text/javascript">
+    function removeexternalassociation(itemId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: itemId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("RemoveExternalAssociation", "Customer")',
+                data: postData,
+                dataType: 'json',
+                success: function (data) {
+                    location.href = data.redirect;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to delete');
+                }
+            });
+        } else {
+            return false;
+        }
+    }
+</script>

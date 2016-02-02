@@ -9,6 +9,7 @@
 <div class="page forum-topic-page">
     @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
     @Html.Partial("_ForumHeader")
+    @Html.AntiForgeryToken()
     <div class="topic-name">
         <h1>@Model.Subject</h1>
     </div>
@@ -19,8 +20,33 @@
                 @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-button" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
-            {                
-                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-button" })
+            {
+                <a href="#" class="delete-topic-button" onclick="return deletetopic(@(Model.Id))">@T("Forum.DeleteTopic").Text</a>
+                <script type="text/javascript">
+                    function deletetopic(topicId) {
+                        if (confirm('@T("Common.AreYouSure")')) {
+                            var postData = {
+                                id: topicId
+                            };
+                            addAntiForgeryToken(postData);
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.Action("TopicDelete", "Boards")',
+                                data: postData,
+                                dataType: 'json',
+                                success: function(data) {
+                                    location.href = data.redirect;
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to delete');
+                                }
+                            });
+                        }else {
+                            return false;
+                        }
+                    }
+                </script>
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
@@ -117,3 +143,28 @@
         }
     </div>
 </div>
+<script type="text/javascript">
+    function deletepost(postId) {
+        if (confirm('@T("Common.AreYouSure")')) {
+            var postData = {
+                id: postId
+            };
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                url: '@Url.Action("PostDelete", "Boards")',
+                data: postData,
+                dataType: 'json',
+                success: function (data) {
+                    location.href = data.redirect;
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert('Failed to delete');
+                }
+            });
+        }else {
+            return false;
+        }
+    }
+</script>
