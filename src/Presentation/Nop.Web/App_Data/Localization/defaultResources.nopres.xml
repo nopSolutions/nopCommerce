@@ -1698,9 +1698,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size Options should not have duplicate items.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSize">
     <Value>Page size</Value>
   </LocaleResource>
@@ -1712,6 +1709,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should not have duplicate items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.Parent">
     <Value>Parent category</Value>
@@ -1905,9 +1905,6 @@
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize">
     <Value>Page size</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSize.Hint">
     <Value>Set the page size for products in this manufacturer e.g. '4' products per page.</Value>
   </LocaleResource>
@@ -1916,6 +1913,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Picture">
     <Value>Picture</Value>
@@ -11178,9 +11178,6 @@
   <LocaleResource Name="Admin.Vendors.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
-    <Value>Page Size options should have unique items.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSize">
     <Value>Page size</Value>
   </LocaleResource>
@@ -11192,6 +11189,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.Hint">
     <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
+    <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.Picture">
     <Value>Picture</Value>
