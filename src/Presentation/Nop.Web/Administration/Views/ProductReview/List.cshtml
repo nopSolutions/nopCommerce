@@ -48,7 +48,7 @@
                 @Html.NopLabelFor(model => model.StoreId):
             </td>
             <td class="adminData">
-                @Html.DropDownListFor(model => model.StoreId, Model.AvailableStors)
+                @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
             </td>
         </tr>
         <tr>
@@ -104,10 +104,9 @@
                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                             width: 50
                         }, {
-                            field: "StoreId",
+                            field: "StoreName",
                             title: "@T("Admin.Catalog.ProductReviews.Fields.Store")",
-                            width: 150,
-                            template: "#:StoreName#"
+                            width: 150
                         }, {
                             field: "ProductName",
                             title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
