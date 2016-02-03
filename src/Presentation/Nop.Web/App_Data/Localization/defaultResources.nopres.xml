@@ -2040,6 +2040,9 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText.Required">
     <Value>Review text is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store">
+    <Value>Store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
@@ -2066,6 +2069,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText.Hint">
     <Value>Search in title and review text.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.Store">
+    <Value>Search product reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Updated">
     <Value>The product review has been updated successfully.</Value>
@@ -4823,6 +4829,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductSku.Hint">
     <Value>Check to show product SKU in public store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore">
+    <Value>Reviews per store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
+    <Value>Enable show review per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>

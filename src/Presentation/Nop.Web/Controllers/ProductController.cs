@@ -826,8 +826,16 @@ namespace Nop.Web.Controllers
             model.ProductReviewOverview = new ProductReviewOverviewModel
             {
                 ProductId = product.Id,
-                RatingSum = product.ApprovedRatingSum,
-                TotalReviews = product.ApprovedTotalReviews,
+                RatingSum = _catalogSettings.ShowProductReviewsPerStore
+                    ? product.ProductReviews
+                               .Where(pr=>pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
+                               .Sum(pr=>pr.Rating)
+                    : product.ApprovedRatingSum,
+                TotalReviews = _catalogSettings.ShowProductReviewsPerStore
+                    ? product
+                        .ProductReviews
+                        .Count(pr=>pr.IsApproved && pr.StoreId==_storeContext.CurrentStore.Id)
+                    : product.ApprovedTotalReviews,
                 AllowCustomerReviews = product.AllowCustomerReviews
             };
 
@@ -924,7 +932,9 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
 
-            var productReviews = product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+            var productReviews = _catalogSettings.ShowProductReviewsPerStore
+                ? product.ProductReviews.Where(pr => pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id).OrderBy(pr => pr.CreatedOnUtc)
+                : product.ProductReviews.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
             foreach (var pr in productReviews)
             {
                 var customer = pr.Customer;
@@ -1259,7 +1269,7 @@ namespace Nop.Web.Controllers
 
             if (products.Count == 0)
                 return Content("");
-
+            
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
             return PartialView(model);
         }

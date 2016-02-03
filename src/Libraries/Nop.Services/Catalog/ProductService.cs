@@ -1848,6 +1848,7 @@ namespace Nop.Services.Catalog
                 query = query.Where(c => c.Title.Contains(message) || c.ReviewText.Contains(message));
             if (storeId != null && storeId > 0)
                 query = query.Where(c => c.StoreId == (int) storeId);
+
             query = query.OrderBy(c => c.CreatedOnUtc);
             var content = query.ToList();
             return content;

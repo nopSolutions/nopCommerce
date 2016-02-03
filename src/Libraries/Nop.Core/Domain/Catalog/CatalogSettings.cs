@@ -109,7 +109,7 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets Allow store-owner to filter reviews by shop
         /// </summary>
-        public bool AllowFilterProductReviewsByStore { get; set; }
+        public bool ShowProductReviewsPerStore { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether product 'Email a friend' feature is enabled

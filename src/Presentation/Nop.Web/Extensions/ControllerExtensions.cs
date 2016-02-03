@@ -366,8 +366,16 @@ namespace Nop.Web.Extensions
                 model.ReviewOverviewModel = new ProductReviewOverviewModel
                 {
                     ProductId = product.Id,
-                    RatingSum = product.ApprovedRatingSum,
-                    TotalReviews = product.ApprovedTotalReviews,
+                    RatingSum =  catalogSettings.ShowProductReviewsPerStore
+                    ? product.ProductReviews
+                               .Where(pr => pr.IsApproved && pr.StoreId == storeContext.CurrentStore.Id)
+                               .Sum(pr => pr.Rating)
+                    : product.ApprovedRatingSum,
+                    TotalReviews = catalogSettings.ShowProductReviewsPerStore
+                    ? product
+                        .ProductReviews
+                        .Count(pr => pr.IsApproved && pr.StoreId == storeContext.CurrentStore.Id)
+                    : product.ApprovedTotalReviews,
                     AllowCustomerReviews = product.AllowCustomerReviews
                 };
 
