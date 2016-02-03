@@ -23,6 +23,7 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
+using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -73,6 +74,7 @@ namespace Nop.Admin.Controllers
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ISortOptionService _sortOptionService;
 
         #endregion
 
@@ -100,7 +102,8 @@ namespace Nop.Admin.Controllers
             IGenericAttributeService genericAttributeService,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService)
+            ILocalizedEntityService localizedEntityService,
+            ISortOptionService sortOptionService)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -125,6 +128,7 @@ namespace Nop.Admin.Controllers
             this._returnRequestService = returnRequestService;
             this._languageService = languageService;
             this._localizedEntityService = localizedEntityService;
+            this._sortOptionService = sortOptionService;
         }
 
         #endregion
@@ -1371,7 +1375,49 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Catalog");
         }
 
+        #region Sort options
 
+        [HttpPost]
+        public ActionResult SortOptionsList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var model = new List<SortOptionModel>();
+            foreach (var option in _sortOptionService.GetAllSortOptions())
+            {
+                var x = option.ToModel();
+                x.Name = option.SortOptionType.GetLocalizedEnum(_localizationService, _workContext);
+                model.Add(x);
+            }
+            var gridModel = new DataSourceResult
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult SortOptionUpdate(SortOptionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var option = _sortOptionService.GetSortOptionById(model.Id);
+            if (option == null)
+                return RedirectToAction("SortOptionsList");
+
+            if (ModelState.IsValid)
+            {
+                option = model.ToEntity(option);
+                _sortOptionService.UpdateSortOption(option);
+            }
+
+            return new NullJsonResult();
+        }
+
+        #endregion
 
         public ActionResult RewardPoints()
         {

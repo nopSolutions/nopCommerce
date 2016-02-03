@@ -87,6 +87,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Warehouse> _warehouseRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<Affiliate> _affiliateRepository;
+        private readonly IRepository<SortOption> _sortOptionRepository;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
@@ -136,6 +137,7 @@ namespace Nop.Services.Installation
             IRepository<Warehouse> warehouseRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<Affiliate> affiliateRepository,
+            IRepository<SortOption> sortOptionRepository,
             IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
@@ -181,6 +183,7 @@ namespace Nop.Services.Installation
             this._warehouseRepository = warehouseRepository;
             this._vendorRepository = vendorRepository;
             this._affiliateRepository = affiliateRepository;
+            this._sortOptionRepository = sortOptionRepository;
             this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
@@ -10129,6 +10132,22 @@ namespace Nop.Services.Installation
             _affiliateRepository.Insert(affilate);
         }
 
+        protected virtual void InstallSortOptions()
+        {
+            var sortOptions = new List<SortOption>();
+            int order = 0;
+            foreach (ProductSortingEnum option in Enum.GetValues(typeof(ProductSortingEnum)))
+            {
+                sortOptions.Add(new SortOption()
+                    {
+                        SortOptionType = option,
+                        IsActive = true,
+                        DisplayOrder = ++order
+                    });
+            }
+            _sortOptionRepository.Insert(sortOptions);
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.FirstOrDefault(pt => pt.Name == tag);
@@ -10173,6 +10192,7 @@ namespace Nop.Services.Installation
             InstallScheduleTasks();
             InstallReturnRequestReasons();
             InstallReturnRequestActions();
+            InstallSortOptions();
 
             if (installSampleData)
             {

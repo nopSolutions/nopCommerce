@@ -61,6 +61,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ITopicService _topicService;
+        private readonly ISortOptionService _sortOptionService;
         private readonly IEventPublisher _eventPublisher;
         private readonly ISearchTermService _searchTermService;
         private readonly MediaSettings _mediaSettings;
@@ -97,6 +98,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService, 
             ICustomerActivityService customerActivityService,
             ITopicService topicService,
+            ISortOptionService sortOptionService,
             IEventPublisher eventPublisher,
             ISearchTermService searchTermService,
             MediaSettings mediaSettings,
@@ -129,6 +131,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._customerActivityService = customerActivityService;
             this._topicService = topicService;
+            this._sortOptionService = sortOptionService;
             this._eventPublisher = eventPublisher;
             this._searchTermService = searchTermService;
             this._mediaSettings = mediaSettings;
@@ -152,20 +155,25 @@ namespace Nop.Web.Controllers
             if (command == null)
                 throw new ArgumentNullException("command");
 
-            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            var options = _sortOptionService.GetActiveSortOptions();
+            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && options.Any();
+            
+            if (command.OrderBy == null)
+                command.OrderBy = options.Any() ? (int)options.First().SortOptionType : 0;
+
             if (pagingFilteringModel.AllowProductSorting)
             {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                foreach (var option in options)
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)option.SortOptionType).ToString(), null);
 
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    var sortValue = option.SortOptionType.GetLocalizedEnum(_localizationService, _workContext);
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
                         Text = sortValue,
                         Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                        Selected = option.SortOptionType == (ProductSortingEnum)command.OrderBy
                     });
                 }
             }

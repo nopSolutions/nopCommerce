@@ -189,6 +189,7 @@
     <Compile Include="Catalog\CategoryTemplateService.cs" />
     <Compile Include="Catalog\IBackInStockSubscriptionService.cs" />
     <Compile Include="Catalog\IManufacturerTemplateService.cs" />
+    <Compile Include="Catalog\ISortOptionService.cs" />
     <Compile Include="Catalog\RoundingHelper.cs" />
     <Compile Include="Catalog\ManufacturerTemplateService.cs" />
     <Compile Include="Catalog\ICategoryTemplateService.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Catalog\ProductTagService.cs" />
     <Compile Include="Catalog\IRecentlyViewedProductsService.cs" />
     <Compile Include="Catalog\RecentlyViewedProductsService.cs" />
+    <Compile Include="Catalog\SortOptionService.cs" />
     <Compile Include="Catalog\TierPriceExtensions.cs" />
     <Compile Include="Catalog\ProductExtensions.cs" />
     <Compile Include="Catalog\PriceFormatter.cs" />

@@ -1137,5 +1137,17 @@ namespace Nop.Admin.Extensions
 
         #endregion
 
+        #region Sort options
+
+        public static SortOptionModel ToModel(this SortOption entity)
+        {
+            return entity.MapTo<SortOption, SortOptionModel>();
+        }
+        public static SortOption ToEntity(this SortOptionModel model, SortOption destination)
+        {
+            return model.MapTo(destination);
+        }
+
+        #endregion
     }
 }

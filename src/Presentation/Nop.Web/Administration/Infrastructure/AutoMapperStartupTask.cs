@@ -893,6 +893,11 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<TopicTemplate, TopicTemplateModel>()
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<TopicTemplateModel, TopicTemplate>();
+
+            Mapper.CreateMap<SortOption, SortOptionModel>()
+                .ForMember(dest => dest.Name, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
+            Mapper.CreateMap<SortOptionModel, SortOption>();
         }
         
         public int Order

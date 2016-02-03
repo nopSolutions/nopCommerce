@@ -246,6 +246,7 @@
     <Compile Include="Models\Plugins\PluginListModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestActionModel.cs" />
     <Compile Include="Models\Settings\ReturnRequestReasonModel.cs" />
+    <Compile Include="Models\Settings\SortOptionModel.cs" />
     <Compile Include="Models\Settings\VendorSettingsModel.cs" />
     <Compile Include="Models\Shipping\WarehouseModel.cs" />
     <Compile Include="Models\Shipping\DeliveryDateModel.cs" />

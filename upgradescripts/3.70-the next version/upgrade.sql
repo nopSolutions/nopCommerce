@@ -77,6 +77,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should not have duplicate items.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
+    <Value>Sort options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
+    <Value>Name</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -219,5 +231,64 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.pag
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'rewardpointssettings.pagesize', N'10', 0)
+END
+GO
+
+--new table
+IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[SortOption]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+BEGIN
+	CREATE TABLE [dbo].[SortOption](
+		[Id] [int] IDENTITY(1,1) NOT NULL,
+		[SortOptionTypeId] int NOT NULL,
+		[IsActive] bit NOT NULL,
+		[DisplayOrder] int NOT NULL,
+	PRIMARY KEY CLUSTERED 
+	(
+		[Id] ASC
+	)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON)
+	)
+END
+GO
+
+--new sort options
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 0)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (0, N'true', 1)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 5)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (5, N'true', 2)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 6)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (6, N'true', 3)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 10)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (10, N'true', 4)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 11)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (11, N'true', 5)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [SortOption] WHERE [SortOptionTypeId] = 15)
+BEGIN
+	INSERT [SortOption] ([SortOptionTypeId], [IsActive], [DisplayOrder])
+	VALUES (15, N'true', 6)
 END
 GO
