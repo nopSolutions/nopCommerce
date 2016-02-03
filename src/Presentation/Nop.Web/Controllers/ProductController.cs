@@ -1588,6 +1588,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
-        #endregion
+        #endregion 
     }
 }

@@ -68,6 +68,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore">
+	<Value>Reviews per store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
+	<Value>Enable show review per store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
@@ -76,6 +82,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should not have duplicate items.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Productreviews.Fields.Store">
+	<Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.Store">
+    <Value>Search product reviews per store</Value>
   </LocaleResource>
 </Language>
 '
@@ -169,6 +181,30 @@ GO
 ALTER TABLE [ProductAttributeValue] ALTER COLUMN [ImageSquaresPictureId] int NOT NULL
 GO
 
+--new column
+	ALTER TABLE [dbo].[Store] SET (LOCK_ESCALATION = TABLE)
+	GO
+	ALTER TABLE [dbo].[ProductReview] ADD
+		[StoreId] int NULL CONSTRAINT DF_ProductReview_StoreId DEFAULT 1
+	GO
+	ALTER TABLE [dbo].[ProductReview] ADD CONSTRAINT
+		FK_ProductReview_Store FOREIGN KEY
+		(
+			[StoreId]
+		) REFERENCES [dbo].[Store]
+		(
+			[Id]
+		) ON UPDATE  NO ACTION 
+	ON DELETE  NO ACTION
+	GO
+	ALTER TABLE [dbo].[ProductReview] SET (LOCK_ESCALATION = TABLE)
+	GO
+	DECLARE @DefaultStoreId INTEGER
+	SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
+	UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE 1=1
+	GO
+	ALTER TABLE [dbo].[ProductReview] ALTER COLUMN [StoreId] INT NOT NULL
+GO
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquarepicturesize')
