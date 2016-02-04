@@ -152,20 +152,33 @@ namespace Nop.Web.Controllers
             if (command == null)
                 throw new ArgumentNullException("command");
 
-            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
+            pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
+
+            var activeOptions = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+                .Except(_catalogSettings.ProductSortingEnumDisabled)
+                .Select((idOption) =>
+                {
+                    int order;
+                    return new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out order) ? order : idOption);
+                })
+                .OrderBy(x => x.Value);
+            if (command.OrderBy == null)
+                command.OrderBy = allDisabled ? 0 : activeOptions.First().Key;
+
             if (pagingFilteringModel.AllowProductSorting)
             {
-                foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
+                foreach (var option in activeOptions)
                 {
                     var currentPageUrl = _webHelper.GetThisPageUrl(true);
-                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + (option.Key).ToString(), null);
 
-                    var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
+                    var sortValue = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext);
                     pagingFilteringModel.AvailableSortOptions.Add(new SelectListItem
                     {
                         Text = sortValue,
                         Value = sortUrl,
-                        Selected = enumValue == (ProductSortingEnum)command.OrderBy
+                        Selected = option.Key == command.OrderBy
                     });
                 }
             }

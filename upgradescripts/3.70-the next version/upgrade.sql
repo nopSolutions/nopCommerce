@@ -77,6 +77,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should not have duplicate items.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
+    <Value>Sort options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
+    <Value>Name</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -219,5 +231,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'rewardpointssettings.pag
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'rewardpointssettings.pagesize', N'10', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsortingenumdisabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'catalogsettings.productsortingenumdisabled',N'',0);
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsortingenumdisplayorder')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'catalogsettings.productsortingenumdisplayorder',N'',0);
 END
 GO
