@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Caching\RedisCacheManager.cs" />
+    <Compile Include="ComponentModel\GenericDictionaryTypeConverter.cs" />
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Catalog\Events.cs" />
     <Compile Include="Domain\Catalog\PredefinedProductAttributeValue.cs" />

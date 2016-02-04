@@ -51,6 +51,9 @@
             <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
                 @T("Admin.Configuration.Settings.Catalog.Sharing")
             </li>
+            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                @T("Admin.Configuration.Settings.Catalog.SortOptions")
+            </li>
         </ul>
         <div>
             @TabGeneralSettings()
@@ -69,6 +72,9 @@
         </div>
         <div>
             @TabSharing()
+        </div>
+        <div>
+            @TabSortOptions()
         </div>
     </div>
 
@@ -775,6 +781,106 @@
             <td class="adminData">
                 @Html.TextAreaFor(model => model.PageShareCode, new { style = "Width: 500px; Height: 150px;" })
                 @Html.ValidationMessageFor(model => model.PageShareCode)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabSortOptions()
+{
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="sortoptions-grid"></div>
+
+                <script>
+                $(document).ready(function () {
+                    $("#sortoptions-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("SortOptionsList", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("SortOptionUpdate", "Setting"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        Name: { editable: false, type: "string" },
+                                        DisplayOrder: { editable: true, type: "number" },
+                                        IsActive: { editable: true, type: "boolean" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "Name",
+                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.Name")",
+                            width: 250
+                        }, {
+                            field: "DisplayOrder",
+                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")",
+                            //integer format
+                            format: "{0:0}",
+                            width: 100
+                        }, {
+                            field: "IsActive",
+                            title: "@T("Admin.Configuration.Settings.Catalog.SortOptions.IsActive")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                        },  {
+                            command: {
+                                name: "edit",
+                                text: {
+                                    edit: "@T("Admin.Common.Edit")",
+                                    update: "@T("Admin.Common.Update")",
+                                    cancel: "@T("Admin.Common.Cancel")"
+                                }
+                            },
+                            title: "@T("Admin.Common.Edit")",
+                            width: 150
+                        }]
+                    });
+                });
+                </script>
             </td>
         </tr>
     </table>

@@ -4830,6 +4830,18 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton.Hint">
     <Value>Check to show share button on product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
+    <Value>Sort options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
+    <Value>Name</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser">
     <Value>Customer settings</Value>
   </LocaleResource>

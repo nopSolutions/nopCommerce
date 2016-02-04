@@ -1371,7 +1371,58 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Catalog");
         }
 
+        #region Sort options
 
+        [HttpPost]
+        public ActionResult SortOptionsList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
+            var model = new List<SortOptionModel>();
+            foreach (var option in catalogSettings.ProductSortingEnumDisplayOrder)
+            {
+                model.Add(new SortOptionModel()
+                {
+                    Id = option.Key,
+                    Name = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext),
+                    IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option.Key),
+                    DisplayOrder = option.Value
+                });
+            }
+            var gridModel = new DataSourceResult
+            {
+                Data = model,
+                Total = model.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult SortOptionUpdate(SortOptionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
+
+            catalogSettings.ProductSortingEnumDisplayOrder[model.Id] = model.DisplayOrder;
+            if (model.IsActive && catalogSettings.ProductSortingEnumDisabled.Contains(model.Id))
+                catalogSettings.ProductSortingEnumDisabled.Remove(model.Id);
+            if (!model.IsActive && !catalogSettings.ProductSortingEnumDisabled.Contains(model.Id))
+                catalogSettings.ProductSortingEnumDisabled.Add(model.Id);
+
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisabled, storeScope, false);
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisplayOrder, storeScope, false);
+            _settingService.ClearCache();
+
+            return new NullJsonResult();
+        }
+
+        #endregion
 
         public ActionResult RewardPoints()
         {

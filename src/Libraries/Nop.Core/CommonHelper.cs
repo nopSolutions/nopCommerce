@@ -239,6 +239,8 @@ namespace Nop.Core
                 return new ShippingOptionTypeConverter();
             if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
                 return new ShippingOptionListTypeConverter();
+            if (type == typeof(Dictionary<int, int>))
+                return new GenericDictionaryTypeConverter<int, int>();
 
             return TypeDescriptor.GetConverter(type);
         }
