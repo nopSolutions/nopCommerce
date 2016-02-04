@@ -4666,12 +4666,7 @@ namespace Nop.Services.Installation
                     DefaultCategoryPageSizeOptions = "6, 3, 9",
                     DefaultCategoryPageSize = 6,
                     DefaultManufacturerPageSizeOptions = "6, 3, 9",
-                    DefaultManufacturerPageSize = 6,
-                    ProductSortingEnumDisabled = new List<int>(),
-                    ProductSortingEnumDisplayOrder = new Dictionary<int, int>()
-                    {
-                        { 0, 1 }, { 5, 2 }, { 6, 3 }, { 10, 4 }, { 11, 5 }, { 15, 6 }
-                    }
+                    DefaultManufacturerPageSize = 6
                 });
 
             settingService.SaveSetting(new LocalizationSettings

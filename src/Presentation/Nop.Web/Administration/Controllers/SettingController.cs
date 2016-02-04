@@ -1382,19 +1382,20 @@ namespace Nop.Admin.Controllers
             var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
             var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
             var model = new List<SortOptionModel>();
-            foreach (var option in catalogSettings.ProductSortingEnumDisplayOrder)
+            foreach (int option in Enum.GetValues(typeof(ProductSortingEnum)))
             {
+                int value;
                 model.Add(new SortOptionModel()
                 {
-                    Id = option.Key,
-                    Name = ((ProductSortingEnum)option.Key).GetLocalizedEnum(_localizationService, _workContext),
-                    IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option.Key),
-                    DisplayOrder = option.Value
+                    Id = option,
+                    Name = ((ProductSortingEnum)option).GetLocalizedEnum(_localizationService, _workContext),
+                    IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option),
+                    DisplayOrder = catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(option, out value) ? value : option
                 });
             }
             var gridModel = new DataSourceResult
             {
-                Data = model,
+                Data = model.OrderBy(option => option.DisplayOrder),
                 Total = model.Count
             };
             return Json(gridModel);

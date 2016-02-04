@@ -246,6 +246,6 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsortingenumdisplayorder')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
-	VALUES (N'catalogsettings.productsortingenumdisplayorder',N'0, 1;5, 2;6, 3;10, 4;11, 5;15, 6',0);
+	VALUES (N'catalogsettings.productsortingenumdisplayorder',N'',0);
 END
 GO

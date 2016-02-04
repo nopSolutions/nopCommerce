@@ -155,9 +155,14 @@ namespace Nop.Web.Controllers
             var allDisabled = _catalogSettings.ProductSortingEnumDisabled.Count == Enum.GetValues(typeof(ProductSortingEnum)).Length;
             pagingFilteringModel.AllowProductSorting = _catalogSettings.AllowProductSorting && !allDisabled;
 
-            var activeOptions = _catalogSettings.ProductSortingEnumDisplayOrder
-                                .Where(x => !_catalogSettings.ProductSortingEnumDisabled.Contains(x.Key))
-                                .OrderBy(x => x.Value);
+            var activeOptions = Enum.GetValues(typeof(ProductSortingEnum)).Cast<int>()
+                .Except(_catalogSettings.ProductSortingEnumDisabled)
+                .Select((idOption) =>
+                {
+                    int order;
+                    return new KeyValuePair<int, int>(idOption, _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(idOption, out order) ? order : idOption);
+                })
+                .OrderBy(x => x.Value);
             if (command.OrderBy == null)
                 command.OrderBy = allDisabled ? 0 : activeOptions.First().Key;
 

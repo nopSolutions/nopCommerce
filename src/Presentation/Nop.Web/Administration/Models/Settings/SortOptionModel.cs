@@ -11,7 +11,6 @@ namespace Nop.Admin.Models.Settings
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SortOptions.IsActive")]
-        [AllowHtml]
         public bool IsActive { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SortOptions.DisplayOrder")]
