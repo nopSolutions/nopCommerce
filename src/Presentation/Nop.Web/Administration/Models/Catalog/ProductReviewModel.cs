@@ -11,7 +11,6 @@ namespace Nop.Admin.Models.Catalog
     public partial class ProductReviewModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Store")]
-        public int StoreId { get; set; }
         public string StoreName { get; set; }
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
         public int ProductId { get; set; }

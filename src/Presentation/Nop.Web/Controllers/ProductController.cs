@@ -823,21 +823,8 @@ namespace Nop.Web.Controllers
 
             #region Product review overview
 
-            model.ProductReviewOverview = new ProductReviewOverviewModel
-            {
-                ProductId = product.Id,
-                RatingSum = _catalogSettings.ShowProductReviewsPerStore
-                    ? product.ProductReviews
-                               .Where(pr=>pr.IsApproved && pr.StoreId == _storeContext.CurrentStore.Id)
-                               .Sum(pr=>pr.Rating)
-                    : product.ApprovedRatingSum,
-                TotalReviews = _catalogSettings.ShowProductReviewsPerStore
-                    ? product
-                        .ProductReviews
-                        .Count(pr=>pr.IsApproved && pr.StoreId==_storeContext.CurrentStore.Id)
-                    : product.ApprovedTotalReviews,
-                AllowCustomerReviews = product.AllowCustomerReviews
-            };
+            model.ProductReviewOverview = this.PrepareProductReviewOverviewModel(_storeContext, _catalogSettings, 
+                _cacheManager, product);
 
             #endregion
 

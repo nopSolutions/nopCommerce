@@ -62,7 +62,6 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("productReview");
 
             model.Id = productReview.Id;
-            model.StoreId = productReview.Store.Id;
             model.StoreName = productReview.Store.Name;
             model.ProductId = productReview.ProductId;
             model.ProductName = productReview.Product.Name;
@@ -98,10 +97,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductReviewListModel();
-            model.AvailableStors.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
-            var stors = _storeService.GetAllStores().OrderBy(st => st.DisplayOrder).Select(st => new SelectListItem() {Selected = false, Text = st.Name, Value = st.Id.ToString()});
-            foreach (var selectListItem in stors)
-                model.AvailableStors.Add(selectListItem);
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0"});
+            var stores = _storeService.GetAllStores().Select(st => new SelectListItem() {Text = st.Name, Value = st.Id.ToString()});
+            foreach (var selectListItem in stores)
+                model.AvailableStores.Add(selectListItem);
             return View(model);
         }
 
@@ -118,7 +117,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
-                createdOnFromValue, createdToFromValue, model.SearchText, model.StoreId!=0?(int?)model.StoreId:null);
+                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId);
 
             var gridModel = new DataSourceResult
             {

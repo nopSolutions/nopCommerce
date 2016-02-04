@@ -71,9 +71,9 @@ namespace Nop.Core.Domain.Catalog
         /// Gets the product
         /// </summary>
         public virtual Product Product { get; set; }
-        
+
         /// <summary>
-        /// Gets the Store for current Rewiew
+        /// Gets or sets the store
         /// </summary>
         public virtual Store Store { get; set; }
 

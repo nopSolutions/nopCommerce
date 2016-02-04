@@ -72,7 +72,7 @@ set @resources='
 	<Value>Reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-	<Value>Enable show review per store</Value>
+	<Value>Enable show reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should have unique items.</Value>
@@ -86,8 +86,14 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Productreviews.Fields.Store">
 	<Value>Store</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.Store">
-    <Value>Search product reviews per store</Value>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
+    <Value>Store in which an review</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
+    <Value>Search for reviews per store</Value>
   </LocaleResource>
 </Language>
 '
@@ -182,28 +188,40 @@ ALTER TABLE [ProductAttributeValue] ALTER COLUMN [ImageSquaresPictureId] int NOT
 GO
 
 --new column
-	ALTER TABLE [dbo].[Store] SET (LOCK_ESCALATION = TABLE)
-	GO
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='StoreId')
+BEGIN
 	ALTER TABLE [dbo].[ProductReview] ADD
-		[StoreId] int NULL CONSTRAINT DF_ProductReview_StoreId DEFAULT 1
-	GO
-	ALTER TABLE [dbo].[ProductReview] ADD CONSTRAINT
-		FK_ProductReview_Store FOREIGN KEY
-		(
-			[StoreId]
-		) REFERENCES [dbo].[Store]
-		(
-			[Id]
-		) ON UPDATE  NO ACTION 
-	ON DELETE  NO ACTION
-	GO
-	ALTER TABLE [dbo].[ProductReview] SET (LOCK_ESCALATION = TABLE)
-	GO
-	DECLARE @DefaultStoreId INTEGER
-	SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
-	UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE 1=1
-	GO
-	ALTER TABLE [dbo].[ProductReview] ALTER COLUMN [StoreId] INT NOT NULL
+	[StoreId] int NULL
+END
+GO
+
+DECLARE @DefaultStoreId INT
+SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
+UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE StoreId IS NULL
+GO
+
+ALTER TABLE [dbo].[ProductReview] ALTER COLUMN [StoreId] INT NOT NULL
+GO
+
+IF EXISTS (SELECT 1 FROM   sys.objects WHERE  
+			name = 'ProductReview_Store'
+			AND parent_object_id = Object_id('ProductReview')
+			AND Objectproperty(object_id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.ProductReview
+DROP CONSTRAINT ProductReview_Store
+GO
+
+ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Store] FOREIGN KEY([StoreId])
+REFERENCES [dbo].[Store] ([Id])
+ON DELETE CASCADE
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductreviewsperstore')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'catalogsettings.showproductreviewsperstore', N'False', 0)
+END
 GO
 
 --new setting

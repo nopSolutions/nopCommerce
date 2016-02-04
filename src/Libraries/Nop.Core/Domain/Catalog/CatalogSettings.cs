@@ -107,7 +107,7 @@ namespace Nop.Core.Domain.Catalog
         public bool NotifyStoreOwnerAboutNewProductReviews { get; set; }
 
         /// <summary>
-        /// Gets or sets Allow store-owner to filter reviews by shop
+        /// Gets or sets a value indicating whether the product reviews will be filtered per store
         /// </summary>
         public bool ShowProductReviewsPerStore { get; set; }
 

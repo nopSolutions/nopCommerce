@@ -11,7 +11,7 @@ namespace Nop.Admin.Models.Catalog
     {
         public ProductReviewListModel()
         {
-            AvailableStors = new List<SelectListItem>();
+            AvailableStores = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnFrom")]
@@ -26,9 +26,9 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string SearchText { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.Store")]
-        public int StoreId { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchStore")]
+        public int SearchStoreId { get; set; }
 
-        public IList<SelectListItem> AvailableStors { get; set; }
+        public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

@@ -1359,9 +1359,9 @@ namespace Nop.Admin.Controllers
                 _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope);
 
             if (model.ShowProductReviewsPerStore_OverrideForStore || storeScope == 0)
-                _settingService.SaveSetting(catalogSettings, x=>x.ShowProductReviewsPerStore, storeScope, false);
-            else if(storeScope>0)
-                _settingService.DeleteSetting(catalogSettings, x=>x.ShowProductReviewsPerStore, storeScope);
+                _settingService.SaveSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();

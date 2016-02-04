@@ -2043,6 +2043,9 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store">
     <Value>Store</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
+    <Value>Store in which an review</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
@@ -2064,14 +2067,17 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
+    <Value>Search for reviews per store</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText">
     <Value>Message</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText.Hint">
     <Value>Search in title and review text.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.Store">
-    <Value>Search product reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Updated">
     <Value>The product review has been updated successfully.</Value>
@@ -4834,7 +4840,7 @@
     <Value>Reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Enable show review per store</Value>
+    <Value>Enable show reviews per store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
