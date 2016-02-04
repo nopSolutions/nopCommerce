@@ -13,6 +13,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
@@ -510,445 +511,114 @@ namespace Nop.Services.ExportImport
                 // get handle to the existing worksheet
                 var worksheet = xlPackage.Workbook.Worksheets.Add("Products");
                 //Create Headers and format them 
-                var properties = new []
+                var properties = new[]
                 {
-                    "ProductTypeId",
-                    "ParentGroupedProductId",
-                    "VisibleIndividually",
-                    "Name",
-                    "ShortDescription",
-                    "FullDescription",
-                    "VendorId",
-                    "ProductTemplateId",
-                    "ShowOnHomePage",
-                    "MetaKeywords",
-                    "MetaDescription",
-                    "MetaTitle",
-                    "SeName",
-                    "AllowCustomerReviews",
-                    "Published",
-                    "SKU",
-                    "ManufacturerPartNumber",
-                    "Gtin",
-                    "IsGiftCard",
-                    "GiftCardTypeId",
-                    "OverriddenGiftCardAmount",
-                    "RequireOtherProducts",
-                    "RequiredProductIds",
-                    "AutomaticallyAddRequiredProducts",
-                    "IsDownload",
-                    "DownloadId",
-                    "UnlimitedDownloads",
-                    "MaxNumberOfDownloads",
-                    "DownloadActivationTypeId",
-                    "HasSampleDownload",
-                    "SampleDownloadId",
-                    "HasUserAgreement",
-                    "UserAgreementText",
-                    "IsRecurring",
-                    "RecurringCycleLength",
-                    "RecurringCyclePeriodId",
-                    "RecurringTotalCycles",
-                    "IsRental",
-                    "RentalPriceLength",
-                    "RentalPricePeriodId",
-                    "IsShipEnabled",
-                    "IsFreeShipping",
-                    "ShipSeparately",
-                    "AdditionalShippingCharge",
-                    "DeliveryDateId",
-                    "IsTaxExempt",
-                    "TaxCategoryId",
-                    "IsTelecommunicationsOrBroadcastingOrElectronicServices",
-                    "ManageInventoryMethodId",
-                    "UseMultipleWarehouses",
-                    "WarehouseId",
-                    "StockQuantity",
-                    "DisplayStockAvailability",
-                    "DisplayStockQuantity",
-                    "MinStockQuantity",
-                    "LowStockActivityId",
-                    "NotifyAdminForQuantityBelow",
-                    "BackorderModeId",
-                    "AllowBackInStockSubscriptions",
-                    "OrderMinimumQuantity",
-                    "OrderMaximumQuantity",
-                    "AllowedQuantities",
-                    "AllowAddingOnlyExistingAttributeCombinations",
-                    "DisableBuyButton",
-                    "DisableWishlistButton",
-                    "AvailableForPreOrder",
-                    "PreOrderAvailabilityStartDateTimeUtc",
-                    "CallForPrice",
-                    "Price",
-                    "OldPrice",
-                    "ProductCost",
-                    "SpecialPrice",
-                    "SpecialPriceStartDateTimeUtc",
-                    "SpecialPriceEndDateTimeUtc",
-                    "CustomerEntersPrice",
-                    "MinimumCustomerEnteredPrice",
-                    "MaximumCustomerEnteredPrice",
-                    "BasepriceEnabled",
-                    "BasepriceAmount",
-                    "BasepriceUnitId",
-                    "BasepriceBaseAmount",
-                    "BasepriceBaseUnitId",
-                    "MarkAsNew",
-                    "MarkAsNewStartDateTimeUtc",
-                    "MarkAsNewEndDateTimeUtc",
-                    "Weight",
-                    "Length",
-                    "Width",
-                    "Height",
-                    "CreatedOnUtc",
-                    "CategoryIds",
-                    "ManufacturerIds",
-                    "Picture1",
-                    "Picture2",
-                    "Picture3"
+                    new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId),
+                    new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId),
+                    new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually),
+                    new PropertyByName<Product>("Name", p => p.Name),
+                    new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
+                    new PropertyByName<Product>("FullDescription", p => p.FullDescription),
+                    new PropertyByName<Product>("VendorId", p => p.VendorId.ToString()),
+                    new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId),
+                    new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage),
+                    new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords),
+                    new PropertyByName<Product>("MetaDescription", p => p.MetaDescription),
+                    new PropertyByName<Product>("MetaTitle", p => p.MetaTitle),
+                    new PropertyByName<Product>("SeName", p => p.GetSeName(0)),
+                    new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews),
+                    new PropertyByName<Product>("Published", p => p.Published),
+                    new PropertyByName<Product>("SKU", p => p.Sku),
+                    new PropertyByName<Product>("ManufacturerPartNumber", p => p.ManufacturerPartNumber),
+                    new PropertyByName<Product>("Gtin", p => p.Gtin),
+                    new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard),
+                    new PropertyByName<Product>("GiftCardTypeId", p => p.GiftCardTypeId),
+                    new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount),
+                    new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts),
+                    new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds),
+                    new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts),
+                    new PropertyByName<Product>("IsDownload", p => p.IsDownload),
+                    new PropertyByName<Product>("DownloadId", p => p.DownloadId),
+                    new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads),
+                    new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads),
+                    new PropertyByName<Product>("DownloadActivationTypeId", p => p.DownloadActivationTypeId),
+                    new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload),
+                    new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId),
+                    new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement),
+                    new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText),
+                    new PropertyByName<Product>("IsRecurring", p => p.IsRecurring),
+                    new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength),
+                    new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId),
+                    new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles),
+                    new PropertyByName<Product>("IsRental", p => p.IsRental),
+                    new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength),
+                    new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId),
+                    new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
+                    new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping),
+                    new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately),
+                    new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge),
+                    new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId),
+                    new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
+                    new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
+                    new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices),
+                    new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
+                    new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses),
+                    new PropertyByName<Product>("WarehouseId", p => p.WarehouseId),
+                    new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
+                    new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability),
+                    new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity),
+                    new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity),
+                    new PropertyByName<Product>("LowStockActivityId", p => p.LowStockActivityId),
+                    new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow),
+                    new PropertyByName<Product>("BackorderModeId", p => p.BackorderModeId),
+                    new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions),
+                    new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity),
+                    new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity),
+                    new PropertyByName<Product>("AllowedQuantities", p => p.AllowedQuantities),
+                    new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations", p => p.AllowAddingOnlyExistingAttributeCombinations),
+                    new PropertyByName<Product>("DisableBuyButton", p => p.DisableBuyButton),
+                    new PropertyByName<Product>("DisableWishlistButton", p => p.DisableWishlistButton),
+                    new PropertyByName<Product>("AvailableForPreOrder", p => p.AvailableForPreOrder),
+                    new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc", p => p.PreOrderAvailabilityStartDateTimeUtc),
+                    new PropertyByName<Product>("CallForPrice", p => p.CallForPrice),
+                    new PropertyByName<Product>("Price", p => p.Price),
+                    new PropertyByName<Product>("OldPrice", p => p.OldPrice),
+                    new PropertyByName<Product>("ProductCost", p => p.ProductCost),
+                    new PropertyByName<Product>("SpecialPrice", p => p.SpecialPrice),
+                    new PropertyByName<Product>("SpecialPriceStartDateTimeUtc", p => p.SpecialPriceStartDateTimeUtc),
+                    new PropertyByName<Product>("SpecialPriceEndDateTimeUtc", p => p.SpecialPriceEndDateTimeUtc),
+                    new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice),
+                    new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice),
+                    new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice),
+                    new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled),
+                    new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount),
+                    new PropertyByName<Product>("BasepriceUnitId", p => p.BasepriceUnitId),
+                    new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount),
+                    new PropertyByName<Product>("BasepriceBaseUnitId", p => p.BasepriceBaseUnitId),
+                    new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew),
+                    new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc),
+                    new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc),
+                    new PropertyByName<Product>("Weight", p => p.Weight),
+                    new PropertyByName<Product>("Length", p => p.Length),
+                    new PropertyByName<Product>("Width", p => p.Width),
+                    new PropertyByName<Product>("Height", p => p.Height),
+                    new PropertyByName<Product>("CreatedOnUtc", p => p.CreatedOnUtc),
+                    new PropertyByName<Product>("CategoryIds", GetCategoryIds),
+                    new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
+                    new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
+                    new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
+                    new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
                 };
-                for (int i = 0; i < properties.Length; i++)
+                
+                var manager = new PropertyManager<Product>(properties);
+                manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                var row = 2;
+                foreach (var product in products)
                 {
-                    worksheet.Cells[1, i + 1].Value = properties[i];
-                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                    manager.CurentObject = product;
+                    manager.WriteToXlsx(worksheet, row++);
                 }
-
-
-                int row = 2;
-                foreach (var p in products)
-                {
-                    int col = 1;
-
-                    worksheet.Cells[row, col].Value = p.ProductTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ParentGroupedProductId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.VisibleIndividually;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Name;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShortDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.FullDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.VendorId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ProductTemplateId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShowOnHomePage;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaKeywords;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaTitle;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.GetSeName(0);
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowCustomerReviews;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Published;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Sku;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ManufacturerPartNumber;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Gtin;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsGiftCard;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.GiftCardTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OverriddenGiftCardAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RequireOtherProducts;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RequiredProductIds;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AutomaticallyAddRequiredProducts;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsDownload;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DownloadId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UnlimitedDownloads;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MaxNumberOfDownloads;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DownloadActivationTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.HasSampleDownload;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SampleDownloadId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.HasUserAgreement;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UserAgreementText;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsRecurring;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringCycleLength;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringCyclePeriodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringTotalCycles;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsRental;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RentalPriceLength;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RentalPricePeriodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsShipEnabled;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsFreeShipping;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShipSeparately;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AdditionalShippingCharge;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DeliveryDateId;
-                    col++;
-                    
-                    worksheet.Cells[row, col].Value = p.IsTaxExempt;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.TaxCategoryId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsTelecommunicationsOrBroadcastingOrElectronicServices;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ManageInventoryMethodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UseMultipleWarehouses;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.WarehouseId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.StockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisplayStockAvailability;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisplayStockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MinStockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.LowStockActivityId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.NotifyAdminForQuantityBelow;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BackorderModeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowBackInStockSubscriptions;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OrderMinimumQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OrderMaximumQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowedQuantities;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowAddingOnlyExistingAttributeCombinations;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisableBuyButton;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisableWishlistButton;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AvailableForPreOrder;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.PreOrderAvailabilityStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CallForPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Price;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OldPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ProductCost;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPriceStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPriceEndDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CustomerEntersPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MinimumCustomerEnteredPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MaximumCustomerEnteredPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceEnabled;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceUnitId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceBaseAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceBaseUnitId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNew;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNewStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNewEndDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Weight;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Length;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Width;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Height;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CreatedOnUtc.ToOADate();
-                    col++;
-
-                    //category identifiers
-                    string categoryIds = null;
-                    foreach (var pc in _categoryService.GetProductCategoriesByProductId(p.Id))
-                    {
-                        categoryIds += pc.CategoryId;
-                        categoryIds += ";";
-                    }
-                    worksheet.Cells[row, col].Value = categoryIds;
-                    col++;
-
-                    //manufacturer identifiers
-                    string manufacturerIds = null;
-                    foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(p.Id))
-                    {
-                        manufacturerIds += pm.ManufacturerId;
-                        manufacturerIds += ";";
-                    }
-                    worksheet.Cells[row, col].Value = manufacturerIds;
-                    col++;
-
-                    //pictures (up to 3 pictures)
-                    string picture1 = null;
-                    string picture2 = null;
-                    string picture3 = null;
-                    var pictures = _pictureService.GetPicturesByProductId(p.Id, 3);
-                    for (int i = 0; i < pictures.Count; i++)
-                    {
-                        string pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
-                        switch (i)
-                        {
-                            case 0:
-                                picture1 = pictureLocalPath;
-                                break;
-                            case 1:
-                                picture2 = pictureLocalPath;
-                                break;
-                            case 2:
-                                picture3 = pictureLocalPath;
-                                break;
-                        }
-                    }
-                    worksheet.Cells[row, col].Value = picture1;
-                    col++;
-                    worksheet.Cells[row, col].Value = picture2;
-                    col++;
-                    worksheet.Cells[row, col].Value = picture3;
-                    col++;
-
-                    row++;
-                }
-
-
-
-
-
-
-
 
                 // we had better add some document properties to the spreadsheet 
 
@@ -1736,6 +1406,60 @@ namespace Nop.Services.ExportImport
             return sb.ToString();
         }
 
+        private string GetCategoryIds(Product product)
+        {
+            string categoryIds = null;
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            {
+                categoryIds += pc.CategoryId;
+                categoryIds += ";";
+            }
+            return categoryIds;
+        }
+
+        private string GetManufacturerIds(Product product)
+        {
+            string manufacturerIds = null;
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            {
+                manufacturerIds += pm.ManufacturerId;
+                manufacturerIds += ";";
+            }
+            return manufacturerIds;
+        }
+
+        private string[] GetPictures(Product product)
+        {
+            //pictures (up to 3 pictures)
+            string picture1 = null;
+            string picture2 = null;
+            string picture3 = null;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
+            for (var i = 0; i < pictures.Count; i++)
+            {
+                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                switch (i)
+                {
+                    case 0:
+                        picture1 = pictureLocalPath;
+                        break;
+                    case 1:
+                        picture2 = pictureLocalPath;
+                        break;
+                    case 2:
+                        picture3 = pictureLocalPath;
+                        break;
+                }
+            }
+            return new[] {picture1, picture2, picture3};
+        }
+
+        private void SetCaptionStyle(ExcelStyle style)
+        {
+            style.Fill.PatternType = ExcelFillStyle.Solid;
+            style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+            style.Font.Bold = true;
+        }
         #endregion
     }
 }
