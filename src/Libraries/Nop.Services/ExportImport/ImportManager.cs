@@ -439,7 +439,10 @@ namespace Nop.Services.ExportImport
                     product.Width = width;
                     product.Height = height;
                     product.Published = published;
-                    product.CreatedOnUtc = createdOnUtc;
+
+                    if(newProduct)
+                        product.CreatedOnUtc = DateTime.UtcNow;
+
                     product.UpdatedOnUtc = DateTime.UtcNow;
                     if (newProduct)
                     {
