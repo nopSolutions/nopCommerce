@@ -204,7 +204,6 @@ namespace Nop.Services.ExportImport
                     "Length",
                     "Width",
                     "Height",
-                    "CreatedOnUtc",
                     "CategoryIds",
                     "ManufacturerIds",
                     "Picture1",
@@ -337,7 +336,6 @@ namespace Nop.Services.ExportImport
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
                     decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
-                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
                     string categoryIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
                     string manufacturerIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
                     string picture1 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
