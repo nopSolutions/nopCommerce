@@ -10,6 +10,7 @@ using Nop.Services.Events;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Stores;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IStoreService _storeService;
 
         #endregion Fields
 
@@ -34,13 +36,15 @@ namespace Nop.Admin.Controllers
             IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, 
             IPermissionService permissionService,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IStoreService storeService)
         {
             this._productService = productService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._eventPublisher = eventPublisher;
+            _storeService = storeService;
         }
 
         #endregion
@@ -58,6 +62,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("productReview");
 
             model.Id = productReview.Id;
+            model.StoreName = productReview.Store.Name;
             model.ProductId = productReview.ProductId;
             model.ProductName = productReview.Product.Name;
             model.CustomerId = productReview.CustomerId;
@@ -92,6 +97,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ProductReviewListModel();
+            model.AvailableStores.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            var stores = _storeService.GetAllStores().Select(st => new SelectListItem() { Text = st.Name, Value = st.Id.ToString() });
+            foreach (var selectListItem in stores)
+                model.AvailableStores.Add(selectListItem);
             return View(model);
         }
 
@@ -108,7 +117,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
-                createdOnFromValue, createdToFromValue, model.SearchText);
+                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId);
             var gridModel = new DataSourceResult
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>

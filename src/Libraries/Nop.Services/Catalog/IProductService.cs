@@ -433,10 +433,11 @@ namespace Nop.Services.Catalog
         /// <param name="fromUtc">Item creation from; null to load all records</param>
         /// <param name="toUtc">Item item creation to; null to load all records</param>
         /// <param name="message">Search title or review text; null to load all records</param>
+        /// <param name="storeId">The store identifier; pass 0 to load all records</param>
         /// <returns>Reviews</returns>
         IList<ProductReview> GetAllProductReviews(int customerId, bool? approved,
             DateTime? fromUtc = null, DateTime? toUtc = null,
-            string message = null);
+            string message = null, int storeId = 0);
 
         /// <summary>
         /// Gets product review

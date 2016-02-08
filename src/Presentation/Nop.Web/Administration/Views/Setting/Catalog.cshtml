@@ -599,6 +599,16 @@
                 @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ShowProductReviewsPerStore):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductReviewsPerStore)
+                @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSearchSettings()
