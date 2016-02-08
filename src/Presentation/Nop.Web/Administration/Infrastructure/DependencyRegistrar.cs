@@ -26,6 +26,9 @@ namespace Nop.Admin.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<ProductController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+
+            //register AutoMapper initialization class
+            builder.RegisterType<AutoMapperRegistrar>();
         }
 
         /// <summary>

@@ -30,6 +30,16 @@ namespace Nop.Admin.Infrastructure.Cache
         public const string SPEC_ATTRIBUTES_MODEL_KEY = "Nop.pres.admin.product.specs";
         public const string SPEC_ATTRIBUTES_PATTERN_KEY = "Nop.pres.admin.product.specs";
 
+        /// <summary>
+        /// Keys for categories caching
+        /// </summary>
+        public const string CATEGORIESALL_MODEL_KEY = "Nop.pres.admin.categorieswithhidden"; //with hidden = true
+        public const string CATEGORIESALL_PATTERN_KEY = "Nop.pres.admin.categorieswithhidden";
+        public const string CATEGORIES_MODEL_KEY = "Nop.pres.admin.categories"; //hidden = false
+        public const string CATEGORIES_PATTERN_KEY = "Nop.pres.admin.categories";
+        public const string CATEGORIESALLCRUMB_MODEL_KEY = "Nop.pres.admin.categorieswithhiddencrumb"; //SelectedListItem list for hidden = true
+        public const string CATEGORIESALLCRUMB_PATTERN_KEY = "Nop.pres.admin.categorieswithhiddencrumb";
+
 
         private readonly ICacheManager _cacheManager;
         
@@ -58,5 +68,27 @@ namespace Nop.Admin.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(SPEC_ATTRIBUTES_PATTERN_KEY);
         }
+
+        //categories
+        public void HandleEvent(EntityInserted<Category> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORIESALL_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIESALLCRUMB_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Category> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORIESALL_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIESALLCRUMB_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Category> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORIESALL_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORIESALLCRUMB_PATTERN_KEY);
+        }
+
+
     }
 }
