@@ -1,0 +1,66 @@
+﻿#search-box {
+    margin: 10px 0 10px 25px;
+}
+
+.tt-input {
+    border-top:thin solid  #e5e5e5;
+    border-right:thin solid #e5e5e5;
+    border-bottom:0;
+    border-left:thin solid  #e5e5e5;
+    box-shadow:0px 1px 1px 1px #e5e5e5;
+    float:left;
+    height:17px;
+    margin:.8em 0 0 .5em; 
+    outline:0;
+    padding:.4em 0 .4em .6em; 
+    width:200px; 
+}
+
+.tt-menu {
+    background-color: white;
+    z-index: 1;
+    width: 100%;
+    border: solid 1px #D4D8DD;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    font-weight: 300;
+}
+
+    .tt-menu .tt-suggestion {
+        margin: 0;
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: solid 1px #d4d8dd;
+    }
+
+    .tt-menu .tt-highlight {
+        color: #e73128;
+    }
+
+    .tt-menu .tt-suggestion:last-of-type {
+        border-bottom: none;
+    }
+
+    .tt-menu .tt-suggestion h5 {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .tt-menu .tt-suggestion p {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    .tt-menu .tt-suggestion.tt-cursor {
+        background-color: #e2e5e8;
+    }
+
+    .tt-menu .tt-suggestion#user-selection:hover {
+        background-color: #e2e5e8;
+    }
+
+    .tt-menu .tt-empty {
+        text-align: center;
+    }
