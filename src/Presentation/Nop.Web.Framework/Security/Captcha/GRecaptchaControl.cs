@@ -6,12 +6,10 @@ namespace Nop.Web.Framework.Security.Captcha
 {
     public class GRecaptchaControl
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Theme { get; set; }
         public string PublicKey { get; set; }
         public string Language { get; set; }
-        public string Type { get; set; }
-        public string Size { get; set; }
 
         public GRecaptchaControl() { }
 
@@ -19,14 +17,13 @@ namespace Nop.Web.Framework.Security.Captcha
         {
             var scriptCallbackTag = new TagBuilder("script");
             scriptCallbackTag.Attributes.Add("type", "text/javascript");
-            scriptCallbackTag.InnerHtml =
-                $"var onloadCallback = function() {{grecaptcha.render('{ID}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}', 'type' : '{Type}', 'size' : '{Size}'}});}};";
+            scriptCallbackTag.InnerHtml = string.Format("var onloadCallback = function() {{grecaptcha.render('{0}', {{'sitekey' : '{1}', 'theme' : '{2}' }});}};", Id, PublicKey, Theme);
             writer.Write(scriptCallbackTag.ToString(TagRenderMode.Normal));
             var captchaTag = new TagBuilder("div");
-            captchaTag.Attributes.Add("id", ID);
+            captchaTag.Attributes.Add("id", Id);
             writer.Write(captchaTag.ToString(TagRenderMode.Normal));
             var scriptLoadApiTag = new TagBuilder("script");
-            scriptLoadApiTag.Attributes.Add("src", "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"+(string.IsNullOrEmpty(Language)?"":$"&hl={Language}"));
+            scriptLoadApiTag.Attributes.Add("src", "https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"+(string.IsNullOrEmpty(Language)?"":string.Format("&hl={0}", Language)));
             scriptLoadApiTag.Attributes.Add("async", null);
             scriptLoadApiTag.Attributes.Add("defer", null);
             writer.Write(scriptLoadApiTag.ToString(TagRenderMode.Normal));

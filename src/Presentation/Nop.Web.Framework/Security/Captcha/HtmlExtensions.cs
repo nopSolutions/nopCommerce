@@ -31,10 +31,14 @@ namespace Nop.Web.Framework.Security.Captcha
                 var theme = !string.IsNullOrEmpty(captchaSettings.ReCaptchaTheme)
                     ? captchaSettings.ReCaptchaTheme
                     : "light";
+                var language = !string.IsNullOrEmpty(captchaSettings.ReCaptchaLanguage)
+                    ? captchaSettings.ReCaptchaLanguage
+                    : "";
                 var captchaControl = new GRecaptchaControl()
                 {
-                    ID = "recaptcha",
+                    Id = "recaptcha",
                     Theme = theme,
+                    Language = language,
                     PublicKey = captchaSettings.ReCaptchaPublicKey
                 };
 

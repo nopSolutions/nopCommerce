@@ -2458,13 +2458,6 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
             model.SecuritySettings.ReCaptchaVersionValues.Add(new SelectListItem() { Text = "v.1", Value = "1" });
             model.SecuritySettings.ReCaptchaVersionValues.Add(new SelectListItem() { Text = "v.2", Value = "2" });
-            model.SecuritySettings.ReCaptchaLanguage = captchaSettings.ReCaptchaLanguage;
-            model.SecuritySettings.ReCaptchaSize = captchaSettings.ReCaptchaSize;
-            model.SecuritySettings.ReCaptchaSizeValues.Add(new SelectListItem() { Text = "Normal", Value = "normal" });
-            model.SecuritySettings.ReCaptchaSizeValues.Add(new SelectListItem() { Text = "Compact", Value = "compact" });
-            model.SecuritySettings.ReCaptchaType = captchaSettings.ReCaptchaType;
-            model.SecuritySettings.ReCaptchaTypeValues.Add(new SelectListItem() { Text = "Image", Value = "image" });
-            model.SecuritySettings.ReCaptchaTypeValues.Add(new SelectListItem() { Text = "Audio", Value = "audio" });
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 
@@ -2708,9 +2701,6 @@ namespace Nop.Admin.Controllers
             captchaSettings.ReCaptchaVersion = model.SecuritySettings.ReCaptchaVersion;
             captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
             captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
-            captchaSettings.ReCaptchaLanguage = model.SecuritySettings.ReCaptchaLanguage;
-            captchaSettings.ReCaptchaSize = model.SecuritySettings.ReCaptchaSize;
-            captchaSettings.ReCaptchaType = model.SecuritySettings.ReCaptchaType;
             _settingService.SaveSetting(captchaSettings);
             if (captchaSettings.Enabled &&
                 (String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPublicKey) || String.IsNullOrWhiteSpace(captchaSettings.ReCaptchaPrivateKey)))

@@ -162,8 +162,6 @@ namespace Nop.Admin.Models.Settings
             public SecuritySettingsModel()
             {
                 ReCaptchaVersionValues = new List<SelectListItem>();
-                ReCaptchaSizeValues = new List<SelectListItem>();
-                ReCaptchaTypeValues = new List<SelectListItem>();
             }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
@@ -216,15 +214,6 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnApplyVendorPage")]
             public bool CaptchaShowOnApplyVendorPage { get; set; }
 
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ReCaptchaLanguage")]
-            public string ReCaptchaLanguage { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ReCaptchaType")]
-            public string ReCaptchaType { get; set; }
-
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.ReCaptchaSize")]
-            public string ReCaptchaSize { get; set; }
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
             [AllowHtml]
             public string ReCaptchaPublicKey { get; set; }
@@ -237,8 +226,6 @@ namespace Nop.Admin.Models.Settings
             public int ReCaptchaVersion { get; set; }
 
             public IList<SelectListItem> ReCaptchaVersionValues { get; set; }
-            public IList<SelectListItem> ReCaptchaTypeValues { get; set; }
-            public IList<SelectListItem> ReCaptchaSizeValues { get; set; }
         }
 
         public partial class PdfSettingsModel : BaseNopModel

@@ -93,19 +93,10 @@ set @resources='
     <Value>reCAPTCHA version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select a reCAPTCHA version.</Value>
+    <Value>Select version of reCAPTCHA.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaType">
-    <Value>reCAPTCHA type</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaType.Hint">
-    <Value>Select a reCAPTCHA type.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaSize">
-    <Value>reCAPTCHA size</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaSize.Hint">
-    <Value>Select a reCAPTCHA version.</Value>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
 </Language>
 '
@@ -273,5 +264,27 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptch
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'captchasettings.recaptchaversion',N'1',0);
+END
+GO
+
+--new or update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchatheme')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'captchasettings.recaptchatheme',N'',0);
+END
+ELSE
+BEGIN
+	UPDATE [Setting] 
+	SET [Value] = N'' 
+	WHERE [Name] = N'captchasettings.recaptchatheme'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchalanguage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'captchasettings.recaptchalanguage',N'',0);
 END
 GO

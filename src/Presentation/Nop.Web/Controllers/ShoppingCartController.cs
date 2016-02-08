@@ -2675,7 +2675,10 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                if (_captchaSettings.ReCaptchaVersion == 1)
+                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                else if (_captchaSettings.ReCaptchaVersion == 2)
+                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaV2"));
             }
 
             //check whether the current customer is guest and ia allowed to email wishlist

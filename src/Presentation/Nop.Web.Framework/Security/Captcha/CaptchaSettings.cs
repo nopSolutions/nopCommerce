@@ -47,7 +47,6 @@ namespace Nop.Web.Framework.Security.Captcha
         /// A value indicating whether CAPTCHA should be displayed on the "Apply for vendor account" page
         /// </summary>
         public bool ShowOnApplyVendorPage { get; set; }
-
         /// <summary>
         /// reCAPTCHA public key
         /// </summary>
@@ -70,29 +69,8 @@ namespace Nop.Web.Framework.Security.Captcha
         /// </summary>
         public int ReCaptchaVersion { get; set; }
         /// <summary>
-        /// reCAPTCHA language
+        /// Language of reCAPTCHA
         /// </summary>
-        /// <remarks>
-        /// See all: https://developers.google.com/recaptcha/docs/language
-        /// Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified.
-        /// </remarks>
         public string ReCaptchaLanguage { get; set; }
-        /// <summary>
-        /// reCAPTCHA type. 
-        /// </summary>
-        /// <remarks>
-        /// Audio or image
-        /// Optional. The type of CAPTCHA to serve. 
-        /// Default: image
-        /// </remarks>
-        public string ReCaptchaType { get; set; }
-        /// <summary>
-        /// reCAPTCHA size.
-        /// </summary>
-        /// <remarks>
-        /// Compact or normal
-        /// Optional. The size of the widget.
-        /// </remarks>
-        public string ReCaptchaSize { get; set; }
     }
 }

@@ -5689,10 +5689,10 @@
     <Value>Enter reCAPTCHA public key (if enabled)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
-    <Value>reCAPTCHA Version</Value>
+    <Value>reCAPTCHA version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select a reCAPTCHA Version.</Value>
+    <Value>Select version of reCAPTCHA.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
@@ -11648,6 +11648,9 @@
   </LocaleResource>
   <LocaleResource Name="Common.WrongCaptcha">
     <Value>The characters didn't match the picture. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
   </LocaleResource>
   <LocaleResource Name="Common.WrongEmail">
     <Value>Wrong email</Value>
