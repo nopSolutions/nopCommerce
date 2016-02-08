@@ -5619,6 +5619,12 @@ namespace Nop.Services.Installation
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
@@ -9185,6 +9191,7 @@ namespace Nop.Services.Installation
                 {
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
+                    StoreId = defaultStore.Id,
                     IsApproved = true,
                     Title = "Some sample review",
                     ReviewText = string.Format("This sample review is for the {0}. I've been waiting for this product to be available. It is priced just right.", product.Name),
