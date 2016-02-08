@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Stores;
 
 namespace Nop.Core.Domain.Catalog
 {
@@ -20,6 +21,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the product identifier
         /// </summary>
         public int ProductId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store identifier
+        /// </summary>
+        public int StoreId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the content is approved
@@ -65,6 +71,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets the product
         /// </summary>
         public virtual Product Product { get; set; }
+
+        /// <summary>
+        /// Gets or sets the store
+        /// </summary>
+        public virtual Store Store { get; set; }
 
         /// <summary>
         /// Gets the entries of product review helpfulness

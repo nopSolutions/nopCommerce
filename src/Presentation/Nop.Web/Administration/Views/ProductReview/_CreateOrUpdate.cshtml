@@ -7,7 +7,15 @@
             @Html.NopLabelFor(model => model.ProductName):
         </td>
         <td class="adminData">
-            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
+            @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new {})
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StoreName):
+        </td>
+        <td class="adminData">
+            @Model.StoreName
         </td>
     </tr>
     <tr>

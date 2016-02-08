@@ -44,6 +44,14 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchStoreId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SearchStoreId, Model.AvailableStores)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-productreviews" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -95,6 +103,10 @@
                             attributes: { style: "text-align:center" },
                             template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
                             width: 50
+                        }, {
+                            field: "StoreName",
+                            title: "@T("Admin.Catalog.ProductReviews.Fields.Store")",
+                            width: 150
                         }, {
                             field: "ProductName",
                             title: "@T("Admin.Catalog.ProductReviews.Fields.Product")",
@@ -271,7 +283,8 @@
                     var data = {
                         CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                         CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                        SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val()
+                        SearchText: $('#@Html.FieldIdFor(model => model.SearchText)').val(),
+                        SearchStoreId: $('#@Html.FieldIdFor(model => model.SearchStoreId)').val()
                     };
                     addAntiForgeryToken(data);
                     return data;
