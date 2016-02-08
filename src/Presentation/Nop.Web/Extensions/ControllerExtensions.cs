@@ -363,17 +363,52 @@ namespace Nop.Web.Extensions
                 }
 
                 //reviews
-                model.ReviewOverviewModel = new ProductReviewOverviewModel
-                {
-                    ProductId = product.Id,
-                    RatingSum = product.ApprovedRatingSum,
-                    TotalReviews = product.ApprovedTotalReviews,
-                    AllowCustomerReviews = product.AllowCustomerReviews
-                };
+                model.ReviewOverviewModel = controller.PrepareProductReviewOverviewModel(storeContext, catalogSettings, cacheManager, product);
 
                 models.Add(model);
             }
             return models;
+        }
+
+        public static ProductReviewOverviewModel PrepareProductReviewOverviewModel(this Controller controller,
+            IStoreContext storeContext,
+            CatalogSettings catalogSettings,
+            ICacheManager cacheManager,
+            Product product)
+        {
+            ProductReviewOverviewModel productReview = null;
+
+            if (catalogSettings.ShowProductReviewsPerStore)
+            {
+                string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_REVIEWS_MODEL_KEY, product.Id, storeContext.CurrentStore.Id);
+
+                productReview = cacheManager.Get(cacheKey, () =>
+                {
+                    return new ProductReviewOverviewModel
+                    {
+                        RatingSum = product.ProductReviews
+                                .Where(pr => pr.IsApproved && pr.StoreId == storeContext.CurrentStore.Id)
+                                .Sum(pr => pr.Rating),
+                        TotalReviews = product
+                                .ProductReviews
+                                .Count(pr => pr.IsApproved && pr.StoreId == storeContext.CurrentStore.Id)
+                    };
+                });
+            }
+            else
+            {
+                productReview = new ProductReviewOverviewModel()
+                {
+                    RatingSum = product.ApprovedRatingSum,
+                    TotalReviews = product.ApprovedTotalReviews
+                };
+            }
+            if (productReview != null)
+            {
+                productReview.ProductId = product.Id;
+                productReview.AllowCustomerReviews = product.AllowCustomerReviews;
+            }
+            return productReview;
         }
     }
 }
