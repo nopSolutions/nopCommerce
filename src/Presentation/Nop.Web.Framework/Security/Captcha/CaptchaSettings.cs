@@ -59,6 +59,40 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>
+        /// <remarks>
+        /// Optional. The color theme of the widget.
+        /// Default for version 1: white
+        /// Default for version 2: light
+        /// </remarks>
         public string ReCaptchaTheme { get; set; }
+        /// <summary>
+        /// reCAPTCHA version
+        /// </summary>
+        public int ReCaptchaVersion { get; set; }
+        /// <summary>
+        /// reCAPTCHA language
+        /// </summary>
+        /// <remarks>
+        /// See all: https://developers.google.com/recaptcha/docs/language
+        /// Optional. Forces the widget to render in a specific language. Auto-detects the user's language if unspecified.
+        /// </remarks>
+        public string ReCaptchaLanguage { get; set; }
+        /// <summary>
+        /// reCAPTCHA type. 
+        /// </summary>
+        /// <remarks>
+        /// Audio or image
+        /// Optional. The type of CAPTCHA to serve. 
+        /// Default: image
+        /// </remarks>
+        public string ReCaptchaType { get; set; }
+        /// <summary>
+        /// reCAPTCHA size.
+        /// </summary>
+        /// <remarks>
+        /// Compact or normal
+        /// Optional. The size of the widget.
+        /// </remarks>
+        public string ReCaptchaSize { get; set; }
     }
 }

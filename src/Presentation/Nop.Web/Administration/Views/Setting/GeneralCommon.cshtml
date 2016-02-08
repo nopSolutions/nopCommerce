@@ -349,41 +349,56 @@
 @helper TabSecuritySettings()
 {
     <script type="text/javascript">
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
 
-        toggleReCaptcha();
-    });
+            toggleReCaptcha();
+            toggleReCaptchaVersion(@Model.SecuritySettings.ReCaptchaVersion);
+        });
 
-    function toggleReCaptcha() {
-        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-            $('#ssCaptchaShowOnLoginPagepnl').show();
-            $('#ssCaptchaShowOnRegistrationPagepnl').show();
-            $('#ssCaptchaShowOnContactUsPagepnl').show();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-            $('#ssCaptchaShowOnProductReviewPagepnl').show();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-            $('#ssReCaptchaPublicKeypnl').show();
-            $('#ssReCaptchaPrivateKeypnl').show();
+        function toggleReCaptcha() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                $('#ssCaptchaShowOnLoginPagepnl').show();
+                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+                $('#ssReCaptchaPublicKeypnl').show();
+                $('#ssReCaptchaPrivateKeypnl').show();
+                $('#ssReCaptchaVersionpnl').show();
+            }
+            else {
+                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+                $('#ssReCaptchaPublicKeypnl').hide();
+                $('#ssReCaptchaPrivateKeypnl').hide();
+                $('#ssReCaptchaVersionpnl').hide();
+            }
         }
-        else {
-            $('#ssCaptchaShowOnLoginPagepnl').hide();
-            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-            $('#ssCaptchaShowOnContactUsPagepnl').hide();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-            $('#ssReCaptchaPublicKeypnl').hide();
-            $('#ssReCaptchaPrivateKeypnl').hide();
+
+        var toggleReCaptchaVersion = function(version) {
+            if (version == 2) {
+                $('#ssReCaptchaLanguagepnl').show();
+                $('#ssReCaptchaSizepnl').show();
+                $('#ssReCaptchaTypepnl').show();
+            } else {
+                $('#ssReCaptchaLanguagepnl').hide();
+                $('#ssReCaptchaSizepnl').hide();
+                $('#ssReCaptchaTypepnl').hide();
+            }
         }
-    }
     </script>
 
     <table class="adminContent">
@@ -542,6 +557,42 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaVersionpnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaVersion):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.ReCaptchaVersionValues, new {onchange = "toggleReCaptchaVersion($(this).val())" })
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaLanguagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model=>model.SecuritySettings.ReCaptchaLanguage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model=>model.SecuritySettings.ReCaptchaLanguage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaLanguage)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaSizepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaSize):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaSize, Model.SecuritySettings.ReCaptchaSizeValues)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaSize)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaTypepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaType):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaType, Model.SecuritySettings.ReCaptchaTypeValues)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaType)
             </td>
         </tr>
         <tr id="ssReCaptchaPublicKeypnl">
