@@ -269,6 +269,30 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
+        public ActionResult ProductSearchAutoComplete(string term, int searchStoreId = 0)
+        {
+            const int searchTermMinimumLength = 3;
+            if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
+                return Content("");
+
+            //products
+            const int productNumber = 15;
+            var products = _productService.SearchProducts(
+                keywords: term,
+                pageSize: productNumber,
+                showHidden: true,
+                storeId: searchStoreId);
+
+            var result = (from p in products
+                          select new
+                          {
+                              label = p.Name,
+                              productid = p.Id
+                          })
+                          .ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
     }
 }
