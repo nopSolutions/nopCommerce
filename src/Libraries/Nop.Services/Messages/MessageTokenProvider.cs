@@ -33,6 +33,7 @@ using Nop.Services.Payments;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Stores;
+using Nop.Core.Domain;
 
 namespace Nop.Services.Messages
 {
@@ -61,6 +62,7 @@ namespace Nop.Services.Messages
         private readonly ShippingSettings _shippingSettings;
 
         private readonly IEventPublisher _eventPublisher;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
         #endregion
 
@@ -84,7 +86,8 @@ namespace Nop.Services.Messages
             TaxSettings taxSettings,
             CurrencySettings currencySettings,
             ShippingSettings shippingSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            StoreInformationSettings storeInformationSettings)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -106,6 +109,7 @@ namespace Nop.Services.Messages
             this._currencySettings = currencySettings;
             this._shippingSettings = shippingSettings;
             this._eventPublisher = eventPublisher;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -548,6 +552,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Store.CompanyPhoneNumber", store.CompanyPhoneNumber));
             tokens.Add(new Token("Store.CompanyVat", store.CompanyVat));
 
+            tokens.Add(new Token("Facebook.URL", _storeInformationSettings.FacebookLink));
+            tokens.Add(new Token("Twitter.URL", _storeInformationSettings.TwitterLink));
+            tokens.Add(new Token("YouTube.URL", _storeInformationSettings.YoutubeLink));
+            tokens.Add(new Token("GooglePlus.URL", _storeInformationSettings.GooglePlusLink));
+
             //event notification
             _eventPublisher.EntityTokensAdded(store, tokens);
         }
@@ -911,7 +920,11 @@ namespace Nop.Services.Messages
                 "%Store.CompanyVat%",
                 "%NewsLetterSubscription.Email%",
                 "%NewsLetterSubscription.ActivationUrl%",
-                "%NewsLetterSubscription.DeactivationUrl%"
+                "%NewsLetterSubscription.DeactivationUrl%",
+                "%Facebook.URL%",
+                "%Twitter.URL%",
+                "%YouTube.URL%",
+                "%GooglePlus.URL%"
             };
             return allowedTokens.ToArray();
         }
@@ -1025,6 +1038,10 @@ namespace Nop.Services.Messages
                 "%PrivateMessage.Text%",
                 "%BackInStockSubscription.ProductName%",
                 "%BackInStockSubscription.ProductUrl%",
+                "%Facebook.URL%",
+                "%Twitter.URL%",
+                "%YouTube.URL%",
+                "%GooglePlus.URL%"
             };
             return allowedTokens.ToArray();
         }
