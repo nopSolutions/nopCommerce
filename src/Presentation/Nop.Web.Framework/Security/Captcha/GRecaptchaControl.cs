@@ -20,7 +20,7 @@ namespace Nop.Web.Framework.Security.Captcha
             var scriptCallbackTag = new TagBuilder("script");
             scriptCallbackTag.Attributes.Add("type", "text/javascript");
             scriptCallbackTag.InnerHtml =
-                $"var onloadCallback = function() {{grecaptcha.render('{ID}', {{'sitekey' : '{PublicKey}', 'theme' : {Theme}, 'type' : '{Type}', 'size' : '{Size}'}});}};";
+                $"var onloadCallback = function() {{grecaptcha.render('{ID}', {{'sitekey' : '{PublicKey}', 'theme' : '{Theme}', 'type' : '{Type}', 'size' : '{Size}'}});}};";
             writer.Write(scriptCallbackTag.ToString(TagRenderMode.Normal));
             var captchaTag = new TagBuilder("div");
             captchaTag.Attributes.Add("id", ID);

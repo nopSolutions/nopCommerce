@@ -5692,7 +5692,7 @@
     <Value>reCAPTCHA Version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select a reCAPTCHA Version</Value>
+    <Value>Select a reCAPTCHA Version.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
