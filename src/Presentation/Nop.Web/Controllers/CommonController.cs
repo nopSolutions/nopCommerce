@@ -499,10 +499,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                if (_captchaSettings.ReCaptchaVersion == 1)
-                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
-                else if (_captchaSettings.ReCaptchaVersion == 2)
-                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaV2"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)
@@ -600,10 +597,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                if (_captchaSettings.ReCaptchaVersion == 1)
-                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
-                else if (_captchaSettings.ReCaptchaVersion == 2)
-                    ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptchaV2"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             model.VendorName = vendor.GetLocalized(x => x.Name);
