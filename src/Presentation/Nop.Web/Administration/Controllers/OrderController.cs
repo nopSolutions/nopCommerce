@@ -38,6 +38,8 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
+using Nop.Core.Caching;
+using Nop.Admin.Infrastructure.Cache;
 
 namespace Nop.Admin.Controllers
 {
@@ -86,6 +88,7 @@ namespace Nop.Admin.Controllers
 	    private readonly IAffiliateService _affiliateService;
 	    private readonly IPictureService _pictureService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICacheManager _cacheManager;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -142,7 +145,8 @@ namespace Nop.Admin.Controllers
             TaxSettings taxSettings,
             MeasureSettings measureSettings,
             AddressSettings addressSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings,
+            ICacheManager cacheManager)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
@@ -190,6 +194,7 @@ namespace Nop.Admin.Controllers
             this._measureSettings = measureSettings;
             this._addressSettings = addressSettings;
             this._shippingSettings = shippingSettings;
+            this._cacheManager = cacheManager;
 		}
         
         #endregion
@@ -2232,10 +2237,24 @@ namespace Nop.Admin.Controllers
             var model = new OrderModel.AddOrderProductModel();
             model.OrderId = orderId;
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+            var categories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALL_MODEL_KEY, () =>
+            {
+                return _categoryService.GetAllCategories(showHidden: true);
+            });
+            model.AvailableCategories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALLCRUMB_MODEL_KEY, () =>
+            {
+                List<SelectListItem> items = new List<SelectListItem>();
+                foreach (var c in categories)
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = c.GetFormattedBreadCrumb(categories),
+                        Value = c.Id.ToString()
+                    });
+                }
+                return items;
+            });
+            model.AvailableCategories.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -3763,10 +3782,24 @@ namespace Nop.Admin.Controllers
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+            var categories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALL_MODEL_KEY, () =>
+            {
+                return _categoryService.GetAllCategories(showHidden: true);
+            });
+            model.AvailableCategories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALLCRUMB_MODEL_KEY, () =>
+            {
+                List<SelectListItem> items = new List<SelectListItem>();
+                foreach (var c in categories)
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = c.GetFormattedBreadCrumb(categories),
+                        Value = c.Id.ToString()
+                    });
+                }
+                return items;
+            });
+            model.AvailableCategories.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });

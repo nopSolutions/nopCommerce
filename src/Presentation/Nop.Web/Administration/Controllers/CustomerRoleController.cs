@@ -17,6 +17,8 @@ using Nop.Services.Vendors;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
+using Nop.Admin.Infrastructure.Cache;
+using Nop.Core.Caching;
 
 namespace Nop.Admin.Controllers
 {
@@ -34,10 +36,11 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
+        private readonly ICacheManager _cacheManager;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CustomerRoleController(ICustomerService customerService,
             ILocalizationService localizationService, 
@@ -48,7 +51,8 @@ namespace Nop.Admin.Controllers
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            ICacheManager cacheManager)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -60,6 +64,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._workContext = workContext;
+            this._cacheManager = cacheManager;
 		}
 
 		#endregion 
@@ -246,10 +251,24 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             //categories
-            model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            var categories = _categoryService.GetAllCategories(showHidden: true);
-            foreach (var c in categories)
-                model.AvailableCategories.Add(new SelectListItem { Text = c.GetFormattedBreadCrumb(categories), Value = c.Id.ToString() });
+            var categories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALL_MODEL_KEY, () =>
+            {
+                return _categoryService.GetAllCategories(showHidden: true);
+            });
+            model.AvailableCategories = _cacheManager.Get(ModelCacheEventConsumer.CATEGORIESALLCRUMB_MODEL_KEY, () =>
+            {
+                List<SelectListItem> items = new List<SelectListItem>();
+                foreach (var c in categories)
+                {
+                    items.Add(new SelectListItem
+                    {
+                        Text = c.GetFormattedBreadCrumb(categories),
+                        Value = c.Id.ToString()
+                    });
+                }
+                return items;
+            });
+            model.AvailableCategories.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
             //manufacturers
             model.AvailableManufacturers.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
