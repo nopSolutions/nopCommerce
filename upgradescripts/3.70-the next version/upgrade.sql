@@ -90,10 +90,22 @@ set @resources='
     <Value>Name</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
-    <Value>reCAPTCHA Version</Value>
+    <Value>reCAPTCHA version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select a reCAPTCHA Version</Value>
+    <Value>Select a reCAPTCHA version.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaType">
+    <Value>reCAPTCHA type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaType.Hint">
+    <Value>Select a reCAPTCHA type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaSize">
+    <Value>reCAPTCHA size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.ReCaptchaSize.Hint">
+    <Value>Select a reCAPTCHA version.</Value>
   </LocaleResource>
 </Language>
 '
