@@ -50,6 +50,8 @@ using Nop.Services.Common;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Core.Infrastructure;
+using Nop.Admin.Infrastructure;
 
 namespace Nop.Admin.Extensions
 {
@@ -57,14 +59,16 @@ namespace Nop.Admin.Extensions
     {
         public static TDestination MapTo<TSource, TDestination>(this TSource source)
         {
-            return Mapper.Map<TSource, TDestination>(source);
+            var autoMapper = EngineContext.Current.Resolve<AutoMapperRegistrar>();
+            return autoMapper.mapper.Map<TSource, TDestination>(source);
         }
 
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return Mapper.Map(source, destination);
+            var autoMapper = EngineContext.Current.Resolve<AutoMapperRegistrar>();
+            return autoMapper.mapper.Map(source, destination);
         }
-        
+
         #region Category
 
         public static CategoryModel ToModel(this Category entity)
@@ -271,7 +275,7 @@ namespace Nop.Admin.Extensions
         {
             return model.MapTo(destination);
         }
-        
+
         #endregion
 
         #region Email account
@@ -397,7 +401,7 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Currencies
 
         public static CurrencyModel ToModel(this Currency entity)
@@ -481,7 +485,7 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Shipping rate computation method
 
         public static ShippingRateComputationMethodModel ToModel(this IShippingRateComputationMethod entity)
@@ -528,7 +532,7 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Payment methods
 
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
@@ -546,7 +550,7 @@ namespace Nop.Admin.Extensions
         }
 
         #endregion
-        
+
         #region Widgets
 
         public static WidgetModel ToModel(this IWidgetPlugin entity)
