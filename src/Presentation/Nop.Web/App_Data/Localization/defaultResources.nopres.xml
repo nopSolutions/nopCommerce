@@ -2821,7 +2821,7 @@
     <Value>The width of the product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Imported">
-    <Value>Product(s) have been imported successfully.</Value>
+    <Value>Products have been imported successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Info">
     <Value>Product Info</Value>

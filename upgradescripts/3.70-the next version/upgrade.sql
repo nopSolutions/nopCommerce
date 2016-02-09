@@ -128,6 +128,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct.Hint">
     <Value>Search by a specific product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Imported">
+    <Value>Products have been imported successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
