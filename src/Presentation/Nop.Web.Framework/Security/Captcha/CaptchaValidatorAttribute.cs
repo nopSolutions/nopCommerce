@@ -7,7 +7,6 @@ namespace Nop.Web.Framework.Security.Captcha
     {
         private const string CHALLENGE_FIELD_KEY = "recaptcha_challenge_field";
         private const string RESPONSE_FIELD_KEY = "recaptcha_response_field";
-        // reCAPTCHA v2 field key
         private const string G_RESPONSE_FIELD_KEY = "g-recaptcha-response";
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -21,7 +20,6 @@ namespace Nop.Web.Framework.Security.Captcha
                 var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
                 if (captchaSettings.Enabled)
                 {
-
                     //validate captcha
                     if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version1)
                     {

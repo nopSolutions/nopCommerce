@@ -10,8 +10,6 @@ namespace Nop.Web.Framework.Security.Captcha
         public string PublicKey { get; set; }
         public string Language { get; set; }
 
-        public GRecaptchaControl() { }
-
         public void RenderControl(HtmlTextWriter writer)
         {
             var scriptCallbackTag = new TagBuilder("script");

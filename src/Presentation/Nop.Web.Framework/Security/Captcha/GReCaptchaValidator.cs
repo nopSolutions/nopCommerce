@@ -11,11 +11,6 @@ namespace Nop.Web.Framework.Security.Captcha
         public string RemoteIp { get; set; }
         public string Response { get; set; }
 
-        public GReCaptchaValidator()
-        {
-            
-        }
-
         public GReCaptchaResponse Validate()
         {
             var uriBuilder = new UriBuilder("https://www.google.com/recaptcha/api/siteverify")
