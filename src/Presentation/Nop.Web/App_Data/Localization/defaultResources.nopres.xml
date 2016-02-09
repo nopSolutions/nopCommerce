@@ -2044,7 +2044,7 @@
     <Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
-    <Value>A store name in which this review was placed.</Value>
+    <Value>A store name in which this review was written.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Title">
     <Value>Title</Value>

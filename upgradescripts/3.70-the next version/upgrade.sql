@@ -87,7 +87,7 @@ set @resources='
 	<Value>Store</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
-	<Value>A store name in which this review was placed.</Value>
+	<Value>A store name in which this review was written.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
 	<Value>Store</Value>
@@ -95,7 +95,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
 	<Value>Search by a specific store.</Value>
   </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
     <Value>Sort options</Value>
   </LocaleResource>
