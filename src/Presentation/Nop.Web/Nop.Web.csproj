@@ -467,6 +467,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Install\SqlServer.Indexes.sql" />
+    <Content Include="Content\admin\typeahead.css" />
     <Content Include="Content\BBEditor\ed.js" />
     <Content Include="Content\BBEditor\images\bold.gif" />
     <Content Include="Content\BBEditor\images\code.gif" />
@@ -1093,6 +1094,9 @@
     <Content Include="Content\tinymce\skins\lightgray\skin.min.css" />
     <Content Include="Content\tinymce\themes\modern\theme.min.js" />
     <Content Include="Content\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\admin\admin.navigation.js" />
+    <Content Include="Scripts\admin\admin.search.js" />
+    <Content Include="Scripts\admin\typeahead.bundle.min.js" />
     <Content Include="Scripts\fineuploader\edit.gif" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.css" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.min.css" />
