@@ -64,10 +64,17 @@
                 @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
                 <script type="text/javascript">
                     $(document).ready(function() {
+                        var searchStoreId = 0;
+
+                        $('#@Html.FieldIdFor(model=>model.SearchStoreId)').change(function() {
+                            searchStoreId = $(this).val();
+                            alert(searchStoreId);
+                        });
+
                         $('#search-product-name').autocomplete({
                             delay: 500,
                             minLength: 3,
-                            source: '@(Url.Action("ProductSearchAutoComplete"))?searchStoreId='+$('#@Html.FieldIdFor(model=>model.SearchStoreId)').val()+'',
+                            source: '@(Url.Action("ProductSearchAutoComplete"))?searchStoreId='+searchStoreId+'',
                             select: function(event, ui) {
                                 $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
                                 $('#search-product-friendly-name').text(ui.item.label);
