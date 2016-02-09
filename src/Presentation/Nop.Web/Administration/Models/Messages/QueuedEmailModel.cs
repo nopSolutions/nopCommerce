@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Messages;
@@ -62,6 +63,13 @@ namespace Nop.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SendImmediately")]
+        public bool SendImmediately { get; set; }
+
+        [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.DontSendBeforeDate")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? DontSendBeforeDate { get; set; }
 
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.SentTries")]
         public int SentTries { get; set; }

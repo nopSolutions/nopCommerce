@@ -10692,6 +10692,12 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.CreatedOn.Hint">
     <Value>Date/Time message added to queue.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.EmailAccountName">
     <Value>Email account</Value>
   </LocaleResource>
@@ -10736,6 +10742,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName.Hint">
     <Value>ReplyTo name (optional).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn">
     <Value>Sent on</Value>

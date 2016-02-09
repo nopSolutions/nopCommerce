@@ -134,6 +134,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImageFileName.Hint">
     <Value>The flag image file name. The image should be saved into \images\flags\ directory.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -358,5 +370,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptch
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'captchasettings.recaptchalanguage',N'',0);
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='DontSendBeforeDateUtc')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [DontSendBeforeDateUtc] DATETIME NULL
 END
 GO

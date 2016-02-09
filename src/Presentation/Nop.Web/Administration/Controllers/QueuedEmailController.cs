@@ -68,7 +68,7 @@ namespace Nop.Admin.Controllers
 
             var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
                 startDateValue, endDateValue, 
-                model.SearchLoadNotSent, model.SearchMaxSentTries, true,
+                model.SearchLoadNotSent, false, model.SearchMaxSentTries, true,
                 command.Page - 1, command.PageSize);
             var gridModel = new DataSourceResult
             {
@@ -76,6 +76,8 @@ namespace Nop.Admin.Controllers
                     var m = x.ToModel();
                     m.PriorityName = x.Priority.GetLocalizedEnum(_localizationService, _workContext);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    if (x.DontSendBeforeDateUtc.HasValue)
+                        m.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(x.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     if (x.SentOnUtc.HasValue)
                         m.SentOn = _dateTimeHelper.ConvertToUserTime(x.SentOnUtc.Value, DateTimeKind.Utc);
 
@@ -122,6 +124,9 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
+            if (email.DontSendBeforeDateUtc.HasValue)
+                model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(email.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
+            else model.SendImmediately = true;
             return View(model);
 		}
 
@@ -141,6 +146,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 email = model.ToEntity(email);
+                email.DontSendBeforeDateUtc = (model.SendImmediately || !model.DontSendBeforeDate.HasValue) ?
+                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value);
                 _queuedEmailService.UpdateQueuedEmail(email);
 
                 SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Updated"));
@@ -152,6 +159,8 @@ namespace Nop.Admin.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             if (email.SentOnUtc.HasValue)
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
+            if (email.DontSendBeforeDateUtc.HasValue)
+                model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(email.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             return View(model);
 		}
 
@@ -183,7 +192,9 @@ namespace Nop.Admin.Controllers
                 AttachmentFileName = queuedEmail.AttachmentFileName,
                 AttachedDownloadId = queuedEmail.AttachedDownloadId,
                 CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = queuedEmail.EmailAccountId
+                EmailAccountId = queuedEmail.EmailAccountId,
+                DontSendBeforeDateUtc = (queuedEmailModel.SendImmediately || !queuedEmailModel.DontSendBeforeDate.HasValue) ? 
+                    null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(queuedEmailModel.DontSendBeforeDate.Value)
             };
             _queuedEmailService.InsertQueuedEmail(requeuedEmail);
 

@@ -131,6 +131,7 @@ namespace Nop.Services.Messages
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
+        /// <param name="loadOnlyItemsToBeSent">A value indicating whether to load only emails for ready to be sent</param>
         /// <param name="maxSendTries">Maximum send tries</param>
         /// <param name="loadNewest">A value indicating whether we should sort queued email descending; otherwise, ascending.</param>
         /// <param name="pageIndex">Page index</param>
@@ -138,7 +139,7 @@ namespace Nop.Services.Messages
         /// <returns>Email item list</returns>
         public virtual IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? createdFromUtc, DateTime? createdToUtc, 
-            bool loadNotSentItemsOnly, int maxSendTries,
+            bool loadNotSentItemsOnly, bool loadOnlyItemsToBeSent, int maxSendTries,
             bool loadNewest, int pageIndex = 0, int pageSize = int.MaxValue)
         {
             fromEmail = (fromEmail ?? String.Empty).Trim();
@@ -155,6 +156,11 @@ namespace Nop.Services.Messages
                 query = query.Where(qe => qe.CreatedOnUtc <= createdToUtc);
             if (loadNotSentItemsOnly)
                 query = query.Where(qe => !qe.SentOnUtc.HasValue);
+            if (loadOnlyItemsToBeSent)
+            {
+                var nowUtc = DateTime.UtcNow;
+                query = query.Where(qe => !qe.DontSendBeforeDateUtc.HasValue || qe.DontSendBeforeDateUtc.Value <= nowUtc);
+            }
             query = query.Where(qe => qe.SentTries < maxSendTries);
             query = loadNewest ?
                 //load the newest records

@@ -28,7 +28,7 @@ namespace Nop.Services.Messages
         {
             var maxTries = 3;
             var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
-                true, maxTries, false, 0, 500);
+                true, true, maxTries, false, 0, 500);
             foreach (var queuedEmail in queuedEmails)
             {
                 var bcc = String.IsNullOrWhiteSpace(queuedEmail.Bcc) 

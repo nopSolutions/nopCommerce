@@ -83,6 +83,11 @@ namespace Nop.Core.Domain.Messages
         public DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
+        /// Gets or sets the date and time in UTC before which this email should not be sent
+        /// </summary>
+        public DateTime? DontSendBeforeDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the send tries
         /// </summary>
         public int SentTries { get; set; }
