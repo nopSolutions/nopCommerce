@@ -117,7 +117,7 @@ namespace Nop.Admin.Controllers
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
             var productReviews = _productService.GetAllProductReviews(0, null, 
-                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId);
+                createdOnFromValue, createdToFromValue, model.SearchText, model.SearchStoreId, model.SearchProductId);
             var gridModel = new DataSourceResult
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>
@@ -269,7 +269,7 @@ namespace Nop.Admin.Controllers
             return Json(new { Result = true });
         }
 
-        public ActionResult ProductSearchAutoComplete(string term, int searchStoreId = 0)
+        public ActionResult ProductSearchAutoComplete(string term)
         {
             const int searchTermMinimumLength = 3;
             if (String.IsNullOrWhiteSpace(term) || term.Length < searchTermMinimumLength)
@@ -280,8 +280,7 @@ namespace Nop.Admin.Controllers
             var products = _productService.SearchProducts(
                 keywords: term,
                 pageSize: productNumber,
-                showHidden: true,
-                storeId: searchStoreId);
+                showHidden: true);
 
             var result = (from p in products
                           select new

@@ -30,7 +30,7 @@ namespace Nop.Admin.Models.Catalog
         public int SearchStoreId { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchProduct")]
-        public int ProductId { get; set; }
+        public int SearchProductId { get; set; }
 
         public IList<SelectListItem> AvailableStores { get; set; }
     }
