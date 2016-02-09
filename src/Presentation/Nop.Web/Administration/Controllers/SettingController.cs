@@ -2456,8 +2456,7 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
             model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
-            model.SecuritySettings.ReCaptchaVersionValues.Add(new SelectListItem() { Text = "v.1", Value = "1" });
-            model.SecuritySettings.ReCaptchaVersionValues.Add(new SelectListItem() { Text = "v.2", Value = "2" });
+            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 

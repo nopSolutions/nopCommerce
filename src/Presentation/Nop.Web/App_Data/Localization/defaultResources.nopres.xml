@@ -5692,7 +5692,7 @@
     <Value>reCAPTCHA version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select version of reCAPTCHA.</Value>
+    <Value>Select version of the reCAPTCHA.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SecuritySettings">
     <Value>Security settings</Value>
@@ -12179,6 +12179,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Services.Payments.RecurringPaymentType.NotSupported">
     <Value>Not supported</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value>Version 1.0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value>Version 2.0</Value>
   </LocaleResource>
   <LocaleResource Name="EUCookieLaw.CannotBrowse">
     <Value>You cannot browse this site until you accept cookies</Value>

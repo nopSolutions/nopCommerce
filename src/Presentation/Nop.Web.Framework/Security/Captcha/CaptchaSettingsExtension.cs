@@ -6,9 +6,9 @@ namespace Nop.Web.Framework.Security.Captcha
     {
         public static string GetWrongCaptchaMessage(this CaptchaSettings captchaSettings, ILocalizationService localizationService)
         {
-            if (captchaSettings.ReCaptchaVersion == 1)
+            if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version1)
                 return localizationService.GetResource("Common.WrongCaptcha");
-            else if (captchaSettings.ReCaptchaVersion == 2)
+            else if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version2)
                 return localizationService.GetResource("Common.WrongCaptchaV2");
             return string.Empty;
         }

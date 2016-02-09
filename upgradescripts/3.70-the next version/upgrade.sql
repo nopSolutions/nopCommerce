@@ -93,10 +93,16 @@ set @resources='
     <Value>reCAPTCHA version</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
-    <Value>Select version of reCAPTCHA.</Value>
+    <Value>Select version of the reCAPTCHA.</Value>
   </LocaleResource>
   <LocaleResource Name="Common.WrongCaptchaV2">
     <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value>Version 1.0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value>Version 2.0</Value>
   </LocaleResource>
 </Language>
 '

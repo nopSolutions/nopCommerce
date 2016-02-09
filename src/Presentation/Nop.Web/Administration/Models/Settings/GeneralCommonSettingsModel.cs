@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Models.Settings
 {
@@ -161,7 +162,7 @@ namespace Nop.Admin.Models.Settings
         {
             public SecuritySettingsModel()
             {
-                ReCaptchaVersionValues = new List<SelectListItem>();
+                AvailableReCaptchaVersions = new List<SelectListItem>();
             }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
@@ -223,9 +224,9 @@ namespace Nop.Admin.Models.Settings
             public string ReCaptchaPrivateKey { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
-            public int ReCaptchaVersion { get; set; }
+            public ReCaptchaVersion ReCaptchaVersion { get; set; }
 
-            public IList<SelectListItem> ReCaptchaVersionValues { get; set; }
+            public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
         }
 
         public partial class PdfSettingsModel : BaseNopModel

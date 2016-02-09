@@ -551,7 +551,7 @@
                 @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaVersion):
             </td>
             <td class="adminData">
-                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.ReCaptchaVersionValues)
+                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
             </td>
         </tr>

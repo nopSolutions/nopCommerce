@@ -23,7 +23,7 @@ namespace Nop.Web.Framework.Security.Captcha
                 {
 
                     //validate captcha
-                    if (captchaSettings.ReCaptchaVersion == 1)
+                    if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version1)
                     {
                         var captchaValidtor = new Recaptcha.RecaptchaValidator
                         {
@@ -36,7 +36,7 @@ namespace Nop.Web.Framework.Security.Captcha
                         var recaptchaResponse = captchaValidtor.Validate();
                         valid = recaptchaResponse.IsValid;
                     }
-                    else if (captchaSettings.ReCaptchaVersion == 2)
+                    else if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version2)
                     {
                         var captchaValidtor = new GReCaptchaValidator()
                         {

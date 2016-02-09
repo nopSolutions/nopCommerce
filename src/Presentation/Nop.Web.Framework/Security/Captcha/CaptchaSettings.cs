@@ -58,18 +58,13 @@ namespace Nop.Web.Framework.Security.Captcha
         /// <summary>
         /// reCAPTCHA theme
         /// </summary>
-        /// <remarks>
-        /// Optional. The color theme of the widget.
-        /// Default for version 1: white
-        /// Default for version 2: light
-        /// </remarks>
         public string ReCaptchaTheme { get; set; }
         /// <summary>
         /// reCAPTCHA version
         /// </summary>
-        public int ReCaptchaVersion { get; set; }
+        public ReCaptchaVersion ReCaptchaVersion { get; set; }
         /// <summary>
-        /// Language of reCAPTCHA
+        /// reCAPTCHA language
         /// </summary>
         public string ReCaptchaLanguage { get; set; }
     }
