@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Framework.Security.Captcha;
 
 namespace Nop.Admin.Models.Settings
 {
@@ -178,7 +179,6 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.HoneypotEnabled")]
             public bool HoneypotEnabled { get; set; }
 
-
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
             public bool CaptchaEnabled { get; set; }
 
@@ -216,6 +216,11 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
             [AllowHtml]
             public string ReCaptchaPrivateKey { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion")]
+            public ReCaptchaVersion ReCaptchaVersion { get; set; }
+
+            public IList<SelectListItem> AvailableReCaptchaVersions { get; set; }
         }
 
         public partial class PdfSettingsModel : BaseNopModel
