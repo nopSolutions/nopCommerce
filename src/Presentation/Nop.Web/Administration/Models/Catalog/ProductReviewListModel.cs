@@ -29,9 +29,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchStore")]
         public int SearchStoreId { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.SearchProduct")]
-        public int SearchProductId { get; set; }
-
         public IList<SelectListItem> AvailableStores { get; set; }
     }
 }

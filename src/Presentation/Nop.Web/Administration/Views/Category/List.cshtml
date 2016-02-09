@@ -14,6 +14,8 @@
     </div>
     <div class="options">
         <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a> <a href="@Url.Action("ExportXml")" class="k-button">@T("Admin.Common.ExportToXml")</a>
+        <a href="@Url.Action("ExportXlsx")" class="k-button">@T("Admin.Common.ExportToExcel")</a>
+        <input type="button" id="importexcel" name="importexcel" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
     </div>
 </div>
 <table width="100%">
@@ -37,7 +39,7 @@
             <div id="categories-grid"></div>
 
             <script>
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $("#categories-grid").kendoGrid({
                         dataSource: {
                             type: "json",
@@ -73,7 +75,8 @@
                             mode: "inline"
                         },
                         scrollable: false,
-                        columns: [{
+                        columns: [
+                        {
                             field: "Breadcrumb",
                             title: "@T("Admin.Catalog.Categories.Fields.Name")"
                         }, {
@@ -92,15 +95,16 @@
                             title: "@T("Admin.Common.Edit")",
                             width: 100,
                             template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
+                            }
+                        ]
                     });
                 });
             </script>
 
             <script type="text/javascript">
-                $(document).ready(function () {
+                $(document).ready(function() {
                     //search button
-                    $('#search-categories').click(function () {
+                    $('#search-categories').click(function() {
                         //search
                         var grid = $('#categories-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
@@ -108,7 +112,7 @@
                         return false;
                     });
 
-                    $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function (event) {
+                    $("#@Html.FieldIdFor(model => model.SearchCategoryName)").keydown(function(event) {
                         if (event.keyCode == 13) {
                             $("#search-categories").click();
                             return false;
@@ -127,3 +131,48 @@
         </td>
     </tr>
 </table>
+
+@*import products form*@
+<div id="importexcel-window" style="display:none;">
+    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <table style="text-align:left;">
+            <tr>
+                <td colspan="2">
+                    <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @T("Admin.Common.ExcelFile"):
+                </td>
+                <td>
+                    <input type="file" id="importexcelfile" name="importexcelfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#importexcel").click(function (e) {
+            e.preventDefault();
+            var window = $("#importexcel-window");
+            if (!window.data("kendoWindow")) {
+                window.kendoWindow({
+                    modal: true,
+                    width: "400px",
+                    title: "@T("Admin.Common.ImportFromExcel")",
+                    actions: ["Close"]
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>
