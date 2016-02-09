@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Messages;
@@ -34,6 +35,10 @@ namespace Nop.Admin.Models.Messages
         
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.DontSendBeforeDate")]
+        [UIHint("DateTimeNullable")]
+        public DateTime? DontSendBeforeDate { get; set; }
 
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.AllowedTokens")]
         public string AllowedTokens { get; set; }
