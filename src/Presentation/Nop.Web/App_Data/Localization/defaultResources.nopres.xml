@@ -2079,6 +2079,12 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText.Hint">
     <Value>Search in title and review text.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchProduct.Hint">
+    <Value>Search by a specific product.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Updated">
     <Value>The product review has been updated successfully.</Value>
   </LocaleResource>
