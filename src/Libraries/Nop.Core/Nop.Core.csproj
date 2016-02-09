@@ -109,6 +109,7 @@
     <Compile Include="Domain\Customers\CustomerAttributeValue.cs" />
     <Compile Include="Domain\Customers\CustomerLoginResults.cs" />
     <Compile Include="Domain\Customers\Events.cs" />
+    <Compile Include="Domain\Messages\MessageDelayPeriod.cs" />
     <Compile Include="Domain\Messages\QueuedEmailPriority.cs" />
     <Compile Include="Domain\Orders\OrderByCountryReportLine.cs" />
     <Compile Include="Domain\Orders\ReturnRequestReason.cs" />

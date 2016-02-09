@@ -3,6 +3,8 @@
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
+@using Nop.Core.Domain.Messages;
+
 <script>
     $(document).ready(function () {
         $("#template-edit").kendoTabStrip({
@@ -175,7 +177,28 @@
         </tr>
     </table>
     ))
+
     <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SendImmediately):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SendImmediately)
+                @Html.ValidationMessageFor(model => model.SendImmediately)
+            </td>
+        </tr>
+        <tr id="pnl-send-after">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DelayBeforeSend):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DelayBeforeSend)
+                @Html.ValidationMessageFor(model => model.DelayBeforeSend)
+                @Html.DropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.DelayPeriodId)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AttachedDownloadId):
@@ -199,7 +222,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.HasAttachedDownload)").change(toggleHasAttachedDownload);
+            $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
             toggleHasAttachedDownload();
+            sendImmediately();
         });
 
         function toggleHasAttachedDownload() {
@@ -209,6 +234,13 @@
             else {
                 $('#pnlAttachedDownload').hide();
             }
+        }
+
+        function sendImmediately() {
+            if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                $('#pnl-send-after').hide();
+            else
+                $('#pnl-send-after').show();
         }
 
     </script>

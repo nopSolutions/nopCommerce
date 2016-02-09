@@ -7200,6 +7200,12 @@
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Body.Required">
     <Value>Body is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend">
+    <Value>Delay send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend.Hint">
+    <Value>The delay before sending message.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.EmailAccount">
     <Value>Email account</Value>
   </LocaleResource>
@@ -7223,6 +7229,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Name.Hint">
     <Value>The name of this template (read only).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.Subject">
     <Value>Subject</Value>
@@ -12092,6 +12104,12 @@
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Logging.LogLevel.Warning">
     <Value>Warning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Hours">
+    <Value>Hours</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.QueuedEmailPriority.Low">
     <Value>Low</Value>

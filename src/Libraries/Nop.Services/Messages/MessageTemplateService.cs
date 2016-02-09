@@ -240,6 +240,8 @@ namespace Nop.Services.Messages
                 AttachedDownloadId = messageTemplate.AttachedDownloadId,
                 EmailAccountId = messageTemplate.EmailAccountId,
                 LimitedToStores = messageTemplate.LimitedToStores,
+                DelayBeforeSend = messageTemplate.DelayBeforeSend,
+                DelayPeriod = messageTemplate.DelayPeriod
             };
 
             InsertMessageTemplate(mtCopy);
