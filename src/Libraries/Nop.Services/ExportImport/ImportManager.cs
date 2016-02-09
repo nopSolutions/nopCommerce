@@ -8,6 +8,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
@@ -204,6 +205,7 @@ namespace Nop.Services.ExportImport
                     "Length",
                     "Width",
                     "Height",
+                    "CreatedOnUtc",
                     "CategoryIds",
                     "ManufacturerIds",
                     "Picture1",
@@ -336,6 +338,7 @@ namespace Nop.Services.ExportImport
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
                     decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
+                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
                     string categoryIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
                     string manufacturerIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
                     string picture1 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
@@ -439,10 +442,7 @@ namespace Nop.Services.ExportImport
                     product.Width = width;
                     product.Height = height;
                     product.Published = published;
-
-                    if(newProduct)
-                        product.CreatedOnUtc = DateTime.UtcNow;
-
+                    product.CreatedOnUtc = createdOnUtc;
                     product.UpdatedOnUtc = DateTime.UtcNow;
                     if (newProduct)
                     {
@@ -549,8 +549,6 @@ namespace Nop.Services.ExportImport
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     _productService.UpdateHasTierPricesProperty(product);
                     _productService.UpdateHasDiscountsApplied(product);
-
-
 
                     //next product
                     iRow++;
@@ -689,6 +687,113 @@ namespace Nop.Services.ExportImport
             }
 
             return count;
+        }
+
+        private BaseEntity GetManufacture(int id)
+        {
+            return _manufacturerService.GetManufacturerById(id);
+        }
+
+        private BaseEntity GetCategory(int id)
+        {
+            return _categoryService.GetCategoryById(id);
+        }
+
+        private void SetObject(bool isNew, BaseEntity obj)
+        {
+            var manufacturer = obj as Manufacturer;
+            if (manufacturer != null)
+            {
+                if (isNew)
+                    _manufacturerService.InsertManufacturer(manufacturer);
+                else
+                    _manufacturerService.UpdateManufacturer(manufacturer);
+            }
+            var category = obj as Category;
+            if (category != null)
+            {
+                if (isNew)
+                    _categoryService.InsertCategory(category);
+                else
+                    _categoryService.UpdateCategory(category);
+            }
+        }
+
+        /// <summary>
+        /// Import manufacturers from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        public virtual void ImportManufacturerFromXlsx(Stream stream)
+        {
+            var properties = new ManufacturerGetProperties(_pictureService);
+            var manager = new PropertyManager<Manufacturer>(properties.GetPropertys);
+
+            ImportFromXlsx(stream, manager, properties, new Manufacturer(), GetManufacture);
+        }
+
+        /// <summary>
+        /// Import categories from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        public virtual void ImportCategoryFromXlsx(Stream stream)
+        {
+            var properties = new CategoriesGetProperties(_pictureService);
+            var manager = new PropertyManager<Category>(properties.GetPropertys);
+
+            ImportFromXlsx(stream, manager, properties, new Category(), GetCategory);
+        }
+
+        /// <summary>
+        /// Import objects from XLSX file
+        /// </summary>
+        /// <typeparam name="T">Type of object</typeparam>
+        /// <param name="stream">File stream</param>
+        /// <param name="manager">Class control properties of the object</param>
+        /// <param name="getProperty">Class access to the object through its properties</param>
+        /// <param name="newObj">New object</param>
+        /// <param name="getObject">Get object function</param>
+        public virtual void ImportFromXlsx<T>(Stream stream, PropertyManager<T> manager, IGetProperties<T> getProperty,
+            BaseEntity newObj, Func<int, BaseEntity> getObject)
+        {
+            using (var xlPackage = new ExcelPackage(stream))
+            {
+                // get the first worksheet in the workbook
+                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null)
+                    throw new NopException("No worksheet found");
+
+                var iRow = 2;
+
+                while (true)
+                {
+                    try
+                    {
+                        var allColumnsAreEmpty = getProperty.GetPropertys
+                            .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                            .All(cell => cell == null || String.IsNullOrEmpty(cell.Value.ToString()));
+
+                        if (allColumnsAreEmpty)
+                            break;
+
+                        manager.ReadFromXlsx(worksheet, iRow);
+                        var obj = getObject(manager.GetProperty("Id").Int32Value);
+
+                        var isNew = obj == null;
+
+                        obj = obj ?? newObj;
+
+                        getProperty.FillObject(obj, isNew, manager);
+
+                        SetObject(isNew, obj);
+
+                        iRow++;
+                    }
+                    catch (NullReferenceException)
+                    {
+                        break;
+                    }
+                }
+            }
         }
 
         #endregion

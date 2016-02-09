@@ -52,13 +52,19 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Access object by key
+        /// Access object by property name
         /// </summary>
-        /// <param name="properyName"></param>
-        /// <returns></returns>
-        public object this[string properyName] => _propertys.ContainsKey(properyName) && CurentObject != null
-            ? _propertys[properyName].GetProperty(CurentObject)
-            : null;
+        /// <param name="properyName">Property name</param>
+        /// <returns>Property value</returns>
+        public object this[string properyName]
+        {
+            get
+            {
+                return _propertys.ContainsKey(properyName) && CurentObject != null
+                    ? _propertys[properyName].GetProperty(CurentObject)
+                    : null;
+            }
+        }
 
         /// <summary>
         /// Write object data to XLSX worksheet
@@ -77,6 +83,22 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
+        /// Read object data from XLSX worksheet
+        /// </summary>
+        /// <param name="worksheet">worksheet</param>
+        /// <param name="row">Row index</param>
+        public void ReadFromXlsx(ExcelWorksheet worksheet, int row)
+        {
+            if (worksheet==null || worksheet.Cells==null)
+                return;
+
+            foreach (var prop in _propertys.Values)
+            {
+                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
+            }
+        }
+
+        /// <summary>
         /// Write caption (first row) to XLSX worksheet
         /// </summary>
         /// <param name="worksheet">worksheet</param>
@@ -91,5 +113,23 @@ namespace Nop.Services.ExportImport.Help
             }
             
         }
+
+        /// <summary>
+        /// Count of properties
+        /// </summary>
+        public int Count
+        {
+            get { return _propertys.Count; }
+        }
+
+        /// <summary>
+        /// Get property by name
+        /// </summary>
+        /// <param name="propertryName"></param>
+        /// <returns></returns>
+        public PropertyByName<T> GetProperty(string propertryName)
+        {
+            return _propertys.ContainsKey(propertryName) ? _propertys[propertryName] : null;
+        } 
     }
 }

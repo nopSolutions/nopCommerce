@@ -3,7 +3,7 @@
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
-set @resources=' 
+set @resources='
 <Language>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
@@ -68,12 +68,6 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Resources.View">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore">
-    <Value>Reviews per store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Enable show reviews per store.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Vendors.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should have unique items.</Value>
   </LocaleResource>
@@ -83,19 +77,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.ShouldHaveUniqueItems">
     <Value>Page Size options should not have duplicate items.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Productreviews.Fields.Store">
-	<Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
-	<Value>A store name in which this review was placed.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
-	<Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
-	<Value>Search by a specific store.</Value>
-  </LocaleResource>
-
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions">
     <Value>Sort options</Value>
   </LocaleResource>
@@ -107,6 +88,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Category(ies) have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturer(s) have been imported successfully.</Value>
   </LocaleResource>
 </Language>
 '
@@ -200,42 +193,6 @@ GO
 ALTER TABLE [ProductAttributeValue] ALTER COLUMN [ImageSquaresPictureId] int NOT NULL
 GO
 
---new column
- IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ProductReview]') and NAME='StoreId')
- BEGIN
- 	ALTER TABLE [dbo].[ProductReview] ADD
- 	[StoreId] int NULL
- END
- GO
- 
- DECLARE @DefaultStoreId INT
- SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
- UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE StoreId IS NULL
- GO
- 
- ALTER TABLE [dbo].[ProductReview] ALTER COLUMN [StoreId] INT NOT NULL
- GO
- 
- IF EXISTS (SELECT 1 FROM   sys.objects WHERE  
- 			name = 'ProductReview_Store'
- 			AND parent_object_id = Object_id('ProductReview')
- 			AND Objectproperty(object_id,N'IsForeignKey') = 1)
- ALTER TABLE dbo.ProductReview
- DROP CONSTRAINT ProductReview_Store
- GO
- 
- ALTER TABLE [dbo].[ProductReview]  WITH CHECK ADD  CONSTRAINT [ProductReview_Store] FOREIGN KEY([StoreId])
- REFERENCES [dbo].[Store] ([Id])
- ON DELETE CASCADE
- GO
- 
- --new setting
- IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductreviewsperstore')
- BEGIN
- 	INSERT [Setting] ([Name], [Value], [StoreId])
- 	VALUES (N'catalogsettings.showproductreviewsperstore', N'False', 0)
- END
- GO
 
 --new setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquarepicturesize')

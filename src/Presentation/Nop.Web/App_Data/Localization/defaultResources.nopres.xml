@@ -2040,12 +2040,6 @@
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.ReviewText.Required">
     <Value>Review text is required.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Store.Hint">
-    <Value>A store name in which this review was placed.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.Fields.Title">
     <Value>Title</Value>
   </LocaleResource>
@@ -2066,12 +2060,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore">
-    <Value>Store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchStore.Hint">
-    <Value>Search by a specific store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.SearchText">
     <Value>Message</Value>
@@ -4835,12 +4823,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductSku.Hint">
     <Value>Check to show product SKU in public store.</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore">
-    <Value>Reviews per store</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductReviewsPerStore.Hint">
-    <Value>Enable show reviews per store.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
     <Value>Show a share button</Value>
@@ -14519,5 +14501,17 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Category(ies) have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturer(s) have been imported successfully.</Value>
   </LocaleResource>
 </Language>
