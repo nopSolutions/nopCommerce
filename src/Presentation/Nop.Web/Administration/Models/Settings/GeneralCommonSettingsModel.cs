@@ -160,6 +160,11 @@ namespace Nop.Admin.Models.Settings
 
         public partial class SecuritySettingsModel : BaseNopModel
         {
+            public SecuritySettingsModel()
+            {
+                this.AvailableReCaptchaVersions = new List<SelectListItem>();
+            }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.EncryptionKey")]
             [AllowHtml]
             public string EncryptionKey { get; set; }
