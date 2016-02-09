@@ -2461,6 +2461,8 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnNewsCommentPage = captchaSettings.ShowOnNewsCommentPage;
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
+            model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
+            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 
@@ -2700,6 +2702,7 @@ namespace Nop.Admin.Controllers
             captchaSettings.ShowOnNewsCommentPage = model.SecuritySettings.CaptchaShowOnNewsCommentPage;
             captchaSettings.ShowOnProductReviewPage = model.SecuritySettings.CaptchaShowOnProductReviewPage;
             captchaSettings.ShowOnApplyVendorPage = model.SecuritySettings.CaptchaShowOnApplyVendorPage;
+            captchaSettings.ReCaptchaVersion = model.SecuritySettings.ReCaptchaVersion;
             captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
             captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
             _settingService.SaveSetting(captchaSettings);

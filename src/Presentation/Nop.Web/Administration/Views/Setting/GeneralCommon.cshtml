@@ -369,6 +369,7 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').show();
             $('#ssReCaptchaPublicKeypnl').show();
             $('#ssReCaptchaPrivateKeypnl').show();
+            $('#ssReCaptchaVersionpnl').show();
         }
         else {
             $('#ssCaptchaShowOnLoginPagepnl').hide();
@@ -382,6 +383,7 @@
             $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
             $('#ssReCaptchaPublicKeypnl').hide();
             $('#ssReCaptchaPrivateKeypnl').hide();
+            $('#ssReCaptchaVersionpnl').hide();
         }
     }
     </script>
@@ -542,6 +544,16 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+            </td>
+        </tr>
+        <tr id="ssReCaptchaVersionpnl">
+
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaVersion):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
             </td>
         </tr>
         <tr id="ssReCaptchaPublicKeypnl">
