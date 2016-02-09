@@ -1455,7 +1455,6 @@ namespace Nop.Admin.Controllers
                     emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
                 if (emailAccount == null)
                     throw new NopException("Email account can't be loaded");
-
                 var email = new QueuedEmail
                 {
                     Priority = QueuedEmailPriority.High,
@@ -1467,6 +1466,8 @@ namespace Nop.Admin.Controllers
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
+                    DontSendBeforeDateUtc = (model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue) ? 
+                        null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));

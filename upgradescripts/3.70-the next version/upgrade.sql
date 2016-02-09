@@ -152,6 +152,18 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate.Hint">
     <Value>Enter a specific date and time to send the campaign. Leave empty to send it immediately.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
 </Language>
 '
 
