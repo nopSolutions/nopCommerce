@@ -108,6 +108,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.SortOptions.Name">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion">
+    <Value>reCAPTCHA version</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.reCaptchaVersion.Hint">
+    <Value>Select version of the reCAPTCHA.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.WrongCaptchaV2">
+    <Value>The reCAPTCHA response is invalid or malformed. Please try again.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version1">
+    <Value>Version 1.0</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Web.Framework.Security.Captcha.ReCaptchaVersion.Version2">
+    <Value>Version 2.0</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -302,5 +317,35 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.products
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'catalogsettings.productsortingenumdisplayorder',N'',0);
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchaversion')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'captchasettings.recaptchaversion',N'1',0);
+END
+GO
+
+--new or update setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchatheme')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'captchasettings.recaptchatheme',N'',0);
+END
+ELSE
+BEGIN
+	UPDATE [Setting] 
+	SET [Value] = N'' 
+	WHERE [Name] = N'captchasettings.recaptchatheme'
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptchalanguage')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'captchasettings.recaptchalanguage',N'',0);
 END
 GO

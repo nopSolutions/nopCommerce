@@ -47,7 +47,6 @@ namespace Nop.Web.Framework.Security.Captcha
         /// A value indicating whether CAPTCHA should be displayed on the "Apply for vendor account" page
         /// </summary>
         public bool ShowOnApplyVendorPage { get; set; }
-
         /// <summary>
         /// reCAPTCHA public key
         /// </summary>
@@ -60,5 +59,13 @@ namespace Nop.Web.Framework.Security.Captcha
         /// reCAPTCHA theme
         /// </summary>
         public string ReCaptchaTheme { get; set; }
+        /// <summary>
+        /// reCAPTCHA version
+        /// </summary>
+        public ReCaptchaVersion ReCaptchaVersion { get; set; }
+        /// <summary>
+        /// reCAPTCHA language
+        /// </summary>
+        public string ReCaptchaLanguage { get; set; }
     }
 }
