@@ -21,24 +21,24 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// All properties
         /// </summary>
-        private readonly Dictionary<string, PropertyByName<T>> _propertys;
+        private readonly Dictionary<string, PropertyByName<T>> _properties;
         private readonly IGetProperties<T> _fill_object;
 
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="propertys">All acsess properties</param>
-        public PropertyManager(IGetProperties<T> propertys)
+        /// <param name="properties">All acsess properties</param>
+        public PropertyManager(IGetProperties<T> properties)
         {
-            _propertys=new Dictionary<string, PropertyByName<T>>();
-            _fill_object = propertys;
+            _properties=new Dictionary<string, PropertyByName<T>>();
+            _fill_object = properties;
 
             var poz = 1;
-            foreach (var propertyByName in propertys.GetProperties)
+            foreach (var propertyByName in properties.GetProperties)
             {
                 propertyByName.PropertyOrderPosition = poz;
                 poz++;
-                _propertys.Add(propertyByName.PropertyName, propertyByName);
+                _properties.Add(propertyByName.PropertyName, propertyByName);
             }
         }
 
@@ -49,10 +49,10 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public int GetIndex(string properyName)
         {
-            if (!_propertys.ContainsKey(properyName))
+            if (!_properties.ContainsKey(properyName))
                 return -1;
 
-            return _propertys[properyName].PropertyOrderPosition;
+            return _properties[properyName].PropertyOrderPosition;
         }
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace Nop.Services.ExportImport.Help
         {
             get
             {
-                return _propertys.ContainsKey(propertyName) && CurrentObject != null
-                    ? _propertys[propertyName].GetProperty(CurrentObject)
+                return _properties.ContainsKey(propertyName) && CurrentObject != null
+                    ? _properties[propertyName].GetProperty(CurrentObject)
                     : null;
             }
         }
@@ -80,7 +80,7 @@ namespace Nop.Services.ExportImport.Help
             if (CurrentObject == null)
                 return;
 
-            foreach (var prop in _propertys.Values)
+            foreach (var prop in _properties.Values)
             {
                 worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
             }
@@ -96,7 +96,7 @@ namespace Nop.Services.ExportImport.Help
             if (worksheet == null || worksheet.Cells == null)
                 return;
 
-            foreach (var prop in _propertys.Values)
+            foreach (var prop in _properties.Values)
             {
                 prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
             }
@@ -109,7 +109,7 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="setStyle">Detection of cell style</param>
         public void WriteCaption(ExcelWorksheet worksheet, Action<ExcelStyle> setStyle)
         {
-            foreach (var caption in _propertys.Values)
+            foreach (var caption in _properties.Values)
             {
                 var cell = worksheet.Cells[1, caption.PropertyOrderPosition];
                 cell.Value = caption;
@@ -123,7 +123,7 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         public int Count
         {
-            get { return _propertys.Count; }
+            get { return _properties.Count; }
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace Nop.Services.ExportImport.Help
         /// <returns></returns>
         public PropertyByName<T> GetProperty(string propertyName)
         {
-            return _propertys.ContainsKey(propertyName) ? _propertys[propertyName] : null;
+            return _properties.ContainsKey(propertyName) ? _properties[propertyName] : null;
         }
 
 
@@ -142,7 +142,7 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         public PropertyByName<T>[] GetProperties
         {
-            get { return _propertys.Values.ToArray(); }
+            get { return _properties.Values.ToArray(); }
         }
 
         public void FillObject(BaseEntity objectToFill, bool isNew, PropertyManager<T> manager)
