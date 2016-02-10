@@ -16,7 +16,8 @@ namespace Nop.Web.Framework.Security.Captcha
             {
                 Theme = captchaSettings.ReCaptchaTheme,
                 Id = "recaptcha",
-                PublicKey = captchaSettings.ReCaptchaPublicKey
+                PublicKey = captchaSettings.ReCaptchaPublicKey,
+                Language = captchaSettings.ReCaptchaLanguage
             };
             captchaControl.RenderControl(htmlWriter);
 

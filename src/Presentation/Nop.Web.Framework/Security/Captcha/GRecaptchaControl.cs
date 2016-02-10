@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Web.Mvc;
 using System.Web.UI;
 
 namespace Nop.Web.Framework.Security.Captcha
@@ -57,20 +58,46 @@ namespace Nop.Web.Framework.Security.Captcha
 
         private void SetTheme()
         {
-            if (_version == ReCaptchaVersion.Version1 && string.IsNullOrEmpty(Theme))
-                Theme = "white";
-            else if (_version == ReCaptchaVersion.Version2 && string.IsNullOrEmpty(Theme))
-                Theme = "light";
-            else if (_version == ReCaptchaVersion.Version1 && Theme.ToLower().Equals("light"))
-                Theme = "white";
-            else if (_version == ReCaptchaVersion.Version1 && Theme.ToLower().Equals("dark"))
-                Theme = "blackglass";
-            else if (_version == ReCaptchaVersion.Version2 && 
-                    (Theme.ToLower().Equals("white") || Theme.ToLower().Equals("clean")))
-                Theme = "light";
-            else if (_version == ReCaptchaVersion.Version2 &&
-                     (Theme.ToLower().Equals("blackglass") || Theme.ToLower().Equals("red")))
-                Theme = "dark";
+            var themes = new[] {"white", "blackglass", "red", "clean", "light", "dark"};
+
+            if (_version == ReCaptchaVersion.Version1)
+            {
+                switch (Theme.ToLower())
+                {
+                    case "light":
+                        Theme = "white";
+                        break;
+                    case "dark":
+                        Theme = "blackglass";
+                        break;
+                    default:
+                        if (!themes.Contains(Theme.ToLower()))
+                        {
+                            Theme = "white";
+                        }
+                        break;
+                }
+            }
+            else if (_version == ReCaptchaVersion.Version2)
+            {
+                switch (Theme.ToLower())
+                {
+                    case "clean":
+                    case "red":
+                    case "white":
+                        Theme = "light";
+                        break;
+                    case "blackglass":
+                        Theme = "dark";
+                        break;
+                    default:
+                        if (!themes.Contains(Theme.ToLower()))
+                        {
+                            Theme = "light";
+                        }
+                        break;
+                }
+            }
         }
     }
 }
