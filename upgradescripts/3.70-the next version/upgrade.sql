@@ -131,6 +131,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Imported">
     <Value>Products have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImageFileName.Hint">
+    <Value>The flag image file name. The image should be saved into \images\flags\ directory.</Value>
+  </LocaleResource>
 </Language>
 '
 
