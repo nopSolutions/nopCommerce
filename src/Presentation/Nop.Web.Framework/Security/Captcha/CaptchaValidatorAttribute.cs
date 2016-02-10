@@ -20,32 +20,16 @@ namespace Nop.Web.Framework.Security.Captcha
                 var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
                 if (captchaSettings.Enabled)
                 {
-                    //validate captcha
-                    if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version1)
+                    var captchaValidtor = new GReCaptchaValidator(captchaSettings.ReCaptchaVersion)
                     {
-                        var captchaValidtor = new Recaptcha.RecaptchaValidator
-                        {
-                            PrivateKey = captchaSettings.ReCaptchaPrivateKey,
-                            RemoteIP = filterContext.HttpContext.Request.UserHostAddress,
-                            Challenge = captchaChallengeValue,
-                            Response = captchaResponseValue
-                        };
+                        SecretKey = captchaSettings.ReCaptchaPrivateKey,
+                        RemoteIp = filterContext.HttpContext.Request.UserHostAddress,
+                        Response = captchaResponseValue ?? gCaptchaResponseValue,
+                        Challenge = captchaChallengeValue
+                    };
 
-                        var recaptchaResponse = captchaValidtor.Validate();
-                        valid = recaptchaResponse.IsValid;
-                    }
-                    else if (captchaSettings.ReCaptchaVersion == ReCaptchaVersion.Version2)
-                    {
-                        var captchaValidtor = new GReCaptchaValidator()
-                        {
-                            SecretKey = captchaSettings.ReCaptchaPrivateKey,
-                            RemoteIp = filterContext.HttpContext.Request.UserHostAddress,
-                            Response = gCaptchaResponseValue
-                        };
-
-                        var recaptchaResponse = captchaValidtor.Validate();
-                        valid = recaptchaResponse.IsValid;
-                    }
+                    var recaptchaResponse = captchaValidtor.Validate();
+                    valid = recaptchaResponse.IsValid;
                 }
             }
 
