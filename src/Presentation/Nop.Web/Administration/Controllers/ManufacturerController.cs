@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -44,33 +46,37 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
-        private readonly IAclService _aclService; 
+        private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IImportManager _importManager;
 
         #endregion
-        
+
         #region Constructors
 
-        public ManufacturerController(ICategoryService categoryService, 
+        public ManufacturerController(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductService productService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
-            IUrlRecordService urlRecordService, 
+            IUrlRecordService urlRecordService,
             IPictureService pictureService,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             ILocalizationService localizationService,
-            ILocalizedEntityService localizedEntityService, 
+            ILocalizedEntityService localizedEntityService,
             IExportManager exportManager,
             IDiscountService discountService,
-            ICustomerActivityService customerActivityService, 
+            ICustomerActivityService customerActivityService,
             IVendorService vendorService,
             IAclService aclService,
             IPermissionService permissionService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IWorkContext workContext,
+            IImportManager importManager)
         {
             this._categoryService = categoryService;
             this._manufacturerTemplateService = manufacturerTemplateService;
@@ -91,10 +97,12 @@ namespace Nop.Admin.Controllers
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._catalogSettings = catalogSettings;
+            this._workContext = workContext;
+            this._importManager = importManager;
         }
 
         #endregion
-        
+
         #region Utilities
 
         [NonAction]
@@ -260,7 +268,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region List
 
         public ActionResult Index()
@@ -319,7 +327,7 @@ namespace Nop.Admin.Controllers
             model.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
             model.Published = true;
             model.AllowCustomersToSelectPageSize = true;
-            
+
             return View(model);
         }
 
@@ -472,7 +480,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit",  new {id = manufacturer.Id});
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -510,7 +518,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
             return RedirectToAction("List");
         }
-        
+
         #endregion
 
         #region Export / Import
@@ -525,6 +533,56 @@ namespace Nop.Admin.Controllers
                 var manufacturers = _manufacturerService.GetAllManufacturers(showHidden: true);
                 var xml = _exportManager.ExportManufacturersToXml(manufacturers);
                 return new XmlDownloadResult(xml, "manufacturers.xml");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        public ActionResult ExportXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            try
+            {
+                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers().Where(p => !p.Deleted));
+
+                return File(bytes, "text/xls", "manufacturers.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportFromXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            //a vendor cannot import manufacturers
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    _importManager.ImportManufacturerFromXlsx(file.InputStream);
+                }
+                else
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturer.Imported"));
+                return RedirectToAction("List");
             }
             catch (Exception exc)
             {
@@ -655,7 +713,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         [HttpPost]
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, string formId, ManufacturerModel.AddManufacturerProductModel model)
@@ -693,5 +751,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+
     }
 }

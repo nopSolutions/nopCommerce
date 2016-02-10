@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Nop.Core;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
 namespace Nop.Services.ExportImport.Help
 {
     /// <summary>
-    /// Class for working with list objects PropertyByName
+    /// Class for working with PropertyByName object list
     /// </summary>
     /// <typeparam name="T">Object type</typeparam>
     public class PropertyManager<T>
@@ -14,23 +16,25 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Curent object to acsess
         /// </summary>
-        public T CurentObject { get; set; }
+        public T CurrentObject { get; set; }
 
         /// <summary>
         /// All properties
         /// </summary>
         private readonly Dictionary<string, PropertyByName<T>> _propertys;
+        private readonly IGetProperties<T> _fill_object;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="propertys">All acsess properties</param>
-        public PropertyManager(params PropertyByName<T>[] propertys)
+        public PropertyManager(IGetProperties<T> propertys)
         {
             _propertys=new Dictionary<string, PropertyByName<T>>();
+            _fill_object = propertys;
 
             var poz = 1;
-            foreach (var propertyByName in propertys)
+            foreach (var propertyByName in propertys.GetProperties)
             {
                 propertyByName.PropertyOrderPosition = poz;
                 poz++;
@@ -52,13 +56,19 @@ namespace Nop.Services.ExportImport.Help
         }
 
         /// <summary>
-        /// Access object by key
+        /// Access object by property name
         /// </summary>
-        /// <param name="properyName"></param>
-        /// <returns></returns>
-        public object this[string properyName] => _propertys.ContainsKey(properyName) && CurentObject != null
-            ? _propertys[properyName].GetProperty(CurentObject)
-            : null;
+        /// <param name="propertyName">Property name</param>
+        /// <returns>Property value</returns>
+        public object this[string propertyName]
+        {
+            get
+            {
+                return _propertys.ContainsKey(propertyName) && CurrentObject != null
+                    ? _propertys[propertyName].GetProperty(CurrentObject)
+                    : null;
+            }
+        }
 
         /// <summary>
         /// Write object data to XLSX worksheet
@@ -67,12 +77,28 @@ namespace Nop.Services.ExportImport.Help
         /// <param name="row">Row index</param>
         public void WriteToXlsx(ExcelWorksheet worksheet, int row)
         {
-            if(CurentObject==null)
+            if (CurrentObject == null)
                 return;
 
             foreach (var prop in _propertys.Values)
             {
-                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurentObject);
+                worksheet.Cells[row, prop.PropertyOrderPosition].Value = prop.GetProperty(CurrentObject);
+            }
+        }
+
+        /// <summary>
+        /// Read object data from XLSX worksheet
+        /// </summary>
+        /// <param name="worksheet">worksheet</param>
+        /// <param name="row">Row index</param>
+        public void ReadFromXlsx(ExcelWorksheet worksheet, int row)
+        {
+            if (worksheet == null || worksheet.Cells == null)
+                return;
+
+            foreach (var prop in _propertys.Values)
+            {
+                prop.PropertyValue = worksheet.Cells[row, prop.PropertyOrderPosition].Value;
             }
         }
 
@@ -90,6 +116,38 @@ namespace Nop.Services.ExportImport.Help
                 setStyle(cell.Style);
             }
             
+        }
+
+        /// <summary>
+        /// Count of properties
+        /// </summary>
+        public int Count
+        {
+            get { return _propertys.Count; }
+        }
+
+        /// <summary>
+        /// Get property by name
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
+        public PropertyByName<T> GetProperty(string propertyName)
+        {
+            return _propertys.ContainsKey(propertyName) ? _propertys[propertyName] : null;
+        }
+
+
+        /// <summary>
+        /// Get property array
+        /// </summary>
+        public PropertyByName<T>[] GetProperties
+        {
+            get { return _propertys.Values.ToArray(); }
+        }
+
+        public void FillObject(BaseEntity objectToFill, bool isNew, PropertyManager<T> manager)
+        {
+            _fill_object.FillObject(objectToFill, isNew, this);
         }
     }
 }

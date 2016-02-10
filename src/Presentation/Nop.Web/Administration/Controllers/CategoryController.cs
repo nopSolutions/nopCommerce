@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -47,28 +48,32 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IImportManager _importManager;
 
         #endregion
-        
+
         #region Constructors
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
-            IManufacturerService manufacturerService, IProductService productService, 
+            IManufacturerService manufacturerService, IProductService productService,
             ICustomerService customerService,
-            IUrlRecordService urlRecordService, 
-            IPictureService pictureService, 
+            IUrlRecordService urlRecordService,
+            IPictureService pictureService,
             ILanguageService languageService,
-            ILocalizationService localizationService, 
+            ILocalizationService localizationService,
             ILocalizedEntityService localizedEntityService,
             IDiscountService discountService,
             IPermissionService permissionService,
-            IAclService aclService, 
+            IAclService aclService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
-            IExportManager exportManager, 
-            IVendorService vendorService, 
+            IExportManager exportManager,
+            IVendorService vendorService,
             ICustomerActivityService customerActivityService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IWorkContext workContext,
+            IImportManager importManager)
         {
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
@@ -89,10 +94,12 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._customerActivityService = customerActivityService;
             this._catalogSettings = catalogSettings;
+            this._workContext = workContext;
+            this._importManager = importManager;
         }
 
         #endregion
-        
+
         #region Utilities
 
         [NonAction]
@@ -280,7 +287,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region List / tree
 
         public ActionResult Index()
@@ -303,7 +310,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
+            var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
                 command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
@@ -317,7 +324,7 @@ namespace Nop.Admin.Controllers
             };
             return Json(gridModel);
         }
-        
+
         public ActionResult Tree()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
@@ -331,12 +338,12 @@ namespace Nop.Admin.Controllers
         {
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
                 .Select(x => new
-                             {
-                                 id = x.Id,
-                                 Name = x.Name,
-                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                             });
+                {
+                    id = x.Id,
+                    Name = x.Name,
+                    hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
+                    imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
+                });
 
             return Json(categories);
         }
@@ -368,7 +375,7 @@ namespace Nop.Admin.Controllers
             model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
             model.Published = true;
             model.IncludeInTopMenu = true;
-            model.AllowCustomersToSelectPageSize = true;            
+            model.AllowCustomersToSelectPageSize = true;
 
             return View(model);
         }
@@ -432,7 +439,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var category = _categoryService.GetCategoryById(id);
-            if (category == null || category.Deleted) 
+            if (category == null || category.Deleted)
                 //No category found with the specified id
                 return RedirectToAction("List");
 
@@ -524,7 +531,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", new {id = category.Id});
+                    return RedirectToAction("Edit", new { id = category.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -564,7 +571,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Deleted"));
             return RedirectToAction("List");
         }
-        
+
 
         #endregion
 
@@ -587,6 +594,55 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        public ActionResult ExportXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            try
+            {
+                var bytes = _exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories().Where(p => !p.Deleted));
+
+                return File(bytes, "text/xls", "categories.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportFromXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                return AccessDeniedView();
+
+            //a vendor cannot import categories
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    _importManager.ImportCategoryFromXlsx(file.InputStream);
+                }
+                else
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Category.Imported"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
         #endregion
 
         #region Products
@@ -651,7 +707,7 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
-            
+
             var model = new CategoryModel.AddCategoryProductModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
@@ -704,7 +760,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         [HttpPost]
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, string formId, CategoryModel.AddCategoryProductModel model)
