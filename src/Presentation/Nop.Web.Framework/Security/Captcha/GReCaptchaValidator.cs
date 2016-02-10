@@ -7,8 +7,8 @@ namespace Nop.Web.Framework.Security.Captcha
 {
     public class GReCaptchaValidator
     {
-        private const string RECAPTCHA_VERIFI_URL_VERSION1 = "https://www.google.com/recaptcha/api/verify?privatekey={0}&response={1}&remoteip={2}&challenge={3}";
-        private const string RECAPTCHA_VERIFI_URL_VERSION2 = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
+        private const string RECAPTCHA_VERIFY_URL_VERSION1 = "https://www.google.com/recaptcha/api/verify?privatekey={0}&response={1}&remoteip={2}&challenge={3}";
+        private const string RECAPTCHA_VERIFY_URL_VERSION2 = "https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}&remoteip={2}";
 
         public string SecretKey { get; set; }
         public string RemoteIp { get; set; }
@@ -31,10 +31,10 @@ namespace Nop.Web.Framework.Security.Captcha
             switch (_version)
             {
                 case ReCaptchaVersion.Version2:
-                    requestUri = string.Format(RECAPTCHA_VERIFI_URL_VERSION2, SecretKey, Response, RemoteIp);
+                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION2, SecretKey, Response, RemoteIp);
                     break;
                 default:
-                    requestUri = string.Format(RECAPTCHA_VERIFI_URL_VERSION1, SecretKey, Response, RemoteIp, Challenge);
+                    requestUri = string.Format(RECAPTCHA_VERIFY_URL_VERSION1, SecretKey, Response, RemoteIp, Challenge);
                     break;
             }
 
