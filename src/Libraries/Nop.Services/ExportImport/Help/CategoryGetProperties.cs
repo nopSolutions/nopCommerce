@@ -74,8 +74,8 @@ namespace Nop.Services.ExportImport.Help
                 manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
             category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
             category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-            category.ShowOnHomePage = manager.GetProperty("PriceRanges").BooleanValue;
-            category.IncludeInTopMenu = manager.GetProperty("PriceRanges").BooleanValue;
+            category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
+            category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
             category.Published = manager.GetProperty("Published").BooleanValue;
             category.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
 
