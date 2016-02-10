@@ -13,7 +13,7 @@ namespace Nop.Services.ExportImport.Help
         /// </summary>
         /// <param name="propertyName">Property name</param>
         /// <param name="func">Feature property access</param>
-        public PropertyByName(string propertyName, Func<T, object> func )
+        public PropertyByName(string propertyName, Func<T, object> func=null )
         {
             PropertyName = propertyName;
             GetProperty = func;

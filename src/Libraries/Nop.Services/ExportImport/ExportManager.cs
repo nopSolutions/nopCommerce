@@ -36,7 +36,6 @@ namespace Nop.Services.ExportImport
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IStoreService _storeService;
-        private readonly ExportImportHelper _exportImportHelper;
 
         #endregion
 
@@ -55,7 +54,6 @@ namespace Nop.Services.ExportImport
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeService = storeService;
-            _exportImportHelper=new ExportImportHelper(_categoryService, _manufacturerService,_pictureService);
         }
 
         #endregion
@@ -208,7 +206,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords),
                 new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription),
                 new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Manufacturer>("Picture", _exportImportHelper.GetPictures),
+                new PropertyByName<Manufacturer>("Picture", GetPictures),
                 new PropertyByName<Manufacturer>("PageSize", p => p.PageSize),
                 new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
                 new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions),
@@ -245,9 +243,9 @@ namespace Nop.Services.ExportImport
                     manager.WriteCaption(worksheet, SetCaptionStyle);
 
                     var row = 2;
-                    foreach (var category in itemsToExport)
+                    foreach (var items in itemsToExport)
                     {
-                        manager.CurrentObject = category;
+                        manager.CurrentObject = items;
                         manager.WriteToXlsx(worksheet, row++);
                     }
 
@@ -293,7 +291,7 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Category>("MetaDescription", p => p.MetaDescription),
                 new PropertyByName<Category>("MetaTitle", p => p.MetaTitle),
                 new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
-                new PropertyByName<Category>("Picture", _exportImportHelper.GetPictures),
+                new PropertyByName<Category>("Picture", GetPictures),
                 new PropertyByName<Category>("PageSize", p => p.PageSize),
                 new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
                 new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions),
@@ -691,11 +689,11 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<Product>("Width", p => p.Width),
                 new PropertyByName<Product>("Height", p => p.Height),
                 new PropertyByName<Product>("CreatedOnUtc", p => p.CreatedOnUtc),
-                new PropertyByName<Product>("CategoryIds", _exportImportHelper.GetCategoryIds),
-                new PropertyByName<Product>("ManufacturerIds", _exportImportHelper.GetManufacturerIds),
-                new PropertyByName<Product>("Picture1", p => _exportImportHelper.GetPictures(p)[0]),
-                new PropertyByName<Product>("Picture2", p => _exportImportHelper.GetPictures(p)[1]),
-                new PropertyByName<Product>("Picture3", p => _exportImportHelper.GetPictures(p)[2])
+                new PropertyByName<Product>("CategoryIds", GetCategoryIds),
+                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
+                new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
+                new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
+                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
             };
 
             return ExportToXlsx(properties, products);
@@ -1472,7 +1470,100 @@ namespace Nop.Services.ExportImport
             style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
             style.Font.Bold = true;
         }
-                
+
+        /// <summary>
+        /// Returns the path to the image file for the category
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <returns>Path to the image file</returns>
+        public string GetPictures(Category category)
+        {
+            return GetPictures(category.PictureId);
+        }
+
+        /// <summary>
+        /// Returns the path to the image file for the manufacturer
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <returns>Path to the image file</returns>
+        public string GetPictures(Manufacturer manufacturer)
+        {
+            return GetPictures(manufacturer.PictureId);
+        }
+
+        /// <summary>
+        /// Returns the path to the image file by ID
+        /// </summary>
+        /// <param name="pictureId">Picture ID</param>
+        /// <returns>Path to the image file</returns>
+        private string GetPictures(int pictureId)
+        {
+            var picture = _pictureService.GetPictureById(pictureId);
+            return _pictureService.GetThumbLocalPath(picture);
+        }
+
+        /// <summary>
+        /// Returns the list of categories for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of categories</returns>
+        public string GetCategoryIds(Product product)
+        {
+            string categoryIds = null;
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            {
+                categoryIds += pc.CategoryId;
+                categoryIds += ";";
+            }
+            return categoryIds;
+        }
+
+        /// <summary>
+        /// Returns the list of manufacturer for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of manufacturer</returns>
+        public string GetManufacturerIds(Product product)
+        {
+            string manufacturerIds = null;
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            {
+                manufacturerIds += pm.ManufacturerId;
+                manufacturerIds += ";";
+            }
+            return manufacturerIds;
+        }
+
+        /// <summary>
+        /// Returns the three first image associated with the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>three first image</returns>
+        public string[] GetPictures(Product product)
+        {
+            //pictures (up to 3 pictures)
+            string picture1 = null;
+            string picture2 = null;
+            string picture3 = null;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
+            for (var i = 0; i < pictures.Count; i++)
+            {
+                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                switch (i)
+                {
+                    case 0:
+                        picture1 = pictureLocalPath;
+                        break;
+                    case 1:
+                        picture2 = pictureLocalPath;
+                        break;
+                    case 2:
+                        picture3 = pictureLocalPath;
+                        break;
+                }
+            }
+            return new[] { picture1, picture2, picture3 };
+        }
         #endregion
     }
 }

@@ -247,7 +247,6 @@
     <Compile Include="Discounts\Cache\DiscountRequirementEventConsumer.cs" />
     <Compile Include="Discounts\DiscountRequirementValidationResult.cs" />
     <Compile Include="Discounts\DiscountValidationResult.cs" />
-    <Compile Include="ExportImport\ExportImportHelper.cs" />
     <Compile Include="ExportImport\Help\PropertyByName.cs" />
     <Compile Include="ExportImport\Help\PropertyManager.cs" />
     <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />

@@ -5,6 +5,7 @@ using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -32,13 +33,12 @@ namespace Nop.Services.ExportImport
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
-        private readonly ExportImportHelper _exportImportHelper;
 
         #endregion
 
         #region Ctor
 
-        public ImportManager(IProductService productService, 
+        public ImportManager(IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IPictureService pictureService,
@@ -57,7 +57,6 @@ namespace Nop.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
-            _exportImportHelper = new ExportImportHelper(_categoryService, _manufacturerService, _pictureService);
         }
 
         #endregion
@@ -116,7 +115,7 @@ namespace Nop.Services.ExportImport
                     throw new NopException("No worksheet found");
 
                 //the columns
-                var properties = new []
+                var properties = new[]
                 {
                     "ProductTypeId",
                     "ParentGroupedProductId",
@@ -221,7 +220,8 @@ namespace Nop.Services.ExportImport
                 {
                     bool allColumnsAreEmpty = true;
                     for (var i = 1; i <= properties.Length; i++)
-                        if (worksheet.Cells[iRow, i].Value != null && !String.IsNullOrEmpty(worksheet.Cells[iRow, i].Value.ToString()))
+                        if (worksheet.Cells[iRow, i].Value != null &&
+                            !String.IsNullOrEmpty(worksheet.Cells[iRow, i].Value.ToString()))
                         {
                             allColumnsAreEmpty = false;
                             break;
@@ -229,123 +229,240 @@ namespace Nop.Services.ExportImport
                     if (allColumnsAreEmpty)
                         break;
 
-                    int productTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
-                    int parentGroupedProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentGroupedProductId")].Value);
-                    bool visibleIndividually = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "VisibleIndividually")].Value);
+                    int productTypeId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
+                    int parentGroupedProductId =
+                        Convert.ToInt32(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "ParentGroupedProductId")].Value);
+                    bool visibleIndividually =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "VisibleIndividually")].Value);
                     string name = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value);
-                    string shortDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value);
-                    string fullDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value);
+                    string shortDescription =
+                        ConvertColumnToString(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value);
+                    string fullDescription =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value);
                     int vendorId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "VendorId")].Value);
-                    int productTemplateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTemplateId")].Value);
-                    bool showOnHomePage = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShowOnHomePage")].Value);
-                    string metaKeywords = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value);
-                    string metaDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaDescription")].Value);
-                    string metaTitle = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaTitle")].Value);
-                    string seName = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "SeName")].Value);
-                    bool allowCustomerReviews = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
-                    bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
+                    int productTemplateId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTemplateId")].Value);
+                    bool showOnHomePage =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShowOnHomePage")].Value);
+                    string metaKeywords =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value);
+                    string metaDescription =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaDescription")].Value);
+                    string metaTitle =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaTitle")].Value);
+                    string seName =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "SeName")].Value);
+                    bool allowCustomerReviews =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
+                    bool published =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
                     string sku = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value);
-                    string manufacturerPartNumber = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value);
+                    string manufacturerPartNumber =
+                        ConvertColumnToString(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value);
                     string gtin = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Gtin")].Value);
-                    bool isGiftCard = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
-                    int giftCardTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
+                    bool isGiftCard =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
+                    int giftCardTypeId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
                     decimal? overriddenGiftCardAmount = null;
-                    var overriddenGiftCardAmountExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "OverriddenGiftCardAmount")].Value;
+                    var overriddenGiftCardAmountExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "OverriddenGiftCardAmount")].Value;
                     if (overriddenGiftCardAmountExcel != null)
                         overriddenGiftCardAmount = Convert.ToDecimal(overriddenGiftCardAmountExcel);
-                    bool requireOtherProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
-                    string requiredProductIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "RequiredProductIds")].Value);
-                    bool automaticallyAddRequiredProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AutomaticallyAddRequiredProducts")].Value);
-                    bool isDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsDownload")].Value);
-                    int downloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadId")].Value);
-                    bool unlimitedDownloads = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UnlimitedDownloads")].Value);
-                    int maxNumberOfDownloads = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MaxNumberOfDownloads")].Value);
-                    int downloadActivationTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadActivationTypeId")].Value);
-                    bool hasSampleDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasSampleDownload")].Value);
-                    int sampleDownloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "SampleDownloadId")].Value);
-                    bool hasUserAgreement = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasUserAgreement")].Value);
-                    string userAgreementText = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "UserAgreementText")].Value);
-                    bool isRecurring = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRecurring")].Value);
-                    int recurringCycleLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCycleLength")].Value);
-                    int recurringCyclePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCyclePeriodId")].Value);
-                    int recurringTotalCycles = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
-                    bool isRental = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRental")].Value);
-                    int rentalPriceLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPriceLength")].Value);
-                    int rentalPricePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPricePeriodId")].Value);
-                    bool isShipEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
-                    bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
-                    bool shipSeparately = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
-                    decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
-                    int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
-                    bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
-                    int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
-                    bool isTelecommunicationsOrBroadcastingOrElectronicServices = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTelecommunicationsOrBroadcastingOrElectronicServices")].Value);
-                    int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
-                    bool useMultipleWarehouses = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UseMultipleWarehouses")].Value);
-                    int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
-                    int stockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "StockQuantity")].Value);
-                    bool displayStockAvailability = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockAvailability")].Value);
-                    bool displayStockQuantity = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockQuantity")].Value);
-                    int minStockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MinStockQuantity")].Value);
-                    int lowStockActivityId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "LowStockActivityId")].Value);
-                    int notifyAdminForQuantityBelow = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "NotifyAdminForQuantityBelow")].Value);
-                    int backorderModeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BackorderModeId")].Value);
-                    bool allowBackInStockSubscriptions = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowBackInStockSubscriptions")].Value);
-                    int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
-                    int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
-                    string allowedQuantities = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value);
-                    bool allowAddingOnlyExistingAttributeCombinations = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowAddingOnlyExistingAttributeCombinations")].Value);
-                    bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
-                    bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
-                    bool availableForPreOrder = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
+                    bool requireOtherProducts =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
+                    string requiredProductIds =
+                        ConvertColumnToString(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "RequiredProductIds")].Value);
+                    bool automaticallyAddRequiredProducts =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AutomaticallyAddRequiredProducts")].Value);
+                    bool isDownload =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsDownload")].Value);
+                    int downloadId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadId")].Value);
+                    bool unlimitedDownloads =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UnlimitedDownloads")].Value);
+                    int maxNumberOfDownloads =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MaxNumberOfDownloads")].Value);
+                    int downloadActivationTypeId =
+                        Convert.ToInt32(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadActivationTypeId")].Value);
+                    bool hasSampleDownload =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasSampleDownload")].Value);
+                    int sampleDownloadId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "SampleDownloadId")].Value);
+                    bool hasUserAgreement =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasUserAgreement")].Value);
+                    string userAgreementText =
+                        ConvertColumnToString(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "UserAgreementText")].Value);
+                    bool isRecurring =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRecurring")].Value);
+                    int recurringCycleLength =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCycleLength")].Value);
+                    int recurringCyclePeriodId =
+                        Convert.ToInt32(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCyclePeriodId")].Value);
+                    int recurringTotalCycles =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
+                    bool isRental =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRental")].Value);
+                    int rentalPriceLength =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPriceLength")].Value);
+                    int rentalPricePeriodId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPricePeriodId")].Value);
+                    bool isShipEnabled =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
+                    bool isFreeShipping =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
+                    bool shipSeparately =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
+                    decimal additionalShippingCharge =
+                        Convert.ToDecimal(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
+                    int deliveryDateId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
+                    bool isTaxExempt =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
+                    int taxCategoryId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
+                    bool isTelecommunicationsOrBroadcastingOrElectronicServices =
+                        Convert.ToBoolean(
+                            worksheet.Cells[
+                                iRow,
+                                GetColumnIndex(properties, "IsTelecommunicationsOrBroadcastingOrElectronicServices")]
+                                .Value);
+                    int manageInventoryMethodId =
+                        Convert.ToInt32(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
+                    bool useMultipleWarehouses =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "UseMultipleWarehouses")].Value);
+                    int warehouseId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
+                    int stockQuantity =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "StockQuantity")].Value);
+                    bool displayStockAvailability =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockAvailability")].Value);
+                    bool displayStockQuantity =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockQuantity")].Value);
+                    int minStockQuantity =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MinStockQuantity")].Value);
+                    int lowStockActivityId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "LowStockActivityId")].Value);
+                    int notifyAdminForQuantityBelow =
+                        Convert.ToInt32(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "NotifyAdminForQuantityBelow")].Value);
+                    int backorderModeId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BackorderModeId")].Value);
+                    bool allowBackInStockSubscriptions =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AllowBackInStockSubscriptions")].Value);
+                    int orderMinimumQuantity =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
+                    int orderMaximumQuantity =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
+                    string allowedQuantities =
+                        ConvertColumnToString(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value);
+                    bool allowAddingOnlyExistingAttributeCombinations =
+                        Convert.ToBoolean(
+                            worksheet.Cells[
+                                iRow, GetColumnIndex(properties, "AllowAddingOnlyExistingAttributeCombinations")].Value);
+                    bool disableBuyButton =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
+                    bool disableWishlistButton =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
+                    bool availableForPreOrder =
+                        Convert.ToBoolean(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
                     DateTime? preOrderAvailabilityStartDateTimeUtc = null;
-                    var preOrderAvailabilityStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "PreOrderAvailabilityStartDateTimeUtc")].Value;
+                    var preOrderAvailabilityStartDateTimeUtcExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "PreOrderAvailabilityStartDateTimeUtc")].Value;
                     if (preOrderAvailabilityStartDateTimeUtcExcel != null)
-                        preOrderAvailabilityStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(preOrderAvailabilityStartDateTimeUtcExcel));
-                    bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
+                        preOrderAvailabilityStartDateTimeUtc =
+                            DateTime.FromOADate(Convert.ToDouble(preOrderAvailabilityStartDateTimeUtcExcel));
+                    bool callForPrice =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
                     decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
-                    decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
-                    decimal productCost = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductCost")].Value);
+                    decimal oldPrice =
+                        Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
+                    decimal productCost =
+                        Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductCost")].Value);
                     decimal? specialPrice = null;
                     var specialPriceExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPrice")].Value;
                     if (specialPriceExcel != null)
                         specialPrice = Convert.ToDecimal(specialPriceExcel);
                     DateTime? specialPriceStartDateTimeUtc = null;
-                    var specialPriceStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceStartDateTimeUtc")].Value;
+                    var specialPriceStartDateTimeUtcExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceStartDateTimeUtc")].Value;
                     if (specialPriceStartDateTimeUtcExcel != null)
-                        specialPriceStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceStartDateTimeUtcExcel));
+                        specialPriceStartDateTimeUtc =
+                            DateTime.FromOADate(Convert.ToDouble(specialPriceStartDateTimeUtcExcel));
                     DateTime? specialPriceEndDateTimeUtc = null;
-                    var specialPriceEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceEndDateTimeUtc")].Value;
+                    var specialPriceEndDateTimeUtcExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceEndDateTimeUtc")].Value;
                     if (specialPriceEndDateTimeUtcExcel != null)
-                        specialPriceEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceEndDateTimeUtcExcel));
+                        specialPriceEndDateTimeUtc =
+                            DateTime.FromOADate(Convert.ToDouble(specialPriceEndDateTimeUtcExcel));
 
-                    bool customerEntersPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
-                    decimal minimumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
-                    decimal maximumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
-                    bool basepriceEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceEnabled")].Value);
-                    decimal basepriceAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceAmount")].Value);
-                    int basepriceUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceUnitId")].Value);
-                    decimal basepriceBaseAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseAmount")].Value);
-                    int basepriceBaseUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseUnitId")].Value);
-                    bool markAsNew = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNew")].Value);
+                    bool customerEntersPrice =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
+                    decimal minimumCustomerEnteredPrice =
+                        Convert.ToDecimal(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
+                    decimal maximumCustomerEnteredPrice =
+                        Convert.ToDecimal(
+                            worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
+                    bool basepriceEnabled =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceEnabled")].Value);
+                    decimal basepriceAmount =
+                        Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceAmount")].Value);
+                    int basepriceUnitId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceUnitId")].Value);
+                    decimal basepriceBaseAmount =
+                        Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseAmount")].Value);
+                    int basepriceBaseUnitId =
+                        Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseUnitId")].Value);
+                    bool markAsNew =
+                        Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNew")].Value);
                     DateTime? markAsNewStartDateTimeUtc = null;
-                    var markAsNewStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewStartDateTimeUtc")].Value;
+                    var markAsNewStartDateTimeUtcExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewStartDateTimeUtc")].Value;
                     if (markAsNewStartDateTimeUtcExcel != null)
                         markAsNewStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewStartDateTimeUtcExcel));
                     DateTime? markAsNewEndDateTimeUtc = null;
-                    var markAsNewEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewEndDateTimeUtc")].Value;
+                    var markAsNewEndDateTimeUtcExcel =
+                        worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewEndDateTimeUtc")].Value;
                     if (markAsNewEndDateTimeUtcExcel != null)
                         markAsNewEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewEndDateTimeUtcExcel));
                     decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
                     decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
                     decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
                     decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
-                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
-                    string categoryIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
-                    string manufacturerIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
-                    string picture1 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
-                    string picture2 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture2")].Value);
-                    string picture3 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture3")].Value);
+                    DateTime createdOnUtc =
+                        DateTime.FromOADate(
+                            Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
+                    string categoryIds =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
+                    string manufacturerIds =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
+                    string picture1 =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
+                    string picture2 =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture2")].Value);
+                    string picture3 =
+                        ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture3")].Value);
 
 
 
@@ -401,7 +518,8 @@ namespace Nop.Services.ExportImport
                     product.DeliveryDateId = deliveryDateId;
                     product.IsTaxExempt = isTaxExempt;
                     product.TaxCategoryId = taxCategoryId;
-                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices = isTelecommunicationsOrBroadcastingOrElectronicServices;
+                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices =
+                        isTelecommunicationsOrBroadcastingOrElectronicServices;
                     product.ManageInventoryMethodId = manageInventoryMethodId;
                     product.UseMultipleWarehouses = useMultipleWarehouses;
                     product.WarehouseId = warehouseId;
@@ -461,7 +579,10 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     if (!String.IsNullOrEmpty(categoryIds))
                     {
-                        foreach (var id in categoryIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (
+                            var id in
+                                categoryIds.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(x => Convert.ToInt32(x.Trim())))
                         {
                             if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) == null)
                             {
@@ -485,7 +606,10 @@ namespace Nop.Services.ExportImport
                     //manufacturer mappings
                     if (!String.IsNullOrEmpty(manufacturerIds))
                     {
-                        foreach (var id in manufacturerIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        foreach (
+                            var id in
+                                manufacturerIds.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(x => Convert.ToInt32(x.Trim())))
                         {
                             if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) == null)
                             {
@@ -507,7 +631,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //pictures
-                    foreach (var picturePath in new [] { picture1, picture2, picture3 })
+                    foreach (var picturePath in new[] {picture1, picture2, picture3})
                     {
                         if (String.IsNullOrEmpty(picturePath))
                             continue;
@@ -524,7 +648,8 @@ namespace Nop.Services.ExportImport
                                 var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
                                 //picture binary after validation (like in database)
                                 var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                                if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
+                                if (existingBinary.SequenceEqual(validatedPictureBinary) ||
+                                    existingBinary.SequenceEqual(newPictureBinary))
                                 {
                                     //the same picture content
                                     pictureAlreadyExists = true;
@@ -535,7 +660,8 @@ namespace Nop.Services.ExportImport
 
                         if (!pictureAlreadyExists)
                         {
-                            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType , _pictureService.GetPictureSeName(name));
+                            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType,
+                                _pictureService.GetPictureSeName(name));
                             product.ProductPictures.Add(new ProductPicture
                             {
                                 //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
@@ -601,7 +727,8 @@ namespace Nop.Services.ExportImport
                         throw new NopException("Wrong file format");
 
                     //import
-                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email, storeId);
+                    var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmailAndStoreId(email,
+                        storeId);
                     if (subscription != null)
                     {
                         subscription.Email = email;
@@ -646,7 +773,7 @@ namespace Nop.Services.ExportImport
 
                     if (tmp.Length != 5)
                         throw new NopException("Wrong file format");
-                    
+
                     //parse
                     var countryTwoLetterIsoCode = tmp[0].Trim();
                     var name = tmp[1].Trim();
@@ -663,7 +790,8 @@ namespace Nop.Services.ExportImport
 
                     //import
                     var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true);
-                    var state = states.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    var state =
+                        states.FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
                     if (state != null)
                     {
@@ -691,36 +819,6 @@ namespace Nop.Services.ExportImport
             return count;
         }
 
-        private BaseEntity GetManufacturer(int id)
-        {
-            return _manufacturerService.GetManufacturerById(id);
-        }
-
-        private BaseEntity GetCategory(int id)
-        {
-            return _categoryService.GetCategoryById(id);
-        }
-
-        private void SetObject(bool isNew, BaseEntity obj)
-        {
-            var manufacturer = obj as Manufacturer;
-            if (manufacturer != null)
-            {
-                if (isNew)
-                    _manufacturerService.InsertManufacturer(manufacturer);
-                else
-                    _manufacturerService.UpdateManufacturer(manufacturer);
-            }
-            var category = obj as Category;
-            if (category != null)
-            {
-                if (isNew)
-                    _categoryService.InsertCategory(category);
-                else
-                    _categoryService.UpdateCategory(category);
-            }
-        }
-
         /// <summary>
         /// Import manufacturers from XLSX file
         /// </summary>
@@ -730,149 +828,24 @@ namespace Nop.Services.ExportImport
             //property array
             var properties = new[]
             {
-                new PropertyByName<Manufacturer>("Id", p => p.Id),
-                new PropertyByName<Manufacturer>("Name", p => p.Name),
-                new PropertyByName<Manufacturer>("Description", p => p.Description),
-                new PropertyByName<Manufacturer>("ManufacturerTemplateId", p => p.ManufacturerTemplateId),
-                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords),
-                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription),
-                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Manufacturer>("Picture", _exportImportHelper.GetPictures),
-                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize),
-                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
-                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions),
-                new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges),
-                new PropertyByName<Manufacturer>("Published", p => p.Published),
-                new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
+                new PropertyByName<Manufacturer>("Id"),
+                new PropertyByName<Manufacturer>("Name"),
+                new PropertyByName<Manufacturer>("Description"),
+                new PropertyByName<Manufacturer>("ManufacturerTemplateId"),
+                new PropertyByName<Manufacturer>("MetaKeywords"),
+                new PropertyByName<Manufacturer>("MetaDescription"),
+                new PropertyByName<Manufacturer>("MetaTitle"),
+                new PropertyByName<Manufacturer>("Picture"),
+                new PropertyByName<Manufacturer>("PageSize"),
+                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize"),
+                new PropertyByName<Manufacturer>("PageSizeOptions"),
+                new PropertyByName<Manufacturer>("PriceRanges"),
+                new PropertyByName<Manufacturer>("Published"),
+                new PropertyByName<Manufacturer>("DisplayOrder")
             };
 
             var manager = new PropertyManager<Manufacturer>(properties);
 
-            ImportFromXlsx(stream, manager, new Manufacturer(), GetManufacturer, FillManufacturerObject);
-        }
-
-        /// <summary>
-        /// Fills the specified object
-        /// </summary>
-        /// <param name="objectToFill">The object to fill</param>
-        /// <param name="isNew">Is new object flag</param>
-        /// <param name="manager">Property manager</param>
-        public void FillManufacturerObject(BaseEntity objectToFill, bool isNew, PropertyManager<Manufacturer> manager)
-        {
-            var manufacturer = objectToFill as Manufacturer;
-
-            if (manufacturer == null)
-                return;
-            if (isNew)
-                manufacturer.CreatedOnUtc = DateTime.UtcNow;
-
-            manufacturer.Name = manager.GetProperty("Name").StringValue;
-            manufacturer.Description = manager.GetProperty("Description").StringValue;
-            manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").Int32Value;
-            manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-            manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-            manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-            var picture = _exportImportHelper.LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                isNew ? null : (int?)manufacturer.PictureId);
-            manufacturer.PageSize = manager.GetProperty("PageSize").Int32Value;
-            manufacturer.AllowCustomersToSelectPageSize =
-                manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-            manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-            manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-            manufacturer.Published = manager.GetProperty("Published").BooleanValue;
-            manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
-
-            if (picture != null)
-                manufacturer.PictureId = picture.Id;
-
-            manufacturer.UpdatedOnUtc = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Import categories from XLSX file
-        /// </summary>
-        /// <param name="stream">Stream</param>
-        public virtual void ImportCategoryFromXlsx(Stream stream)
-        {
-            var properties = new[]
-            {
-                new PropertyByName<Category>("Id", p => p.Id),
-                new PropertyByName<Category>("Name", p => p.Name),
-                new PropertyByName<Category>("Description", p => p.Description),
-                new PropertyByName<Category>("CategoryTemplateId", p => p.CategoryTemplateId),
-                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords),
-                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription),
-                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle),
-                new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
-                new PropertyByName<Category>("Picture", _exportImportHelper.GetPictures),
-                new PropertyByName<Category>("PageSize", p => p.PageSize),
-                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
-                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions),
-                new PropertyByName<Category>("PriceRanges", p => p.PriceRanges),
-                new PropertyByName<Category>("ShowOnHomePage", p => p.ShowOnHomePage),
-                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu),
-                new PropertyByName<Category>("Published", p => p.Published),
-                new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
-            };
-
-            var manager = new PropertyManager<Category>(properties);
-
-            ImportFromXlsx(stream, manager, new Category(), GetCategory, FillCategoryObject);
-        }
-
-        /// <summary>
-        /// Fills the specified object
-        /// </summary>
-        /// <param name="objectToFill">The object to fill</param>
-        /// <param name="isNew">Is new object flag</param>
-        /// <param name="manager">Property manager</param>
-        public void FillCategoryObject(BaseEntity objectToFill, bool isNew, PropertyManager<Category> manager)
-        {
-            var category = objectToFill as Category;
-
-            if (category == null)
-                return;
-            if (isNew)
-                category.CreatedOnUtc = DateTime.UtcNow;
-
-            category.Name = manager.GetProperty("Name").StringValue;
-            category.Description = manager.GetProperty("Description").StringValue;
-
-            category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").Int32Value;
-            category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
-            category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
-            category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-            category.ParentCategoryId = manager.GetProperty("ParentCategoryId").Int32Value;
-            var picture = _exportImportHelper.LoadPicture(manager.GetProperty("Picture").StringValue, category.Name,
-                isNew ? null : (int?)category.PictureId);
-            category.PageSize = manager.GetProperty("PageSize").Int32Value;
-            category.AllowCustomersToSelectPageSize =
-                manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
-            category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
-            category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
-            category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
-            category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
-            category.Published = manager.GetProperty("Published").BooleanValue;
-            category.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
-
-            if (picture != null)
-                category.PictureId = picture.Id;
-
-            category.UpdatedOnUtc = DateTime.UtcNow;
-        }
-
-        /// <summary>
-        /// Import objects from XLSX file
-        /// </summary>
-        /// <typeparam name="T">Type of object</typeparam>
-        /// <param name="stream">File stream</param>
-        /// <param name="manager">Instance of object properties control class</param>
-        /// <param name="newObj">New object</param>
-        /// <param name="getObject">Get object function</param>
-        /// <param name="fillObject">Fills the specified object function</param>
-        public virtual void ImportFromXlsx<T>(Stream stream, PropertyManager<T> manager,
-            BaseEntity newObj, Func<int, BaseEntity> getObject, Action<BaseEntity, bool, PropertyManager<T>> fillObject)
-        {
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -884,34 +857,184 @@ namespace Nop.Services.ExportImport
 
                 while (true)
                 {
-                    try
-                    {
-                        var allColumnsAreEmpty = manager.GetProperties
-                            .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
-                            .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+                    var allColumnsAreEmpty = manager.GetProperties
+                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
 
-                        if (allColumnsAreEmpty)
-                            break;
-
-                        manager.ReadFromXlsx(worksheet, iRow);
-                        var obj = getObject(manager.GetProperty("Id").Int32Value);
-
-                        var isNew = obj == null;
-
-                        obj = obj ?? newObj;
-
-                        fillObject(obj, isNew, manager);
-
-                        SetObject(isNew, obj);
-
-                        iRow++;
-                    }
-                    catch (NullReferenceException)
-                    {
+                    if (allColumnsAreEmpty)
                         break;
-                    }
+
+                    manager.ReadFromXlsx(worksheet, iRow);
+
+                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").Int32Value);
+
+                    var isNew = manufacturer == null;
+
+                    manufacturer = manufacturer ?? new Manufacturer();
+
+                    if (isNew)
+                        manufacturer.CreatedOnUtc = DateTime.UtcNow;
+
+                    manufacturer.Name = manager.GetProperty("Name").StringValue;
+                    manufacturer.Description = manager.GetProperty("Description").StringValue;
+                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").Int32Value;
+                    manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
+                    manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
+                    manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
+                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
+                        isNew ? null : (int?) manufacturer.PictureId);
+                    manufacturer.PageSize = manager.GetProperty("PageSize").Int32Value;
+                    manufacturer.AllowCustomersToSelectPageSize =
+                        manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
+                    manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
+                    manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
+                    manufacturer.Published = manager.GetProperty("Published").BooleanValue;
+                    manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+
+                    if (picture != null)
+                        manufacturer.PictureId = picture.Id;
+
+                    manufacturer.UpdatedOnUtc = DateTime.UtcNow;
+
+                    if (isNew)
+                        _manufacturerService.InsertManufacturer(manufacturer);
+                    else
+                        _manufacturerService.UpdateManufacturer(manufacturer);
+
+                    iRow++;
                 }
             }
+        }
+
+        /// <summary>
+        /// Import categories from XLSX file
+        /// </summary>
+        /// <param name="stream">Stream</param>
+        public virtual void ImportCategoryFromXlsx(Stream stream)
+        {
+            var properties = new[]
+            {
+                new PropertyByName<Category>("Id"),
+                new PropertyByName<Category>("Name"),
+                new PropertyByName<Category>("Description"),
+                new PropertyByName<Category>("CategoryTemplateId"),
+                new PropertyByName<Category>("MetaKeywords"),
+                new PropertyByName<Category>("MetaDescription"),
+                new PropertyByName<Category>("MetaTitle"),
+                new PropertyByName<Category>("ParentCategoryId"),
+                new PropertyByName<Category>("Picture"),
+                new PropertyByName<Category>("PageSize"),
+                new PropertyByName<Category>("AllowCustomersToSelectPageSize"),
+                new PropertyByName<Category>("PageSizeOptions"),
+                new PropertyByName<Category>("PriceRanges"),
+                new PropertyByName<Category>("ShowOnHomePage"),
+                new PropertyByName<Category>("IncludeInTopMenu"),
+                new PropertyByName<Category>("Published"),
+                new PropertyByName<Category>("DisplayOrder")
+            };
+
+            var manager = new PropertyManager<Category>(properties);
+
+            using (var xlPackage = new ExcelPackage(stream))
+            {
+                // get the first worksheet in the workbook
+                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null)
+                    throw new NopException("No worksheet found");
+
+                var iRow = 2;
+
+                while (true)
+                {
+                    var allColumnsAreEmpty = manager.GetProperties
+                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+
+                    if (allColumnsAreEmpty)
+                        break;
+
+                    manager.ReadFromXlsx(worksheet, iRow);
+
+
+                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").Int32Value);
+
+                    var isNew = category == null;
+
+                    category = category ?? new Category();
+
+                    if (isNew)
+                        category.CreatedOnUtc = DateTime.UtcNow;
+
+                    category.Name = manager.GetProperty("Name").StringValue;
+                    category.Description = manager.GetProperty("Description").StringValue;
+
+                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").Int32Value;
+                    category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
+                    category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
+                    category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
+                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").Int32Value;
+                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name,
+                        isNew ? null : (int?) category.PictureId);
+                    category.PageSize = manager.GetProperty("PageSize").Int32Value;
+                    category.AllowCustomersToSelectPageSize =
+                        manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
+                    category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
+                    category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
+                    category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
+                    category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
+                    category.Published = manager.GetProperty("Published").BooleanValue;
+                    category.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+
+                    if (picture != null)
+                        category.PictureId = picture.Id;
+
+                    category.UpdatedOnUtc = DateTime.UtcNow;
+
+                    if (isNew)
+                        _categoryService.InsertCategory(category);
+                    else
+                        _categoryService.UpdateCategory(category);
+
+                    iRow++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates or loads the image
+        /// </summary>
+        /// <param name="picturePath">The path to the image file</param>
+        /// <param name="name">The name of the object</param>
+        /// <param name="picId">Image identifier, may be null</param>
+        /// <returns>The image or null if the image has not changed</returns>
+        public Picture LoadPicture(string picturePath, string name, int? picId = null)
+        {
+            if (String.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
+                return null;
+
+            var mimeType = GetMimeTypeFromFilePath(picturePath);
+            var newPictureBinary = File.ReadAllBytes(picturePath);
+            var pictureAlreadyExists = false;
+            if (picId != null)
+            {
+                //compare with existing product pictures
+                var existingPicture = _pictureService.GetPictureById(picId.Value);
+
+                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
+                //picture binary after validation (like in database)
+                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                if (existingBinary.SequenceEqual(validatedPictureBinary) ||
+                    existingBinary.SequenceEqual(newPictureBinary))
+                {
+                    pictureAlreadyExists = true;
+                }
+            }
+
+            if (pictureAlreadyExists) return null;
+
+            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType,
+                _pictureService.GetPictureSeName(name));
+            return newPicture;
         }
 
         #endregion
