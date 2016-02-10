@@ -22,19 +22,18 @@ namespace Nop.Services.ExportImport.Help
         /// All properties
         /// </summary>
         private readonly Dictionary<string, PropertyByName<T>> _properties;
-        private readonly IGetProperties<T> _fill_object;
+
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="properties">All acsess properties</param>
-        public PropertyManager(IGetProperties<T> properties)
+        public PropertyManager(PropertyByName<T>[] properties)
         {
             _properties=new Dictionary<string, PropertyByName<T>>();
-            _fill_object = properties;
 
             var poz = 1;
-            foreach (var propertyByName in properties.GetProperties)
+            foreach (var propertyByName in properties)
             {
                 propertyByName.PropertyOrderPosition = poz;
                 poz++;
@@ -143,11 +142,6 @@ namespace Nop.Services.ExportImport.Help
         public PropertyByName<T>[] GetProperties
         {
             get { return _properties.Values.ToArray(); }
-        }
-
-        public void FillObject(BaseEntity objectToFill, bool isNew, PropertyManager<T> manager)
-        {
-            _fill_object.FillObject(objectToFill, isNew, this);
         }
     }
 }

@@ -32,6 +32,7 @@ namespace Nop.Services.ExportImport
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly ExportImportHelper _exportImportHelper;
 
         #endregion
 
@@ -56,6 +57,7 @@ namespace Nop.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            _exportImportHelper = new ExportImportHelper(_categoryService, _manufacturerService, _pictureService);
         }
 
         #endregion
@@ -725,10 +727,65 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportManufacturerFromXlsx(Stream stream)
         {
-            var properties = new ManufacturerGetProperties(_pictureService);
+            //property array
+            var properties = new[]
+            {
+                new PropertyByName<Manufacturer>("Id", p => p.Id),
+                new PropertyByName<Manufacturer>("Name", p => p.Name),
+                new PropertyByName<Manufacturer>("Description", p => p.Description),
+                new PropertyByName<Manufacturer>("ManufacturerTemplateId", p => p.ManufacturerTemplateId),
+                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords),
+                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription),
+                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle),
+                new PropertyByName<Manufacturer>("Picture", _exportImportHelper.GetPictures),
+                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize),
+                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
+                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions),
+                new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges),
+                new PropertyByName<Manufacturer>("Published", p => p.Published),
+                new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
+            };
+
             var manager = new PropertyManager<Manufacturer>(properties);
 
-            ImportFromXlsx(stream, manager, new Manufacturer(), GetManufacturer);
+            ImportFromXlsx(stream, manager, new Manufacturer(), GetManufacturer, FillManufacturerObject);
+        }
+
+        /// <summary>
+        /// Fills the specified object
+        /// </summary>
+        /// <param name="objectToFill">The object to fill</param>
+        /// <param name="isNew">Is new object flag</param>
+        /// <param name="manager">Property manager</param>
+        public void FillManufacturerObject(BaseEntity objectToFill, bool isNew, PropertyManager<Manufacturer> manager)
+        {
+            var manufacturer = objectToFill as Manufacturer;
+
+            if (manufacturer == null)
+                return;
+            if (isNew)
+                manufacturer.CreatedOnUtc = DateTime.UtcNow;
+
+            manufacturer.Name = manager.GetProperty("Name").StringValue;
+            manufacturer.Description = manager.GetProperty("Description").StringValue;
+            manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").Int32Value;
+            manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
+            manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
+            manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
+            var picture = _exportImportHelper.LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
+                isNew ? null : (int?)manufacturer.PictureId);
+            manufacturer.PageSize = manager.GetProperty("PageSize").Int32Value;
+            manufacturer.AllowCustomersToSelectPageSize =
+                manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
+            manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
+            manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
+            manufacturer.Published = manager.GetProperty("Published").BooleanValue;
+            manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+
+            if (picture != null)
+                manufacturer.PictureId = picture.Id;
+
+            manufacturer.UpdatedOnUtc = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -737,10 +794,71 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportCategoryFromXlsx(Stream stream)
         {
-            var properties = new CategoryGetProperties(_pictureService);
+            var properties = new[]
+            {
+                new PropertyByName<Category>("Id", p => p.Id),
+                new PropertyByName<Category>("Name", p => p.Name),
+                new PropertyByName<Category>("Description", p => p.Description),
+                new PropertyByName<Category>("CategoryTemplateId", p => p.CategoryTemplateId),
+                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords),
+                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription),
+                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle),
+                new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
+                new PropertyByName<Category>("Picture", _exportImportHelper.GetPictures),
+                new PropertyByName<Category>("PageSize", p => p.PageSize),
+                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
+                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions),
+                new PropertyByName<Category>("PriceRanges", p => p.PriceRanges),
+                new PropertyByName<Category>("ShowOnHomePage", p => p.ShowOnHomePage),
+                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu),
+                new PropertyByName<Category>("Published", p => p.Published),
+                new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
+            };
+
             var manager = new PropertyManager<Category>(properties);
 
-            ImportFromXlsx(stream, manager, new Category(), GetCategory);
+            ImportFromXlsx(stream, manager, new Category(), GetCategory, FillCategoryObject);
+        }
+
+        /// <summary>
+        /// Fills the specified object
+        /// </summary>
+        /// <param name="objectToFill">The object to fill</param>
+        /// <param name="isNew">Is new object flag</param>
+        /// <param name="manager">Property manager</param>
+        public void FillCategoryObject(BaseEntity objectToFill, bool isNew, PropertyManager<Category> manager)
+        {
+            var category = objectToFill as Category;
+
+            if (category == null)
+                return;
+            if (isNew)
+                category.CreatedOnUtc = DateTime.UtcNow;
+
+            category.Name = manager.GetProperty("Name").StringValue;
+            category.Description = manager.GetProperty("Description").StringValue;
+
+            category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").Int32Value;
+            category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
+            category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
+            category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
+            category.ParentCategoryId = manager.GetProperty("ParentCategoryId").Int32Value;
+            var picture = _exportImportHelper.LoadPicture(manager.GetProperty("Picture").StringValue, category.Name,
+                isNew ? null : (int?)category.PictureId);
+            category.PageSize = manager.GetProperty("PageSize").Int32Value;
+            category.AllowCustomersToSelectPageSize =
+                manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
+            category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
+            category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
+            category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
+            category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
+            category.Published = manager.GetProperty("Published").BooleanValue;
+            category.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+
+            if (picture != null)
+                category.PictureId = picture.Id;
+
+            category.UpdatedOnUtc = DateTime.UtcNow;
         }
 
         /// <summary>
@@ -751,8 +869,9 @@ namespace Nop.Services.ExportImport
         /// <param name="manager">Instance of object properties control class</param>
         /// <param name="newObj">New object</param>
         /// <param name="getObject">Get object function</param>
+        /// <param name="fillObject">Fills the specified object function</param>
         public virtual void ImportFromXlsx<T>(Stream stream, PropertyManager<T> manager,
-            BaseEntity newObj, Func<int, BaseEntity> getObject)
+            BaseEntity newObj, Func<int, BaseEntity> getObject, Action<BaseEntity, bool, PropertyManager<T>> fillObject)
         {
             using (var xlPackage = new ExcelPackage(stream))
             {
@@ -781,7 +900,7 @@ namespace Nop.Services.ExportImport
 
                         obj = obj ?? newObj;
 
-                        manager.FillObject(obj, isNew, manager);
+                        fillObject(obj, isNew, manager);
 
                         SetObject(isNew, obj);
 
