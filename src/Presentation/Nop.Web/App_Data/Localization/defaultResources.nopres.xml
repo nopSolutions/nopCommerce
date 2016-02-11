@@ -4116,9 +4116,6 @@
   <LocaleResource Name="Admin.Configuration.Languages.Resources">
     <Value>String resources</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
-    <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.Fields.Name">
     <Value>Resource name</Value>
   </LocaleResource>
@@ -4136,6 +4133,18 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Resources.SaveBeforeEdit">
     <Value>You need to save the language before you can make or change resources for this language.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName">
+    <Value>Resource name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search by a specific resource.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue.Hint">
+    <Value>Search by a specific resource value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Stores">
     <Value>Stores</Value>
@@ -4452,9 +4461,6 @@
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings">
     <Value>All settings (advanced)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
-    <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Name">
     <Value>Setting name</Value>
   </LocaleResource>
@@ -4469,6 +4475,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Fields.Value">
     <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue.Hint">
+    <Value>Search by a specific setting value.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Blog">
     <Value>Blog settings</Value>

@@ -220,7 +220,29 @@
             <td>
                 @if (Model.Id > 0)
                 {
-                    @T("Admin.Configuration.Languages.Resources.Description")
+                    <table width="100%">
+                        <tr>
+                            <td class="adminTitle">
+                                @Html.NopLabelFor(model => model.Search.SearchResourceName):
+                            </td>
+                            <td class="adminData">
+                                @Html.EditorFor(model => model.Search.SearchResourceName)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="adminTitle">
+                                @Html.NopLabelFor(model => model.Search.SearchResourceValue):
+                            </td>
+                            <td class="adminData">
+                                @Html.EditorFor(model => model.Search.SearchResourceValue)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <input type="button" id="search-resources" class="k-button" value="@T("Admin.Common.Search")" />
+                            </td>
+                        </tr>
+                    </table>
                 }
                 else
                 {
@@ -243,15 +265,14 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id }))",
+                                            url: "@Html.Raw(Url.Action("Resources", "Language", new {languageId = Model.Id}))",
                                             type: "POST",
                                             dataType: "json",
-                                            contentType: "application/json"
-                                            //any-forgery does not work with this contentType for some reasons
-                                            //data: addAntiForgeryToken
+                                            contentType: "application/json",
+                                            data: additionalData
                                         },
                                         create: {
-                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id }))",
+                                            url: "@Html.Raw(Url.Action("ResourceAdd", "Language", new {languageId = Model.Id}))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -309,36 +330,21 @@
                                     refresh: true,
                                     pageSizes: [@(gridPageSizes)]
                                 },
-                                sortable: true,
                                 toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                                 editable: {
                                     confirmation: false,
                                     mode: "inline"
-                                },
-                                filterable: {
-                                    extra: false,
-                                    operators: {
-                                        string: {
-                                            contains: "Contains",
-                                            eq: "Is equal to",
-                                            startswith: "Starts with"
-                                        }
-                                    }
                                 },
                                 scrollable: false,
                                 columns: [
                                     {
                                         field: "Name",
                                         title: "@T("Admin.Configuration.Languages.Resources.Fields.Name")",
-                                        width: 300,
-                                        filterable: true,
-                                        sortable: true
+                                        width: 300
                                     }, {
                                         field: "Value",
                                         title: "@T("Admin.Configuration.Languages.Resources.Fields.Value")",
-                                        width: 300,
-                                        filterable: true,
-                                        sortable: true
+                                        width: 300
 
                                     }, {
                                         command: [
@@ -354,13 +360,44 @@
                                                 text: "@T("Admin.Common.Delete")"
                                             }
                                         ],
-                                        width: 200,
-                                        filterable: false
+                                        width: 200
                                     }
                                 ]
                             });
                         });
 
+                    </script>
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#search-resources').click(function () {
+                                var grid = $('#resources-grid').data('kendoGrid');
+                                grid.dataSource.page(1);
+                                return false;
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchResourceName: $('#@Html.FieldIdFor(model => model.Search.SearchResourceName)').val(),
+                                SearchResourceValue: $('#@Html.FieldIdFor(model => model.Search.SearchResourceValue)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                        $("#@Html.FieldIdFor(model => model.Search.SearchResourceName)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-resources").click();
+                                return false;
+                            }
+                        });
+
+                        $("#@Html.FieldIdFor(model => model.Search.SearchResourceValue)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-resources").click();
+                                return false;
+                            }
+                        });
                     </script>
                 }
             </td>

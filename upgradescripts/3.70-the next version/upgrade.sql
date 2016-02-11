@@ -176,6 +176,30 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue.Hint">
+    <Value>Search by a specific setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName">
+    <Value>Resource name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search by a specific resource.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue.Hint">
+    <Value>Search by a specific resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

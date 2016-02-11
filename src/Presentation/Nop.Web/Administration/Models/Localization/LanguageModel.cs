@@ -58,5 +58,7 @@ namespace Nop.Admin.Models.Localization
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
 
+        // search
+        public LanguageResourcesListModel Search { get; set; }
     }
 }
