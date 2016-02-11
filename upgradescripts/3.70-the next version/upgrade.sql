@@ -38,7 +38,7 @@ set @resources='
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
-    <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
+  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
     <Value>Restricted products [and quantity range]</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
@@ -163,6 +163,18 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
     <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Categories have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
 </Language>
 '

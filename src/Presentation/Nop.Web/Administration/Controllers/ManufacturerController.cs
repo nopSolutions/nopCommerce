@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
 using Nop.Admin.Models.Catalog;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
@@ -47,9 +49,11 @@ namespace Nop.Admin.Controllers
         private readonly IAclService _aclService; 
         private readonly IPermissionService _permissionService;
         private readonly CatalogSettings _catalogSettings;
+        private readonly IWorkContext _workContext;
+        private readonly IImportManager _importManager;
 
         #endregion
-        
+
         #region Constructors
 
         public ManufacturerController(ICategoryService categoryService, 
@@ -70,7 +74,9 @@ namespace Nop.Admin.Controllers
             IVendorService vendorService,
             IAclService aclService,
             IPermissionService permissionService,
-            CatalogSettings catalogSettings)
+            CatalogSettings catalogSettings,
+            IWorkContext workContext,
+            IImportManager importManager)
         {
             this._categoryService = categoryService;
             this._manufacturerTemplateService = manufacturerTemplateService;
@@ -91,6 +97,8 @@ namespace Nop.Admin.Controllers
             this._aclService = aclService;
             this._permissionService = permissionService;
             this._catalogSettings = catalogSettings;
+            this._workContext = workContext;
+            this._importManager = importManager;
         }
 
         #endregion
@@ -533,6 +541,56 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        public ActionResult ExportXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            try
+            {
+                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
+                 
+                return File(bytes, "text/xls", "manufacturers.xlsx");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult ImportFromXlsx()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                return AccessDeniedView();
+
+            //a vendor cannot import manufacturers
+            if (_workContext.CurrentVendor != null)
+                return AccessDeniedView();
+
+            try
+            {
+                var file = Request.Files["importexcelfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    _importManager.ImportManufacturerFromXlsx(file.InputStream);
+                }
+                else
+                {
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
+                    return RedirectToAction("List");
+                }
+                SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturer.Imported"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
+
         #endregion
 
         #region Products
@@ -693,5 +751,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
+
+        
     }
 }
