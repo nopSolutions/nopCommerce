@@ -221,11 +221,13 @@ namespace Nop.Services.Localization
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="resourceName">The resource name; pass null to load all records</param>
+        /// <param name="resourceValue">The resource value; pass null to load all records</param>
         /// <returns>Locale string resources</returns>
-        public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId)
+        public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId, string resourceName = null, string resourceValue = null)
         {
             string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-            return _cacheManager.Get(key, () =>
+            var resources = _cacheManager.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -233,17 +235,35 @@ namespace Nop.Services.Localization
                             orderby l.ResourceName
                             where l.LanguageId == languageId
                             select l;
+
                 var locales = query.ToList();
                 //format: <name, <id, value>>
                 var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
                 foreach (var locale in locales)
                 {
-                    var resourceName = locale.ResourceName.ToLowerInvariant();
-                    if (!dictionary.ContainsKey(resourceName))
-                        dictionary.Add(resourceName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
+                    var resName = locale.ResourceName.ToLowerInvariant();
+                    if (!dictionary.ContainsKey(resName))
+                        dictionary.Add(resName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
                 }
                 return dictionary;
             });
+
+            if (!string.IsNullOrEmpty(resourceName) || !string.IsNullOrEmpty(resourceValue))
+            {
+                var queryResult = resources.AsQueryable();
+                if (!string.IsNullOrEmpty(resourceName))
+                    queryResult = queryResult.Where(l => l.Key.ToLower().Contains(resourceName.ToLower()));
+                if (!string.IsNullOrEmpty(resourceValue))
+                    queryResult = queryResult.Where(l => l.Value.Value.ToLower().Contains(resourceValue.ToLower()));
+                var result = new Dictionary<string, KeyValuePair<int, string>>();
+                foreach (var keyValuePair in queryResult)
+                {
+                    result.Add(keyValuePair.Key, keyValuePair.Value);
+                }
+                return result;
+            }
+
+            return resources;
         }
 
         /// <summary>

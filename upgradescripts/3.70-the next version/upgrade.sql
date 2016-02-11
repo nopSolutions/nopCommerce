@@ -3,7 +3,7 @@
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
-set @resources='
+set @resources=' 
 <Language>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
@@ -38,7 +38,7 @@ set @resources='
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
-  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
+    <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
     <Value>Restricted products [and quantity range]</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
@@ -176,6 +176,36 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingName">
+    <Value>Setting name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingName.Hint">
+    <Value>Search by a specific setting.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue.Hint">
+    <Value>Search by a specific setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName">
+    <Value>Resource name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search by a specific resource.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue.Hint">
+    <Value>Search by a specific resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -275,7 +305,7 @@ GO
  	[StoreId] int NULL
  END
  GO
-
+ 
  DECLARE @DefaultStoreId INT
  SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
  UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE StoreId IS NULL
@@ -297,7 +327,7 @@ GO
  ON DELETE CASCADE
  GO
  
---new setting
+ --new setting
  IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductreviewsperstore')
  BEGIN
  	INSERT [Setting] ([Name], [Value], [StoreId])

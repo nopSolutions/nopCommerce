@@ -328,16 +328,13 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-		public ActionResult Resources(int languageId, DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+		public ActionResult Resources(int languageId, DataSourceRequest command, LanguageResourcesListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
-            
-		    var language = _languageService.GetLanguageById(languageId);
 
             var resources = _localizationService
-                .GetAllResourceValues(languageId)
+                .GetAllResourceValues(languageId, model.SearchResourceName, model.SearchResourceValue)
                 .OrderBy(x => x.Key)
                 .Select(x => new LanguageResourceModel
                     {
@@ -345,10 +342,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Value.Key,
                         Name = x.Key,
                         Value = x.Value.Value,
-                    })
-                    .AsQueryable()
-                    .Filter(filter)
-                    .Sort(sort);
+                    });
             
             var gridModel = new DataSourceResult
             {

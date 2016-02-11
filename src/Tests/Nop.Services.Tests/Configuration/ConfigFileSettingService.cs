@@ -61,7 +61,7 @@ namespace Nop.Services.Tests.Configuration
             throw new NotImplementedException();
         }
 
-        public override IList<Setting> GetAllSettings()
+        public override IList<Setting> GetAllSettings(string settingName = null, string settingValue = null)
         {
             var settings = new List<Setting>();
             var appSettings = ConfigurationManager.AppSettings;

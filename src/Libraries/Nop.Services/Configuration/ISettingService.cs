@@ -58,8 +58,10 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets all settings
         /// </summary>
+        /// <param name="settingName">The setting name; pass null to load all records</param>
+        /// <param name="settingValue">The setting value; pass null to load all records</param>
         /// <returns>Settings</returns>
-        IList<Setting> GetAllSettings();
+        IList<Setting> GetAllSettings(string settingName = null, string settingValue = null);
 
         /// <summary>
         /// Determines whether a setting exists

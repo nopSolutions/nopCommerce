@@ -61,8 +61,10 @@ namespace Nop.Services.Localization
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>
+        /// <param name="resourceName">The resource name; pass null to load all records</param>
+        /// <param name="resourceValue">The resource value; pass null to load all records</param>
         /// <returns>Locale string resources</returns>
-        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId);
+        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId, string resourceName = null, string resourceValue = null);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
