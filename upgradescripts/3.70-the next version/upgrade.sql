@@ -134,6 +134,48 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImageFileName.Hint">
     <Value>The flag image file name. The image should be saved into \images\flags\ directory.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate.Hint">
+    <Value>Enter a specific date and time to send the campaign. Leave empty to send it immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Categories have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturers have been imported successfully.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingName">
     <Value>Setting name</Value>
   </LocaleResource>
@@ -388,5 +430,21 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptch
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'captchasettings.recaptchalanguage',N'',0);
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='DontSendBeforeDateUtc')
+BEGIN
+	ALTER TABLE [QueuedEmail]
+	ADD [DontSendBeforeDateUtc] DATETIME NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Campaign]') and NAME='DontSendBeforeDateUtc')
+BEGIN
+	ALTER TABLE [Campaign]
+	ADD [DontSendBeforeDateUtc] DATETIME NULL
 END
 GO

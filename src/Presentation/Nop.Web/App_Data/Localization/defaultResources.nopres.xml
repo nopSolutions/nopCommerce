@@ -8445,8 +8445,20 @@
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.Body.Hint">
     <Value>Enter the message of email.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.Queued">
     <Value>The email has been queued successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.SendEmail.Subject">
     <Value>The subject</Value>
@@ -9792,6 +9804,12 @@
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate.Hint">
+    <Value>Enter a specific date and time to send the campaign. Leave empty to send it immediately.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Campaigns.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
@@ -10716,6 +10734,12 @@
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.CreatedOn.Hint">
     <Value>Date/Time message added to queue.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.EmailAccountName">
     <Value>Email account</Value>
   </LocaleResource>
@@ -10760,6 +10784,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.ReplyToName.Hint">
     <Value>ReplyTo name (optional).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SentOn">
     <Value>Sent on</Value>
@@ -14564,5 +14594,17 @@
   </LocaleResource>
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
+    <Value>Imported categories are distinguished by ID. If the ID already exists, then its corresponding category will be updated. For new categories ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.List.ImportFromExcelTip">
+    <Value>Imported manufacturers are distinguished by ID. If the ID already exists, then its corresponding manufacturer will be updated. For new manufacturers ID do not need to specify</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Category.Imported">
+    <Value>Categories have been imported successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
+    <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
 </Language>

@@ -161,12 +161,15 @@ namespace Nop.Admin.Infrastructure.Mapper
                         mo => mo.MapFrom(src => src.EmailAccount != null ? src.EmailAccount.FriendlyName : string.Empty))
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.PriorityName, mo => mo.Ignore())
+                    .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())
+                    .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.SentOn, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<QueuedEmailModel, QueuedEmail>()
                     .ForMember(dest => dest.Priority, dt => dt.Ignore())
                     .ForMember(dest => dest.PriorityId, dt => dt.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore())
+                    .ForMember(dest => dest.DontSendBeforeDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.SentOnUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.EmailAccount, mo => mo.Ignore())
                     .ForMember(dest => dest.EmailAccountId, mo => mo.Ignore())
@@ -175,12 +178,14 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
                 //campaign
                 cfg.CreateMap<Campaign, CampaignModel>()
+                    .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CampaignModel, Campaign>()
+                    .ForMember(dest => dest.DontSendBeforeDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
                 //topcis
                 cfg.CreateMap<Topic, TopicModel>()
@@ -931,7 +936,7 @@ namespace Nop.Admin.Infrastructure.Mapper
         {
             get
             {
-                return _mapper; 
+                return _mapper;
             }
         }
         /// <summary>

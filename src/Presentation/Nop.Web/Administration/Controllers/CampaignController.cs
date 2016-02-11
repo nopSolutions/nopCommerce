@@ -116,6 +116,8 @@ namespace Nop.Admin.Controllers
                 {
                     var model = x.ToModel();
                     model.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    if (x.DontSendBeforeDateUtc.HasValue)
+                        model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(x.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
                     return model;
                 }),
                 Total = campaigns.Count
@@ -145,6 +147,8 @@ namespace Nop.Admin.Controllers
             {
                 var campaign = model.ToEntity();
                 campaign.CreatedOnUtc = DateTime.UtcNow;
+                campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
+                    (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.InsertCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Added"));
@@ -169,6 +173,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = campaign.ToModel();
+            if (campaign.DontSendBeforeDateUtc.HasValue)
+                model.DontSendBeforeDate = _dateTimeHelper.ConvertToUserTime(campaign.DontSendBeforeDateUtc.Value, DateTimeKind.Utc);
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
             //stores
             PrepareStoresModel(model);
@@ -191,6 +197,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 campaign = model.ToEntity(campaign);
+                campaign.DontSendBeforeDateUtc = model.DontSendBeforeDate.HasValue ?
+                    (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.DontSendBeforeDate.Value) : null;
                 _campaignService.UpdateCampaign(campaign);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Updated"));
