@@ -178,12 +178,14 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AttachedDownloadId, mo => mo.Ignore());
                 //campaign
                 cfg.CreateMap<Campaign, CampaignModel>()
+                    .ForMember(dest => dest.DontSendBeforeDate, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOn, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.TestEmail, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CampaignModel, Campaign>()
+                    .ForMember(dest => dest.DontSendBeforeDateUtc, mo => mo.Ignore())
                     .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
                 //topcis
                 cfg.CreateMap<Topic, TopicModel>()
@@ -934,7 +936,7 @@ namespace Nop.Admin.Infrastructure.Mapper
         {
             get
             {
-                return _mapper; 
+                return _mapper;
             }
         }
         /// <summary>

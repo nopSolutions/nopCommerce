@@ -3,7 +3,7 @@
 --new locale resources
 declare @resources xml
 --a resource will be deleted if its value is empty
-set @resources=' 
+set @resources='
 <Language>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages.Hint">
     <Value>Indicates whether a customer should be notified by email about new private messages.</Value>
@@ -38,7 +38,7 @@ set @resources='
   <LocaleResource Name="ActivityLog.EditOrder">
     <Value>Edited an order (ID = {0}). See order notes for details</Value>
   </LocaleResource>
-    <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
+  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.Products">
     <Value>Restricted products [and quantity range]</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.Products">
@@ -144,6 +144,24 @@ set @resources='
     <Value>Send immediately</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Campaigns.Fields.DontSendBeforeDate.Hint">
+    <Value>Enter a specific date and time to send the campaign. Leave empty to send it immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate">
+    <Value>Planned date of sending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.DontSendBeforeDate.Hint">
+    <Value>The specific send date and time.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.SendEmail.SendImmediately.Hint">
     <Value>Send message immediately.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Category.List.ImportFromExcelTip">
@@ -257,7 +275,7 @@ GO
  	[StoreId] int NULL
  END
  GO
- 
+
  DECLARE @DefaultStoreId INT
  SET @DefaultStoreId = (SELECT TOP (1) Id FROM [dbo].[Store]);
  UPDATE [dbo].[ProductReview] SET StoreId = @DefaultStoreId WHERE StoreId IS NULL
@@ -279,7 +297,7 @@ GO
  ON DELETE CASCADE
  GO
  
- --new setting
+--new setting
  IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductreviewsperstore')
  BEGIN
  	INSERT [Setting] ([Name], [Value], [StoreId])
@@ -389,6 +407,14 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[QueuedEmail]') and NAME='DontSendBeforeDateUtc')
 BEGIN
 	ALTER TABLE [QueuedEmail]
+	ADD [DontSendBeforeDateUtc] DATETIME NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Campaign]') and NAME='DontSendBeforeDateUtc')
+BEGIN
+	ALTER TABLE [Campaign]
 	ADD [DontSendBeforeDateUtc] DATETIME NULL
 END
 GO

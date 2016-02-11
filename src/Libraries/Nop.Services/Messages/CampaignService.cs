@@ -164,7 +164,8 @@ namespace Nop.Services.Messages
                     Subject = subject,
                     Body = body,
                     CreatedOnUtc = DateTime.UtcNow,
-                    EmailAccountId = emailAccount.Id
+                    EmailAccountId = emailAccount.Id,
+                    DontSendBeforeDateUtc = campaign.DontSendBeforeDateUtc
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 totalEmailsSent++;
