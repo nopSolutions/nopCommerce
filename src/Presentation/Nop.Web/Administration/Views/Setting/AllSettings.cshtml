@@ -1,4 +1,5 @@
 ﻿@using Nop.Services.Stores
+@model AllSettingsListModel
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -9,22 +10,40 @@
 @Html.AntiForgeryToken()
 <div class="section-header">
     <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt=""/>
         @T("Admin.Configuration.Settings.AllSettings")
     </div>
 </div>
-<table class="adminContent">
+<table width="100%">
     <tr>
-        <td>
-            @T("Admin.Configuration.Settings.AllSettings.Description")
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchSettingName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SearchSettingName)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchSettingValue):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SearchSettingValue)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <input type="button" id="search-settings" class="k-button" value="@T("Admin.Common.Search")" />
+        </td>
+    </tr>
+</table>
+<table class="adminContent">
     <tr>
         <td>
             <div id="settings-grid"></div>
 
             <script>
-                $(document).ready(function () {
+                $(document).ready(function() {
                     $("#settings-grid").kendoGrid({
                         dataSource: {
                             type: "json",
@@ -33,9 +52,8 @@
                                     url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
                                     type: "POST",
                                     dataType: "json",
-                                    contentType: "application/json"
-                                    //any-forgery does not work with this contentType for some reasons
-                                    //data: addAntiForgeryToken
+                                    contentType: "application/json",
+                                    data: additionalData
                                 },
                                 create: {
                                     url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
@@ -44,7 +62,7 @@
                                     data: addAntiForgeryToken
                                 },
                                 update: {
-                                    url:"@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
+                                    url: "@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
                                     type: "POST",
                                     dataType: "json",
                                     data: addAntiForgeryToken
@@ -79,12 +97,12 @@
                                     }
                                 }
                             },
-                            requestEnd: function (e) {
+                            requestEnd: function(e) {
                                 if (e.type == "create" || e.type == "update") {
                                     this.read();
                                 }
                             },
-                            error: function (e) {
+                            error: function(e) {
                                 display_kendoui_grid_error(e);
                                 // Cancel the changes
                                 this.cancelChanges();
@@ -98,45 +116,30 @@
                             refresh: true,
                             pageSizes: [@(gridPageSizes)]
                         },
-                        sortable: true,
                         toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
                         editable: {
                             confirmation: false,
                             mode: "inline"
                         },
-                        filterable: {
-                            extra: false,
-                            operators: {
-                                string: {
-                                    contains: "Contains",
-                                    eq: "Is equal to",
-                                    startswith: "Starts with"
-                                }
-                            }
-                        },
                         scrollable: false,
-                        columns: [{
+                        columns: [
+                        {
                             field: "Name",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
-                            width: 300,
-                            filterable: true,
-                            sortable: true
+                            width: 300
                         }, {
                             field: "Value",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Value")",
-                            width: 300,
-                            filterable: true,
-                            sortable: true
+                            width: 300
                         }, {
                             field: "StoreId",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName")",
                             width: 150,
                             editor: storeDropDownEditor,
-                            template: "#:Store#",
-                            filterable: false,
-                            sortable: false
+                            template: "#:Store#"
                         }, {
-                            command: [{
+                            command: [
+                            {
                                 name: "edit",
                                 text: {
                                     edit: "@T("Admin.Common.Edit")",
@@ -146,18 +149,19 @@
                             }, {
                                 name: "destroy",
                                 text: "@T("Admin.Common.Delete")"
-                            }],
-                            width: 200,
-                            filterable: false
-                        }]
+                                    }
+                                ],
+                                width: 200
+                            }
+                        ]
                     });
                 });
 
                 //local datasource
                 var allStores = [
                     {
-                        Id : 0,
-                        Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+                        Id: 0,
+                        Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
                     }
                     @{
                         var storeService = EngineContext.Current.Resolve<IStoreService>();
@@ -166,11 +170,11 @@
                     @foreach (var store in allStores)
                     {
                         <text>
-                        , {
-                            Id: @(store.Id),
-                            Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
-                        }
-                        </text>
+                    , {
+                        Id: @(store.Id),
+                        Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                    }
+                    </text>
                     }
                 ];
 
@@ -182,6 +186,38 @@
                             dataSource: allStores
                         });
                 }
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#search-settings').click(function () {
+                        var grid = $('#settings-grid').data('kendoGrid');
+                        grid.dataSource.page(1);
+                        return false;
+                    });
+                });
+
+                function additionalData() {
+                    var data = {
+                        SearchSettingName: $('#@Html.FieldIdFor(model => model.SearchSettingName)').val(),
+                        SearchSettingValue: $('#@Html.FieldIdFor(model => model.SearchSettingValue)').val()
+                    };
+                    addAntiForgeryToken(data);
+                    return data;
+                }
+
+                $("#@Html.FieldIdFor(model => model.SearchSettingName)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-settings").click();
+                        return false;
+                    }
+                });
+
+                $("#@Html.FieldIdFor(model => model.SearchSettingValue)").keydown(function (event) {
+                    if (event.keyCode == 13) {
+                        $("#search-settings").click();
+                        return false;
+                    }
+                });
             </script>
         </td>
     </tr>
