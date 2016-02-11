@@ -117,6 +117,87 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        protected virtual void SetCaptionStyle(ExcelStyle style)
+        {
+            style.Fill.PatternType = ExcelFillStyle.Solid;
+            style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+            style.Font.Bold = true;
+        }
+
+        /// <summary>
+        /// Returns the path to the image file by ID
+        /// </summary>
+        /// <param name="pictureId">Picture ID</param>
+        /// <returns>Path to the image file</returns>
+        protected virtual string GetPictures(int pictureId)
+        {
+            var picture = _pictureService.GetPictureById(pictureId);
+            return _pictureService.GetThumbLocalPath(picture);
+        }
+
+        /// <summary>
+        /// Returns the list of categories for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of categories</returns>
+        protected virtual string GetCategoryIds(Product product)
+        {
+            string categoryIds = null;
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            {
+                categoryIds += pc.CategoryId;
+                categoryIds += ";";
+            }
+            return categoryIds;
+        }
+
+        /// <summary>
+        /// Returns the list of manufacturer for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of manufacturer</returns>
+        protected virtual string GetManufacturerIds(Product product)
+        {
+            string manufacturerIds = null;
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            {
+                manufacturerIds += pm.ManufacturerId;
+                manufacturerIds += ";";
+            }
+            return manufacturerIds;
+        }
+
+        /// <summary>
+        /// Returns the three first image associated with the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>three first image</returns>
+        protected virtual string[] GetPictures(Product product)
+        {
+            //pictures (up to 3 pictures)
+            string picture1 = null;
+            string picture2 = null;
+            string picture3 = null;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
+            for (var i = 0; i < pictures.Count; i++)
+            {
+                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                switch (i)
+                {
+                    case 0:
+                        picture1 = pictureLocalPath;
+                        break;
+                    case 1:
+                        picture2 = pictureLocalPath;
+                        break;
+                    case 2:
+                        picture3 = pictureLocalPath;
+                        break;
+                }
+            }
+            return new[] { picture1, picture2, picture3 };
+        }
+
         #endregion
 
         #region Methods
@@ -1479,87 +1560,6 @@ namespace Nop.Services.ExportImport
                 sb.Append(Environment.NewLine); //new line
             }
             return sb.ToString();
-        }
-
-        private void SetCaptionStyle(ExcelStyle style)
-        {
-            style.Fill.PatternType = ExcelFillStyle.Solid;
-            style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-            style.Font.Bold = true;
-        }
-        
-        /// <summary>
-        /// Returns the path to the image file by ID
-        /// </summary>
-        /// <param name="pictureId">Picture ID</param>
-        /// <returns>Path to the image file</returns>
-        private string GetPictures(int pictureId)
-        {
-            var picture = _pictureService.GetPictureById(pictureId);
-            return _pictureService.GetThumbLocalPath(picture);
-        }
-
-        /// <summary>
-        /// Returns the list of categories for a product separated by a ";"
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>List of categories</returns>
-        private string GetCategoryIds(Product product)
-        {
-            string categoryIds = null;
-            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
-            {
-                categoryIds += pc.CategoryId;
-                categoryIds += ";";
-            }
-            return categoryIds;
-        }
-
-        /// <summary>
-        /// Returns the list of manufacturer for a product separated by a ";"
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>List of manufacturer</returns>
-        private string GetManufacturerIds(Product product)
-        {
-            string manufacturerIds = null;
-            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
-            {
-                manufacturerIds += pm.ManufacturerId;
-                manufacturerIds += ";";
-            }
-            return manufacturerIds;
-        }
-
-        /// <summary>
-        /// Returns the three first image associated with the product
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>three first image</returns>
-        private string[] GetPictures(Product product)
-        {
-            //pictures (up to 3 pictures)
-            string picture1 = null;
-            string picture2 = null;
-            string picture3 = null;
-            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
-            for (var i = 0; i < pictures.Count; i++)
-            {
-                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
-                switch (i)
-                {
-                    case 0:
-                        picture1 = pictureLocalPath;
-                        break;
-                    case 1:
-                        picture2 = pictureLocalPath;
-                        break;
-                    case 2:
-                        picture3 = pictureLocalPath;
-                        break;
-                }
-            }
-            return new[] {picture1, picture2, picture3};
         }
 
         #endregion

@@ -96,6 +96,43 @@ namespace Nop.Services.ExportImport
             return mimeType;
         }
 
+        /// <summary>
+        /// Creates or loads the image
+        /// </summary>
+        /// <param name="picturePath">The path to the image file</param>
+        /// <param name="name">The name of the object</param>
+        /// <param name="picId">Image identifier, may be null</param>
+        /// <returns>The image or null if the image has not changed</returns>
+        protected virtual Picture LoadPicture(string picturePath, string name, int? picId = null)
+        {
+            if (String.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
+                return null;
+
+            var mimeType = GetMimeTypeFromFilePath(picturePath);
+            var newPictureBinary = File.ReadAllBytes(picturePath);
+            var pictureAlreadyExists = false;
+            if (picId != null)
+            {
+                //compare with existing product pictures
+                var existingPicture = _pictureService.GetPictureById(picId.Value);
+
+                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
+                //picture binary after validation (like in database)
+                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                if (existingBinary.SequenceEqual(validatedPictureBinary) ||
+                    existingBinary.SequenceEqual(newPictureBinary))
+                {
+                    pictureAlreadyExists = true;
+                }
+            }
+
+            if (pictureAlreadyExists) return null;
+
+            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType,
+                _pictureService.GetPictureSeName(name));
+            return newPicture;
+        }
+
         #endregion
 
         #region Methods
@@ -863,43 +900,6 @@ namespace Nop.Services.ExportImport
                     iRow++;
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates or loads the image
-        /// </summary>
-        /// <param name="picturePath">The path to the image file</param>
-        /// <param name="name">The name of the object</param>
-        /// <param name="picId">Image identifier, may be null</param>
-        /// <returns>The image or null if the image has not changed</returns>
-        private Picture LoadPicture(string picturePath, string name, int? picId = null)
-        {
-            if (String.IsNullOrEmpty(picturePath) || !File.Exists(picturePath))
-                return null;
-
-            var mimeType = GetMimeTypeFromFilePath(picturePath);
-            var newPictureBinary = File.ReadAllBytes(picturePath);
-            var pictureAlreadyExists = false;
-            if (picId != null)
-            {
-                //compare with existing product pictures
-                var existingPicture = _pictureService.GetPictureById(picId.Value);
-
-                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
-                //picture binary after validation (like in database)
-                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                if (existingBinary.SequenceEqual(validatedPictureBinary) ||
-                    existingBinary.SequenceEqual(newPictureBinary))
-                {
-                    pictureAlreadyExists = true;
-                }
-            }
-
-            if (pictureAlreadyExists) return null;
-
-            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType,
-                _pictureService.GetPictureSeName(name));
-            return newPicture;
         }
 
         #endregion
