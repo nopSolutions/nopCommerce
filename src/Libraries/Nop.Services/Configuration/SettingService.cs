@@ -296,13 +296,18 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets all settings
         /// </summary>
+        /// <param name="settingName">The setting name; pass null to load all records</param>
+        /// <param name="settingValue">The setting value; pass null to load all records</param>
         /// <returns>Settings</returns>
-        public virtual IList<Setting> GetAllSettings()
+        public virtual IList<Setting> GetAllSettings(string settingName = null, string settingValue = null)
         {
-            var query = from s in _settingRepository.Table
-                        orderby s.Name, s.StoreId
-                        select s;
-            var settings = query.ToList();
+            var query = _settingRepository.Table;
+            if (!string.IsNullOrEmpty(settingName))
+                query = query.Where(s => s.Name.ToLower().Contains(settingName.ToLower()));
+            if (!string.IsNullOrEmpty(settingValue))
+                query = query.Where(s => s.Value.ToLower().Contains(settingValue.ToLower()));
+            var settings = query.OrderBy(s => new {s.Name, s.StoreId}).ToList();
+
             return settings;
         }
 

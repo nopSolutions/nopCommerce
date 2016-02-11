@@ -2927,14 +2927,13 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-        public ActionResult AllSettings(DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+        public ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
             var settings = _settingService
-                .GetAllSettings()
+                .GetAllSettings(model.SearchSettingName, model.SearchSettingValue)
                 .Select(x =>
                             {
                                 string storeName;
@@ -2956,10 +2955,7 @@ namespace Nop.Admin.Controllers
                                     StoreId = x.StoreId
                                 };
                                 return settingModel;
-                            })
-                .AsQueryable()
-                .Filter(filter)
-                .Sort(sort);
+                            });
 
             var gridModel = new DataSourceResult
             {
