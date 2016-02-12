@@ -133,6 +133,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableCurrencies, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
                     .ForMember(dest => dest.FlagFileNames, mo => mo.Ignore())
+                    .ForMember(dest => dest.Search, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<LanguageModel, Language>()
                     .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore());
@@ -153,9 +154,10 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.ListOfStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.SendImmediately, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<MessageTemplateModel, MessageTemplate>()
-                .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore());
+                    .ForMember(dest => dest.DelayPeriod, mo => mo.Ignore());
                 //queued email
                 cfg.CreateMap<QueuedEmail, QueuedEmailModel>()
                     .ForMember(dest => dest.EmailAccountName,
