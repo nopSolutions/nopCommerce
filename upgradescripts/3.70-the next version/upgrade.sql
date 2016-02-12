@@ -219,10 +219,10 @@ set @resources='
     <Value>Hours</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor">
-    <Value>Allow search by vendor in store advanced search</Value>
+    <Value>Allow search by vendor</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor.Hint">
-    <Value>Check to allow customers to search by vendor in store.</Value>
+    <Value>Check to allow customers to search by vendor on advanced search page.</Value>
   </LocaleResource>
   <LocaleResource Name="Search.Vendor">
     <Value>Vendor</Value>
