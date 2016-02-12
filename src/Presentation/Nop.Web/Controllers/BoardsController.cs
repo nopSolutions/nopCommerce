@@ -275,7 +275,7 @@ namespace Nop.Web.Controllers
                                     string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     feedDescription,
                                     new Uri(url),
-                                    "ActiveDiscussionsRSS",
+                                    _webHelper.GetThisPageUrl(false),
                                     DateTime.UtcNow);
 
             var items = new List<SyndicationItem>();
@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
                                         string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
                                         feedDescription,
                                         new Uri(url),
-                                        string.Format("ForumRSS:{0}", forum.Id),
+                                        _webHelper.GetThisPageUrl(false),
                                         DateTime.UtcNow);
 
                 var items = new List<SyndicationItem>();

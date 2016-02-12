@@ -1178,7 +1178,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: New products", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Information about products",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "NewProductsRSS",
+                                    _webHelper.GetThisPageUrl(false),
                                     DateTime.UtcNow);
 
             if (!_catalogSettings.NewProductsEnabled)
