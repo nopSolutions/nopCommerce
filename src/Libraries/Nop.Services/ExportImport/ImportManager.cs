@@ -273,14 +273,14 @@ namespace Nop.Services.ExportImport
                     if (isNew)
                         product.CreatedOnUtc = DateTime.UtcNow;
 
-                    product.ProductTypeId = manager.GetProperty("ProductTypeId").Int32Value;
-                    product.ParentGroupedProductId = manager.GetProperty("ParentGroupedProductId").Int32Value;
+                    product.ProductTypeId = manager.GetProperty("ProductTypeId").IntValue;
+                    product.ParentGroupedProductId = manager.GetProperty("ParentGroupedProductId").IntValue;
                     product.VisibleIndividually = manager.GetProperty("VisibleIndividually").BooleanValue;
                     product.Name = manager.GetProperty("Name").StringValue;
                     product.ShortDescription = manager.GetProperty("ShortDescription").StringValue;
                     product.FullDescription = manager.GetProperty("FullDescription").StringValue;
-                    product.VendorId = manager.GetProperty("VendorId").Int32Value;
-                    product.ProductTemplateId = manager.GetProperty("ProductTemplateId").Int32Value;
+                    product.VendorId = manager.GetProperty("VendorId").IntValue;
+                    product.ProductTemplateId = manager.GetProperty("ProductTemplateId").IntValue;
                     product.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
                     product.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     product.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
@@ -292,72 +292,72 @@ namespace Nop.Services.ExportImport
                     product.ManufacturerPartNumber = manager.GetProperty("ManufacturerPartNumber").StringValue;
                     product.Gtin = manager.GetProperty("Gtin").StringValue;
                     product.IsGiftCard = manager.GetProperty("IsGiftCard").BooleanValue;
-                    product.GiftCardTypeId = manager.GetProperty("GiftCardTypeId").Int32Value;
+                    product.GiftCardTypeId = manager.GetProperty("GiftCardTypeId").IntValue;
                     product.OverriddenGiftCardAmount = manager.GetProperty("OverriddenGiftCardAmount").DecimalValue;
                     product.RequireOtherProducts = manager.GetProperty("RequireOtherProducts").BooleanValue;
                     product.RequiredProductIds = manager.GetProperty("RequiredProductIds").StringValue;
                     product.AutomaticallyAddRequiredProducts = manager.GetProperty("AutomaticallyAddRequiredProducts").BooleanValue;
                     product.IsDownload = manager.GetProperty("IsDownload").BooleanValue;
-                    product.DownloadId = manager.GetProperty("DownloadId").Int32Value;
+                    product.DownloadId = manager.GetProperty("DownloadId").IntValue;
                     product.UnlimitedDownloads = manager.GetProperty("UnlimitedDownloads").BooleanValue;
-                    product.MaxNumberOfDownloads = manager.GetProperty("MaxNumberOfDownloads").Int32Value;
-                    product.DownloadActivationTypeId = manager.GetProperty("DownloadActivationTypeId").Int32Value;
+                    product.MaxNumberOfDownloads = manager.GetProperty("MaxNumberOfDownloads").IntValue;
+                    product.DownloadActivationTypeId = manager.GetProperty("DownloadActivationTypeId").IntValue;
                     product.HasSampleDownload = manager.GetProperty("HasSampleDownload").BooleanValue;
-                    product.SampleDownloadId = manager.GetProperty("SampleDownloadId").Int32Value;
+                    product.SampleDownloadId = manager.GetProperty("SampleDownloadId").IntValue;
                     product.HasUserAgreement = manager.GetProperty("HasUserAgreement").BooleanValue;
                     product.UserAgreementText = manager.GetProperty("UserAgreementText").StringValue;
                     product.IsRecurring = manager.GetProperty("IsRecurring").BooleanValue;
-                    product.RecurringCycleLength = manager.GetProperty("RecurringCycleLength").Int32Value;
-                    product.RecurringCyclePeriodId = manager.GetProperty("RecurringCyclePeriodId").Int32Value;
-                    product.RecurringTotalCycles = manager.GetProperty("RecurringTotalCycles").Int32Value;
+                    product.RecurringCycleLength = manager.GetProperty("RecurringCycleLength").IntValue;
+                    product.RecurringCyclePeriodId = manager.GetProperty("RecurringCyclePeriodId").IntValue;
+                    product.RecurringTotalCycles = manager.GetProperty("RecurringTotalCycles").IntValue;
                     product.IsRental = manager.GetProperty("IsRental").BooleanValue;
-                    product.RentalPriceLength = manager.GetProperty("RentalPriceLength").Int32Value;
-                    product.RentalPricePeriodId = manager.GetProperty("RentalPricePeriodId").Int32Value;
+                    product.RentalPriceLength = manager.GetProperty("RentalPriceLength").IntValue;
+                    product.RentalPricePeriodId = manager.GetProperty("RentalPricePeriodId").IntValue;
                     product.IsShipEnabled = manager.GetProperty("IsShipEnabled").BooleanValue;
                     product.IsFreeShipping = manager.GetProperty("IsFreeShipping").BooleanValue;
                     product.ShipSeparately = manager.GetProperty("ShipSeparately").BooleanValue;
                     product.AdditionalShippingCharge = manager.GetProperty("AdditionalShippingCharge").DecimalValue;
-                    product.DeliveryDateId = manager.GetProperty("DeliveryDateId").Int32Value;
+                    product.DeliveryDateId = manager.GetProperty("DeliveryDateId").IntValue;
                     product.IsTaxExempt = manager.GetProperty("IsTaxExempt").BooleanValue;
-                    product.TaxCategoryId = manager.GetProperty("TaxCategoryId").Int32Value;
+                    product.TaxCategoryId = manager.GetProperty("TaxCategoryId").IntValue;
                     product.IsTelecommunicationsOrBroadcastingOrElectronicServices = manager.GetProperty("IsTelecommunicationsOrBroadcastingOrElectronicServices").BooleanValue;
-                    product.ManageInventoryMethodId = manager.GetProperty("ManageInventoryMethodId").Int32Value;
+                    product.ManageInventoryMethodId = manager.GetProperty("ManageInventoryMethodId").IntValue;
                     product.UseMultipleWarehouses = manager.GetProperty("UseMultipleWarehouses").BooleanValue;
-                    product.WarehouseId = manager.GetProperty("WarehouseId").Int32Value;
-                    product.StockQuantity = manager.GetProperty("StockQuantity").Int32Value;
+                    product.WarehouseId = manager.GetProperty("WarehouseId").IntValue;
+                    product.StockQuantity = manager.GetProperty("StockQuantity").IntValue;
                     product.DisplayStockAvailability = manager.GetProperty("DisplayStockAvailability").BooleanValue;
                     product.DisplayStockQuantity = manager.GetProperty("DisplayStockQuantity").BooleanValue;
-                    product.MinStockQuantity = manager.GetProperty("MinStockQuantity").Int32Value;
-                    product.LowStockActivityId = manager.GetProperty("LowStockActivityId").Int32Value;
-                    product.NotifyAdminForQuantityBelow = manager.GetProperty("NotifyAdminForQuantityBelow").Int32Value;
-                    product.BackorderModeId = manager.GetProperty("BackorderModeId").Int32Value;
+                    product.MinStockQuantity = manager.GetProperty("MinStockQuantity").IntValue;
+                    product.LowStockActivityId = manager.GetProperty("LowStockActivityId").IntValue;
+                    product.NotifyAdminForQuantityBelow = manager.GetProperty("NotifyAdminForQuantityBelow").IntValue;
+                    product.BackorderModeId = manager.GetProperty("BackorderModeId").IntValue;
                     product.AllowBackInStockSubscriptions = manager.GetProperty("AllowBackInStockSubscriptions").BooleanValue;
-                    product.OrderMinimumQuantity = manager.GetProperty("OrderMinimumQuantity").Int32Value;
-                    product.OrderMaximumQuantity = manager.GetProperty("OrderMaximumQuantity").Int32Value;
+                    product.OrderMinimumQuantity = manager.GetProperty("OrderMinimumQuantity").IntValue;
+                    product.OrderMaximumQuantity = manager.GetProperty("OrderMaximumQuantity").IntValue;
                     product.AllowedQuantities = manager.GetProperty("AllowedQuantities").StringValue;
                     product.AllowAddingOnlyExistingAttributeCombinations = manager.GetProperty("AllowAddingOnlyExistingAttributeCombinations").BooleanValue;
                     product.DisableBuyButton = manager.GetProperty("DisableBuyButton").BooleanValue;
                     product.DisableWishlistButton = manager.GetProperty("DisableWishlistButton").BooleanValue;
                     product.AvailableForPreOrder = manager.GetProperty("AvailableForPreOrder").BooleanValue;
-                    product.PreOrderAvailabilityStartDateTimeUtc = manager.GetProperty("PreOrderAvailabilityStartDateTimeUtc").NullDateTime;
+                    product.PreOrderAvailabilityStartDateTimeUtc = manager.GetProperty("PreOrderAvailabilityStartDateTimeUtc").DateTimeNullable;
                     product.CallForPrice = manager.GetProperty("CallForPrice").BooleanValue;
                     product.Price = manager.GetProperty("Price").DecimalValue;
                     product.OldPrice = manager.GetProperty("OldPrice").DecimalValue;
                     product.ProductCost = manager.GetProperty("ProductCost").DecimalValue;
-                    product.SpecialPrice = manager.GetProperty("SpecialPrice").NullDecimalValue;
-                    product.SpecialPriceStartDateTimeUtc = manager.GetProperty("SpecialPriceStartDateTimeUtc").NullDateTime;
-                    product.SpecialPriceEndDateTimeUtc = manager.GetProperty("SpecialPriceEndDateTimeUtc").NullDateTime;
+                    product.SpecialPrice = manager.GetProperty("SpecialPrice").DecimalValueNullable;
+                    product.SpecialPriceStartDateTimeUtc = manager.GetProperty("SpecialPriceStartDateTimeUtc").DateTimeNullable;
+                    product.SpecialPriceEndDateTimeUtc = manager.GetProperty("SpecialPriceEndDateTimeUtc").DateTimeNullable;
                     product.CustomerEntersPrice = manager.GetProperty("CustomerEntersPrice").BooleanValue;
                     product.MinimumCustomerEnteredPrice = manager.GetProperty("MinimumCustomerEnteredPrice").DecimalValue;
                     product.MaximumCustomerEnteredPrice = manager.GetProperty("MaximumCustomerEnteredPrice").DecimalValue;
                     product.BasepriceEnabled = manager.GetProperty("BasepriceEnabled").BooleanValue;
                     product.BasepriceAmount = manager.GetProperty("BasepriceAmount").DecimalValue;
-                    product.BasepriceUnitId = manager.GetProperty("BasepriceUnitId").Int32Value;
+                    product.BasepriceUnitId = manager.GetProperty("BasepriceUnitId").IntValue;
                     product.BasepriceBaseAmount = manager.GetProperty("BasepriceBaseAmount").DecimalValue;
-                    product.BasepriceBaseUnitId = manager.GetProperty("BasepriceBaseUnitId").Int32Value;
+                    product.BasepriceBaseUnitId = manager.GetProperty("BasepriceBaseUnitId").IntValue;
                     product.MarkAsNew = manager.GetProperty("MarkAsNew").BooleanValue;
-                    product.MarkAsNewStartDateTimeUtc = manager.GetProperty("MarkAsNewStartDateTimeUtc").NullDateTime;
-                    product.MarkAsNewEndDateTimeUtc = manager.GetProperty("MarkAsNewEndDateTimeUtc").NullDateTime;
+                    product.MarkAsNewStartDateTimeUtc = manager.GetProperty("MarkAsNewStartDateTimeUtc").DateTimeNullable;
+                    product.MarkAsNewEndDateTimeUtc = manager.GetProperty("MarkAsNewEndDateTimeUtc").DateTimeNullable;
                     product.Weight = manager.GetProperty("Weight").DecimalValue;
                     product.Length = manager.GetProperty("Length").DecimalValue;
                     product.Width = manager.GetProperty("Width").DecimalValue;
@@ -652,7 +652,7 @@ namespace Nop.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").Int32Value);
+                    var manufacturer = _manufacturerService.GetManufacturerById(manager.GetProperty("Id").IntValue);
 
                     var isNew = manufacturer == null;
 
@@ -663,18 +663,18 @@ namespace Nop.Services.ExportImport
 
                     manufacturer.Name = manager.GetProperty("Name").StringValue;
                     manufacturer.Description = manager.GetProperty("Description").StringValue;
-                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").Int32Value;
+                    manufacturer.ManufacturerTemplateId = manager.GetProperty("ManufacturerTemplateId").IntValue;
                     manufacturer.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
                     var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
                         isNew ? null : (int?) manufacturer.PictureId);
-                    manufacturer.PageSize = manager.GetProperty("PageSize").Int32Value;
+                    manufacturer.PageSize = manager.GetProperty("PageSize").IntValue;
                     manufacturer.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
                     manufacturer.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
                     manufacturer.Published = manager.GetProperty("Published").BooleanValue;
-                    manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+                    manufacturer.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
 
                     if (picture != null)
                         manufacturer.PictureId = picture.Id;
@@ -741,7 +741,7 @@ namespace Nop.Services.ExportImport
                     manager.ReadFromXlsx(worksheet, iRow);
 
 
-                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").Int32Value);
+                    var category = _categoryService.GetCategoryById(manager.GetProperty("Id").IntValue);
 
                     var isNew = category == null;
 
@@ -753,20 +753,20 @@ namespace Nop.Services.ExportImport
                     category.Name = manager.GetProperty("Name").StringValue;
                     category.Description = manager.GetProperty("Description").StringValue;
 
-                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").Int32Value;
+                    category.CategoryTemplateId = manager.GetProperty("CategoryTemplateId").IntValue;
                     category.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
                     category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
-                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").Int32Value;
+                    category.ParentCategoryId = manager.GetProperty("ParentCategoryId").IntValue;
                     var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?) category.PictureId);
-                    category.PageSize = manager.GetProperty("PageSize").Int32Value;
+                    category.PageSize = manager.GetProperty("PageSize").IntValue;
                     category.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
                     category.PriceRanges = manager.GetProperty("PriceRanges").StringValue;
                     category.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
                     category.IncludeInTopMenu = manager.GetProperty("IncludeInTopMenu").BooleanValue;
                     category.Published = manager.GetProperty("Published").BooleanValue;
-                    category.DisplayOrder = manager.GetProperty("DisplayOrder").Int32Value;
+                    category.DisplayOrder = manager.GetProperty("DisplayOrder").IntValue;
 
                     if (picture != null)
                         category.PictureId = picture.Id;

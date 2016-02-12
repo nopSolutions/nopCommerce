@@ -44,7 +44,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to Int32
         /// </summary>
-        public int Int32Value
+        public int IntValue
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to decimal?
         /// </summary>
-        public decimal? NullDecimalValue
+        public decimal? DecimalValueNullable
         {
             get
             {
@@ -122,7 +122,7 @@ namespace Nop.Services.ExportImport.Help
         /// <summary>
         /// Converted property value to DateTime?
         /// </summary>
-        public DateTime? NullDateTime
+        public DateTime? DateTimeNullable
         {
             get { return PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?; }
         }
