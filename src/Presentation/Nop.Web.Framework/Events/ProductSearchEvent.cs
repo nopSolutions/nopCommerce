@@ -12,5 +12,6 @@ namespace Nop.Web.Framework.Events
         public IList<int> CategoryIds { get; set; }
         public int ManufacturerId { get; set; }
         public int WorkingLanguageId { get; set; }
+        public int VendorId { get; set; }
     }
 }

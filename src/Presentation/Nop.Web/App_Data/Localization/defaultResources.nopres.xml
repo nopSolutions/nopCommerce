@@ -6579,6 +6579,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowCustomersToContactVendors.Hint">
     <Value>Check to allow customers to contact vendors.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor">
+    <Value>Allow search by vendor in store advanced search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor.Hint">
+    <Value>Check to allow customers to search by vendor in store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Vendor.ShowVendorOnProductDetailsPage">
     <Value>Show vendor on product details page</Value>
   </LocaleResource>
@@ -14135,6 +14141,9 @@
   </LocaleResource>
   <LocaleResource Name="Search.SearchTermMinimumLengthIsNCharacters">
     <Value>Search term minimum length is {0} characters</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.Vendor">
+    <Value>Vendor</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart">
     <Value>Shopping cart</Value>

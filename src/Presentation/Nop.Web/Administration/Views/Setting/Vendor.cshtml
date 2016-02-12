@@ -59,5 +59,15 @@
                 @Html.ValidationMessageFor(model => model.AllowCustomersToApplyForVendorAccount)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.AllowSearchByVendor_OverrideForStore, model => model.AllowSearchByVendor, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.AllowSearchByVendor):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowSearchByVendor)
+                @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
+            </td>
+        </tr>
     </table>
 }

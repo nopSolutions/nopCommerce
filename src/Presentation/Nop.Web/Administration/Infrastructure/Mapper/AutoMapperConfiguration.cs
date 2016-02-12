@@ -700,6 +700,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.ShowVendorOnProductDetailsPage_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToContactVendors_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToApplyForVendorAccount_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowSearchByVendor_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<VendorSettingsModel, VendorSettings>()
                     .ForMember(dest => dest.DefaultVendorPageSizeOptions, mo => mo.Ignore());
