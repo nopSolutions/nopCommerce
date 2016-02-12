@@ -1169,12 +1169,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportOrdersToXlsx(stream, orders);
-                    bytes = stream.ToArray();
-                }
+                byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
                 return File(bytes, "text/xls", "orders.xlsx");
             }
             catch (Exception exc)
@@ -1204,13 +1199,16 @@ namespace Nop.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
+            try
             {
-                _exportManager.ExportOrdersToXlsx(stream, orders);
-                bytes = stream.ToArray();
+                byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
+                return File(bytes, "text/xls", "orders.xlsx");
             }
-            return File(bytes, "text/xls", "orders.xlsx");
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         #endregion
