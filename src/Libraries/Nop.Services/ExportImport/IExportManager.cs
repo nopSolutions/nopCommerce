@@ -61,17 +61,15 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXlsx(Stream stream, IList<Order> orders);
-        
+        byte[] ExportOrdersToXlsx(IList<Order> orders);
+
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        void ExportCustomersToXlsx(Stream stream, IList<Customer> customers);
-        
+        byte[] ExportCustomersToXlsx(IList<Customer> customers);
+
         /// <summary>
         /// Export customer list to xml
         /// </summary>

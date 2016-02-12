@@ -143,7 +143,107 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
-            // ok, we can run the real code of the sample now
+                //the columns
+                var properties = new []
+                {
+                    new PropertyByName<Product>("ProductTypeId"),
+                    new PropertyByName<Product>("ParentGroupedProductId"),
+                    new PropertyByName<Product>("VisibleIndividually"),
+                    new PropertyByName<Product>("Name"),
+                    new PropertyByName<Product>("ShortDescription"),
+                    new PropertyByName<Product>("FullDescription"),
+                    new PropertyByName<Product>("VendorId"),
+                    new PropertyByName<Product>("ProductTemplateId"),
+                    new PropertyByName<Product>("ShowOnHomePage"),
+                    new PropertyByName<Product>("MetaKeywords"),
+                    new PropertyByName<Product>("MetaDescription"),
+                    new PropertyByName<Product>("MetaTitle"),
+                    new PropertyByName<Product>("SeName"),
+                    new PropertyByName<Product>("AllowCustomerReviews"),
+                    new PropertyByName<Product>("Published"),
+                    new PropertyByName<Product>("SKU"),
+                    new PropertyByName<Product>("ManufacturerPartNumber"),
+                    new PropertyByName<Product>("Gtin"),
+                    new PropertyByName<Product>("IsGiftCard"),
+                    new PropertyByName<Product>("GiftCardTypeId"),
+                    new PropertyByName<Product>("OverriddenGiftCardAmount"),
+                    new PropertyByName<Product>("RequireOtherProducts"),
+                    new PropertyByName<Product>("RequiredProductIds"),
+                    new PropertyByName<Product>("AutomaticallyAddRequiredProducts"),
+                    new PropertyByName<Product>("IsDownload"),
+                    new PropertyByName<Product>("DownloadId"),
+                    new PropertyByName<Product>("UnlimitedDownloads"),
+                    new PropertyByName<Product>("MaxNumberOfDownloads"),
+                    new PropertyByName<Product>("DownloadActivationTypeId"),
+                    new PropertyByName<Product>("HasSampleDownload"),
+                    new PropertyByName<Product>("SampleDownloadId"),
+                    new PropertyByName<Product>("HasUserAgreement"),
+                    new PropertyByName<Product>("UserAgreementText"),
+                    new PropertyByName<Product>("IsRecurring"),
+                    new PropertyByName<Product>("RecurringCycleLength"),
+                    new PropertyByName<Product>("RecurringCyclePeriodId"),
+                    new PropertyByName<Product>("RecurringTotalCycles"),
+                    new PropertyByName<Product>("IsRental"),
+                    new PropertyByName<Product>("RentalPriceLength"),
+                    new PropertyByName<Product>("RentalPricePeriodId"),
+                    new PropertyByName<Product>("IsShipEnabled"),
+                    new PropertyByName<Product>("IsFreeShipping"),
+                    new PropertyByName<Product>("ShipSeparately"),
+                    new PropertyByName<Product>("AdditionalShippingCharge"),
+                    new PropertyByName<Product>("DeliveryDateId"),
+                    new PropertyByName<Product>("IsTaxExempt"),
+                    new PropertyByName<Product>("TaxCategoryId"),
+                    new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices"),
+                    new PropertyByName<Product>("ManageInventoryMethodId"),
+                    new PropertyByName<Product>("UseMultipleWarehouses"),
+                    new PropertyByName<Product>("WarehouseId"),
+                    new PropertyByName<Product>("StockQuantity"),
+                    new PropertyByName<Product>("DisplayStockAvailability"),
+                    new PropertyByName<Product>("DisplayStockQuantity"),
+                    new PropertyByName<Product>("MinStockQuantity"),
+                    new PropertyByName<Product>("LowStockActivityId"),
+                    new PropertyByName<Product>("NotifyAdminForQuantityBelow"),
+                    new PropertyByName<Product>("BackorderModeId"),
+                    new PropertyByName<Product>("AllowBackInStockSubscriptions"),
+                    new PropertyByName<Product>("OrderMinimumQuantity"),
+                    new PropertyByName<Product>("OrderMaximumQuantity"),
+                    new PropertyByName<Product>("AllowedQuantities"),
+                    new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations"),
+                    new PropertyByName<Product>("DisableBuyButton"),
+                    new PropertyByName<Product>("DisableWishlistButton"),
+                    new PropertyByName<Product>("AvailableForPreOrder"),
+                    new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc"),
+                    new PropertyByName<Product>("CallForPrice"),
+                    new PropertyByName<Product>("Price"),
+                    new PropertyByName<Product>("OldPrice"),
+                    new PropertyByName<Product>("ProductCost"),
+                    new PropertyByName<Product>("SpecialPrice"),
+                    new PropertyByName<Product>("SpecialPriceStartDateTimeUtc"),
+                    new PropertyByName<Product>("SpecialPriceEndDateTimeUtc"),
+                    new PropertyByName<Product>("CustomerEntersPrice"),
+                    new PropertyByName<Product>("MinimumCustomerEnteredPrice"),
+                    new PropertyByName<Product>("MaximumCustomerEnteredPrice"),
+                    new PropertyByName<Product>("BasepriceEnabled"),
+                    new PropertyByName<Product>("BasepriceAmount"),
+                    new PropertyByName<Product>("BasepriceUnitId"),
+                    new PropertyByName<Product>("BasepriceBaseAmount"),
+                    new PropertyByName<Product>("BasepriceBaseUnitId"),
+                    new PropertyByName<Product>("MarkAsNew"),
+                    new PropertyByName<Product>("MarkAsNewStartDateTimeUtc"),
+                    new PropertyByName<Product>("MarkAsNewEndDateTimeUtc"),
+                    new PropertyByName<Product>("Weight"),
+                    new PropertyByName<Product>("Length"),
+                    new PropertyByName<Product>("Width"),
+                    new PropertyByName<Product>("Height"),
+                    new PropertyByName<Product>("CategoryIds"),
+                    new PropertyByName<Product>("ManufacturerIds"),
+                    new PropertyByName<Product>("Picture1"),
+                    new PropertyByName<Product>("Picture2"),
+                    new PropertyByName<Product>("Picture3")
+                };
+
+            var manager = new PropertyManager<Product>(properties);
+
             using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
@@ -151,335 +251,128 @@ namespace Nop.Services.ExportImport
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
 
-                //the columns
-                var properties = new []
-                {
-                    "ProductTypeId",
-                    "ParentGroupedProductId",
-                    "VisibleIndividually",
-                    "Name",
-                    "ShortDescription",
-                    "FullDescription",
-                    "VendorId",
-                    "ProductTemplateId",
-                    "ShowOnHomePage",
-                    "MetaKeywords",
-                    "MetaDescription",
-                    "MetaTitle",
-                    "SeName",
-                    "AllowCustomerReviews",
-                    "Published",
-                    "SKU",
-                    "ManufacturerPartNumber",
-                    "Gtin",
-                    "IsGiftCard",
-                    "GiftCardTypeId",
-                    "OverriddenGiftCardAmount",
-                    "RequireOtherProducts",
-                    "RequiredProductIds",
-                    "AutomaticallyAddRequiredProducts",
-                    "IsDownload",
-                    "DownloadId",
-                    "UnlimitedDownloads",
-                    "MaxNumberOfDownloads",
-                    "DownloadActivationTypeId",
-                    "HasSampleDownload",
-                    "SampleDownloadId",
-                    "HasUserAgreement",
-                    "UserAgreementText",
-                    "IsRecurring",
-                    "RecurringCycleLength",
-                    "RecurringCyclePeriodId",
-                    "RecurringTotalCycles",
-                    "IsRental",
-                    "RentalPriceLength",
-                    "RentalPricePeriodId",
-                    "IsShipEnabled",
-                    "IsFreeShipping",
-                    "ShipSeparately",
-                    "AdditionalShippingCharge",
-                    "DeliveryDateId",
-                    "IsTaxExempt",
-                    "TaxCategoryId",
-                    "IsTelecommunicationsOrBroadcastingOrElectronicServices",
-                    "ManageInventoryMethodId",
-                    "UseMultipleWarehouses",
-                    "WarehouseId",
-                    "StockQuantity",
-                    "DisplayStockAvailability",
-                    "DisplayStockQuantity",
-                    "MinStockQuantity",
-                    "LowStockActivityId",
-                    "NotifyAdminForQuantityBelow",
-                    "BackorderModeId",
-                    "AllowBackInStockSubscriptions",
-                    "OrderMinimumQuantity",
-                    "OrderMaximumQuantity",
-                    "AllowedQuantities",
-                    "AllowAddingOnlyExistingAttributeCombinations",
-                    "DisableBuyButton",
-                    "DisableWishlistButton",
-                    "AvailableForPreOrder",
-                    "PreOrderAvailabilityStartDateTimeUtc",
-                    "CallForPrice",
-                    "Price",
-                    "OldPrice",
-                    "ProductCost",
-                    "SpecialPrice",
-                    "SpecialPriceStartDateTimeUtc",
-                    "SpecialPriceEndDateTimeUtc",
-                    "CustomerEntersPrice",
-                    "MinimumCustomerEnteredPrice",
-                    "MaximumCustomerEnteredPrice",
-                    "BasepriceEnabled",
-                    "BasepriceAmount",
-                    "BasepriceUnitId",
-                    "BasepriceBaseAmount",
-                    "BasepriceBaseUnitId",
-                    "MarkAsNew",
-                    "MarkAsNewStartDateTimeUtc",
-                    "MarkAsNewEndDateTimeUtc",
-                    "Weight",
-                    "Length",
-                    "Width",
-                    "Height",
-                    "CreatedOnUtc",
-                    "CategoryIds",
-                    "ManufacturerIds",
-                    "Picture1",
-                    "Picture2",
-                    "Picture3"
-                };
+                var iRow = 2;
 
-
-                int iRow = 2;
                 while (true)
                 {
-                    bool allColumnsAreEmpty = true;
-                    for (var i = 1; i <= properties.Length; i++)
-                        if (worksheet.Cells[iRow, i].Value != null && !String.IsNullOrEmpty(worksheet.Cells[iRow, i].Value.ToString()))
-                        {
-                            allColumnsAreEmpty = false;
-                            break;
-                        }
+                    var allColumnsAreEmpty = manager.GetProperties
+                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                        .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
+
                     if (allColumnsAreEmpty)
                         break;
 
-                    int productTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTypeId")].Value);
-                    int parentGroupedProductId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ParentGroupedProductId")].Value);
-                    bool visibleIndividually = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "VisibleIndividually")].Value);
-                    string name = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value);
-                    string shortDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value);
-                    string fullDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value);
-                    int vendorId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "VendorId")].Value);
-                    int productTemplateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTemplateId")].Value);
-                    bool showOnHomePage = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShowOnHomePage")].Value);
-                    string metaKeywords = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value);
-                    string metaDescription = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaDescription")].Value);
-                    string metaTitle = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "MetaTitle")].Value);
-                    string seName = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "SeName")].Value);
-                    bool allowCustomerReviews = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
-                    bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
-                    string sku = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value);
-                    string manufacturerPartNumber = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value);
-                    string gtin = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Gtin")].Value);
-                    bool isGiftCard = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
-                    int giftCardTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
-                    decimal? overriddenGiftCardAmount = null;
-                    var overriddenGiftCardAmountExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "OverriddenGiftCardAmount")].Value;
-                    if (overriddenGiftCardAmountExcel != null)
-                        overriddenGiftCardAmount = Convert.ToDecimal(overriddenGiftCardAmountExcel);
-                    bool requireOtherProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
-                    string requiredProductIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "RequiredProductIds")].Value);
-                    bool automaticallyAddRequiredProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AutomaticallyAddRequiredProducts")].Value);
-                    bool isDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsDownload")].Value);
-                    int downloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadId")].Value);
-                    bool unlimitedDownloads = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UnlimitedDownloads")].Value);
-                    int maxNumberOfDownloads = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MaxNumberOfDownloads")].Value);
-                    int downloadActivationTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadActivationTypeId")].Value);
-                    bool hasSampleDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasSampleDownload")].Value);
-                    int sampleDownloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "SampleDownloadId")].Value);
-                    bool hasUserAgreement = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasUserAgreement")].Value);
-                    string userAgreementText = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "UserAgreementText")].Value);
-                    bool isRecurring = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRecurring")].Value);
-                    int recurringCycleLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCycleLength")].Value);
-                    int recurringCyclePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCyclePeriodId")].Value);
-                    int recurringTotalCycles = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
-                    bool isRental = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRental")].Value);
-                    int rentalPriceLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPriceLength")].Value);
-                    int rentalPricePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RentalPricePeriodId")].Value);
-                    bool isShipEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
-                    bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
-                    bool shipSeparately = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShipSeparately")].Value);
-                    decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
-                    int deliveryDateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DeliveryDateId")].Value);
-                    bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
-                    int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
-                    bool isTelecommunicationsOrBroadcastingOrElectronicServices = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTelecommunicationsOrBroadcastingOrElectronicServices")].Value);
-                    int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
-                    bool useMultipleWarehouses = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UseMultipleWarehouses")].Value);
-                    int warehouseId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "WarehouseId")].Value);
-                    int stockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "StockQuantity")].Value);
-                    bool displayStockAvailability = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockAvailability")].Value);
-                    bool displayStockQuantity = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockQuantity")].Value);
-                    int minStockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MinStockQuantity")].Value);
-                    int lowStockActivityId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "LowStockActivityId")].Value);
-                    int notifyAdminForQuantityBelow = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "NotifyAdminForQuantityBelow")].Value);
-                    int backorderModeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BackorderModeId")].Value);
-                    bool allowBackInStockSubscriptions = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowBackInStockSubscriptions")].Value);
-                    int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
-                    int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
-                    string allowedQuantities = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value);
-                    bool allowAddingOnlyExistingAttributeCombinations = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowAddingOnlyExistingAttributeCombinations")].Value);
-                    bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
-                    bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
-                    bool availableForPreOrder = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AvailableForPreOrder")].Value);
-                    DateTime? preOrderAvailabilityStartDateTimeUtc = null;
-                    var preOrderAvailabilityStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "PreOrderAvailabilityStartDateTimeUtc")].Value;
-                    if (preOrderAvailabilityStartDateTimeUtcExcel != null)
-                        preOrderAvailabilityStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(preOrderAvailabilityStartDateTimeUtcExcel));
-                    bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
-                    decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
-                    decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
-                    decimal productCost = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductCost")].Value);
-                    decimal? specialPrice = null;
-                    var specialPriceExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPrice")].Value;
-                    if (specialPriceExcel != null)
-                        specialPrice = Convert.ToDecimal(specialPriceExcel);
-                    DateTime? specialPriceStartDateTimeUtc = null;
-                    var specialPriceStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceStartDateTimeUtc")].Value;
-                    if (specialPriceStartDateTimeUtcExcel != null)
-                        specialPriceStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceStartDateTimeUtcExcel));
-                    DateTime? specialPriceEndDateTimeUtc = null;
-                    var specialPriceEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceEndDateTimeUtc")].Value;
-                    if (specialPriceEndDateTimeUtcExcel != null)
-                        specialPriceEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceEndDateTimeUtcExcel));
+                    manager.ReadFromXlsx(worksheet, iRow);
 
-                    bool customerEntersPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
-                    decimal minimumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
-                    decimal maximumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
-                    bool basepriceEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceEnabled")].Value);
-                    decimal basepriceAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceAmount")].Value);
-                    int basepriceUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceUnitId")].Value);
-                    decimal basepriceBaseAmount = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseAmount")].Value);
-                    int basepriceBaseUnitId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BasepriceBaseUnitId")].Value);
-                    bool markAsNew = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNew")].Value);
-                    DateTime? markAsNewStartDateTimeUtc = null;
-                    var markAsNewStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewStartDateTimeUtc")].Value;
-                    if (markAsNewStartDateTimeUtcExcel != null)
-                        markAsNewStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewStartDateTimeUtcExcel));
-                    DateTime? markAsNewEndDateTimeUtc = null;
-                    var markAsNewEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "MarkAsNewEndDateTimeUtc")].Value;
-                    if (markAsNewEndDateTimeUtcExcel != null)
-                        markAsNewEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(markAsNewEndDateTimeUtcExcel));
-                    decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
-                    decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
-                    decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
-                    decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
-                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
-                    string categoryIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value);
-                    string manufacturerIds = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value);
-                    string picture1 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value);
-                    string picture2 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture2")].Value);
-                    string picture3 = ConvertColumnToString(worksheet.Cells[iRow, GetColumnIndex(properties, "Picture3")].Value);
-                    
-                    var product = _productService.GetProductBySku(sku);
-                    bool newProduct = false;
-                    if (product == null)
-                    {
-                        product = new Product {CreatedOnUtc = createdOnUtc};
-                        newProduct = true;
-                    }
-                    product.ProductTypeId = productTypeId;
-                    product.ParentGroupedProductId = parentGroupedProductId;
-                    product.VisibleIndividually = visibleIndividually;
-                    product.Name = name;
-                    product.ShortDescription = shortDescription;
-                    product.FullDescription = fullDescription;
-                    product.VendorId = vendorId;
-                    product.ProductTemplateId = productTemplateId;
-                    product.ShowOnHomePage = showOnHomePage;
-                    product.MetaKeywords = metaKeywords;
-                    product.MetaDescription = metaDescription;
-                    product.MetaTitle = metaTitle;
-                    product.AllowCustomerReviews = allowCustomerReviews;
-                    product.Sku = sku;
-                    product.ManufacturerPartNumber = manufacturerPartNumber;
-                    product.Gtin = gtin;
-                    product.IsGiftCard = isGiftCard;
-                    product.GiftCardTypeId = giftCardTypeId;
-                    product.OverriddenGiftCardAmount = overriddenGiftCardAmount;
-                    product.RequireOtherProducts = requireOtherProducts;
-                    product.RequiredProductIds = requiredProductIds;
-                    product.AutomaticallyAddRequiredProducts = automaticallyAddRequiredProducts;
-                    product.IsDownload = isDownload;
-                    product.DownloadId = downloadId;
-                    product.UnlimitedDownloads = unlimitedDownloads;
-                    product.MaxNumberOfDownloads = maxNumberOfDownloads;
-                    product.DownloadActivationTypeId = downloadActivationTypeId;
-                    product.HasSampleDownload = hasSampleDownload;
-                    product.SampleDownloadId = sampleDownloadId;
-                    product.HasUserAgreement = hasUserAgreement;
-                    product.UserAgreementText = userAgreementText;
-                    product.IsRecurring = isRecurring;
-                    product.RecurringCycleLength = recurringCycleLength;
-                    product.RecurringCyclePeriodId = recurringCyclePeriodId;
-                    product.RecurringTotalCycles = recurringTotalCycles;
-                    product.IsRental = isRental;
-                    product.RentalPriceLength = rentalPriceLength;
-                    product.RentalPricePeriodId = rentalPricePeriodId;
-                    product.IsShipEnabled = isShipEnabled;
-                    product.IsFreeShipping = isFreeShipping;
-                    product.ShipSeparately = shipSeparately;
-                    product.AdditionalShippingCharge = additionalShippingCharge;
-                    product.DeliveryDateId = deliveryDateId;
-                    product.IsTaxExempt = isTaxExempt;
-                    product.TaxCategoryId = taxCategoryId;
-                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices = isTelecommunicationsOrBroadcastingOrElectronicServices;
-                    product.ManageInventoryMethodId = manageInventoryMethodId;
-                    product.UseMultipleWarehouses = useMultipleWarehouses;
-                    product.WarehouseId = warehouseId;
-                    product.StockQuantity = stockQuantity;
-                    product.DisplayStockAvailability = displayStockAvailability;
-                    product.DisplayStockQuantity = displayStockQuantity;
-                    product.MinStockQuantity = minStockQuantity;
-                    product.LowStockActivityId = lowStockActivityId;
-                    product.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
-                    product.BackorderModeId = backorderModeId;
-                    product.AllowBackInStockSubscriptions = allowBackInStockSubscriptions;
-                    product.OrderMinimumQuantity = orderMinimumQuantity;
-                    product.OrderMaximumQuantity = orderMaximumQuantity;
-                    product.AllowedQuantities = allowedQuantities;
-                    product.AllowAddingOnlyExistingAttributeCombinations = allowAddingOnlyExistingAttributeCombinations;
-                    product.DisableBuyButton = disableBuyButton;
-                    product.DisableWishlistButton = disableWishlistButton;
-                    product.AvailableForPreOrder = availableForPreOrder;
-                    product.PreOrderAvailabilityStartDateTimeUtc = preOrderAvailabilityStartDateTimeUtc;
-                    product.CallForPrice = callForPrice;
-                    product.Price = price;
-                    product.OldPrice = oldPrice;
-                    product.ProductCost = productCost;
-                    product.SpecialPrice = specialPrice;
-                    product.SpecialPriceStartDateTimeUtc = specialPriceStartDateTimeUtc;
-                    product.SpecialPriceEndDateTimeUtc = specialPriceEndDateTimeUtc;
-                    product.CustomerEntersPrice = customerEntersPrice;
-                    product.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
-                    product.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
-                    product.BasepriceEnabled = basepriceEnabled;
-                    product.BasepriceAmount = basepriceAmount;
-                    product.BasepriceUnitId = basepriceUnitId;
-                    product.BasepriceBaseAmount = basepriceBaseAmount;
-                    product.BasepriceBaseUnitId = basepriceBaseUnitId;
-                    product.MarkAsNew = markAsNew;
-                    product.MarkAsNewStartDateTimeUtc = markAsNewStartDateTimeUtc;
-                    product.MarkAsNewEndDateTimeUtc = markAsNewEndDateTimeUtc;
-                    product.Weight = weight;
-                    product.Length = length;
-                    product.Width = width;
-                    product.Height = height;
-                    product.Published = published;
+                    var product = _productService.GetProductBySku(manager.GetProperty("SKU").StringValue);
+
+                    var isNew = product == null;
+
+                    product = product ?? new Product();
+
+                    if (isNew)
+                        product.CreatedOnUtc = DateTime.UtcNow;
+
+                    product.ProductTypeId = manager.GetProperty("ProductTypeId").Int32Value;
+                    product.ParentGroupedProductId = manager.GetProperty("ParentGroupedProductId").Int32Value;
+                    product.VisibleIndividually = manager.GetProperty("VisibleIndividually").BooleanValue;
+                    product.Name = manager.GetProperty("Name").StringValue;
+                    product.ShortDescription = manager.GetProperty("ShortDescription").StringValue;
+                    product.FullDescription = manager.GetProperty("FullDescription").StringValue;
+                    product.VendorId = manager.GetProperty("VendorId").Int32Value;
+                    product.ProductTemplateId = manager.GetProperty("ProductTemplateId").Int32Value;
+                    product.ShowOnHomePage = manager.GetProperty("ShowOnHomePage").BooleanValue;
+                    product.MetaKeywords = manager.GetProperty("MetaKeywords").StringValue;
+                    product.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
+                    product.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
+                    var seName = manager.GetProperty("SeName").StringValue;
+                    product.AllowCustomerReviews = manager.GetProperty("AllowCustomerReviews").BooleanValue;
+                    product.Published = manager.GetProperty("Published").BooleanValue;
+                    product.Sku = manager.GetProperty("SKU").StringValue;
+                    product.ManufacturerPartNumber = manager.GetProperty("ManufacturerPartNumber").StringValue;
+                    product.Gtin = manager.GetProperty("Gtin").StringValue;
+                    product.IsGiftCard = manager.GetProperty("IsGiftCard").BooleanValue;
+                    product.GiftCardTypeId = manager.GetProperty("GiftCardTypeId").Int32Value;
+                    product.OverriddenGiftCardAmount = manager.GetProperty("OverriddenGiftCardAmount").DecimalValue;
+                    product.RequireOtherProducts = manager.GetProperty("RequireOtherProducts").BooleanValue;
+                    product.RequiredProductIds = manager.GetProperty("RequiredProductIds").StringValue;
+                    product.AutomaticallyAddRequiredProducts = manager.GetProperty("AutomaticallyAddRequiredProducts").BooleanValue;
+                    product.IsDownload = manager.GetProperty("IsDownload").BooleanValue;
+                    product.DownloadId = manager.GetProperty("DownloadId").Int32Value;
+                    product.UnlimitedDownloads = manager.GetProperty("UnlimitedDownloads").BooleanValue;
+                    product.MaxNumberOfDownloads = manager.GetProperty("MaxNumberOfDownloads").Int32Value;
+                    product.DownloadActivationTypeId = manager.GetProperty("DownloadActivationTypeId").Int32Value;
+                    product.HasSampleDownload = manager.GetProperty("HasSampleDownload").BooleanValue;
+                    product.SampleDownloadId = manager.GetProperty("SampleDownloadId").Int32Value;
+                    product.HasUserAgreement = manager.GetProperty("HasUserAgreement").BooleanValue;
+                    product.UserAgreementText = manager.GetProperty("UserAgreementText").StringValue;
+                    product.IsRecurring = manager.GetProperty("IsRecurring").BooleanValue;
+                    product.RecurringCycleLength = manager.GetProperty("RecurringCycleLength").Int32Value;
+                    product.RecurringCyclePeriodId = manager.GetProperty("RecurringCyclePeriodId").Int32Value;
+                    product.RecurringTotalCycles = manager.GetProperty("RecurringTotalCycles").Int32Value;
+                    product.IsRental = manager.GetProperty("IsRental").BooleanValue;
+                    product.RentalPriceLength = manager.GetProperty("RentalPriceLength").Int32Value;
+                    product.RentalPricePeriodId = manager.GetProperty("RentalPricePeriodId").Int32Value;
+                    product.IsShipEnabled = manager.GetProperty("IsShipEnabled").BooleanValue;
+                    product.IsFreeShipping = manager.GetProperty("IsFreeShipping").BooleanValue;
+                    product.ShipSeparately = manager.GetProperty("ShipSeparately").BooleanValue;
+                    product.AdditionalShippingCharge = manager.GetProperty("AdditionalShippingCharge").DecimalValue;
+                    product.DeliveryDateId = manager.GetProperty("DeliveryDateId").Int32Value;
+                    product.IsTaxExempt = manager.GetProperty("IsTaxExempt").BooleanValue;
+                    product.TaxCategoryId = manager.GetProperty("TaxCategoryId").Int32Value;
+                    product.IsTelecommunicationsOrBroadcastingOrElectronicServices = manager.GetProperty("IsTelecommunicationsOrBroadcastingOrElectronicServices").BooleanValue;
+                    product.ManageInventoryMethodId = manager.GetProperty("ManageInventoryMethodId").Int32Value;
+                    product.UseMultipleWarehouses = manager.GetProperty("UseMultipleWarehouses").BooleanValue;
+                    product.WarehouseId = manager.GetProperty("WarehouseId").Int32Value;
+                    product.StockQuantity = manager.GetProperty("StockQuantity").Int32Value;
+                    product.DisplayStockAvailability = manager.GetProperty("DisplayStockAvailability").BooleanValue;
+                    product.DisplayStockQuantity = manager.GetProperty("DisplayStockQuantity").BooleanValue;
+                    product.MinStockQuantity = manager.GetProperty("MinStockQuantity").Int32Value;
+                    product.LowStockActivityId = manager.GetProperty("LowStockActivityId").Int32Value;
+                    product.NotifyAdminForQuantityBelow = manager.GetProperty("NotifyAdminForQuantityBelow").Int32Value;
+                    product.BackorderModeId = manager.GetProperty("BackorderModeId").Int32Value;
+                    product.AllowBackInStockSubscriptions = manager.GetProperty("AllowBackInStockSubscriptions").BooleanValue;
+                    product.OrderMinimumQuantity = manager.GetProperty("OrderMinimumQuantity").Int32Value;
+                    product.OrderMaximumQuantity = manager.GetProperty("OrderMaximumQuantity").Int32Value;
+                    product.AllowedQuantities = manager.GetProperty("AllowedQuantities").StringValue;
+                    product.AllowAddingOnlyExistingAttributeCombinations = manager.GetProperty("AllowAddingOnlyExistingAttributeCombinations").BooleanValue;
+                    product.DisableBuyButton = manager.GetProperty("DisableBuyButton").BooleanValue;
+                    product.DisableWishlistButton = manager.GetProperty("DisableWishlistButton").BooleanValue;
+                    product.AvailableForPreOrder = manager.GetProperty("AvailableForPreOrder").BooleanValue;
+                    product.PreOrderAvailabilityStartDateTimeUtc = manager.GetProperty("PreOrderAvailabilityStartDateTimeUtc").NullDateTime;
+                    product.CallForPrice = manager.GetProperty("CallForPrice").BooleanValue;
+                    product.Price = manager.GetProperty("Price").DecimalValue;
+                    product.OldPrice = manager.GetProperty("OldPrice").DecimalValue;
+                    product.ProductCost = manager.GetProperty("ProductCost").DecimalValue;
+                    product.SpecialPrice = manager.GetProperty("SpecialPrice").NullDecimalValue;
+                    product.SpecialPriceStartDateTimeUtc = manager.GetProperty("SpecialPriceStartDateTimeUtc").NullDateTime;
+                    product.SpecialPriceEndDateTimeUtc = manager.GetProperty("SpecialPriceEndDateTimeUtc").NullDateTime;
+                    product.CustomerEntersPrice = manager.GetProperty("CustomerEntersPrice").BooleanValue;
+                    product.MinimumCustomerEnteredPrice = manager.GetProperty("MinimumCustomerEnteredPrice").DecimalValue;
+                    product.MaximumCustomerEnteredPrice = manager.GetProperty("MaximumCustomerEnteredPrice").DecimalValue;
+                    product.BasepriceEnabled = manager.GetProperty("BasepriceEnabled").BooleanValue;
+                    product.BasepriceAmount = manager.GetProperty("BasepriceAmount").DecimalValue;
+                    product.BasepriceUnitId = manager.GetProperty("BasepriceUnitId").Int32Value;
+                    product.BasepriceBaseAmount = manager.GetProperty("BasepriceBaseAmount").DecimalValue;
+                    product.BasepriceBaseUnitId = manager.GetProperty("BasepriceBaseUnitId").Int32Value;
+                    product.MarkAsNew = manager.GetProperty("MarkAsNew").BooleanValue;
+                    product.MarkAsNewStartDateTimeUtc = manager.GetProperty("MarkAsNewStartDateTimeUtc").NullDateTime;
+                    product.MarkAsNewEndDateTimeUtc = manager.GetProperty("MarkAsNewEndDateTimeUtc").NullDateTime;
+                    product.Weight = manager.GetProperty("Weight").DecimalValue;
+                    product.Length = manager.GetProperty("Length").DecimalValue;
+                    product.Width = manager.GetProperty("Width").DecimalValue;
+                    product.Height = manager.GetProperty("Height").DecimalValue;
+
+                    var categoryIds = manager.GetProperty("CategoryIds").StringValue;
+                    var manufacturerIds = manager.GetProperty("ManufacturerIds").StringValue;
+
+                    var picture1 = manager.GetProperty("Picture1").StringValue;
+                    var picture2 = manager.GetProperty("Picture2").StringValue;
+                    var picture3 = manager.GetProperty("Picture3").StringValue;
+
                     product.UpdatedOnUtc = DateTime.UtcNow;
-                    if (newProduct)
+
+                    if (isNew)
                     {
                         _productService.InsertProduct(product);
                     }
@@ -492,55 +385,46 @@ namespace Nop.Services.ExportImport
                     _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
 
                     //category mappings
-                    if (!String.IsNullOrEmpty(categoryIds))
+                    foreach (var id in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        foreach (var id in categoryIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) != null)
+                            continue;
+                        //ensure that category exists
+                        var category = _categoryService.GetCategoryById(id);
+                        if (category == null)
+                            continue;
+
+                        var productCategory = new ProductCategory
                         {
-                            if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) == null)
-                            {
-                                //ensure that category exists
-                                var category = _categoryService.GetCategoryById(id);
-                                if (category != null)
-                                {
-                                    var productCategory = new ProductCategory
-                                    {
-                                        ProductId = product.Id,
-                                        CategoryId = category.Id,
-                                        IsFeaturedProduct = false,
-                                        DisplayOrder = 1
-                                    };
-                                    _categoryService.InsertProductCategory(productCategory);
-                                }
-                            }
-                        }
+                            ProductId = product.Id,
+                            CategoryId = category.Id,
+                            IsFeaturedProduct = false,
+                            DisplayOrder = 1
+                        };
+                        _categoryService.InsertProductCategory(productCategory);
                     }
 
                     //manufacturer mappings
-                    if (!String.IsNullOrEmpty(manufacturerIds))
+                    foreach (var id in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        foreach (var id in manufacturerIds.Split(new [] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) != null)
+                            continue;
+                        //ensure that manufacturer exists
+                        var manufacturer = _manufacturerService.GetManufacturerById(id);
+                        if (manufacturer == null)
+                            continue;
+                        var productManufacturer = new ProductManufacturer
                         {
-                            if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) == null)
-                            {
-                                //ensure that manufacturer exists
-                                var manufacturer = _manufacturerService.GetManufacturerById(id);
-                                if (manufacturer != null)
-                                {
-                                    var productManufacturer = new ProductManufacturer
-                                    {
-                                        ProductId = product.Id,
-                                        ManufacturerId = manufacturer.Id,
-                                        IsFeaturedProduct = false,
-                                        DisplayOrder = 1
-                                    };
-                                    _manufacturerService.InsertProductManufacturer(productManufacturer);
-                                }
-                            }
-                        }
+                            ProductId = product.Id,
+                            ManufacturerId = manufacturer.Id,
+                            IsFeaturedProduct = false,
+                            DisplayOrder = 1
+                        };
+                        _manufacturerService.InsertProductManufacturer(productManufacturer);
                     }
 
                     //pictures
-                    foreach (var picturePath in new [] { picture1, picture2, picture3 })
+                    foreach (var picturePath in new[] { picture1, picture2, picture3 })
                     {
                         if (String.IsNullOrEmpty(picturePath))
                             continue;
@@ -548,7 +432,7 @@ namespace Nop.Services.ExportImport
                         var mimeType = GetMimeTypeFromFilePath(picturePath);
                         var newPictureBinary = File.ReadAllBytes(picturePath);
                         var pictureAlreadyExists = false;
-                        if (!newProduct)
+                        if (!isNew)
                         {
                             //compare with existing product pictures
                             var existingPictures = _pictureService.GetPicturesByProductId(product.Id);
@@ -557,35 +441,32 @@ namespace Nop.Services.ExportImport
                                 var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
                                 //picture binary after validation (like in database)
                                 var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                                if (existingBinary.SequenceEqual(validatedPictureBinary) || existingBinary.SequenceEqual(newPictureBinary))
-                                {
-                                    //the same picture content
-                                    pictureAlreadyExists = true;
-                                    break;
-                                }
+                                if (!existingBinary.SequenceEqual(validatedPictureBinary) && !existingBinary.SequenceEqual(newPictureBinary))
+                                    continue;
+                                //the same picture content
+                                pictureAlreadyExists = true;
+                                break;
                             }
                         }
 
-                        if (!pictureAlreadyExists)
+                        if (pictureAlreadyExists)
+                            continue;
+                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
+                        product.ProductPictures.Add(new ProductPicture
                         {
-                            var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(name));
-                            product.ProductPictures.Add(new ProductPicture
-                            {
-                                //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                                //pictures are duplicated
-                                //maybe because entity size is too large
-                                PictureId = newPicture.Id,
-                                DisplayOrder = 1,
-                            });
-                            _productService.UpdateProduct(product);
-                        }
+                            //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                            //pictures are duplicated
+                            //maybe because entity size is too large
+                            PictureId = newPicture.Id,
+                            DisplayOrder = 1,
+                        });
+                        _productService.UpdateProduct(product);
                     }
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     _productService.UpdateHasTierPricesProperty(product);
                     _productService.UpdateHasDiscountsApplied(product);
 
-                    //next product
                     iRow++;
                 }
             }

@@ -91,6 +91,42 @@ namespace Nop.Services.ExportImport.Help
             }
         }
 
+        /// <summary>
+        /// Converted property value to decimal?
+        /// </summary>
+        public decimal? NullDecimalValue
+        {
+            get
+            {
+                decimal rez;
+                if (PropertyValue == null || !decimal.TryParse(PropertyValue.ToString(), out rez))
+                    return null;
+                return rez;
+            }
+        }
+
+        /// <summary>
+        /// Converted property value to double
+        /// </summary>
+        public double DoubleValue
+        {
+            get
+            {
+                double rez;
+                if (PropertyValue == null || !double.TryParse(PropertyValue.ToString(), out rez))
+                    return default(double);
+                return rez;
+            }
+        }
+
+        /// <summary>
+        /// Converted property value to DateTime?
+        /// </summary>
+        public DateTime? NullDateTime
+        {
+            get { return PropertyValue == null ? null : DateTime.FromOADate(DoubleValue) as DateTime?; }
+        }
+
         public override string ToString()
         {
             return PropertyName;
