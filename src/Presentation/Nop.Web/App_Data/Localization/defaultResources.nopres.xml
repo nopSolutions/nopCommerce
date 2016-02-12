@@ -7668,6 +7668,12 @@
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Password.Hint">
     <Value>The password to access the content of this topic</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
+    <Value>Determines whether this topic is published (visible) in your store.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.SeName">
     <Value>Search engine friendly page name</Value>
   </LocaleResource>

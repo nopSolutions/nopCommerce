@@ -234,7 +234,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true)
+            var topicModels = _topicService.GetAllTopics(model.SearchStoreId, true, true)
                 .Select(x =>x.ToModel())
                 .ToList();
             //little hack here:
@@ -275,6 +275,7 @@ namespace Nop.Admin.Controllers
             
             //default values
             model.DisplayOrder = 1;
+            model.Published = true;
 
             return View(model);
         }

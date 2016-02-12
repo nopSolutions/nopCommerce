@@ -60,6 +60,9 @@ namespace Nop.Admin.Models.Topics
         [AllowHtml]
         public string Body { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.Published")]
+        public bool Published { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Topics.Fields.TopicTemplate")]
         public int TopicTemplateId { get; set; }
         public IList<SelectListItem> AvailableTopicTemplates { get; set; }

@@ -75,6 +75,13 @@
                             field: "SystemName",
                             title: "@T("Admin.ContentManagement.Topics.Fields.SystemName")"
                         }, {
+                            field: "Published",
+                            title: "@T("Admin.ContentManagement.Topics.Fields.Published")",
+                            width: 100,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                        }, {
                             field: "IsPasswordProtected",
                             title: "@T("Admin.ContentManagement.Topics.Fields.IsPasswordProtected")",
                             width: 100,

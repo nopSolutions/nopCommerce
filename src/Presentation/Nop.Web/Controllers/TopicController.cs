@@ -96,6 +96,8 @@ namespace Nop.Web.Controllers
                 var topic = _topicService.GetTopicById(topicId);
                 if (topic == null)
                     return null;
+                if (!topic.Published)
+                    return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))
                     return null;
@@ -137,6 +139,8 @@ namespace Nop.Web.Controllers
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
                     return null;
+                if (!topic.Published)
+                    return null;
                 //ACL (access control list)
                 if (!_aclService.Authorize(topic))
                     return null;
@@ -175,6 +179,8 @@ namespace Nop.Web.Controllers
                 var topic = _topicService.GetTopicBySystemName(systemName, _storeContext.CurrentStore.Id);
                 if (topic == null)
                     return null;
+                if (!topic.Published)
+                    return null;
                 //Store mapping
                 if (!_storeMappingService.Authorize(topic))
                     return null;
@@ -201,6 +207,7 @@ namespace Nop.Web.Controllers
 
             var topic = _topicService.GetTopicById(id);
             if (topic != null &&
+                topic.Published &&
                 //password protected?
                 topic.IsPasswordProtected &&
                 //store mapping
