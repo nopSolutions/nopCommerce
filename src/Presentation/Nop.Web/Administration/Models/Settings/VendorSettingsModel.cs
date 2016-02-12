@@ -23,5 +23,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowCustomersToApplyForVendorAccount")]
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
         public bool AllowCustomersToApplyForVendorAccount_OverrideForStore { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Vendor.AllowSearchByVendor")]
+        public bool AllowSearchByVendor { get; set; }
+        public bool AllowSearchByVendor_OverrideForStore { get; set; }
     }
 }

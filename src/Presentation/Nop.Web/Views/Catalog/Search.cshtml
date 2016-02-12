@@ -64,6 +64,13 @@
                                     @Html.DropDownListFor(model => model.mid, Model.AvailableManufacturers)
                                 </div>
                             }
+                            @if (Model.asv && Model.AvailableVendors.Count > 0)
+                            {
+                                <div class="inputs">
+                                    @Html.LabelFor(model => model.vid, new {}, ":")
+                                    @Html.DropDownListFor(model => model.vid, Model.AvailableVendors)
+                                </div>
+                            }
                             <div class="inputs">
                                 <label>@T("Search.PriceRange"):</label>
                                 <span class="price-range">

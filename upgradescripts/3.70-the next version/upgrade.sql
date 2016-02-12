@@ -218,6 +218,15 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Hours">
     <Value>Hours</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor">
+    <Value>Allow search by vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.AllowSearchByVendor.Hint">
+    <Value>Check to allow customers to search by vendor on advanced search page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Search.Vendor">
+    <Value>Vendor</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -483,4 +492,12 @@ WHERE [DelayPeriodId] IS NULL
 GO
 
 ALTER TABLE [MessageTemplate] ALTER COLUMN [DelayPeriodId] int NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.allowsearchbyvendor')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'vendorsettings.allowsearchbyvendor',N'False',0);
+END
 GO
