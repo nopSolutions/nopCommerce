@@ -11,6 +11,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
@@ -2927,14 +2928,19 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-        public ActionResult AllSettings(DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+        public ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var settings = _settingService
-                .GetAllSettings()
+            var query = _settingService.GetAllSettings().AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchSettingName))
+                query = query.Where(s => s.Name.ToLowerInvariant().Contains(model.SearchSettingName.ToLowerInvariant()));
+            if (!string.IsNullOrEmpty(model.SearchSettingValue))
+                query = query.Where(s => s.Value.ToLowerInvariant().Contains(model.SearchSettingValue.ToLowerInvariant()));
+
+            var settings = query.ToList()
                 .Select(x =>
                             {
                                 string storeName;
@@ -2957,9 +2963,7 @@ namespace Nop.Admin.Controllers
                                 };
                                 return settingModel;
                             })
-                .AsQueryable()
-                .Filter(filter)
-                .Sort(sort);
+                .AsQueryable();
 
             var gridModel = new DataSourceResult
             {

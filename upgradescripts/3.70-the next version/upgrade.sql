@@ -176,6 +176,48 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.SearchSettingValue.Hint">
+    <Value>Search by a specific setting value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName">
+    <Value>Resource name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceName.Hint">
+    <Value>Search by a specific resource.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue">
+    <Value>Value</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.SearchResourceValue.Hint">
+    <Value>Search by a specific resource value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend">
+    <Value>Delay send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.DelayBeforeSend.Hint">
+    <Value>The delay before sending message.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately">
+    <Value>Send immediately</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.MessageTemplates.Fields.SendImmediately.Hint">
+    <Value>Send message immediately.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Days">
+    <Value>Days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Messages.MessageDelayPeriod.Hours">
+    <Value>Hours</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -417,4 +459,28 @@ BEGIN
 	ALTER TABLE [Campaign]
 	ADD [DontSendBeforeDateUtc] DATETIME NULL
 END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[MessageTemplate]') and NAME='DelayBeforeSend')
+BEGIN
+	ALTER TABLE [MessageTemplate]
+	ADD [DelayBeforeSend] INT NULL
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[MessageTemplate]') and NAME='DelayPeriodId')
+BEGIN
+	ALTER TABLE [MessageTemplate]
+	ADD [DelayPeriodId] INT NULL
+END
+GO
+
+UPDATE [MessageTemplate]
+SET [DelayPeriodId] = 0
+WHERE [DelayPeriodId] IS NULL
+GO
+
+ALTER TABLE [MessageTemplate] ALTER COLUMN [DelayPeriodId] int NOT NULL
 GO

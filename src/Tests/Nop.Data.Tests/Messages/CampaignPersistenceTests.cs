@@ -16,7 +16,8 @@ namespace Nop.Data.Tests.Messages
                 Name = "Name 1",
                 Subject = "Subject 1",
                 Body = "Body 1",
-                CreatedOnUtc = new DateTime(2010,01,02)
+                CreatedOnUtc = new DateTime(2010,01,02),
+                DontSendBeforeDateUtc = new DateTime(2016, 2, 23)
             };
 
             var fromDb = SaveAndLoadEntity(campaign);
@@ -25,6 +26,7 @@ namespace Nop.Data.Tests.Messages
             fromDb.Subject.ShouldEqual("Subject 1");
             fromDb.Body.ShouldEqual("Body 1");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.DontSendBeforeDateUtc.ShouldEqual(new DateTime(2016, 2, 23));
         }
     }
 }
