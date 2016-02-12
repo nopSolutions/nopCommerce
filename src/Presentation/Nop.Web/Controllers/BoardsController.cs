@@ -275,7 +275,7 @@ namespace Nop.Web.Controllers
                                     string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     feedDescription,
                                     new Uri(url),
-                                    _webHelper.GetThisPageUrl(false),
+                                    string.Format("urn:store:{0}:activeDiscussions", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             var items = new List<SyndicationItem>();
@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
                 string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                 items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl),
-                    String.Format("Topic:{0}", topic.Id), (topic.LastPostTime ?? topic.UpdatedOnUtc)));
+                    String.Format("urn:store:{0}:activeDiscussions:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), (topic.LastPostTime ?? topic.UpdatedOnUtc)));
             }
             feed.Items = items;
 
@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
                                         string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
                                         feedDescription,
                                         new Uri(url),
-                                        _webHelper.GetThisPageUrl(false),
+                                        string.Format("urn:store:{0}:forum", _storeContext.CurrentStore.Id),
                                         DateTime.UtcNow);
 
                 var items = new List<SyndicationItem>();
@@ -404,7 +404,7 @@ namespace Nop.Web.Controllers
                     string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
                     string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
-                    items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("Topic:{0}", topic.Id),
+                    items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id),
                         (topic.LastPostTime ?? topic.UpdatedOnUtc)));
                 }
 
