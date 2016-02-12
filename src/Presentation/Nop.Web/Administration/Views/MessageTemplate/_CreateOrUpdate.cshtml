@@ -55,7 +55,10 @@
                 @Html.NopLabelFor(model => model.AllowedTokens):
             </td>
             <td class="adminData">
-                @Html.DisplayFor(model => model.AllowedTokens)
+                <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                <div id="pnlAllowedTokens" style="display:none">
+                    @Html.DisplayFor(model => model.AllowedTokens)
+                </div>
             </td>
         </tr>
         <tr>
@@ -67,27 +70,23 @@
                 @Html.HiddenFor(model => model.Name)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsActive):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsActive)
-                @Html.ValidationMessageFor(model => model.IsActive)
-            </td>
-        </tr>
     </table>
+
+    <script type="text/javascript">
+        function toggleLoadedAllowedTokens() {
+            $('#pnlAllowedTokens').toggle();
+            if ($('#pnlAllowedTokens').css('display') == 'none') {
+                $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+            }
+            else {
+                $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+            }
+        }
+
+    </script>
+
     @(Html.LocalizedEditor<MessageTemplateModel, MessageTemplateLocalizedModel>("messagetemplate-localized",
     @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].BccEmailAddresses)
-                @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
-            </td>
-        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Locales[item].Subject):
@@ -106,14 +105,15 @@
                 @Html.ValidationMessageFor(model => model.Locales[item].Body)
             </td>
         </tr>
-         <tr>
-             <td class="adminTitle">
-                 @T("Admin.ContentManagement.MessageTemplates.Test"):
-             </td>
-             <td class="adminData">
-                 <input type="button" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
-             </td>
-         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Locales[item].BccEmailAddresses)
+                @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Locales[item].EmailAccountId):
@@ -123,6 +123,14 @@
                 @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
             </td>
         </tr>
+         <tr>
+             <td class="adminTitle">
+                 @T("Admin.ContentManagement.MessageTemplates.Test"):
+             </td>
+             <td class="adminData">
+                 <input type="button" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id, languageId = Model.Locales[item].LanguageId }))')" />
+             </td>
+         </tr>
         <tr>
             <td colspan="2">
                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
@@ -131,15 +139,6 @@
     </table>
     ,
     @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.BccEmailAddresses):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.BccEmailAddresses)
-                @Html.ValidationMessageFor(model => model.BccEmailAddresses)
-            </td>
-        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Subject):
@@ -158,14 +157,15 @@
                 @Html.ValidationMessageFor(model => model.Body)
             </td>
         </tr>
-         <tr>
-             <td class="adminTitle">
-                 @T("Admin.ContentManagement.MessageTemplates.Test"):
-             </td>
-             <td class="adminData">
-                 <input type="button" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
-             </td>
-         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.BccEmailAddresses):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.BccEmailAddresses)
+                @Html.ValidationMessageFor(model => model.BccEmailAddresses)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.EmailAccountId):
@@ -175,10 +175,27 @@
                 @Html.ValidationMessageFor(model => model.EmailAccountId)
             </td>
         </tr>
+         <tr>
+             <td class="adminTitle">
+                 @T("Admin.ContentManagement.MessageTemplates.Test"):
+             </td>
+             <td class="adminData">
+                 <input type="button" class="k-button" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new { id = Model.Id }))')" />
+             </td>
+         </tr>
     </table>
     ))
 
     <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsActive):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsActive)
+                @Html.ValidationMessageFor(model => model.IsActive)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SendImmediately):
