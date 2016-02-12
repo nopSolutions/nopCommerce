@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "BlogRSS",
+                                   _webHelper.GetThisPageUrl(false),
                                     DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)

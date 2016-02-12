@@ -207,7 +207,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "News",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "NewsRSS",
+                                    _webHelper.GetThisPageUrl(false),
                                     DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
