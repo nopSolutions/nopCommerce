@@ -207,7 +207,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: News", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "News",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    _webHelper.GetThisPageUrl(false),
+                                    string.Format("urn:store:{0}:news}", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_newsSettings.Enabled)
@@ -218,7 +218,7 @@ namespace Nop.Web.Controllers
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { SeName = n.GetSeName(n.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
-                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("Blog:{0}", n.Id), n.CreatedOnUtc));
+                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("urn:store:{0}:news:blog:{1}", _storeContext.CurrentStore.Id, n.Id), n.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult { Feed = feed };
