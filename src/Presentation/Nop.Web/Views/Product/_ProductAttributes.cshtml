@@ -238,7 +238,7 @@
                                         var attributeName = String.IsNullOrEmpty(attributeValue.PriceAdjustment) ?
                                             attributeValue.Name :
                                             T("Products.ProductAttributes.PriceAdjustment", attributeValue.Name, attributeValue.PriceAdjustment).Text;
-                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value") : null)>
+                                        <li @(attributeValue.IsPreSelected ? @Html.Raw(" class=\"selected-value\"") : null)>
                                             <label for="@(controlId)_@(attributeValue.Id)">
                                                 <span class="color-container">
                                                     <span class="color" style="background: url('@(attributeValue.ImageSquaresPictureModel.ImageUrl)') 50% 50% no-repeat;">&nbsp;</span>
