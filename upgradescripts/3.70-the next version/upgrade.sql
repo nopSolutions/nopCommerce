@@ -233,6 +233,18 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Topics.Fields.Published.Hint">
     <Value>Determines whether this topic is published (visible) in your store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore">
+    <Value>Store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
+    <Value>Search by a specific store.</Value>
+  </LocaleResource>
 </Language>
 '
 

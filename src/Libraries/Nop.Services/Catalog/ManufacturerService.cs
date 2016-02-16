@@ -131,11 +131,13 @@ namespace Nop.Services.Catalog
         /// Gets all manufacturers
         /// </summary>
         /// <param name="manufacturerName">Manufacturer name</param>
+        /// <param name="storeId">Store identifier; 0 if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
         public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName = "",
+            int storeId = 0,
             int pageIndex = 0,
             int pageSize = int.MaxValue, 
             bool showHidden = false)
@@ -148,9 +150,9 @@ namespace Nop.Services.Catalog
             query = query.Where(m => !m.Deleted);
             query = query.OrderBy(m => m.DisplayOrder);
 
-            if (!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations))
+            if ((!showHidden && (!_catalogSettings.IgnoreAcl || !_catalogSettings.IgnoreStoreLimitations)) || storeId > 0)
             { 
-                if (!_catalogSettings.IgnoreAcl)
+                if (!showHidden && !_catalogSettings.IgnoreAcl)
                 {
                     //ACL (access control list)
                     var allowedCustomerRolesIds = _workContext.CurrentCustomer.GetCustomerRoleIds();
@@ -161,15 +163,14 @@ namespace Nop.Services.Catalog
                             where !m.SubjectToAcl || allowedCustomerRolesIds.Contains(acl.CustomerRoleId)
                             select m;
                 }
-                if (!_catalogSettings.IgnoreStoreLimitations)
+                if ((!showHidden && !_catalogSettings.IgnoreStoreLimitations) || storeId > 0)
                 {
                     //Store mapping
-                    var currentStoreId = _storeContext.CurrentStore.Id;
                     query = from m in query
                             join sm in _storeMappingRepository.Table
                             on new { c1 = m.Id, c2 = "Manufacturer" } equals new { c1 = sm.EntityId, c2 = sm.EntityName } into m_sm
                             from sm in m_sm.DefaultIfEmpty()
-                            where !m.LimitedToStores || currentStoreId == sm.StoreId
+                            where !m.LimitedToStores || storeId == sm.StoreId
                             select m;
                 }
                 //only distinct manufacturers (group by ID)

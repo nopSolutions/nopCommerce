@@ -348,7 +348,7 @@ namespace Nop.Web.Controllers
                 //load categories if null passed
                 //we implemeneted it this way for performance optimization - recursive iterations (below)
                 //this way all categories are loaded only once
-                allCategories = _categoryService.GetAllCategories();
+                allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
             }
             var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).ToList();
             foreach (var category in categories)
@@ -881,7 +881,7 @@ namespace Nop.Web.Controllers
         public ActionResult ManufacturerAll()
         {
             var model = new List<ManufacturerModel>();
-            var manufacturers = _manufacturerService.GetAllManufacturers();
+            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
             foreach (var manufacturer in manufacturers)
             {
                 var modelMan = manufacturer.ToModel();
@@ -922,7 +922,8 @@ namespace Nop.Web.Controllers
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
 
-                    var manufacturers = _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
+                    var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id, 
+                        pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
                     var model = new ManufacturerNavigationModel
                     {
                         TotalManufacturers = manufacturers.TotalCount
@@ -1239,7 +1240,7 @@ namespace Nop.Web.Controllers
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
-                var allCategories = _categoryService.GetAllCategories();
+                var allCategories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
                 foreach (var c in allCategories)
                 {
                     //generate full category name (breadcrumb)
@@ -1279,7 +1280,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var manufacturers = _manufacturerService.GetAllManufacturers();
+            var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
             if (manufacturers.Count > 0)
             {
                 model.AvailableManufacturers.Add(new SelectListItem

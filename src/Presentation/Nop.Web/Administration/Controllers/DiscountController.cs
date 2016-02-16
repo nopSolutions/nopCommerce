@@ -609,7 +609,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var categories = _categoryService.GetAllCategories(model.SearchCategoryName,
-                command.Page - 1, command.PageSize, true);
+                0, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = categories.Select(x =>
@@ -725,7 +725,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var manufacturers = _manufacturerService.GetAllManufacturers(model.SearchManufacturerName,
-                command.Page - 1, command.PageSize, true);
+                0, command.Page - 1, command.PageSize, true);
             var gridModel = new DataSourceResult
             {
                 Data = manufacturers.Select(x => x.ToModel()),

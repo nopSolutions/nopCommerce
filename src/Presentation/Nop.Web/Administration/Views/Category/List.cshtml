@@ -28,6 +28,14 @@
         </td>
     </tr>
     <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchStoreId):
+        </td>
+        <td class="adminData">
+            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             <input type="button" id="search-categories" class="k-button" value="@T("Admin.Common.Search")" />
         </td>
@@ -122,7 +130,8 @@
 
                 function additionalData() {
                     var data = {
-                        SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val()
+                        SearchCategoryName: $('#@Html.FieldIdFor(model => model.SearchCategoryName)').val(),
+                        SearchStoreId: $('#SearchStoreId').val()
                     };
                     addAntiForgeryToken(data);
                     return data;
