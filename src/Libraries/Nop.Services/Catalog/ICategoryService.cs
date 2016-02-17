@@ -114,5 +114,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productCategory">>Product category mapping</param>
         void UpdateProductCategory(ProductCategory productCategory);
+
+        /// <summary>
+        /// Returns a list of IDs not existing categories
+        /// </summary>
+        /// <param name="categoryIds">The IDs of the categories to check</param>
+        /// <returns>List of IDs not existing categories</returns>
+        IEnumerable<int> GetNotExistingCategories(List<int> categoryIds);
     }
 }

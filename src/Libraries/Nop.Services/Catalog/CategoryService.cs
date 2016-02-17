@@ -566,6 +566,19 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(productCategory);
         }
+        
+        /// <summary>
+        /// Returns a list of IDs not existing categories
+        /// </summary>
+        /// <param name="categoryIds">The IDs of the categories to check</param>
+        /// <returns>List of IDs not existing categories</returns>
+        public virtual IEnumerable<int> GetNotExistingCategories(List<int> categoryIds)
+        {
+            var query = _categoryRepository.Table;
+            var filter = query.Select(p => p.Id).Distinct().ToList();
+
+            return categoryIds.Distinct().Where(p => !filter.Contains(p)).OrderBy(p=>p);
+        }
 
         #endregion
     }
