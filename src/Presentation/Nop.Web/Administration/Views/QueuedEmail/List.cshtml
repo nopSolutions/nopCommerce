@@ -193,15 +193,12 @@
                             return false;
                         });
 
-                        $("#@Html.FieldIdFor(model => model.SearchFromEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-queuedemails").click();
-                                return false;
-                            }
-                        });
-
-                        $("#@Html.FieldIdFor(model => model.SearchToEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
+                        var fromEmailId = "#@Html.FieldIdFor(model => model.SearchFromEmail)";
+                        var toEmailId = "#@Html.FieldIdFor(model => model.SearchToEmail)";
+                        var s = ", ";
+                       
+                        $("".concat(fromEmailId, s, toEmailId)).keydown(function (event) {
+                            if (event.keyCode === 13) {
                                 $("#search-queuedemails").click();
                                 return false;
                             }

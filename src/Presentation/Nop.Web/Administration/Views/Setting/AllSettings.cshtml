@@ -205,15 +205,12 @@
                     return data;
                 }
 
-                $("#@Html.FieldIdFor(model => model.SearchSettingName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-settings").click();
-                        return false;
-                    }
-                });
+                var settingNameId = "#@Html.FieldIdFor(model => model.SearchSettingName)";
+                var settingValueId = "#@Html.FieldIdFor(model => model.SearchSettingValue)";
+                var s = ", ";
 
-                $("#@Html.FieldIdFor(model => model.SearchSettingValue)").keydown(function (event) {
-                    if (event.keyCode == 13) {
+                $("".concat(settingNameId, s, settingValueId)).keydown(function (event) {
+                    if (event.keyCode === 13) {
                         $("#search-settings").click();
                         return false;
                     }

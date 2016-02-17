@@ -166,20 +166,14 @@
                     });
                 });
 
-                $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-affiliates").click();
-                        return false;
-                    }
-                });
-                $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-affiliates").click();
-                        return false;
-                    }
-                });
-                $("#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
+                var firstNameId = "#@Html.FieldIdFor(model => model.SearchFirstName)";
+                var lastNameId = "#@Html.FieldIdFor(model => model.SearchLastName)";
+                var friendlyUrlNameId = "#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)";
+                var s = ", ";
+
+               
+                $("".concat(firstNameId, s, lastNameId, s, friendlyUrlNameId)).keydown(function (event) {
+                    if (event.keyCode === 13) {
                         $("#search-affiliates").click();
                         return false;
                     }
