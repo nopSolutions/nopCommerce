@@ -245,6 +245,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ImportToExcel.ManyRecordsWarning">
+    <Value>Import requires a lot of memory resources. That''s why it''s not recommended to import more than 500 - 1,000 records at once. If you have more records, it''s better to split them to multiple Excel files and import separately.</Value>
+  </LocaleResource>
 </Language>
 '
 
