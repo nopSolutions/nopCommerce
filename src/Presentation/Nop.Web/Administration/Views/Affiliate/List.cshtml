@@ -168,7 +168,8 @@
 
 
                 $("".concat("#@Html.FieldIdFor(model => model.SearchFirstName),",
-                    "#@Html.FieldIdFor(model => model.SearchLastName)")).keydown(function (event) {
+                    "#@Html.FieldIdFor(model => model.SearchLastName),",
+                    "#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)")).keydown(function (event) {
                     if (event.keyCode === 13) {
                         $("#search-affiliates").click();
                         return false;
