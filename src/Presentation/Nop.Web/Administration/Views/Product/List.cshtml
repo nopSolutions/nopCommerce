@@ -237,13 +237,20 @@
                 return false;
             });
 
-            $("".concat("#@Html.FieldIdFor(model => model.SearchProductName),",
-                "#@Html.FieldIdFor(model => model.GoDirectlyToSku)")).keydown(function (event) {
+           
+            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
                 if (event.keyCode === 13) {
-                    $("#go-to-product-by-sku").click();
+                    $("#search-products").click();
                     return false;
                 }
             });
+
+            $("#@Html.FieldIdFor(model => model.GoDirectlyToSku)").keydown(function (event) {
+                    if (event.keyCode === 13) {
+                        $("#go-to-product-by-sku").click();
+                        return false;
+                    }
+                });
 
             //delete selected
             $('#delete-selected').click(function(e) {
