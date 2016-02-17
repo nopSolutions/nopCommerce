@@ -237,11 +237,8 @@
                 return false;
             });
 
-            var productNameId = "#@Html.FieldIdFor(model => model.SearchProductName)";
-            var goDirectlyToSkuId = "#@Html.FieldIdFor(model => model.GoDirectlyToSku)";
-            var s = ", ";
-
-            $("".concat(productNameId, s, goDirectlyToSkuId)).keydown(function (event) {
+            $("".concat("#@Html.FieldIdFor(model => model.SearchProductName),",
+                "#@Html.FieldIdFor(model => model.GoDirectlyToSku)")).keydown(function (event) {
                 if (event.keyCode === 13) {
                     $("#go-to-product-by-sku").click();
                     return false;

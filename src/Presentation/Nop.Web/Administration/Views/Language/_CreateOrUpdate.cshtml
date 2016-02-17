@@ -384,12 +384,9 @@
                             addAntiForgeryToken(data);
                             return data;
                         }
-
-                        var resourceNameId = "#@Html.FieldIdFor(model => model.Search.SearchResourceName)";
-                        var resourceValueId = "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)";
-                        var s = ", ";
-
-                        $("".concat(resourceNameId, s, resourceValueId)).keydown(function (event) {
+                        
+                        $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
+                            "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function (event) {
                             if (event.keyCode === 13) {
                                 $("#search-resources").click();
                                 return false;

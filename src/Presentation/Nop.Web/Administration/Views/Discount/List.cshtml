@@ -140,12 +140,8 @@
                     });
                 });
 
-                var discountNameId = "#@Html.FieldIdFor(model => model.SearchDiscountName)";
-                var discountCouponCodeId = "#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)";
-                var s = ", ";
-
-
-                $("".concat(discountNameId, s, discountCouponCodeId)).keydown(function (event) {
+                $("".concat("#@Html.FieldIdFor(model => model.SearchDiscountName),",
+                    "#@Html.FieldIdFor(model => model.SearchDiscountCouponCode)")).keydown(function (event) {
                     if (event.keyCode === 13) {
                         $("#search-discounts").click();
                         return false;

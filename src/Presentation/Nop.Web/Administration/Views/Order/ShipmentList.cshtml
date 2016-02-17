@@ -272,11 +272,8 @@
                 });
             });
 
-            var trackingNumberId = "#@Html.FieldIdFor(model => model.TrackingNumber)";
-            var cityId = "#@Html.FieldIdFor(model => model.City)";
-            var s = ", ";
-
-            $("".concat(trackingNumberId, s, cityId)).keydown(function (event) {
+            $("".concat("#@Html.FieldIdFor(model => model.TrackingNumber),",
+                "#@Html.FieldIdFor(model => model.City)")).keydown(function (event) {
                 if (event.keyCode === 13) {
                     $("#search-shipments").click();
                     return false;

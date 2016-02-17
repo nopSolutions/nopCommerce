@@ -343,13 +343,10 @@
                             return false;
                         });
 
-                        var emailId = "#@Html.FieldIdFor(model => model.BillingEmail)";
-                        var lastNameId = "#@Html.FieldIdFor(model => model.BillingLastName)";
-                        var orderNotesId = "#@Html.FieldIdFor(model => model.OrderNotes)";
-                        var goDirectlyToNumberId = "#@Html.FieldIdFor(model => model.GoDirectlyToNumber)";
-                        var s = ", ";
-
-                        $("".concat(emailId, s, lastNameId, s, orderNotesId, s, goDirectlyToNumberId)).keydown(function (event) {
+                        $("".concat("#@Html.FieldIdFor(model => model.BillingEmail),",
+                            "#@Html.FieldIdFor(model => model.BillingLastName),",
+                            "#@Html.FieldIdFor(model => model.OrderNotes),",
+                            "#@Html.FieldIdFor(model => model.GoDirectlyToNumber)")).keydown(function (event) {
                             if (event.keyCode === 13) {
                                 $("#go-to-order-by-number").click();
                                 return false;
