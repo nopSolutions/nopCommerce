@@ -193,15 +193,9 @@
                             return false;
                         });
 
-                        $("#@Html.FieldIdFor(model => model.SearchFromEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-queuedemails").click();
-                                return false;
-                            }
-                        });
-
-                        $("#@Html.FieldIdFor(model => model.SearchToEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
+                        $("".concat("#@Html.FieldIdFor(model => model.SearchFromEmail),",
+                            "#@Html.FieldIdFor(model => model.SearchToEmail)")).keydown(function (event) {
+                            if (event.keyCode === 13) {
                                 $("#search-queuedemails").click();
                                 return false;
                             }

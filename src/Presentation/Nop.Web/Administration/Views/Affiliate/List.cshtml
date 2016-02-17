@@ -166,20 +166,10 @@
                     });
                 });
 
-                $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-affiliates").click();
-                        return false;
-                    }
-                });
-                $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-affiliates").click();
-                        return false;
-                    }
-                });
-                $("#@Html.FieldIdFor(model => model.SearchFriendlyUrlName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
+
+                $("".concat("#@Html.FieldIdFor(model => model.SearchFirstName),",
+                    "#@Html.FieldIdFor(model => model.SearchLastName)")).keydown(function (event) {
+                    if (event.keyCode === 13) {
                         $("#search-affiliates").click();
                         return false;
                     }

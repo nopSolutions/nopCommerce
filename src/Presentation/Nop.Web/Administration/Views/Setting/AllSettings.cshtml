@@ -205,15 +205,9 @@
                     return data;
                 }
 
-                $("#@Html.FieldIdFor(model => model.SearchSettingName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-settings").click();
-                        return false;
-                    }
-                });
-
-                $("#@Html.FieldIdFor(model => model.SearchSettingValue)").keydown(function (event) {
-                    if (event.keyCode == 13) {
+                $("".concat("#@Html.FieldIdFor(model => model.SearchSettingName),",
+                    "#@Html.FieldIdFor(model => model.SearchSettingValue)")).keydown(function (event) {
+                    if (event.keyCode === 13) {
                         $("#search-settings").click();
                         return false;
                     }
