@@ -626,7 +626,7 @@ namespace Nop.Services.ExportImport
         /// Import manufacturers from XLSX file
         /// </summary>
         /// <param name="stream">Stream</param>
-        public virtual void ImportManufacturerFromXlsx(Stream stream)
+        public virtual void ImportManufacturersFromXlsx(Stream stream)
         {
             //property array
             var properties = new[]
@@ -712,7 +712,7 @@ namespace Nop.Services.ExportImport
         /// Import categories from XLSX file
         /// </summary>
         /// <param name="stream">Stream</param>
-        public virtual void ImportCategoryFromXlsx(Stream stream)
+        public virtual void ImportCategoriesFromXlsx(Stream stream)
         {
             var properties = new[]
             {

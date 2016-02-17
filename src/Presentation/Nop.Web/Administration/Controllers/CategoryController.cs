@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
                 var file = Request.Files["importexcelfile"];
                 if (file != null && file.ContentLength > 0)
                 {
-                    _importManager.ImportCategoryFromXlsx(file.InputStream);
+                    _importManager.ImportCategoriesFromXlsx(file.InputStream);
                 }
                 else
                 {
