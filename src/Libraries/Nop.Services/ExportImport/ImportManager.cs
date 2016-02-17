@@ -482,8 +482,8 @@ namespace Nop.Services.ExportImport
                     }
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
-                    _productService.UpdateHasTierPricesProperty(product);
-                    _productService.UpdateHasDiscountsApplied(product);
+                    //_productService.UpdateHasTierPricesProperty(product);
+                    //_productService.UpdateHasDiscountsApplied(product);
                 }
             }
             //Trace.WriteLine(DateTime.Now-start);
