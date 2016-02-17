@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
@@ -143,6 +146,7 @@ namespace Nop.Services.ExportImport
         /// <param name="stream">Stream</param>
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
+            //var start = DateTime.Now;
                 //the columns
                 var properties = new []
                 {
@@ -251,17 +255,36 @@ namespace Nop.Services.ExportImport
                 if (worksheet == null)
                     throw new NopException("No worksheet found");
 
-                var iRow = 2;
+                var endRow = 2;
+                var allCategoriesIds = new List<int>();
 
+                var categoryCellNum = manager.GetProperty("CategoryIds").PropertyOrderPosition;
+
+                //find end of data
                 while (true)
                 {
                     var allColumnsAreEmpty = manager.GetProperties
-                        .Select(property => worksheet.Cells[iRow, property.PropertyOrderPosition])
+                        .Select(property => worksheet.Cells[endRow, property.PropertyOrderPosition])
                         .All(cell => cell == null || cell.Value == null || String.IsNullOrEmpty(cell.Value.ToString()));
 
                     if (allColumnsAreEmpty)
                         break;
 
+                    var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
+                    if(!categoryIds.IsEmpty())
+                        allCategoriesIds.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
+                    endRow++;
+                }
+
+                var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesIds).ToList();
+
+                if (notExistingCategories.Any())
+                {
+                    throw (new ArgumentException(string.Format("The following category ID(s) don't exist - {0}", string.Join(", ", notExistingCategories))));
+                }
+                    
+                for (var iRow = 2; iRow < endRow; iRow++)
+                {
                     manager.ReadFromXlsx(worksheet, iRow);
 
                     var product = _productService.GetProductBySku(manager.GetProperty("SKU").StringValue);
@@ -385,19 +408,15 @@ namespace Nop.Services.ExportImport
                     _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
 
                     //category mappings
-                    foreach (var id in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                    foreach (var categoryId in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        if (product.ProductCategories.FirstOrDefault(x => x.CategoryId == id) != null)
+                        if (product.ProductCategories.Any(p=>p.CategoryId==categoryId))
                             continue;
-                        //ensure that category exists
-                        var category = _categoryService.GetCategoryById(id);
-                        if (category == null)
-                            continue;
-
+                       
                         var productCategory = new ProductCategory
                         {
                             ProductId = product.Id,
-                            CategoryId = category.Id,
+                            CategoryId = categoryId,
                             IsFeaturedProduct = false,
                             DisplayOrder = 1
                         };
@@ -466,10 +485,9 @@ namespace Nop.Services.ExportImport
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     _productService.UpdateHasTierPricesProperty(product);
                     _productService.UpdateHasDiscountsApplied(product);
-
-                    iRow++;
                 }
             }
+            //Trace.WriteLine(DateTime.Now-start);
         }
 
         /// <summary>
