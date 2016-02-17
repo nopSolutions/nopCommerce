@@ -572,12 +572,15 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryIds">The IDs of the categories to check</param>
         /// <returns>List of IDs not existing categories</returns>
-        public virtual IEnumerable<int> GetNotExistingCategories(List<int> categoryIds)
+        public virtual int[] GetNotExistingCategories(int[] categoryIds)
         {
-            var query = _categoryRepository.Table;
-            var filter = query.Select(p => p.Id).Distinct().ToList();
+            if (categoryIds == null)
+                throw new ArgumentNullException("categoryIds");
 
-            return categoryIds.Distinct().Where(p => !filter.Contains(p)).OrderBy(p=>p);
+            var query = _categoryRepository.Table;
+            var filter = query.Select(c => c.Id).ToList();
+
+            return categoryIds.Distinct().Where(c => !filter.Contains(c)).OrderBy(c => c).ToArray();
         }
 
         #endregion

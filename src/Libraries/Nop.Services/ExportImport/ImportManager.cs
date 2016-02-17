@@ -276,8 +276,7 @@ namespace Nop.Services.ExportImport
                     endRow++;
                 }
 
-                var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesIds).ToList();
-
+                var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesIds.ToArray());
                 if (notExistingCategories.Any())
                 {
                     throw (new ArgumentException(string.Format("The following category ID(s) don't exist - {0}", string.Join(", ", notExistingCategories))));

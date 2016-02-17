@@ -120,6 +120,6 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="categoryIds">The IDs of the categories to check</param>
         /// <returns>List of IDs not existing categories</returns>
-        IEnumerable<int> GetNotExistingCategories(List<int> categoryIds);
+        int[] GetNotExistingCategories(int[] categoryIds);
     }
 }
