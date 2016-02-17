@@ -237,14 +237,9 @@
                 return false;
             });
 
-            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-                if (event.keyCode == 13) {
-                    $("#search-products").click();
-                    return false;
-                }
-            });
-            $("#@Html.FieldIdFor(model => model.GoDirectlyToSku)").keydown(function (event) {
-                if (event.keyCode == 13) {
+            $("".concat("#@Html.FieldIdFor(model => model.SearchProductName),",
+                "#@Html.FieldIdFor(model => model.GoDirectlyToSku)")).keydown(function (event) {
+                if (event.keyCode === 13) {
                     $("#go-to-product-by-sku").click();
                     return false;
                 }
@@ -277,25 +272,25 @@
                 });
                 return false;
             });
-            
+
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
             });
 
-            //wire up checkboxes. 
+            //wire up checkboxes.
             $('#products-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
                 var $check = $(this);
                 if ($check.is(":checked") == true) {
                     var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked == -1) {
-                        //add id to selectedIds.  
+                        //add id to selectedIds.
                         selectedIds.push($check.val());
                     }
                 }
                 else {
                     var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked > -1) {
-                        //remove id from selectedIds.  
+                        //remove id from selectedIds.
                         selectedIds = $.grep(selectedIds, function (item, index) {
                             return item != $check.val();
                         });
@@ -325,7 +320,7 @@
             $('#products-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
                 var currentId = $(this).val();
                 var checked = jQuery.inArray(currentId, selectedIds);
-                //set checked based on if current checkbox's value is in selectedIds.  
+                //set checked based on if current checkbox's value is in selectedIds.
                 $(this).attr('checked', checked > -1);
             });
 

@@ -287,44 +287,14 @@
                             return false;
                         });
 
-                        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchUsername)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchCompany)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchPhone)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-customers").click();
-                                return false;
-                            }
-                        });
-                        $("#@Html.FieldIdFor(model => model.SearchZipPostalCode)").keydown(function (event) {
-                            if (event.keyCode == 13) {
+                        $("".concat("#@Html.FieldIdFor(model => model.SearchEmail),",
+                            "#@Html.FieldIdFor(model => model.SearchUsername),",
+                            "#@Html.FieldIdFor(model => model.SearchFirstName),",
+                            "#@Html.FieldIdFor(model => model.SearchLastName),",
+                            "#@Html.FieldIdFor(model => model.SearchCompany),",
+                            "#@Html.FieldIdFor(model => model.SearchPhone),",
+                            "#@Html.FieldIdFor(model => model.SearchZipPostalCode)")).keydown(function (event) {
+                            if (event.keyCode === 13) {
                                 $("#search-customers").click();
                                 return false;
                             }
