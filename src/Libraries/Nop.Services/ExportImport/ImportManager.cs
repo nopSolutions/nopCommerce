@@ -423,18 +423,15 @@ namespace Nop.Services.ExportImport
                     }
 
                     //manufacturer mappings
-                    foreach (var id in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                    foreach (var manufacturerId in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == id) != null)
+                        if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == manufacturerId) != null)
                             continue;
-                        //ensure that manufacturer exists
-                        var manufacturer = _manufacturerService.GetManufacturerById(id);
-                        if (manufacturer == null)
-                            continue;
+                        
                         var productManufacturer = new ProductManufacturer
                         {
                             ProductId = product.Id,
-                            ManufacturerId = manufacturer.Id,
+                            ManufacturerId = manufacturerId,
                             IsFeaturedProduct = false,
                             DisplayOrder = 1
                         };

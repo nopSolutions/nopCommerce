@@ -93,5 +93,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productManufacturer">Product manufacturer mapping</param>
         void UpdateProductManufacturer(ProductManufacturer productManufacturer);
+
+        /// <summary>
+        /// Returns a list of IDs not existing manufacturers
+        /// </summary>
+        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
+        /// <returns>List of IDs not existing manufacturers</returns>
+        int[] GetNotExistingManufacturers(int[] manufacturerIds);
     }
 }

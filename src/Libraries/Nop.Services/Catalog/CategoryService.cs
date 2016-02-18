@@ -578,9 +578,10 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("categoryIds");
 
             var query = _categoryRepository.Table;
-            var filter = query.Select(c => c.Id).ToList();
+            var queryFilter = categoryIds.Distinct().ToArray();
+            var filter = query.Select(c => c.Id).Where(c => queryFilter.Contains(c)).ToList();
 
-            return categoryIds.Distinct().Where(c => !filter.Contains(c)).OrderBy(c => c).ToArray();
+            return queryFilter.Except(filter).ToArray();
         }
 
         #endregion
