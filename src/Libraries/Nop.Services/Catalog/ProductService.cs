@@ -1140,6 +1140,20 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
+        /// Gets a products by SKU array
+        /// </summary>
+        /// <param name="skuArray">SKU array</param>
+        /// <returns>Products</returns>
+        public IList<Product> GetProductsBySku(string[] skuArray)
+        {
+            if (skuArray == null)
+                throw new ArgumentNullException("skuArray");
+
+            var query = _productRepository.Table;
+            return query.Where(p => skuArray.Contains(p.Sku)).ToList();
+        }
+
+        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>

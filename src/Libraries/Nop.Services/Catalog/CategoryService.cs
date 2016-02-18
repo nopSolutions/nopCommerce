@@ -578,11 +578,27 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("categoryIds");
 
             var query = _categoryRepository.Table;
-            var filter = query.Select(c => c.Id).ToList();
+            var queryFilter = categoryIds.Distinct().ToArray();
+            var filter = query.Select(c => c.Id).Where(c => queryFilter.Contains(c)).ToList();
 
-            return categoryIds.Distinct().Where(c => !filter.Contains(c)).OrderBy(c => c).ToArray();
+            return queryFilter.Except(filter).ToArray();
         }
 
+
+        /// <summary>
+        /// Get categories IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Categories IDs for products</returns>
+        public virtual IDictionary<int, int[]> GetProductCategoryIds(int[] productIds)
+        {
+            var query = _productCategoryRepository.Table;
+
+            return query.Where(p => productIds.Contains(p.ProductId))
+                .Select(p => new {p.ProductId, p.CategoryId}).ToList()
+                .GroupBy(a => a.ProductId)
+                .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
+        } 
         #endregion
     }
 }

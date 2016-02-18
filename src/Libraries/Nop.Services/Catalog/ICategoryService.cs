@@ -121,5 +121,12 @@ namespace Nop.Services.Catalog
         /// <param name="categoryIds">The IDs of the categories to check</param>
         /// <returns>List of IDs not existing categories</returns>
         int[] GetNotExistingCategories(int[] categoryIds);
+
+        /// <summary>
+        /// Get categories IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Categories IDs for products</returns>
+        IDictionary<int, int[]> GetProductCategoryIds(int[] productIds);
     }
 }
