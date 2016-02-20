@@ -145,9 +145,9 @@ namespace Nop.Services.Orders
         /// <param name="paymentMethodSystemName">Payment method system name; null to load all records</param>
         /// <param name="createdFromUtc">Created date from (UTC); null to load all records</param>
         /// <param name="createdToUtc">Created date to (UTC); null to load all records</param>
-        /// <param name="os">Order status; null to load all orders</param>
-        /// <param name="ps">Order payment status; null to load all orders</param>
-        /// <param name="ss">Order shipment status; null to load all orders</param>
+        /// <param name="osIds">Order status identifiers; null to load all orders</param>
+        /// <param name="psIds">Payment status identifiers; null to load all orders</param>
+        /// <param name="ssIds">Shipping status identifiers; null to load all orders</param>
         /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="billingLastName">Billing last name. Leave empty to load all records.</param>
         /// <param name="orderNotes">Search in order notes. Leave empty to load all records.</param>
@@ -160,23 +160,11 @@ namespace Nop.Services.Orders
             int productId = 0, int affiliateId = 0, int warehouseId = 0,
             int billingCountryId = 0, string paymentMethodSystemName = null,
             DateTime? createdFromUtc = null, DateTime? createdToUtc = null,
-            OrderStatus? os = null, PaymentStatus? ps = null, ShippingStatus? ss = null,
+            List<int> osIds = null, List<int> psIds = null, List<int> ssIds = null,
             string billingEmail = null, string billingLastName = "",
             string orderNotes = null, string orderGuid = null,
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            int? orderStatusId = null;
-            if (os.HasValue)
-                orderStatusId = (int)os.Value;
-
-            int? paymentStatusId = null;
-            if (ps.HasValue)
-                paymentStatusId = (int)ps.Value;
-
-            int? shippingStatusId = null;
-            if (ss.HasValue)
-                shippingStatusId = (int)ss.Value;
-
             var query = _orderRepository.Table;
             if (storeId > 0)
                 query = query.Where(o => o.StoreId == storeId);
@@ -223,12 +211,12 @@ namespace Nop.Services.Orders
                 query = query.Where(o => createdFromUtc.Value <= o.CreatedOnUtc);
             if (createdToUtc.HasValue)
                 query = query.Where(o => createdToUtc.Value >= o.CreatedOnUtc);
-            if (orderStatusId.HasValue)
-                query = query.Where(o => orderStatusId.Value == o.OrderStatusId);
-            if (paymentStatusId.HasValue)
-                query = query.Where(o => paymentStatusId.Value == o.PaymentStatusId);
-            if (shippingStatusId.HasValue)
-                query = query.Where(o => shippingStatusId.Value == o.ShippingStatusId);
+            if (osIds != null && osIds.Count > 0)
+                query = query.Where(o => osIds.Contains(o.OrderStatusId));
+            if (psIds != null && psIds.Count > 0)
+                query = query.Where(o => psIds.Contains(o.PaymentStatusId));
+            if (ssIds != null && ssIds.Count > 0)
+                query = query.Where(o => ssIds.Contains(o.ShippingStatusId));
             if (!String.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
             if (!String.IsNullOrEmpty(billingLastName))

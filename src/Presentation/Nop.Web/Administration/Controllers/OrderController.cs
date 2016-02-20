@@ -814,8 +814,10 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
-        public ActionResult List(int? orderStatusId = null,
-            int? paymentStatusId = null, int? shippingStatusId = null)
+        public ActionResult List(
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> orderStatusIds = null,
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> paymentStatusIds = null,
+            [ModelBinder(typeof(CommaSeparatedModelBinder))] List<string> shippingStatusIds = null)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -823,35 +825,34 @@ namespace Nop.Admin.Controllers
             //order statuses
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
-            model.AvailableOrderStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (orderStatusId.HasValue)
+            model.AvailableOrderStatuses.Insert(0, new SelectListItem
+                { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (orderStatusIds != null && orderStatusIds.Count() > 0)
             {
-                //pre-select value?
-                var item = model.AvailableOrderStatuses.FirstOrDefault(x => x.Value == orderStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailableOrderStatuses.Where(os => orderStatusIds.Contains(os.Value)))
                     item.Selected = true;
+                model.AvailableOrderStatuses.FirstOrDefault().Selected = false;
             }
-
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
-            model.AvailablePaymentStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (paymentStatusId.HasValue)
+            model.AvailablePaymentStatuses.Insert(0, new SelectListItem
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (paymentStatusIds != null && paymentStatusIds.Count > 0)
             {
-                //pre-select value?
-                var item = model.AvailablePaymentStatuses.FirstOrDefault(x => x.Value == paymentStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailablePaymentStatuses.Where(ps => paymentStatusIds.Contains(ps.Value)))
                     item.Selected = true;
+                model.AvailablePaymentStatuses.FirstOrDefault().Selected = false;
             }
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
-            model.AvailableShippingStatuses.Insert(0, new SelectListItem { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            if (shippingStatusId.HasValue)
+            model.AvailableShippingStatuses.Insert(0, new SelectListItem
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (shippingStatusIds != null && shippingStatusIds.Count > 0)
             {
-                //pre-select value?
-                var item = model.AvailableShippingStatuses.FirstOrDefault(x => x.Value == shippingStatusId.Value.ToString());
-                if (item != null)
+                foreach (var item in model.AvailableShippingStatuses.Where(ss => shippingStatusIds.Contains(ss.Value)))
                     item.Selected = true;
+                model.AvailableShippingStatuses.FirstOrDefault().Selected = false;
             }
 
             //stores
@@ -905,9 +906,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null 
                             :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
 		    var filterByProductId = 0;
 		    var product = _productService.GetProductById(model.ProductId);
@@ -922,9 +923,9 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue, 
                 createdToUtc: endDateValue,
-                os: orderStatus, 
-                ps: paymentStatus, 
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -960,22 +961,23 @@ namespace Nop.Admin.Controllers
                 vendorId: model.VendorId,
                 orderId: 0,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue,
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
                 orderNotes: model.OrderNotes);
+
             var profit = _orderReportService.ProfitReport(
                 storeId: model.StoreId,
                 vendorId: model.VendorId,
                 paymentMethodSystemName: model.PaymentMethodSystemName,
-                os: orderStatus,
-                ps: paymentStatus, 
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 startTimeUtc: startDateValue, 
                 endTimeUtc: endDateValue,
                 billingEmail: model.BillingEmail,
@@ -1062,9 +1064,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1079,9 +1081,9 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1141,9 +1143,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1158,9 +1160,9 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -1674,9 +1676,9 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = !model.OrderStatusIds.Contains(0) ? model.OrderStatusIds : null;
+            var paymentStatusIds = !model.PaymentStatusIds.Contains(0) ? model.PaymentStatusIds : null;
+            var shippingStatusIds = !model.ShippingStatusIds.Contains(0) ? model.ShippingStatusIds : null;
 
             var filterByProductId = 0;
             var product = _productService.GetProductById(model.ProductId);
@@ -1691,9 +1693,9 @@ namespace Nop.Admin.Controllers
                 paymentMethodSystemName: model.PaymentMethodSystemName,
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus,
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 billingEmail: model.BillingEmail,
                 billingLastName: model.BillingLastName,
                 billingCountryId: model.BillingCountryId,
@@ -3948,31 +3950,39 @@ namespace Nop.Admin.Controllers
 
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(ps: PaymentStatus.Pending, ignoreCancelledOrders: true);
+            var orderStatuses = Enum.GetValues(typeof(OrderStatus)).Cast<int>().Where(os => os != (int)OrderStatus.Cancelled).ToList();
+            var paymentStatuses = new List<int>() { (int)PaymentStatus.Pending };
+            var psPending = _orderReportService.GetOrderAverageReportLine(psIds: paymentStatuses, osIds: orderStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
                 Count = psPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { paymentStatusId = ((int)PaymentStatus.Pending).ToString() })
+                ViewLink = Url.Action("List", "Order", new {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    paymentStatusIds = string.Join(",", paymentStatuses) })
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(ss: ShippingStatus.NotYetShipped, ignoreCancelledOrders: true);
+            var shippingStatuses = new List<int>() { (int)ShippingStatus.NotYetShipped };
+            var ssPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses, ssIds: shippingStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
                 Count = ssPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { shippingStatusId = ((int)ShippingStatus.NotYetShipped).ToString() })
+                ViewLink = Url.Action("List", "Order", new {
+                    orderStatusIds = string.Join(",", orderStatuses),
+                    shippingStatusIds = string.Join(",", shippingStatuses) })
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(os: OrderStatus.Pending, ignoreCancelledOrders: true);
+            orderStatuses = new List<int>() { (int)OrderStatus.Pending };
+            var osPending = _orderReportService.GetOrderAverageReportLine(osIds: orderStatuses);
             model.Add(new OrderIncompleteReportLineModel
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
                 Count = osPending.CountOrders,
                 Total = _priceFormatter.FormatPrice(osPending.SumOrders, true, false),
-                ViewLink = Url.Action("List", "Order", new { orderStatusId = ((int)OrderStatus.Pending).ToString() })
+                ViewLink = Url.Action("List", "Order", new { orderStatusIds = string.Join(",", orderStatuses) })
             });
 
             var gridModel = new DataSourceResult

@@ -333,16 +333,16 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.EndDate == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            OrderStatus? orderStatus = model.OrderStatusId > 0 ? (OrderStatus?)(model.OrderStatusId) : null;
-            PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
-            ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
+            var orderStatusIds = model.OrderStatusId > 0 ? new List<int>() { model.OrderStatusId } : null;
+            var paymentStatusIds = model.PaymentStatusId > 0 ? new List<int>() { model.PaymentStatusId } : null;
+            var shippingStatusIds = model.ShippingStatusId > 0 ? new List<int>() { model.ShippingStatusId } : null;
 
             var orders = _orderService.SearchOrders(
                 createdFromUtc: startDateValue,
                 createdToUtc: endDateValue,
-                os: orderStatus,
-                ps: paymentStatus,
-                ss: shippingStatus, 
+                osIds: orderStatusIds,
+                psIds: paymentStatusIds,
+                ssIds: shippingStatusIds,
                 affiliateId: affiliate.Id,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);

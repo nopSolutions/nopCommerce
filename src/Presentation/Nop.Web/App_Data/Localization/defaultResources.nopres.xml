@@ -9313,10 +9313,10 @@
     <Value>Search in order notes. Leave empty to load all orders.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderStatus">
-    <Value>Order status</Value>
+    <Value>Order statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.OrderStatus.Hint">
-    <Value>Search by a specific order status e.g. Complete.</Value>
+    <Value>Search by a specific order statuses e.g. Complete.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.PaymentMethod">
     <Value>Payment method</Value>
@@ -9325,10 +9325,10 @@
     <Value>Search by a specific payment method.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.PaymentStatus">
-    <Value>Payment status</Value>
+    <Value>Payment statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.PaymentStatus.Hint">
-    <Value>Search by a specific payment status e.g. Paid.</Value>
+    <Value>Search by a specific payment statuses e.g. Paid.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.Product">
     <Value>Product</Value>
@@ -9337,10 +9337,10 @@
     <Value>Search by a specific product.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.ShippingStatus">
-    <Value>Shipping status</Value>
+    <Value>Shipping statuses</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
-    <Value>Search by a specific shipping status e.g. Not yet shipped.</Value>
+    <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.List.StartDate">
     <Value>Start date</Value>

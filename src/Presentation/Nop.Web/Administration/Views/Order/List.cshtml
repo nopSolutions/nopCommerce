@@ -47,26 +47,26 @@
         </tr>
         <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.OrderStatusId):
+                @Html.NopLabelFor(model => model.OrderStatusIds):
             </td>
             <td class="adminData">
-                @Html.DropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+                @Html.EditorFor(model => model.OrderStatusIds, new { SelectList = Model.AvailableOrderStatuses })
             </td>
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PaymentStatusId):
+                @Html.NopLabelFor(model => model.PaymentStatusIds):
             </td>
             <td class="adminData">
-                @Html.DropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+                @Html.EditorFor(model => model.PaymentStatusIds, new { SelectList = Model.AvailablePaymentStatuses })
             </td>
         </tr>
         <tr @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippingStatusId):
+                @Html.NopLabelFor(model => model.ShippingStatusIds):
             </td>
             <td class="adminData">
-                @Html.DropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+                @Html.EditorFor(model => model.ShippingStatusIds, new { SelectList = Model.AvailableShippingStatuses })
             </td>
         </tr>
         <tr>
@@ -384,9 +384,9 @@
                         var data = {
                             StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
                             EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
-                            OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
-                            PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
-                            ShippingStatusId: $('#@Html.FieldIdFor(model => model.ShippingStatusId)').val(),
+                            OrderStatusIds: $('#@Html.FieldIdFor(model => model.OrderStatusIds)').val(),
+                            PaymentStatusIds: $('#@Html.FieldIdFor(model => model.PaymentStatusIds)').val(),
+                            ShippingStatusIds: $('#@Html.FieldIdFor(model => model.ShippingStatusIds)').val(),
                             StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                             VendorId: $('#@Html.FieldIdFor(model => model.VendorId)').val(),
                             WarehouseId: $('#@Html.FieldIdFor(model => model.WarehouseId)').val(),

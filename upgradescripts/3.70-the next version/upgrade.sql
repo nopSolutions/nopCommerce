@@ -248,6 +248,24 @@ set @resources='
   <LocaleResource Name="Admin.Common.ImportToExcel.ManyRecordsWarning">
     <Value>Import requires a lot of memory resources. That''s why it''s not recommended to import more than 500 - 1,000 records at once. If you have more records, it''s better to split them to multiple Excel files and import separately.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderStatus">
+    <Value>Order statuses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.OrderStatus.Hint">
+    <Value>Search by a specific order statuses e.g. Complete.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.PaymentStatus">
+    <Value>Payment statuses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.PaymentStatus.Hint">
+    <Value>Search by a specific payment statuses e.g. Paid.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.ShippingStatus">
+    <Value>Shipping statuses</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
+    <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
+  </LocaleResource>
 </Language>
 '
 
