@@ -439,11 +439,12 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(productManufacturer);
         }
 
+
         /// <summary>
-        /// Get manufacturers IDs for products
+        /// Get manufacturer IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
-        /// <returns>Manufacturers IDs for products</returns>
+        /// <returns>Manufacturer IDs for products</returns>
         public virtual IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds)
         {
             var query = _productManufacturerRepository.Table;
@@ -454,8 +455,9 @@ namespace Nop.Services.Catalog
                 .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
         }
 
+
         /// <summary>
-        /// Returns a list of IDs not existing manufacturers
+        /// Returns a list of IDs of not existing manufacturers
         /// </summary>
         /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
         /// <returns>List of IDs not existing manufacturers</returns>

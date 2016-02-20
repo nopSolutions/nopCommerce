@@ -308,10 +308,10 @@ namespace Nop.Services.ExportImport
                 var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray());
 
                 //performance optimization, load all categories IDs for products in one SQL request
-                var productsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
+                var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 //performance optimization, load all manufacturers IDs for products in one SQL request
-                var productsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
+                var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 for (var iRow = 2; iRow < endRow; iRow++)
                 {
@@ -438,7 +438,7 @@ namespace Nop.Services.ExportImport
                     _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
 
                     //category mappings
-                    var categories = isNew ? new int[0] : productsCategoryIds[product.Id];
+                    var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
                     foreach (var categoryId in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
                         if (categories.Any(c => c == categoryId))
@@ -455,7 +455,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //manufacturer mappings
-                    var manufacturers = isNew ? new int[0] : productsManufacturerIds[product.Id];
+                    var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
                     foreach (var manufacturerId in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
                         if (manufacturers.Any(c => c == manufacturerId))

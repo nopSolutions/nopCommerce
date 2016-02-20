@@ -95,14 +95,14 @@ namespace Nop.Services.Catalog
         void UpdateProductManufacturer(ProductManufacturer productManufacturer);
 
         /// <summary>
-        /// Get manufacturers IDs for products
+        /// Get manufacturer IDs for products
         /// </summary>
         /// <param name="productIds">Products IDs</param>
-        /// <returns>Manufacturers IDs for products</returns>
+        /// <returns>Manufacturer IDs for products</returns>
         IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds);
 
         /// <summary>
-        /// Returns a list of IDs not existing manufacturers
+        /// Returns a list of IDs of not existing manufacturers
         /// </summary>
         /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
         /// <returns>List of IDs not existing manufacturers</returns>
