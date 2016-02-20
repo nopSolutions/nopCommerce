@@ -14,7 +14,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -653,15 +652,7 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var urlRecords = new List<UrlRecord>();
-                foreach (var id in selectedIds)
-                {
-                    var urlRecord = _urlRecordService.GetUrlRecordById(id);
-                    if (urlRecord != null)
-                        urlRecords.Add(urlRecord);
-                }
-                foreach (var urlRecord in urlRecords)
-                    _urlRecordService.DeleteUrlRecord(urlRecord);
+                _urlRecordService.DeleteUrlRecords(_urlRecordService.GetUrlRecordsByIds(selectedIds.ToArray()));
             }
 
             return Json(new { Result = true });

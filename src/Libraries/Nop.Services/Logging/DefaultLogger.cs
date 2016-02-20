@@ -103,6 +103,18 @@ namespace Nop.Services.Logging
         }
 
         /// <summary>
+        /// Deletes a log items
+        /// </summary>
+        /// <param name="logs">Log items</param>
+        public virtual void DeleteLogs(IList<Log> logs)
+        {
+            if (logs == null)
+                throw new ArgumentNullException("logs");
+
+            _logRepository.Delete(logs);
+        }
+
+        /// <summary>
         /// Clears a log
         /// </summary>
         public virtual void ClearLog()

@@ -227,9 +227,7 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var queuedEmails = _queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray());
-                foreach (var queuedEmail in queuedEmails)
-                    _queuedEmailService.DeleteQueuedEmail(queuedEmail);
+                _queuedEmailService.DeleteQueuedEmails(_queuedEmailService.GetQueuedEmailsByIds(selectedIds.ToArray()));
             }
 
             return Json(new { Result = true });

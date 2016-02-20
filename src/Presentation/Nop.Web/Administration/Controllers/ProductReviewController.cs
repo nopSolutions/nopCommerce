@@ -257,11 +257,13 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var productReviews = _productService.GetProducReviewsByIds(selectedIds.ToArray());
-                foreach (var productReview in productReviews)
+                var products = _productService.GetProductsByIds(productReviews.Select(p => p.ProductId).Distinct().ToArray());
+
+                _productService.DeleteProductReviews(productReviews);
+
+                //update product totals
+                foreach (var product in products)
                 {
-                    var product = productReview.Product;
-                    _productService.DeleteProductReview(productReview);
-                    //update product totals
                     _productService.UpdateProductReviewTotals(product);
                 }
             }

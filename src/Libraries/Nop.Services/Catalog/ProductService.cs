@@ -175,6 +175,24 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Delete products
+        /// </summary>
+        /// <param name="products">Products</param>
+        public virtual void DeleteProducts(IList<Product> products)
+        {
+            if (products == null)
+                throw new ArgumentNullException("products");
+
+            foreach (var product in products)
+            {
+                product.Deleted = true;
+            }
+
+            //delete product
+            UpdateProducts(products);
+        }
+
+        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
@@ -265,6 +283,24 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
+        }
+
+        public virtual void UpdateProducts(IList<Product> products)
+        {
+            if (products == null)
+                throw new ArgumentNullException("products");
+
+            //update
+            _productRepository.Update(products);
+
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+
+            //event notification
+            foreach (var product in products)
+            {
+                _eventPublisher.EntityUpdated(product);
+            }
         }
 
         /// <summary>
@@ -1909,6 +1945,25 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
+        }
+
+        /// <summary>
+        /// Deletes product reviews
+        /// </summary>
+        /// <param name="productReviews">Product reviews</param>
+        public virtual void DeleteProductReviews(IList<ProductReview> productReviews)
+        {
+            if (productReviews == null)
+                throw new ArgumentNullException("productReviews");
+
+            _productReviewRepository.Delete(productReviews);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            //event notification
+            foreach (var productReview in productReviews)
+            {
+                _eventPublisher.EntityDeleted(productReview);
+            }
         }
 
         #endregion
