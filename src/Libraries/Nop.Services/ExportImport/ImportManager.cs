@@ -257,7 +257,6 @@ namespace Nop.Services.ExportImport
 
                 var endRow = 2;
                 var allCategoriesIds = new List<int>();
-
                 var allSku = new List<string>();
 
                 var categoryCellNum = manager.GetProperty("CategoryIds").PropertyOrderPosition;

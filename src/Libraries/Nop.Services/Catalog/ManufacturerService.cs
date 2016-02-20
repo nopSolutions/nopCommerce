@@ -467,7 +467,6 @@ namespace Nop.Services.Catalog
             var query = _manufacturerRepository.Table;
             var queryFilter = manufacturerIds.Distinct().ToArray();
             var filter = query.Select(m => m.Id).Where(m => queryFilter.Contains(m)).ToList();
-
             return queryFilter.Except(filter).ToArray();
         }
 
