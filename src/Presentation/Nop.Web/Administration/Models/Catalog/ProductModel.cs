@@ -778,10 +778,12 @@ namespace Nop.Admin.Models.Catalog
             [AllowHtml]
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
             public string DefaultValue { get; set; }
-
+            public string ValidationRulesString { get; set; }
+            
             //condition
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
             public bool ConditionAllowed { get; set; }
+            public string ConditionString { get; set; }
         }
         public partial class ProductAttributeValueListModel : BaseNopModel
         {
