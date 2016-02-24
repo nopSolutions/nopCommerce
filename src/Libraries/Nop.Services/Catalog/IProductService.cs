@@ -221,6 +221,13 @@ namespace Nop.Services.Catalog
         Product GetProductBySku(string sku);
 
         /// <summary>
+        /// Gets a products by SKU array
+        /// </summary>
+        /// <param name="skuArray">SKU array</param>
+        /// <returns>Products</returns>
+        IList<Product> GetProductsBySku(string[] skuArray);
+
+        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>

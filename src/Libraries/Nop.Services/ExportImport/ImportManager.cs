@@ -257,7 +257,10 @@ namespace Nop.Services.ExportImport
 
                 var endRow = 2;
                 var allCategoriesIds = new List<int>();
+                var allSku = new List<string>();
+
                 var categoryCellNum = manager.GetProperty("CategoryIds").PropertyOrderPosition;
+                var skuCellNum = manager.GetProperty("SKU").PropertyOrderPosition;
 
                 var allManufacturersIds = new List<int>();
                 var manufacturerCellNum = manager.GetProperty("ManufacturerIds").PropertyOrderPosition;
@@ -276,29 +279,45 @@ namespace Nop.Services.ExportImport
                     if(!categoryIds.IsEmpty())
                         allCategoriesIds.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
 
+                    var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
+                    if (!sku.IsEmpty())
+                        allSku.Add(sku);
+
                     var manufacturerIds = worksheet.Cells[endRow, manufacturerCellNum].Value.Return(p => p.ToString(), string.Empty);
                     if (!manufacturerIds.IsEmpty())
                         allManufacturersIds.AddRange(manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
+
                     endRow++;
                 }
 
+                //performance optimization, the check for the existence of the categories in one SQL request
                 var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesIds.ToArray());
                 if (notExistingCategories.Any())
                 {
                     throw (new ArgumentException(string.Format("The following category ID(s) don't exist - {0}", string.Join(", ", notExistingCategories))));
                 }
 
+                //performance optimization, the check for the existence of the manufacturers in one SQL request
                 var notExistingManufacturers = _manufacturerService.GetNotExistingManufacturers(allManufacturersIds.ToArray());
                 if (notExistingManufacturers.Any())
                 {
-                    throw (new ArgumentException(string.Format("The following manufacturer ID(s) don't exist - {0}", string.Join(", ", notExistingManufacturers))));
+                    throw new ArgumentException(string.Format("The following manufacturer ID(s) don't exist - {0}", string.Join(", ", notExistingManufacturers)));
                 }
+
+                //performance optimization, load all products by SKU in one SQL request
+                var allProductsBySku = _productService.GetProductsBySku(allSku.ToArray());
+
+                //performance optimization, load all categories IDs for products in one SQL request
+                var allProductsCategoryIds = _categoryService.GetProductCategoryIds(allProductsBySku.Select(p => p.Id).ToArray());
+
+                //performance optimization, load all manufacturers IDs for products in one SQL request
+                var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
 
                 for (var iRow = 2; iRow < endRow; iRow++)
                 {
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var product = _productService.GetProductBySku(manager.GetProperty("SKU").StringValue);
+                    var product = allProductsBySku.FirstOrDefault(p=>p.Sku == manager.GetProperty("SKU").StringValue);
 
                     var isNew = product == null;
 
@@ -419,9 +438,10 @@ namespace Nop.Services.ExportImport
                     _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
 
                     //category mappings
+                    var categories = isNew || !allProductsCategoryIds.ContainsKey(product.Id) ? new int[0] : allProductsCategoryIds[product.Id];
                     foreach (var categoryId in categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        if (product.ProductCategories.Any(p=>p.CategoryId==categoryId))
+                        if (categories.Any(c => c == categoryId))
                             continue;
                        
                         var productCategory = new ProductCategory
@@ -435,11 +455,12 @@ namespace Nop.Services.ExportImport
                     }
 
                     //manufacturer mappings
+                    var manufacturers = isNew || !allProductsManufacturerIds.ContainsKey(product.Id) ? new int[0] : allProductsManufacturerIds[product.Id];
                     foreach (var manufacturerId in manufacturerIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                     {
-                        if (product.ProductManufacturers.FirstOrDefault(x => x.ManufacturerId == manufacturerId) != null)
+                        if (manufacturers.Any(c => c == manufacturerId))
                             continue;
-                        
+
                         var productManufacturer = new ProductManufacturer
                         {
                             ProductId = product.Id,

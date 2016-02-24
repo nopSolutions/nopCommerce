@@ -568,7 +568,7 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
-        /// Returns a list of IDs not existing categories
+        /// Returns a list of IDs of not existing categories
         /// </summary>
         /// <param name="categoryIds">The IDs of the categories to check</param>
         /// <returns>List of IDs not existing categories</returns>
@@ -584,6 +584,21 @@ namespace Nop.Services.Catalog
             return queryFilter.Except(filter).ToArray();
         }
 
+
+        /// <summary>
+        /// Get category IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Category IDs for products</returns>
+        public virtual IDictionary<int, int[]> GetProductCategoryIds(int[] productIds)
+        {
+            var query = _productCategoryRepository.Table;
+
+            return query.Where(p => productIds.Contains(p.ProductId))
+                .Select(p => new {p.ProductId, p.CategoryId}).ToList()
+                .GroupBy(a => a.ProductId)
+                .ToDictionary(items => items.Key, items => items.Select(a => a.CategoryId).ToArray());
+        } 
         #endregion
     }
 }
