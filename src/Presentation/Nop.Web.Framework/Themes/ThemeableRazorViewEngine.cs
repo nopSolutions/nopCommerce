@@ -1,38 +1,16 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web.Hosting;
+using System.Reflection;
 using System.Web.Mvc;
-using Nop.Core.Plugins;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Web.Framework.Themes
 {
     public class ThemeableRazorViewEngine : ThemeableVirtualPathProviderViewEngine
     {
-        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        private const string PluginReplacementString = "%PluginSystemName%";
-        private const string PluginsLocationFormat = "~/Plugins/" + PluginReplacementString + "/Views/{1}/{0}.cshtml";
+        private const string PluginReplacementString = "{DynamicPluginPath}";
 
         public ThemeableRazorViewEngine()
-        {
-            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(HostingEnvironment.MapPath(InstalledPluginsFilePath));
-
-            var customViewLocationFormats = new List<string>()
-                                                {
-                                                    //themes
-                                                    "~/Themes/{2}/Views/{1}/{0}.cshtml",
-                                                    "~/Themes/{2}/Views/Shared/{0}.cshtml",
-
-                                                    //default
-                                                    "~/Views/{1}/{0}.cshtml",
-                                                    "~/Views/Shared/{0}.cshtml",
-
-                                                    //Admin
-                                                    "~/Administration/Views/{1}/{0}.cshtml",
-                                                    "~/Administration/Views/Shared/{0}.cshtml"
-                                                };
-
-            customViewLocationFormats.AddRange(installedPluginSystemNames.Select(systemName => PluginsLocationFormat.Replace(PluginReplacementString, systemName)));
-
+        {                                             
             AreaViewLocationFormats = new[]
                                           {
                                               //themes
@@ -67,7 +45,22 @@ namespace Nop.Web.Framework.Themes
                                                     "~/Areas/{2}/Views/Shared/{0}.cshtml"
                                                  };
             
-            ViewLocationFormats = customViewLocationFormats.ToArray();
+            ViewLocationFormats = new[]{
+                                                    //themes
+                                                    "~/Themes/{2}/Views/{1}/{0}.cshtml",
+                                                    "~/Themes/{2}/Views/Shared/{0}.cshtml",
+
+                                                    //default
+                                                    "~/Views/{1}/{0}.cshtml",
+                                                    "~/Views/Shared/{0}.cshtml",
+
+                                                    //Admin
+                                                    "~/Administration/Views/{1}/{0}.cshtml",
+                                                    "~/Administration/Views/Shared/{0}.cshtml",
+
+                                                    //dynamic plugins
+                                                    PluginReplacementString + "/{1}/{0}.cshtml"
+                                                };
 
             MasterLocationFormats = new[]
                                         {
@@ -80,23 +73,52 @@ namespace Nop.Web.Framework.Themes
                                             "~/Views/Shared/{0}.cshtml"
                                         };
 
-            PartialViewLocationFormats = customViewLocationFormats.ToArray();
+            PartialViewLocationFormats = new []{
+                                                    //themes
+                                                    "~/Themes/{2}/Views/{1}/{0}.cshtml",
+                                                    "~/Themes/{2}/Views/Shared/{0}.cshtml",
+
+                                                    //default
+                                                    "~/Views/{1}/{0}.cshtml",
+                                                    "~/Views/Shared/{0}.cshtml",
+
+                                                    //Admin
+                                                    "~/Administration/Views/{1}/{0}.cshtml",
+                                                    "~/Administration/Views/Shared/{0}.cshtml",
+
+                                                    //dynamic plugins
+                                                    PluginReplacementString + "/{1}/{0}.cshtml"
+                                                };
 
             FileExtensions = new[] { "cshtml" };
+        }
+        private string GetPluginLocation(ControllerContext controllerContext, string path)
+        {
+            var controllerType = controllerContext.Controller.GetType();
+            var pluginLocation = controllerType.GetCustomAttribute<ThemeablePluginViewLocationAttribute>(true);
+            if (pluginLocation != null)
+                return path.Replace(PluginReplacementString, pluginLocation.BaseViewLocation);
+
+            // return default location base on controller namespace
+            return path.Replace(PluginReplacementString, controllerType.Namespace);
         }
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
             IEnumerable<string> fileExtensions = base.FileExtensions;
-
-            return new RazorView(controllerContext, partialPath, null, false, fileExtensions);
+            return new RazorView(controllerContext, GetPluginLocation(controllerContext, partialPath), null, false, fileExtensions);
             //return new RazorView(controllerContext, partialPath, layoutPath, runViewStartPages, fileExtensions, base.ViewPageActivator);
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
             IEnumerable<string> fileExtensions = base.FileExtensions;
-            return new RazorView(controllerContext, viewPath, masterPath, true, fileExtensions);
+            return new RazorView(controllerContext, GetPluginLocation(controllerContext, viewPath), GetPluginLocation(controllerContext, masterPath), true, fileExtensions);
+        }
+
+        protected override bool FileExists(ControllerContext controllerContext, string virtualPath)
+        {
+            return base.FileExists(controllerContext, GetPluginLocation(controllerContext, virtualPath));
         }
     }
 }

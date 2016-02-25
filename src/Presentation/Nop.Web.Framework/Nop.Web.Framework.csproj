@@ -143,6 +143,7 @@
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BasePluginController.cs" />
+    <Compile Include="Controllers\ThemeablePluginViewLocationAttribute.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="Kendoui\DataSourceRequest.cs" />
     <Compile Include="Kendoui\DataSourceResult.cs" />
