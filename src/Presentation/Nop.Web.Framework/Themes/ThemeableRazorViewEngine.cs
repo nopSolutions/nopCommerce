@@ -99,8 +99,11 @@ namespace Nop.Web.Framework.Themes
             if (pluginLocation != null)
                 return path.Replace(PluginReplacementString, pluginLocation.BaseViewLocation);
 
+            if (!path.StartsWith("~/"))
+                path = "~/" + path;
+
             // return default location base on controller namespace
-            return path.Replace(PluginReplacementString, "~/" + controllerType.Namespace);
+            return path;
         }
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
