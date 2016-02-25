@@ -1855,6 +1855,16 @@
             Queryable extensions for AutoMapper
             </summary>
         </member>
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.Map``2(System.Linq.IQueryable{``0},System.Linq.IQueryable{``1})">
+            <summary>
+            Maps a queryable expression of a source type to a queryable expression of a destination type
+            </summary>
+            <typeparam name="TSource">Source type</typeparam>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="sourceQuery">Source queryable</param>
+            <param name="destQuery">Destination queryable</param>
+            <returns>Mapped destination queryable</returns>
+        </member>
         <member name="M:AutoMapper.QueryableExtensions.Extensions.Map``2(System.Linq.IQueryable{``0},System.Linq.IQueryable{``1},AutoMapper.IConfigurationProvider)">
             <summary>
             Maps a queryable expression of a source type to a queryable expression of a destination type
@@ -1866,6 +1876,17 @@
             <param name="config"></param>
             <returns>Mapped destination queryable</returns>
         </member>
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Extension method to project from a queryable using the provided mapping engine
+            </summary>
+            <remarks>Projections are only calculated once and cached</remarks>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="source">Queryable source</param>
+            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
+            <param name="membersToExpand">Explicit members to expand</param>
+            <returns>Expression to project into</returns>
+        </member>
         <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,AutoMapper.IConfigurationProvider,System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
             <summary>
             Extension method to project from a queryable using the provided mapping engine
@@ -1873,7 +1894,7 @@
             <remarks>Projections are only calculated once and cached</remarks>
             <typeparam name="TDestination">Destination type</typeparam>
             <param name="source">Queryable source</param>
-            <param name="configuration">Maper configuration</param>
+            <param name="configuration">Mapper configuration</param>
             <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
             <param name="membersToExpand">Explicit members to expand</param>
             <returns>Expression to project into</returns>
@@ -1888,6 +1909,27 @@
             <param name="configuration">Mapper configuration</param>
             <param name="membersToExpand">Explicit members to expand</param>
             <returns>Expression to project into</returns>
+        </member>
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Extension method to project from a queryable using the provided mapping engine
+            </summary>
+            <remarks>Projections are only calculated once and cached</remarks>
+            <typeparam name="TDestination">Destination type</typeparam>
+            <param name="source">Queryable source</param>
+            <param name="membersToExpand">Explicit members to expand</param>
+            <returns>Expression to project into</returns>
+        </member>
+        <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,System.Collections.Generic.IDictionary{System.String,System.Object},System.String[])">
+            <summary>
+            Projects the source type to the destination type given the mapping configuration
+            </summary>
+            <typeparam name="TDestination">Destination type to map to</typeparam>
+            <param name="source">Queryable source</param>
+            <param name="configuration">Mapper configuration</param>
+            <param name="parameters">Optional parameter object for parameterized mapping expressions</param>
+            <param name="membersToExpand">Explicit members to expand</param>
+            <returns>Queryable result, use queryable extension methods to project and execute result</returns>
         </member>
         <member name="M:AutoMapper.QueryableExtensions.Extensions.ProjectTo``1(System.Linq.IQueryable,AutoMapper.IConfigurationProvider,System.Collections.Generic.IDictionary{System.String,System.Object},System.String[])">
             <summary>
