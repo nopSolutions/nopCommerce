@@ -354,11 +354,12 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var comments = _blogService.GetBlogCommentsByIds(selectedIds.ToArray());
-                foreach (var comment in comments)
+                var blogPosts = _blogService.GetBlogPostsByIds(comments.Select(p => p.BlogPostId).Distinct().ToArray());
+
+                _blogService.DeleteBlogComments(comments);
+                //update totals
+                foreach (var blogPost in blogPosts)
                 {
-                    var blogPost = comment.BlogPost;
-                    _blogService.DeleteBlogComment(comment);
-                    //update totals
                     blogPost.CommentCount = blogPost.BlogComments.Count;
                     _blogService.UpdateBlogPost(blogPost);
                 }

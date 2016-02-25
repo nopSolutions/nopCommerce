@@ -85,6 +85,24 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Deleted a queued emails
+        /// </summary>
+        /// <param name="queuedEmails">Queued emails</param>
+        public virtual void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails)
+        {
+            if (queuedEmails == null)
+                throw new ArgumentNullException("queuedEmails");
+
+            _queuedEmailRepository.Delete(queuedEmails);
+
+            //event notification
+            foreach (var queuedEmail in queuedEmails)
+            {
+                _eventPublisher.EntityDeleted(queuedEmail);
+            }
+        }
+
+        /// <summary>
         /// Gets a queued email by identifier
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>

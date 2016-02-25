@@ -1189,22 +1189,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
-
-            var products = new List<Product>();
+            
             if (selectedIds != null)
             {
-                products.AddRange(_productService.GetProductsByIds(selectedIds.ToArray()));
-
-                for (int i = 0; i < products.Count; i++)
-                {
-                    var product = products[i];
-
-                    //a vendor should have access only to his products
-                    if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                        continue;
-
-                    _productService.DeleteProduct(product);
-                }
+                _productService.DeleteProducts(_productService.GetProductsByIds(selectedIds.ToArray()).Where(p => _workContext.CurrentVendor == null || p.VendorId == _workContext.CurrentVendor.Id).ToList());
             }
 
             return Json(new { Result = true });

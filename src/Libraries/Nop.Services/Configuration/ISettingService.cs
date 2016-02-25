@@ -25,6 +25,12 @@ namespace Nop.Services.Configuration
         void DeleteSetting(Setting setting);
 
         /// <summary>
+        /// Deletes settings
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        void DeleteSettings(IList<Setting> settings);
+
+        /// <summary>
         /// Get setting by key
         /// </summary>
         /// <param name="key">Key</param>

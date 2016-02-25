@@ -21,6 +21,12 @@ namespace Nop.Services.Catalog
         void DeleteProduct(Product product);
 
         /// <summary>
+        /// Delete products
+        /// </summary>
+        /// <param name="products">Products</param>
+        void DeleteProducts(IList<Product> products);
+
+        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
@@ -51,6 +57,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateProduct(Product product);
+
+        /// <summary>
+        /// Updates the products
+        /// </summary>
+        /// <param name="products">Product</param>
+        void UpdateProducts(IList<Product> products);
 
         /// <summary>
         /// Get (visible) product number in certain category
@@ -466,6 +478,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         void DeleteProductReview(ProductReview productReview);
+
+        /// <summary>
+        /// Deletes product reviews
+        /// </summary>
+        /// <param name="productReviews">Product reviews</param>
+        void DeleteProductReviews(IList<ProductReview> productReviews);
 
         #endregion
 
