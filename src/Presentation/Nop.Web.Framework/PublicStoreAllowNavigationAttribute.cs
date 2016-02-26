@@ -12,7 +12,7 @@ namespace Nop.Web.Framework
         private readonly bool _ignore;
 
         /// <summary>
-        /// Contructor
+        /// Ctor 
         /// </summary>
         /// <param name="ignore">Pass false in order to ignore this functionality for a certain action method</param>
         public PublicStoreAllowNavigationAttribute(bool ignore = false)

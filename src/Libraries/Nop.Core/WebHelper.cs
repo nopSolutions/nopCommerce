@@ -291,7 +291,7 @@ namespace Nop.Core
                 #region Database is installed
 
                 //let's resolve IWorkContext  here.
-                //Do not inject it via contructor because it'll cause circular references
+                //Do not inject it via constructor  because it'll cause circular references
                 var storeContext = EngineContext.Current.Resolve<IStoreContext>();
                 var currentStore = storeContext.CurrentStore;
                 if (currentStore == null)
