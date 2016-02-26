@@ -266,6 +266,39 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
     <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupCreated">
+    <Value>The backup created</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupDeleted">
+    <Value>Backup file "{0}" deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupNow">
+    <Value>Backup now</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.DatabaseBackups">
+    <Value>Database backups</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.DatabaseRestored">
+    <Value>Database is restored</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Delete">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.FileName">
+    <Value>File Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.FileSize">
+    <Value>File Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Restore">
+    <Value>Restore</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Progress">
+    <Value>Processing database backup...</Value>
+  </LocaleResource>
 </Language>
 '
 

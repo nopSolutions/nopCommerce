@@ -29,6 +29,11 @@ namespace Nop.Core.Data
         bool StoredProceduredSupported { get; }
 
         /// <summary>
+        /// A value indicating whether this data provider supports backup
+        /// </summary>
+        bool BackupSupported { get; }
+
+        /// <summary>
         /// Gets a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>
