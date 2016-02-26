@@ -1005,6 +1005,7 @@
     <Content Include="Content\samples\product_TabletCover.jpeg" />
     <Content Include="Content\samples\product_Windows8.jpeg" />
     <Content Include="Content\samples\product_WomenTShirt.jpg" />
+    <Content Include="Content\tagEditor\jquery.tag-editor.css" />
     <Content Include="Content\tinymce\license.txt" />
     <Content Include="Content\tinymce\plugins\advlist\plugin.min.js" />
     <Content Include="Content\tinymce\plugins\anchor\plugin.min.js" />
@@ -1101,7 +1102,6 @@
     <Content Include="Content\jquery-ui-themes\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.3.custom.css" />
     <Content Include="Content\jquery-ui-themes\smoothness\jquery-ui-1.10.3.custom.min.css" />
-    <Content Include="Content\tagit\jquery.tagit.css" />
     <Content Include="Content\tinymce\plugins\jbimages\css\dialog-v4.css" />
     <Content Include="Content\tinymce\plugins\jbimages\css\dialog.css" />
     <Content Include="Content\tinymce\plugins\jbimages\dialog-v4.htm" />
@@ -1587,8 +1587,6 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\selectivizr.min.js" />
-    <Content Include="Scripts\tag-it.js" />
-    <Content Include="Scripts\tag-it.min.js" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.window.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\kendo.web.min.js.map" />
@@ -1657,6 +1655,9 @@
     <Content Include="Scripts\kendo\2014.1.318\kendo.autocomplete.min.js.map" />
     <Content Include="Scripts\kendo\2014.1.318\jquery.min.map" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\tagEditor\jquery.caret.min.js" />
+    <Content Include="Scripts\tagEditor\jquery.tag-editor.js" />
+    <Content Include="Scripts\tagEditor\jquery.tag-editor.min.js" />
     <Content Include="Themes\DefaultClean\Content\css\ie8.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.rtl.css" />

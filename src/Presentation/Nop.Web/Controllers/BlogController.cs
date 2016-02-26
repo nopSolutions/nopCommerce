@@ -113,7 +113,7 @@ namespace Nop.Web.Controllers
             model.Body = blogPost.Body;
             model.BodyOverview = blogPost.BodyOverview;
             model.AllowComments = blogPost.AllowComments;
-            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
+            model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.StartDateUtc ?? blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
             model.NumberOfComments = blogPost.CommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
@@ -365,7 +365,8 @@ namespace Nop.Web.Controllers
                 {
                     var months = new SortedDictionary<DateTime, int>();
 
-                    var first = blogPosts[blogPosts.Count - 1].CreatedOnUtc;
+                    var blogPost = blogPosts[blogPosts.Count - 1];
+                    var first = blogPost.StartDateUtc ?? blogPost.CreatedOnUtc;
                     while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
                         var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));

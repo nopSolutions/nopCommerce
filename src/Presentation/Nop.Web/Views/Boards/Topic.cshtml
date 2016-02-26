@@ -31,7 +31,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-top">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                    $(function () {
+                    $(document).ready(function () {
                         $('#watch-topic-top').click(function () {
                             $.ajax({
                                 cache: false,
@@ -85,7 +85,7 @@
             {
                 <a class="watch-topic-button" href="#" id="watch-topic-bottom">@Model.WatchTopicText</a>
                 <script type="text/javascript">
-                $(function () {
+                    $(document).ready(function () {
                     $('#watch-topic-bottom').click(function () {
                         var postData = {};
                         addAntiForgeryToken(postData);

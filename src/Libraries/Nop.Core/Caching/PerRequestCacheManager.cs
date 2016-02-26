@@ -132,17 +132,7 @@ namespace Nop.Core.Caching
             if (items == null)
                 return;
 
-            var enumerator = items.GetEnumerator();
-            var keysToRemove = new List<String>();
-            while (enumerator.MoveNext())
-            {
-                keysToRemove.Add(enumerator.Key.ToString());
-            }
-
-            foreach (string key in keysToRemove)
-            {
-                items.Remove(key);
-            }
+            items.Clear();
         }
 
         /// <summary>

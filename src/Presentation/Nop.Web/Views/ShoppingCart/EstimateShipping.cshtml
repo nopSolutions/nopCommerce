@@ -4,7 +4,7 @@
 {
     <div class="shipping">
         <script type="text/javascript">
-            $(function() {
+            $(document).ready(function () {
                 $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                     var selectedItem = $(this).val();
                     var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");

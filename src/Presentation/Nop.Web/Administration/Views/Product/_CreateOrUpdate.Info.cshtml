@@ -1,8 +1,9 @@
 ﻿@model ProductModel
 @{
     //resources for product tags input
-    Html.AppendCssFileParts("~/Content/tagit/jquery.tagit.css");
-    Html.AppendScriptParts("~/Scripts/tag-it.min.js");
+    Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
+    Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
 }
 @using Nop.Core.Domain.Catalog;
 @using Nop.Services.Catalog;
@@ -314,7 +315,7 @@
         //TODO move to Model
         var productTags = EngineContext.Current.Resolve<IProductTagService>().GetAllProductTags();
         var productTagsSb = new StringBuilder();
-        productTagsSb.Append("var sampleTags = [");
+        productTagsSb.Append("var initialProductTags = [");
         for (int i = 0; i < productTags.Count; i++)
         {
             var tag = productTags[i];
@@ -328,12 +329,17 @@
         }
         productTagsSb.Append("]");
     }
-    //product tags
+    //tags
     $(document).ready(function () {
         @Html.Raw(productTagsSb.ToString())
-        $("#@Html.FieldIdFor(model => model.ProductTags)").tagit({
-            availableTags: sampleTags,
-            allowSpaces: true
+        $("#@Html.FieldIdFor(model => model.ProductTags)").tagEditor({
+            autocomplete: {
+                delay: 0,
+                position: { collision: 'flip' },
+                source: initialProductTags
+            },
+            delimiter: ',',
+            placeholder: 'Enter tags ...'
         });
     });
 

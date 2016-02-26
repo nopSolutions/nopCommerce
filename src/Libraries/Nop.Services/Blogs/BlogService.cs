@@ -89,9 +89,9 @@ namespace Nop.Services.Blogs
         {
             var query = _blogPostRepository.Table;
             if (dateFrom.HasValue)
-                query = query.Where(b => dateFrom.Value <= b.CreatedOnUtc);
+                query = query.Where(b => dateFrom.Value <= (b.StartDateUtc ?? b.CreatedOnUtc));
             if (dateTo.HasValue)
-                query = query.Where(b => dateTo.Value >= b.CreatedOnUtc);
+                query = query.Where(b => dateTo.Value >= (b.StartDateUtc ?? b.CreatedOnUtc));
             if (languageId > 0)
                 query = query.Where(b => languageId == b.LanguageId);
             if (!showHidden)
@@ -119,7 +119,7 @@ namespace Nop.Services.Blogs
                         select bpGroup.FirstOrDefault();
             }
 
-            query = query.OrderByDescending(b => b.CreatedOnUtc);
+            query = query.OrderByDescending(b => b.StartDateUtc ?? b.CreatedOnUtc);
             
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
             return blogPosts;
