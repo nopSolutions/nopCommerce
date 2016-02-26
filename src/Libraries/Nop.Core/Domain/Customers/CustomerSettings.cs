@@ -6,6 +6,11 @@ namespace Nop.Core.Domain.Customers
     public class CustomerSettings : ISettings
     {
         /// <summary>
+        /// Get or set a value indicating that a customer can select a role during registration.
+        /// </summary>
+        public bool RoleSelectionEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether usernames are used instead of emails
         /// </summary>
         public bool UsernamesEnabled { get; set; }

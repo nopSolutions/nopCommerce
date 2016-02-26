@@ -23,6 +23,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.ImageSquaresPicture.Hint">
     <Value>Upload a picture to be used with the image squares attribute control</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RoleSelectionEnabled">
+    <Value>Upload a picture to be used with the image squares attribute control</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -121,5 +124,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquar
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'mediasettings.imagesquarepicturesize', N'32', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customerSettings.roleselectionenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'customerSettings.roleselectionenabled', N'', 0)
 END
 GO

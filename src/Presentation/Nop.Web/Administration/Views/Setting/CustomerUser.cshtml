@@ -419,6 +419,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.RoleSelectionEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.RoleSelectionEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.RoleSelectionEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.GenderEnabled):
             </td>
             <td class="adminData">

@@ -27,6 +27,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
             public bool UsernamesEnabled { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.RoleSelectionEnabled")]
+            public bool RoleSelectionEnabled { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames")]
             public bool AllowUsersToChangeUsernames { get; set; }
 
