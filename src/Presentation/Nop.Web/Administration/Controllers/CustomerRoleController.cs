@@ -34,10 +34,12 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IVendorService _vendorService;
         private readonly IWorkContext _workContext;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizedEntityService _localizedEntityService;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CustomerRoleController(ICustomerService customerService,
             ILocalizationService localizationService, 
@@ -48,7 +50,9 @@ namespace Nop.Admin.Controllers
             IManufacturerService manufacturerService,
             IStoreService storeService,
             IVendorService vendorService,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService)
 		{
             this._customerService = customerService;
             this._localizationService = localizationService;
@@ -60,7 +64,9 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._vendorService = vendorService;
             this._workContext = workContext;
-		}
+            this._languageService = languageService;
+            this._localizedEntityService = localizedEntityService;
+        }
 
 		#endregion 
 
@@ -121,6 +127,10 @@ namespace Nop.Admin.Controllers
             var model = new CustomerRoleModel();
             //default values
             model.Active = true;
+
+            //locales
+            AddLocales(_languageService, model.Locales);
+
             return View(model);
         }
 
@@ -135,9 +145,11 @@ namespace Nop.Admin.Controllers
                 var customerRole = model.ToEntity();
                 _customerService.InsertCustomerRole(customerRole);
 
+                UpdateAttributeLocales(customerRole, model);
+
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomerRole", _localizationService.GetResource("ActivityLog.AddNewCustomerRole"), customerRole.Name);
-
+                
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = customerRole.Id }) : RedirectToAction("List");
             }
@@ -157,8 +169,27 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 		    
             var model = PrepareCustomerRoleModel(customerRole);
+
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Description = customerRole.GetLocalized(x => x.Description, languageId, false, false);
+            });
+
             return View(model);
 		}
+
+        [NonAction]
+        protected virtual void UpdateAttributeLocales(CustomerRole specificationAttribute, CustomerRoleModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(specificationAttribute,
+                                                               x => x.Description,
+                                                               localized.Description,
+                                                               localized.LanguageId);
+            }
+        }
 
         [HttpPost, ParameterBasedOnFormName("save-continue", "continueEditing")]
         public ActionResult Edit(CustomerRoleModel model, bool continueEditing)
@@ -187,6 +218,8 @@ namespace Nop.Admin.Controllers
                     
                     customerRole = model.ToEntity(customerRole);
                     _customerService.UpdateCustomerRole(customerRole);
+
+                    UpdateAttributeLocales(customerRole, model);
 
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);

@@ -25,8 +25,17 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RoleSelectionEnabled">
     <Value>Upload a picture to be used with the image squares attribute control</Value>
-  </LocaleResource>  
-</Language>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Description">
+    <Value>Role description</Value>
+  </LocaleResource>
+   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Description.hint">
+    <Value>Description used on customer registration forms to describe a role.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.AllowFormSelection">
+    <Value>Allow form selection</Value>
+  </LocaleResource>
+ </Language>
 '
 
 CREATE TABLE #LocaleStringResourceTmp
@@ -133,4 +142,10 @@ BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'customerSettings.roleselectionenabled', N'', 0)
 END
+GO
+
+-- New columns for role table
+ALTER TABLE dbo.CustomerRole ADD Description varchar(25) NULL
+GO
+ALTER TABLE dbo.CustomerRole ADD AllowFormSelection bit NULL
 GO

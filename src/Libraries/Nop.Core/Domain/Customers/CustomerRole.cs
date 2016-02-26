@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Security;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Customers
 {
     /// <summary>
     /// Represents a customer role
     /// </summary>
-    public partial class CustomerRole : BaseEntity
+    public partial class CustomerRole : BaseEntity, ILocalizedEntity
     {
-        private ICollection<PermissionRecord> _permissionRecords;
+        private ICollection<PermissionRecord> _permissionRecords;        
 
         /// <summary>
         /// Gets or sets the customer role name
@@ -45,7 +46,17 @@ namespace Nop.Core.Domain.Customers
         /// A customer is added to this customer role once a specified product is purchased.
         /// </summary>
         public int PurchasedWithProductId { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the description of role
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets the allow selection
+        /// </summary>
+        public bool AllowFormSelection { get; set; }
+
         /// <summary>
         /// Gets or sets the permission records
         /// </summary>
