@@ -100,6 +100,7 @@ namespace Nop.Admin.Models.Settings
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
             [AllowHtml]
+            [NoTrim]
             public string PageTitleSeparator { get; set; }
             public bool PageTitleSeparator_OverrideForStore { get; set; }
             
