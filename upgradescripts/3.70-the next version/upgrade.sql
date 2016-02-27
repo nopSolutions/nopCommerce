@@ -35,6 +35,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.AllowFormSelection">
     <Value>Allow form selection</Value>
   </LocaleResource>
+   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.SignUpApproving">
+    <Value>Need approving of customer</Value>
+  </LocaleResource>
  </Language>
 '
 
@@ -147,5 +150,5 @@ GO
 -- New columns for role table
 ALTER TABLE dbo.CustomerRole ADD Description varchar(25) NULL
 GO
-ALTER TABLE dbo.CustomerRole ADD AllowFormSelection bit NULL
-GO
+ALTER TABLE dbo.CustomerRole ADD AllowFormSelection bit NOT NULL DF_CustomerRole_AllowFormSelection DEFAULT 0
+

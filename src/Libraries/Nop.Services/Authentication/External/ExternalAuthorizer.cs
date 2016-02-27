@@ -141,7 +141,7 @@ namespace Nop.Services.Authentication.External
                         (_customerSettings.UserRegistrationType == UserRegistrationType.EmailValidation &&
                          !_externalAuthenticationSettings.RequireEmailValidation);
 
-                    var registrationRequest = new CustomerRegistrationRequest(currentCustomer, 
+                    var registrationRequest = new CustomerRegistrationRequest(currentCustomer,null, 
                         details.EmailAddress,
                         _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress, 
                         randomPassword,

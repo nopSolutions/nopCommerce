@@ -58,6 +58,11 @@ namespace Nop.Core.Domain.Customers
         public bool AllowFormSelection { get; set; }
 
         /// <summary>
+        /// Gets or sets the allow selection
+        /// </summary>
+        public bool SignUpApproving { get; set; }        
+
+        /// <summary>
         /// Gets or sets the permission records
         /// </summary>
         public virtual ICollection<PermissionRecord> PermissionRecords

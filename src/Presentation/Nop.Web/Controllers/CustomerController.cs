@@ -456,6 +456,7 @@ namespace Nop.Web.Controllers
             
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
+            model.RoleSelectionEnabled = _customerSettings.RoleSelectionEnabled;
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.DateOfBirthRequired = _customerSettings.DateOfBirthRequired;
@@ -483,7 +484,19 @@ namespace Nop.Web.Controllers
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
-            
+
+            if (_customerSettings.RoleSelectionEnabled)
+            {
+                model.CustomerRoles = _customerService.GetAllCustomerRoles(false)
+                                                               .Where(x => !x.IsSystemRole && x.AllowFormSelection)
+                                                               .Select(y => new CustomerRoleModel
+                                                               {
+                                                                   Description = y.GetLocalized(k => k.Description),
+                                                                   Id = y.Id
+                                                               })
+                                                               .ToList();
+            }
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
@@ -927,9 +940,17 @@ namespace Nop.Web.Controllers
                 {
                     model.Username = model.Username.Trim();
                 }
-
+                
                 bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
-                var registrationRequest = new CustomerRegistrationRequest(customer, 
+
+                if (model.CustomerRoles.Any(x => x.IsChecked))
+                {
+                    _customerSettings.UserRegistrationType = UserRegistrationType.AdminApproval;
+                    isApproved = false;
+                }
+
+                var registrationRequest = new CustomerRegistrationRequest(customer,
+                    model.CustomerRoles.Select(r => r.Id).ToArray(), 
                     model.Email,
                     _customerSettings.UsernamesEnabled ? model.Username : model.Email, 
                     model.Password, 

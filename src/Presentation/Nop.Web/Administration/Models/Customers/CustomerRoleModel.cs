@@ -40,6 +40,9 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.AllowFormSelection")]
         public bool AllowFormSelection { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.SignUpApproving")]
+        public bool SignUpApproving { get; set; }        
+
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.PurchasedWithProduct")]
         public int PurchasedWithProductId { get; set; }
 

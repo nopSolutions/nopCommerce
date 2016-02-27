@@ -210,9 +210,22 @@ namespace Nop.Services.Customers
             
             //add to 'Registered' role
             var registeredRole = _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
+
             if (registeredRole == null)
                 throw new NopException("'Registered' role could not be loaded");
+
             request.Customer.CustomerRoles.Add(registeredRole);
+
+            // check additional roles
+            if (request.RolesBinded != null)
+            {
+                foreach (var item in request.RolesBinded)
+                {
+                    var additionalRole = _customerService.GetCustomerRoleById(item);
+                    request.Customer.CustomerRoles.Add(additionalRole);
+                }
+            }
+
             //remove from 'Guests' role
             var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
             if (guestRole != null)

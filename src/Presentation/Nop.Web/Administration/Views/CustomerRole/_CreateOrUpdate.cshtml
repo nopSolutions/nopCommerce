@@ -153,5 +153,15 @@
             @Html.ValidationMessageFor(model => model.AllowFormSelection)
         </td>
     </tr>
+
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SignUpApproving)
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SignUpApproving)
+            @Html.ValidationMessageFor(model => model.SignUpApproving)
+        </td>
+    </tr>
 }
 </table>
