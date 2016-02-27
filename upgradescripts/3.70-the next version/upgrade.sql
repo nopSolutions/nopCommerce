@@ -24,7 +24,10 @@ set @resources='
     <Value>Upload a picture to be used with the image squares attribute control</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RoleSelectionEnabled">
-    <Value>Upload a picture to be used with the image squares attribute control</Value>
+    <Value>Role selection enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.RoleSelectionEnabled.hint">
+    <Value>Allow to select roles during registration</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Description">
     <Value>Role description</Value>
@@ -35,9 +38,12 @@ set @resources='
   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.AllowFormSelection">
     <Value>Allow form selection</Value>
   </LocaleResource>
-   <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.SignUpApproving">
-    <Value>Need approving of customer</Value>
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.AllowFormSelection.hint">
+    <Value>Allow user to select this role during registration</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.TypeOfCustomer">
+    <Value>Type of Customer</Value>
+  </LocaleResource>  
  </Language>
 '
 
@@ -147,8 +153,17 @@ BEGIN
 END
 GO
 
--- New columns for role table
-ALTER TABLE dbo.CustomerRole ADD Description varchar(25) NULL
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='Description')
+BEGIN
+	ALTER TABLE dbo.CustomerRole ADD Description varchar(25) NULL
+END
 GO
-ALTER TABLE dbo.CustomerRole ADD AllowFormSelection bit NOT NULL DF_CustomerRole_AllowFormSelection DEFAULT 0
+
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CustomerRole]') and NAME='AllowFormSelection')
+BEGIN
+	ALTER TABLE dbo.CustomerRole ADD AllowFormSelection bit NOT NULL DEFAULT 0
+END
+GO
+
+
 

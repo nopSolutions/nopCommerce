@@ -55,12 +55,7 @@ namespace Nop.Core.Domain.Customers
         /// <summary>
         /// Gets or sets the allow selection
         /// </summary>
-        public bool AllowFormSelection { get; set; }
-
-        /// <summary>
-        /// Gets or sets the allow selection
-        /// </summary>
-        public bool SignUpApproving { get; set; }        
+        public bool AllowFormSelection { get; set; }            
 
         /// <summary>
         /// Gets or sets the permission records
