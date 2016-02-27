@@ -950,7 +950,7 @@ namespace Nop.Web.Controllers
                 }
 
                 var registrationRequest = new CustomerRegistrationRequest(customer,
-                    model.CustomerRoles.Select(r => r.Id).ToArray(), 
+                    model.CustomerRoles.Where(x => x.IsChecked).Select(r => r.Id).ToArray(), 
                     model.Email,
                     _customerSettings.UsernamesEnabled ? model.Username : model.Email, 
                     model.Password, 
