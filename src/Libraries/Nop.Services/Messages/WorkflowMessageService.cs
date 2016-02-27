@@ -97,7 +97,9 @@ namespace Nop.Services.Messages
                 AttachmentFileName = attachmentFileName,
                 AttachedDownloadId = messageTemplate.AttachedDownloadId,
                 CreatedOnUtc = DateTime.UtcNow,
-                EmailAccountId = emailAccount.Id
+                EmailAccountId = emailAccount.Id,
+                DontSendBeforeDateUtc = !messageTemplate.DelayBeforeSend.HasValue ? null
+                    : (DateTime?)(DateTime.UtcNow + TimeSpan.FromHours(messageTemplate.DelayPeriod.ToHours(messageTemplate.DelayBeforeSend.Value)))
             };
 
             _queuedEmailService.InsertQueuedEmail(email);

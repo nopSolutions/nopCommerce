@@ -1189,22 +1189,10 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
-
-            var products = new List<Product>();
+            
             if (selectedIds != null)
             {
-                products.AddRange(_productService.GetProductsByIds(selectedIds.ToArray()));
-
-                for (int i = 0; i < products.Count; i++)
-                {
-                    var product = products[i];
-
-                    //a vendor should have access only to his products
-                    if (_workContext.CurrentVendor != null && product.VendorId != _workContext.CurrentVendor.Id)
-                        continue;
-
-                    _productService.DeleteProduct(product);
-                }
+                _productService.DeleteProducts(_productService.GetProductsByIds(selectedIds.ToArray()).Where(p => _workContext.CurrentVendor == null || p.VendorId == _workContext.CurrentVendor.Id).ToList());
             }
 
             return Json(new { Result = true });
@@ -2857,12 +2845,8 @@ namespace Nop.Admin.Controllers
             );
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportProductsToXlsx(stream, products);
-                    bytes = stream.ToArray();
-                }
+                var bytes = _exportManager.ExportProductsToXlsx(products);
+                 
                 return File(bytes, "text/xls", "products.xlsx");
             }
             catch (Exception exc)
@@ -2893,12 +2877,8 @@ namespace Nop.Admin.Controllers
                 products = products.Where(p => p.VendorId == _workContext.CurrentVendor.Id).ToList();
             }
 
-            byte[] bytes = null;
-            using (var stream = new MemoryStream())
-            {
-                _exportManager.ExportProductsToXlsx(stream, products);
-                bytes = stream.ToArray();
-            }
+            var bytes = _exportManager.ExportProductsToXlsx(products);
+              
             return File(bytes, "text/xls", "products.xlsx");
         }
 
@@ -3328,9 +3308,44 @@ namespace Nop.Admin.Controllers
                         attributeModel.TotalValues = x.ProductAttributeValues.Count;
                     }
 
-                    attributeModel.ValidationRulesAllowed = x.ValidationRulesAllowed();
+                    if (x.ValidationRulesAllowed())
+                    {
+                        var validationRules = new StringBuilder(string.Empty);
+                        attributeModel.ValidationRulesAllowed = true;
+                        if (x.ValidationMinLength != null)
+                            validationRules.AppendFormat("{0}: {1}<br />", 
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MinLength"),
+                                x.ValidationMinLength);
+                        if (x.ValidationMaxLength != null)
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength"),
+                                x.ValidationMaxLength);
+                        if (!string.IsNullOrEmpty(x.ValidationFileAllowedExtensions))
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions"),
+                                HttpUtility.HtmlEncode(x.ValidationFileAllowedExtensions));
+                        if (x.ValidationFileMaximumSize != null)
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize"),
+                                x.ValidationFileMaximumSize);
+                        if (!string.IsNullOrEmpty(x.DefaultValue))
+                            validationRules.AppendFormat("{0}: {1}<br />",
+                                _localizationService.GetResource("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue"),
+                                HttpUtility.HtmlEncode(x.DefaultValue));
+                        attributeModel.ValidationRulesString = validationRules.ToString();
+                    }
+
+
                     //currenty any attribute can have condition. why not?
                     attributeModel.ConditionAllowed = true;
+                    var conditionAttribute = _productAttributeParser.ParseProductAttributeMappings(x.ConditionAttributeXml).FirstOrDefault();
+                    var conditionValue = _productAttributeParser.ParseProductAttributeValues(x.ConditionAttributeXml).FirstOrDefault();
+                    if (conditionAttribute != null && conditionValue != null)
+                        attributeModel.ConditionString = string.Format("{0}: {1}",
+                            HttpUtility.HtmlEncode(conditionAttribute.ProductAttribute.Name),
+                            HttpUtility.HtmlEncode(conditionValue.Name));
+                    else
+                        attributeModel.ConditionString = string.Empty;
                     return attributeModel;
                 })
                 .ToList();

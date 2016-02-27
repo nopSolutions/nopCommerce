@@ -180,6 +180,27 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
+        /// Deletes settings
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        public virtual void DeleteSettings(IList<Setting> settings)
+        {
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
+            _settingRepository.Delete(settings);
+
+            //cache
+            _cacheManager.RemoveByPattern(SETTINGS_PATTERN_KEY);
+
+            //event notification
+            foreach (var setting in settings)
+            {
+                _eventPublisher.EntityDeleted(setting);
+            }
+        }
+
+        /// <summary>
         /// Gets a setting by identifier
         /// </summary>
         /// <param name="settingId">Setting identifier</param>
@@ -446,8 +467,7 @@ namespace Nop.Services.Configuration
                 settingsToDelete.AddRange(allSettings.Where(x => x.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase)));
             }
 
-            foreach (var setting in settingsToDelete)
-                DeleteSetting(setting);
+            DeleteSettings(settingsToDelete);
         }
 
         /// <summary>

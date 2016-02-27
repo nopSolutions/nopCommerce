@@ -73,6 +73,17 @@ namespace Nop.Services.Blogs
         }
 
         /// <summary>
+        /// Gets blog posts
+        /// </summary>
+        /// <param name="blogPostIds">Blog post identifiers</param>
+        /// <returns>Blog posts</returns>
+        public virtual IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds)
+        {
+            var query = _blogPostRepository.Table;
+            return query.Where(p => blogPostIds.Contains(p.Id)).ToList();
+        }
+
+        /// <summary>
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
@@ -284,6 +295,18 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogComment");
 
             _blogCommentRepository.Delete(blogComment);
+        }
+
+        /// <summary>
+        /// Deletes blog comments
+        /// </summary>
+        /// <param name="blogComments">Blog comments</param>
+        public virtual void DeleteBlogComments(IList<BlogComment> blogComments)
+        {
+            if (blogComments == null)
+                throw new ArgumentNullException("blogComments");
+
+            _blogCommentRepository.Delete(blogComments);
         }
 
         #endregion

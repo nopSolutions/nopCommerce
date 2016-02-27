@@ -29,6 +29,13 @@
             </div>
             @if (Model.RewardPoints.Count > 0)
             {
+                var pager = Html.Pager(Model.PagerModel);
+                if (!MvcHtmlString.IsNullOrEmpty(pager))
+                {
+                    <div class="pager">
+                        @pager
+                    </div>
+                }    
                 <div class="table-wrapper">
                     <table class="data-table">
                         <colgroup>

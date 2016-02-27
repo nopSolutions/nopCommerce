@@ -76,7 +76,7 @@ namespace Nop.Web.Models.Catalog
         /// <summary>
         /// Order by
         /// </summary>
-        public int OrderBy { get; set; }
+        public int? OrderBy { get; set; }
 
         /// <summary>
         /// Product sorting

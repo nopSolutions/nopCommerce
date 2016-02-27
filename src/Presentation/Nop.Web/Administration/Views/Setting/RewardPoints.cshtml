@@ -128,5 +128,15 @@
                 @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.PageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PageSize)
+                @Html.ValidationMessageFor(model => model.PageSize)
+            </td>
+        </tr>
     </table>
 }

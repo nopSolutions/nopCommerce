@@ -72,6 +72,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DontSendBeforeDate):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DontSendBeforeDate)
+            @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.StoreId):
         </td>
         <td class="adminData">

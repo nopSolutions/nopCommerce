@@ -696,6 +696,9 @@ body .k-button{
 .k-grid table tr:hover > td{
     background: #e3e3e3 !important;
 }
+.k-multiselect{
+    width: 350px;
+}
 /* etc */
 .customer-info-tab .gender{
     display: inline-block;

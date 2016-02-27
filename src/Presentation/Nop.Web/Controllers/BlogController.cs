@@ -223,7 +223,7 @@ namespace Nop.Web.Controllers
                                     string.Format("{0}: Blog", _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     "Blog",
                                     new Uri(_webHelper.GetStoreLocation(false)),
-                                    "BlogRSS",
+                                    string.Format("urn:store:{0}:blog", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             if (!_blogSettings.Enabled)
@@ -234,7 +234,7 @@ namespace Nop.Web.Controllers
             foreach (var blogPost in blogPosts)
             {
                 string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
+                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult { Feed = feed };
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)

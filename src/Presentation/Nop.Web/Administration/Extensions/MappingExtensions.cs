@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Nop.Admin.Infrastructure.Mapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Cms;
@@ -57,12 +58,12 @@ namespace Nop.Admin.Extensions
     {
         public static TDestination MapTo<TSource, TDestination>(this TSource source)
         {
-            return Mapper.Map<TSource, TDestination>(source);
+            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
         }
 
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return Mapper.Map(source, destination);
+            return AutoMapperConfiguration.Mapper.Map(source, destination);
         }
         
         #region Category

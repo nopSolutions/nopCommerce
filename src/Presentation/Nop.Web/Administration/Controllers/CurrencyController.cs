@@ -317,7 +317,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                //ensure we have at least one published language
+                //ensure we have at least one published currency
                 var allCurrencies = _currencyService.GetAllCurrencies();
                 if (allCurrencies.Count == 1 && allCurrencies[0].Id == currency.Id &&
                     !model.Published)

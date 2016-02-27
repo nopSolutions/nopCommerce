@@ -499,7 +499,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             if (ModelState.IsValid)
@@ -597,7 +597,7 @@ namespace Nop.Web.Controllers
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
             {
-                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+                ModelState.AddModelError("", _captchaSettings.GetWrongCaptchaMessage(_localizationService));
             }
 
             model.VendorName = vendor.GetLocalized(x => x.Name);
@@ -682,13 +682,13 @@ namespace Nop.Web.Controllers
                 //categories
                 if (_commonSettings.SitemapIncludeCategories)
                 {
-                    var categories = _categoryService.GetAllCategories();
+                    var categories = _categoryService.GetAllCategories(storeId: _storeContext.CurrentStore.Id);
                     model.Categories = categories.Select(x => x.ToModel()).ToList();
                 }
                 //manufacturers
                 if (_commonSettings.SitemapIncludeManufacturers)
                 {
-                    var manufacturers = _manufacturerService.GetAllManufacturers();
+                    var manufacturers = _manufacturerService.GetAllManufacturers(storeId: _storeContext.CurrentStore.Id);
                     model.Manufacturers = manufacturers.Select(x => x.ToModel()).ToList();
                 }
                 //products

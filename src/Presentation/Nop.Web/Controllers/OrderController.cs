@@ -23,6 +23,7 @@ using Nop.Services.Shipping;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
@@ -571,7 +572,7 @@ namespace Nop.Web.Controllers
 
         //My account / Reward points
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult CustomerRewardPoints()
+        public ActionResult CustomerRewardPoints(int? page)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return new HttpUnauthorizedResult();
@@ -580,18 +581,30 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
-
+            var pageSize = _rewardPointsSettings.PageSize;
             var model = new CustomerRewardPointsModel();
-            foreach (var rph in _rewardPointService.GetRewardPointsHistory(customer.Id))
-            {
-                model.RewardPoints.Add(new CustomerRewardPointsModel.RewardPointsHistoryModel
+            var list = _rewardPointService.GetRewardPointsHistory(customer.Id, pageIndex: --page ?? 0, pageSize: pageSize);
+
+            model.RewardPoints = list.Select(rph => 
+                new CustomerRewardPointsModel.RewardPointsHistoryModel
                 {
                     Points = rph.Points,
                     PointsBalance = rph.PointsBalance,
                     Message = rph.Message,
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                });
-            }
+                }).ToList();
+
+            model.PagerModel = new PagerModel
+            {
+                PageSize = list.PageSize,
+                TotalRecords = list.TotalCount,
+                PageIndex = list.PageIndex,
+                ShowTotalSummary = true,
+                RouteActionName = "CustomerRewardPointsPaged",
+                UseRouteLinks = true,
+                RouteValues = new RewardPointsRouteValues { page = page ?? 0}
+            };
+
             //current amount/balance
             int rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(customer.Id, _storeContext.CurrentStore.Id);
             decimal rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);

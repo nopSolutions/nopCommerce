@@ -13,6 +13,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
@@ -116,6 +117,87 @@ namespace Nop.Services.ExportImport
             }
         }
 
+        protected virtual void SetCaptionStyle(ExcelStyle style)
+        {
+            style.Fill.PatternType = ExcelFillStyle.Solid;
+            style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+            style.Font.Bold = true;
+        }
+
+        /// <summary>
+        /// Returns the path to the image file by ID
+        /// </summary>
+        /// <param name="pictureId">Picture ID</param>
+        /// <returns>Path to the image file</returns>
+        protected virtual string GetPictures(int pictureId)
+        {
+            var picture = _pictureService.GetPictureById(pictureId);
+            return _pictureService.GetThumbLocalPath(picture);
+        }
+
+        /// <summary>
+        /// Returns the list of categories for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of categories</returns>
+        protected virtual string GetCategoryIds(Product product)
+        {
+            string categoryIds = null;
+            foreach (var pc in _categoryService.GetProductCategoriesByProductId(product.Id))
+            {
+                categoryIds += pc.CategoryId;
+                categoryIds += ";";
+            }
+            return categoryIds;
+        }
+
+        /// <summary>
+        /// Returns the list of manufacturer for a product separated by a ";"
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>List of manufacturer</returns>
+        protected virtual string GetManufacturerIds(Product product)
+        {
+            string manufacturerIds = null;
+            foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(product.Id))
+            {
+                manufacturerIds += pm.ManufacturerId;
+                manufacturerIds += ";";
+            }
+            return manufacturerIds;
+        }
+
+        /// <summary>
+        /// Returns the three first image associated with the product
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>three first image</returns>
+        protected virtual string[] GetPictures(Product product)
+        {
+            //pictures (up to 3 pictures)
+            string picture1 = null;
+            string picture2 = null;
+            string picture3 = null;
+            var pictures = _pictureService.GetPicturesByProductId(product.Id, 3);
+            for (var i = 0; i < pictures.Count; i++)
+            {
+                var pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
+                switch (i)
+                {
+                    case 0:
+                        picture1 = pictureLocalPath;
+                        break;
+                    case 1:
+                        picture2 = pictureLocalPath;
+                        break;
+                    case 2:
+                        picture3 = pictureLocalPath;
+                        break;
+                }
+            }
+            return new[] { picture1, picture2, picture3 };
+        }
+
         #endregion
 
         #region Methods
@@ -189,6 +271,71 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
+        /// Export manufacturers to XLSX
+        /// </summary>
+        /// <param name="manufacturers">Manufactures</param>
+        public virtual byte[] ExportManufacturersToXlsx(IEnumerable<Manufacturer> manufacturers)
+        {
+            //property array
+            var properties = new[]
+            {
+                new PropertyByName<Manufacturer>("Id", p => p.Id),
+                new PropertyByName<Manufacturer>("Name", p => p.Name),
+                new PropertyByName<Manufacturer>("Description", p => p.Description),
+                new PropertyByName<Manufacturer>("ManufacturerTemplateId", p => p.ManufacturerTemplateId),
+                new PropertyByName<Manufacturer>("MetaKeywords", p => p.MetaKeywords),
+                new PropertyByName<Manufacturer>("MetaDescription", p => p.MetaDescription),
+                new PropertyByName<Manufacturer>("MetaTitle", p => p.MetaTitle),
+                new PropertyByName<Manufacturer>("Picture", p => GetPictures(p.PictureId)),
+                new PropertyByName<Manufacturer>("PageSize", p => p.PageSize),
+                new PropertyByName<Manufacturer>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
+                new PropertyByName<Manufacturer>("PageSizeOptions", p => p.PageSizeOptions),
+                new PropertyByName<Manufacturer>("PriceRanges", p => p.PriceRanges),
+                new PropertyByName<Manufacturer>("Published", p => p.Published),
+                new PropertyByName<Manufacturer>("DisplayOrder", p => p.DisplayOrder)
+            };
+
+            return ExportToXlsx(properties, manufacturers);
+        }
+
+        /// <summary>
+        /// Export objects to XLSX
+        /// </summary>
+        /// <typeparam name="T">Type of object</typeparam>
+        /// <param name="properties">Class access to the object through its properties</param>
+        /// <param name="itemsToExport">The objects to export</param>
+        /// <returns></returns>
+        public virtual byte[] ExportToXlsx<T>(PropertyByName<T>[] properties, IEnumerable<T> itemsToExport)
+        {
+            using (var stream = new MemoryStream())
+            {
+                // ok, we can run the real code of the sample now
+                using (var xlPackage = new ExcelPackage(stream))
+                {
+                    // uncomment this line if you want the XML written out to the outputDir
+                    //xlPackage.DebugMode = true; 
+
+                    // get handle to the existing worksheet
+                    var worksheet = xlPackage.Workbook.Worksheets.Add(typeof (T).Name);
+                    //create Headers and format them 
+
+                    var manager = new PropertyManager<T>(properties);
+                    manager.WriteCaption(worksheet, SetCaptionStyle);
+
+                    var row = 2;
+                    foreach (var items in itemsToExport)
+                    {
+                        manager.CurrentObject = items;
+                        manager.WriteToXlsx(worksheet, row++);
+                    }
+
+                    xlPackage.Save();
+                }
+                return stream.ToArray();
+            }
+        }
+
+        /// <summary>
         /// Export category list to xml
         /// </summary>
         /// <returns>Result in XML format</returns>
@@ -205,6 +352,36 @@ namespace Nop.Services.ExportImport
             xmlWriter.WriteEndDocument();
             xmlWriter.Close();
             return stringWriter.ToString();
+        }
+
+        /// <summary>
+        /// Export categories to XLSX
+        /// </summary>
+        /// <param name="categories">Categories</param>
+        public virtual byte[] ExportCategoriesToXlsx(IEnumerable<Category> categories)
+        {
+            //property array
+            var properties = new[]
+            {
+                new PropertyByName<Category>("Id", p => p.Id),
+                new PropertyByName<Category>("Name", p => p.Name),
+                new PropertyByName<Category>("Description", p => p.Description),
+                new PropertyByName<Category>("CategoryTemplateId", p => p.CategoryTemplateId),
+                new PropertyByName<Category>("MetaKeywords", p => p.MetaKeywords),
+                new PropertyByName<Category>("MetaDescription", p => p.MetaDescription),
+                new PropertyByName<Category>("MetaTitle", p => p.MetaTitle),
+                new PropertyByName<Category>("ParentCategoryId", p => p.ParentCategoryId),
+                new PropertyByName<Category>("Picture", p => GetPictures(p.PictureId)),
+                new PropertyByName<Category>("PageSize", p => p.PageSize),
+                new PropertyByName<Category>("AllowCustomersToSelectPageSize", p => p.AllowCustomersToSelectPageSize),
+                new PropertyByName<Category>("PageSizeOptions", p => p.PageSizeOptions),
+                new PropertyByName<Category>("PriceRanges", p => p.PriceRanges),
+                new PropertyByName<Category>("ShowOnHomePage", p => p.ShowOnHomePage),
+                new PropertyByName<Category>("IncludeInTopMenu", p => p.IncludeInTopMenu),
+                new PropertyByName<Category>("Published", p => p.Published),
+                new PropertyByName<Category>("DisplayOrder", p => p.DisplayOrder)
+            };
+            return ExportToXlsx(properties, categories);
         }
 
         /// <summary>
@@ -322,9 +499,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Published", null, product.Published.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, product.UpdatedOnUtc.ToString());
-
-
-
+                
                 xmlWriter.WriteStartElement("ProductDiscounts");
                 var discounts = product.AppliedDiscounts;
                 foreach (var discount in discounts)
@@ -414,15 +589,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-
-
-
-
-
-
-
-
-
+                
                 xmlWriter.WriteStartElement("ProductPictures");
                 var productPictures = product.ProductPictures;
                 foreach (var productPicture in productPictures)
@@ -434,7 +601,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-                
+
                 xmlWriter.WriteStartElement("ProductCategories");
                 var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
                 if (productCategories != null)
@@ -481,7 +648,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
                 xmlWriter.WriteEndElement();
-                
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -494,481 +661,108 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export products to XLSX
         /// </summary>
-        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        public virtual void ExportProductsToXlsx(Stream stream, IList<Product> products)
+        public virtual byte[] ExportProductsToXlsx(IEnumerable<Product> products)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-
-            // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            var properties = new[]
             {
-                // uncomment this line if you want the XML written out to the outputDir
-                //xlPackage.DebugMode = true; 
-
-                // get handle to the existing worksheet
-                var worksheet = xlPackage.Workbook.Worksheets.Add("Products");
-                //Create Headers and format them 
-                var properties = new []
-                {
-                    "ProductTypeId",
-                    "ParentGroupedProductId",
-                    "VisibleIndividually",
-                    "Name",
-                    "ShortDescription",
-                    "FullDescription",
-                    "VendorId",
-                    "ProductTemplateId",
-                    "ShowOnHomePage",
-                    "MetaKeywords",
-                    "MetaDescription",
-                    "MetaTitle",
-                    "SeName",
-                    "AllowCustomerReviews",
-                    "Published",
-                    "SKU",
-                    "ManufacturerPartNumber",
-                    "Gtin",
-                    "IsGiftCard",
-                    "GiftCardTypeId",
-                    "OverriddenGiftCardAmount",
-                    "RequireOtherProducts",
-                    "RequiredProductIds",
-                    "AutomaticallyAddRequiredProducts",
-                    "IsDownload",
-                    "DownloadId",
-                    "UnlimitedDownloads",
-                    "MaxNumberOfDownloads",
-                    "DownloadActivationTypeId",
-                    "HasSampleDownload",
-                    "SampleDownloadId",
-                    "HasUserAgreement",
-                    "UserAgreementText",
-                    "IsRecurring",
-                    "RecurringCycleLength",
-                    "RecurringCyclePeriodId",
-                    "RecurringTotalCycles",
-                    "IsRental",
-                    "RentalPriceLength",
-                    "RentalPricePeriodId",
-                    "IsShipEnabled",
-                    "IsFreeShipping",
-                    "ShipSeparately",
-                    "AdditionalShippingCharge",
-                    "DeliveryDateId",
-                    "IsTaxExempt",
-                    "TaxCategoryId",
-                    "IsTelecommunicationsOrBroadcastingOrElectronicServices",
-                    "ManageInventoryMethodId",
-                    "UseMultipleWarehouses",
-                    "WarehouseId",
-                    "StockQuantity",
-                    "DisplayStockAvailability",
-                    "DisplayStockQuantity",
-                    "MinStockQuantity",
-                    "LowStockActivityId",
-                    "NotifyAdminForQuantityBelow",
-                    "BackorderModeId",
-                    "AllowBackInStockSubscriptions",
-                    "OrderMinimumQuantity",
-                    "OrderMaximumQuantity",
-                    "AllowedQuantities",
-                    "AllowAddingOnlyExistingAttributeCombinations",
-                    "DisableBuyButton",
-                    "DisableWishlistButton",
-                    "AvailableForPreOrder",
-                    "PreOrderAvailabilityStartDateTimeUtc",
-                    "CallForPrice",
-                    "Price",
-                    "OldPrice",
-                    "ProductCost",
-                    "SpecialPrice",
-                    "SpecialPriceStartDateTimeUtc",
-                    "SpecialPriceEndDateTimeUtc",
-                    "CustomerEntersPrice",
-                    "MinimumCustomerEnteredPrice",
-                    "MaximumCustomerEnteredPrice",
-                    "BasepriceEnabled",
-                    "BasepriceAmount",
-                    "BasepriceUnitId",
-                    "BasepriceBaseAmount",
-                    "BasepriceBaseUnitId",
-                    "MarkAsNew",
-                    "MarkAsNewStartDateTimeUtc",
-                    "MarkAsNewEndDateTimeUtc",
-                    "Weight",
-                    "Length",
-                    "Width",
-                    "Height",
-                    "CreatedOnUtc",
-                    "CategoryIds",
-                    "ManufacturerIds",
-                    "Picture1",
-                    "Picture2",
-                    "Picture3"
-                };
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    worksheet.Cells[1, i + 1].Value = properties[i];
-                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
-                }
-
-
-                int row = 2;
-                foreach (var p in products)
-                {
-                    int col = 1;
-
-                    worksheet.Cells[row, col].Value = p.ProductTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ParentGroupedProductId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.VisibleIndividually;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Name;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShortDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.FullDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.VendorId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ProductTemplateId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShowOnHomePage;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaKeywords;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaDescription;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MetaTitle;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.GetSeName(0);
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowCustomerReviews;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Published;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Sku;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ManufacturerPartNumber;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Gtin;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsGiftCard;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.GiftCardTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OverriddenGiftCardAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RequireOtherProducts;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RequiredProductIds;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AutomaticallyAddRequiredProducts;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsDownload;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DownloadId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UnlimitedDownloads;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MaxNumberOfDownloads;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DownloadActivationTypeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.HasSampleDownload;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SampleDownloadId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.HasUserAgreement;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UserAgreementText;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsRecurring;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringCycleLength;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringCyclePeriodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RecurringTotalCycles;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsRental;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RentalPriceLength;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.RentalPricePeriodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsShipEnabled;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsFreeShipping;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ShipSeparately;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AdditionalShippingCharge;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DeliveryDateId;
-                    col++;
-                    
-                    worksheet.Cells[row, col].Value = p.IsTaxExempt;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.TaxCategoryId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.IsTelecommunicationsOrBroadcastingOrElectronicServices;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ManageInventoryMethodId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.UseMultipleWarehouses;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.WarehouseId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.StockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisplayStockAvailability;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisplayStockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MinStockQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.LowStockActivityId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.NotifyAdminForQuantityBelow;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BackorderModeId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowBackInStockSubscriptions;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OrderMinimumQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OrderMaximumQuantity;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowedQuantities;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AllowAddingOnlyExistingAttributeCombinations;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisableBuyButton;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.DisableWishlistButton;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.AvailableForPreOrder;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.PreOrderAvailabilityStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CallForPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Price;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.OldPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.ProductCost;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPriceStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.SpecialPriceEndDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CustomerEntersPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MinimumCustomerEnteredPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MaximumCustomerEnteredPrice;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceEnabled;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceUnitId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceBaseAmount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.BasepriceBaseUnitId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNew;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNewStartDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.MarkAsNewEndDateTimeUtc;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Weight;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Length;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Width;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.Height;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = p.CreatedOnUtc.ToOADate();
-                    col++;
-
-                    //category identifiers
-                    string categoryIds = null;
-                    foreach (var pc in _categoryService.GetProductCategoriesByProductId(p.Id))
-                    {
-                        categoryIds += pc.CategoryId;
-                        categoryIds += ";";
-                    }
-                    worksheet.Cells[row, col].Value = categoryIds;
-                    col++;
-
-                    //manufacturer identifiers
-                    string manufacturerIds = null;
-                    foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(p.Id))
-                    {
-                        manufacturerIds += pm.ManufacturerId;
-                        manufacturerIds += ";";
-                    }
-                    worksheet.Cells[row, col].Value = manufacturerIds;
-                    col++;
-
-                    //pictures (up to 3 pictures)
-                    string picture1 = null;
-                    string picture2 = null;
-                    string picture3 = null;
-                    var pictures = _pictureService.GetPicturesByProductId(p.Id, 3);
-                    for (int i = 0; i < pictures.Count; i++)
-                    {
-                        string pictureLocalPath = _pictureService.GetThumbLocalPath(pictures[i]);
-                        switch (i)
-                        {
-                            case 0:
-                                picture1 = pictureLocalPath;
-                                break;
-                            case 1:
-                                picture2 = pictureLocalPath;
-                                break;
-                            case 2:
-                                picture3 = pictureLocalPath;
-                                break;
-                        }
-                    }
-                    worksheet.Cells[row, col].Value = picture1;
-                    col++;
-                    worksheet.Cells[row, col].Value = picture2;
-                    col++;
-                    worksheet.Cells[row, col].Value = picture3;
-                    col++;
-
-                    row++;
-                }
-
-
-
-
-
-
-
-
-                // we had better add some document properties to the spreadsheet 
-
-                // set some core property values
-                //var storeName = _storeInformationSettings.StoreName;
-                //var storeUrl = _storeInformationSettings.StoreUrl;
-                //xlPackage.Workbook.Properties.Title = string.Format("{0} products", storeName);
-                //xlPackage.Workbook.Properties.Author = storeName;
-                //xlPackage.Workbook.Properties.Subject = string.Format("{0} products", storeName);
-                //xlPackage.Workbook.Properties.Keywords = string.Format("{0} products", storeName);
-                //xlPackage.Workbook.Properties.Category = "Products";
-                //xlPackage.Workbook.Properties.Comments = string.Format("{0} products", storeName);
-
-                // set some extended property values
-                //xlPackage.Workbook.Properties.Company = storeName;
-                //xlPackage.Workbook.Properties.HyperlinkBase = new Uri(storeUrl);
-
-                // save the new spreadsheet
-                xlPackage.Save();
-            }
+                new PropertyByName<Product>("ProductTypeId", p => p.ProductTypeId),
+                new PropertyByName<Product>("ParentGroupedProductId", p => p.ParentGroupedProductId),
+                new PropertyByName<Product>("VisibleIndividually", p => p.VisibleIndividually),
+                new PropertyByName<Product>("Name", p => p.Name),
+                new PropertyByName<Product>("ShortDescription", p => p.ShortDescription),
+                new PropertyByName<Product>("FullDescription", p => p.FullDescription),
+                new PropertyByName<Product>("VendorId", p => p.VendorId.ToString()),
+                new PropertyByName<Product>("ProductTemplateId", p => p.ProductTemplateId),
+                new PropertyByName<Product>("ShowOnHomePage", p => p.ShowOnHomePage),
+                new PropertyByName<Product>("MetaKeywords", p => p.MetaKeywords),
+                new PropertyByName<Product>("MetaDescription", p => p.MetaDescription),
+                new PropertyByName<Product>("MetaTitle", p => p.MetaTitle),
+                new PropertyByName<Product>("SeName", p => p.GetSeName(0)),
+                new PropertyByName<Product>("AllowCustomerReviews", p => p.AllowCustomerReviews),
+                new PropertyByName<Product>("Published", p => p.Published),
+                new PropertyByName<Product>("SKU", p => p.Sku),
+                new PropertyByName<Product>("ManufacturerPartNumber", p => p.ManufacturerPartNumber),
+                new PropertyByName<Product>("Gtin", p => p.Gtin),
+                new PropertyByName<Product>("IsGiftCard", p => p.IsGiftCard),
+                new PropertyByName<Product>("GiftCardTypeId", p => p.GiftCardTypeId),
+                new PropertyByName<Product>("OverriddenGiftCardAmount", p => p.OverriddenGiftCardAmount),
+                new PropertyByName<Product>("RequireOtherProducts", p => p.RequireOtherProducts),
+                new PropertyByName<Product>("RequiredProductIds", p => p.RequiredProductIds),
+                new PropertyByName<Product>("AutomaticallyAddRequiredProducts", p => p.AutomaticallyAddRequiredProducts),
+                new PropertyByName<Product>("IsDownload", p => p.IsDownload),
+                new PropertyByName<Product>("DownloadId", p => p.DownloadId),
+                new PropertyByName<Product>("UnlimitedDownloads", p => p.UnlimitedDownloads),
+                new PropertyByName<Product>("MaxNumberOfDownloads", p => p.MaxNumberOfDownloads),
+                new PropertyByName<Product>("DownloadActivationTypeId", p => p.DownloadActivationTypeId),
+                new PropertyByName<Product>("HasSampleDownload", p => p.HasSampleDownload),
+                new PropertyByName<Product>("SampleDownloadId", p => p.SampleDownloadId),
+                new PropertyByName<Product>("HasUserAgreement", p => p.HasUserAgreement),
+                new PropertyByName<Product>("UserAgreementText", p => p.UserAgreementText),
+                new PropertyByName<Product>("IsRecurring", p => p.IsRecurring),
+                new PropertyByName<Product>("RecurringCycleLength", p => p.RecurringCycleLength),
+                new PropertyByName<Product>("RecurringCyclePeriodId", p => p.RecurringCyclePeriodId),
+                new PropertyByName<Product>("RecurringTotalCycles", p => p.RecurringTotalCycles),
+                new PropertyByName<Product>("IsRental", p => p.IsRental),
+                new PropertyByName<Product>("RentalPriceLength", p => p.RentalPriceLength),
+                new PropertyByName<Product>("RentalPricePeriodId", p => p.RentalPricePeriodId),
+                new PropertyByName<Product>("IsShipEnabled", p => p.IsShipEnabled),
+                new PropertyByName<Product>("IsFreeShipping", p => p.IsFreeShipping),
+                new PropertyByName<Product>("ShipSeparately", p => p.ShipSeparately),
+                new PropertyByName<Product>("AdditionalShippingCharge", p => p.AdditionalShippingCharge),
+                new PropertyByName<Product>("DeliveryDateId", p => p.DeliveryDateId),
+                new PropertyByName<Product>("IsTaxExempt", p => p.IsTaxExempt),
+                new PropertyByName<Product>("TaxCategoryId", p => p.TaxCategoryId),
+                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices", p => p.IsTelecommunicationsOrBroadcastingOrElectronicServices),
+                new PropertyByName<Product>("ManageInventoryMethodId", p => p.ManageInventoryMethodId),
+                new PropertyByName<Product>("UseMultipleWarehouses", p => p.UseMultipleWarehouses),
+                new PropertyByName<Product>("WarehouseId", p => p.WarehouseId),
+                new PropertyByName<Product>("StockQuantity", p => p.StockQuantity),
+                new PropertyByName<Product>("DisplayStockAvailability", p => p.DisplayStockAvailability),
+                new PropertyByName<Product>("DisplayStockQuantity", p => p.DisplayStockQuantity),
+                new PropertyByName<Product>("MinStockQuantity", p => p.MinStockQuantity),
+                new PropertyByName<Product>("LowStockActivityId", p => p.LowStockActivityId),
+                new PropertyByName<Product>("NotifyAdminForQuantityBelow", p => p.NotifyAdminForQuantityBelow),
+                new PropertyByName<Product>("BackorderModeId", p => p.BackorderModeId),
+                new PropertyByName<Product>("AllowBackInStockSubscriptions", p => p.AllowBackInStockSubscriptions),
+                new PropertyByName<Product>("OrderMinimumQuantity", p => p.OrderMinimumQuantity),
+                new PropertyByName<Product>("OrderMaximumQuantity", p => p.OrderMaximumQuantity),
+                new PropertyByName<Product>("AllowedQuantities", p => p.AllowedQuantities),
+                new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations", p => p.AllowAddingOnlyExistingAttributeCombinations),
+                new PropertyByName<Product>("DisableBuyButton", p => p.DisableBuyButton),
+                new PropertyByName<Product>("DisableWishlistButton", p => p.DisableWishlistButton),
+                new PropertyByName<Product>("AvailableForPreOrder", p => p.AvailableForPreOrder),
+                new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc", p => p.PreOrderAvailabilityStartDateTimeUtc),
+                new PropertyByName<Product>("CallForPrice", p => p.CallForPrice),
+                new PropertyByName<Product>("Price", p => p.Price),
+                new PropertyByName<Product>("OldPrice", p => p.OldPrice),
+                new PropertyByName<Product>("ProductCost", p => p.ProductCost),
+                new PropertyByName<Product>("SpecialPrice", p => p.SpecialPrice),
+                new PropertyByName<Product>("SpecialPriceStartDateTimeUtc", p => p.SpecialPriceStartDateTimeUtc),
+                new PropertyByName<Product>("SpecialPriceEndDateTimeUtc", p => p.SpecialPriceEndDateTimeUtc),
+                new PropertyByName<Product>("CustomerEntersPrice", p => p.CustomerEntersPrice),
+                new PropertyByName<Product>("MinimumCustomerEnteredPrice", p => p.MinimumCustomerEnteredPrice),
+                new PropertyByName<Product>("MaximumCustomerEnteredPrice", p => p.MaximumCustomerEnteredPrice),
+                new PropertyByName<Product>("BasepriceEnabled", p => p.BasepriceEnabled),
+                new PropertyByName<Product>("BasepriceAmount", p => p.BasepriceAmount),
+                new PropertyByName<Product>("BasepriceUnitId", p => p.BasepriceUnitId),
+                new PropertyByName<Product>("BasepriceBaseAmount", p => p.BasepriceBaseAmount),
+                new PropertyByName<Product>("BasepriceBaseUnitId", p => p.BasepriceBaseUnitId),
+                new PropertyByName<Product>("MarkAsNew", p => p.MarkAsNew),
+                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc", p => p.MarkAsNewStartDateTimeUtc),
+                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc", p => p.MarkAsNewEndDateTimeUtc),
+                new PropertyByName<Product>("Weight", p => p.Weight),
+                new PropertyByName<Product>("Length", p => p.Length),
+                new PropertyByName<Product>("Width", p => p.Width),
+                new PropertyByName<Product>("Height", p => p.Height),
+                new PropertyByName<Product>("CategoryIds", GetCategoryIds),
+                new PropertyByName<Product>("ManufacturerIds", GetManufacturerIds),
+                new PropertyByName<Product>("Picture1", p => GetPictures(p)[0]),
+                new PropertyByName<Product>("Picture2", p => GetPictures(p)[1]),
+                new PropertyByName<Product>("Picture3", p => GetPictures(p)[2])
+            };
+
+            return ExportToXlsx(properties, products);
         }
 
         /// <summary>
@@ -989,7 +783,7 @@ namespace Nop.Services.ExportImport
             foreach (var order in orders)
             {
                 xmlWriter.WriteStartElement("Order");
-                
+
                 xmlWriter.WriteElementString("OrderId", null, order.Id.ToString());
                 xmlWriter.WriteElementString("OrderGuid", null, order.OrderGuid.ToString());
                 xmlWriter.WriteElementString("StoreId", null, order.StoreId.ToString());
@@ -1087,9 +881,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
                         xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : "");
 
-                        xmlWriter.WriteElementString("ShippedDateUtc", null,shipment.ShippedDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.HasValue ? 
                             shipment.ShippedDateUtc.ToString() : "");
-                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ?
+                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
                             shipment.DeliveryDateUtc.Value.ToString() : "");
                         xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
                         xmlWriter.WriteEndElement();
@@ -1110,290 +904,68 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        public virtual void ExportOrdersToXlsx(Stream stream, IList<Order> orders)
+        public virtual byte[] ExportOrdersToXlsx(IList<Order> orders)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
-
-            // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            //property array
+            var properties = new[]
             {
-                // uncomment this line if you want the XML written out to the outputDir
-                //xlPackage.DebugMode = true; 
+                    new PropertyByName<Order>("OrderId", p=>p.Id),
+                    new PropertyByName<Order>("StoreId", p=>p.StoreId),
+                    new PropertyByName<Order>("OrderGuid",p=>p.OrderGuid),
+                    new PropertyByName<Order>("CustomerId",p=>p.CustomerId),
+                    new PropertyByName<Order>("OrderStatusId", p=>p.OrderStatusId),
+                    new PropertyByName<Order>("PaymentStatusId", p=>p.PaymentStatusId),
+                    new PropertyByName<Order>("ShippingStatusId", p=>p.ShippingStatusId),
+                    new PropertyByName<Order>("OrderSubtotalInclTax", p=>p.OrderSubtotalInclTax),
+                    new PropertyByName<Order>("OrderSubtotalExclTax", p=>p.OrderSubtotalExclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountInclTax", p=>p.OrderSubTotalDiscountInclTax),
+                    new PropertyByName<Order>("OrderSubTotalDiscountExclTax", p=>p.OrderSubTotalDiscountExclTax),
+                    new PropertyByName<Order>("OrderShippingInclTax", p=>p.OrderShippingInclTax),
+                    new PropertyByName<Order>("OrderShippingExclTax", p=>p.OrderShippingExclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeInclTax", p=>p.PaymentMethodAdditionalFeeInclTax),
+                    new PropertyByName<Order>("PaymentMethodAdditionalFeeExclTax", p=>p.PaymentMethodAdditionalFeeExclTax),
+                    new PropertyByName<Order>("TaxRates", p=>p.TaxRates),
+                    new PropertyByName<Order>("OrderTax", p=>p.OrderTax),
+                    new PropertyByName<Order>("OrderTotal", p=>p.OrderTotal),
+                    new PropertyByName<Order>("RefundedAmount", p=>p.RefundedAmount),
+                    new PropertyByName<Order>("OrderDiscount", p=>p.OrderDiscount),
+                    new PropertyByName<Order>("CurrencyRate", p=>p.CurrencyRate),
+                    new PropertyByName<Order>("CustomerCurrencyCode", p=>p.CustomerCurrencyCode),
+                    new PropertyByName<Order>("AffiliateId", p=>p.AffiliateId),
+                    new PropertyByName<Order>("PaymentMethodSystemName", p=>p.PaymentMethodSystemName),
+                    new PropertyByName<Order>("ShippingPickUpInStore", p=>p.PickUpInStore),
+                    new PropertyByName<Order>("ShippingMethod", p=>p.ShippingMethod),
+                    new PropertyByName<Order>("ShippingRateComputationMethodSystemName", p=>p.ShippingRateComputationMethodSystemName),
+                    new PropertyByName<Order>("CustomValuesXml", p=>p.CustomValuesXml),
+                    new PropertyByName<Order>("VatNumber", p=>p.VatNumber),
+                    new PropertyByName<Order>("CreatedOnUtc", p=>p.CreatedOnUtc.ToOADate()),
+                    new PropertyByName<Order>("BillingFirstName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FirstName, "")),
+                    new PropertyByName<Order>("BillingLastName", p=>p.BillingAddress.Return(billingAddress=>billingAddress.LastName, "")),
+                    new PropertyByName<Order>("BillingEmail", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Email, "")),
+                    new PropertyByName<Order>("BillingCompany", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Company, "")),
+                    new PropertyByName<Order>("BillingCountry",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Country, null).Return(country=>country.Name,"")),
+                    new PropertyByName<Order>("BillingStateProvince",p=>p.BillingAddress.Return(billingAddress=>billingAddress.StateProvince, null).Return(stateProvince=>stateProvince.Name,"")),
+                    new PropertyByName<Order>("BillingCity", p=>p.BillingAddress.Return(billingAddress=>billingAddress.City,"")),
+                    new PropertyByName<Order>("BillingAddress1",p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address1,"")),
+                    new PropertyByName<Order>("BillingAddress2", p=>p.BillingAddress.Return(billingAddress=>billingAddress.Address2,"")),
+                    new PropertyByName<Order>("BillingZipPostalCode", p=>p.BillingAddress.Return(billingAddress=>billingAddress.ZipPostalCode,"")),
+                    new PropertyByName<Order>("BillingPhoneNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.PhoneNumber,"")),
+                    new PropertyByName<Order>("BillingFaxNumber", p=>p.BillingAddress.Return(billingAddress=>billingAddress.FaxNumber,"")),
+                    new PropertyByName<Order>("ShippingFirstName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FirstName,"")),
+                    new PropertyByName<Order>("ShippingLastName", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.LastName, "")),
+                    new PropertyByName<Order>("ShippingEmail", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Email, "")),
+                    new PropertyByName<Order>("ShippingCompany", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Company, "")),
+                    new PropertyByName<Order>("ShippingCountry", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Country, null).Return(country=>country.Name,"")),
+                    new PropertyByName<Order>("ShippingStateProvince", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.StateProvince, null).Return(stateProvince=>stateProvince.Name,"")),
+                    new PropertyByName<Order>("ShippingCity", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.City, "")),
+                    new PropertyByName<Order>("ShippingAddress1", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address1, "")),
+                    new PropertyByName<Order>("ShippingAddress2", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.Address2, "")),
+                    new PropertyByName<Order>("ShippingZipPostalCode", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.ZipPostalCode, "")),
+                    new PropertyByName<Order>("ShippingPhoneNumber",p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.PhoneNumber, "")),
+                    new PropertyByName<Order>("ShippingFaxNumber", p=>p.ShippingAddress.Return(shippingAddress=>shippingAddress.FaxNumber, ""))
+            };
 
-                // get handle to the existing worksheet
-                var worksheet = xlPackage.Workbook.Worksheets.Add("Orders");
-                //Create Headers and format them
-                var properties = new []
-                    {
-                        //order properties
-                        "OrderId",
-                        "StoreId",
-                        "OrderGuid",
-                        "CustomerId",
-                        "OrderStatusId",
-                        "PaymentStatusId",
-                        "ShippingStatusId",
-                        "OrderSubtotalInclTax",
-                        "OrderSubtotalExclTax",
-                        "OrderSubTotalDiscountInclTax",
-                        "OrderSubTotalDiscountExclTax",
-                        "OrderShippingInclTax",
-                        "OrderShippingExclTax",
-                        "PaymentMethodAdditionalFeeInclTax",
-                        "PaymentMethodAdditionalFeeExclTax",
-                        "TaxRates",
-                        "OrderTax",
-                        "OrderTotal",
-                        "RefundedAmount",
-                        "OrderDiscount",
-                        "CurrencyRate",
-                        "CustomerCurrencyCode",
-                        "AffiliateId",
-                        "PaymentMethodSystemName",
-                        "ShippingPickUpInStore",
-                        "ShippingMethod",
-                        "ShippingRateComputationMethodSystemName",
-                        "CustomValuesXml",
-                        "VatNumber",
-                        "CreatedOnUtc",
-                        //billing address
-                        "BillingFirstName",
-                        "BillingLastName",
-                        "BillingEmail",
-                        "BillingCompany",
-                        "BillingCountry",
-                        "BillingStateProvince",
-                        "BillingCity",
-                        "BillingAddress1",
-                        "BillingAddress2",
-                        "BillingZipPostalCode",
-                        "BillingPhoneNumber",
-                        "BillingFaxNumber",
-                        //shipping address
-                        "ShippingFirstName",
-                        "ShippingLastName",
-                        "ShippingEmail",
-                        "ShippingCompany",
-                        "ShippingCountry",
-                        "ShippingStateProvince",
-                        "ShippingCity",
-                        "ShippingAddress1",
-                        "ShippingAddress2",
-                        "ShippingZipPostalCode",
-                        "ShippingPhoneNumber",
-                        "ShippingFaxNumber"
-                    };
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    worksheet.Cells[1, i + 1].Value = properties[i];
-                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
-                }
-
-
-                int row = 2;
-                    foreach (var order in orders)
-                    {
-                        int col = 1;
-
-                        //order properties
-                        worksheet.Cells[row, col].Value = order.Id;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.StoreId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderGuid;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.CustomerId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderStatusId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PaymentStatusId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.ShippingStatusId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderSubtotalInclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderSubtotalExclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderSubTotalDiscountInclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderSubTotalDiscountExclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderShippingInclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderShippingExclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PaymentMethodAdditionalFeeInclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PaymentMethodAdditionalFeeExclTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.TaxRates;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderTax;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderTotal;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.RefundedAmount;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.OrderDiscount;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.CurrencyRate;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.CustomerCurrencyCode;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.AffiliateId;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PaymentMethodSystemName;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.PickUpInStore;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.ShippingMethod;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.ShippingRateComputationMethodSystemName;
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.CustomValuesXml;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.VatNumber;
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.CreatedOnUtc.ToOADate();
-                        col++;
-
-                        
-                        //billing address
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.FirstName : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.LastName : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Email : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Company : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null && order.BillingAddress.Country != null ? order.BillingAddress.Country.Name : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null && order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.Name : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.City : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Address1 : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Address2 : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.ZipPostalCode : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.PhoneNumber : "";
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.FaxNumber : "";
-                        col++;
-
-                        //shipping address
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.FirstName : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.LastName : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Email : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Company : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.City : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Address1 : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Address2 : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : "";
-                        col++;
-                        
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.PhoneNumber : "";
-                        col++;
-
-                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.FaxNumber : "";
-                        col++;
-                        
-                        //next row
-                        row++;
-                    }
-
-
-
-
-
-
-
-
-                // we had better add some document properties to the spreadsheet 
-
-                // set some core property values
-                //var storeName = _storeInformationSettings.StoreName;
-                //var storeUrl = _storeInformationSettings.StoreUrl;
-                //xlPackage.Workbook.Properties.Title = string.Format("{0} orders", storeName);
-                //xlPackage.Workbook.Properties.Author = storeName;
-                //xlPackage.Workbook.Properties.Subject = string.Format("{0} orders", storeName);
-                //xlPackage.Workbook.Properties.Keywords = string.Format("{0} orders", storeName);
-                //xlPackage.Workbook.Properties.Category = "Orders";
-                //xlPackage.Workbook.Properties.Comments = string.Format("{0} orders", storeName);
-
-                // set some extended property values
-                //xlPackage.Workbook.Properties.Company = storeName;
-                //xlPackage.Workbook.Properties.HyperlinkBase = new Uri(storeUrl);
-
-                // save the new spreadsheet
-                xlPackage.Save();
-            }
+            return ExportToXlsx(properties, orders);
         }
 
         /// <summary>
@@ -1401,214 +973,49 @@ namespace Nop.Services.ExportImport
         /// </summary>
         /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        public virtual void ExportCustomersToXlsx(Stream stream, IList<Customer> customers)
+        public virtual byte[] ExportCustomersToXlsx(IList<Customer> customers)
         {
-            if (stream == null)
-                throw new ArgumentNullException("stream");
 
-            // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(stream))
+            //property array
+            var properties = new[]
             {
-                // uncomment this line if you want the XML written out to the outputDir
-                //xlPackage.DebugMode = true; 
+                new PropertyByName<Customer>("CustomerId", p => p.Id),
+                new PropertyByName<Customer>("CustomerGuid", p => p.CustomerGuid),
+                new PropertyByName<Customer>("Email", p => p.Email),
+                new PropertyByName<Customer>("Username", p => p.Username),
+                new PropertyByName<Customer>("Password", p => p.Password),
+                new PropertyByName<Customer>("PasswordFormatId", p => p.PasswordFormatId),
+                new PropertyByName<Customer>("PasswordSalt", p => p.PasswordSalt),
+                new PropertyByName<Customer>("IsTaxExempt", p => p.IsTaxExempt),
+                new PropertyByName<Customer>("AffiliateId", p => p.AffiliateId),
+                new PropertyByName<Customer>("VendorId", p => p.VendorId),
+                new PropertyByName<Customer>("Active", p => p.Active),
+                new PropertyByName<Customer>("IsGuest", p => p.IsGuest()),
+                new PropertyByName<Customer>("IsRegistered", p => p.IsRegistered()),
+                new PropertyByName<Customer>("IsAdministrator", p => p.IsAdmin()),
+                new PropertyByName<Customer>("IsForumModerator", p => p.IsForumModerator()),
+                //attributes
+                new PropertyByName<Customer>("FirstName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.FirstName)),
+                new PropertyByName<Customer>("LastName", p => p.GetAttribute<string>(SystemCustomerAttributeNames.LastName)),
+                new PropertyByName<Customer>("Gender", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Gender)),
+                new PropertyByName<Customer>("Company", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Company)),
+                new PropertyByName<Customer>("StreetAddress", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress)),
+                new PropertyByName<Customer>("StreetAddress2", p => p.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2)),
+                new PropertyByName<Customer>("ZipPostalCode", p => p.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode)),
+                new PropertyByName<Customer>("City", p => p.GetAttribute<string>(SystemCustomerAttributeNames.City)),
+                new PropertyByName<Customer>("CountryId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.CountryId)),
+                new PropertyByName<Customer>("StateProvinceId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId)),
+                new PropertyByName<Customer>("Phone", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Phone)),
+                new PropertyByName<Customer>("Fax", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Fax)),
+                new PropertyByName<Customer>("VatNumber", p => p.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber)),
+                new PropertyByName<Customer>("VatNumberStatusId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId)),
+                new PropertyByName<Customer>("TimeZoneId", p => p.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId)),
+                new PropertyByName<Customer>("AvatarPictureId", p => p.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId)),
+                new PropertyByName<Customer>("ForumPostCount", p => p.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount)),
+                new PropertyByName<Customer>("Signature", p => p.GetAttribute<string>(SystemCustomerAttributeNames.Signature)),
+            };
 
-                // get handle to the existing worksheet
-                var worksheet = xlPackage.Workbook.Worksheets.Add("Customers");
-                //Create Headers and format them
-                var properties = new []
-                    {
-                        "CustomerId",
-                        "CustomerGuid",
-                        "Email",
-                        "Username",
-                        "PasswordStr",//why can't we use 'Password' name?
-                        "PasswordFormatId",
-                        "PasswordSalt",
-                        "IsTaxExempt",
-                        "AffiliateId",
-                        "VendorId",
-                        "Active",
-                        "IsGuest",
-                        "IsRegistered",
-                        "IsAdministrator",
-                        "IsForumModerator",
-                        "FirstName",
-                        "LastName",
-                        "Gender",
-                        "Company",
-                        "StreetAddress",
-                        "StreetAddress2",
-                        "ZipPostalCode",
-                        "City",
-                        "CountryId",
-                        "StateProvinceId",
-                        "Phone",
-                        "Fax",
-                        "VatNumber",
-                        "VatNumberStatusId",
-                        "TimeZoneId",
-                        "AvatarPictureId",
-                        "ForumPostCount",
-                        "Signature"
-                    };
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    worksheet.Cells[1, i + 1].Value = properties[i];
-                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
-                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
-                }
-
-
-                int row = 2;
-                foreach (var customer in customers)
-                {
-                    int col = 1;
-
-                    worksheet.Cells[row, col].Value = customer.Id;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.CustomerGuid;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.Email;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.Username;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.Password;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.PasswordFormatId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.PasswordSalt;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.IsTaxExempt;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.AffiliateId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.VendorId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.Active;
-                    col++;
-
-                    //roles
-                    worksheet.Cells[row, col].Value = customer.IsGuest();
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.IsRegistered();
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.IsAdmin();
-                    col++;
-
-                    worksheet.Cells[row, col].Value = customer.IsForumModerator();
-                    col++;
-                    
-                    //attributes
-                    var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                    var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                    var gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                    var company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                    var streetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                    var streetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                    var zipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                    var city = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                    var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                    var stateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                    var phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                    var fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-                    var vatNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.VatNumber);
-                    var vatNumberStatusId = customer.GetAttribute<int>(SystemCustomerAttributeNames.VatNumberStatusId);
-                    var timeZoneId = customer.GetAttribute<string>(SystemCustomerAttributeNames.TimeZoneId);
-
-                    var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
-                    var forumPostCount = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
-                    var signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-
-                    worksheet.Cells[row, col].Value = firstName;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = lastName;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = gender;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = company;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = streetAddress;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = streetAddress2;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = zipPostalCode;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = city;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = countryId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = stateProvinceId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = phone;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = fax;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = vatNumber;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = vatNumberStatusId;
-                    col++;
-                    
-                    worksheet.Cells[row, col].Value = timeZoneId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = avatarPictureId;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = forumPostCount;
-                    col++;
-
-                    worksheet.Cells[row, col].Value = signature;
-                    col++;
-
-                    row++;
-                }
-
-
-                // we had better add some document properties to the spreadsheet 
-
-                // set some core property values
-                //var storeName = _storeInformationSettings.StoreName;
-                //var storeUrl = _storeInformationSettings.StoreUrl;
-                //xlPackage.Workbook.Properties.Title = string.Format("{0} customers", storeName);
-                //xlPackage.Workbook.Properties.Author = storeName;
-                //xlPackage.Workbook.Properties.Subject = string.Format("{0} customers", storeName);
-                //xlPackage.Workbook.Properties.Keywords = string.Format("{0} customers", storeName);
-                //xlPackage.Workbook.Properties.Category = "Customers";
-                //xlPackage.Workbook.Properties.Comments = string.Format("{0} customers", storeName);
-
-                // set some extended property values
-                //xlPackage.Workbook.Properties.Company = storeName;
-                //xlPackage.Workbook.Properties.HyperlinkBase = new Uri(storeUrl);
-
-                // save the new spreadsheet
-                xlPackage.Save();
-            }
+            return ExportToXlsx(properties, customers);
         }
 
         /// <summary>
@@ -1674,7 +1081,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
                 xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
                 xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
-                
+
                 xmlWriter.WriteEndElement();
             }
 
@@ -1683,7 +1090,7 @@ namespace Nop.Services.ExportImport
             xmlWriter.Close();
             return stringWriter.ToString();
         }
-        
+
         /// <summary>
         /// Export newsletter subscribers to TXT
         /// </summary>
@@ -1703,7 +1110,7 @@ namespace Nop.Services.ExportImport
                 sb.Append(subscription.Active);
                 sb.Append(separator);
                 sb.Append(subscription.StoreId);
-                sb.Append(Environment.NewLine);  //new line
+                sb.Append(Environment.NewLine); //new line
             }
             return sb.ToString();
         }
@@ -1731,7 +1138,7 @@ namespace Nop.Services.ExportImport
                 sb.Append(state.Published);
                 sb.Append(separator);
                 sb.Append(state.DisplayOrder);
-                sb.Append(Environment.NewLine);  //new line
+                sb.Append(Environment.NewLine); //new line
             }
             return sb.ToString();
         }

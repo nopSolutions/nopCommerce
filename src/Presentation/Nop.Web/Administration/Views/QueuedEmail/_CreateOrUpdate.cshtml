@@ -122,6 +122,23 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SendImmediately):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SendImmediately)
+            @Html.ValidationMessageFor(model => model.SendImmediately)
+        </td>
+    </tr>
+    <tr id="pnl-send-date">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DontSendBeforeDate):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DontSendBeforeDate)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.SentTries):
         </td>
         <td class="adminData">
@@ -153,3 +170,17 @@
         </td>
     </tr>
 </table>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+            sendImmediately();
+        });
+
+        function sendImmediately() {
+            if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                $('#pnl-send-date').hide();
+            else
+                $('#pnl-send-date').show();
+        }
+</script>

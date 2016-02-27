@@ -27,8 +27,9 @@ namespace Nop.Services.Topics
         /// <remarks>
         /// {0} : store ID
         /// {1} : ignore ACL?
+        /// {2} : show hidden?
         /// </remarks>
-        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}-{1}";
+        private const string TOPICS_ALL_KEY = "Nop.topics.all-{0}-{1}-{2}";
         /// <summary>
         /// Key for caching
         /// </summary>
@@ -140,14 +141,18 @@ namespace Nop.Services.Topics
         /// </summary>
         /// <param name="storeId">Store identifier; pass 0 to load all records</param>
         /// <param name="ignorAcl">A value indicating whether to ignore ACL rules</param>
+        /// <param name="showHidden">A value indicating whether to show hidden topics</param>
         /// <returns>Topics</returns>
-        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false)
+        public virtual IList<Topic> GetAllTopics(int storeId, bool ignorAcl = false, bool showHidden = false)
         {
-            string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl);
+            string key = string.Format(TOPICS_ALL_KEY, storeId, ignorAcl, showHidden);
             return _cacheManager.Get(key, () =>
             {
                 var query = _topicRepository.Table;
                 query = query.OrderBy(t => t.DisplayOrder).ThenBy(t => t.SystemName);
+
+                if (!showHidden)
+                    query = query.Where(t => t.Published);
 
                 if ((storeId > 0 && !_catalogSettings.IgnoreStoreLimitations) ||
                     (!ignorAcl && !_catalogSettings.IgnoreAcl))

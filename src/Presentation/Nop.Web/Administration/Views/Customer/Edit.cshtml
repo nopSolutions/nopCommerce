@@ -57,6 +57,24 @@
                 </td>
             </tr>
             <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.SendImmediately):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendEmail.SendImmediately)
+                    @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
+                </td>
+            </tr>
+            <tr id="pnl-send-date">
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendEmail.DontSendBeforeDate)
+                    @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
+                </td>
+            </tr>
+            <tr>
                 <td colspan="2">
                     <input type="submit" class="k-button" value="@T("Admin.Customers.Customers.SendEmail")" />
                 </td>
@@ -72,14 +90,24 @@
             if (!window.data("kendoWindow")) {
                 window.kendoWindow({
                     modal: true,
-                    width: "600px",
+                    width: "650px",
                     title: "@T("Admin.Customers.Customers.SendEmail")",
                     actions: ["Close"]
                 });
             }
             window.data('kendoWindow').center().open();
         });
+
+        $("#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)").click(sendImmediately);
+        sendImmediately();
     });
+
+    function sendImmediately() {
+        if ($('#@Html.FieldIdFor(model => model.SendEmail.SendImmediately)').is(':checked'))
+            $('#pnl-send-date').hide();
+        else
+            $('#pnl-send-date').show();
+    }
 </script>
 
 

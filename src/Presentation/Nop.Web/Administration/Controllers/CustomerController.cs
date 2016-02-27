@@ -632,6 +632,14 @@ namespace Nop.Admin.Controllers
                 .GetAllCustomerRoles(true)
                 .Select(cr => cr.ToModel())
                 .ToList();
+
+            // Precheck Registered Role as a default role while creating a new customer through admin
+            if(model.SelectedCustomerRoleIds==null && customer==null && model.AvailableCustomerRoles.Count>0)
+            {
+                model.SelectedCustomerRoleIds = new[] {model.AvailableCustomerRoles
+                    .FirstOrDefault(c=>c.SystemName==SystemCustomerRoleNames.Registered).Id };
+            }
+
             //reward points history
             if (customer != null)
             {
@@ -846,7 +854,14 @@ namespace Nop.Admin.Controllers
                 ModelState.AddModelError("", customerRolesError);
                 ErrorNotification(customerRolesError, false);
             }
-            
+
+            // Ensure that valid email address is entered if Registered role is checked to avoid registered customers with empty email address
+            if (newCustomerRoles.Count > 0 && newCustomerRoles.FirstOrDefault(c => c.SystemName == SystemCustomerRoleNames.Registered) != null && !CommonHelper.IsValidEmail(model.Email))
+            {
+                ModelState.AddModelError("", "Valid Email is required for customer to be in 'Registered' role");
+                ErrorNotification("Valid Email is required for customer to be in 'Registered' role", false);
+            }
+
             if (ModelState.IsValid)
             {
                 var customer = new Customer
@@ -1440,7 +1455,6 @@ namespace Nop.Admin.Controllers
                     emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
                 if (emailAccount == null)
                     throw new NopException("Email account can't be loaded");
-
                 var email = new QueuedEmail
                 {
                     Priority = QueuedEmailPriority.High,
@@ -1452,6 +1466,8 @@ namespace Nop.Admin.Controllers
                     Subject = model.SendEmail.Subject,
                     Body = model.SendEmail.Body,
                     CreatedOnUtc = DateTime.UtcNow,
+                    DontSendBeforeDateUtc = (model.SendEmail.SendImmediately || !model.SendEmail.DontSendBeforeDate.HasValue) ? 
+                        null : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.SendEmail.DontSendBeforeDate.Value)
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
@@ -1515,7 +1531,7 @@ namespace Nop.Admin.Controllers
         #region Reward points history
 
         [HttpPost]
-        public ActionResult RewardPointsHistorySelect(int customerId)
+        public ActionResult RewardPointsHistorySelect(DataSourceRequest command, int customerId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
@@ -1524,23 +1540,22 @@ namespace Nop.Admin.Controllers
             if (customer == null)
                 throw new ArgumentException("No customer found with the specified id");
 
-            var model = new List<CustomerModel.RewardPointsHistoryModel>();
-            foreach (var rph in _rewardPointService.GetRewardPointsHistory(customer.Id, true))
+            var rewardPoints = _rewardPointService.GetRewardPointsHistory(customer.Id, true, command.Page - 1, command.PageSize);
+            var gridModel = new DataSourceResult
             {
-                var store = _storeService.GetStoreById(rph.StoreId);
-                model.Add(new CustomerModel.RewardPointsHistoryModel
+                Data = rewardPoints.Select(rph =>
+                {
+                    var store = _storeService.GetStoreById(rph.StoreId);
+                    return new CustomerModel.RewardPointsHistoryModel
                     {
                         StoreName = store != null ? store.Name : "Unknown",
                         Points = rph.Points,
                         PointsBalance = rph.PointsBalance,
                         Message = rph.Message,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(rph.CreatedOnUtc, DateTimeKind.Utc)
-                    });
-            } 
-            var gridModel = new DataSourceResult
-            {
-                Data = model,
-                Total = model.Count
+                    };
+                }),
+                Total = rewardPoints.TotalCount
             };
 
             return Json(gridModel);
@@ -2067,12 +2082,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                byte[] bytes;
-                using (var stream = new MemoryStream())
-                {
-                    _exportManager.ExportCustomersToXlsx(stream, customers);
-                    bytes = stream.ToArray();
-                }
+                byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
                 return File(bytes, "text/xls", "customers.xlsx");
             }
             catch (Exception exc)
@@ -2098,13 +2108,16 @@ namespace Nop.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            byte[] bytes;
-            using (var stream = new MemoryStream())
+            try
             {
-                _exportManager.ExportCustomersToXlsx(stream, customers);
-                bytes = stream.ToArray();
+                byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
+                return File(bytes, "text/xls", "customers.xlsx");
             }
-            return File(bytes, "text/xls", "customers.xlsx");
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
         }
 
         [HttpPost, ActionName("List")]

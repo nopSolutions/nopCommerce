@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
@@ -14,8 +15,11 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="customerId">Customer identifier; 0 to load all records</param>
         /// <param name="showHidden">A value indicating whether to show hidden records (filter by current store if possible)</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Reward point history records</returns>
-        IList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false);
+        IPagedList<RewardPointsHistory> GetRewardPointsHistory(int customerId = 0, bool showHidden = false, 
+            int pageIndex = 0, int pageSize = int.MaxValue);
 
         /// <summary>
         /// Add reward points history record

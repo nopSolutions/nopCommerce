@@ -21,89 +21,54 @@ namespace Nop.Core.Configuration
             var config = new NopConfig();
 
             var startupNode = section.SelectSingleNode("Startup");
-            if (startupNode != null && startupNode.Attributes != null)
-            {
-                var attribute = startupNode.Attributes["IgnoreStartupTasks"];
-                if (attribute != null)
-                    config.IgnoreStartupTasks = Convert.ToBoolean(attribute.Value);
-            }
-
+            config.IgnoreStartupTasks = GetBool(startupNode, "IgnoreStartupTasks");
+           
             var redisCachingNode = section.SelectSingleNode("RedisCaching");
-            if (redisCachingNode != null && redisCachingNode.Attributes != null)
-            {
-                var enabledAttribute = redisCachingNode.Attributes["Enabled"];
-                if (enabledAttribute != null)
-                    config.RedisCachingEnabled = Convert.ToBoolean(enabledAttribute.Value);
-
-                var connectionStringAttribute = redisCachingNode.Attributes["ConnectionString"];
-                if (connectionStringAttribute != null)
-                    config.RedisCachingConnectionString = connectionStringAttribute.Value;
-            }
+            config.RedisCachingEnabled = GetBool(redisCachingNode, "Enabled");
+            config.RedisCachingConnectionString = GetString(redisCachingNode, "ConnectionString");
 
             var userAgentStringsNode = section.SelectSingleNode("UserAgentStrings");
-            if (userAgentStringsNode != null && userAgentStringsNode.Attributes != null)
-            {
-                var attribute = userAgentStringsNode.Attributes["databasePath"];
-                if (attribute != null)
-                    config.UserAgentStringsPath = attribute.Value;
-            }
-
+            config.UserAgentStringsPath = GetString(userAgentStringsNode, "databasePath");
+           
             var supportPreviousNopcommerceVersionsNode = section.SelectSingleNode("SupportPreviousNopcommerceVersions");
-            if (supportPreviousNopcommerceVersionsNode != null && supportPreviousNopcommerceVersionsNode.Attributes != null)
-            {
-                var attribute = supportPreviousNopcommerceVersionsNode.Attributes["Enabled"];
-                if (attribute != null)
-                    config.SupportPreviousNopcommerceVersions = Convert.ToBoolean(attribute.Value);
-            }
-
+            config.SupportPreviousNopcommerceVersions = GetBool(supportPreviousNopcommerceVersionsNode, "Enabled");
+            
             var webFarmsNode = section.SelectSingleNode("WebFarms");
-            if (webFarmsNode != null && webFarmsNode.Attributes != null)
-            {
-                var multipleInstancesEnabledAttribute = webFarmsNode.Attributes["MultipleInstancesEnabled"];
-                if (multipleInstancesEnabledAttribute != null)
-                    config.MultipleInstancesEnabled = Convert.ToBoolean(multipleInstancesEnabledAttribute.Value);
-
-                var runOnAzureWebsitesAttribute = webFarmsNode.Attributes["RunOnAzureWebsites"];
-                if (runOnAzureWebsitesAttribute != null)
-                    config.RunOnAzureWebsites = Convert.ToBoolean(runOnAzureWebsitesAttribute.Value);
-            }
+            config.MultipleInstancesEnabled = GetBool(webFarmsNode, "MultipleInstancesEnabled");
+            config.RunOnAzureWebsites = GetBool(webFarmsNode, "RunOnAzureWebsites");
 
             var azureBlobStorageNode = section.SelectSingleNode("AzureBlobStorage");
-            if (azureBlobStorageNode != null && azureBlobStorageNode.Attributes != null)
-            {
-                var azureConnectionStringAttribute = azureBlobStorageNode.Attributes["ConnectionString"];
-                if (azureConnectionStringAttribute != null)
-                    config.AzureBlobStorageConnectionString = azureConnectionStringAttribute.Value;
-
-                var azureContainerNameAttribute = azureBlobStorageNode.Attributes["ContainerName"];
-                if (azureContainerNameAttribute != null)
-                    config.AzureBlobStorageContainerName = azureContainerNameAttribute.Value;
-
-                var azureEndPointAttribute = azureBlobStorageNode.Attributes["EndPoint"];
-                if (azureEndPointAttribute != null)
-                    config.AzureBlobStorageEndPoint = azureEndPointAttribute.Value;
-
-            }
+            config.AzureBlobStorageConnectionString = GetString(azureBlobStorageNode, "ConnectionString");
+            config.AzureBlobStorageContainerName = GetString(azureBlobStorageNode, "ContainerName");
+            config.AzureBlobStorageEndPoint = GetString(azureBlobStorageNode, "EndPoint");
 
             var installationNode = section.SelectSingleNode("Installation");
-            if (installationNode != null && installationNode.Attributes != null)
-            {
-                var disableSampleDataDuringInstallationAttribute = installationNode.Attributes["DisableSampleDataDuringInstallation"];
-                if (disableSampleDataDuringInstallationAttribute != null)
-                    config.DisableSampleDataDuringInstallation = Convert.ToBoolean(disableSampleDataDuringInstallationAttribute.Value);
-
-                var useFastInstallationServiceAttribute = installationNode.Attributes["UseFastInstallationService"];
-                if (useFastInstallationServiceAttribute != null)
-                    config.UseFastInstallationService = Convert.ToBoolean(useFastInstallationServiceAttribute.Value);
-
-                var pluginsIgnoredDuringInstallationAttribute = installationNode.Attributes["PluginsIgnoredDuringInstallation"];
-                if (pluginsIgnoredDuringInstallationAttribute != null)
-                    config.PluginsIgnoredDuringInstallation = pluginsIgnoredDuringInstallationAttribute.Value;
-            }
+            config.DisableSampleDataDuringInstallation = GetBool(installationNode, "DisableSampleDataDuringInstallation");
+            config.UseFastInstallationService = GetBool(installationNode, "UseFastInstallationService");
+            config.PluginsIgnoredDuringInstallation = GetString(installationNode, "PluginsIgnoredDuringInstallation");
 
             return config;
         }
-        
+
+        private string GetString(XmlNode node, string attrName)
+        {
+            return SetByXElement<string>(node, attrName, Convert.ToString);
+        }
+
+        private bool GetBool(XmlNode node, string attrName)
+        {
+            return SetByXElement<bool>(node, attrName, Convert.ToBoolean);
+        }
+
+        private T SetByXElement<T>(XmlNode node, string attrName, Func<string, T> converter)
+        {
+            if (node == null || node.Attributes == null) return default(T);
+            var attr = node.Attributes[attrName];
+            if (attr == null) return default(T);
+            var attrVal = attr.Value;
+            return converter(attrVal);
+        }
+
         /// <summary>
         /// Indicates whether we should ignore startup tasks
         /// </summary>

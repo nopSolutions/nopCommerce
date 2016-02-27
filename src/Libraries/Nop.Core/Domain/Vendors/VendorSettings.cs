@@ -31,5 +31,10 @@ namespace Nop.Core.Domain.Vendors
         /// Gets or sets a value indicating whether users can fill a form to become a new vendor
         /// </summary>
         public bool AllowCustomersToApplyForVendorAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether it is possible to carry out advanced search in the store by vendor
+        /// </summary>
+        public bool AllowSearchByVendor { get; set; }
     }
 }

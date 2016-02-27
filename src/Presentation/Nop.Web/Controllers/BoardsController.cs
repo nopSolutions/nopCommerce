@@ -275,7 +275,7 @@ namespace Nop.Web.Controllers
                                     string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name)),
                                     feedDescription,
                                     new Uri(url),
-                                    "ActiveDiscussionsRSS",
+                                    string.Format("urn:store:{0}:activeDiscussions", _storeContext.CurrentStore.Id),
                                     DateTime.UtcNow);
 
             var items = new List<SyndicationItem>();
@@ -289,7 +289,7 @@ namespace Nop.Web.Controllers
                 string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                 items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl),
-                    String.Format("Topic:{0}", topic.Id), (topic.LastPostTime ?? topic.UpdatedOnUtc)));
+                    String.Format("urn:store:{0}:activeDiscussions:topic:{1}", _storeContext.CurrentStore.Id, topic.Id), (topic.LastPostTime ?? topic.UpdatedOnUtc)));
             }
             feed.Items = items;
 
@@ -391,7 +391,7 @@ namespace Nop.Web.Controllers
                                         string.Format(feedTitle, _storeContext.CurrentStore.GetLocalized(x => x.Name), forum.Name),
                                         feedDescription,
                                         new Uri(url),
-                                        string.Format("ForumRSS:{0}", forum.Id),
+                                        string.Format("urn:store:{0}:forum", _storeContext.CurrentStore.Id),
                                         DateTime.UtcNow);
 
                 var items = new List<SyndicationItem>();
@@ -404,7 +404,7 @@ namespace Nop.Web.Controllers
                     string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
                     string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
-                    items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("Topic:{0}", topic.Id),
+                    items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id),
                         (topic.LastPostTime ?? topic.UpdatedOnUtc)));
                 }
 
@@ -658,11 +658,16 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
         }
 
+        [HttpPost]
+        [PublicAntiForgery]
         public ActionResult TopicDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("HomePage"),
+                });
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -678,11 +683,17 @@ namespace Nop.Web.Controllers
 
                 if (forum != null)
                 {
-                    return RedirectToRoute("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() });
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() }),
+                    });
                 }
             }
 
-            return RedirectToRoute("Boards");
+            return Json(new
+            {
+                redirect = Url.RouteUrl("Boards"),
+            });
         }
 
         public ActionResult TopicCreate(int id)
@@ -1029,11 +1040,16 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [PublicAntiForgery]
         public ActionResult PostDelete(int id)
         {
             if (!_forumSettings.ForumsEnabled)
             {
-                return RedirectToRoute("HomePage");
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("HomePage"),
+                });
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -1055,12 +1071,21 @@ namespace Nop.Web.Controllers
                 forumTopic = _forumService.GetTopicById(forumPost.TopicId);
                 if (forumTopic == null)
                 {
-                    return RedirectToRoute("ForumSlug", new { id = forumId, slug = forumSlug });
+                    return Json(new
+                    {
+                        redirect = Url.RouteUrl("ForumSlug", new { id = forumId, slug = forumSlug }),
+                    });
                 }
-                return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() }),
+                });
             }
 
-            return RedirectToRoute("Boards");
+            return Json(new
+            {
+                redirect = Url.RouteUrl("Boards"),
+            });
         }
 
         public ActionResult PostCreate(int id, int? quote)

@@ -4386,6 +4386,7 @@ namespace Nop.Services.Installation
                                            IsPasswordProtected = false,
                                            IncludeInFooterColumn1 = true,
                                            DisplayOrder = 20,
+                                           Published = true,
                                            Title = "About us",
                                            Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4396,6 +4397,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "",
                                            Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4407,6 +4409,7 @@ namespace Nop.Services.Installation
                                            IsPasswordProtected = false,
                                            IncludeInFooterColumn1 = true,
                                            DisplayOrder = 15,
+                                           Published = true,
                                            Title = "Conditions of Use",
                                            Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4417,6 +4420,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "",
                                            Body = "<p>Put your contact information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4427,6 +4431,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "Forums",
                                            Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4437,6 +4442,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "Welcome to our store",
                                            Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4447,6 +4453,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "About login / registration",
                                            Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4458,6 +4465,7 @@ namespace Nop.Services.Installation
                                            IsPasswordProtected = false,
                                            IncludeInFooterColumn1 = true,
                                            DisplayOrder = 10,
+                                           Published = true,
                                            Title = "Privacy notice",
                                            Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4468,6 +4476,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "",
                                            Body = "<p><strong>The page you requested was not found, and we have a fine guess why.</strong></p><ul><li>If you typed the URL directly, please make sure the spelling is correct.</li><li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li></ul>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4479,6 +4488,7 @@ namespace Nop.Services.Installation
                                            IsPasswordProtected = false,
                                            IncludeInFooterColumn1 = true,
                                            DisplayOrder = 5,
+                                           Published = true,
                                            Title = "Shipping & returns",
                                            Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4489,6 +4499,7 @@ namespace Nop.Services.Installation
                                            IncludeInSitemap = false,
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
+                                           Published = true,
                                            Title = "",
                                            Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id
@@ -4795,6 +4806,7 @@ namespace Nop.Services.Installation
                     PointsForPurchases_Canceled = OrderStatus.Cancelled,
                     DisplayHowMuchWillBeEarned = true,
                     PointsAccumulatedForAllStores = true,
+                    PageSize = 10
                 });
 
             settingService.SaveSetting(new CurrencySettings
@@ -5618,6 +5630,12 @@ namespace Nop.Services.Installation
             if (defaultCustomer == null)
                 throw new Exception("Cannot load default customer");
 
+            //default store
+            var defaultStore = _storeRepository.Table.FirstOrDefault();
+            if (defaultStore == null)
+                throw new Exception("No default store could be loaded");
+
+
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
             var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
@@ -5637,6 +5655,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Build your own computer",
+                Sku = "COMP_CUST",
                 ShortDescription = "Build it",
                 FullDescription = "<p>Fight back against cluttered workspaces with the stylish IBM zBC12 All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The black IBM zBC12 has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -5826,6 +5845,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Digital Storm VANQUISH 3 Custom Performance PC",
+                Sku = "DS_VA3_PC",
                 ShortDescription = "Digital Storm Vanquish 3 Desktop PC",
                 FullDescription = "<p>Blow the doors off today’s most demanding games with maximum detail, speed, and power for an immersive gaming experience without breaking the bank.</p><p>Stay ahead of the competition, VANQUISH 3 is fully equipped to easily handle future upgrades, keeping your system on the cutting edge for years to come.</p><p>Each system is put through an extensive stress test, ensuring you experience zero bottlenecks and get the maximum performance from your hardware.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -5876,6 +5896,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo IdeaCentre 600 All-in-One PC",
+                Sku = "LE_IC_600",
                 ShortDescription = "",
                 FullDescription = "<p>The A600 features a 21.5in screen, DVD or optional Blu-Ray drive, support for the full beans 1920 x 1080 HD, Dolby Home Cinema certification and an optional hybrid analogue/digital TV tuner.</p><p>Connectivity is handled by 802.11a/b/g - 802.11n is optional - and an ethernet port. You also get four USB ports, a Firewire slot, a six-in-one card reader and a 1.3- or two-megapixel webcam.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -5929,6 +5950,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple MacBook Pro 13-inch",
+                Sku = "AP_MBP_13",
                 ShortDescription = "A groundbreaking Retina display. A new force-sensing trackpad. All-flash architecture. Powerful dual-core and quad-core Intel processors. Together, these features take the notebook to a new level of performance. And they will do the same for you in everything you create.",
                 FullDescription = "<p>With fifth-generation Intel Core processors, the latest graphics, and faster flash storage, the incredibly advanced MacBook Pro with Retina display moves even further ahead in performance and battery life.* *Compared with the previous generation.</p><p>Retina display with 2560-by-1600 resolution</p><p>Fifth-generation dual-core Intel Core i5 processor</p><p>Intel Iris Graphics</p><p>Up to 9 hours of battery life1</p><p>Faster flash storage2</p><p>802.11ac Wi-Fi</p><p>Two Thunderbolt 2 ports for connecting high-performance devices and transferring data at lightning speed</p><p>Two USB 3 ports (compatible with USB 2 devices) and HDMI</p><p>FaceTime HD camera</p><p>Pages, Numbers, Keynote, iPhoto, iMovie, GarageBand included</p><p>OS X, the world's most advanced desktop operating system</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6025,6 +6047,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Asus N551JK-XO076H Laptop",
+                Sku = "AS_551_LP",
                 ShortDescription = "Laptop Asus N551JK Intel Core i7-4710HQ 2.5 GHz, RAM 16GB, HDD 1TB, Video NVidia GTX 850M 4GB, BluRay, 15.6, Full HD, Win 8.1",
                 FullDescription = "<p>The ASUS N550JX combines cutting-edge audio and visual technology to deliver an unsurpassed multimedia experience. A full HD wide-view IPS panel is tailor-made for watching movies and the intuitive touchscreen makes for easy, seamless navigation. ASUS has paired the N550JX’s impressive display with SonicMaster Premium, co-developed with Bang & Olufsen ICEpower® audio experts, for true surround sound. A quad-speaker array and external subwoofer combine for distinct vocals and a low bass that you can feel.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6106,6 +6129,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Samsung Series 9 NP900X4C Premium Ultrabook",
+                Sku = "SM_900_PU",
                 ShortDescription = "Samsung Series 9 NP900X4C-A06US 15-Inch Ultrabook (1.70 GHz Intel Core i5-3317U Processor, 8GB DDR3, 128GB SSD, Windows 8) Ash Black",
                 FullDescription = "<p>Designed with mobility in mind, Samsung's durable, ultra premium, lightweight Series 9 laptop (model NP900X4C-A01US) offers mobile professionals and power users a sophisticated laptop equally suited for work and entertainment. Featuring a minimalist look that is both simple and sophisticated, its polished aluminum uni-body design offers an iconic look and feel that pushes the envelope with an edge just 0.58 inches thin. This Series 9 laptop also includes a brilliant 15-inch SuperBright Plus display with HD+ technology, 128 GB Solid State Drive (SSD), 8 GB of system memory, and up to 10 hours of battery life.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6188,6 +6212,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Spectre XT Pro UltraBook",
+                Sku = "HP_SPX_UB",
                 ShortDescription = "HP Spectre XT Pro UltraBook / Intel Core i5-2467M / 13.3 / 4GB / 128GB / Windows 7 Professional / Laptop",
                 FullDescription = "<p>Introducing HP ENVY Spectre XT, the Ultrabook designed for those who want style without sacrificing substance. It's sleek. It's thin. And with Intel. Corer i5 processor and premium materials, it's designed to go anywhere from the bistro to the boardroom, it's unlike anything you've ever seen from HP.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6280,6 +6305,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HP Envy 6-1180ca 15.6-Inch Sleekbook",
+                Sku = "HP_ESB_15",
                 ShortDescription = "HP ENVY 6-1202ea Ultrabook Beats Audio, 3rd generation Intel® CoreTM i7-3517U processor, 8GB RAM, 500GB HDD, Microsoft Windows 8, AMD Radeon HD 8750M (2 GB DDR3 dedicated)",
                 FullDescription = "The UltrabookTM that's up for anything. Thin and light, the HP ENVY is the large screen UltrabookTM with Beats AudioTM. With a soft-touch base that makes it easy to grab and go, it's a laptop that's up for anything.<br><br><b>Features</b><br><br>- Windows 8 or other operating systems available<br><br><b>Top performance. Stylish design. Take notice.</b><br><br>- At just 19.8 mm (0.78 in) thin, the HP ENVY UltrabookTM is slim and light enough to take anywhere. It's the laptop that gets you noticed with the power to get it done.<br>- With an eye-catching metal design, it's a laptop that you want to carry with you. The soft-touch, slip-resistant base gives you the confidence to carry it with ease.<br><br><b>More entertaining. More gaming. More fun.</b><br><br>- Own the UltrabookTM with Beats AudioTM, dual speakers, a subwoofer, and an awesome display. Your music, movies and photo slideshows will always look and sound their best.<br>- Tons of video memory let you experience incredible gaming and multimedia without slowing down. Create and edit videos in a flash. And enjoy more of what you love to the fullest.<br>- The HP ENVY UltrabookTM is loaded with the ports you'd expect on a world-class laptop, but on a Sleekbook instead. Like HDMI, USB, RJ-45, and a headphone jack. You get all the right connections without compromising size.<br><br><b>Only from HP.</b><br><br>- Life heats up. That's why there's HP CoolSense technology, which automatically adjusts your notebook's temperature based on usage and conditions. It stays cool. You stay comfortable.<br>- With HP ProtectSmart, your notebook's data stays safe from accidental bumps and bruises. It senses motion and plans ahead, stopping your hard drive and protecting your entire digital life.<br>- Keep playing even in dimly lit rooms or on red eye flights. The optional backlit keyboard[1] is full-size so you don't compromise comfort. Backlit keyboard. Another bright idea.<br><br><b>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6369,6 +6395,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Lenovo Thinkpad X1 Carbon Laptop",
+                Sku = "LE_TX1_CL",
                 ShortDescription = "Lenovo Thinkpad X1 Carbon Touch Intel Core i7 14 Ultrabook",
                 FullDescription = "<p>The X1 Carbon brings a new level of quality to the ThinkPad legacy of high standards and innovation. It starts with the durable, carbon fiber-reinforced roll cage, making for the best Ultrabook construction available, and adds a host of other new features on top of the old favorites. Because for 20 years, we haven't stopped innovating. And you shouldn't stop benefiting from that.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6451,6 +6478,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Adobe Photoshop CS4",
+                Sku = "AD_CS4_PH",
                 ShortDescription = "Easily find and view all your photos",
                 FullDescription = "<p>Adobe Photoshop CS4 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop CS4 so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6502,6 +6530,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Windows 8 Pro",
+                Sku = "MS_WIN_8P",
                 ShortDescription = "Windows 8 is a Microsoft operating system that was released in 2012 as part of the company's Windows NT OS family. ",
                 FullDescription = "<p>Windows 8 Pro is comparable to Windows 7 Professional and Ultimate and is targeted towards enthusiasts and business users; it includes all the features of Windows 8. Additional features include the ability to receive Remote Desktop connections, the ability to participate in a Windows Server domain, Encrypting File System, Hyper-V, and Virtual Hard Disk Booting, Group Policy as well as BitLocker and BitLocker To Go. Windows Media Center functionality is available only for Windows 8 Pro as a separate software package.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6552,6 +6581,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Sound Forge Pro 11",
+                Sku = "SF_PRO_11",
                 ShortDescription = "Advanced audio waveform editor.",
                 FullDescription = "<p>Sound Forge™ Pro is the application of choice for a generation of creative and prolific artists, producers, and editors. Record audio quickly on a rock-solid platform, address sophisticated audio processing tasks with surgical precision, and render top-notch master files with ease. New features include one-touch recording, metering for the new critical standards, more repair and restoration tools, and exclusive round-trip interoperability with SpectraLayers Pro. Taken together, these enhancements make this edition of Sound Forge Pro the deepest and most advanced audio editing platform available.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6607,6 +6637,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.GroupedProduct,
                 VisibleIndividually = true,
                 Name = "Nikon D5500 DSLR",
+                Sku = "N5500DS_0",
                 ShortDescription = "Slim, lightweight Nikon D5500 packs a vari-angle touchscreen",
                 FullDescription = "Nikon has announced its latest DSLR, the D5500. A lightweight, compact DX-format camera with a 24.2MP sensor, it’s the first of its type to offer a vari-angle touchscreen. The D5500 replaces the D5300 in Nikon’s range, and while it offers much the same features the company says it’s a much slimmer and lighter prospect. There’s a deep grip for easier handling and built-in Wi-Fi that lets you transfer and share shots via your phone or tablet.",
                 ProductTemplateId = productTemplateGrouped.Id,
@@ -6658,6 +6689,7 @@ namespace Nop.Services.Installation
                 VisibleIndividually = false, //hide this products
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
                 Name = "Nikon D5500 DSLR - Black",
+                Sku = "N5500DS_B",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "canon-digital-slr-camera-black",
                 AllowCustomerReviews = true,
@@ -6694,6 +6726,7 @@ namespace Nop.Services.Installation
                 VisibleIndividually = false, //hide this products
                 ParentGroupedProductId = productNikonD5500DSLR.Id,
                 Name = "Nikon D5500 DSLR - Red",
+                Sku = "N5500DS_R",
                 ProductTemplateId = productTemplateSimple.Id,
                 //SeName = "canon-digital-slr-camera-silver",
                 AllowCustomerReviews = true,
@@ -6734,6 +6767,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Leica T Mirrorless Digital Camera",
+                Sku = "LT_MIR_DC",
                 ShortDescription = "Leica T (Typ 701) Silver",
                 FullDescription = "<p>The new Leica T offers a minimalist design that's crafted from a single block of aluminum.  Made in Germany and assembled by hand, this 16.3 effective mega pixel camera is easy to use.  With a massive 3.7 TFT LCD intuitive touch screen control, the user is able to configure and save their own menu system.  The Leica T has outstanding image quality and also has 16GB of built in memory.  This is Leica's first system camera to use Wi-Fi.  Add the T-App to your portable iOS device and be able to transfer and share your images (free download from the Apple App Store)</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6785,6 +6819,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Apple iCam",
+                Sku = "APPLE_CAM",
                 ShortDescription = "Photography becomes smart",
                 FullDescription = "<p>A few months ago we featured the amazing WVIL camera, by many considered the future of digital photography. This is another very good looking concept, iCam is the vision of Italian designer Antonio DeRosa, the idea is to have a device that attaches to the iPhone 5, which then allows the user to have a camera with interchangeable lenses. The device would also feature a front-touch screen and a projector. Would be great if apple picked up on this and made it reality.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6846,6 +6881,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One M8 Android L 5.0 Lollipop",
+                Sku = "M8_HTC_5L",
                 ShortDescription = "HTC - One (M8) 4G LTE Cell Phone with 32GB Memory - Gunmetal (Sprint)",
                 FullDescription = "<p><b>HTC One (M8) Cell Phone for Sprint:</b> With its brushed-metal design and wrap-around unibody frame, the HTC One (M8) is designed to fit beautifully in your hand. It's fun to use with amped up sound and a large Full HD touch screen, and intuitive gesture controls make it seem like your phone almost knows what you need before you do. <br><br>Sprint Easy Pay option available in store.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6899,6 +6935,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "HTC One Mini Blue",
+                Sku = "OM_HTC_BL",
                 ShortDescription = "HTC One and HTC One Mini now available in bright blue hue",
                 FullDescription = "<p>HTC One mini smartphone with 4.30-inch 720x1280 display powered by 1.4GHz processor alongside 1GB RAM and 4-Ultrapixel rear camera.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -6956,6 +6993,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nokia Lumia 1020",
+                Sku = "N_1020_LU",
                 ShortDescription = "Nokia Lumia 1020 4G Cell Phone (Unlocked)",
                 FullDescription = "<p>Capture special moments for friends and family with this Nokia Lumia 1020 32GB WHITE cell phone that features an easy-to-use 41.0MP rear-facing camera and a 1.2MP front-facing camera. The AMOLED touch screen offers 768 x 1280 resolution for crisp visuals.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7009,6 +7047,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Beats Pill 2.0 Wireless Speaker",
+                Sku = "BP_20_WSP",
                 ShortDescription = "<b>Pill 2.0 Portable Bluetooth Speaker (1-Piece):</b> Watch your favorite movies and listen to music with striking sound quality. This lightweight, portable speaker is easy to take with you as you travel to any destination, keeping you entertained wherever you are. ",
                 FullDescription = "<p<ul><li>Pair and play with your Bluetooth® device with 30 foot range</li><li>Built-in speakerphone</li><li>7 hour rechargeable battery</li><li>Power your other devices with USB charge out</li><li>Tap two Beats Pills™ together for twice the sound with Beats Bond™</li></ul></p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7085,6 +7124,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Universal 7-8 Inch Tablet Cover",
+                Sku = "TC_78I_UN",
                 ShortDescription = "Universal protection for 7-inch & 8-inch tablets",
                 FullDescription = "<p>Made of durable polyurethane, our Universal Cover is slim, lightweight, and strong, with protective corners that stretch to hold most 7 and 8-inch tablets securely. This tough case helps protects your tablet from bumps, scuffs, and dings.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7134,6 +7174,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Portable Sound Speakers",
+                Sku = "PT_SPK_SN",
                 ShortDescription = "Universall portable sound speakers",
                 FullDescription = "<p>Your phone cut the cord, now it's time for you to set your music free and buy a Bluetooth speaker. Thankfully, there's one suited for everyone out there.</p><p>Some Bluetooth speakers excel at packing in as much functionality as the unit can handle while keeping the price down. Other speakers shuck excess functionality in favor of premium build materials instead. Whatever path you choose to go down, you'll be greeted with many options to suit your personal tastes.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7186,6 +7227,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Floral Roshe Customized Running Shoes",
+                Sku = "NK_FRC_RS",
                 ShortDescription = "When you ran across these shoes, you will immediately fell in love and needed a pair of these customized beauties.",
                 FullDescription = "<p>Each Rosh Run is personalized and exclusive, handmade in our workshop Custom. Run Your Rosh creations born from the hand of an artist specialized in sneakers, more than 10 years of experience.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7305,6 +7347,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "adidas Consortium Campus 80s Running Shoes",
+                Sku = "AD_C80_RS",
                 ShortDescription = "adidas Consortium Campus 80s Primeknit Light Maroon/Running Shoes",
                 FullDescription = "<p>One of three colorways of the adidas Consortium Campus 80s Primeknit set to drop alongside each other. This pair comes in light maroon and running white. Featuring a maroon-based primeknit upper with white accents. A limited release, look out for these at select adidas Consortium accounts worldwide.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7439,6 +7482,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike SB Zoom Stefan Janoski \"Medium Mint\"",
+                Sku = "NK_ZSJ_MM",
                 ShortDescription = "Nike SB Zoom Stefan Janoski Dark Grey Medium Mint Teal ...",
                 FullDescription = "The newly Nike SB Zoom Stefan Janoski gets hit with a \"Medium Mint\" accents that sits atop a Dark Grey suede. Expected to drop in October.",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7498,6 +7542,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Nike Tailwind Loose Short-Sleeve Running Shirt",
+                Sku = "NK_TLS_RS",
                 ShortDescription = "",
                 FullDescription = "<p>Boost your adrenaline with the Nike® Women's Tailwind Running Shirt. The lightweight, slouchy fit is great for layering, and moisture-wicking fabrics keep you feeling at your best. This tee has a notched hem for an enhanced range of motion, while flat seams with reinforcement tape lessen discomfort and irritation over longer distances. Put your keys and card in the side zip pocket and take off in your Nike® running t-shirt.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7603,6 +7648,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Oversized Women T-Shirt",
+                Sku = "WM_OVR_TS",
                 ShortDescription = "",
                 FullDescription = "<p>This oversized women t-Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7671,6 +7717,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Custom T-Shirt",
+                Sku = "CS_TSHIRT",
                 ShortDescription = "T-Shirt - Add Your Content",
                 FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7732,6 +7779,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Levi's 511 Jeans",
+                Sku = "LV_511_JN",
                 ShortDescription = "Levi's Faded Black 511 Jeans ",
                 FullDescription = "<p>Between a skinny and straight fit, our 511&trade; slim fit jeans are cut close without being too restricting. Slim throughout the thigh and leg opening for a long and lean look.</p><ul><li>Slouch1y at top; sits below the waist</li><li>Slim through the leg, close at the thigh and straight to the ankle</li><li>Stretch for added comfort</li><li>Classic five-pocket styling</li><li>99% Cotton, 1% Spandex, 11.2 oz. - Imported</li></ul>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7810,6 +7858,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Obey Propaganda Hat",
+                Sku = "OB_HAT_PR",
                 ShortDescription = "",
                 FullDescription = "<p>Printed poplin 5 panel camp hat with debossed leather patch and web closure</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7898,6 +7947,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Reversible Horseferry Check Belt",
+                Sku = "RH_CHK_BL",
                 ShortDescription = "Reversible belt in Horseferry check with smooth leather trim",
                 FullDescription = "<p>Reversible belt in Horseferry check with smooth leather trim</p><p>Leather lining, polished metal buckle</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -7949,6 +7999,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Ray Ban Aviator Sunglasses",
+                Sku = "RB_AVR_SG",
                 ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
                 FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8020,6 +8071,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Night Visions",
+                Sku = "NIGHT_VSN",
                 ShortDescription = "Night Visions is the debut studio album by American rock band Imagine Dragons.",
                 FullDescription = "<p>Original Release Date: September 4, 2012</p><p>Release Date: September 4, 2012</p><p>Genre - Alternative rock, indie rock, electronic rock</p><p>Label - Interscope/KIDinaKORNER</p><p>Copyright: (C) 2011 Interscope Records</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8092,6 +8144,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "If You Wait",
+                Sku = "IF_YOU_WT",
                 ShortDescription = "If You Wait is the debut studio album by English indie pop band London Grammar",
                 FullDescription = "<p>Original Release Date: September 6, 2013</p><p>Genre - Electronica, dream pop downtempo, pop</p><p>Label - Metal & Dust/Ministry of Sound</p><p>Producer - Tim Bran, Roy Kerr London, Grammar</p><p>Length - 43:22</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8155,6 +8208,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Science & Faith",
+                Sku = "SCI_FAITH",
                 ShortDescription = "Science & Faith is the second studio album by Irish pop rock band The Script.",
                 FullDescription = "<p># Original Release Date: September 10, 2010<br /># Label: RCA, Epic/Phonogenic(America)<br /># Copyright: 2010 RCA Records.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8207,6 +8261,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Fahrenheit 451 by Ray Bradbury",
+                Sku = "FR_451_RB",
                 ShortDescription = "Fahrenheit 451 is a dystopian novel by Ray Bradbury published in 1953. It is regarded as one of his best works.",
                 FullDescription = "<p>The novel presents a future American society where books are outlawed and firemen burn any that are found. The title refers to the temperature that Bradbury understood to be the autoignition point of paper.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8257,6 +8312,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "First Prize Pies",
+                Sku = "FIRST_PRP",
                 ShortDescription = "Allison Kave made pies as a hobby, until one day her boyfriend convinced her to enter a Brooklyn pie-making contest. She won. In fact, her pies were such a hit that she turned pro.",
                 FullDescription = "<p>First Prize Pies, a boutique, made-to-order pie business that originated on New York's Lower East Side, has become synonymous with tempting and unusual confections. For the home baker who is passionate about seasonal ingredients and loves a creative approach to recipes, First Prize Pies serves up 52 weeks of seasonal and eclectic pastries in an interesting pie-a-week format. Clear instructions, technical tips and creative encouragement guide novice bakers as well as pie mavens. With its nostalgia-evoking photos of homemade pies fresh out of the oven, First Prize Pies will be as giftable as it is practical.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8310,6 +8366,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Pride and Prejudice",
+                Sku = "PRIDE_PRJ",
                 ShortDescription = "Pride and Prejudice is a novel of manners by Jane Austen, first published in 1813.",
                 FullDescription = "<p>Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8365,6 +8422,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Elegant Gemstone Necklace",
+                Sku = "EG_GEM_NL",
                 ShortDescription = "Classic and elegant gemstone necklace now available in our store",
                 FullDescription = "<p>For those who like jewelry, creating their ownelegant jewelry from gemstone beads provides an economical way to incorporate genuine gemstones into your jewelry wardrobe. Manufacturers create beads from all kinds of precious gemstones and semi-precious gemstones, which are available in bead shops, craft stores, and online marketplaces.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8416,6 +8474,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Flower Girl Bracelet",
+                Sku = "FL_GIRL_B",
                 ShortDescription = "Personalised Flower Braceled",
                 FullDescription = "<p>This is a great gift for your flower girl to wear on your wedding day. A delicate bracelet that is made with silver plated soldered cable chain, gives this bracelet a dainty look for young wrist. A Swarovski heart, shown in Rose, hangs off a silver plated flower. Hanging alongside the heart is a silver plated heart charm with Flower Girl engraved on both sides. This is a great style for the younger flower girl.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8470,6 +8529,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "Vintage Style Engagement Ring",
+                Sku = "VS_ENG_RN",
                 ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
                 FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8523,6 +8583,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$25 Virtual Gift Card",
+                Sku = "VG_CR_025",
                 ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8567,6 +8628,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$50 Physical Gift Card",
+                Sku = "PG_CR_050",
                 ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -8618,6 +8680,7 @@ namespace Nop.Services.Installation
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,
                 Name = "$100 Physical Gift Card",
+                Sku = "PG_CR_100",
                 ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSimple.Id,
@@ -9184,6 +9247,7 @@ namespace Nop.Services.Installation
                 {
                     CustomerId = defaultCustomer.Id,
                     ProductId = product.Id,
+                    StoreId = defaultStore.Id,
                     IsApproved = true,
                     Title = "Some sample review",
                     ReviewText = string.Format("This sample review is for the {0}. I've been waiting for this product to be available. It is priced just right.", product.Name),
@@ -9529,6 +9593,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewTopic",
+                                                  Enabled = true,
+                                                  Name = "Add a new topic"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "AddNewWidget",
                                                   Enabled = true,
                                                   Name = "Add a new widget"
@@ -9577,6 +9647,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "DeleteOrder",
+                                                  Enabled = true,
+                                                  Name = "Delete an order"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteProduct",
                                                   Enabled = true,
                                                   Name = "Delete a product"
@@ -9604,6 +9680,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Delete a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteTopic",
+                                                  Enabled = true,
+                                                  Name = "Delete a topic"
                                               },
                                           new ActivityLogType
                                               {
@@ -9655,6 +9737,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "EditOrder",
+                                                  Enabled = true,
+                                                  Name = "Edit an order"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "EditProduct",
                                                   Enabled = true,
                                                   Name = "Edit a product"
@@ -9688,6 +9776,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Edit a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditTopic",
+                                                  Enabled = true,
+                                                  Name = "Edit a topic"
                                               },
                                           new ActivityLogType
                                               {
@@ -10058,6 +10152,19 @@ namespace Nop.Services.Installation
             };
 
             _vendorRepository.Insert(vendors);
+
+            //search engine names
+            foreach (var vendor in vendors)
+            {
+                _urlRecordRepository.Insert(new UrlRecord
+                {
+                    EntityId = vendor.Id,
+                    EntityName = "Vendor",
+                    LanguageId = 0,
+                    IsActive = true,
+                    Slug = vendor.ValidateSeName("", vendor.Name, true)
+                });
+            }
         }
 
         protected virtual void InstallAffiliates()

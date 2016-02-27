@@ -11,6 +11,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
@@ -292,6 +293,7 @@ namespace Nop.Admin.Controllers
                 model.ShowVendorOnProductDetailsPage_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.ShowVendorOnProductDetailsPage, storeScope);
                 model.AllowCustomersToContactVendors_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToContactVendors, storeScope);
                 model.AllowCustomersToApplyForVendorAccount_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
+                model.AllowSearchByVendor_OverrideForStore = _settingService.SettingExists(vendorSettings, x => x.AllowSearchByVendor, storeScope);
             }
 
             return View(model);
@@ -330,6 +332,11 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(vendorSettings, x => x.AllowCustomersToApplyForVendorAccount, storeScope);
+
+            if (model.AllowSearchByVendor_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(vendorSettings, x => x.AllowSearchByVendor, storeScope);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(vendorSettings, x => x.AllowSearchByVendor, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
@@ -1074,6 +1081,7 @@ namespace Nop.Admin.Controllers
                 model.DisplayTaxShippingInfoShoppingCart_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoShoppingCart, storeScope);
                 model.DisplayTaxShippingInfoWishlist_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoWishlist, storeScope);
                 model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope);
+                model.ShowProductReviewsPerStore_OverrideForStore = _settingService.SettingExists(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
             }
             return View(model);
         }
@@ -1357,6 +1365,11 @@ namespace Nop.Admin.Controllers
             else if (storeScope > 0)
                 _settingService.DeleteSetting(catalogSettings, x => x.DisplayTaxShippingInfoOrderDetailsPage, storeScope);
 
+            if (model.ShowProductReviewsPerStore_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(catalogSettings, x => x.ShowProductReviewsPerStore, storeScope);
+
             //now clear settings cache
             _settingService.ClearCache();
 
@@ -1371,7 +1384,59 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Catalog");
         }
 
+        #region Sort options
 
+        [HttpPost]
+        public ActionResult SortOptionsList(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
+            var model = new List<SortOptionModel>();
+            foreach (int option in Enum.GetValues(typeof(ProductSortingEnum)))
+            {
+                int value;
+                model.Add(new SortOptionModel()
+                {
+                    Id = option,
+                    Name = ((ProductSortingEnum)option).GetLocalizedEnum(_localizationService, _workContext),
+                    IsActive = !catalogSettings.ProductSortingEnumDisabled.Contains(option),
+                    DisplayOrder = catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(option, out value) ? value : option
+                });
+            }
+            var gridModel = new DataSourceResult
+            {
+                Data = model.OrderBy(option => option.DisplayOrder),
+                Total = model.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost]
+        public ActionResult SortOptionUpdate(SortOptionModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            var storeScope = this.GetActiveStoreScopeConfiguration(_storeService, _workContext);
+            var catalogSettings = _settingService.LoadSetting<CatalogSettings>(storeScope);
+
+            catalogSettings.ProductSortingEnumDisplayOrder[model.Id] = model.DisplayOrder;
+            if (model.IsActive && catalogSettings.ProductSortingEnumDisabled.Contains(model.Id))
+                catalogSettings.ProductSortingEnumDisabled.Remove(model.Id);
+            if (!model.IsActive && !catalogSettings.ProductSortingEnumDisabled.Contains(model.Id))
+                catalogSettings.ProductSortingEnumDisabled.Add(model.Id);
+
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisabled, storeScope, false);
+            _settingService.SaveSetting(catalogSettings, x => x.ProductSortingEnumDisplayOrder, storeScope, false);
+            _settingService.ClearCache();
+
+            return new NullJsonResult();
+        }
+
+        #endregion
 
         public ActionResult RewardPoints()
         {
@@ -1394,7 +1459,9 @@ namespace Nop.Admin.Controllers
                     _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Points, storeScope);
                 model.PointsForPurchases_Awarded_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Awarded, storeScope);
                 model.PointsForPurchases_Canceled_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForPurchases_Canceled, storeScope);
-                model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope); model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
+                model.DisplayHowMuchWillBeEarned_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
+                model.PointsForRegistration_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PointsForRegistration, storeScope);
+                model.PageSize_OverrideForStore = _settingService.SettingExists(rewardPointsSettings, x => x.PageSize, storeScope);
             }
             var currencySettings = _settingService.LoadSetting<CurrencySettings>(storeScope); 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
@@ -1461,6 +1528,11 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope, false);
                 else if (storeScope > 0)
                     _settingService.DeleteSetting(rewardPointsSettings, x => x.DisplayHowMuchWillBeEarned, storeScope);
+
+                if (model.PageSize_OverrideForStore || storeScope == 0)
+                    _settingService.SaveSetting(rewardPointsSettings, x => x.PageSize, storeScope, false);
+                else if (storeScope > 0)
+                    _settingService.DeleteSetting(rewardPointsSettings, x => x.PageSize, storeScope);
 
                 _settingService.SaveSetting(rewardPointsSettings, x => x.PointsAccumulatedForAllStores, 0, false);
 
@@ -2396,6 +2468,8 @@ namespace Nop.Admin.Controllers
             model.SecuritySettings.CaptchaShowOnNewsCommentPage = captchaSettings.ShowOnNewsCommentPage;
             model.SecuritySettings.CaptchaShowOnProductReviewPage = captchaSettings.ShowOnProductReviewPage;
             model.SecuritySettings.CaptchaShowOnApplyVendorPage = captchaSettings.ShowOnApplyVendorPage;
+            model.SecuritySettings.ReCaptchaVersion = captchaSettings.ReCaptchaVersion;
+            model.SecuritySettings.AvailableReCaptchaVersions = ReCaptchaVersion.Version1.ToSelectList(false).ToList();
             model.SecuritySettings.ReCaptchaPublicKey = captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = captchaSettings.ReCaptchaPrivateKey;
 
@@ -2635,6 +2709,7 @@ namespace Nop.Admin.Controllers
             captchaSettings.ShowOnNewsCommentPage = model.SecuritySettings.CaptchaShowOnNewsCommentPage;
             captchaSettings.ShowOnProductReviewPage = model.SecuritySettings.CaptchaShowOnProductReviewPage;
             captchaSettings.ShowOnApplyVendorPage = model.SecuritySettings.CaptchaShowOnApplyVendorPage;
+            captchaSettings.ReCaptchaVersion = model.SecuritySettings.ReCaptchaVersion;
             captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
             captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
             _settingService.SaveSetting(captchaSettings);
@@ -2859,14 +2934,19 @@ namespace Nop.Admin.Controllers
         //do not validate request token (XSRF)
         //for some reasons it does not work with "filtering" support
         [AdminAntiForgery(true)] 
-        public ActionResult AllSettings(DataSourceRequest command,
-            Nop.Web.Framework.Kendoui.Filter filter = null, IEnumerable<Sort> sort = null)
+        public ActionResult AllSettings(DataSourceRequest command, AllSettingsListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var settings = _settingService
-                .GetAllSettings()
+            var query = _settingService.GetAllSettings().AsQueryable();
+
+            if (!string.IsNullOrEmpty(model.SearchSettingName))
+                query = query.Where(s => s.Name.ToLowerInvariant().Contains(model.SearchSettingName.ToLowerInvariant()));
+            if (!string.IsNullOrEmpty(model.SearchSettingValue))
+                query = query.Where(s => s.Value.ToLowerInvariant().Contains(model.SearchSettingValue.ToLowerInvariant()));
+
+            var settings = query.ToList()
                 .Select(x =>
                             {
                                 string storeName;
@@ -2889,9 +2969,7 @@ namespace Nop.Admin.Controllers
                                 };
                                 return settingModel;
                             })
-                .AsQueryable()
-                .Filter(filter)
-                .Sort(sort);
+                .AsQueryable();
 
             var gridModel = new DataSourceResult
             {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Web;
 using System.Xml;
+using System.Linq;
 
 namespace Nop.Core.Plugins
 {
@@ -11,18 +12,16 @@ namespace Nop.Core.Plugins
     /// </summary>
     public partial class OfficialFeedManager : IOfficialFeedManager
     {
-        /// <summary>
-        /// Get categories
-        /// </summary>
-        /// <returns>Result</returns>
-        public virtual IList<OfficialFeedCategory> GetCategories()
+        private static string MakeUrl(string query, params object[] args)
         {
-            var result = new List<OfficialFeedCategory>();
+            var url = "http://www.nopcommerce.com/extensionsxml.aspx?" + query;
 
-            const string feedUrl = "http://www.nopcommerce.com/extensionsxml.aspx?getCategories=1";
+            return string.Format(url, args);
+        }
 
-            //specify timeout (5 secs)
-            var request = WebRequest.Create(feedUrl);
+        private static XmlDocument GetDocument(string feedQuery, params object[] args)
+        {
+            var request = WebRequest.Create(MakeUrl(feedQuery, args));
             request.Timeout = 5000;
             using (var response = request.GetResponse())
             {
@@ -32,21 +31,23 @@ namespace Nop.Core.Plugins
 
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(responseFromServer);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//categories/category"))
-                {
-                    var id = node.SelectNodes(@"id")[0].InnerText;
-                    var parentCategoryId = node.SelectNodes(@"parentCategoryId")[0].InnerText;
-                    var name = node.SelectNodes(@"name")[0].InnerText;
-                    result.Add(new OfficialFeedCategory
-                    {
-                        Id = int.Parse(id),
-                        ParentCategoryId = int.Parse(parentCategoryId),
-                        Name = name,
-                    });
-                }
+                return xmlDoc;
             }
-            return result;
+        }
+
+        /// <summary>
+        /// Get categories
+        /// </summary>
+        /// <returns>Result</returns>
+        public virtual IList<OfficialFeedCategory> GetCategories()
+        {
+            return GetDocument("getCategories=1").SelectNodes(@"//categories/category").Cast<XmlNode>().Select(node => new OfficialFeedCategory
+            {
+                Id = int.Parse(node.ElText(@"id")),
+                ParentCategoryId = int.Parse(node.ElText(@"parentCategoryId")),
+                Name = node.ElText(@"name"),
+            }).ToList();
+            
         }
 
         /// <summary>
@@ -55,34 +56,11 @@ namespace Nop.Core.Plugins
         /// <returns>Result</returns>
         public virtual IList<OfficialFeedVersion> GetVersions()
         {
-            var result = new List<OfficialFeedVersion>();
-
-            const string feedUrl = "http://www.nopcommerce.com/extensionsxml.aspx?getVersions=1";
-
-            //specify timeout (5 secs)
-            var request = WebRequest.Create(feedUrl);
-            request.Timeout = 5000;
-            using (var response = request.GetResponse())
+            return GetDocument("getVersions=1").SelectNodes(@"//versions/version").Cast<XmlNode>().Select(node => new OfficialFeedVersion
             {
-                var dataStream = response.GetResponseStream();
-                var reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(responseFromServer);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//versions/version"))
-                {
-                    var id = node.SelectNodes(@"id")[0].InnerText;
-                    var name = node.SelectNodes(@"name")[0].InnerText;
-                    result.Add(new OfficialFeedVersion
-                    {
-                        Id = int.Parse(id),
-                        Name = name,
-                    });
-                }
-            }
-            return result;
+                Id = int.Parse(node.ElText(@"id")),
+                Name = node.ElText(@"name"),
+            }).ToList();            
         }
 
         /// <summary>
@@ -100,52 +78,24 @@ namespace Nop.Core.Plugins
             string searchTerm = "",
             int pageIndex = 0, int pageSize = int.MaxValue)
         {
-
-            var list = new List<OfficialFeedPlugin>();
+            int totalRecords = 0;
 
             //pageSize parameter is currently ignored by official site (set to 15)
-            var feedUrl = string.Format("http://www.nopcommerce.com/extensionsxml.aspx?category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
+            var xmlDoc = GetDocument("category={0}&version={1}&price={2}&pageIndex={3}&pageSize={4}&searchTerm={5}",
                 categoryId, versionId, price, pageIndex, pageSize, HttpUtility.UrlEncode(searchTerm));
 
-            //specify timeout (5 secs)
-            var request = WebRequest.Create(feedUrl);
-            request.Timeout = 5000;
-            int totalRecords = 0;
-            using (var response = request.GetResponse())
+            var list = xmlDoc.SelectNodes(@"//extensions/extension").Cast<XmlNode>().Select(node => new OfficialFeedPlugin
             {
-                var dataStream = response.GetResponseStream();
-                var reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
+                Name = node.ElText(@"name"),
+                Url = node.ElText(@"url"),
+                PictureUrl = node.ElText(@"picture"),
+                Category = node.ElText(@"category"),
+                SupportedVersions = node.ElText(@"versions"),
+                Price = node.ElText(@"price")
+            }).ToList();
 
-                var xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(responseFromServer);
-
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//extensions/extension"))
-                {
-                    var name = node.SelectNodes(@"name")[0].InnerText;
-                    var url = node.SelectNodes(@"url")[0].InnerText;
-                    var pictureUrl = node.SelectNodes(@"picture")[0].InnerText;
-                    var category = node.SelectNodes(@"category")[0].InnerText;
-                    var versions = node.SelectNodes(@"versions")[0].InnerText;
-                    var priceValue = node.SelectNodes(@"price")[0].InnerText;
-                    list.Add(new OfficialFeedPlugin
-                    {
-                        Name = name,
-                        Url = url,
-                        PictureUrl = pictureUrl,
-                        Category = category,
-                        SupportedVersions= versions,
-                        Price = priceValue,
-                    });
-                }
-
-                //total records
-                foreach (XmlNode node in xmlDoc.SelectNodes(@"//totalRecords"))
-                {
-                   totalRecords = int.Parse(node.SelectNodes(@"value")[0].InnerText);
-                }
-            }
-
+            totalRecords = int.Parse(xmlDoc.SelectNodes(@"//totalRecords")[0].ElText(@"value"));
+                        
             return new PagedList<OfficialFeedPlugin>(list, pageIndex, pageSize, totalRecords);
         }
     }
