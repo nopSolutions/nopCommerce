@@ -928,6 +928,7 @@ INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (366, N'vendors
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (367, N'vendorsettings.allowcustomerstoapplyforvendoraccount', N'True', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (368, N'emailaccountsettings.defaultemailaccountid', N'1', 0)
 INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (369, N'widgetsettings.activewidgetsystemnames', N'Widgets.NivoSlider', 0)
+INSERT [dbo].[Setting] ([Id], [Name], [Value], [StoreId]) VALUES (370, N'Tasks.DeleteGuestTask.OlderThanMinutes', N'1440', 0)
 SET IDENTITY_INSERT [dbo].[Setting] OFF
 GO
 
