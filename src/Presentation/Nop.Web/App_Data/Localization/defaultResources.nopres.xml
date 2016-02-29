@@ -1212,6 +1212,27 @@
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.BackToList">
     <Value>back to checkout attribute list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition">
+     <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes">
+     <Value>Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes.Hint">
+     <Value>Choose an attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition">
+     <Value>Enable condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
+     <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists">
+     <Value>No attribute exists that could be used as condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit">
+     <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Deleted">
     <Value>The attribute has been deleted successfully.</Value>
   </LocaleResource>

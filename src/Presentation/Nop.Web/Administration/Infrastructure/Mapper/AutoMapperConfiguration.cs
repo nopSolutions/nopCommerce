@@ -547,6 +547,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
                     .ForMember(dest => dest.AvailableStores, mo => mo.Ignore())
                     .ForMember(dest => dest.SelectedStoreIds, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConditionAllowed, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConditionModel, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                     .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())

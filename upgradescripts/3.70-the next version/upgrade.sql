@@ -266,6 +266,27 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
     <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition">
+     <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes">
+     <Value>Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes.Hint">
+     <Value>Choose an attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition">
+     <Value>Enable condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
+     <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists">
+     <Value>No attribute exists that could be used as condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit">
+     <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -555,4 +576,12 @@ WHERE [Published] IS NULL
 GO
 
 ALTER TABLE [Topic] ALTER COLUMN [Published] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ConditionAttributeXml')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [ConditionAttributeXml] nvarchar(MAX) NULL
+END
 GO
