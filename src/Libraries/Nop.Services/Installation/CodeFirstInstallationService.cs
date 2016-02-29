@@ -5028,6 +5028,8 @@ namespace Nop.Services.Installation
                 {
                     ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
                 });
+
+            settingService.SetSetting("Tasks.DeleteGuestTask.OlderThanMinutes", 1440);
         }
 
         protected virtual void InstallCheckoutAttributes()
