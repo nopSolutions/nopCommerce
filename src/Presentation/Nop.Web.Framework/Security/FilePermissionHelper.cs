@@ -148,11 +148,10 @@ namespace Nop.Web.Framework.Security
         /// <summary>
         /// Gets a list of directories (physical paths) which require write permission
         /// </summary>
-        /// <param name="webHelper">Web helper</param>
         /// <returns>Result</returns>
-        public static IEnumerable<string> GetDirectoriesWrite(IWebHelper webHelper)
+        public static IEnumerable<string> GetDirectoriesWrite()
         {
-            string rootDir = webHelper.MapPath("~/");
+            string rootDir = CommonHelper.MapPath("~/");
             var dirsToCheck = new List<string>();
             //dirsToCheck.Add(rootDir);
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
@@ -170,15 +169,14 @@ namespace Nop.Web.Framework.Security
         /// <summary>
         /// Gets a list of files (physical paths) which require write permission
         /// </summary>
-        /// <param name="webHelper">Web helper</param>
         /// <returns>Result</returns>
-        public static IEnumerable<string> GetFilesWrite(IWebHelper webHelper)
+        public static IEnumerable<string> GetFilesWrite()
         {
-            string rootDir = webHelper.MapPath("~/");
+            string rootDir = CommonHelper.MapPath("~/");
             var filesToCheck = new List<string>();
             filesToCheck.Add(Path.Combine(rootDir, "Global.asax"));
             filesToCheck.Add(Path.Combine(rootDir, "web.config"));
-            filesToCheck.Add(Path.Combine(rootDir,"App_Data\\InstalledPlugins.txt"));
+            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\InstalledPlugins.txt"));
             filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
             return filesToCheck;
         }

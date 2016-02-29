@@ -30,7 +30,7 @@ namespace Nop.Services.Installation
         #region Ctor
 
         public SqlFileInstallationService(IRepository<Language> languageRepository,
-            IRepository<Customer> customerRepository, 
+            IRepository<Customer> customerRepository,
             IRepository<Store> storeRepository,
             IDbContext dbContext,
             IWebHelper webHelper)
@@ -52,7 +52,7 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -113,7 +113,7 @@ namespace Nop.Services.Installation
                 {
                     if (sb.Length > 0)
                         return sb.ToString();
-                    
+
                     return null;
                 }
 
@@ -133,14 +133,14 @@ namespace Nop.Services.Installation
         public virtual void InstallData(string defaultUserEmail,
             string defaultUserPassword, bool installSampleData = true)
         {
-            ExecuteSqlFile(_webHelper.MapPath("~/App_Data/Install/create_required_data.sql"));
+            ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/create_required_data.sql"));
             InstallLocaleResources();
             UpdateDefaultCustomer(defaultUserEmail, defaultUserPassword);
             UpdateDefaultStoreUrl();
 
             if (installSampleData)
             {
-                ExecuteSqlFile(_webHelper.MapPath("~/App_Data/Install/create_sample_data.sql"));
+                ExecuteSqlFile(CommonHelper.MapPath("~/App_Data/Install/create_sample_data.sql"));
             }
         }
 
