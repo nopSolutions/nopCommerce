@@ -6,6 +6,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Localization;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Nop.Admin.Models.Customers
 {
@@ -49,7 +50,7 @@ namespace Nop.Admin.Models.Customers
         public IList<CustomerRoleLocalizedModel> Locales { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Description")]
-        [AllowHtml]
+        [AllowHtml]       
         public string Description { get; set; }
         
         #region Nested classes
@@ -99,7 +100,6 @@ namespace Nop.Admin.Models.Customers
         public int LanguageId { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Description")]
-        [AllowHtml]
         public string Description { get; set; }
     }
 }

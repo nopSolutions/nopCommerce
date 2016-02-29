@@ -287,6 +287,10 @@ set @resources='
   <LocaleResource Name="Account.TypeOfCustomer">
     <Value>Type of Customer</Value>
   </LocaleResource>  
+  <LocaleResource Name="Admin.Customers.CustomerRoles.Fields.Name.Description">
+    <Value>Role description required when it is displayed on the form.</Value>
+  </LocaleResource>
+ 
 </Language>
 '
 
