@@ -145,7 +145,7 @@ namespace Nop.Core.Caching
             foreach (var ep in _muxer.GetEndPoints())
             {
                 var server = _muxer.GetServer(ep);
-                //we can use the code belwo (commented)
+                //we can use the code below (commented)
                 //but it requires administration permission - ",allowAdmin=true"
                 //server.FlushDatabase();
 
