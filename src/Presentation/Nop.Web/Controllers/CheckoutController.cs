@@ -1473,6 +1473,10 @@ namespace Nop.Web.Controllers
                 }
 
                 //shipping is not required
+
+                _workContext.CurrentCustomer.ShippingAddress = null;
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
                 _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.SelectedShippingOption, null, _storeContext.CurrentStore.Id);
 
                 //load next step
