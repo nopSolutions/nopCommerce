@@ -4,6 +4,7 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Nop.Core;
+using System.Data.Entity.Core.EntityClient;
 
 namespace Nop.Data 
 {
@@ -172,6 +173,15 @@ namespace Nop.Data
             }
 
             return result;
+        }
+
+        public static string DbName(this IDbContext context)
+        {
+            var connection = ((IObjectContextAdapter)context).ObjectContext.Connection as EntityConnection;
+            if(connection==null)
+                return string.Empty;
+
+            return connection.StoreConnection.Database; 
         }
 
         #endregion

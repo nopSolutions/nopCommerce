@@ -128,4 +128,103 @@
             </tr>
         }
     </table>
+    <p>
+        <hr/>
+    </p>
+    
+    <div id="backup-data"></div>
+    <table width="100%" class="backup">
+        <tr>
+            <td colspan="4"><strong>@T("Admin.System.Maintenance.BackupDatabase.DatabaseBackups")</strong></td>
+            <td style="text-align: right;">
+                <input type="submit" id="backup-database" name="backup-database" class="k-button" value="@T("Admin.System.Maintenance.BackupDatabase.BackupNow")"/>
+            </td>
+        </tr>
+    </table>
+
+    <script type="text/javascript">
+        function SubmitBackupAction(fileName, action) {
+            $("#backup-data").children().remove();
+            $("#backup-data").append('<input type="hidden" name="backupFileName" value="' + fileName + '"/>');
+            $("#backup-data").append('<input type="hidden" name="action" value="' + action + '"/>');
+            ShowProgress();
+        };
+
+        function ShowProgress() {
+            $("html, body").animate({ scrollTop: 0 }, 400);
+            showThrobber('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.System.Maintenance.BackupDatabase.Progress").Text))');
+        };
+
+        $(document).ready(function () {
+            $("#backup-database").on("click", function() {
+                ShowProgress();
+            });
+        });
+    </script>
+
+    <div id="backup-list"></div>
+
+    <script>
+                $(document).ready(function() {
+                    $("#backup-list").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("BackupFiles", "Common"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors"
+                            },
+                            error: function(e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "Name",
+                                title: "@T("Admin.System.Maintenance.BackupDatabase.FileName")"
+                            }, {
+                                field: "Length",
+                                title: "@T("Admin.System.Maintenance.BackupDatabase.FileSize")"
+                            }, {
+                                field: "Link",
+                                title: "@T("Admin.System.Maintenance.BackupDatabase.Download")",
+                                template: '<a href="#=Link#">@T("Admin.System.Maintenance.BackupDatabase.Download")</a>'
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
+                                template: '<input type="submit" class="k-button restore" value="@T("Admin.System.Maintenance.BackupDatabase.Restore")" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')"/>'
+                            },
+                            {
+                                field: "Name",
+                                title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
+                                template: '<input type="submit" class="k-button delete" value="@T("Admin.System.Maintenance.BackupDatabase.Delete")" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')" />'
+                            }
+                        ]
+                    });
+                });
+    </script>
 }

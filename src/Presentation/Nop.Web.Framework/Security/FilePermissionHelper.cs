@@ -156,6 +156,7 @@ namespace Nop.Web.Framework.Security
             var dirsToCheck = new List<string>();
             //dirsToCheck.Add(rootDir);
             dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
+            dirsToCheck.Add(Path.Combine(rootDir, "Administration\\backups"));
             dirsToCheck.Add(Path.Combine(rootDir, "bin"));
             dirsToCheck.Add(Path.Combine(rootDir, "content"));
             dirsToCheck.Add(Path.Combine(rootDir, "content\\images"));

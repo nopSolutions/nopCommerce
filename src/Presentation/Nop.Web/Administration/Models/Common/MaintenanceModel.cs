@@ -17,7 +17,7 @@ namespace Nop.Admin.Models.Common
         public DeleteGuestsModel DeleteGuests { get; set; }
         public DeleteAbandonedCartsModel DeleteAbandonedCarts { get; set; }
         public DeleteExportedFilesModel DeleteExportedFiles { get; set; }
-
+        
         #region Nested classes
 
         public partial class DeleteGuestsModel : BaseNopModel

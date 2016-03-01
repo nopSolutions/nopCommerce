@@ -59,6 +59,7 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
         private readonly HttpContextBase _httpContext;
+        private readonly IMaintenanceService _maintenanceService;
 
         #endregion
 
@@ -84,7 +85,8 @@ namespace Nop.Admin.Controllers
             ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
-            HttpContextBase httpContext)
+            HttpContextBase httpContext,
+            IMaintenanceService maintenanceService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -107,6 +109,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
+            this._maintenanceService = maintenanceService;
         }
 
         #endregion
@@ -419,8 +422,7 @@ namespace Nop.Admin.Controllers
             
             return View(model);
         }
-
-
+        
         public ActionResult Maintenance()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -432,6 +434,7 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
         public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
@@ -449,6 +452,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-abondoned-carts")]
         public ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
@@ -461,6 +465,7 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.NumberOfDeletedItems = _shoppingCartService.DeleteExpiredShoppingCartItems(olderThanDateValue);
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]
         public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
@@ -502,6 +507,82 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult BackupFiles(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var backupFiles = _maintenanceService.GetAllBackupFiles().ToList();
+            
+            var gridModel = new DataSourceResult
+            {
+                Data = backupFiles.Select(p=>new {p.Name,
+                    Length = string.Format("{0:F2} Mb", p.Length / 1024f / 1024f),
+                    Link = _webHelper.GetStoreLocation(false) + "Administration/backups/"+p.Name
+                }),
+                Total = backupFiles.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("backup-database")]
+        public ActionResult BackupDatabase(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            try
+            {
+                _maintenanceService.BackupDatabase();
+                this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("backupFileName", "action")]
+        public ActionResult BackupAction(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var action = this.Request.Form["action"];
+
+            var fileName = this.Request.Form["backupFileName"];
+            var backupPath = _maintenanceService.GetBackupPath(fileName);
+
+            try
+            {
+                switch (action)
+                {
+                    case "delete-backup":
+                    {
+                        System.IO.File.Delete(backupPath);
+                        this.SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
+                    }
+                        break;
+                    case "restore-backup":
+                    {
+                        _maintenanceService.RestoreDatabase(backupPath);
+                        this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
+                    }
+                        break;
+                }
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+            
+            return View(model);
+        }
 
         [ChildActionOnly]
         public ActionResult LanguageSelector()
