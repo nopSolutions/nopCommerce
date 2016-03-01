@@ -236,7 +236,7 @@ namespace Nop.Web.Controllers
 
             var model = new ActiveDiscussionsModel();
 
-            int pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize: 50;
+            int pageSize = _forumSettings.ActiveDiscussionsPageSize > 0 ? _forumSettings.ActiveDiscussionsPageSize : 50;
 
             var topics = _forumService.GetActiveTopics(forumId, (page - 1), pageSize);
             model.TopicPageSize = topics.PageSize;
@@ -266,7 +266,7 @@ namespace Nop.Web.Controllers
             }
 
             var topics = _forumService.GetActiveTopics(forumId, 0, _forumSettings.ActiveDiscussionsFeedCount);
-            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, "http");
+            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
 
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
@@ -285,7 +285,7 @@ namespace Nop.Web.Controllers
 
             foreach (var topic in topics)
             {
-                string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
+                string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 string content = String.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                 items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl),
@@ -328,7 +328,7 @@ namespace Nop.Web.Controllers
                 model.SeName = forum.GetSeName();
                 model.Description = forum.Description;
 
-                int pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize: 10;
+                int pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize : 10;
 
                 //subscription                
                 if (_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
@@ -342,7 +342,7 @@ namespace Nop.Web.Controllers
                     }
                 }
 
-                var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty, 
+                var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty,
                     ForumSearchType.All, 0, (page - 1), pageSize);
                 model.TopicPageSize = topics.PageSize;
                 model.TopicTotalRecords = topics.TotalCount;
@@ -382,7 +382,7 @@ namespace Nop.Web.Controllers
                 var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, "http");
+                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
 
                 var feedTitle = _localizationService.GetResource("Forum.ForumFeedTitle");
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
@@ -401,7 +401,7 @@ namespace Nop.Web.Controllers
 
                 foreach (var topic in topics)
                 {
-                    string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, "http");
+                    string topicUrl = Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                     string content = string.Format("{2}: {0}, {3}: {1}", topic.NumReplies.ToString(), topic.Views.ToString(), repliesText, viewsText);
 
                     items.Add(new SyndicationItem(topic.Subject, content, new Uri(topicUrl), String.Format("urn:store:{0}:forum:topic:{1}", _storeContext.CurrentStore.Id, topic.Id),
@@ -477,7 +477,7 @@ namespace Nop.Web.Controllers
                 //if not posts loaded, redirect to the first page
                 if (posts.Count == 0 && page > 1)
                 {
-                    return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
                 }
 
                 //update view count
@@ -487,7 +487,7 @@ namespace Nop.Web.Controllers
                 //prepare model
                 var model = new ForumTopicPageModel();
                 model.Id = forumTopic.Id;
-                model.Subject= forumTopic.Subject;
+                model.Subject = forumTopic.Subject;
                 model.SeName = forumTopic.GetSeName();
 
                 model.IsCustomerAllowedToEditTopic = _forumService.IsCustomerAllowedToEditTopic(_workContext.CurrentCustomer, forumTopic);
@@ -514,7 +514,7 @@ namespace Nop.Web.Controllers
                     var forumPostModel = new ForumPostModel
                     {
                         Id = post.Id,
-                        ForumTopicId =  post.TopicId,
+                        ForumTopicId = post.TopicId,
                         ForumTopicSeName = forumTopic.GetSeName(),
                         FormattedText = post.FormatPostText(),
                         IsCurrentCustomerAllowedToEditPost = _forumService.IsCustomerAllowedToEditPost(_workContext.CurrentCustomer, post),
@@ -533,15 +533,15 @@ namespace Nop.Web.Controllers
                     };
                     //created on string
                     if (_forumSettings.RelativeDateTimeFormattingEnabled)
-                       forumPostModel.PostCreatedOnStr = post.CreatedOnUtc.RelativeFormat(true, "f");
+                        forumPostModel.PostCreatedOnStr = post.CreatedOnUtc.RelativeFormat(true, "f");
                     else
-                        forumPostModel.PostCreatedOnStr =_dateTimeHelper.ConvertToUserTime(post.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
+                        forumPostModel.PostCreatedOnStr = _dateTimeHelper.ConvertToUserTime(post.CreatedOnUtc, DateTimeKind.Utc).ToString("f");
                     //avatar
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         forumPostModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
-                            _mediaSettings.AvatarPictureSize, 
+                            post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                            _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);
                     }
@@ -777,7 +777,7 @@ namespace Nop.Web.Controllers
 
                     if (_forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer))
                     {
-                        topicType = (ForumTopicType) Enum.ToObject(typeof (ForumTopicType), model.TopicTypeId);
+                        topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
                     }
 
                     //forum topic
@@ -785,7 +785,7 @@ namespace Nop.Web.Controllers
                     {
                         ForumId = forum.Id,
                         CustomerId = _workContext.CurrentCustomer.Id,
-                        TopicTypeId = (int) topicType,
+                        TopicTypeId = (int)topicType,
                         Subject = subject,
                         CreatedOnUtc = nowUtc,
                         UpdatedOnUtc = nowUtc
@@ -829,7 +829,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
                 }
                 catch (Exception ex)
                 {
@@ -956,11 +956,11 @@ namespace Nop.Web.Controllers
 
                     if (_forumService.IsCustomerAllowedToSetTopicPriority(_workContext.CurrentCustomer))
                     {
-                        topicType = (ForumTopicType) Enum.ToObject(typeof (ForumTopicType), model.TopicTypeId);
+                        topicType = (ForumTopicType)Enum.ToObject(typeof(ForumTopicType), model.TopicTypeId);
                     }
 
                     //forum topic
-                    forumTopic.TopicTypeId = (int) topicType;
+                    forumTopic.TopicTypeId = (int)topicType;
                     forumTopic.Subject = subject;
                     forumTopic.UpdatedOnUtc = nowUtc;
                     _forumService.UpdateTopic(forumTopic);
@@ -1018,7 +1018,7 @@ namespace Nop.Web.Controllers
                     }
 
                     // redirect to the topic page with the topic slug
-                    return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
+                    return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
                 }
                 catch (Exception ex)
                 {
@@ -1125,7 +1125,7 @@ namespace Nop.Web.Controllers
                 IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer),
                 Subscribed = false,
             };
-            
+
             //subscription            
             if (model.IsCustomerAllowedToSubscribe)
             {
@@ -1231,7 +1231,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    int pageSize =_forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
+                    int pageSize = _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10;
 
                     int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
                     var url = string.Empty;
@@ -1264,7 +1264,7 @@ namespace Nop.Web.Controllers
             model.Id = 0;
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
             model.ForumEditor = _forumSettings.ForumEditor;
-            
+
             return View(model);
         }
 
@@ -1428,7 +1428,7 @@ namespace Nop.Web.Controllers
             model.Id = forumPost.Id;
             model.IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer);
             model.ForumEditor = _forumSettings.ForumEditor;
-            
+
             return View(model);
         }
 
@@ -1598,7 +1598,7 @@ namespace Nop.Web.Controllers
 
                     model.SearchResultsVisible = (topics.Count > 0);
                     model.NoResultsVisisble = !(model.SearchResultsVisible);
-                    
+
                     return View(model);
                 }
                 model.SearchResultsVisible = false;
