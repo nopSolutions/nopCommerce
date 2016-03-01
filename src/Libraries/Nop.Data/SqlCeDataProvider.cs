@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
@@ -42,6 +43,14 @@ namespace Nop.Data
         /// A value indicating whether this data provider supports stored procedures
         /// </summary>
         public virtual bool StoredProceduredSupported
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// A value indicating whether this data provider supports backup
+        /// </summary>
+        public bool BackupSupported
         {
             get { return false; }
         }

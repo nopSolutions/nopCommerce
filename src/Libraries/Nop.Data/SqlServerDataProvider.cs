@@ -118,6 +118,14 @@ namespace Nop.Data
         }
 
         /// <summary>
+        /// A value indicating whether this data provider supports backup
+        /// </summary>
+        public virtual bool BackupSupported
+        {
+            get { return true; }
+        }
+
+        /// <summary>
         /// Gets a support database parameter object (used by stored procedures)
         /// </summary>
         /// <returns>Parameter</returns>

@@ -2,23 +2,26 @@
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Domain.Media
 @using Nop.Core.Infrastructure;
+@using System.Text;
 @if (Model.Count > 0)
 {
+    var attributeChangeScriptsBuilder = new StringBuilder();
     <div class="checkout-attributes">
         <dl>
             @foreach (var attribute in Model)
             {
                 string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
                 string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
-                <dt><label class="text-prompt">
-                    @textPrompt
-                </label>
+                <dt id="@string.Format("checkout_attribute_label_{0}", attribute.Id)">
+                    <label class="text-prompt">
+                        @textPrompt
+                    </label>
                     @if (attribute.IsRequired)
                     {
                         <span class="required">*</span>
                     }
                 </dt>
-                <dd>
+                <dd id="@string.Format("checkout_attribute_input_{0}", attribute.Id)">
                     @switch (attribute.AttributeControlType)
                     {
                         case AttributeControlType.DropdownList:
@@ -36,6 +39,7 @@
                                 <option selected="@attributeValue.IsPreSelected" value="@attributeValue.Id">@attributeName</option>
                             }
                         </select>
+                            attributeChangeScriptsBuilder.AppendFormat("$('#{0}').change(function(){{checkoutAttributeChange();}});\n", controlId);
                             }
                             break;
                         case AttributeControlType.RadioList:
@@ -50,6 +54,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -67,6 +72,7 @@
                                     <input id="@(controlId)_@(attributeValue.Id)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
                                     <label for="@(controlId)_@(attributeValue.Id)">@attributeName</label>
                                 </li>
+                                attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                             }
                         </ul>
                             }
@@ -209,6 +215,7 @@
                                                 @*<span class="name">@attributeName</span>*@
                                             </label>
                                         </li>
+                                        attributeChangeScriptsBuilder.AppendFormat("$('#{0}_{1}').click(function(){{checkoutAttributeChange();}});\n", controlId, attributeValue.Id);
                                     }
                                 </ul>
                                 <script type="text/javascript">
@@ -231,4 +238,34 @@
             }
         </dl>
     </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            checkoutAttributeChange();
+            @Html.Raw(attributeChangeScriptsBuilder.ToString())
+        });
+
+        function checkoutAttributeChange() {
+            $.ajax({
+                cache: false,
+                url: '@Html.Raw(Url.Action("CheckoutAttributeChange", "ShoppingCart"))',
+                data: $('#shopping-cart-form').serialize(),
+                type: 'post',
+                success: function(data) {
+                    if (data.enabledattributeids) {
+                        for (var i = 0; i < data.enabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.enabledattributeids[i]).show();
+                            $('#checkout_attribute_input_' + data.enabledattributeids[i]).show();
+                        }
+                    }
+                    if (data.disabledattributeids) {
+                        for (var i = 0; i < data.disabledattributeids.length; i++) {
+                            $('#checkout_attribute_label_' + data.disabledattributeids[i]).hide();
+                            $('#checkout_attribute_input_' + data.disabledattributeids[i]).hide();
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 }
