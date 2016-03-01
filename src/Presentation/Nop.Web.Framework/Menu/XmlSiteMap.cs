@@ -24,7 +24,7 @@ namespace Nop.Web.Framework.Menu
         public virtual void LoadFrom(string physicalPath)
         {
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            string filePath = webHelper.MapPath(physicalPath);
+            string filePath = CommonHelper.MapPath(physicalPath);
             string content = File.ReadAllText(filePath);
 
             if (!string.IsNullOrEmpty(content))

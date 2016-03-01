@@ -15,7 +15,6 @@ namespace Nop.Services.Helpers
     public partial class UserAgentHelper : IUserAgentHelper
     {
         private readonly NopConfig _config;
-        private readonly IWebHelper _webHelper;
         private readonly HttpContextBase _httpContext;
 
         /// <summary>
@@ -27,7 +26,6 @@ namespace Nop.Services.Helpers
         public UserAgentHelper(NopConfig config, IWebHelper webHelper, HttpContextBase httpContext)
         {
             this._config = config;
-            this._webHelper = webHelper;
             this._httpContext = httpContext;
         }
 
@@ -40,7 +38,7 @@ namespace Nop.Services.Helpers
                 if (String.IsNullOrEmpty(_config.UserAgentStringsPath))
                     return null;
 
-                var filePath = _webHelper.MapPath(_config.UserAgentStringsPath);
+                var filePath = CommonHelper.MapPath(_config.UserAgentStringsPath);
                 var uasParser = new UasParser(filePath);
                 Singleton<UasParser>.Instance = uasParser;
             }
