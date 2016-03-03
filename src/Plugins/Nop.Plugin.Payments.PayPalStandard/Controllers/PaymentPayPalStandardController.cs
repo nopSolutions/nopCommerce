@@ -300,7 +300,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     //validate order total
                     if (payPalStandardPaymentSettings.PdtValidateOrderTotal && !Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                     {
-                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}", mc_gross, order.OrderTotal);
+                        string errorStr = string.Format("PayPal PDT. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
                         //log
                         _logger.Error(errorStr);
                         //order note
@@ -511,21 +511,60 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                         break;
                                     case PaymentStatus.Authorized:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
-                                                _orderProcessingService.MarkAsAuthorized(order);
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsAuthorized(order))
+                                                {
+                                                    _orderProcessingService.MarkAsAuthorized(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
+                                                _orderService.UpdateOrder(order);
                                             }
                                         }
                                         break;
                                     case PaymentStatus.Paid:
                                         {
-                                            if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                            //validate order total
+                                            if (Math.Round(mc_gross, 2).Equals(Math.Round(order.OrderTotal, 2)))
                                             {
+                                                //valid
+                                                if (_orderProcessingService.CanMarkOrderAsPaid(order))
+                                                {
+                                                    order.AuthorizationTransactionId = txn_id;
+                                                    _orderService.UpdateOrder(order);
 
-                                                order.AuthorizationTransactionId = txn_id;
+                                                    _orderProcessingService.MarkOrderAsPaid(order);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                //not valid
+                                                string errorStr = string.Format("PayPal IPN. Returned order total {0} doesn't equal order total {1}. Order# {2}.", mc_gross, order.OrderTotal, order.Id);
+                                                //log
+                                                _logger.Error(errorStr);
+                                                //order note
+                                                order.OrderNotes.Add(new OrderNote
+                                                {
+                                                    Note = errorStr,
+                                                    DisplayToCustomer = false,
+                                                    CreatedOnUtc = DateTime.UtcNow
+                                                });
                                                 _orderService.UpdateOrder(order);
-
-                                                _orderProcessingService.MarkOrderAsPaid(order);
                                             }
                                         }
                                         break;
