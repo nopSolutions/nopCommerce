@@ -110,7 +110,7 @@ namespace Nop.Web.Framework.Kendoui
             {
                 return String.Format("{0}.IndexOf(@{1}, System.StringComparison.InvariantCultureIgnoreCase) < 0", Field, index);
             }
-            if (comparison == "=" && Value.GetType() == typeof(String))
+            if (comparison == "=" && Value is String)
             {
                 //string only
                 comparison = "Equals";
