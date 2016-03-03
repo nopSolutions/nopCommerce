@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
@@ -33,7 +34,7 @@ namespace Nop.Admin.Controllers
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
-                : "application/octet-stream";
+                : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType)
             {
                 FileDownloadName = fileName + download.Extension
@@ -43,7 +44,7 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         [ValidateInput(false)]
         //do not validate request token (XSRF)
-        [AdminAntiForgery(true)] 
+        [AdminAntiForgery(true)]
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
@@ -53,7 +54,7 @@ namespace Nop.Admin.Controllers
                 UseDownloadUrl = true,
                 DownloadUrl = downloadUrl,
                 IsNew = true
-              };
+            };
             _downloadService.InsertDownload(download);
 
             return Json(new { downloadId = download.Id }, JsonRequestBehavior.AllowGet);
@@ -109,10 +110,13 @@ namespace Nop.Admin.Controllers
 
             //when returning JSON the mime-type must be set to text/plain
             //otherwise some browsers will pop-up a "Save As" dialog.
-            return Json(new { success = true, 
-                downloadId = download.Id, 
-                downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) },
-                "text/plain");
+            return Json(new
+            {
+                success = true,
+                downloadId = download.Id,
+                downloadUrl = Url.Action("DownloadFile", new { downloadGuid = download.DownloadGuid })
+            },
+                MimeTypes.TextPlain);
         }
     }
 }

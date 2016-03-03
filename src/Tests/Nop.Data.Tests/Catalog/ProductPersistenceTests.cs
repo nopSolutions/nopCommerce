@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Shipping;
@@ -121,7 +122,7 @@ namespace Nop.Data.Tests.Catalog
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 UpdatedOnUtc = new DateTime(2010, 01, 02),
             };
-            
+
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.ProductType.ShouldEqual(ProductType.GroupedProduct);
@@ -234,13 +235,13 @@ namespace Nop.Data.Tests.Catalog
         public void Can_save_and_load_product_with_productCategories()
         {
             var product = new Product
-                          {
-                              Name = "Name 1",
-                              Published = true,
-                              Deleted = false,
-                              CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02)
-                          };
+            {
+                Name = "Name 1",
+                Published = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
             product.ProductCategories.Add
                 (
                     new ProductCategory
@@ -283,13 +284,13 @@ namespace Nop.Data.Tests.Catalog
         public void Can_save_and_load_product_with_productManufacturers()
         {
             var product = new Product
-                          {
-                              Name = "Name 1",
-                              Published = true,
-                              Deleted = false,
-                              CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02)
-                          };
+            {
+                Name = "Name 1",
+                Published = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
             product.ProductManufacturers.Add
                 (
                     new ProductManufacturer
@@ -332,13 +333,13 @@ namespace Nop.Data.Tests.Catalog
         public void Can_save_and_load_product_with_productPictures()
         {
             var product = new Product
-                          {
-                              Name = "Name 1",
-                              Published = true,
-                              Deleted = false,
-                              CreatedOnUtc = new DateTime(2010, 01, 01),
-                              UpdatedOnUtc = new DateTime(2010, 01, 02)
-                          };
+            {
+                Name = "Name 1",
+                Published = true,
+                Deleted = false,
+                CreatedOnUtc = new DateTime(2010, 01, 01),
+                UpdatedOnUtc = new DateTime(2010, 01, 02)
+            };
             product.ProductPictures.Add
                 (
                     new ProductPicture
@@ -347,7 +348,7 @@ namespace Nop.Data.Tests.Catalog
                         Picture = new Picture
                         {
                             PictureBinary = new byte[] { 1, 2, 3 },
-                            MimeType = "image/pjpeg",
+                            MimeType = MimeTypes.ImagePJpeg,
                             IsNew = true
                         }
                     }
@@ -361,7 +362,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ProductPictures.First().DisplayOrder.ShouldEqual(1);
 
             fromDb.ProductPictures.First().Picture.ShouldNotBeNull();
-            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual("image/pjpeg");
+            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual(MimeTypes.ImagePJpeg);
         }
 
         [Test]
