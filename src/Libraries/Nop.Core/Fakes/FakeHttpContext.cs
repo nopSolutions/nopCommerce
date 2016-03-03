@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Security.Principal;
 using System.Web;
@@ -37,7 +36,7 @@ namespace Nop.Core.Fakes
         {
         }
 
-        public FakeHttpContext(string relativeUrl, 
+        public FakeHttpContext(string relativeUrl,
             IPrincipal principal, NameValueCollection formParams,
             NameValueCollection queryStringParams, HttpCookieCollection cookies,
             SessionStateItemCollection sessionItems, NameValueCollection serverVariables)
@@ -59,7 +58,7 @@ namespace Nop.Core.Fakes
             _sessionItems = sessionItems;
             _serverVariables = serverVariables;
 
-            _items = new Dictionary<object, object>();
+            _items = new Hashtable();
         }
 
         public override HttpRequestBase Request
