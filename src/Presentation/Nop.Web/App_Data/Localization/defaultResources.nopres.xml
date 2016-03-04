@@ -4116,6 +4116,9 @@
   <LocaleResource Name="Admin.Configuration.Languages.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
+    <Value>Flag</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.Published">
     <Value>Published</Value>
   </LocaleResource>

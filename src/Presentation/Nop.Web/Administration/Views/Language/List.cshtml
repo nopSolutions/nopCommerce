@@ -58,7 +58,13 @@
                         columns: [{
                             field: "Name",
                             title: "@T("Admin.Configuration.Languages.Fields.Name")"
-                        }, {
+                        },{
+                            field: "FlagImageFileName",
+                            title: "@T("Admin.Configuration.Languages.Fields.FlagImage")",
+                            width: 22,
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Content/Images/flags/")#=FlagImageFileName#" />'
+                        },{
                             field: "LanguageCulture",
                             title: "@T("Admin.Configuration.Languages.Fields.LanguageCulture")",
                             width: 200
