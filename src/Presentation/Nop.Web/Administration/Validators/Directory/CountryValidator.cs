@@ -12,6 +12,7 @@ namespace Nop.Admin.Validators.Directory
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Countries.Fields.Name.Required"));
+            RuleFor(p => p.Name).Length(100);
 
             RuleFor(x => x.TwoLetterIsoCode)
                 .NotEmpty()
