@@ -149,7 +149,7 @@ namespace Nop.Services.Customers
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
             bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647)
+            int pageIndex = 0, int pageSize = Int32.MaxValue)
         {
             var query = _customerRepository.Table;
             if (createdFromUtc.HasValue)
