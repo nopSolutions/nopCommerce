@@ -4086,6 +4086,9 @@
   <LocaleResource Name="Admin.Configuration.Languages.Fields.DisplayOrder.Hint">
     <Value>The display order of this language. 1 represents the top of the list.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
+    <Value>Flag image</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImageFileName">
     <Value>Flag image file name</Value>
   </LocaleResource>

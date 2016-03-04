@@ -320,6 +320,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Progress">
     <Value>Processing database backup...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
+    <Value>Flag image</Value>
+  </LocaleResource>
 </Language>
 '
 
