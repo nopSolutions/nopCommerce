@@ -367,10 +367,11 @@ namespace Nop.Services.Orders
         /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         public virtual int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
-            int recordsToReturn = 5, bool showHidden = false)
+            int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false)
         {
             if (productId == 0)
                 throw new ArgumentException("Product ID is not specified");
@@ -388,7 +389,8 @@ namespace Nop.Services.Orders
                          (!orderItem.Order.Deleted) &&
                          (storeId == 0 || orderItem.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
-                         (showHidden || p.Published)
+                         (showHidden || p.Published) &&
+                         (!visibleIndividuallyOnly || p.VisibleIndividually)
                          select new { orderItem, p };
 
             var query3 = from orderItem_p in query2
