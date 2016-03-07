@@ -97,7 +97,7 @@ namespace Nop.Data
             //pass some table names to ensure that we have nopCommerce 2.X installed
             var tablesToValidate = new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
 
-            //custom commands (stored proedures, indexes)
+            //custom commands (stored procedures, indexes)
 
             var customCommands = new List<string>();
             //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
