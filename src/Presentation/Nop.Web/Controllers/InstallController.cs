@@ -330,7 +330,7 @@ namespace Nop.Web.Controllers
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        string databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
+                        string databaseFullPath = CommonHelper.MapPath("~/App_Data/") + databaseFileName;
                         if (System.IO.File.Exists(databaseFullPath))
                         {
                             System.IO.File.Delete(databaseFullPath);

@@ -60,8 +60,8 @@ namespace Nop.Core.Plugins
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
                 // prevent app from starting altogether
-                var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
-                _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
+                var pluginFolder = new DirectoryInfo(CommonHelper.MapPath(PluginsPath));
+                _shadowCopyFolder = new DirectoryInfo(CommonHelper.MapPath(ShadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
@@ -203,7 +203,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -228,7 +228,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -249,7 +249,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         public static void MarkAllPluginsAsUninstalled()
         {
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
+            var filePath = CommonHelper.MapPath(InstalledPluginsFilePath);
             if (File.Exists(filePath))
                 File.Delete(filePath);
         }
@@ -479,8 +479,7 @@ namespace Nop.Core.Plugins
         /// <returns></returns>
         private static string GetInstalledPluginsFilePath()
         { 
-            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
-            return filePath;
+            return CommonHelper.MapPath(InstalledPluginsFilePath);
         }
 
         #endregion
