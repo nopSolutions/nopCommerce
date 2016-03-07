@@ -338,7 +338,7 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Single(l => l.Name == "English");
 
             //save resources
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(CommonHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
             {
                 var localesXml = File.ReadAllText(filePath);
                 var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -4651,7 +4651,11 @@ namespace Nop.Services.Installation
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
                 ProductsAlsoPurchasedEnabled = true,
+<<<<<<< HEAD
                 ProductsAlsoPurchasedNumber = 3,
+=======
+                ProductsAlsoPurchasedNumber = 4,
+>>>>>>> refs/remotes/nopSolutions/develop
                 AjaxProcessAttributeChange = true,
                 NumberOfProductTags = 15,
                 ProductsByTagPageSize = 6,
@@ -5201,7 +5205,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
 
 
@@ -5539,7 +5543,7 @@ namespace Nop.Services.Installation
         protected virtual void InstallManufacturers()
         {
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.FirstOrDefault(pt => pt.Name == "Products in Grid or Lines");
@@ -5638,11 +5642,11 @@ namespace Nop.Services.Installation
 
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
+            var sampleImagesPath = CommonHelper.MapPath("~/content/samples/");
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = _webHelper.MapPath("~/content/samples/");
+            var sampleDownloadsPath = CommonHelper.MapPath("~/content/samples/");
 
             //products
             var allProducts = new List<Product>();
