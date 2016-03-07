@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Extensions;
@@ -46,7 +45,7 @@ namespace Nop.Admin.Controllers
         private readonly IDiscountService _discountService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
-        private readonly IAclService _aclService; 
+        private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IWorkContext _workContext;
@@ -56,21 +55,21 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ManufacturerController(ICategoryService categoryService, 
+        public ManufacturerController(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService,
             IProductService productService,
-            ICustomerService customerService, 
+            ICustomerService customerService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
-            IUrlRecordService urlRecordService, 
+            IUrlRecordService urlRecordService,
             IPictureService pictureService,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             ILocalizationService localizationService,
-            ILocalizedEntityService localizedEntityService, 
+            ILocalizedEntityService localizedEntityService,
             IExportManager exportManager,
             IDiscountService discountService,
-            ICustomerActivityService customerActivityService, 
+            ICustomerActivityService customerActivityService,
             IVendorService vendorService,
             IAclService aclService,
             IPermissionService permissionService,
@@ -102,7 +101,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region Utilities
 
         [NonAction]
@@ -268,7 +267,7 @@ namespace Nop.Admin.Controllers
         }
 
         #endregion
-        
+
         #region List
 
         public ActionResult Index()
@@ -330,7 +329,7 @@ namespace Nop.Admin.Controllers
             model.PageSizeOptions = _catalogSettings.DefaultManufacturerPageSizeOptions;
             model.Published = true;
             model.AllowCustomersToSelectPageSize = true;
-            
+
             return View(model);
         }
 
@@ -483,7 +482,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit",  new {id = manufacturer.Id});
+                    return RedirectToAction("Edit", new { id = manufacturer.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -521,7 +520,7 @@ namespace Nop.Admin.Controllers
             SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Deleted"));
             return RedirectToAction("List");
         }
-        
+
         #endregion
 
         #region Export / Import
@@ -551,9 +550,9 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
-                 
-                return File(bytes, "text/xls", "manufacturers.xlsx");
+                var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p => !p.Deleted));
+                //Correct MimeType here?
+                return File(bytes, MimeTypes.TextXls, "manufacturers.xlsx");
             }
             catch (Exception exc)
             {
@@ -716,7 +715,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         [HttpPost]
         [FormValueRequired("save")]
         public ActionResult ProductAddPopup(string btnId, string formId, ManufacturerModel.AddManufacturerProductModel model)
@@ -755,6 +754,6 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
-        
+
     }
 }

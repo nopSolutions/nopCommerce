@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Web;
+using Nop.Core;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
 
@@ -506,7 +507,7 @@ namespace Nop.Admin.Controllers
             ZipFile.CreateFromDirectory(path, tmpZip,CompressionLevel.Fastest, true);
             _r.Clear();
             _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + dirName + ".zip\"");
-            _r.ContentType = "application/force-download";
+            _r.ContentType = MimeTypes.ApplicationForceDownload;
             _r.TransmitFile(tmpZip);
             _r.Flush();
             System.IO.File.Delete(tmpZip);
@@ -519,7 +520,7 @@ namespace Nop.Admin.Controllers
             if(file.Exists){
                 _r.Clear();
                 _r.Headers.Add("Content-Disposition", "attachment; filename=\"" + file.Name + "\"");
-                _r.ContentType = "application/force-download";
+                _r.ContentType = MimeTypes.ApplicationForceDownload;
                 _r.TransmitFile(file.FullName);
                 _r.Flush();
                 _r.End();
@@ -667,7 +668,7 @@ namespace Nop.Admin.Controllers
             img.Dispose();
             Image.GetThumbnailImageAbort imgCallback = new Image.GetThumbnailImageAbort(ThumbnailCallback);
 
-            _r.AddHeader("Content-Type", "image/png");
+            _r.AddHeader("Content-Type", MimeTypes.ImagePng);
             cropImg.GetThumbnailImage(width, height, imgCallback, IntPtr.Zero).Save(_r.OutputStream, ImageFormat.Png);
             _r.OutputStream.Close();
             cropImg.Dispose();

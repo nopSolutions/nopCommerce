@@ -18,10 +18,10 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Controllers
 {
-	public partial class NewsLetterSubscriptionController : BaseAdminController
-	{
-		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-		private readonly IDateTimeHelper _dateTimeHelper;
+    public partial class NewsLetterSubscriptionController : BaseAdminController
+    {
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
         private readonly IStoreService _storeService;
@@ -29,31 +29,31 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
-		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
-			IDateTimeHelper dateTimeHelper,
+        public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
+            IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService,
             IPermissionService permissionService,
             IStoreService storeService,
             ICustomerService customerService,
             IExportManager exportManager,
             IImportManager importManager)
-		{
-			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-			this._dateTimeHelper = dateTimeHelper;
+        {
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
             this._storeService = storeService;
             this._customerService = customerService;
             this._exportManager = exportManager;
             this._importManager = importManager;
-		}
+        }
 
-		public ActionResult Index()
-		{
-			return RedirectToAction("List");
-		}
+        public ActionResult Index()
+        {
+            return RedirectToAction("List");
+        }
 
-		public ActionResult List()
+        public ActionResult List()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -87,11 +87,11 @@ namespace Nop.Admin.Controllers
             foreach (var cr in _customerService.GetAllCustomerRoles(true))
                 model.AvailableCustomerRoles.Add(new SelectListItem { Text = cr.Name, Value = cr.Id.ToString() });
 
-			return View(model);
-		}
+            return View(model);
+        }
 
-		[HttpPost]
-		public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
+        [HttpPost]
+        public ActionResult SubscriptionList(DataSourceRequest command, NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -109,18 +109,18 @@ namespace Nop.Admin.Controllers
             var gridModel = new DataSourceResult
             {
                 Data = newsletterSubscriptions.Select(x =>
-				{
-					var m = x.ToModel();
-				    var store = _storeService.GetStoreById(x.StoreId);
-				    m.StoreName = store != null ? store.Name : "Unknown store";
-					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-					return m;
-				}),
+                {
+                    var m = x.ToModel();
+                    var store = _storeService.GetStoreById(x.StoreId);
+                    m.StoreName = store != null ? store.Name : "Unknown store";
+                    m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
+                    return m;
+                }),
                 Total = newsletterSubscriptions.TotalCount
             };
 
             return Json(gridModel);
-		}
+        }
 
         [HttpPost]
         public ActionResult SubscriptionUpdate([Bind(Exclude = "CreatedOn")] NewsLetterSubscriptionModel model)
@@ -157,7 +157,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost, ActionName("List")]
         [FormValueRequired("exportcsv")]
-		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
+        public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
@@ -168,14 +168,14 @@ namespace Nop.Admin.Controllers
             else if (model.ActiveId == 2)
                 isActive = false;
 
-			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
+            var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
                 model.StoreId, isActive, model.CustomerRoleId);
 
-		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
-
+            string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
+            //Correct Extension? why not .csv?
             string fileName = String.Format("newsletter_emails_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-			return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
-		}
+            return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
+        }
 
         [HttpPost]
         public ActionResult ImportCsv(FormCollection form)
@@ -201,5 +201,5 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
             }
         }
-	}
+    }
 }

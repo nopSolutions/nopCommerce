@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -93,8 +92,8 @@ namespace Nop.Services.ExportImport
             var mimeType = MimeMapping.GetMimeMapping(filePath);
 
             //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
-            if (mimeType == "application/octet-stream")
-                mimeType = "image/jpeg";
+            if (mimeType == MimeTypes.ApplicationOctetStream)
+                mimeType = MimeTypes.ImageJpeg;
 
             return mimeType;
         }
@@ -147,9 +146,9 @@ namespace Nop.Services.ExportImport
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
             //var start = DateTime.Now;
-                //the columns
-                var properties = new []
-                {
+            //the columns
+            var properties = new[]
+            {
                     new PropertyByName<Product>("ProductTypeId"),
                     new PropertyByName<Product>("ParentGroupedProductId"),
                     new PropertyByName<Product>("VisibleIndividually"),
@@ -276,7 +275,7 @@ namespace Nop.Services.ExportImport
                         break;
 
                     var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
-                    if(!categoryIds.IsEmpty())
+                    if (!categoryIds.IsEmpty())
                         allCategoriesIds.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
 
                     var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
@@ -317,7 +316,7 @@ namespace Nop.Services.ExportImport
                 {
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var product = allProductsBySku.FirstOrDefault(p=>p.Sku == manager.GetProperty("SKU").StringValue);
+                    var product = allProductsBySku.FirstOrDefault(p => p.Sku == manager.GetProperty("SKU").StringValue);
 
                     var isNew = product == null;
 
@@ -443,7 +442,7 @@ namespace Nop.Services.ExportImport
                     {
                         if (categories.Any(c => c == categoryId))
                             continue;
-                       
+
                         var productCategory = new ProductCategory
                         {
                             ProductId = product.Id,
@@ -715,7 +714,7 @@ namespace Nop.Services.ExportImport
                     manufacturer.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     manufacturer.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
                     var picture = LoadPicture(manager.GetProperty("Picture").StringValue, manufacturer.Name,
-                        isNew ? null : (int?) manufacturer.PictureId);
+                        isNew ? null : (int?)manufacturer.PictureId);
                     manufacturer.PageSize = manager.GetProperty("PageSize").IntValue;
                     manufacturer.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     manufacturer.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;
@@ -805,7 +804,7 @@ namespace Nop.Services.ExportImport
                     category.MetaDescription = manager.GetProperty("MetaDescription").StringValue;
                     category.MetaTitle = manager.GetProperty("MetaTitle").StringValue;
                     category.ParentCategoryId = manager.GetProperty("ParentCategoryId").IntValue;
-                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?) category.PictureId);
+                    var picture = LoadPicture(manager.GetProperty("Picture").StringValue, category.Name, isNew ? null : (int?)category.PictureId);
                     category.PageSize = manager.GetProperty("PageSize").IntValue;
                     category.AllowCustomersToSelectPageSize = manager.GetProperty("AllowCustomersToSelectPageSize").BooleanValue;
                     category.PageSizeOptions = manager.GetProperty("PageSizeOptions").StringValue;

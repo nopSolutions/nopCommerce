@@ -20,37 +20,37 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Controllers
 {
     public partial class CountryController : BaseAdminController
-	{
-		#region Fields
+    {
+        #region Fields
 
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
-	    private readonly IAddressService _addressService;
+        private readonly IAddressService _addressService;
         private readonly IPermissionService _permissionService;
-	    private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
 
-	    #endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
         public CountryController(ICountryService countryService,
-            IStateProvinceService stateProvinceService, 
+            IStateProvinceService stateProvinceService,
             ILocalizationService localizationService,
-            IAddressService addressService, 
+            IAddressService addressService,
             IPermissionService permissionService,
-            ILocalizedEntityService localizedEntityService, 
+            ILocalizedEntityService localizedEntityService,
             ILanguageService languageService,
             IStoreService storeService,
             IStoreMappingService storeMappingService,
             IExportManager exportManager,
             IImportManager importManager)
-		{
+        {
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
@@ -62,12 +62,12 @@ namespace Nop.Admin.Controllers
             this._storeMappingService = storeMappingService;
             this._exportManager = exportManager;
             this._importManager = importManager;
-		}
+        }
 
-		#endregion 
+        #endregion
 
         #region Utilities
-        
+
         [NonAction]
         protected virtual void UpdateLocales(Country country, CountryModel model)
         {
@@ -166,7 +166,7 @@ namespace Nop.Admin.Controllers
 
             return Json(gridModel);
         }
-        
+
         public ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
@@ -258,7 +258,7 @@ namespace Nop.Admin.Controllers
                     //selected tab
                     SaveSelectedTabIndex();
 
-                    return RedirectToAction("Edit", new {id = country.Id});
+                    return RedirectToAction("Edit", new { id = country.Id });
                 }
                 return RedirectToAction("List");
             }
@@ -481,7 +481,7 @@ namespace Nop.Admin.Controllers
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id, showHidden: true).ToList() : new List<StateProvince>();
             var result = (from s in states
-                         select new { id = s.Id, name = s.Name }).ToList();
+                          select new { id = s.Id, name = s.Name }).ToList();
             if (addAsterisk.HasValue && addAsterisk.Value)
             {
                 //asterisk
@@ -530,13 +530,13 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
-
+            //Why not .csv Extension here?
             string fileName = String.Format("states_{0}_{1}.txt", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
 
             var states = _stateProvinceService.GetStateProvinces(true);
             string result = _exportManager.ExportStatesToTxt(states);
 
-            return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
+            return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
         }
 
         [HttpPost]
