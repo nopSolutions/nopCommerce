@@ -266,6 +266,63 @@ set @resources='
   <LocaleResource Name="Admin.Orders.List.ShippingStatus.Hint">
     <Value>Search by a specific shipping statuses e.g. Not yet shipped.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition">
+     <Value>Condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes">
+     <Value>Attribute</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes.Hint">
+     <Value>Choose an attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition">
+     <Value>Enable condition</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition.Hint">
+     <Value>Check to specify a condition (depending on other attribute) when this attribute should be enabled (visible).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists">
+     <Value>No attribute exists that could be used as condition.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Condition.SaveBeforeEdit">
+     <Value>You need to save the checkout attribute before you can edit conditional attributes.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupCreated">
+    <Value>The backup created</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupDeleted">
+    <Value>Backup file "{0}" deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.BackupNow">
+    <Value>Backup now</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.DatabaseBackups">
+    <Value>Database backups</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.DatabaseRestored">
+    <Value>Database is restored</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Delete">
+    <Value>Delete</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Download">
+    <Value>Download</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.FileName">
+    <Value>File Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.FileSize">
+    <Value>File Size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Restore">
+    <Value>Restore</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Progress">
+    <Value>Processing database backup...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
+    <Value>Flag image</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -555,4 +612,12 @@ WHERE [Published] IS NULL
 GO
 
 ALTER TABLE [Topic] ALTER COLUMN [Published] bit NOT NULL
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[CheckoutAttribute]') and NAME='ConditionAttributeXml')
+BEGIN
+	ALTER TABLE [CheckoutAttribute]
+	ADD [ConditionAttributeXml] nvarchar(MAX) NULL
+END
 GO

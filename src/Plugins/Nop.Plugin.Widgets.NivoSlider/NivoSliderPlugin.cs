@@ -19,7 +19,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
 
-        public NivoSliderPlugin(IPictureService pictureService, 
+        public NivoSliderPlugin(IPictureService pictureService,
             ISettingService settingService, IWebHelper webHelper)
         {
             this._pictureService = pictureService;
@@ -67,14 +67,14 @@ namespace Nop.Plugin.Widgets.NivoSlider
                 {"widgetZone", widgetZone}
             };
         }
-        
+
         /// <summary>
         /// Install plugin
         /// </summary>
         public override void Install()
         {
             //pictures
-            var sampleImagesPath = _webHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
+            var sampleImagesPath = CommonHelper.MapPath("~/Plugins/Widgets.NivoSlider/Content/nivoslider/sample-images/");
 
 
             //settings
@@ -128,7 +128,7 @@ namespace Nop.Plugin.Widgets.NivoSlider
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Text.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link");
             this.DeletePluginLocaleResource("Plugins.Widgets.NivoSlider.Link.Hint");
-            
+
             base.Uninstall();
         }
     }

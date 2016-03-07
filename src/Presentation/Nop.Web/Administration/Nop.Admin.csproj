@@ -420,6 +420,7 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="db_backups\placeholder.txt" />
     <Content Include="Content\images\ajax_loader_small.gif" />
     <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\images\1pix.gif" />
@@ -1333,6 +1334,7 @@
   <ItemGroup>
     <Content Include="Views\Product\ProductAttributeConditionPopup.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

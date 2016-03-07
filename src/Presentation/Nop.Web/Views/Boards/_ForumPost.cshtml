@@ -1,5 +1,11 @@
 ﻿@model ForumPostModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
 @using Nop.Web.Models.Boards;
+@{
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    var thisPageUrl = webHelper.GetThisPageUrl(true);
+}
 @Html.Raw(String.Format("<a name=\"{0}\"></a>", Model.Id))
 <div class="topic-post" id="@Html.Encode(String.Format("post{0}", Model.Id))">
     <div class="post-info">
@@ -83,15 +89,8 @@
                     }
                 </div>
                 <div class="quote-post">
-                    @if (Model.CurrentTopicPage > 1)
-                    {
-                        @Html.RouteLink(String.Format("#{0}", Model.Id.ToString()), "TopicSlugPaged", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName, page = Model.CurrentTopicPage }, new { @class = "post-link-button", title = T("Forum.PostLinkTitle") })
-                    }
-                    else
-                    {
-                        @Html.RouteLink(String.Format("#{0}", Model.Id.ToString()), "TopicSlug", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName }, new { @class = "post-link-button", title = T("Forum.PostLinkTitle") })
-                    }
-                    @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "quote-post-button" })
+                    <a id="@Model.Id" title="@T("Forum.PostLinkTitle")" class="forum-post-link" href="@(thisPageUrl)#@(Model.Id)">#@(Model.Id)</a>
+                    @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new {id = Model.ForumTopicId, quote = Model.Id}, new {@class = "quote-post-button"})
                 </div>
             </div>
         </div>

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Hosting;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
 
@@ -62,7 +61,7 @@ namespace Nop.Core
             {
                 // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
                 // to force an AppDomain restart.
-                File.SetLastWriteTimeUtc(MapPath("~/web.config"), DateTime.UtcNow);
+                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/web.config"), DateTime.UtcNow);
                 return true;
             }
             catch
@@ -83,7 +82,7 @@ namespace Nop.Core
                 //i.e "Controller does not implement IController".
                 //The issue is described here: http://www.nopcommerce.com/boards/t/10969/nop-20-plugin.aspx?p=4#51318
                 //The solution is to touch global.asax file
-                File.SetLastWriteTimeUtc(MapPath("~/global.asax"), DateTime.UtcNow);
+                File.SetLastWriteTimeUtc(CommonHelper.MapPath("~/global.asax"), DateTime.UtcNow);
                 return true;
             }
             catch
@@ -405,16 +404,6 @@ namespace Nop.Core
             if (extension == null) return false;
 
             return _staticFileExtensions.Contains(extension);
-        }
-
-        /// <summary>
-        /// Maps a virtual path to a physical disk path.
-        /// </summary>
-        /// <param name="path">The path to map. E.g. "~/bin"</param>
-        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
-        public virtual string MapPath(string path)
-        {
-            return CommonHelper.MapPath(path);
         }
 
         /// <summary>
