@@ -6,7 +6,6 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
-using System.Web.Hosting;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Data.Initializers;
