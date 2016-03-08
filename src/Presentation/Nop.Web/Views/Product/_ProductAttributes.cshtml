@@ -318,7 +318,7 @@
             function @(attributeChangeHandlerFuncName)() {
                 $.ajax({
                     cache: false,
-                    url: '@Html.Raw(Url.Action("ProductDetails_AttributeChange", "ShoppingCart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
+                    url: '@Html.Raw(Url.Action("productdetails_attributechange", "shoppingcart", new {productId = productId, validateAttributeConditions = attributesHaveConditions}))',
                     data: $('#product-details-form').serialize(),
                     type: 'post',
                     success: function(data) {

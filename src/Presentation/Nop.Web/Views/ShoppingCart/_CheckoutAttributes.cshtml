@@ -248,7 +248,7 @@
         function checkoutAttributeChange() {
             $.ajax({
                 cache: false,
-                url: '@Html.Raw(Url.Action("CheckoutAttributeChange", "ShoppingCart"))',
+                url: '@Html.Raw(Url.Action("checkoutattributechange", "shoppingcart"))',
                 data: $('#shopping-cart-form').serialize(),
                 type: 'post',
                 success: function(data) {
