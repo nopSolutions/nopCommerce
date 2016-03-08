@@ -535,7 +535,7 @@ namespace Nop.Services.Catalog
                 //prepare parameters
                 var pCategoryIds = _dataProvider.GetParameter();
                 pCategoryIds.ParameterName = "CategoryIds";
-                pCategoryIds.Value = commaSeparatedCategoryIds != null ? (object)commaSeparatedCategoryIds : DBNull.Value;
+                pCategoryIds.Value = (object)commaSeparatedCategoryIds ?? DBNull.Value;
                 pCategoryIds.DbType = DbType.String;
                 
                 var pManufacturerId = _dataProvider.GetParameter();
@@ -625,7 +625,7 @@ namespace Nop.Services.Catalog
 
                 var pFilteredSpecs = _dataProvider.GetParameter();
                 pFilteredSpecs.ParameterName = "FilteredSpecs";
-                pFilteredSpecs.Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value;
+                pFilteredSpecs.Value = (object)commaSeparatedSpecIds ?? DBNull.Value;
                 pFilteredSpecs.DbType = DbType.String;
 
                 var pLanguageId = _dataProvider.GetParameter();
