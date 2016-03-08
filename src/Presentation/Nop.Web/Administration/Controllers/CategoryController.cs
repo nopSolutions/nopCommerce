@@ -606,7 +606,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes =_exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, "text/xls", "categories.xlsx");
+                return File(bytes, MimeTypes.TextXls, "categories.xlsx");
             }
             catch (Exception exc)
             {

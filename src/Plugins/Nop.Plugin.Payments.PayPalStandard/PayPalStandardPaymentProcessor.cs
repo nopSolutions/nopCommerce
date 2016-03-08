@@ -83,8 +83,8 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public bool GetPdtDetails(string tx, out Dictionary<string, string> values, out string response)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
+            req.Method = WebRequestMethods.Http.Post;
+            req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
@@ -130,15 +130,15 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public bool VerifyIpn(string formString, out Dictionary<string, string> values)
         {
             var req = (HttpWebRequest)WebRequest.Create(GetPaypalUrl());
-            req.Method = "POST";
-            req.ContentType = "application/x-www-form-urlencoded";
+            req.Method = WebRequestMethods.Http.Post;
+            req.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             //now PayPal requires user-agent. otherwise, we can get 403 error
             req.UserAgent = HttpContext.Current.Request.UserAgent;
 
             string formContent = string.Format("{0}&cmd=_notify-validate", formString);
             req.ContentLength = formContent.Length;
 
-            //PayPal requires TLS 1.2 since January 1016
+            //PayPal requires TLS 1.2 since January 2016
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             using (var sw = new StreamWriter(req.GetRequestStream(), Encoding.ASCII))

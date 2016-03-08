@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Shipping;
@@ -347,7 +348,7 @@ namespace Nop.Data.Tests.Catalog
                         Picture = new Picture
                         {
                             PictureBinary = new byte[] { 1, 2, 3 },
-                            MimeType = "image/pjpeg",
+                            MimeType = MimeTypes.ImagePJpeg,
                             IsNew = true
                         }
                     }
@@ -361,7 +362,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ProductPictures.First().DisplayOrder.ShouldEqual(1);
 
             fromDb.ProductPictures.First().Picture.ShouldNotBeNull();
-            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual("image/pjpeg");
+            fromDb.ProductPictures.First().Picture.MimeType.ShouldEqual(MimeTypes.ImagePJpeg);
         }
 
         [Test]

@@ -1172,7 +1172,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, "text/xls", "orders.xlsx");
+                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1204,7 +1204,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportOrdersToXlsx(orders);
-                return File(bytes, "text/xls", "orders.xlsx");
+                return File(bytes, MimeTypes.TextXls, "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -1654,7 +1654,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format("order_{0}.pdf", order.Id));
         }
 
         [HttpPost, ActionName("List")]
@@ -1708,7 +1708,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "orders.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
         [HttpPost]
@@ -1746,7 +1746,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "orders.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "orders.pdf");
         }
 
         [HttpPost, ActionName("Edit")]
@@ -3411,7 +3411,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
+            return File(bytes, MimeTypes.ApplicationPdf, string.Format("packagingslip_{0}.pdf", shipment.Id));
         }
 
         [HttpPost, ActionName("ShipmentList")]
@@ -3456,7 +3456,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "packagingslips.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
         [HttpPost]
@@ -3493,7 +3493,7 @@ namespace Nop.Admin.Controllers
                 _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage.Id);
                 bytes = stream.ToArray();
             }
-            return File(bytes, "application/pdf", "packagingslips.pdf");
+            return File(bytes, MimeTypes.ApplicationPdf, "packagingslips.pdf");
         }
 
         [HttpPost]

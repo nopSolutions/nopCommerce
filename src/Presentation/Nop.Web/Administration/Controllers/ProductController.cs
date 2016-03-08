@@ -2718,7 +2718,7 @@ namespace Nop.Admin.Controllers
                     _pdfService.PrintProductsToPdf(stream, products);
                     bytes = stream.ToArray();
                 }
-                return File(bytes, "application/pdf", "pdfcatalog.pdf");
+                return File(bytes, MimeTypes.ApplicationPdf, "pdfcatalog.pdf");
             }
             catch (Exception exc)
             {
@@ -2847,7 +2847,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes = _exportManager.ExportProductsToXlsx(products);
                  
-                return File(bytes, "text/xls", "products.xlsx");
+                return File(bytes, MimeTypes.TextXls, "products.xlsx");
             }
             catch (Exception exc)
             {
@@ -2879,7 +2879,7 @@ namespace Nop.Admin.Controllers
 
             var bytes = _exportManager.ExportProductsToXlsx(products);
               
-            return File(bytes, "text/xls", "products.xlsx");
+            return File(bytes, MimeTypes.TextXls, "products.xlsx");
         }
 
         [HttpPost]
