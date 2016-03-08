@@ -552,6 +552,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<CheckoutAttributeModel, CheckoutAttribute>()
                     .ForMember(dest => dest.AttributeControlType, mo => mo.Ignore())
+                    .ForMember(dest => dest.ConditionAttributeXml, mo => mo.Ignore())
                     .ForMember(dest => dest.CheckoutAttributeValues, mo => mo.Ignore());
                 //customer attributes
                 cfg.CreateMap<CustomerAttribute, CustomerAttributeModel>()

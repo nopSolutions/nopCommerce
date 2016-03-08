@@ -31,7 +31,7 @@ namespace Nop.Web.Controllers
     [NopHttpsRequirement(SslRequirement.No)]
     public partial class BlogController : BasePublicController
     {
-		#region Fields
+        #region Fields
 
         private readonly IBlogService _blogService;
         private readonly IWorkContext _workContext;
@@ -50,25 +50,25 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly CaptchaSettings _captchaSettings;
-        
+
         #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public BlogController(IBlogService blogService, 
+        public BlogController(IBlogService blogService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPictureService pictureService, 
+            IPictureService pictureService,
             ILocalizationService localizationService,
             IDateTimeHelper dateTimeHelper,
-            IWorkflowMessageService workflowMessageService, 
+            IWorkflowMessageService workflowMessageService,
             IWebHelper webHelper,
-            ICacheManager cacheManager, 
+            ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IStoreMappingService storeMappingService,
             MediaSettings mediaSettings,
             BlogSettings blogSettings,
-            LocalizationSettings localizationSettings, 
+            LocalizationSettings localizationSettings,
             CustomerSettings customerSettings,
             CaptchaSettings captchaSettings)
         {
@@ -91,7 +91,7 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-		#endregion
+        #endregion
 
         #region Utilities
 
@@ -134,8 +134,8 @@ namespace Nop.Web.Controllers
                     if (_customerSettings.AllowCustomersToUploadAvatars)
                     {
                         commentModel.CustomerAvatarUrl = _pictureService.GetPictureUrl(
-                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId), 
-                            _mediaSettings.AvatarPictureSize, 
+                            bc.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+                            _mediaSettings.AvatarPictureSize,
                             _customerSettings.DefaultAvatarEnabled,
                             defaultPictureType: PictureType.Avatar);
                     }
@@ -170,7 +170,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id, 
+                blogPosts = _blogService.GetAllBlogPostsByTag(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id,
                     command.Tag, command.PageNumber - 1, command.PageSize);
             }
@@ -187,7 +187,7 @@ namespace Nop.Web.Controllers
 
             return model;
         }
-        
+
         #endregion
 
         #region Methods
@@ -196,7 +196,7 @@ namespace Nop.Web.Controllers
         {
             if (!_blogSettings.Enabled)
                 return RedirectToRoute("HomePage");
-            
+
             var model = PrepareBlogPostListModel(command);
             return View("List", model);
         }
@@ -233,7 +233,7 @@ namespace Nop.Web.Controllers
             var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, languageId);
             foreach (var blogPost in blogPosts)
             {
-                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, "http");
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { SeName = blogPost.GetSeName(blogPost.LanguageId, ensureTwoPublishedLanguages: false) }, _webHelper.IsCurrentConnectionSecured() ? "https" : "http");
                 items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("urn:store:{0}:blog:post:{1}", _storeContext.CurrentStore.Id, blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
@@ -254,7 +254,7 @@ namespace Nop.Web.Controllers
             //Store mapping
             if (!_storeMappingService.Authorize(blogPost))
                 return InvokeHttp404();
-            
+
             var model = new BlogPostModel();
             PrepareBlogPostModel(model, blogPost, true);
 
@@ -359,7 +359,7 @@ namespace Nop.Web.Controllers
             {
                 var model = new List<BlogPostYearModel>();
 
-                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id, 
+                var blogPosts = _blogService.GetAllBlogPosts(_storeContext.CurrentStore.Id,
                     _workContext.WorkingLanguage.Id);
                 if (blogPosts.Count > 0)
                 {

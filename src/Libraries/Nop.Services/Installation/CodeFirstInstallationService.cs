@@ -4651,7 +4651,7 @@ namespace Nop.Services.Installation
                 SearchPageAllowCustomersToSelectPageSize = true,
                 SearchPagePageSizeOptions = "6, 3, 9, 18",
                 ProductsAlsoPurchasedEnabled = true,
-                ProductsAlsoPurchasedNumber = 3,
+                ProductsAlsoPurchasedNumber = 4,
                 AjaxProcessAttributeChange = true,
                 NumberOfProductTags = 15,
                 ProductsByTagPageSize = 6,

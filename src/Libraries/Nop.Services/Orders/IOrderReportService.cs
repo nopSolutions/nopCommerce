@@ -85,17 +85,18 @@ namespace Nop.Services.Orders
             int orderBy = 1,
             int pageIndex = 0, int pageSize = int.MaxValue,
             bool showHidden = false);
-        
+
         /// <summary>
         /// Gets a list of products (identifiers) purchased by other customers who purchased a specified product
         /// </summary>
         /// <param name="storeId">Store identifier</param>
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Records to return</param>
+        /// <param name="visibleIndividuallyOnly">A values indicating whether to load only products marked as "visible individually"; "false" to load all records; "true" to load "visible individually" only</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Products</returns>
         int[] GetAlsoPurchasedProductsIds(int storeId, int productId,
-            int recordsToReturn = 5, bool showHidden = false);
+            int recordsToReturn = 5, bool visibleIndividuallyOnly = true, bool showHidden = false);
 
         /// <summary>
         /// Gets a list of products that were never sold

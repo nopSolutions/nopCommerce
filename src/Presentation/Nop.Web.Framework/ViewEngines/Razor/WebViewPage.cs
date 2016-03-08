@@ -71,30 +71,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
         }
 
-        public HelperResult RenderWrappedSection(string name, object wrapperHtmlAttributes)
-        {
-            Action<TextWriter> action = delegate(TextWriter tw)
-                                {
-                                    var htmlAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(wrapperHtmlAttributes);
-                                    var tagBuilder = new TagBuilder("div");
-                                    tagBuilder.MergeAttributes(htmlAttributes);
-
-                                    var section = RenderSection(name, false);
-                                    if (section != null)
-                                    {
-                                        tw.Write(tagBuilder.ToString(TagRenderMode.StartTag));
-                                        section.WriteTo(tw);
-                                        tw.Write(tagBuilder.ToString(TagRenderMode.EndTag));
-                                    }
-                                };
-            return new HelperResult(action);
-        }
-
-        public HelperResult RenderSection(string sectionName, Func<object, HelperResult> defaultContent)
-        {
-            return IsSectionDefined(sectionName) ? RenderSection(sectionName) : defaultContent(new object());
-        }
-
         public override string Layout
         {
             get
