@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
+using Nop.Core;
 using Nop.Core.Domain.Seo;
 using Nop.Services.Seo;
 
@@ -268,7 +269,7 @@ namespace Nop.Web.Framework.UI
                 //parts to do not bundle
                 foreach (var path in partsToDontBundle)
                 {
-                    result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", urlHelper.Content(path));
+                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(path), MimeTypes.TextJavascript);
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -279,7 +280,7 @@ namespace Nop.Web.Framework.UI
                 var result = new StringBuilder();
                 foreach (var path in _scriptParts[location].Select(x => x.Part).Distinct())
                 {
-                    result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", urlHelper.Content(path));
+                    result.AppendFormat("<script src=\"{0}\" type=\"{1}\"></script>", urlHelper.Content(path), MimeTypes.TextJavascript);
                     result.Append(Environment.NewLine);
                 }
                 return result.ToString();
@@ -365,8 +366,8 @@ namespace Nop.Web.Framework.UI
                 var result = new StringBuilder();
                 foreach (var path in distinctParts)
                 {
-                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", urlHelper.Content(path));
-                    result.Append(Environment.NewLine);
+                    result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"{1}\" />", urlHelper.Content(path), MimeTypes.TextCss);
+                    result.AppendLine();
                 }
                 return result.ToString();
             }

@@ -991,7 +991,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            Response.ContentType = "text/plain";
+            Response.ContentType = MimeTypes.TextPlain;
             Response.Write(sb.ToString());
             return null;
         }

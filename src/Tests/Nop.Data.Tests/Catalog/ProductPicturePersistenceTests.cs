@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Tests;
@@ -26,7 +27,7 @@ namespace Nop.Data.Tests.Catalog
                                          Picture = new Picture
                                                                       {
                                                                           PictureBinary = new byte[] { 1, 2, 3 },
-                                                                          MimeType = "image/pjpeg",
+                                                                          MimeType = MimeTypes.ImagePJpeg,
                                                                           IsNew = true
                                                                       }
                                      };
@@ -39,7 +40,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Product.Name.ShouldEqual("Name 1");
 
             fromDb.Picture.ShouldNotBeNull();
-            fromDb.Picture.MimeType.ShouldEqual("image/pjpeg");
+            fromDb.Picture.MimeType.ShouldEqual(MimeTypes.ImagePJpeg);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Nop.Data.Tests.Media
                 UseDownloadUrl = true,
                 DownloadUrl = "http://www.someUrl.com/file.zip",
                 DownloadBinary = new byte[] { 1, 2, 3 },
-                ContentType = "application/x-zip-co",
+                ContentType = MimeTypes.ApplicationXZipCo,
                 Filename = "file",
                 Extension = ".zip",
                 IsNew = true
@@ -30,7 +30,7 @@ namespace Nop.Data.Tests.Media
             fromDb.UseDownloadUrl.ShouldEqual(true);
             fromDb.DownloadUrl.ShouldEqual("http://www.someUrl.com/file.zip");
             fromDb.DownloadBinary.ShouldEqual(new byte[] { 1, 2, 3 });
-            fromDb.ContentType.ShouldEqual("application/x-zip-co");
+            fromDb.ContentType.ShouldEqual(MimeTypes.ApplicationXZipCo);
             fromDb.Filename.ShouldEqual("file");
             fromDb.Extension.ShouldEqual(".zip");
             fromDb.IsNew.ShouldEqual(true);

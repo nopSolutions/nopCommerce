@@ -93,8 +93,8 @@ namespace Nop.Services.ExportImport
             var mimeType = MimeMapping.GetMimeMapping(filePath);
 
             //little hack here because MimeMapping does not contain all mappings (e.g. PNG)
-            if (mimeType == "application/octet-stream")
-                mimeType = "image/jpeg";
+            if (mimeType == MimeTypes.ApplicationOctetStream)
+                mimeType = MimeTypes.ImageJpeg;
 
             return mimeType;
         }

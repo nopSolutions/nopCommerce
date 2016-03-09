@@ -1921,7 +1921,7 @@ namespace Nop.Web.Controllers
                 {
                     success = false,
                     downloadGuid = Guid.Empty,
-                }, "text/plain");
+                }, MimeTypes.TextPlain);
             }
 
             //we process it distinct ways based on a browser
@@ -1966,7 +1966,7 @@ namespace Nop.Web.Controllers
                         success = false,
                         message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
                         downloadGuid = Guid.Empty,
-                    }, "text/plain");
+                    }, MimeTypes.TextPlain);
                 }
             }
 
@@ -1992,7 +1992,7 @@ namespace Nop.Web.Controllers
                 message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
                 downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
-            }, "text/plain");
+            }, MimeTypes.TextPlain);
         }
 
         [HttpPost]
@@ -2005,7 +2005,7 @@ namespace Nop.Web.Controllers
                 {
                     success = false,
                     downloadGuid = Guid.Empty,
-                }, "text/plain");
+                }, MimeTypes.TextPlain);
             }
 
             //we process it distinct ways based on a browser
@@ -2050,7 +2050,7 @@ namespace Nop.Web.Controllers
                         success = false,
                         message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), attribute.ValidationFileMaximumSize.Value),
                         downloadGuid = Guid.Empty,
-                    }, "text/plain");
+                    }, MimeTypes.TextPlain);
                 }
             }
 
@@ -2076,7 +2076,7 @@ namespace Nop.Web.Controllers
                 message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
                 downloadUrl = Url.Action("GetFileUpload", "Download", new { downloadId = download.DownloadGuid }),
                 downloadGuid = download.DownloadGuid,
-            }, "text/plain");
+            }, MimeTypes.TextPlain);
         }
 
 

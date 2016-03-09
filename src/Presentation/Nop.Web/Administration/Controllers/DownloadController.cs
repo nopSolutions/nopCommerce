@@ -2,6 +2,7 @@
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Services.Media;
 using Nop.Web.Framework.Security;
@@ -33,7 +34,7 @@ namespace Nop.Admin.Controllers
             string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
             string contentType = !String.IsNullOrWhiteSpace(download.ContentType)
                 ? download.ContentType
-                : "application/octet-stream";
+                : MimeTypes.ApplicationOctetStream;
             return new FileContentResult(download.DownloadBinary, contentType)
             {
                 FileDownloadName = fileName + download.Extension
@@ -112,7 +113,7 @@ namespace Nop.Admin.Controllers
             return Json(new { success = true, 
                 downloadId = download.Id, 
                 downloadUrl = Url.Action("DownloadFile", new { downloadGuid= download.DownloadGuid }) },
-                "text/plain");
+                MimeTypes.TextPlain);
         }
     }
 }

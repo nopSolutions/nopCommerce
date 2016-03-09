@@ -426,8 +426,8 @@ namespace Nop.Plugin.Shipping.USPS
         {
             byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
+            request.Method = WebRequestMethods.Http.Post;
+            request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             request.ContentLength = bytes.Length;
             var requestStream = request.GetRequestStream();
             requestStream.Write(bytes, 0, bytes.Length);
