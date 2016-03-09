@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core;
 using Nop.Core.Domain.Media;
 using Nop.Tests;
 using NUnit.Framework;

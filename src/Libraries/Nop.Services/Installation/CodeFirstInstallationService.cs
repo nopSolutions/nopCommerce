@@ -6920,7 +6920,7 @@ namespace Nop.Services.Installation
             allProducts.Add(productHtcOne);
             productHtcOne.ProductPictures.Add(new ProductPicture
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), "image/jpeg"MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOne.Name)),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HTC_One_M8.jpeg"), MimeTypes.ImageJpeg, pictureService.GetPictureSeName(productHtcOne.Name)),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHtcOne);
