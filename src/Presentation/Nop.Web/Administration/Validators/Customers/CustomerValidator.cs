@@ -2,6 +2,7 @@
 using FluentValidation.Results;
 using Nop.Admin.Models.Customers;
 using Nop.Core.Domain.Customers;
+using Nop.Data;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
@@ -12,7 +13,8 @@ namespace Nop.Admin.Validators.Customers
     {
         public CustomerValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings,
+            IDbContext dbContext)
         {
             //form fields
             if (customerSettings.CountryEnabled && customerSettings.CountryRequired)
@@ -54,6 +56,8 @@ namespace Nop.Admin.Validators.Customers
                 RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required"));
             if (customerSettings.FaxRequired && customerSettings.FaxEnabled) 
                 RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required"));
+
+            SetStringPropertiesMaxLength<Customer>(dbContext);
         }
     }
 }
