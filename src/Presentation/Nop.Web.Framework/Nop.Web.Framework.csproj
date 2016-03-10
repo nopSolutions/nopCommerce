@@ -146,7 +146,6 @@
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="Kendoui\DataSourceRequest.cs" />
     <Compile Include="Kendoui\DataSourceResult.cs" />
-    <Compile Include="Kendoui\Dynamic.cs" />
     <Compile Include="Kendoui\Sort.cs" />
     <Compile Include="Kendoui\Filter.cs" />
     <Compile Include="Kendoui\QueryableExtensions.cs" />
