@@ -746,7 +746,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
@@ -762,7 +761,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
@@ -778,7 +776,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(CATEGORY_NUMBER_OF_PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
@@ -875,7 +872,6 @@ namespace Nop.Web.Infrastructure.Cache
              _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); 
              _cacheManager.RemoveByPattern(CATEGORY_MENU_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
-             _cacheManager.RemoveByPattern(CATEGORY_BREADCRUMB_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_SUBCATEGORIES_PATTERN_KEY);
              _cacheManager.RemoveByPattern(CATEGORY_HOMEPAGE_PATTERN_KEY);
              _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
@@ -957,7 +953,6 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTS_RELATED_IDS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SITEMAP_PATTERN_KEY);
-            _cacheManager.RemoveByPattern(PRODUCT_REVIEWS_PATTERN_KEY);
         }
         
         //product tags
