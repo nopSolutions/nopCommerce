@@ -422,6 +422,7 @@
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\browscap.xml" />
     <Content Include="App_Data\Install\create_required_data.sql" />
     <Content Include="App_Data\Install\create_sample_data.sql" />
     <Content Include="App_Data\Localization\Installation\installation.ar.xml" />
@@ -1147,7 +1148,6 @@
     <Content Include="Content\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.woff" />
     <Content Include="Content\kendo\2014.1.318\images\kendoui.ttf" />
-    <Content Include="App_Data\uas_20140809-02.ini" />
     <Content Include="Content\samples\product_IfYouWait_1.zip" />
     <Content Include="Content\samples\product_NightVision_1.zip" />
     <Content Include="Content\samples\product_ScienceAndFaith_1.zip" />
