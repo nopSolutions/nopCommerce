@@ -140,6 +140,25 @@ namespace Nop.Web.Infrastructure.Cache
         //shopping cart items
         IConsumer<EntityUpdated<ShoppingCartItem>>
     {
+
+        #region Cache keys 
+
+        private readonly ICacheManager _cacheManager;
+
+        #endregion
+
+        #region Ctor
+
+        public ModelCacheEventConsumer()
+        {
+            //TODO inject static cache manager using constructor
+            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+        }
+        
+        #endregion 
+
+        #region Cache keys 
+
         /// <summary>
         /// Key for categories on the search page
         /// </summary>
@@ -712,13 +731,9 @@ namespace Nop.Web.Infrastructure.Cache
         public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}-{2}";
         public const string WIDGET_PATTERN_KEY = "Nop.pres.widget";
 
-        private readonly ICacheManager _cacheManager;
-        
-        public ModelCacheEventConsumer()
-        {
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
-        }
+        #endregion
+
+        #region Methods
 
         //languages
         public void HandleEvent(EntityInserted<Language> eventMessage)
@@ -1290,5 +1305,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCT_REVIEWS_PATTERN_KEY);
         }
+
+        #endregion
     }
 }
