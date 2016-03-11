@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Text;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework.Controllers;
@@ -75,5 +77,34 @@ namespace Nop.Admin.Controllers
                 }
             }
         }
+
+        /// <summary>
+        /// Creates a <see cref="T:System.Web.Mvc.JsonResult"/> object that serializes the specified object to JavaScript Object Notation (JSON) format using the content type, content encoding, and the JSON request behavior.
+        /// </summary>
+        /// 
+        /// <returns>
+        /// The result object that serializes the specified object to JSON format.
+        /// </returns>
+        /// <param name="data">The JavaScript object graph to serialize.</param>
+        /// <param name="contentType">The content type (MIME type).</param>
+        /// <param name="contentEncoding">The content encoding.</param>
+        /// <param name="behavior">The JSON request behavior</param>
+        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
+        {
+            //Json fix for admin area
+            //sometime our entities have big text values returned (e.g. product desriptions)
+            //of course, we can set and return them as "empty" (we already do it so). Furthermore, it's a perfoemance optimization
+            //but it's better to avoid exceptions for other entities and allow maximum JSON length
+            return new JsonResult()
+            {
+                Data = data,
+                ContentType = contentType,
+                ContentEncoding = contentEncoding,
+                JsonRequestBehavior = behavior,
+                MaxJsonLength = int.MaxValue
+            };
+            //return base.Json(data, contentType, contentEncoding, behavior);
+        }
+
     }
 }
