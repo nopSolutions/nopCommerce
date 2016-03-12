@@ -128,5 +128,12 @@ namespace Nop.Services.Catalog
         /// <param name="productIds">Products IDs</param>
         /// <returns>Category IDs for products</returns>
         IDictionary<int, int[]> GetProductCategoryIds(int[] productIds);
+
+        /// <summary>
+        /// Get categories for navigation tree
+        /// </summary>
+        /// <param name="CategoryId">Category ID of category navigated to</param>
+        /// <returns>Categories list</returns>
+        IList<Category> GetCategoryTree(int CategoryId);
     }
 }

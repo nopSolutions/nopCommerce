@@ -649,12 +649,12 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), 
                 _storeContext.CurrentStore.Id);
-            var cachedModel = _cacheManager.Get(cacheKey, () => PrepareCategorySimpleModels(0).ToList());
 
+            var tree = _categoryService.GetCategoryTree(activeCategoryId);
             var model = new CategoryNavigationModel
             {
                 CurrentCategoryId = activeCategoryId,
-                Categories = cachedModel
+                Categories = PrepareCategorySimpleModels(0, allCategories: tree).ToList()
             };
 
             return PartialView(model);
