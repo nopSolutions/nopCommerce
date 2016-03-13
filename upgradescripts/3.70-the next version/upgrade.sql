@@ -323,6 +323,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.FlagImage">
     <Value>Flag image</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress">
+     <Value>Ip adress</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
+     <Value>Search by last ip adress.</Value>
+  </LocaleResource> 
 </Language>
 '
 

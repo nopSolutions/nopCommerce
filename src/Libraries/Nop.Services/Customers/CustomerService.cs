@@ -265,12 +265,9 @@ namespace Nop.Services.Customers
             }
 
             //search by IpAddress
-            if (!String.IsNullOrWhiteSpace(ipAddress))
+            if (!String.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
             {
-               if (CommonHelper.IsValidIpAddress(ipAddress))
-               {
                     query = query.Where(w => w.LastIpAddress == ipAddress);
-               }
             }
 
             if (loadOnlyWithShoppingCart)
