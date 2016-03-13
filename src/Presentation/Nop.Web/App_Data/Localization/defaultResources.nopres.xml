@@ -8414,7 +8414,13 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.List.SearchZipCode.Hint">
     <Value>Search by zip code.</Value>
-  </LocaleResource>
+  </LocaleResource>  
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress">
+     <Value>Ip adress</Value>
+   </LocaleResource>
+   <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
+     <Value>Search by last ip adress.</Value>
+   </LocaleResource> 
   <LocaleResource Name="Admin.Customers.Customers.Orders">
     <Value>Orders</Value>
   </LocaleResource>
