@@ -55,5 +55,8 @@ namespace Nop.Admin.Models.Customers
         [AllowHtml]
         public string SearchZipPostalCode { get; set; }
         public bool ZipPostalCodeEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchIpAddress")]
+        public string SearchIpAddress { get; set; }
     }
 }

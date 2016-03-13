@@ -12,6 +12,7 @@ using Nop.Core.Domain.Shipping;
 using System.Linq;
 using System.Web.Hosting;
 using System.IO;
+using System.Net;
 
 namespace Nop.Core
 {
@@ -52,6 +53,17 @@ namespace Nop.Core
             email = email.Trim();
             var result = Regex.IsMatch(email, "^(?:[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`\\{\\|\\}\\~]+\\.)*[\\w\\!\\#\\$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`\\{\\|\\}\\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\\-](?!\\.)){0,61}[a-zA-Z0-9]?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\\[(?:(?:[01]?\\d{1,2}|2[0-4]\\d|25[0-5])\\.){3}(?:[01]?\\d{1,2}|2[0-4]\\d|25[0-5])\\]))$", RegexOptions.IgnoreCase);
             return result;
+        }
+
+        /// <summary>
+        /// Verifies that string is an valid IP-Address
+        /// </summary>
+        /// <param name="ipAddress">IPAddress to verify</param>
+        /// <returns>true if the string is a valid IpAddress and false if it's not</returns>
+        public static bool IsValidIpAddress(string ipAddress)
+        {
+            IPAddress ip;
+            return IPAddress.TryParse(ipAddress, out ip);
         }
 
         /// <summary>

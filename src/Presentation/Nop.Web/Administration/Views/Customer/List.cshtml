@@ -137,6 +137,14 @@
             </tr>
         } 
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchIpAddress):
+            </td>            
+            <td class="adminData">
+                @Html.EditorFor(model => model.SearchIpAddress)                
+            </td>            
+        </tr>
+        <tr>
             <td colspan="2">
                 <input type="button" id="search-customers" class="k-button" value="@T("Admin.Common.Search")" />
             </td>
@@ -293,7 +301,8 @@
                             "#@Html.FieldIdFor(model => model.SearchLastName),",
                             "#@Html.FieldIdFor(model => model.SearchCompany),",
                             "#@Html.FieldIdFor(model => model.SearchPhone),",
-                            "#@Html.FieldIdFor(model => model.SearchZipPostalCode)")).keydown(function (event) {
+                            "#@Html.FieldIdFor(model => model.SearchZipPostalCode),",
+                            "#@Html.FieldIdFor(model => model.SearchIpAddress)")).keydown(function (event) {
                             if (event.keyCode === 13) {
                                 $("#search-customers").click();
                                 return false;
@@ -361,7 +370,8 @@
                             SearchMonthOfBirth: $('#@Html.FieldIdFor(model => model.SearchMonthOfBirth)').val(),
                             SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
                             SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
-                            SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()
+                            SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val(),
+                            SearchIpAddress: $('#@Html.FieldIdFor(model => model.SearchIpAddress)').val()
                         };
                         addAntiForgeryToken(data);
                         return data;
