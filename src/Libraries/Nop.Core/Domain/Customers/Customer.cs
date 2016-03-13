@@ -15,7 +15,7 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
-
+        private ICollection<LD_CustomerCategoryPrice> _categoryPrice;
         /// <summary>
         /// Ctor
         /// </summary>
