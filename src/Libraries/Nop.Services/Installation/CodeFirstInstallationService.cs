@@ -4550,7 +4550,8 @@ namespace Nop.Services.Installation
                 Log404Errors = true,
                 BreadcrumbDelimiter = "/",
                 RenderXuaCompatible = false,
-                XuaCompatibleValue = "IE=edge"
+                XuaCompatibleValue = "IE=edge",
+                DeleteGuestTaskOlderThanMinutes = 1440
             });
 
             settingService.SaveSetting(new SeoSettings
@@ -5028,7 +5029,6 @@ namespace Nop.Services.Installation
             {
                 ActiveWidgetSystemNames = new List<string> { "Widgets.NivoSlider" },
             });
-            settingService.SetSetting("Tasks.DeleteGuestTask.OlderThanMinutes", 1440);
         }
 
         protected virtual void InstallCheckoutAttributes()

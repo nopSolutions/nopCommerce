@@ -1,4 +1,5 @@
 ﻿using System;
+using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Tasks;
 
@@ -10,12 +11,12 @@ namespace Nop.Services.Customers
     public partial class DeleteGuestsTask : ITask
     {
         private readonly ICustomerService _customerService;
-        private readonly ISettingService _settingService;
+        private readonly CommonSettings _commonSettings;
 
-        public DeleteGuestsTask(ICustomerService customerService, ISettingService settingService)
+        public DeleteGuestsTask(ICustomerService customerService, CommonSettings commonSettings)
         {
             this._customerService = customerService;
-            this._settingService = settingService;
+            this._commonSettings = commonSettings;
         }
 
         /// <summary>
@@ -23,7 +24,7 @@ namespace Nop.Services.Customers
         /// </summary>
         public void Execute()
         {
-            var olderThanMinutes = _settingService.GetSettingByKey<int>("Tasks.DeleteGuestTask.OlderThanMinutes"); 
+            var olderThanMinutes = _commonSettings.DeleteGuestTaskOlderThanMinutes;
             // Default value in case 0 is returned.  0 would effectively disable this service and harm performance.
             olderThanMinutes = olderThanMinutes == 0 ? 1440 : olderThanMinutes;
     

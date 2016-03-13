@@ -620,9 +620,9 @@ END
 GO
 
 --new setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'Tasks.DeleteGuestTask.OlderThanMinutes')
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.deleteguesttaskolderthanminutes')
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
-	VALUES (N'Tasks.DeleteGuestTask.OlderThanMinutes',N'1440',0);
+	VALUES (N'commonsettings.deleteguesttaskolderthanminutes',N'1440',0);
 END
 GO
