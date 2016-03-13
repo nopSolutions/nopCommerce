@@ -608,20 +608,23 @@ namespace Nop.Services.Catalog
         public virtual IList<Category> GetCategoryTree(int CategoryId)
         {
             List<Category> tree = new List<Category>();
-            var currentcategory = GetCategoryById(CategoryId);
-
-            int parentid = currentcategory.ParentCategoryId;
-
-            while (parentid != 0)
+            if (CategoryId != 0)
             {
-                var children = GetAllCategoriesByParentCategoryId(parentid);
-                if (children.Count > 0)
+                var currentcategory = GetCategoryById(CategoryId);
+
+                int parentid = currentcategory.ParentCategoryId;
+
+                while (parentid != 0)
                 {
-                    tree.AddRange(children);
-                    var parentcategory = GetCategoryById(children[0].ParentCategoryId);
-                    parentid = parentcategory.ParentCategoryId;
+                    var children = GetAllCategoriesByParentCategoryId(parentid);
+                    if (children.Count > 0)
+                    {
+                        tree.AddRange(children);
+                        var parentcategory = GetCategoryById(children[0].ParentCategoryId);
+                        parentid = parentcategory.ParentCategoryId;
+                    }
+                    else break;
                 }
-                else break;
             }
             tree.AddRange(GetAllCategoriesByParentCategoryId(0));
             return tree;
