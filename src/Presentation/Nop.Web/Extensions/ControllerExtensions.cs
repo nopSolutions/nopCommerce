@@ -379,7 +379,7 @@ namespace Nop.Web.Extensions
             ICacheManager cacheManager,
             Product product)
         {
-            ProductReviewOverviewModel productReview = null;
+            ProductReviewOverviewModel productReview;
 
             if (catalogSettings.ShowProductReviewsPerStore)
             {
