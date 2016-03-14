@@ -334,7 +334,22 @@ set @resources='
    </LocaleResource>
    <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
      <Value>Search by IP address.</Value>
-   </LocaleResource>
+   </LocaleResource> 
+  <LocaleResource Name="Account.Fields.ConfirmEmail">
+    <Value>Confirm email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.ConfirmEmail.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Email.EnteredEmailsDoNotMatch">
+    <Value>The email and confirmation email do not match.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice">
+    <Value>Force entering email twice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
+    <Value>Force entering email twice during registration</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -639,5 +654,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.deletegue
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'commonsettings.deleteguesttaskolderthanminutes',N'1440',0);
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.enteringemailtwice')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'customersettings.enteringemailtwice',N'False',0);
 END
 GO

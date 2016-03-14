@@ -87,7 +87,8 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.StoreLastVisitedPage")]
             public bool StoreLastVisitedPage { get; set; }
 
-
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice")]
+            public bool EnteringEmailTwice { get; set; }
 
 
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
