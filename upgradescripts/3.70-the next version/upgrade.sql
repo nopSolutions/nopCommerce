@@ -627,3 +627,11 @@ BEGIN
 	ADD [ConditionAttributeXml] nvarchar(MAX) NULL
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.deleteguesttaskolderthanminutes')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'commonsettings.deleteguesttaskolderthanminutes',N'1440',0);
+END
+GO
