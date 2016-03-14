@@ -1,8 +1,18 @@
 ﻿@model SpecificationAttributeOptionModel
+@{
+    Html.AddScriptParts("~/Scripts/farbtastic.js");
+    Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
+}
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.SpecificationAttributeId)
-
+@{
+    //pre-set some color (required for farbtastic)
+    if (String.IsNullOrEmpty(Model.ColorSquaresRgb))
+    {
+        Model.ColorSquaresRgb = "#FFFFFF";
+    }
+}
 
 @if (ViewBag.RefreshPage == true)
 {
@@ -13,6 +23,20 @@
     </script>
 }
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)").click(toggleEnableColorSquaresRgb);
+        toggleEnableColorSquaresRgb();
+    });
+
+    function toggleEnableColorSquaresRgb() {
+        if ($('#@Html.FieldIdFor(model => model.EnableColorSquaresRgb)').is(':checked')) {
+            $('#pnlColorSquaresRgb').show();
+        } else {
+            $('#pnlColorSquaresRgb').hide();
+        }
+    }
+</script>
 @(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
 @<table class="adminContent">
     <tr>
@@ -44,6 +68,30 @@
 </table>
 ))
 <table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.EnableColorSquaresRgb):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.EnableColorSquaresRgb)
+            @Html.ValidationMessageFor(model => model.EnableColorSquaresRgb)
+        </td>
+    </tr>
+    <tr id="pnlColorSquaresRgb">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ColorSquaresRgb):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ColorSquaresRgb)
+            <div id="color-picker"></div>
+            <script type="text/javascript">
+                $(document).ready(function(){
+                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                });
+            </script>
+            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+        </td>
+    </tr>
     <tr>
         <td class="adminTitle">
             @Html.NopLabelFor(model => model.DisplayOrder):

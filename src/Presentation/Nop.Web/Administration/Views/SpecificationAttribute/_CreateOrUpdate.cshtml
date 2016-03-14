@@ -161,7 +161,7 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 250, true); return false;\" class='k-button' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 350, true); return false;\" class='k-button' />"
                                     }, {
                                         command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
                                         title: "@T("Admin.Common.Delete")",
@@ -174,7 +174,7 @@
                 </tr>
                 <tr>
                     <td width="100%">
-                        <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 250, true); return false;" class="k-button" />
+                        <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 350, true); return false;" class="k-button" />
                         <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {

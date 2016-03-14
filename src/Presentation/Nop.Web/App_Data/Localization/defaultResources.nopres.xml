@@ -1542,11 +1542,23 @@
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.EditOptionDetails">
     <Value>Edit option details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used instead of an option text name (it'll be displayed as "color square").</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder">
     <Value>Display order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder.Hint">
     <Value>The display order of the option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb">
+    <Value>Specify color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
+    <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name">
     <Value>Name</Value>

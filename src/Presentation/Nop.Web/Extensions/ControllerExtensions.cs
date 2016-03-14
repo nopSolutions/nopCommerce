@@ -42,6 +42,7 @@ namespace Nop.Web.Extensions
                     {
                         SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                         SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
                     };
 
                     switch (psa.AttributeType)

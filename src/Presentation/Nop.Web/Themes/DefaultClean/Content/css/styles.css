@@ -1314,6 +1314,9 @@ label, label + * {
 	height: 5px;
 	background-color: #ddd;
 }
+.product-filter .group li.color-item:before {
+	top: 25px;
+}
 
 .filtered-items .title {
 	margin: 0 0 5px;

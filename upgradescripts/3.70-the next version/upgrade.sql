@@ -335,6 +335,18 @@ set @resources='
    <LocaleResource Name="Admin.Customers.Customers.List.SearchIpAddress.Hint">
      <Value>Search by IP address.</Value>
    </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb">
+    <Value>Specify color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
+    <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -639,5 +651,15 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.deletegue
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'commonsettings.deleteguesttaskolderthanminutes',N'1440',0);
+END
+GO
+
+
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[SpecificationAttributeOption]') and NAME='ColorSquaresRgb')
+BEGIN
+	ALTER TABLE [SpecificationAttributeOption]
+	ADD [ColorSquaresRgb] nvarchar(100) NULL
 END
 GO

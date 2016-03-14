@@ -21,11 +21,23 @@
                             <li class="title">
                                 <strong>@groupList[0].SpecificationAttributeName</strong>
                             </li>
-
                             @foreach (var spec in groupList)
                             {
-                                <li class="item">
-                                    <a href="@spec.FilterUrl">@spec.SpecificationAttributeOptionName</a>
+                                <li class="item @(!String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb) ? "color-item" : null)">
+                                    <a href="@spec.FilterUrl">
+                                        @if (String.IsNullOrEmpty(spec.SpecificationAttributeOptionColorRgb))
+                                        {
+                                            @spec.SpecificationAttributeOptionName
+                                        }
+                                        else
+                                        {
+                                            <div class="color-squares">
+                                                <span class="color-container" title="@spec.SpecificationAttributeOptionName">
+                                                    <span class="color" style="background-color: @(spec.SpecificationAttributeOptionColorRgb);">&nbsp;</span>
+                                                </span>
+                                            </div>
+                                        }
+                                    </a>
                                 </li>
                             }
                         </ul>
