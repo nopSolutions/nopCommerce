@@ -18,14 +18,26 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
-    if (supportRtl)
-    {
-        Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
-    }
-    else
-    {
-        Html.AppendCssFileParts("~/Administration/Content/styles.css");
-    }
+    //if (supportRtl)
+    //{
+    //    Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
+    //}
+    //else
+    //{
+    Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    //}
+
+     <!-- Font Awesome -->
+    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/font-awesome-4.4.0.min.css");
+     <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
+    Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
+    <!-- Theme style -->
+    Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
+    <!-- Bootstrap 3.3.5 -->
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap/bootstrap-3.3.5.min.css");
+
 
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
     Html.AppendScriptParts("~/Scripts/admin.common.js");
@@ -33,7 +45,11 @@
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Scripts/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/Scripts/adminLTE/demo.js");
+    Html.AppendScriptParts("~/Scripts/bootstrap/bootstrap-3.3.4.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
+
 
     //page title
     string adminPageTitle = "";
