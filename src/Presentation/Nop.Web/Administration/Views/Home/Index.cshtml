@@ -10,100 +10,136 @@
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
 }
 @Html.AntiForgeryToken()
-<div class="section-title">
-    <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
-    @T("Admin.Dashboard")
+<div class="content-header">
+    <h1>
+        @T("Admin.Dashboard")
+        <small>@T("Admin.Dashboard.StoreStatistics")</small>
+    </h1>
 </div>
-<table class="dashboard">
-    @Html.Widget("admin_dashboard_top")
-    <tr>
-        <td class="maincol">
-            <div class="section-header">
-                <div class="title">
-                    <img src="@Url.Content("~/Administration/Content/images/ico-stat1.gif")" alt="" />
-                    @T("Admin.Dashboard.StoreStatistics")
-                </div>
-            </div>
+<div class="content">
+    <div class="row">
+        <div class="col-md-10">
+            @Html.Widget("admin_dashboard_top")
             @if (!Model.IsLoggedInAsVendor && canManageOrders)
             {
-                <table class="stats">
-                    <tbody>
-                        <tr>
-                            <td class="orderaveragereport">
-                                <div class="statisticsTitle">
-                                    @T("Admin.SalesReport.Average")
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">@T("Admin.SalesReport.Average")</h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 </div>
+                            </div>
+                            <div class="box-body">
                                 @Html.Action("OrderAverageReport", "Order")
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
             @if (!Model.IsLoggedInAsVendor)
             {
                 if (canManageOrders || canManageCustomers || canManageProducts)
                 {
-                    <table class="stats">
-                        <tbody>
-                            <tr>
-                                @if (canManageOrders)
-                                {
-                                    <td class="orderstatistics">
-                                        <div class="statisticsTitle">
-                                            @T("Admin.SalesReport.Incomplete")
+                    <div class="row">
+                        @if (canManageOrders)
+                    {
+                            <div class="col-md-6">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">@T("Admin.SalesReport.Incomplete")</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                         </div>
+                                    </div>
+                                    <div class="box-body">
                                         @Html.Action("OrderIncompleteReport", "Order")
-                                    </td>
-                                }
-                                @if (canManageCustomers)
-                                {
-                                    <td class="customerstatistics">
-                                        <div class="statisticsTitle">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (canManageCustomers)
+                    {
+                            <div class="col-md-3">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">
                                             @T("Admin.Customers.Reports.RegisteredCustomers")
+                                        </h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                         </div>
+                                    </div>
+                                    <div class="box-body">
                                         @Html.Action("ReportRegisteredCustomers", "Customer")
-                                    </td>
-                                }
-                                @if (canManageProducts)
-                                {
-                                    <td class="search-term-statistics">
-                                        <div class="statisticsTitle">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        @if (canManageProducts)
+                    {
+                            <div class="col-md-3">
+                                <div class="box">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">
                                             @T("Admin.SearchTermReport")
+                                        </h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                         </div>
+                                    </div>
+                                    <div class="box-body">
                                         @Html.Action("PopularSearchTermsReport", "Common")
-                                    </td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
                 }
             }
             @if (canManageOrders)
             {
-                <table class="stats">
-                    <tr>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByQuantity")
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    @T("Admin.SalesReport.BestSellers.ByQuantity")
+                                </h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                </div>
                             </div>
-                            @Html.Action("BestsellersBriefReportByQuantity", "Order")
-                        </td>
-                        <td class="bestsellers">
-                            <div class="statisticsTitle">
-                                @T("Admin.SalesReport.BestSellers.ByAmount")
+                            <div class="box-body">
+                                @Html.Action("BestsellersBriefReportByQuantity", "Order")
                             </div>
-                            @Html.Action("BestsellersBriefReportByAmount", "Order")
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    @T("Admin.SalesReport.BestSellers.ByAmount")
+                                </h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                @Html.Action("BestsellersBriefReportByAmount", "Order")
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-        </td>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <td class="rightcol">
+        </div>
+        <div class="col-md-2">
+            @if (!Model.IsLoggedInAsVendor)
+            {
                 @Html.Action("NopCommerceNews", "Home")
-            </td>
-        }
-    </tr>
-    @Html.Widget("admin_dashboard_bottom")
-</table>
+            }
+        </div>
+        @Html.Widget("admin_dashboard_bottom")
+    </div>
+</div>
