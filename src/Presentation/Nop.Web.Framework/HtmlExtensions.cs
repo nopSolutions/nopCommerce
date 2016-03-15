@@ -23,18 +23,14 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
-            // Create tag builder
-            var builder = new TagBuilder("img");
+            //create tag builder
+            var builder = new TagBuilder("i");
 
-            // Add attributes
-            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
-            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
-
-            builder.MergeAttribute("src", url);
-            builder.MergeAttribute("alt", value);
+            //add attributes
+            builder.MergeAttribute("class", "fa fa-question-circle");
             builder.MergeAttribute("title", value);
 
-            // Render tag
+            //render tag
             return MvcHtmlString.Create(builder.ToString());
         }
 
@@ -129,7 +125,7 @@ namespace Nop.Web.Framework
             if (String.IsNullOrEmpty(actionName))
                 actionName = "Delete";
 
-            var modalId =  MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
+            var modalId = MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
                 .ToHtmlString();
 
             var deleteConfirmationModel = new DeleteConfirmationModel
@@ -181,9 +177,27 @@ namespace Nop.Web.Framework
                         .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
 
                     result.Append(helper.Hint(hintResource).ToHtmlString());
+                    result.Append("&nbsp;");
                 }
             }
-            result.Append(helper.LabelFor(expression, new { title = hintResource }));
+            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopEditor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.EditorFor(expression));
+            result.Replace("class=\"text-box single-line\"", "class=\"text-box single-line form-control\"");
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, IList<SelectListItem> itemList)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.DropDownList(name, itemList, new { @class = "form-control" }));
+
             return MvcHtmlString.Create(result.ToString());
         }
 
@@ -276,11 +290,11 @@ namespace Nop.Web.Framework
             //ensure it's not negative
             if (indexToSelect < 0)
                 indexToSelect = 0;
-            
+
             //required validation
             if (indexToSelect == currentIndex)
             {
-            return new MvcHtmlString(" class='k-state-active'");
+                return new MvcHtmlString(" class='k-state-active'");
             }
 
             return new MvcHtmlString("");
@@ -379,7 +393,7 @@ namespace Nop.Web.Framework
             for (int i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
-                                    i, 
+                                    i,
                                     (selectedMonth.HasValue && selectedMonth.Value == i) ? " selected=\"selected\"" : null,
                                     CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
             }
@@ -431,7 +445,7 @@ namespace Nop.Web.Framework
         {
             string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
+            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
                 return MvcHtmlString.Empty;
@@ -453,4 +467,3 @@ namespace Nop.Web.Framework
         #endregion
     }
 }
-
