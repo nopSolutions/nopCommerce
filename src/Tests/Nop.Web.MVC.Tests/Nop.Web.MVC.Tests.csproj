@@ -59,9 +59,6 @@
       <Private>True</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Nop.Data">
-      <HintPath>..\..\Presentation\Nop.Web\Administration\Bin\Nop.Data.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
@@ -158,6 +155,10 @@
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6BDA8332-939F-45B7-A25E-7A797260AE59}</Project>
       <Name>Nop.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
+      <Project>{ccd7f2c9-6a2c-4cf0-8e89-076b8fc0f144}</Project>
+      <Name>Nop.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
