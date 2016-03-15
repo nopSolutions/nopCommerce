@@ -4737,6 +4737,7 @@ namespace Nop.Services.Installation
                 OnlineCustomerMinutes = 20,
                 StoreLastVisitedPage = false,
                 SuffixDeletedCustomers = false,
+                EnteringEmailTwice = false,
             });
 
             settingService.SaveSetting(new AddressSettings

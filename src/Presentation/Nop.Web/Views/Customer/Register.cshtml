@@ -126,6 +126,15 @@
                         </div>
 
                     }
+                    @if (Model.EnteringEmailTwice)
+                    {
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.ConfirmEmail, new { }, ":")
+                            @Html.EditorFor(model => model.ConfirmEmail)
+                            @Html.RequiredHint()
+                            @Html.ValidationMessageFor(model => model.ConfirmEmail)
+                        </div>
+                    }
                 </div>
             </div>
             @if (Model.CompanyEnabled || Model.DisplayVatNumber)

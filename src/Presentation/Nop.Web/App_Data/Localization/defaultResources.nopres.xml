@@ -249,6 +249,12 @@
   <LocaleResource Name="Account.Fields.Company.Required">
     <Value>Company name is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.ConfirmEmail">
+    <Value>Confirm email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.ConfirmEmail.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
   <LocaleResource Name="Account.Fields.ConfirmPassword">
     <Value>Confirm password</Value>
   </LocaleResource>
@@ -272,6 +278,9 @@
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Email">
     <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Email.EnteredEmailsDoNotMatch">
+    <Value>The email and confirmation email do not match.</Value>
   </LocaleResource>
   <LocaleResource Name="Account.Fields.Email.Required">
     <Value>Email is required.</Value>
@@ -5168,6 +5177,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultStoreTimeZone.Hint">
     <Value>The default store time zone used to display dates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice">
+    <Value>Force entering email twice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
+    <Value>Force entering email twice during registration</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled">
     <Value>Auto register enabled</Value>

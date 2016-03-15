@@ -483,7 +483,8 @@ namespace Nop.Web.Controllers
             model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.HoneypotEnabled = _securitySettings.HoneypotEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnRegistrationPage;
-            
+            model.EnteringEmailTwice = _customerSettings.EnteringEmailTwice;
+
             //countries and states
             if (_customerSettings.CountryEnabled)
             {
