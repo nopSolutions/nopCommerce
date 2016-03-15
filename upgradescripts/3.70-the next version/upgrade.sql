@@ -347,6 +347,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
     <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash">
+    <Value>Import product images using hash</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash.Hint">
+    <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
+  </LocaleResource>  
 </Language>
 '
 
@@ -481,6 +487,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.imagesquar
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'mediasettings.imagesquarepicturesize', N'32', 0)
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.importproductimagesusinghash')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'mediasettings.importproductimagesusinghash', N'true', 0)
 END
 GO
 

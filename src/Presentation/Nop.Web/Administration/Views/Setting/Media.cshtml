@@ -156,15 +156,25 @@
           @Html.ValidationMessageFor(model => model.MultipleThumbDirectories)
         </td>
       </tr>
-      <tr>
-        <td class="adminTitle">
-          @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
-          @Html.NopLabelFor(model => model.DefaultImageQuality):
-        </td>
-        <td class="adminData">
-          @Html.EditorFor(model => model.DefaultImageQuality)
-          @Html.ValidationMessageFor(model => model.DefaultImageQuality)
-        </td>
-      </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.DefaultImageQuality_OverrideForStore, model => model.DefaultImageQuality, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.DefaultImageQuality):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DefaultImageQuality)
+                @Html.ValidationMessageFor(model => model.DefaultImageQuality)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.ImportProductImagesUsingHash_OverrideForStore, model => model.ImportProductImagesUsingHash, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.ImportProductImagesUsingHash):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ImportProductImagesUsingHash)
+                @Html.ValidationMessageFor(model => model.ImportProductImagesUsingHash)
+            </td>
+        </tr>
     </table>
 }

@@ -2168,6 +2168,7 @@ namespace Nop.Admin.Controllers
                 model.MaximumImageSize_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MaximumImageSize, storeScope);
                 model.MultipleThumbDirectories_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.MultipleThumbDirectories, storeScope);
                 model.DefaultImageQuality_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.DefaultImageQuality, storeScope);
+                model.ImportProductImagesUsingHash_OverrideForStore = _settingService.SettingExists(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope);
             }
             model.PicturesStoredIntoDatabase = _pictureService.StoreInDb;
             return View(model);
@@ -2196,7 +2197,7 @@ namespace Nop.Admin.Controllers
                 _settingService.SaveSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope, false);
             else if (storeScope > 0)
                 _settingService.DeleteSetting(mediaSettings, x => x.ProductThumbPictureSize, storeScope);
-            
+
             if (model.ProductDetailsPictureSize_OverrideForStore || storeScope == 0)
                 _settingService.SaveSetting(mediaSettings, x => x.ProductDetailsPictureSize, storeScope, false);
             else if (storeScope > 0)
@@ -2251,6 +2252,11 @@ namespace Nop.Admin.Controllers
               _settingService.SaveSetting(mediaSettings, x => x.DefaultImageQuality, storeScope, false);
             else if (storeScope > 0)
               _settingService.DeleteSetting(mediaSettings, x => x.DefaultImageQuality, storeScope);
+
+            if (model.ImportProductImagesUsingHash_OverrideForStore || storeScope == 0)
+                _settingService.SaveSetting(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope, false);
+            else if (storeScope > 0)
+                _settingService.DeleteSetting(mediaSettings, x => x.ImportProductImagesUsingHash, storeScope);
 
             //now clear settings cache
             _settingService.ClearCache();
