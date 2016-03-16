@@ -153,10 +153,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UserAgentStringLibrary, Version=1.0.1211.25, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nopCommerceCustom\UserAgentStringLibrary.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Affiliates\AffiliateService.cs" />
@@ -249,6 +245,7 @@
     <Compile Include="Discounts\DiscountValidationResult.cs" />
     <Compile Include="ExportImport\Help\PropertyByName.cs" />
     <Compile Include="ExportImport\Help\PropertyManager.cs" />
+    <Compile Include="Helpers\BrowscapXmlParser.cs" />
     <Compile Include="Infrastructure\AzureWebsitesMachineNameProvider.cs" />
     <Compile Include="Infrastructure\DefaultMachineNameProvider.cs" />
     <Compile Include="Infrastructure\IMachineNameProvider.cs" />
