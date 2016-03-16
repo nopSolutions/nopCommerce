@@ -126,7 +126,7 @@ namespace Nop.Plugin.Shipping.USPS
                 throw new NopException(string.Format("USPS shipping service. Could not load \"{0}\" measure dimension", MEASUREDIMENSIONSYSTEMKEYWORD));
 
             var baseusedMeasureDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
-            if (usedMeasureDimension == null)
+            if (baseusedMeasureDimension == null)
                 throw new NopException("Primary dimension can't be loaded");
 
             decimal lengthTmp, widthTmp, heightTmp;
@@ -375,11 +375,11 @@ namespace Nop.Plugin.Shipping.USPS
                     if (pounds2 < 1)
                         pounds2 = 1;
                     if (height2 < 1)
-                        height2 = 1;
+                        height2 = 1; // Why assign a 1 if it is assigned below 12? Perhaps this is a mistake.
                     if (width2 < 1)
-                        width2 = 1;
+                        width2 = 1; // Similarly
                     if (length2 < 1)
-                        length2 = 1;
+                        length2 = 1; // Similarly
 
                     //little hack here for international requests
                     length2 = 12;
