@@ -484,15 +484,15 @@ if (Model.Id > 0)
                 </div>
             </div>
         </div>
-    }
-    else
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
-            </div>
-        </div>
-    }
+                    }
+                    else
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+                            </div>
+                        </div>
+                    }
 }
 
 
@@ -505,7 +505,7 @@ if (Model.Id > 0)
                 foreach (var discount in Model.AvailableDiscounts)
                 {
                     <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                           @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                           } />@discount.Name
+                           @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                             } />@discount.Name
                         <br />
                 }
             }
@@ -555,8 +555,12 @@ if (Model.Id > 0)
                         @Html.Action("AclDisabledWarning", "Common")
                         foreach (var customerRole in Model.AvailableCustomerRoles)
                         {
-                            <div>
-                                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" 
+                                           checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />
+                                    @customerRole.Name
+                                </label>
                             </div>
                         }
                     }
@@ -609,8 +613,11 @@ if (Model.Id > 0)
                         @Html.Action("MultistoreDisabledWarning", "Common")
                         foreach (var store in Model.AvailableStores)
                         {
-                            <div>
-                                <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />
+                                    @store.Name
+                                </label>
                             </div>
                         }
                     }

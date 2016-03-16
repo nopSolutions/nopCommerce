@@ -35,3 +35,16 @@ table.adminContent {
     -moz-box-sizing: border-box !important;
     box-sizing: border-box !important;
 }
+
+.form-group input[type=checkbox] {
+    margin-top: 8px;
+}
+
+.form-group .checkbox input[type=checkbox] {
+    margin-top: 3px;
+}
+
+.panel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
