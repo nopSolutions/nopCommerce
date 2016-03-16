@@ -16,46 +16,44 @@
     });
 </script>
 <div class="content">
-    <div>
-        <div id="category-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Products")
-                </li>
-                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Discounts")
-                </li>
-                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Acl")
-                </li>
-                <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Stores")
-                </li>
-            </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabSeo()
-            </div>
-            <div>
-                @TabProducts()
-            </div>
-            <div>
-                @TabDiscounts()
-            </div>
-            <div>
-                @TabAcl()
-            </div>
-            <div>
-                @TabStores()
-            </div>
+    <div id="category-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Categories.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Common.SEO")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Categories.Products")
+            </li>
+            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Categories.Discounts")
+            </li>
+            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Categories.Acl")
+            </li>
+            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                @T("Admin.Catalog.Categories.Stores")
+            </li>
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabSeo()
+        </div>
+        <div>
+            @TabProducts()
+        </div>
+        <div>
+            @TabDiscounts()
+        </div>
+        <div>
+            @TabAcl()
+        </div>
+        <div>
+            @TabStores()
         </div>
     </div>
 </div>
@@ -116,9 +114,7 @@
                 </div>
             </div>
             <div>
-                <div colspan="2">
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
         </div>
     </div>
@@ -292,9 +288,7 @@
                 </div>
             </div>
             <div>
-                <div colspan="2">
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
         </div>
     </div>
@@ -464,24 +458,22 @@ if (Model.Id > 0)
             </div>
 
             <div class="panel-footer">
-                <div>
-                    <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")"
-                           onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new {categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form"}))', 800, 800, true); return false;"
-                           class="btn btn-default" />
-                    <input type="submit" id="btnRefreshProducts" style="display: none" />
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#btnRefreshProducts').click(function () {
-                                //refresh grid
-                                var grid = $("#products-grid").data('kendoGrid');
-                                grid.dataSource.read();
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Catalog.Categories.Products.AddNew")"
+                       onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Category", new {categoryId = Model.Id, btnId = "btnRefreshProducts", formId = "category-form"}))', 800, 800, true); return false;"
+                       class="btn btn-default" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProducts').click(function () {
+                            //refresh grid
+                            var grid = $("#products-grid").data('kendoGrid');
+                            grid.dataSource.read();
 
-                                //return false to don't reload a page
-                                return false;
-                            });
+                            //return false to don't reload a page
+                            return false;
                         });
-                    </script>
-                </div>
+                    });
+                </script>
             </div>
         </div>
                     }
@@ -504,9 +496,13 @@ if (Model.Id > 0)
             {
                 foreach (var discount in Model.AvailableDiscounts)
                 {
-                    <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                           @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                             } />@discount.Name
-                        <br />
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
+                                   @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                                } />@discount.Name
+                            @discount.Name
+                        </label>
+                    </div>
                 }
             }
             else
@@ -557,7 +553,7 @@ if (Model.Id > 0)
                         {
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" 
+                                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
                                            checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />
                                     @customerRole.Name
                                 </label>
