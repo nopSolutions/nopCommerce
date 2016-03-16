@@ -429,15 +429,18 @@ namespace Nop.Plugin.Shipping.USPS
             request.Method = WebRequestMethods.Http.Post;
             request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
             request.ContentLength = bytes.Length;
-            var requestStream = request.GetRequestStream();
-            requestStream.Write(bytes, 0, bytes.Length);
-            requestStream.Close();
-            var response = request.GetResponse();
-            string responseXml;
-            using (var reader = new StreamReader(response.GetResponseStream()))
-                responseXml = reader.ReadToEnd();
+            using (var requestStream = request.GetRequestStream())
+            {
+                requestStream.Write(bytes, 0, bytes.Length);
+            }
+            using (var response = request.GetResponse())
+            {
+                string responseXml;
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                    responseXml = reader.ReadToEnd();
 
-            return responseXml;
+                return responseXml;
+            }
         }
 
         private bool IsPackageTooLarge(int length, int height, int width)

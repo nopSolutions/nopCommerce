@@ -116,8 +116,10 @@ namespace Nop.Services.Security
             using (var ms = new MemoryStream(data)) {
                 using (var cs = new CryptoStream(ms, new TripleDESCryptoServiceProvider().CreateDecryptor(key, iv), CryptoStreamMode.Read))
                 {
-                    var sr = new StreamReader(cs, new UnicodeEncoding());
-                    return sr.ReadLine();
+                    using (var sr = new StreamReader(cs, new UnicodeEncoding()))
+                    {
+                        return sr.ReadLine();
+                    }
                 }
             }
         }

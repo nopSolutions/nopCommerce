@@ -103,15 +103,17 @@ namespace Nop.Services.Messages
                         string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : download.Id.ToString();
                         fileName += download.Extension;
 
-                        
-                        var ms = new MemoryStream(download.DownloadBinary);
-                        var attachment = new Attachment(ms, fileName);
-                        //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
-                        //var attachment = new Attachment(ms, fileName, contentType);
-                        attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
-                        attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
-                        message.Attachments.Add(attachment);
+
+                        using (var ms = new MemoryStream(download.DownloadBinary))
+                        {
+                            var attachment = new Attachment(ms, fileName);
+                            //string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                            //var attachment = new Attachment(ms, fileName, contentType);
+                            attachment.ContentDisposition.CreationDate = DateTime.UtcNow;
+                            attachment.ContentDisposition.ModificationDate = DateTime.UtcNow;
+                            attachment.ContentDisposition.ReadDate = DateTime.UtcNow;
+                            message.Attachments.Add(attachment);
+                        }
                     }
                 }
             }
