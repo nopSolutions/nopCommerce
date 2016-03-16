@@ -630,7 +630,6 @@ namespace Nop.Admin.Controllers
             Bitmap img = new Bitmap(Bitmap.FromStream(fs));
             fs.Close();
             fs.Dispose();
-            int cropWidth = img.Width, cropHeight = img.Height;
             int cropX = 0, cropY = 0;
 
             double imgRatio = (double)img.Width / (double)img.Height;
@@ -644,8 +643,8 @@ namespace Nop.Admin.Controllers
                 height = img.Height;
 
             double cropRatio = (double)width / (double)height;
-            cropWidth = Convert.ToInt32(Math.Floor((double)img.Height * cropRatio));
-            cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
+            int cropWidth = Convert.ToInt32(Math.Floor((double)img.Height * cropRatio));
+            int cropHeight = Convert.ToInt32(Math.Floor((double)cropWidth / cropRatio));
             if (cropWidth > img.Width)
             {
                 cropWidth = img.Width;

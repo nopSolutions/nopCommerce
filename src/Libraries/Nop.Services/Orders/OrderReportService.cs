@@ -389,7 +389,6 @@ namespace Nop.Services.Orders
                          (!orderItem.Order.Deleted) &&
                          (storeId == 0 || orderItem.Order.StoreId == storeId) &&
                          (!p.Deleted) &&
-                         (showHidden || p.Published) &&
                          (!visibleIndividuallyOnly || p.VisibleIndividually)
                          select new { orderItem, p };
 
