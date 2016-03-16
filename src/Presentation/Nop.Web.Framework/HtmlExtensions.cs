@@ -201,6 +201,24 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
+        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+            Expression<Func<TModel, TValue>> expression, IList<SelectListItem> itemList)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.DropDownListFor(expression, itemList, new { @class = "form-control" }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.TextAreaFor(expression, new { @class = "form-control" }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,

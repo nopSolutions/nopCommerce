@@ -29,3 +29,9 @@ table.adminContent {
 .k-state-active, .k-state-active:hover, .k-active-filter, .k-tabstrip .k-state-active {
     border-color: #c5c5c5 !important;
 }
+
+.k-animation-container, .k-widget, .k-widget *, .k-animation-container *, .k-widget *:before, .k-animation-container *:after, .k-block .k-header, .k-list-container {
+    -webkit-box-sizing: border-box !important;
+    -moz-box-sizing: border-box !important;
+    box-sizing: border-box !important;
+}
