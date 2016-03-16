@@ -3,19 +3,19 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.EditManufacturerDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Catalog.Manufacturers.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Manufacturer", new { SeName = Model.SeName })', 800, 600, true); return false;" class="k-button" />
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="manufacturer-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
+            <small>@Html.ActionLink("(" + T("Admin.Catalog.Manufacturers.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Manufacturer", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-default" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <span id="manufacturer-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
