@@ -79,6 +79,9 @@ namespace Nop.Services.Messages
             //Replace subject and body tokens 
             var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
             var bodyReplaced = _tokenizer.Replace(body, tokens, true);
+
+            //limit name length
+            toName = CommonHelper.EnsureMaximumLength(toName, 300);
             
             var email = new QueuedEmail
             {

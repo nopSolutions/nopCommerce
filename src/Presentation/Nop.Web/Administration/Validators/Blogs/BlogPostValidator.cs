@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Blogs;
+using Nop.Core.Domain.Blogs;
+using Nop.Data;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 
@@ -7,7 +9,7 @@ namespace Nop.Admin.Validators.Blogs
 {
     public class BlogPostValidator : BaseNopValidator<BlogPostModel>
     {
-        public BlogPostValidator(ILocalizationService localizationService)
+        public BlogPostValidator(ILocalizationService localizationService, IDbContext dbContext)
         {
             RuleFor(x => x.Title)
                 .NotEmpty()
@@ -22,6 +24,8 @@ namespace Nop.Admin.Validators.Blogs
             RuleFor(x => x.Tags)
                 .Must(x => x == null || !x.Contains("."))
                 .WithMessage(localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Fields.Tags.NoDots"));
+
+            SetStringPropertiesMaxLength<BlogPost>(dbContext);
 
         }
     }

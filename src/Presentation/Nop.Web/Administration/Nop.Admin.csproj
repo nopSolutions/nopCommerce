@@ -62,8 +62,8 @@
       <HintPath>..\..\..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidation, Version=6.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\FluentValidation.6.2.0.0\lib\Net45\FluentValidation.dll</HintPath>
+    <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -420,6 +420,7 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="db_backups\placeholder.txt" />
     <Content Include="Content\images\ajax_loader_small.gif" />
     <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\images\1pix.gif" />
@@ -1333,6 +1334,7 @@
   <ItemGroup>
     <Content Include="Views\Product\ProductAttributeConditionPopup.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

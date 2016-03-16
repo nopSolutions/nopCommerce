@@ -286,6 +286,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.StoreLastVisitedPage)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.EnteringEmailTwice):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.EnteringEmailTwice)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.EnteringEmailTwice)
+            </td>
+        </tr>
     </table>
 }
 @helper TabCustomerFormFields()

@@ -42,6 +42,7 @@ namespace Nop.Web.Extensions
                     {
                         SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
                         SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                        ColorSquaresRgb = psa.SpecificationAttributeOption.ColorSquaresRgb
                     };
 
                     switch (psa.AttributeType)
@@ -123,23 +124,26 @@ namespace Nop.Web.Extensions
 
                                 var associatedProducts = productService.GetAssociatedProducts(product.Id, storeContext.CurrentStore.Id);
 
+                                //add to cart button (ignore "DisableBuyButton" property for grouped products)
+                                priceModel.DisableBuyButton = !permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart) ||
+                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //add to wishlist button (ignore "DisableWishlistButton" property for grouped products)
+                                priceModel.DisableWishlistButton = !permissionService.Authorize(StandardPermissionProvider.EnableWishlist) ||
+                                    !permissionService.Authorize(StandardPermissionProvider.DisplayPrices);
+
+                                //compare products
+                                priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
                                 switch (associatedProducts.Count)
                                 {
                                     case 0:
                                         {
                                             //no associated products
-                                            //priceModel.DisableBuyButton = true;
-                                            //priceModel.DisableWishlistButton = true;
-                                            //compare products
-                                            priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
-                                            //priceModel.AvailableForPreOrder = false;
                                         }
                                         break;
                                     default:
                                         {
                                             //we have at least one associated product
-                                            //priceModel.DisableBuyButton = true;
-                                            //priceModel.DisableWishlistButton = true;
                                             //compare products
                                             priceModel.DisableAddToCompareListButton = !catalogSettings.CompareProductsEnabled;
                                             //priceModel.AvailableForPreOrder = false;
@@ -376,7 +380,7 @@ namespace Nop.Web.Extensions
             ICacheManager cacheManager,
             Product product)
         {
-            ProductReviewOverviewModel productReview = null;
+            ProductReviewOverviewModel productReview;
 
             if (catalogSettings.ShowProductReviewsPerStore)
             {

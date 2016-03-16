@@ -61,5 +61,10 @@ namespace Nop.Core.Domain.Common
         /// Gets or sets a ignore words (phrases) to be ignored when logging errors/messages
         /// </summary>
         public List<string> IgnoreLogWordlist { get; set; }
+
+        /// <summary>
+        /// Gets or sets interval (in minutes) with which the Delete Guest Task runs
+        /// </summary>
+        public int DeleteGuestTaskOlderThanMinutes { get; set; }
     }
 }

@@ -31,14 +31,14 @@ namespace Nop.Web.Extensions
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
             string bbEditorWebRoot = String.Format("{0}Content/", storeLocation);
 
-            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" type=\"text/javascript\"></script>", storeLocation);
-            sb.Append(Environment.NewLine);
-            sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
-            sb.Append(Environment.NewLine);
+            sb.AppendFormat("<script src=\"{0}Content/BBEditor/ed.js\" type=\"{1}\"></script>", storeLocation, MimeTypes.TextJavascript);
+            sb.AppendLine();
+            sb.AppendFormat("<script language=\"javascript\" type=\"{0}\">", MimeTypes.TextJavascript);
+            sb.AppendLine();
             sb.AppendFormat("edToolbar('{0}','{1}');", name, bbEditorWebRoot);
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
             sb.Append("</script>");
-            sb.Append(Environment.NewLine);
+            sb.AppendLine();
 
             return MvcHtmlString.Create(sb.ToString());
         }

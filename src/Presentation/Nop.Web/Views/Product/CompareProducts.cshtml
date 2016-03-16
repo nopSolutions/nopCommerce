@@ -100,12 +100,22 @@
                                 @foreach (var product in Model.Products)
                                 {
                                     var foundProductSpec = product.SpecificationAttributeModels.FirstOrDefault(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId);
-                                    var specValue = foundProductSpec != null ? foundProductSpec.ValueRaw : "";
                                                                 
                                     <td style="width: @columnWidth;">
-                                        @if (!String.IsNullOrEmpty(specValue))
+                                        @if (foundProductSpec != null)
                                         {
-                                            @Html.Raw(specValue)
+                                            if (String.IsNullOrEmpty(foundProductSpec.ColorSquaresRgb))
+                                            {
+                                                @Html.Raw(foundProductSpec.ValueRaw)
+                                            }
+                                            else
+                                            {
+                                                <div class="color-squares">
+                                                    <span class="color-container" title="@Html.Raw(foundProductSpec.ValueRaw)">
+                                                        <span class="color" style="background-color: @(foundProductSpec.ColorSquaresRgb);">&nbsp;</span>
+                                                    </span>
+                                                </div>
+                                            }
                                         }
                                         else
                                         {

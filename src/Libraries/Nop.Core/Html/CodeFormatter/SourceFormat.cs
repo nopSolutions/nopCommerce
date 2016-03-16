@@ -204,7 +204,7 @@ namespace Nop.Core.Html.CodeFormatter
 			
 			if (embedStyleSheet)
 			{
-				sb.Append("<style type=\"text/css\">\n");
+				sb.AppendFormat("<style type=\"{0}\">\n",MimeTypes.TextCss);
 				sb.Append(GetCssString());
 				sb.Append("</style>\n");
 			}

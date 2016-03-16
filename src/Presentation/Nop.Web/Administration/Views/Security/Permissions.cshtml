@@ -71,7 +71,7 @@
                                     {
                                         var allowed = Model.Allowed.ContainsKey(pr.SystemName) && Model.Allowed[pr.SystemName][cr.Id];
                                         <td>
-                                            <input class="allow_@(cr.Id)" class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) />
+                                            <input class="allow_@(cr.Id)" type="checkbox" value="@(pr.SystemName)" name="allow_@(cr.Id)" @(allowed ? " checked=checked" : null) />
                                         </td>
                                     }
                                 </tr>

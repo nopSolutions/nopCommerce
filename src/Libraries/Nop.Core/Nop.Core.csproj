@@ -91,6 +91,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\IRedisConnectionWrapper.cs" />
+    <Compile Include="Caching\RedisConnectionWrapper.cs" />
     <Compile Include="Caching\RedisCacheManager.cs" />
     <Compile Include="ComponentModel\GenericDictionaryTypeConverter.cs" />
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Domain\Vendors\VendorNote.cs" />
     <Compile Include="Domain\Vendors\VendorSettings.cs" />
     <Compile Include="Domain\Vendors\Vendor.cs" />
+    <Compile Include="Dynamic.cs" />
     <Compile Include="IStoreContext.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
@@ -305,6 +308,7 @@
     <Compile Include="Html\CodeFormatter\VisualBasicFormat.cs" />
     <Compile Include="Html\HtmlHelper.cs" />
     <Compile Include="Html\ResolveLinksHelper.cs" />
+    <Compile Include="MimeTypes.cs" />
     <Compile Include="Plugins\LoadPluginsMode.cs" />
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\IOfficialFeedManager.cs" />

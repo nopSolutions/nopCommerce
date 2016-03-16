@@ -134,7 +134,12 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
         /// </summary>
         public bool SuffixDeletedCustomers { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to force entering email twice
+        /// </summary>
+        public bool EnteringEmailTwice { get; set; }
+
         #region Form fields
 
         /// <summary>

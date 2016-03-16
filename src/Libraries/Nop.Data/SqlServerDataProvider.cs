@@ -6,7 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.SqlClient;
 using System.IO;
 using System.Text;
-using System.Web.Hosting;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Data.Initializers;
 
@@ -97,13 +97,11 @@ namespace Nop.Data
             //pass some table names to ensure that we have nopCommerce 2.X installed
             var tablesToValidate = new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" };
 
-            //custom commands (stored proedures, indexes)
+            //custom commands (stored procedures, indexes)
 
             var customCommands = new List<string>();
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/Install/SqlServer.Indexes.sql"), false));
-            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/Install/SqlServer.StoredProcedures.sql"), false));
+            customCommands.AddRange(ParseCommands(CommonHelper.MapPath("~/App_Data/Install/SqlServer.Indexes.sql"), false));
+            customCommands.AddRange(ParseCommands(CommonHelper.MapPath("~/App_Data/Install/SqlServer.StoredProcedures.sql"), false));
 
             var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
             Database.SetInitializer(initializer);
@@ -113,6 +111,14 @@ namespace Nop.Data
         /// A value indicating whether this data provider supports stored procedures
         /// </summary>
         public virtual bool StoredProceduredSupported
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// A value indicating whether this data provider supports backup
+        /// </summary>
+        public virtual bool BackupSupported
         {
             get { return true; }
         }

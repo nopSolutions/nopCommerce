@@ -797,6 +797,7 @@ namespace Nop.Admin.Controllers
                 company: model.SearchCompany,
                 phone: model.SearchPhone,
                 zipPostalCode: model.SearchZipPostalCode,
+                ipAddress: model.SearchIpAddress,
                 loadOnlyWithShoppingCart: false,
                 pageIndex: command.Page - 1,
                 pageSize: command.PageSize);
@@ -2083,7 +2084,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, "text/xls", "customers.xlsx");
+                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
             }
             catch (Exception exc)
             {
@@ -2111,7 +2112,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 byte[] bytes = _exportManager.ExportCustomersToXlsx(customers);
-                return File(bytes, "text/xls", "customers.xlsx");
+                return File(bytes, MimeTypes.TextXls, "customers.xlsx");
             }
             catch (Exception exc)
             {

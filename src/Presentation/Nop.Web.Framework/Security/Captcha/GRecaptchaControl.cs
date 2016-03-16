@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI;
+using Nop.Core;
 
 namespace Nop.Web.Framework.Security.Captcha
 {
@@ -28,7 +29,7 @@ namespace Nop.Web.Framework.Security.Captcha
             if (_version == ReCaptchaVersion.Version1)
             {
                 var scriptCaptchaOptionsTag = new TagBuilder("script");
-                scriptCaptchaOptionsTag.Attributes.Add("type", "text/javascript");
+                scriptCaptchaOptionsTag.Attributes.Add("type", MimeTypes.TextJavascript);
                 scriptCaptchaOptionsTag.InnerHtml =
                     string.Format("var RecaptchaOptions = {{ theme: '{0}', tabindex: 0 }}; ", Theme);
                 writer.Write(scriptCaptchaOptionsTag.ToString(TagRenderMode.Normal));
@@ -40,7 +41,7 @@ namespace Nop.Web.Framework.Security.Captcha
             else if (_version == ReCaptchaVersion.Version2)
             {
                 var scriptCallbackTag = new TagBuilder("script");
-                scriptCallbackTag.Attributes.Add("type", "text/javascript");
+                scriptCallbackTag.Attributes.Add("type", MimeTypes.TextJavascript);
                 scriptCallbackTag.InnerHtml = string.Format("var onloadCallback = function() {{grecaptcha.render('{0}', {{'sitekey' : '{1}', 'theme' : '{2}' }});}};", Id, PublicKey, Theme);
                 writer.Write(scriptCallbackTag.ToString(TagRenderMode.Normal));
 

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Models.Stores;
 using Nop.Admin.Validators.Orders;
+using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
@@ -70,6 +71,9 @@ namespace Nop.Admin.Models.Orders
 
         public IList<CheckoutAttributeLocalizedModel> Locales { get; set; }
 
+        //condition
+        public bool ConditionAllowed { get; set; }
+        public ConditionModel ConditionModel { get; set; }
 
         //Store mapping
         [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Fields.LimitedToStores")]
@@ -78,6 +82,28 @@ namespace Nop.Admin.Models.Orders
         public List<StoreModel> AvailableStores { get; set; }
         public int[] SelectedStoreIds { get; set; }
 
+    }
+
+    public partial class ConditionModel : BaseNopEntityModel
+    {
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Condition.EnableCondition")]
+        public bool EnableCondition { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Attributes.CheckoutAttributes.Condition.Attributes")]
+        public int SelectedAttributeId { get; set; }
+
+        public IList<AttributeConditionModel> ConditionAttributes { get; set; }
+    }
+
+    public partial class AttributeConditionModel : BaseNopEntityModel
+    {
+        public string Name { get; set; }
+
+        public AttributeControlType AttributeControlType { get; set; }
+
+        public IList<SelectListItem> Values { get; set; }
+
+        public string SelectedValueId { get; set; }
     }
 
     public partial class CheckoutAttributeLocalizedModel : ILocalizedModelLocal
