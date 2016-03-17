@@ -15,7 +15,6 @@ namespace Nop.Data.Tests
             var ctx = new NopObjectContext("Test");
             string result = ctx.CreateDatabaseScript();
             result.ShouldNotBeNull();
-            Console.Write(result);
         }
     }
 }
