@@ -362,6 +362,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
     <Value>Force entering email twice during registration</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
+    <Value>This attribute is already added to this product</Value>
+  </LocaleResource>
 </Language>
 '
 

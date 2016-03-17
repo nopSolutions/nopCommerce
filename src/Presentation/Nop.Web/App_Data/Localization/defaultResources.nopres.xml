@@ -3081,6 +3081,9 @@
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes">
     <Value>Attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
+    <Value>This attribute is already added to this product</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.Condition">
     <Value>Condition</Value>
   </LocaleResource>
