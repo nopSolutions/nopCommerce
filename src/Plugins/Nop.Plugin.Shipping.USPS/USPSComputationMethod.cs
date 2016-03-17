@@ -424,7 +424,7 @@ namespace Nop.Plugin.Shipping.USPS
 
         private string DoRequest(string url, string requestString)
         {
-            byte[] bytes = new ASCIIEncoding().GetBytes(requestString);
+            byte[] bytes = Encoding.ASCII.GetBytes(requestString);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = WebRequestMethods.Http.Post;
             request.ContentType = MimeTypes.ApplicationXWwwFormUrlencoded;
