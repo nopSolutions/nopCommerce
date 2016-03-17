@@ -48,3 +48,8 @@ table.adminContent {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.tag-editor {
+    border: 1px solid #d2d6de !important;
+    line-height: 26px !important;
+}

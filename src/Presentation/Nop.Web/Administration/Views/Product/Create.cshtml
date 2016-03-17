@@ -3,17 +3,17 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.AddNew").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.AddNew") @Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Catalog.Products.AddNew")
+            <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

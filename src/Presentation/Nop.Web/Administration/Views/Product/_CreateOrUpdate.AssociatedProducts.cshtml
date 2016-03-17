@@ -1,10 +1,10 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
-{     
-    <table class="adminContent">
-        <tr>
-            <td>
+<div class="panel-group">
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+            {
+            <div class="panel-body">
                 <ul>
                     <li>
                         @T("Admin.Catalog.Products.AssociatedProducts.Note1")
@@ -13,10 +13,7 @@
                         @T("Admin.Catalog.Products.AssociatedProducts.Note2")
                     </li>
                 </ul>
-            </td>
-        </tr>
-        <tr>
-            <td>
+
                 <div id="associatedproducts-grid"></div>
 
                 <script>
@@ -26,13 +23,13 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new { productId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("AssociatedProductList", "Product", new {productId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     update: {
-                                        url:"@Html.Raw(Url.Action("AssociatedProductUpdate", "Product"))",
+                                        url: "@Html.Raw(Url.Action("AssociatedProductUpdate", "Product"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -51,18 +48,18 @@
                                     model: {
                                         id: "Id",
                                         fields: {
-                                            ProductName: {editable: false, type: "string" },
-                                            DisplayOrder: {editable: true, type: "number" },
-                                            Id: {editable: false, type: "number" }
+                                            ProductName: { editable: false, type: "string" },
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
                                         }
                                     }
                                 },
-                                requestEnd: function(e) {
-                                    if(e.type=="update") {
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
                                         this.read();
                                     }
                                 },
-                                error: function(e) {
+                                error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -82,60 +79,64 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
-                                field: "ProductName",
-                                title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")"
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")",
-                                //integer format
-                                format: "{0:0}",
-                                width: 150
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.View")",
-                                width: 100,
-                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                            }, {
-                                command: [{
-                                    name: "edit",
-                                    text: {
-                                        edit: "@T("Admin.Common.Edit")",
-                                        update: "@T("Admin.Common.Update")",
-                                        cancel: "@T("Admin.Common.Cancel")"
-                                    }
+                            columns: [
+                                {
+                                    field: "ProductName",
+                                    title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")"
                                 }, {
-                                    name: "destroy",
-                                    text: "@T("Admin.Common.Delete")"
-                                }],
-                                width: 200
-                            }]
+                                    field: "DisplayOrder",
+                                    title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.DisplayOrder")",
+                                    //integer format
+                                    format: "{0:0}",
+                                    width: 150
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                                }, {
+                                    command: [
+                                        {
+                                            name: "edit",
+                                            text: {
+                                                edit: "@T("Admin.Common.Edit")",
+                                                update: "@T("Admin.Common.Update")",
+                                                cancel: "@T("Admin.Common.Cancel")"
+                                            }
+                                        }, {
+                                            name: "destroy",
+                                            text: "@T("Admin.Common.Delete")"
+                                        }
+                                    ],
+                                    width: 200
+                                }
+                            ]
                         });
                     });
                 </script>
-            </td>
-        </tr>
-        <tr>
-            <td width="100%">
-                <input type="submit" id="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
-                <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#btnRefreshAssociatedProducts').click(function () {
-                            //refresh grid
-                            var grid = $("#associatedproducts-grid").data('kendoGrid');
-                            grid.dataSource.read();
+            </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefreshAssociatedProducts').click(function () {
+                                //refresh grid
+                                var grid = $("#associatedproducts-grid").data('kendoGrid');
+                                grid.dataSource.read();
 
-                            //return false to don't reload a page
-                            return false;
+                                //return false to don't reload a page
+                                return false;
+                            });
                         });
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
-}
-else
-{
-    @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
-}
+                    </script>
+                </div>
+        }
+        else
+        {
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
+            </div>
+        }
+    </div>
+</div>

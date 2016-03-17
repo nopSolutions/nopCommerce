@@ -202,7 +202,7 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, IList<SelectListItem> itemList)
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList)
         {
             var result = new StringBuilder();
             result.Append(helper.DropDownListFor(expression, itemList, new { @class = "form-control" }));
