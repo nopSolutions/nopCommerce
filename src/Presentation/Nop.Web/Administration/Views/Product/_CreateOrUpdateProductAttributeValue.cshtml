@@ -4,221 +4,208 @@
     Html.AddScriptParts("~/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.ProductAttributeMappingId)
-@Html.HiddenFor(model => model.DisplayColorSquaresRgb)
-@Html.HiddenFor(model => model.DisplayImageSquaresPicture)
+<div class="content">
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.ProductAttributeMappingId)
+    @Html.HiddenFor(model => model.DisplayColorSquaresRgb)
+    @Html.HiddenFor(model => model.DisplayImageSquaresPicture)
 
-@if (ViewBag.RefreshPage == true)
-{
+    @if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
     <script type="text/javascript">
-        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){}
-        window.close();
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
+            toggleProductType();
+        });
+
+        function toggleProductType() {
+            var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
+            if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
+                $('#group-associated-product').hide();
+            $('#group-quantity').hide();
+            $('#group-price-adjustment').show();
+            $('#group-weight-adjustment').show();
+            $('#group-cost').show();
+        } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
+            $('#group-associated-product').show();
+            $('#group-quantity').show();
+            $('#group-price-adjustment').hide();
+            $('#group-weight-adjustment').hide();
+            $('#group-cost').hide();
+        }
+        }
     </script>
-}
-<script type="text/javascript">
-    $(document).ready(function () {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.AttributeValueTypeId):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopDropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
+                    </div>
+                </div>
+                <div class="form-group" id="group-associated-product">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.AssociatedProductId):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.HiddenFor(model => model.AssociatedProductId)
+                        <span id="associate-product-name">@Model.AssociatedProductName</span>
+                        @Html.ValidationMessageFor(model => model.AssociatedProductId)
+                        <input type="submit" value=@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new { productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name" }))', 800, 800, true); return false;" class="btn btn-default" />
+                    </div>
+                </div>
+                <div class="form-group" id="group-quantity">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.Quantity):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.Quantity)
+                        @Html.ValidationMessageFor(model => model.Quantity)
+                    </div>
+                </div>
+                @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+                @<div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.Locales[item].Name):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
 
-        $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
-
-        toggleProductType();
-    });
-
-    function toggleProductType() {
-        var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
-        if (selectedProductTypeId == @(((int)AttributeValueType.Simple).ToString())) {
-            $('#group-associated-product').hide();
-        $('#group-quantity').hide();
-        $('#group-price-adjustment').show();
-        $('#group-weight-adjustment').show();
-        $('#group-cost').show();
-    } else if (selectedProductTypeId == @(((int)AttributeValueType.AssociatedToProduct).ToString())) {
-        $('#group-associated-product').show();
-        $('#group-quantity').show();
-        $('#group-price-adjustment').hide();
-        $('#group-weight-adjustment').hide();
-        $('#group-cost').hide();
-    }
-    }
-</script>
-<div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AttributeValueTypeId):
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    @Html.DropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
-                    @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
-                </div>
-            </div>
-            <div class="form-group" id="group-associated-product">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AssociatedProductId):
-                </div>
-                <div class="col-sm-6">
-                    @Html.HiddenFor(model => model.AssociatedProductId)
-                    <span id="associate-product-name">@Model.AssociatedProductName</span>
-                    @Html.ValidationMessageFor(model => model.AssociatedProductId)
-                    <input type="submit" value=@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new { productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name" }))', 800, 800, true); return false;" class="k-button" />
-                </div>
-            </div>
-            <div class="form-group" id="group-quantity">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Quantity):
-                </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.Quantity)
-                    @Html.ValidationMessageFor(model => model.Quantity)
-                </div>
-            </div>
-        </div>
-    </div>
-    @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
-    @<div class="panel panel-default">
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].Name):
-                </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.Locales[item].Name)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
-        </div>
-    </div>
 ,
-    @<div class="panel panel-default">
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Name):
+                @<div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.Name):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
-                </div>
-            </div>
-        </div>
-    </div>
       ))
-    <div class="panel panel-default">
-        <div class="panel-body">
-            @if (Model.DisplayColorSquaresRgb)
-            {
-                <div class="form-group">
+                @if (Model.DisplayColorSquaresRgb)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            @Html.NopLabelFor(model => model.ColorSquaresRgb):
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.NopEditor(model => model.ColorSquaresRgb)
+                            <div id="color-picker"></div>
+                            <script type="text/javascript">
+                                $(document).ready(function(){
+                                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                });
+                            </script>
+                            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                        </div>
+                    </div>
+                }
+                @if (Model.DisplayImageSquaresPicture)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            @Html.NopLabelFor(model => model.ImageSquaresPictureId):
+                        </div>
+                        <div class="col-sm-6">
+                            @Html.NopEditor(model => model.ImageSquaresPictureId)
+                            @Html.ValidationMessageFor(model => model.ImageSquaresPictureId)
+                        </div>
+                    </div>
+                }
+                <div class="form-group" id="group-price-adjustment">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.ColorSquaresRgb):
+                        @Html.NopLabelFor(model => model.PriceAdjustment):
                     </div>
                     <div class="col-sm-6">
-                        @Html.EditorFor(model => model.ColorSquaresRgb)
-                        <div id="color-picker"></div>
-                        <script type="text/javascript">
-                            $(document).ready(function(){
-                                $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
-                            });
-                        </script>
-                        @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                        @Html.NopEditor(model => model.PriceAdjustment)
+                        @Html.ValidationMessageFor(model => model.PriceAdjustment)
                     </div>
                 </div>
-            }
-            @if (Model.DisplayImageSquaresPicture)
-            {
-                <div class="form-group">
+                <div class="form-group" id="group-weight-adjustment">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.ImageSquaresPictureId):
+                        @Html.NopLabelFor(model => model.WeightAdjustment):
                     </div>
                     <div class="col-sm-6">
-                        @Html.EditorFor(model => model.ImageSquaresPictureId)
-                        @Html.ValidationMessageFor(model => model.ImageSquaresPictureId)
+                        @Html.NopEditor(model => model.WeightAdjustment)
+                        @Html.ValidationMessageFor(model => model.WeightAdjustment)
                     </div>
                 </div>
-            }
-            <div class="form-group" id="group-price-adjustment">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.PriceAdjustment):
+                <div class="form-group" id="group-cost">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.Cost):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.Cost)
+                        @Html.ValidationMessageFor(model => model.Cost)
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.PriceAdjustment)
-                    @Html.ValidationMessageFor(model => model.PriceAdjustment)
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.IsPreSelected):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.IsPreSelected)
+                        @Html.ValidationMessageFor(model => model.IsPreSelected)
+                    </div>
                 </div>
-            </div>
-            <div class="form-group" id="group-weight-adjustment">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.WeightAdjustment):
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.DisplayOrder):
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
                 </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.WeightAdjustment)
-                    @Html.ValidationMessageFor(model => model.WeightAdjustment)
-                </div>
-            </div>
-            <div class="form-group" id="group-cost">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Cost):
-                </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.Cost)
-                    @Html.ValidationMessageFor(model => model.Cost)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.IsPreSelected):
-                </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.IsPreSelected)
-                    @Html.ValidationMessageFor(model => model.IsPreSelected)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.DisplayOrder):
-                </div>
-                <div class="col-sm-6">
-                    @Html.EditorFor(model => model.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.DisplayOrder)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.PictureId):
-                </div>
-                <div class="col-sm-6">
-                    <ul style="list-style: none;">
-                        <li style="float: left; width: 110px;">
-                            <p style="float: left; padding-top: 20px;">
-                                <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
-                                       @if (Model.PictureId == 0) { <text> checked="checked" </text>     }>
-                            </p>
-                            <p style="float: left; padding-top: 20px;">
-                                <label for="id_image_0">
-                                    @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture")
-                                </label>
-                            </p>
-                        </li>
-                        @foreach (var picture in Model.ProductPictureModels)
-                        {
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.PictureId):
+                    </div>
+                    <div class="col-sm-6">
+                        <ul style="list-style: none;">
                             <li style="float: left; width: 110px;">
                                 <p style="float: left; padding-top: 20px;">
-                                    <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
-                                           @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>     }>
+                                    <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
+                                           @if (Model.PictureId == 0) { <text> checked="checked" </text>            }>
                                 </p>
-                                <p style="float: left;">
-                                    <label for="id_image_@picture.PictureId">
-                                        <img src="@picture.PictureUrl" alt="" title="" width="75">
+                                <p style="float: left; padding-top: 20px;">
+                                    <label for="id_image_0">
+                                        @T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.Picture.NoPicture")
                                     </label>
                                 </p>
                             </li>
-                        }
-                    </ul>
-                    @Html.ValidationMessageFor(model => model.PictureId)
+                            @foreach (var picture in Model.ProductPictureModels)
+                            {
+                                <li style="float: left; width: 110px;">
+                                    <p style="float: left; padding-top: 20px;">
+                                        <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
+                                               @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>            }>
+                                    </p>
+                                    <p style="float: left;">
+                                        <label for="id_image_@picture.PictureId">
+                                            <img src="@picture.PictureUrl" alt="" title="" width="75">
+                                        </label>
+                                    </p>
+                                </li>
+                            }
+                        </ul>
+                        @Html.ValidationMessageFor(model => model.PictureId)
+                    </div>
                 </div>
             </div>
         </div>

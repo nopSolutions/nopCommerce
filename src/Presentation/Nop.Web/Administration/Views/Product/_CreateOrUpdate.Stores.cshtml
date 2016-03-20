@@ -2,9 +2,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-
         $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
         toggleStoreMapping();
     });
 
@@ -44,10 +42,10 @@
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" name="SelectedDiscountIds" value="@store.Id"
-                                           @if (Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id)) { <text> checked="checked" </text>} />
-                                        @store.Name
-                                    </label>
-                                </div>
+                                           @if (Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id)) { <text> checked="checked" </text> } />
+                                    @store.Name
+                                </label>
+                            </div>
                         }
                     }
                     else

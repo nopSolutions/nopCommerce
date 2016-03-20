@@ -5,37 +5,39 @@
 {
     <script type="text/javascript">
         try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
+        catch (e){}
         window.close();
     </script>
 }
-@(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Locales[item].Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Locales[item].Name)
-            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </td>
-    </tr>
-</table>
+<div class="panel-group">
+    <div class="panel panel-default">
+        @(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
+        @<div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-4">
+                    @Html.NopLabelFor(model => model.Locales[item].Name):
+                </div>
+                <div class="col-sm-6">
+                    @Html.NopEditor(model => model.Locales[item].Name)
+                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                </div>
+            </div>
+            <div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </div>
+        </div>
 ,
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-</table>
+        @<div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-4">
+                    @Html.NopLabelFor(model => model.Name):
+                </div>
+                <div class="col-sm-6">
+                    @Html.NopEditor(model => model.Name)
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+        </div>
 ))
+    </div>
+</div>
