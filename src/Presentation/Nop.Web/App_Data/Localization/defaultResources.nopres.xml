@@ -1473,6 +1473,12 @@
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.Name.Required">
     <Value>Please provide a name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.ColorSquaresRgb">
+    <Value>RGB color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.ColorSquaresRgb.Hint">
+    <Value>Choose color to be used with the color squares attribute control.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment">
     <Value>Price adjustment</Value>
   </LocaleResource>

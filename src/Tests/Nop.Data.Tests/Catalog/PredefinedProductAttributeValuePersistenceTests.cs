@@ -13,6 +13,7 @@ namespace Nop.Data.Tests.Catalog
             var pav = new PredefinedProductAttributeValue
             {
                 Name = "Name 1",
+                ColorSquaresRgb = "#FFFFFF",
                 PriceAdjustment = 1.1M,
                 WeightAdjustment = 2.1M,
                 Cost = 3.1M,
@@ -27,6 +28,7 @@ namespace Nop.Data.Tests.Catalog
             var fromDb = SaveAndLoadEntity(pav);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
+            fromDb.ColorSquaresRgb.ShouldEqual("#FFFFFF");
             fromDb.PriceAdjustment.ShouldEqual(1.1M);
             fromDb.WeightAdjustment.ShouldEqual(2.1M);
             fromDb.Cost.ShouldEqual(3.1M);
