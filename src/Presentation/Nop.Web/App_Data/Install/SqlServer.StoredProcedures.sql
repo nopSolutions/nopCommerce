@@ -280,11 +280,7 @@ BEGIN
 			UNION
 			SELECT p.Id
 			FROM Product p with (NOLOCK)
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(p.[Sku], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, p.[Sku]) > 0 '
+			WHERE PATINDEX(@Keywords, p.[Sku]) > 0 '
 		END
 
 		IF @SearchProductTags = 1
@@ -750,7 +746,7 @@ BEGIN
 	DECLARE @create_index_text nvarchar(4000)
 	SET @create_index_text = '
 	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
-		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription], [Sku])
+		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
 		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('Product') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
 	
