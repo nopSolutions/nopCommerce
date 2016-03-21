@@ -6561,11 +6561,13 @@
             <value>a Chunk</value>
         </member>
         <member name="T:iTextSharp.text.MarkedObject">
-            Wrapper that allows to add properties to 'basic building block' objects.
-            Before iText 1.5 every 'basic building block' implemented the MarkupAttributes interface.
-            By setting attributes, you could add markup to the corresponding XML and/or HTML tag.
-            This functionality was hardly used by anyone, so it was removed, and replaced by
-            the MarkedObject functionality.
+             Wrapper that allows to add properties to 'basic building block' objects.
+             Before iText 1.5 every 'basic building block' implemented the MarkupAttributes interface.
+             By setting attributes, you could add markup to the corresponding XML and/or HTML tag.
+             This functionality was hardly used by anyone, so it was removed, and replaced by
+             the MarkedObject functionality.
+            
+             @deprecated since 5.5.9. This class is no longer used.
         </member>
         <member name="F:iTextSharp.text.MarkedObject.element">
             The element that is wrapped in a MarkedObject. 
@@ -6608,11 +6610,13 @@
             @return the markupAttributes
         </member>
         <member name="T:iTextSharp.text.MarkedSection">
-            Wrapper that allows to add properties to a Chapter/Section object.
-            Before iText 1.5 every 'basic building block' implemented the MarkupAttributes interface.
-            By setting attributes, you could add markup to the corresponding XML and/or HTML tag.
-            This functionality was hardly used by anyone, so it was removed, and replaced by
-            the MarkedObject functionality.
+             Wrapper that allows to add properties to a Chapter/Section object.
+             Before iText 1.5 every 'basic building block' implemented the MarkupAttributes interface.
+             By setting attributes, you could add markup to the corresponding XML and/or HTML tag.
+             This functionality was hardly used by anyone, so it was removed, and replaced by
+             the MarkedObject functionality.
+            
+             @deprecated since 5.5.9. This class is no longer used.
         </member>
         <member name="F:iTextSharp.text.MarkedSection.title">
             This is the title of this section. 
@@ -18190,6 +18194,19 @@
              @param tagContent <code>true</code> - template content will be tagged(all that will be added after), <code>false</code> - only a Do operator will be tagged.
                                taken into account only if <code>isTagged()</code> - <code>true</code>.
         </member>
+        <member name="M:iTextSharp.text.pdf.PdfContentByte.AddTemplate(iTextSharp.text.pdf.PdfTemplate,System.Double,System.Double,System.Double,System.Double,System.Double,System.Double,System.Boolean,System.Boolean)">
+             Adds a template to this content.
+            
+             @param template the template
+             @param a an element of the transformation matrix
+             @param b an element of the transformation matrix
+             @param c an element of the transformation matrix
+             @param d an element of the transformation matrix
+             @param e an element of the transformation matrix
+             @param f an element of the transformation matrix
+             @param tagContent <code>true</code> - template content will be tagged(all that will be added after), <code>false</code> - only a Do operator will be tagged.
+                               taken into account only if <code>isTagged()</code> - <code>true</code>.
+        </member>
         <member name="M:iTextSharp.text.pdf.PdfContentByte.AddFormXObj(iTextSharp.text.pdf.PdfStream,iTextSharp.text.pdf.PdfName,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
              Adds a form XObject to this content.
             
@@ -24027,6 +24044,15 @@
             @param numberStyle the numbering style such as LOWERCASE_ROMAN_NUMERALS
             @param text the text to prefix the number. Can be <CODE>null</CODE> or empty
             @param firstPage the first logical page number
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfPageLabels.AddPageLabel(System.Int32,System.Int32,System.String,System.Int32,System.Boolean)">
+            Adds or replaces a page label.
+            @param page the real page to start the numbering. First page is 1
+            @param numberStyle the numbering style such as LOWERCASE_ROMAN_NUMERALS
+            @param text the text to prefix the number. Can be <CODE>null</CODE> or empty
+            @param firstPage the first logical page number
+            @param includeFirstPage If true, the page label will be added to the first page if it is page 1.  
+            	 If the first page is not page 1 or this value is false, the value will not be added to the dictionary.  
         </member>
         <member name="M:iTextSharp.text.pdf.PdfPageLabels.AddPageLabel(System.Int32,System.Int32,System.String)">
             Adds or replaces a page label. The first logical page has the default
@@ -48576,6 +48602,9 @@
         <member name="M:iTextSharp.text.log.CounterFactory.SetCounter(iTextSharp.text.log.ICounter)">
             Setter for the counter.
         </member>
+        <member name="T:iTextSharp.text.log.DefaultCounter">
+            Implementation of the Counter interface that doesn't do anything.
+        </member>
         <member name="T:iTextSharp.text.log.ICounter">
             Interface that can be implemented if you want to count the number of documents
             that are being processed by iText.
@@ -48593,6 +48622,17 @@
         <member name="M:iTextSharp.text.log.ICounter.Written(System.Int64)">
             This method gets triggered if a file is written.
             @param l	the length of the file that was written 
+        </member>
+        <member name="M:iTextSharp.text.log.DefaultCounter.GetCounter(System.Type)">
+            @param klass
+            @return this Counter implementation
+            @see com.itextpdf.text.log.Counter#getCounter(java.lang.Class)
+        </member>
+        <member name="M:iTextSharp.text.log.DefaultCounter.Read(System.Int64)">
+            @see com.itextpdf.text.log.Counter#read(long)
+        </member>
+        <member name="M:iTextSharp.text.log.DefaultCounter.Written(System.Int64)">
+            @see com.itextpdf.text.log.Counter#written(long)
         </member>
         <member name="T:iTextSharp.text.log.ILogger">
              Logger interface
@@ -48674,6 +48714,17 @@
         </member>
         <member name="T:iTextSharp.text.log.NoOpCounter">
             Implementation of the Counter interface that doesn't do anything.
+        </member>
+        <member name="M:iTextSharp.text.log.NoOpCounter.GetCounter(System.Type)">
+            @param klass The Class asking for the Counter
+            @return the Counter instance
+            @see com.itextpdf.text.log.Counter#getCounter(java.lang.Class)
+        </member>
+        <member name="M:iTextSharp.text.log.NoOpCounter.Read(System.Int64)">
+            @see com.itextpdf.text.log.Counter#read(long)
+        </member>
+        <member name="M:iTextSharp.text.log.NoOpCounter.Written(System.Int64)">
+            @see com.itextpdf.text.log.Counter#written(long)
         </member>
         <member name="T:iTextSharp.text.log.NoOpLogger">
              The no-operation logger, it does nothing with the received logging
@@ -49668,6 +49719,18 @@
         </member>
         <member name="F:iTextSharp.text.pdf.PdfDiv.keepTogether">
             Defines if the div should be kept on one page if possible
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfDiv.getActualHeight">
+            IMPROTANT NOTE: be careful with this method because it would return correct result
+            only in case if {@link PdfDiv#layout(PdfContentByte, boolean, boolean, float, float, float, float)}
+            was already called.
+            @return the actual height the div would require to layout it's content
+        </member>
+        <member name="M:iTextSharp.text.pdf.PdfDiv.getActualWidth">
+            IMPROTANT NOTE: be careful with this method because it would return correct result
+            only in case if {@link PdfDiv#layout(PdfContentByte, boolean, boolean, float, float, float, float)}
+            was already called.
+            @return the actual width the div would require to layout it's content
         </member>
         <member name="M:iTextSharp.text.pdf.PdfDiv.SetBackgroundImage(iTextSharp.text.Image,System.Single,System.Single)">
             Image will be scaled to fit in the div occupied area.
@@ -51242,6 +51305,9 @@
             Changing the version makes it extremely difficult to debug an application.
             Also, the nature of open source software is that you honor the copyright of the original creators of the software.
         </member>
+        <member name="F:iTextSharp.text.Version.AGPL">
+            String that will indicate if the AGPL version is used. 
+        </member>
         <member name="F:iTextSharp.text.Version.version">
             The iText version instance. 
         </member>
@@ -51290,6 +51356,10 @@
         <member name="P:iTextSharp.text.Version.Key">
             Returns a license key if one was provided, or null if not.
             @return a license key.
+        </member>
+        <member name="P:iTextSharp.text.Version.IsAGPLVersion">
+            Checks if the AGPL version is used.
+            @return returns true if the AGPL version is used.
         </member>
         <member name="T:iTextSharp.text.WritableDirectElement">
              An element that is not an element, it holds {@link Element#WRITABLE_DIRECT}
