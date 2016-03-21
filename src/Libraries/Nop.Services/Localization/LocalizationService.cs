@@ -90,9 +90,6 @@ namespace Nop.Services.Localization
             this._dataProvider = dataProvider;
             this._dbContext = dbContext;
             this._commonSettings = commonSettings;
-            this._dataProvider = dataProvider;
-            this._dbContext = dbContext;
-            this._commonSettings = commonSettings;
             this._localizationSettings = localizationSettings;
             this._eventPublisher = eventPublisher;
         }

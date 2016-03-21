@@ -1,3 +1,0 @@
-﻿This packge is not available using nuGet. That's why we added it here.
-
-Distrubuted with PerlRegex.dll

@@ -346,6 +346,24 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.EnableColorSquaresRgb.Hint">
     <Value>Check to choose color to be used instead of an option text name (it''ll be displayed as "color square").</Value>
+  </LocaleResource> 
+  <LocaleResource Name="Account.Fields.ConfirmEmail">
+    <Value>Confirm email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.ConfirmEmail.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Email.EnteredEmailsDoNotMatch">
+    <Value>The email and confirmation email do not match.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice">
+    <Value>Force entering email twice</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.EnteringEmailTwice.Hint">
+    <Value>Force entering email twice during registration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
+    <Value>This attribute is already added to this product</Value>
   </LocaleResource>
 </Language>
 '
@@ -654,12 +672,27 @@ BEGIN
 END
 GO
 
-
-
 --new column
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[SpecificationAttributeOption]') and NAME='ColorSquaresRgb')
 BEGIN
 	ALTER TABLE [SpecificationAttributeOption]
 	ADD [ColorSquaresRgb] nvarchar(100) NULL
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.enteringemailtwice')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'customersettings.enteringemailtwice',N'False',0);
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId])
+	VALUES (N'pdfsettings.fontfilename', N'FreeSerif.ttf', 0)
 END
 GO

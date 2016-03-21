@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -15,7 +14,6 @@ namespace Nop.Data.Tests
             var ctx = new NopObjectContext("Test");
             string result = ctx.CreateDatabaseScript();
             result.ShouldNotBeNull();
-            Console.Write(result);
         }
     }
 }
