@@ -9,7 +9,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew").Text;
 }
-@using (Html.BeginForm("AssociateProductToAttributeValuePopup", "Product", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header">
@@ -39,7 +39,7 @@
                         @Html.NopLabelFor(model => model.SearchProductName):
                     </div>
                     <div class="col-sm-6">
-                        @Html.NopEditor(model => model.SearchProductName)
+                        @Html.NopEditorFor(model => model.SearchProductName)
                     </div>
                 </div>
                 <div class="form-group">

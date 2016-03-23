@@ -23,16 +23,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.SubjectToAcl):
+                    @Html.NopLabelFor(model => model.SubjectToAcl)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.SubjectToAcl)
+                    @Html.NopEditorFor(model => model.SubjectToAcl)
                     @Html.ValidationMessageFor(model => model.SubjectToAcl)
                 </div>
             </div>
             <div class="form-group" id="pnl-acl">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AvailableCustomerRoles):
+                    @Html.NopLabelFor(model => model.AvailableCustomerRoles)
                 </div>
                 <div class="col-sm-6">
                     @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)

@@ -23,14 +23,19 @@ namespace Nop.Web.Framework
 
         public static MvcHtmlString Hint(this HtmlHelper helper, string value)
         {
-            //create tag builder
-            var builder = new TagBuilder("i");
+            // Create tag builder
+            var builder = new TagBuilder("img");
 
-            //add attributes
-            builder.MergeAttribute("class", "fa fa-question-circle");
+            // Add attributes
+            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
+
+            builder.MergeAttribute("src", url);
+            builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
+            builder.MergeAttribute("class", "ico-help");
 
-            //render tag
+            // Render tag
             return MvcHtmlString.Create(builder.ToString());
         }
 
@@ -161,64 +166,6 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(window.ToString());
         }
 
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
-        {
-            var result = new StringBuilder();
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
-            var hintResource = string.Empty;
-            object value;
-            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
-            {
-                var resourceDisplayName = value as NopResourceDisplayName;
-                if (resourceDisplayName != null && displayHint)
-                {
-                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-
-                    result.Append(helper.Hint(hintResource).ToHtmlString());
-                    result.Append("&nbsp;");
-                }
-            }
-            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
-            return MvcHtmlString.Create(result.ToString());
-        }
-
-        public static MvcHtmlString NopEditor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
-        {
-            var result = new StringBuilder();
-            result.Append(helper.EditorFor(expression));
-            result.Replace("class=\"text-box single-line\"", "class=\"text-box single-line form-control\"");
-
-            return MvcHtmlString.Create(result.ToString());
-        }
-
-        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, IList<SelectListItem> itemList)
-        {
-            var result = new StringBuilder();
-            result.Append(helper.DropDownList(name, itemList, new { @class = "form-control" }));
-
-            return MvcHtmlString.Create(result.ToString());
-        }
-
-        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList)
-        {
-            var result = new StringBuilder();
-            result.Append(helper.DropDownListFor(expression, itemList, new { @class = "form-control" }));
-
-            return MvcHtmlString.Create(result.ToString());
-        }
-
-        public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression)
-        {
-            var result = new StringBuilder();
-            result.Append(helper.TextAreaFor(expression, new { @class = "form-control" }));
-
-            return MvcHtmlString.Create(result.ToString());
-        }
-
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, bool>> expression,
             Expression<Func<TModel, TValue>> forInputExpression,
@@ -317,6 +264,69 @@ namespace Nop.Web.Framework
 
             return new MvcHtmlString("");
         }
+
+
+        #region Form fields
+
+        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
+        {
+            var result = new StringBuilder();
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var hintResource = string.Empty;
+            object value;
+
+            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            {
+                var resourceDisplayName = value as NopResourceDisplayName;
+                if (resourceDisplayName != null && displayHint)
+                {
+                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
+                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
+
+                    result.Append(helper.Hint(hintResource).ToHtmlString());
+                }
+            }
+            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.EditorFor(expression, new { htmlAttributes = new { @class = "form-control" } }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, IList<SelectListItem> itemList)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.DropDownList(name, itemList, new {@class = "form-control"}));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.DropDownListFor(expression, itemList, new {@class = "form-control"}));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new StringBuilder();
+            result.Append(helper.TextAreaFor(expression, new {@class = "form-control"}));
+            
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        #endregion
 
         #endregion
 

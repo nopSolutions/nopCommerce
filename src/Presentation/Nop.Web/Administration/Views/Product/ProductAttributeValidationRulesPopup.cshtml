@@ -39,7 +39,7 @@
                 @Html.NopLabelFor(model => model.ValidationMinLength):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.ValidationMinLength)
+                @Html.NopEditorFor(model => model.ValidationMinLength)
                 @Html.ValidationMessageFor(model => model.ValidationMinLength)
             </td>
         </tr>
@@ -48,7 +48,7 @@
                 @Html.NopLabelFor(model => model.ValidationMaxLength):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.ValidationMaxLength)
+                @Html.NopEditorFor(model => model.ValidationMaxLength)
                 @Html.ValidationMessageFor(model => model.ValidationMaxLength)
             </td>
         </tr>
@@ -57,7 +57,7 @@
                 @Html.NopLabelFor(model => model.ValidationFileAllowedExtensions):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.ValidationFileAllowedExtensions)
+                @Html.NopEditorFor(model => model.ValidationFileAllowedExtensions)
                 @Html.ValidationMessageFor(model => model.ValidationFileAllowedExtensions)
             </td>
         </tr>
@@ -66,7 +66,7 @@
                 @Html.NopLabelFor(model => model.ValidationFileMaximumSize):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.ValidationFileMaximumSize)
+                @Html.NopEditorFor(model => model.ValidationFileMaximumSize)
                 @Html.ValidationMessageFor(model => model.ValidationFileMaximumSize)
             </td>
         </tr>
@@ -75,13 +75,13 @@
                 @Html.NopLabelFor(model => model.DefaultValue):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.DefaultValue)
+                @Html.NopEditorFor(model => model.DefaultValue)
                 @Html.ValidationMessageFor(model => model.DefaultValue)
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" class="k-button" value="@T("Admin.Common.Save")" />
+                <input type="submit" class="btn btn-default" value="@T("Admin.Common.Save")" />
             </td>
         </tr>
     </table>

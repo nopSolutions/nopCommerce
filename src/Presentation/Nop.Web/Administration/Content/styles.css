@@ -20,7 +20,7 @@
 table.adminContent {
     border-collapse: collapse;
     color: #333;
-    font-size: 12px;
+    font-size: 14px;
     margin: 0;
     width: 100%;
     vertical-align: middle;
@@ -37,7 +37,7 @@ table.adminContent {
 }
 
 .form-group input[type=checkbox] {
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .form-group .checkbox input[type=checkbox] {
@@ -52,4 +52,13 @@ table.adminContent {
 .tag-editor {
     border: 1px solid #d2d6de !important;
     line-height: 26px !important;
+}
+
+.form-horizontal .control-label {
+    float: right;
+}
+.form-horizontal img.ico-help {
+    float: right;
+    margin-top: 8px;
+    margin-left: 5px;
 }

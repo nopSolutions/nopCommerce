@@ -6,7 +6,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
 }
-@using (Html.BeginForm("EditProductTag", "Product", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header">

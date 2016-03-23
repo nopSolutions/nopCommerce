@@ -11,7 +11,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.Products.AddNew").Text;
 }
-@using (Html.BeginForm("ProductAddPopup", "Category", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header">
@@ -34,15 +34,15 @@
             <div class="box-body">
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchProductName):
+                        @Html.NopLabelFor(model => model.SearchProductName)
                     </div>
                     <div class="col-sm-5">
-                        @Html.NopEditor(model => model.SearchProductName)
+                        @Html.NopEditorFor(model => model.SearchProductName)
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchCategoryId):
+                        @Html.NopLabelFor(model => model.SearchCategoryId)
                     </div>
                     <div class="col-sm-5">
                         @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
@@ -50,7 +50,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchManufacturerId):
+                        @Html.NopLabelFor(model => model.SearchManufacturerId)
                     </div>
                     <div class="col-sm-5">
                         @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
@@ -58,7 +58,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchStoreId):
+                        @Html.NopLabelFor(model => model.SearchStoreId)
                     </div>
                     <div class="col-sm-5">
                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
@@ -66,7 +66,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchVendorId):
+                        @Html.NopLabelFor(model => model.SearchVendorId)
                     </div>
                     <div class="col-sm-5">
                         @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
@@ -74,15 +74,15 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchProductTypeId):
+                        @Html.NopLabelFor(model => model.SearchProductTypeId)
                     </div>
                     <div class="col-sm-5">
                         @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
                     </div>
                 </div>
-                <div class="box-footer">
-                    <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
-                </div>
+            </div>
+            <div class="box-footer">
+                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
             </div>
         </div>
 

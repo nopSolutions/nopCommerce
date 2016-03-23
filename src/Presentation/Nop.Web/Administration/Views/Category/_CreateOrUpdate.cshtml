@@ -97,16 +97,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].Name):
+                    @Html.NopLabelFor(model => model.Locales[item].Name)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.Locales[item].Name)
+                    @Html.NopEditorFor(model => model.Locales[item].Name)
                     @Html.ValidationMessageFor(model => model.Locales[item].Name)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].Description):
+                    @Html.NopLabelFor(model => model.Locales[item].Description)
                 </div>
                 <div class="col-sm-6">
                     @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
@@ -123,16 +123,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Name):
+                    @Html.NopLabelFor(model => model.Name)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.Name)
+                    @Html.NopEditorFor(model => model.Name)
                     @Html.ValidationMessageFor(model => model.Name)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Description):
+                    @Html.NopLabelFor(model => model.Description)
                 </div>
                 <div class="col-sm-6">
                     @Html.EditorFor(x => x.Description, "RichEditor")
@@ -146,7 +146,7 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.CategoryTemplateId):
+                    @Html.NopLabelFor(model => model.CategoryTemplateId)
                 </div>
                 <div class="col-sm-6">
                     @Html.NopDropDownListFor(model => model.CategoryTemplateId, Model.AvailableCategoryTemplates)
@@ -158,13 +158,13 @@
                     @Html.NopLabelFor(model => model.PictureId)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.PictureId)
+                    @Html.NopEditorFor(model => model.PictureId)
                     @Html.ValidationMessageFor(model => model.PictureId)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.ParentCategoryId):
+                    @Html.NopLabelFor(model => model.ParentCategoryId)
                 </div>
                 <div class="col-sm-6">
                     @Html.NopDropDownListFor(model => model.ParentCategoryId, Model.AvailableCategories)
@@ -173,73 +173,73 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.PriceRanges):
+                    @Html.NopLabelFor(model => model.PriceRanges)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.PriceRanges)
+                    @Html.NopEditorFor(x => x.PriceRanges)
                     @Html.ValidationMessageFor(model => model.PriceRanges)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.ShowOnHomePage):
+                    @Html.NopLabelFor(model => model.ShowOnHomePage)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.ShowOnHomePage)
+                    @Html.NopEditorFor(x => x.ShowOnHomePage)
                     @Html.ValidationMessageFor(model => model.ShowOnHomePage)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.IncludeInTopMenu):
+                    @Html.NopLabelFor(model => model.IncludeInTopMenu)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.IncludeInTopMenu)
+                    @Html.NopEditorFor(x => x.IncludeInTopMenu)
                     @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
+                    @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.AllowCustomersToSelectPageSize)
+                    @Html.NopEditorFor(x => x.AllowCustomersToSelectPageSize)
                     @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
                 </div>
             </div>
             <div id="pnlPageSize" class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.PageSize):
+                    @Html.NopLabelFor(model => model.PageSize)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.PageSize)
+                    @Html.NopEditorFor(x => x.PageSize)
                     @Html.ValidationMessageFor(model => model.PageSize)
                 </div>
             </div>
             <div id="pnlPageSizeOptions" class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.PageSizeOptions):
+                    @Html.NopLabelFor(model => model.PageSizeOptions)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.PageSizeOptions)
+                    @Html.NopEditorFor(x => x.PageSizeOptions)
                     @Html.ValidationMessageFor(model => model.PageSizeOptions)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Published):
+                    @Html.NopLabelFor(model => model.Published)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.Published)
+                    @Html.NopEditorFor(x => x.Published)
                     @Html.ValidationMessageFor(model => model.Published)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.DisplayOrder):
+                    @Html.NopLabelFor(model => model.DisplayOrder)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.DisplayOrder)
+                    @Html.NopEditorFor(model => model.DisplayOrder)
                     @Html.ValidationMessageFor(model => model.DisplayOrder)
                 </div>
             </div>
@@ -253,16 +253,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaKeywords):
+                    @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.Locales[item].MetaKeywords)
+                    @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
                     @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaDescription):
+                    @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
                 </div>
                 <div class="col-sm-6">
                     @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
@@ -271,19 +271,19 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
+                    @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.Locales[item].MetaTitle)
+                    @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
                     @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.Locales[item].SeName):
+                    @Html.NopLabelFor(model => model.Locales[item].SeName)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.Locales[item].SeName)
+                    @Html.NopEditorFor(model => model.Locales[item].SeName)
                     @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                 </div>
             </div>
@@ -297,16 +297,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.MetaKeywords):
+                    @Html.NopLabelFor(model => model.MetaKeywords)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.MetaKeywords)
+                    @Html.NopEditorFor(x => x.MetaKeywords)
                     @Html.ValidationMessageFor(model => model.MetaKeywords)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.MetaDescription):
+                    @Html.NopLabelFor(model => model.MetaDescription)
                 </div>
                 <div class="col-sm-6">
                     @Html.NopTextAreaFor(x => x.MetaDescription)
@@ -315,19 +315,19 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.MetaTitle):
+                    @Html.NopLabelFor(model => model.MetaTitle)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.MetaTitle)
+                    @Html.NopEditorFor(x => x.MetaTitle)
                     @Html.ValidationMessageFor(model => model.MetaTitle)
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.SeName):
+                    @Html.NopLabelFor(model => model.SeName)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(x => x.SeName)
+                    @Html.NopEditorFor(x => x.SeName)
                     @Html.ValidationMessageFor(model => model.SeName)
                 </div>
             </div>
@@ -534,16 +534,16 @@ if (Model.Id > 0)
 
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.SubjectToAcl):
+                    @Html.NopLabelFor(model => model.SubjectToAcl)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.SubjectToAcl)
+                    @Html.NopEditorFor(model => model.SubjectToAcl)
                     @Html.ValidationMessageFor(model => model.SubjectToAcl)
                 </div>
             </div>
             <div id="pnl-acl" class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AvailableCustomerRoles):
+                    @Html.NopLabelFor(model => model.AvailableCustomerRoles)
                 </div>
                 <div class="col-sm-6">
                     @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
@@ -592,16 +592,16 @@ if (Model.Id > 0)
             </script>
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.LimitedToStores):
+                    @Html.NopLabelFor(model => model.LimitedToStores)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.LimitedToStores)
+                    @Html.NopEditorFor(model => model.LimitedToStores)
                     @Html.ValidationMessageFor(model => model.LimitedToStores)
                 </div>
             </div>
             <div id="pnl-available-stores" class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AvailableStores):
+                    @Html.NopLabelFor(model => model.AvailableStores)
                 </div>
                 <div class="col-sm-6">
                     @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)

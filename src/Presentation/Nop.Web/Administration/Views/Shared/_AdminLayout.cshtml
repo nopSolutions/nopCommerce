@@ -84,9 +84,9 @@
     @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-    <div id="ajaxBusy">
+    @*<div id="ajaxBusy">
         <span>&nbsp;</span>
-    </div>
+    </div>*@
     <div class="wrapper">
         @if (IsSectionDefined("header"))
             {
@@ -366,7 +366,7 @@
         }
 
         <div class="content-wrapper">
-            @if (IsSectionDefined("statusbar"))
+            @*@if (IsSectionDefined("statusbar"))
             {
                 @RenderSection("statusbar")
             }
@@ -377,7 +377,7 @@
 
                     - Нужен ли??
                 </div>
-            }
+            }*@
             @Html.Partial("Notifications")
             <div>
                 @RenderBody()

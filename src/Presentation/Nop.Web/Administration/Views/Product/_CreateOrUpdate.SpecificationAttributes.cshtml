@@ -248,7 +248,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AttributeTypeId):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)
                         </div>
                         <div class="col-sm-6">
                             @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.AttributeTypeId, ((SpecificationAttributeType)Model.AddSpecificationAttributeModel.AttributeTypeId).ToSelectList())
@@ -257,7 +257,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)
                         </div>
                         <div class="col-sm-6">
                             @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId, Model.AddSpecificationAttributeModel.AvailableAttributes)
@@ -266,7 +266,7 @@
                     </div>
                     <div class="form-group" id="pnlSpecificationAttributeOptionId">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)
                         </div>
                         <div class="col-sm-6">
                             @Html.NopDropDownListFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId, Model.AddSpecificationAttributeModel.AvailableOptions)
@@ -275,37 +275,37 @@
                     </div>
                     <div class="form-group" id="pnlCustomValue">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.CustomValue)
                         </div>
                         <div class="col-sm-6">
-                            @Html.EditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
+                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.CustomValue)
                             @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.CustomValue)
                         </div>
                     </div>
                     <div class="form-group" id="pnlAllowFiltering">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
                         </div>
                         <div class="col-sm-6">
-                            @Html.EditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
+                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
                             @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.AllowFiltering)
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
                         </div>
                         <div class="col-sm-6">
-                            @Html.EditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
+                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
                             @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder):
+                            @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
                         </div>
                         <div class="col-sm-6">
-                            @Html.EditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
+                            @Html.NopEditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
                             @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
                         </div>
                     </div>

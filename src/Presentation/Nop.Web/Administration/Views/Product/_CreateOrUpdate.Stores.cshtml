@@ -22,16 +22,16 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.LimitedToStores):
+                    @Html.NopLabelFor(model => model.LimitedToStores)
                 </div>
                 <div class="col-sm-6">
-                    @Html.NopEditor(model => model.LimitedToStores)
+                    @Html.NopEditorFor(model => model.LimitedToStores)
                     @Html.ValidationMessageFor(model => model.LimitedToStores)
                 </div>
             </div>
             <div class="form-group" id="pnl-available-stores">
                 <div class="col-sm-4">
-                    @Html.NopLabelFor(model => model.AvailableStores):
+                    @Html.NopLabelFor(model => model.AvailableStores)
                 </div>
                 <div class="col-sm-6">
                     @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)

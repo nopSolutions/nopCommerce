@@ -24,7 +24,7 @@
                 @Html.NopLabelFor(model => model.SearchProductName):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.SearchProductName)
+                @Html.NopEditorFor(model => model.SearchProductName)
             </td>
         </tr>
         <tr>
@@ -69,7 +69,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -119,7 +119,7 @@
                                 field: "Name",
                                 title: "@T("Admin.Common.Select")",
                                 width: 50,
-                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(#=Id#)" class="k-button" />'
+                                template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(#=Id#)" class="btn btn-default" />'
                             },{
                                 field: "Name",
                                 title: "@T("Admin.Catalog.Products.Fields.Name")"

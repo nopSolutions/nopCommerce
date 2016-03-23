@@ -15,35 +15,34 @@
         <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
         <a href="@Url.Action("ExportXml")" class="btn btn-default">@T("Admin.Common.ExportToXml")</a>
         <a href="@Url.Action("ExportXlsx")" class="btn btn-default">@T("Admin.Common.ExportToExcel")</a>
-        <input type="button" id="importexcel" name="importexcel" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")"/>
+        <input type="button" id="importexcel" name="importexcel" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" />
     </div>
 </div>
 <div class="content">
-    <div class="box box-info">
-        <form class="form-horizontal">
-            <div class="box-body">
+    <div class="box">
+        <div class="box-body">
+            <div class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-sm-2">
-                        @Html.NopLabelFor(model => model.SearchManufacturerName):
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.SearchManufacturerName)
                     </div>
-                    <div class="col-sm-5">
-                        @Html.NopEditor(model => model.SearchManufacturerName)
+                    <div class="col-sm-6">
+                        @Html.NopEditorFor(model => model.SearchManufacturerName)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-2">
-                        @Html.NopLabelFor(model => model.SearchStoreId):
+                    <div class="col-sm-4">
+                        @Html.NopLabelFor(model => model.SearchStoreId)
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-6">
                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
                     </div>
                 </div>
-
             </div>
-            <div class="box-footer">
-                <button type="submit" id="search-manufacturers" class="btn btn-default">@T("Admin.Common.Search")</button>
-            </div>
-        </form>
+        </div>
+        <div class="box-footer">
+            <button type="submit" id="search-manufacturers" class="btn btn-default">@T("Admin.Common.Search")</button>
+        </div>
     </div>
 
     <table class="adminContent">
@@ -172,7 +171,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromExcel")" />
+                        <input type="submit" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" />
                     </td>
                 </tr>
             </table>

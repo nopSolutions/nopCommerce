@@ -9,7 +9,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.RelatedProducts.AddNew").Text;
 }
-@using (Html.BeginForm("RelatedProductAddPopup", "Product", FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header">
@@ -35,7 +35,7 @@
                         @Html.NopLabelFor(model => model.SearchProductName):
                     </div>
                     <div class="col-sm-6">
-                        @Html.NopEditor(model => model.SearchProductName)
+                        @Html.NopEditorFor(model => model.SearchProductName)
                     </div>
                 </div>
                 <div class="form-group">
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <div class="box-footer">
-                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
+                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
             </div>
         </div>
 
