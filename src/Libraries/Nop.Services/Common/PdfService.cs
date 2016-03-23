@@ -114,6 +114,10 @@ namespace Nop.Services.Common
 
         #region Utilities
 
+        /// <summary>
+        /// Get font
+        /// </summary>
+        /// <returns></returns>
         protected virtual Font GetFont()
         {
             //nopCommerce supports unicode characters
