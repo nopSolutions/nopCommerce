@@ -293,11 +293,11 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, bool addBootstrapClass = true)
+            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
             object htmlAttributes = null;
-            if (addBootstrapClass)
+            if (renderFormControlClass)
                 htmlAttributes = new {@class = "form-control"};
 
             result.Append(helper.EditorFor(expression, new { htmlAttributes }));
@@ -306,11 +306,11 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, 
-            IList<SelectListItem> itemList, bool addBootstrapClass = true)
+            IList<SelectListItem> itemList, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
             object htmlAttributes = null;
-            if (addBootstrapClass)
+            if (renderFormControlClass)
                 htmlAttributes = new { @class = "form-control" };
 
             result.Append(helper.DropDownList(name, itemList, htmlAttributes));
@@ -319,11 +319,11 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList, bool addBootstrapClass = true)
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
             object htmlAttributes = null;
-            if (addBootstrapClass)
+            if (renderFormControlClass)
                 htmlAttributes = new { @class = "form-control" };
 
             result.Append(helper.DropDownListFor(expression, itemList, htmlAttributes));
@@ -332,11 +332,11 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool addBootstrapClass = true)
+            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
             object htmlAttributes = null;
-            if (addBootstrapClass)
+            if (renderFormControlClass)
                 htmlAttributes = new { @class = "form-control" };
 
             result.Append(helper.TextAreaFor(expression, htmlAttributes));
