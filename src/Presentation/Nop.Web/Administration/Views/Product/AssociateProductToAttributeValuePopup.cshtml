@@ -35,56 +35,61 @@
         <div class="box">
             <div class="box-body">
                 <div class="form-group">
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchProductName):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchProductName)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopEditorFor(model => model.SearchProductName)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchCategoryId):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchCategoryId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchManufacturerId):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchManufacturerId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchStoreId):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchStoreId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
                     </div>
                 </div>
                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchVendorId):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchVendorId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
-                        @Html.NopLabelFor(model => model.SearchProductTypeId):
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchProductTypeId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
                     </div>
                 </div>
-            </div>
-            <div class="box-footer">
-                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -62,3 +62,7 @@ table.adminContent {
     margin-top: 8px;
     margin-left: 5px;
 }
+
+.mce-panel {
+    border-color: #d2d6de !important;
+}

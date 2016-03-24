@@ -24,30 +24,36 @@
         <div class="box-body">
             <div class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.SearchCategoryName)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopEditorFor(model => model.SearchCategoryName)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.SearchStoreId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <button type="submit" id="search-categories" class="btn btn-default">@T("Admin.Common.Search")</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="box-footer">
-            <button type="submit" id="search-categories" class="btn btn-default">@T("Admin.Common.Search")</button>
-        </div>
     </div>
-    <table class="adminContent">
-        <tr>
-            <td>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="categories-grid"></div>
 
                 <script>
@@ -141,43 +147,45 @@
                         return data;
                     }
                 </script>
-            </td>
-        </tr>
-    </table>
-
-    @*import products form*@
-    <div id="importexcel-window" style="display: none;">
-        @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            @Html.AntiForgeryToken()
-            <table style="text-align: left;">
-                <tr>
-                    <td colspan="2">
-                        <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <em>@T("Admin.Common.ImportToExcel.ManyRecordsWarning")</em>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @T("Admin.Common.ExcelFile"):
-                    </td>
-                    <td>
-                        <input type="file" id="importexcelfile" name="importexcelfile" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <input type="submit" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" />
-                    </td>
-                </tr>
-            </table>
-        }
+            </div>
+        </div>
     </div>
 </div>
+
+
+@*import products form*@
+<div id="importexcel-window" style="display: none;">
+    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <table style="text-align: left;">
+            <tr>
+                <td colspan="2">
+                    <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <em>@T("Admin.Common.ImportToExcel.ManyRecordsWarning")</em>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @T("Admin.Common.ExcelFile"):
+                </td>
+                <td>
+                    <input type="file" id="importexcelfile" name="importexcelfile" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="submit" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#importexcel").click(function (e) {

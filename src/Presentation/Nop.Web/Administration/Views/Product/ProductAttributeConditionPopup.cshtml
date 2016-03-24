@@ -11,7 +11,7 @@
 @using (Html.BeginForm("ProductAttributeConditionPopup", "Product",
                                                     new RouteValueDictionary(new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
                                                     FormMethod.Post,
-                                                    new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
+                                                    new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, {"class", "form-horizontal"} }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
@@ -55,10 +55,10 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-4">
-                            @Html.NopLabelFor(model => model.EnableCondition):
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.EnableCondition)
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-9">
                             @Html.NopEditorFor(model => model.EnableCondition)
                             @Html.ValidationMessageFor(model => model.EnableCondition)
                         </div>
@@ -73,10 +73,10 @@
                                 attributesList.Add(new SelectListItem {Text = attribute.Name, Value = attribute.Id.ToString()});
                             }
                             <div class="form-group" id="pnlBasepriceUnit">
-                                <div class="col-sm-4">
-                                    @Html.NopLabelFor(model => model.SelectedProductAttributeId):
+                                <div class="col-sm-3">
+                                    @Html.NopLabelFor(model => model.SelectedProductAttributeId)
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9">
                                     @Html.DropDownListFor(model => model.SelectedProductAttributeId, attributesList)
 
                                     <script type="text/javascript">
@@ -95,10 +95,10 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     &nbsp;
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9">
                                     @foreach (var attribute in Model.ProductAttributes)
                                     {
                                         string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -166,10 +166,10 @@
                         else
                         {
                             <div class="form-group">
-                                <div class="col-sm-8">
+                                <div class="col-sm-9">
                                     No attribute exists that could be used as condition
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     &nbsp;
                                 </div>
                             </div>

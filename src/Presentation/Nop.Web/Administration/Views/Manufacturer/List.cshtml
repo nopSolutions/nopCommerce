@@ -23,31 +23,36 @@
         <div class="box-body">
             <div class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.SearchManufacturerName)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopEditorFor(model => model.SearchManufacturerName)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
+                    <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.SearchStoreId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-9">
                         @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <button type="submit" id="search-manufacturers" class="btn btn-default">@T("Admin.Common.Search")</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="box-footer">
-            <button type="submit" id="search-manufacturers" class="btn btn-default">@T("Admin.Common.Search")</button>
-        </div>
     </div>
 
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="manufacturers-grid"></div>
 
                 <script>
@@ -141,9 +146,10 @@
                         return data;
                     }
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
+
 
     @*import products form*@
     <div id="importexcel-window" style="display:none;">
@@ -163,7 +169,7 @@
                 </tr>
                 <tr>
                     <td>
-                        @T("Admin.Common.ExcelFile"):
+                        @T("Admin.Common.ExcelFile")
                     </td>
                     <td>
                         <input type="file" id="importexcelfile" name="importexcelfile" />
