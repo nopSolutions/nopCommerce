@@ -292,36 +292,54 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+            Expression<Func<TModel, TValue>> expression, bool addBootstrapClass = true)
         {
             var result = new StringBuilder();
-            result.Append(helper.EditorFor(expression, new { htmlAttributes = new { @class = "form-control" } }));
+            object htmlAttributes = null;
+            if (addBootstrapClass)
+                htmlAttributes = new {@class = "form-control"};
+
+            result.Append(helper.EditorFor(expression, new { htmlAttributes }));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, IList<SelectListItem> itemList)
+        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, 
+            IList<SelectListItem> itemList, bool addBootstrapClass = true)
         {
             var result = new StringBuilder();
-            result.Append(helper.DropDownList(name, itemList, new {@class = "form-control"}));
+            object htmlAttributes = null;
+            if (addBootstrapClass)
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.DropDownList(name, itemList, htmlAttributes));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList)
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList, bool addBootstrapClass = true)
         {
             var result = new StringBuilder();
-            result.Append(helper.DropDownListFor(expression, itemList, new {@class = "form-control"}));
+            object htmlAttributes = null;
+            if (addBootstrapClass)
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.DropDownListFor(expression, itemList, htmlAttributes));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression)
+            Expression<Func<TModel, TValue>> expression, bool addBootstrapClass = true)
         {
             var result = new StringBuilder();
-            result.Append(helper.TextAreaFor(expression, new {@class = "form-control"}));
+            object htmlAttributes = null;
+            if (addBootstrapClass)
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.TextAreaFor(expression, htmlAttributes));
             
             return MvcHtmlString.Create(result.ToString());
         }
