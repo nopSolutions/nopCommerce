@@ -3,22 +3,21 @@
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Customers.CustomerRoles")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-            <div id="customerroles-grid"></div>
-
-            <script>
+                <div id="customerroles-grid"></div>
+                <script>
                 $(document).ready(function () {
                     $("#customerroles-grid").kendoGrid({
                         dataSource: {
@@ -100,7 +99,8 @@
                         }]
                     });
                 });
-            </script>
-        </td>
-    </tr>
-</table>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
