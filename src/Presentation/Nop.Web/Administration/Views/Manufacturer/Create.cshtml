@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.AddNew").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form", @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
@@ -16,5 +16,9 @@
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdate", Model)
+        </div>
+    </div>
 }

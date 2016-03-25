@@ -3,21 +3,25 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form", @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name 
+            @T("Admin.Catalog.Categories.EditCategoryDetails") - @Model.Name
             <small>@Html.ActionLink("(" + T("Admin.Catalog.Categories.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn btn-default" />
+            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-default" />
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
             <span id="category-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdate", Model)
+        </div>
+    </div>
 }
 @Html.DeleteConfirmation("category-delete")

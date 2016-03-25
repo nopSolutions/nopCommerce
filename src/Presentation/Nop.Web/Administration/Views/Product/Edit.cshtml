@@ -3,7 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form", @class = "form-horizontal" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
@@ -12,14 +12,18 @@
             <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { SeName = Model.SeName })', 800, 600, true); return false;" class="btn btn-default" />
+            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-default" />
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
             <input type="submit" id="copyproduct" name="copyproduct" class="btn btn-default" value="@T("Admin.Catalog.Products.Copy")" />
             <span id="product-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate", Model)
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdate", Model)
+        </div>
+    </div>
 }
 @Html.DeleteConfirmation("product-delete")
 

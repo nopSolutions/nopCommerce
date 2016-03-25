@@ -6,10 +6,10 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
 }
-@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="content-header">
+    <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.ProductTags.EditTagDetails")- @Model.Name
         </h1>
@@ -17,5 +17,9 @@
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdateProductTag", Model)
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdateProductTag", Model)
+        </div>
+    </div>
 }
