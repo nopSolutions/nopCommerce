@@ -420,9 +420,70 @@
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\adminLTE\AdminLTE-2.3.0.css" />
+    <Content Include="Content\adminLTE\AdminLTE-2.3.0.min.css" />
+    <Content Include="Content\adminLTE\img\avatar.png" />
+    <Content Include="Content\adminLTE\img\avatar04.png" />
+    <Content Include="Content\adminLTE\img\avatar2.png" />
+    <Content Include="Content\adminLTE\img\avatar3.png" />
+    <Content Include="Content\adminLTE\img\avatar5.png" />
+    <Content Include="Content\adminLTE\img\boxed-bg.jpg" />
+    <Content Include="Content\adminLTE\img\boxed-bg.png" />
+    <Content Include="Content\adminLTE\img\credit\american-express.png" />
+    <Content Include="Content\adminLTE\img\credit\cirrus.png" />
+    <Content Include="Content\adminLTE\img\credit\mastercard.png" />
+    <Content Include="Content\adminLTE\img\credit\mestro.png" />
+    <Content Include="Content\adminLTE\img\credit\paypal.png" />
+    <Content Include="Content\adminLTE\img\credit\paypal2.png" />
+    <Content Include="Content\adminLTE\img\credit\visa.png" />
+    <Content Include="Content\adminLTE\img\default-50x50.gif" />
+    <Content Include="Content\adminLTE\img\icons.png" />
+    <Content Include="Content\adminLTE\img\photo1.png" />
+    <Content Include="Content\adminLTE\img\photo2.png" />
+    <Content Include="Content\adminLTE\img\photo3.jpg" />
+    <Content Include="Content\adminLTE\img\photo4.jpg" />
+    <Content Include="Content\adminLTE\img\user1-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user2-160x160.jpg" />
+    <Content Include="Content\adminLTE\img\user3-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user4-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user5-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user6-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user7-128x128.jpg" />
+    <Content Include="Content\adminLTE\img\user8-128x128.jpg" />
+    <Content Include="Content\adminLTE\skins\skin-black-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-black-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-black.css" />
+    <Content Include="Content\adminLTE\skins\skin-black.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-blue-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-blue-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-blue.css" />
+    <Content Include="Content\adminLTE\skins\skin-blue.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-green-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-green-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-green.css" />
+    <Content Include="Content\adminLTE\skins\skin-green.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-purple-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-purple-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-purple.css" />
+    <Content Include="Content\adminLTE\skins\skin-purple.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-red-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-red-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-red.css" />
+    <Content Include="Content\adminLTE\skins\skin-red.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-yellow-light.css" />
+    <Content Include="Content\adminLTE\skins\skin-yellow-light.min.css" />
+    <Content Include="Content\adminLTE\skins\skin-yellow.css" />
+    <Content Include="Content\adminLTE\skins\skin-yellow.min.css" />
+    <Content Include="Content\adminLTE\skins\_all-skins.css" />
+    <Content Include="Content\adminLTE\skins\_all-skins.min.css" />
+    <Content Include="Content\bootstrap\bootstrap-3.3.5.css" />
+    <Content Include="Content\bootstrap\bootstrap-3.3.5.min.css" />
+    <Content Include="Content\fontAwesome\font-awesome-4.4.0.css" />
+    <Content Include="Content\fontAwesome\font-awesome-4.4.0.min.css" />
+    <Content Include="Content\images\logo-mini.png" />
+    <Content Include="Content\images\logo.png" />
     <Content Include="db_backups\placeholder.txt" />
     <Content Include="Content\images\ajax_loader_small.gif" />
-    <Content Include="Content\styles.rtl.css" />
     <Content Include="Content\images\1pix.gif" />
     <Content Include="Content\images\admin-gvw-bg.gif" />
     <Content Include="Content\images\admin-header-bg.gif" />
@@ -456,6 +517,7 @@
     <Content Include="Content\images\warnings-tick.png" />
     <Content Include="Content\images\warnings-warning.png" />
     <Content Include="Content\styles.css" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="sitemap.config">
       <SubType>Designer</SubType>
     </Content>
@@ -964,6 +1026,12 @@
     <Content Include="Views\Common\LanguageSelector.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\bootstrap\bootstrap-3.3.5.css.map" />
     <None Include="Views\Product\_ProductAttributes.cshtml" />
     <Content Include="Views\Setting\_ReturnRequestReasons.cshtml" />
     <Content Include="Views\Setting\ReturnRequestReasonEdit.cshtml" />

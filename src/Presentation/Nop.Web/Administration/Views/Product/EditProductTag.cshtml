@@ -6,16 +6,15 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
 }
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+    <div class="content-header">
+        <h1 class="pull-left">
             @T("Admin.Catalog.ProductTags.EditTagDetails")- @Model.Name
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdateProductTag", Model)

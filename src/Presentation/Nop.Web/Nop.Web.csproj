@@ -1091,6 +1091,12 @@
     <Content Include="Content\tinymce\skins\lightgray\skin.min.css" />
     <Content Include="Content\tinymce\themes\modern\theme.min.js" />
     <Content Include="Content\tinymce\tinymce.min.js" />
+    <Content Include="Scripts\adminLTE\app.js" />
+    <Content Include="Scripts\adminLTE\app.min.js" />
+    <Content Include="Scripts\adminLTE\demo.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-3.3.4.js" />
+    <Content Include="Scripts\bootstrap\bootstrap-3.3.4.min.js" />
+    <Content Include="Scripts\bootstrap\npm.js" />
     <Content Include="Scripts\fineuploader\edit.gif" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.css" />
     <Content Include="Scripts\fineuploader\fineuploader-4.2.2.min.css" />

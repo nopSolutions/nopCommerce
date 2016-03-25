@@ -1,10 +1,10 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
-{ 
-    <table class="adminContent">
-        <tr>
-            <td>
+<div class="panel-group">
+    @if (Model.Id > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="crosssellproducts-grid"></div>
 
                 <script>
@@ -38,7 +38,7 @@
                                         }
                                     }
                                 },
-                                error: function(e) {
+                                error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -76,11 +76,9 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-        <tr>
-            <td width="100%">
-                <input type="submit" id="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+            </div>
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="btn btn-default" />
                 <input type="submit" id="btnRefreshCrossSellProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -94,11 +92,15 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
-}
-else
-{
-    @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
-}
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

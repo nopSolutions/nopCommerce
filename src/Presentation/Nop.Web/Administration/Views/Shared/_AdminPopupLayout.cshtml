@@ -1,13 +1,88 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+﻿@using Nop.Core.Domain.Localization
+@using Nop.Web.Framework.UI;
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@{
+    var kendoVersion = "2014.1.318";
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
+        !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
+
+    //CSS resources
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.rtl.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.default.min.css", kendoVersion));
+    Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
+    Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+    //if (supportRtl)
+    //{
+    //    Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
+    //}
+    //else
+    //{
+    Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    //}
+
+     <!-- Font Awesome -->
+    Html.AppendCssFileParts("~/Administration/Content/fontAwesome/font-awesome-4.4.0.min.css");
+     <!-- Ionicons -->
+    @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+    <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
+    Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
+    <!-- Theme style -->
+    Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
+    <!-- Bootstrap 3.3.5 -->
+    Html.AppendCssFileParts("~/Administration/Content/bootstrap/bootstrap-3.3.5.min.css");
+
+
+    Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
+    Html.AppendScriptParts("~/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Scripts/adminLTE/app.min.js");
+    Html.AppendScriptParts("~/Scripts/adminLTE/demo.js");
+    Html.AppendScriptParts("~/Scripts/bootstrap/bootstrap-3.3.4.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
+
+
+    //page title
+    string adminPageTitle = "";
+    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        adminPageTitle = ViewBag.Title + " / ";
+    }
+    adminPageTitle += T("Admin.PageTitle").Text;
+
+    //X-UA-Compatible tag
+    var commonSettings = EngineContext.Current.Resolve<CommonSettings>();
+    if (commonSettings.RenderXuaCompatible)
+    {
+        Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
+    }
 }
-@section header
-{
-}
-@section headermenu
-{
-}
-@section statusbar
-{
-}
-@RenderBody()
+<!DOCTYPE html>
+<html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
+<head>
+    <title>@adminPageTitle</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
+</head>
+<body class="hold-transition skin-blue sidebar-collapse">
+    @*<div id="ajaxBusy">
+        <span>&nbsp;</span>
+    </div>*@
+    <div class="wrapper">
+        <div class="content-wrapper">
+            @Html.Partial("Notifications")
+            <div>
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
+</body>
+</html>
+

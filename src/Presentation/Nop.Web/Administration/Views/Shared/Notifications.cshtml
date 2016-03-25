@@ -24,13 +24,15 @@
 }
 @foreach (var message in successMessages)
 {
-    <div class="message-box message-box-success">
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         @message
     </div>
 }
 @foreach (var message in errorMessages)
 {
-    <div class="message-box message-box-error">
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         @message
     </div>
 }
