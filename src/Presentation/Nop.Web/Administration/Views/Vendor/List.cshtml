@@ -7,36 +7,45 @@
     ViewBag.Title = T("Admin.Vendors").Text;
     }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Vendors")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-vendors" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="vendors-grid"></div>
+<div class="content">
+    <div class="box">
+        <div class="box-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SearchName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SearchName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <button type="submit" id="search-vendors" class="btn btn-default">@T("Admin.Common.Search")</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <script>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div id="vendors-grid"></div>
+
+                <script>
                 $(document).ready(function () {
                     $("#vendors-grid").kendoGrid({
                         dataSource: {
@@ -96,8 +105,8 @@
                         }]
                     });
                 });
-            </script>
-            <script type="text/javascript">
+                </script>
+                <script type="text/javascript">
                 $(document).ready(function () {
                     //search button
                     $('#search-vendors').click(function () {
@@ -123,7 +132,8 @@
                     addAntiForgeryToken(data);
                     return data;
                 }
-            </script>
-        </td>
-    </tr>
-</table>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
