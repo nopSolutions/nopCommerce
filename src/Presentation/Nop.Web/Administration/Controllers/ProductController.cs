@@ -3402,6 +3402,7 @@ namespace Nop.Admin.Controllers
                     ProductAttributeMappingId = productAttributeMapping.Id,
                     AttributeValueType = AttributeValueType.Simple,
                     Name = predefinedValue.Name,
+                    ColorSquaresRgb = predefinedValue.ColorSquaresRgb,
                     PriceAdjustment = predefinedValue.PriceAdjustment,
                     WeightAdjustment = predefinedValue.WeightAdjustment,
                     Cost = predefinedValue.Cost,

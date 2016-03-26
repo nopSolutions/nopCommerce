@@ -283,6 +283,7 @@ namespace Nop.Admin.Controllers
                         Id = x.Id,
                         ProductAttributeId = x.ProductAttributeId,
                         Name = x.Name,
+                        ColorSquaresRgb = x.ColorSquaresRgb,
                         PriceAdjustment = x.PriceAdjustment,
                         PriceAdjustmentStr = x.PriceAdjustment.ToString("G29"),
                         WeightAdjustment = x.WeightAdjustment,
@@ -310,6 +311,7 @@ namespace Nop.Admin.Controllers
 
             var model = new PredefinedProductAttributeValueModel();
             model.ProductAttributeId = productAttributeId;
+            model.ColorSquaresRgb = "#000000";
 
             //locales
             AddLocales(_languageService, model.Locales);
@@ -333,6 +335,7 @@ namespace Nop.Admin.Controllers
                 {
                     ProductAttributeId = model.ProductAttributeId,
                     Name = model.Name,
+                    ColorSquaresRgb = model.ColorSquaresRgb,
                     PriceAdjustment = model.PriceAdjustment,
                     WeightAdjustment = model.WeightAdjustment,
                     Cost = model.Cost,
@@ -367,6 +370,7 @@ namespace Nop.Admin.Controllers
             {
                 ProductAttributeId = ppav.ProductAttributeId,
                 Name = ppav.Name,
+                ColorSquaresRgb = ppav.ColorSquaresRgb,
                 PriceAdjustment = ppav.PriceAdjustment,
                 WeightAdjustment = ppav.WeightAdjustment,
                 Cost = ppav.Cost,
@@ -394,6 +398,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 ppav.Name = model.Name;
+                ppav.ColorSquaresRgb = model.ColorSquaresRgb;
                 ppav.PriceAdjustment = model.PriceAdjustment;
                 ppav.WeightAdjustment = model.WeightAdjustment;
                 ppav.Cost = model.Cost;

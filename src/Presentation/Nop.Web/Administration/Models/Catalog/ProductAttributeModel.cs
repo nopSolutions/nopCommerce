@@ -69,6 +69,9 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string Name { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.ColorSquaresRgb")]
+        public string ColorSquaresRgb { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
         public decimal PriceAdjustment { get; set; }
         [NopResourceDisplayName("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.PriceAdjustment")]
