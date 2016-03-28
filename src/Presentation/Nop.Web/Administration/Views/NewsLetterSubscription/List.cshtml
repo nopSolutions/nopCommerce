@@ -9,61 +9,72 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
+
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Promotions.NewsLetterSubscriptions")
-        </div>
-        <div class="options">
-            <input type="submit" name="exportcsv" class="k-button" value="@T("Admin.Common.ExportToCsv")" />
-            <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="exportcsv" class="btn btn-default" value="@T("Admin.Common.ExportToCsv")" />
+            <input type="submit" id="importcsv" name="importcsv" class="btn btn-default" value="@T("Admin.Common.ImportFromCsv")" />
         </div>
     </div>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ActiveId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("ActiveId", Model.ActiveList)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StoreId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("StoreId", Model.AvailableStores)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerRoleId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("CustomerRoleId", Model.AvailableCustomerRoles)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-subscriptions" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="newsletter-subscriptions-grid"></div>
 
-                <script>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchEmail)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SearchEmail)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.ActiveId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("ActiveId", Model.ActiveList)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.StoreId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.CustomerRoleId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("CustomerRoleId", Model.AvailableCustomerRoles)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="button" id="search-subscriptions" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div id="newsletter-subscriptions-grid"></div>
+
+                        <script>
                     $(document).ready(function() {
                         $("#newsletter-subscriptions-grid").kendoGrid({
                             dataSource: {
@@ -167,38 +178,40 @@
                             ]
                         });
                     });
-                </script>
-            </td>
-        </tr>
-    </table>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#search-subscriptions').click(function() {
-                var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
-                grid.dataSource.page(1); //new search. Set page size to 1
-                //grid.dataSource.read(); we already loaded the grid above using "page" function
-                return false;
-            });
+                        </script>
+                        <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#search-subscriptions').click(function() {
+                            var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                            return false;
+                        });
 
-            $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
-                if (event.keyCode == 13) {
-                    $("#search-subscriptions").click();
-                    return false;
-                }
-            });
-        });
+                        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
+                            if (event.keyCode == 13) {
+                                $("#search-subscriptions").click();
+                                return false;
+                            }
+                        });
+                    });
 
-        function additionalData() {
-            var data = {
-                ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
-                StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-                CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
-                SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
-            };
-            addAntiForgeryToken(data);
-            return data;
-        }
-    </script>
+                    function additionalData() {
+                        var data = {
+                            ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
+                            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                            CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
+                            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
+                        };
+                        addAntiForgeryToken(data);
+                        return data;
+                    }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @*import emails form*@
