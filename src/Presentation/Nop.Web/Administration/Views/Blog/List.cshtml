@@ -6,21 +6,28 @@
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+
+
+
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.BlogPosts")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="blogpost-grid"></div>
 
-            <script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div id="blogpost-grid"></div>
+
+                    <script>
                     $(document).ready(function () {
                         $("#blogpost-grid").kendoGrid({
                             dataSource: {
@@ -66,7 +73,6 @@
                             }, {
                                 field: "Comments",
                                 title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
-                                width: 100,
                                 template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
                             }, {
                                 field: "StartDate",
@@ -94,7 +100,9 @@
                             }]
                         });
                     });
-            </script>
-        </td>
-    </tr>
-</table>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
