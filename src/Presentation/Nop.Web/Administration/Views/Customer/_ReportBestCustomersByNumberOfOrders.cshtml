@@ -7,58 +7,57 @@
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
-            <div class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.StartDate)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.EditorFor(model => model.StartDate)
-                    </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.StartDate)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.EndDate)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.EditorFor(model => model.EndDate)
-                    </div>
+                <div class="col-sm-9">
+                    @Html.EditorFor(model => model.StartDate)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.OrderStatusId)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopDropDownList("OrderStatusId", Model.AvailableOrderStatuses)
-                    </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.EndDate)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.PaymentStatusId)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopDropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
-                    </div>
+                <div class="col-sm-9">
+                    @Html.EditorFor(model => model.EndDate)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.ShippingStatusId)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopDropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
-                    </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.OrderStatusId)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-sm-9">
-                        <input type="button" id="search-best-customers-numberoforders-grid" class="btn btn-default" value="@T("Admin.Customers.Reports.RunReport")"/>
-                    </div>
+                <div class="col-sm-9">
+                    @Html.NopDropDownList("OrderStatusId", Model.AvailableOrderStatuses)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.PaymentStatusId)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopDropDownList("PaymentStatusId", Model.AvailablePaymentStatuses)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.ShippingStatusId)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopDropDownList("ShippingStatusId", Model.AvailableShippingStatuses)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    &nbsp;
+                </div>
+                <div class="col-sm-9">
+                    <input type="button" id="search-best-customers-numberoforders-grid" class="btn btn-default" value="@T("Admin.Customers.Reports.RunReport")"/>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="best-customers-numberoforders-grid"></div>
