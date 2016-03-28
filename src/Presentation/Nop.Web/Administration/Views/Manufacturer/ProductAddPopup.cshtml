@@ -23,10 +23,13 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="content-header">
-        <h1>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Catalog.Manufacturers.Products.AddNew")
         </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
     </div>
 
     <div class="content">

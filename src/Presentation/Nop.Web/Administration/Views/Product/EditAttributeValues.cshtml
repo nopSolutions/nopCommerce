@@ -7,11 +7,14 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
 {
     @Html.AntiForgeryToken()
-    <div class="content-header">
-        <h1>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName)
-            <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)</small>
+            <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.BackToProduct") + ")", "Edit", "Product", new {Id = Model.ProductId}, null)</small>
         </h1>
+        <div class="pull-right">
+            &nbsp;
+        </div>
     </div>
     <div class="content">
         <div class="panel-group">
