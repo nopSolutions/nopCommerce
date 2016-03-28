@@ -17,9 +17,5 @@
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-    <div class="content">
-        <div class="form-horizontal">
-            @Html.Partial("_CreateOrUpdateProductTag", Model)
-        </div>
-    </div>
+    @Html.Partial("_CreateOrUpdateProductTag", Model)
 }

@@ -388,8 +388,8 @@
             $('#required-product-names').text('');
         }
     }
-
 </script>
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -432,7 +432,9 @@
                         @Html.NopLabelFor(model => model.AssociatedToProductId)
                     </div>
                     <div class="col-sm-9">
-                        @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
+                        <p>
+                            @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new {id = Model.AssociatedToProductId}, new {})
+                        </p>
                     </div>
                 </div>
             }
@@ -447,9 +449,10 @@
             </div>
         </div>
     </div>
-    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-    @<div class="panel panel-default">
-        <div class="panel-body">
+
+    <div class="panel panel-default">
+        @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
+        @<div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -477,14 +480,10 @@
                     @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
                 </div>
             </div>
-            <div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
         </div>
-    </div>
                 ,
-    @<div class="panel panel-default">
-        <div class="panel-body">
+        @<div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.Name)
@@ -513,8 +512,9 @@
                 </div>
             </div>
         </div>
-    </div>
             ))
+    </div>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -600,6 +600,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-prices">
         <div class="panel-body">
             <div class="form-group">
@@ -795,11 +796,11 @@
                     @Html.NopEditorFor(model => model.RequiredProductIds)
                     @Html.ValidationMessageFor(model => model.RequiredProductIds)
                     <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                    <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new { btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds" }))', 800, 800, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 800, true); return false;" class="btn btn-default" />
                     <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
                     <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#btnRefreshRequiredProducts').click(function () {
+                        $(document).ready(function() {
+                            $('#btnRefreshRequiredProducts').click(function() {
                                 //refresh product list
                                 loadRequiredProductFriendlyNames();
 
@@ -822,6 +823,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-giftcard">
         <div class="panel-body">
             <div class="form-group">
@@ -853,6 +855,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-downloads">
         <div class="panel-body">
             <div class="form-group">
@@ -947,6 +950,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-recurring">
         <div class="panel-body">
             <div class="form-group">
@@ -987,6 +991,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-rental">
         <div class="panel-body">
             <div class="form-group">
@@ -1018,6 +1023,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-shipping">
         <div class="panel-body">
             <div class="form-group">
@@ -1103,6 +1109,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-tax">
         <div class="panel-body">
             <div class="form-group">
@@ -1134,6 +1141,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default" id="group-inventory">
         <div class="panel-body">
             <div class="form-group">
@@ -1169,7 +1177,7 @@
                 </div>
                 <div class="col-sm-9">
                     @if (Model.ProductWarehouseInventoryModels.Count > 0)
-            {
+                    {
                         <table style="width: 600px; border-collapse: collapse;">
                             <thead>
                                 <tr>
@@ -1192,7 +1200,7 @@
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.ProductWarehouseInventoryModels)
-                                {
+                {
                                     <tr>
                                         <td style="width: 40%;">
                                             <div style="padding-left: 10px; padding-right: 10px;">
@@ -1202,26 +1210,26 @@
                                         <td align="center" style="width: 10%;">
                                             <input type="checkbox" id="warehouse_used_@(item.WarehouseId)" name="warehouse_used_@(item.WarehouseId)" value="@item.WarehouseId" checked="@item.WarehouseUsed" />
                                             <script type="text/javascript">
-                                                $(document).ready(function () {
+                                                $(document).ready(function() {
                                                     $("#warehouse_used_@(item.WarehouseId)").change(toggleWarehouseUsed_@(item.WarehouseId));
                                                     toggleWarehouseUsed_@(item.WarehouseId)();
                                                 });
+
                                                 function toggleWarehouseUsed_@(item.WarehouseId)() {
                                                     if ($('#warehouse_used_@(item.WarehouseId)').is(':checked')) {
                                                         $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', false);
                                                         $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', false);
-                                                    }
-                                                    else {
+                                                    } else {
                                                         $('#warehouse_qty_@(item.WarehouseId)').prop('disabled', true);
                                                         $('#warehouse_reserved_@(item.WarehouseId)').prop('disabled', true);
                                                     }
                                                 }
                                             </script>
                                         <td align="center" style="width: 20%;">
-                                            <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width:70px;" />
+                                            <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="adminInput" style="width: 70px;" />
                                         </td>
                                         <td align="center" style="width: 20%;">
-                                            <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width:70px;" />
+                                            <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="adminInput" style="width: 70px;" />
                                         </td>
                                         <td align="center" style="width: 10%;">
                                             @item.PlannedQuantity
@@ -1356,6 +1364,7 @@
             </div>
         </div>
     </div>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
@@ -1417,9 +1426,11 @@
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.CreatedOn)
-                    </div>
+                    </div>t
                     <div class="col-sm-9">
-                        @Model.CreatedOn.Value.ToString("F")
+                        <p>
+                            @Model.CreatedOn.Value.ToString("F")
+                        </p>
                     </div>
                 </div>
             }
@@ -1430,7 +1441,9 @@
                         @Html.NopLabelFor(model => model.UpdatedOn)
                     </div>
                     <div class="col-sm-9">
-                        @Model.UpdatedOn.Value.ToString("F")
+                        <p>
+                            @Model.UpdatedOn.Value.ToString("F")
+                        </p>
                     </div>
                 </div>
             }

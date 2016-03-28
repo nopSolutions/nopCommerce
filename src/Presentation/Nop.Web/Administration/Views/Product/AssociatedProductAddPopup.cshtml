@@ -9,6 +9,16 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.AssociatedProducts.AddNew").Text;
 }
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+                try {
+                    window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
+                } catch (e) {
+                }
+                window.close();
+    </script>
+}
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -18,85 +28,76 @@
         </h1>
     </div>
 
-    if (ViewBag.RefreshPage == true)
-    {
-        <script type="text/javascript">
-            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-            catch (e){}
-            window.close();
-        </script>
-    }
-
     <div class="content">
         <div class="form-horizontal">
-            <div class="box">
-                <div class="box-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchProductName)
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductName)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SearchProductName)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchProductName)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchCategoryId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchCategoryId)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchManufacturerId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchStoreId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchManufacturerId)
+                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchVendorId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductTypeId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchStoreId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
-                        </div>
-                    </div>
-                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchVendorId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchVendorId", Model.AvailableVendors)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchProductTypeId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="products-grid"></div>
 
                         <script>
-                            $(document).ready(function () {
+                            $(document).ready(function() {
                                 $("#products-grid").kendoGrid({
                                     dataSource: {
                                         type: "json",
@@ -132,7 +133,8 @@
                                         mode: "inline"
                                     },
                                     scrollable: false,
-                                    columns: [{
+                                    columns: [
+                                    {
                                         field: "Id",
                                         headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
                                         headerAttributes: { style: "text-align:center" },
@@ -152,7 +154,8 @@
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
                                         template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                                    }]
+                                    }
+                                    ]
                                 });
                             });
                         </script>
@@ -163,8 +166,8 @@
                 </div>
 
                 <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#search-products').click(function () {
+                    $(document).ready(function() {
+                        $('#search-products').click(function() {
                             var grid = $('#products-grid').data('kendoGrid');
                             grid.dataSource.page(1); //new search. Set page size to 1
                             //grid.dataSource.read(); we already loaded the grid above using "page" function
@@ -173,7 +176,7 @@
                             return false;
                         });
 
-                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function(event) {
                             if (event.keyCode == 13) {
                                 $("#search-products").click();
                                 return false;

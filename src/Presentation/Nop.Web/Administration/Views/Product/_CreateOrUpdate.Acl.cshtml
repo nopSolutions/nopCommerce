@@ -1,13 +1,12 @@
 ﻿@model ProductModel
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
 
         $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
 
         toggleAcl();
     });
-
 
     function toggleAcl() {
         if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
@@ -16,8 +15,8 @@
             $('#pnl-acl').hide();
         }
     }
-
 </script>
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -51,7 +50,7 @@
                     }
                     else
                     {
-                        <div>No customer roles defined</div>
+                        <text>No customer roles defined</text>
                     }
                 </div>
             </div>

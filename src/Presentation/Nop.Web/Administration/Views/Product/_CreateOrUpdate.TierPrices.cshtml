@@ -10,25 +10,25 @@
                 <div id="tierprices-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#tierprices-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("TierPriceList", "Product", new { productId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("TierPriceList", "Product", new {productId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     create: {
-                                        url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new { productId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("TierPriceInsert", "Product", new {productId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
                                     },
                                     update: {
-                                        url:"@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
+                                        url: "@Html.Raw(Url.Action("TierPriceUpdate", "Product"))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -58,12 +58,12 @@
                                         }
                                     }
                                 },
-                                requestEnd: function (e) {
+                                requestEnd: function(e) {
                                     if (e.type == "create" || e.type == "update") {
                                         this.read();
                                     }
                                 },
-                                error: function (e) {
+                                error: function(e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -84,7 +84,8 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "StoreId",
                                 title: "@T("Admin.Catalog.Products.TierPrices.Fields.Store")",
                                 width: 250,
@@ -98,7 +99,6 @@
                                 editor: customerRoleDropDownEditor,
                                 template: "#:CustomerRole#"
                             },
-
                             {
                                 field: "Quantity",
                                 title: "@T("Admin.Catalog.Products.TierPrices.Fields.Quantity")",
@@ -109,16 +109,17 @@
                                 field: "Price",
                                 title: "@T("Admin.Catalog.Products.TierPrices.Fields.Price")",
                                 width: 150,
-                                editor: function (container, options) {
+                                editor: function(container, options) {
                                     $('<input name="' + options.field + '"/>')
-                                            .appendTo(container)
-                                            .kendoNumericTextBox({
-                                                format: "{0:n4}",
-                                                decimals: 4
-                                            });
+                                        .appendTo(container)
+                                        .kendoNumericTextBox({
+                                            format: "{0:n4}",
+                                            decimals: 4
+                                        });
                                 }
-                            },{
-                                command: [{
+                            }, {
+                                command: [
+                                {
                                     name: "edit",
                                     text: {
                                         edit: "@T("Admin.Common.Edit")",
@@ -128,51 +129,53 @@
                                 }, {
                                     name: "destroy",
                                     text: "@T("Admin.Common.Delete")"
-                                }],
-                                width: 200
-                            }]
+                                        }
+                                    ],
+                                    width: 200
+                                }
+                            ]
                         });
                     });
 
                     //local datasource
                     var allStores = [
                         {
-                            Id : 0,
-                            Name : "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
+                            Id: 0,
+                            Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
                         }
                         @{
-                var storeService = EngineContext.Current.Resolve<IStoreService>();
-                var allStores = storeService.GetAllStores();
-            }
+                            var storeService = EngineContext.Current.Resolve<IStoreService>();
+                            var allStores = storeService.GetAllStores();
+                        }
                         @foreach (var store in allStores)
-            {
-                <text>
+                        {
+                            <text>
                                     , {
                                         Id: @(store.Id),
                                         Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
                                     }
                                     </text>
-            }
+                        }
                     ];
 
                     var allCustomerRoles = [
                         {
-                            Id : 0,
-                            Name : "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
+                            Id: 0,
+                            Name: "@T("Admin.Catalog.Products.TierPrices.Fields.CustomerRole.All")"
                         }
                         @{
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
-                var allCustomerRoles = customerService.GetAllCustomerRoles(true);
-            }
+                            var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                            var allCustomerRoles = customerService.GetAllCustomerRoles(true);
+                        }
                         @foreach (var customerRole in allCustomerRoles)
-            {
-                <text>
+                        {
+                            <text>
                                 , {
                                     Id: @(customerRole.Id),
                                     Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(customerRole.Name)))"
                                 }
                     </text>
-            }
+                        }
                     ];
 
                     function storeDropDownEditor(container, options) {
@@ -193,11 +196,11 @@
                             });
                     }
                 </script>
-    }
-    else
-    {
-        @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
-    }
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.TierPrices.SaveBeforeEdit")
+            }
         </div>
     </div>
 </div>

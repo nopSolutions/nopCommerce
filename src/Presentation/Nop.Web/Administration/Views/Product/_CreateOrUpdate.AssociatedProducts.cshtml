@@ -3,7 +3,7 @@
 <div class="panel-group">
     <div class="panel panel-default">
         @if (Model.Id > 0)
-            {
+        {
             <div class="panel-body">
                 <ul>
                     <li>
@@ -115,22 +115,22 @@
                     });
                 </script>
             </div>
-                <div class="panel-footer">
-                    <input type="submit" id="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="btn btn-default" />
-                    <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            $('#btnRefreshAssociatedProducts').click(function () {
-                                //refresh grid
-                                var grid = $("#associatedproducts-grid").data('kendoGrid');
-                                grid.dataSource.read();
+            <div class="panel-footer">
+                <input type="submit" id="btnAddNewAssociatedProduct" value="@T("Admin.Catalog.Products.AssociatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AssociatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshAssociatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="btn btn-default" />
+                <input type="submit" id="btnRefreshAssociatedProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshAssociatedProducts').click(function () {
+                            //refresh grid
+                            var grid = $("#associatedproducts-grid").data('kendoGrid');
+                            grid.dataSource.read();
 
-                                //return false to don't reload a page
-                                return false;
-                            });
+                            //return false to don't reload a page
+                            return false;
                         });
-                    </script>
-                </div>
+                    });
+                </script>
+            </div>
         }
         else
         {

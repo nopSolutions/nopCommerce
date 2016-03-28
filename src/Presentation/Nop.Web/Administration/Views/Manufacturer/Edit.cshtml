@@ -18,10 +18,6 @@
             <span id="manufacturer-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
-    <div class="content">
-        <div class="form-horizontal">
-            @Html.Partial("_CreateOrUpdate", Model)
-        </div>
-    </div>
+    @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("manufacturer-delete")

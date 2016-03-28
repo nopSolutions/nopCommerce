@@ -309,9 +309,14 @@
                             @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
                         </div>
                     </div>
-                </div>
-                <div class="panel-footer">
-                    <input type="button" id="addProductSpec" class="btn btn-default" value="@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")" />
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="addProductSpec" class="btn btn-default" value="@T("Admin.Catalog.Products.SpecificationAttributes.AddButton")" />
+                        </div>
+                    </div>
                 </div>
             </div>
         }

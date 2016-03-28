@@ -1,8 +1,8 @@
 ﻿@model ProductModel
 
-@if (Model.Id > 0)
-{
-    <div class="panel-group">
+<div class="panel-group">
+    @if (Model.Id > 0)
+    {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="productpictures-grid"></div>
@@ -197,14 +197,23 @@
                         @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
                     </div>
                 </div>
-            </div>
-            <div class="panel-footer">
-                <input type="button" id="addProductPicture" class="btn btn-default" value="@T("Admin.Catalog.Products.Pictures.AddButton")" />
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="button" id="addProductPicture" class="btn btn-default" value="@T("Admin.Catalog.Products.Pictures.AddButton")" />
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-}
-else
-{
-    @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
-}
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+            </div>
+        </div>
+    }
+</div>

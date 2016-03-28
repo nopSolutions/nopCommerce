@@ -44,9 +44,9 @@ table.adminContent {
     margin-top: 3px;
 }
 
-.panel {
-    margin-top: 10px;
-    margin-bottom: 10px;
+.form-group p {
+    margin-top: 6px;
+    margin-bottom: 0px;
 }
 
 .tag-editor {

@@ -1,22 +1,20 @@
 ﻿@model ProductModel
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
         toggleStoreMapping();
     });
 
-
     function toggleStoreMapping() {
         if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
             $('#pnl-available-stores').show();
-        }
-        else {
+        } else {
             $('#pnl-available-stores').hide();
         }
     }
-
 </script>
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -50,7 +48,7 @@
                     }
                     else
                     {
-                        <div>No stores defined</div>
+                        <text>No stores defined</text>
                     }
                 </div>
             </div>

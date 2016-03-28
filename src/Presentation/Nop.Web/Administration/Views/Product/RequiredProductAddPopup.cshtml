@@ -19,177 +19,177 @@
     </div>
 
     <div class="content">
-        <div class="form-horizontal">
-            <div class="box">
-                <div class="box-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchProductName)
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductName)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SearchProductName)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SearchProductName)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchCategoryId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchCategoryId)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchManufacturerId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchStoreId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("SearchStoreId", Model.AvailableStores)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchManufacturerId)
+                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchVendorId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductTypeId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchStoreId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
-                        </div>
-                    </div>
-                    <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchVendorId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SearchVendorId", Model.AvailableVendors)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SearchProductTypeId)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div id="products-grid"></div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="products-grid"></div>
 
-                        <script>
-                            $(document).ready(function () {
-                                $("#products-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("RequiredProductAddPopupList", "Product"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: additionalData
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors"
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        pageSize: @(defaultGridPageSize),
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
+                    <script>
+                        $(document).ready(function () {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("RequiredProductAddPopupList", "Product"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
                                     },
-                                    pageable: {
-                                        refresh: true,
-                                        pageSizes: [@(gridPageSizes)]
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
                                     },
-                                    editable: {
-                                        confirmation: false,
-                                        mode: "inline"
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
                                     },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "Name",
-                                        title: "@T("Admin.Common.Select")",
-                                        width: 50,
-                                        template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(#=Id#)" class="btn btn-default" />'
-                                    },{
-                                        field: "Name",
-                                        title: "@T("Admin.Catalog.Products.Fields.Name")"
-                                    }, {
-                                        field: "Published",
-                                        title: "@T("Admin.Catalog.Products.Fields.Published")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                                    }]
-                                });
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "Name",
+                                    title: "@T("Admin.Common.Select")",
+                                    width: 50,
+                                    template: '<input type="button" value="@T("Admin.Common.Select")" onclick="selectRequiredProduct(#=Id#)" class="btn btn-default" />'
+                                },{
+                                    field: "Name",
+                                    title: "@T("Admin.Catalog.Products.Fields.Name")"
+                                }, {
+                                    field: "Published",
+                                    title: "@T("Admin.Catalog.Products.Fields.Published")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                }]
                             });
-                        </script>
-                    </div>
+                        });
+                    </script>
                 </div>
             </div>
-
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#search-products').click(function () {
-                        var grid = $('#products-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-                });
-
-                $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-products").click();
-                        return false;
-                    }
-                });
-
-                function additionalData() {
-                    var data = {
-                        SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
-                        SearchCategoryId: $('#SearchCategoryId').val(),
-                        SearchManufacturerId: $('#SearchManufacturerId').val(),
-                        SearchStoreId: $('#SearchStoreId').val(),
-                        SearchVendorId: $('#SearchVendorId').val(),
-                        SearchProductTypeId: $('#SearchProductTypeId').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
-
-                function selectRequiredProduct(productid) {
-                    try {
-                        var currentValue = window.opener.document.getElementById('@(ViewBag.productIdsInput)').value;
-                        if (currentValue) {
-                            //add comma
-                            window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += ', ';
-                        }
-                        window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += productid;
-                        window.opener.document.getElementById('@(ViewBag.btnId)').click();
-                    }
-                    catch (e){}
-                    window.close();
-                }
-            </script>
         </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#search-products').click(function () {
+                    var grid = $('#products-grid').data('kendoGrid');
+                    grid.dataSource.page(1); //new search. Set page size to 1
+                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                    return false;
+                });
+            });
+
+            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-products").click();
+                    return false;
+                }
+            });
+
+            function additionalData() {
+                var data = {
+                    SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                    SearchCategoryId: $('#SearchCategoryId').val(),
+                    SearchManufacturerId: $('#SearchManufacturerId').val(),
+                    SearchStoreId: $('#SearchStoreId').val(),
+                    SearchVendorId: $('#SearchVendorId').val(),
+                    SearchProductTypeId: $('#SearchProductTypeId').val()
+                };
+                addAntiForgeryToken(data);
+                return data;
+            }
+
+            function selectRequiredProduct(productid) {
+                try {
+                    var currentValue = window.opener.document.getElementById('@(ViewBag.productIdsInput)').value;
+                    if (currentValue) {
+                        //add comma
+                        window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += ', ';
+                    }
+                    window.opener.document.getElementById('@(ViewBag.productIdsInput)').value += productid;
+                    window.opener.document.getElementById('@(ViewBag.btnId)').click();
+                }
+                catch (e){}
+                window.close();
+            }
+        </script>
     </div>
 }

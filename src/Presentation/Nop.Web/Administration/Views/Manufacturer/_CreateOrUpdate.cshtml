@@ -5,7 +5,7 @@
 <script>
     $(document).ready(function() {
         $("#manufacturer-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -14,44 +14,49 @@
         });
     });
 </script>
-<div id="manufacturer-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Manufacturers.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Common.SEO")
-        </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Manufacturers.Products")
-        </li>
-        <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Manufacturers.Discounts")
-        </li>
-        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Manufacturers.Acl")
-        </li>
-        <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Manufacturers.Stores")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabSeo()
-    </div>
-    <div>
-        @TabProducts()
-    </div>
-    <div>
-        @TabDiscounts()
-    </div>
-    <div>
-        @TabAcl()
-    </div>
-    <div>
-        @TabStores()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="manufacturer-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Manufacturers.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.Common.SEO")
+                </li>
+                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Manufacturers.Products")
+                </li>
+                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Manufacturers.Discounts")
+                </li>
+                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Manufacturers.Acl")
+                </li>
+                <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Manufacturers.Stores")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabSeo()
+            </div>
+            <div>
+                @TabProducts()
+            </div>
+            <div>
+                @TabDiscounts()
+            </div>
+            <div>
+                @TabAcl()
+            </div>
+            <div>
+                @TabStores()
+            </div>
+        </div>
     </div>
 </div>
 
@@ -70,74 +75,71 @@
 
 @helper TabInfo()
 {
-    <div class="panel-group">
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
-                togglePageSize();
-            });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();
+        });
 
-            function togglePageSize() {
-                if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
-                    $('#pnlPageSize').hide();
-                    $('#pnlPageSizeOptions').show();
-                } else {
-                    $('#pnlPageSize').show();
-                    $('#pnlPageSizeOptions').hide();
-                }
+        function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
             }
-        </script>
+        }
+    </script>
 
+    <div class="panel-group">
         <div class="panel panel-default">
-            <div class="panel-body">
-                @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
-                @<div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Name)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </div>
+            @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-info-localized",
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Name)
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Description)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
                     </div>
                 </div>
-        ,
-                @<div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Name)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
-                        </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Description)
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Description)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.EditorFor(x => x.Description, "RichEditor")
-                            @Html.ValidationMessageFor(model => model.Description)
-                        </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Locales[item].Description)
                     </div>
                 </div>
-    ))
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+    ,
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Description)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(x => x.Description, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                </div>
+            </div>
+            ))
         </div>
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
@@ -219,9 +221,9 @@
 @helper TabSeo()
 {
     <div class="panel-group">
-        @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
-        @<div class="panel panel-default">
-            <div class="panel-body">
+        <div class="panel panel-default">
+            @(Html.LocalizedEditor<ManufacturerModel, ManufacturerLocalizedModel>("manufacturer-seo-localized",
+            @<div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
@@ -258,52 +260,48 @@
                         @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                     </div>
                 </div>
-                <div class="form-group">
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+    ,
+            @<div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.MetaKeywords)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(x => x.MetaKeywords)
+                            @Html.ValidationMessageFor(model => model.MetaKeywords)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.MetaDescription)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopTextAreaFor(x => x.MetaDescription)
+                            @Html.ValidationMessageFor(model => model.MetaDescription)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.MetaTitle)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(x => x.MetaTitle)
+                            @Html.ValidationMessageFor(model => model.MetaTitle)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SeName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(x => x.SeName)
+                            @Html.ValidationMessageFor(model => model.SeName)
+                        </div>
+                    </div>
+            </div>))
         </div>
-            ,
-        @<div class="panel panel-default">
-            <div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaKeywords)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.MetaKeywords)
-                        @Html.ValidationMessageFor(model => model.MetaKeywords)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaDescription)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopTextAreaFor(x => x.MetaDescription)
-                        @Html.ValidationMessageFor(model => model.MetaDescription)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.MetaTitle)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.MetaTitle)
-                        @Html.ValidationMessageFor(model => model.MetaTitle)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.SeName)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(x => x.SeName)
-                        @Html.ValidationMessageFor(model => model.SeName)
-                    </div>
-                </div>
-            </div>
-        </div>))
     </div>
 }
 @helper TabProducts()
@@ -448,16 +446,16 @@
                     </script>
                 </div>
             </div>
-                        }
-                        else
-                        {
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
-                                </div>
-                            </div>
+            }
+            else
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
+                    </div>
+                </div>
 
-                        }
+            }
     </div>
 }
 @helper TabDiscounts()
@@ -472,7 +470,7 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                                                } />@discount.Name
+                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>                                                                      } />@discount.Name
                                     @discount.Name
                                 </label>
                             </div>
@@ -487,7 +485,7 @@
     </div>
 }
 @helper TabAcl()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -538,7 +536,7 @@
                         }
                         else
                         {
-                            <div>No customer roles defined</div>
+                            <text>No customer roles defined</text>
                         }
                     </div>
                 </div>
@@ -596,7 +594,7 @@
                         }
                         else
                         {
-                            <div>No stores defined</div>
+                            <text>No stores defined</text>
                         }
                     </div>
                 </div>
