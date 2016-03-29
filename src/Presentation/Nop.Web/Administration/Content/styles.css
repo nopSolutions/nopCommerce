@@ -94,14 +94,12 @@ table.adminContent {
 
 .k-picker-wrap.k-state-default, 
 .k-numeric-wrap.k-state-default {
-    border-color: #d2d6de;
     border-radius: 0;
-    border-right: none;
+    border: none;
 }
 
 .k-picker-wrap.k-state-default>.k-select,
 .k-numeric-wrap.k-state-default>.k-select {
-    margin-top: -1px;
     border-radius: 0;
     background-color: #3c8dbc;
     border: none;
@@ -110,9 +108,10 @@ table.adminContent {
 
 .k-picker-wrap .k-input, 
 .k-numeric-wrap .k-input {
-    height: 32px;
+    height: 34px;
     border-radius: 0;
     padding: 0.177em 8px;
+    border: 1px solid #d2d6de;
 }
 
 .k-picker-wrap.k-state-focused.k-state-selected,
