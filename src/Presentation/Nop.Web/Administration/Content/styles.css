@@ -201,3 +201,9 @@ td.k-state-focused.k-state-selected{
 .k-datetimepicker .k-picker-wrap .k-icon {
     margin: 0 3px;
 }
+
+.input-group.input-group-short .input-group-btn {
+    width: auto;
+    display: inline-block;
+    margin-left: 10px;
+}
