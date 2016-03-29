@@ -91,3 +91,67 @@ table.adminContent {
     color: #444;
     border-color: #ddd;
 }
+
+.k-autocomplete.k-state-default, 
+.k-picker-wrap.k-state-default, 
+.k-numeric-wrap.k-state-default, 
+.k-dropdown-wrap.k-state-default {
+    border-color: #d2d6de;
+    border-radius: 0;
+}
+
+.k-state-default>.k-select {
+    margin-top: -1px;
+    border: none;
+    border-radius: 0;
+}
+
+.k-dropdown-wrap .k-input, 
+.k-picker-wrap .k-input, 
+.k-numeric-wrap .k-input {
+    height: 32px;
+    border-radius: 0;
+    padding: 0.177em 8px;
+}
+
+.k-dropdown-wrap.k-state-focused, 
+.k-picker-wrap.k-state-focused, 
+.k-numeric-wrap.k-state-focused {
+    border-color: #3c8dbc;
+    box-shadow: none;
+}
+
+.k-numerictextbox .k-link {
+    height: 17px;
+    width: 29px;
+    background-color: #3c8dbc;
+    border-radius: 0;
+}
+
+.k-numeric-wrap .k-link+.k-link {
+    border-radius: 0;
+}
+
+.k-numerictextbox .k-link.k-state-selected {
+    background-color: #00c0ef;
+}
+
+.k-numerictextbox .k-icon {
+    height: 17px;
+    background: none;
+}
+
+.k-numerictextbox .k-link .k-icon:before {
+    color: #fff;
+    font: normal normal normal 14px/1 FontAwesome;
+    height: 17px;
+    line-height: 17px;
+}
+
+.k-numerictextbox .k-link .k-i-arrow-n:before {
+    content: "\f0d8";
+}
+
+.k-numerictextbox .k-link .k-i-arrow-s:before {
+    content: "\f0d7";
+}
