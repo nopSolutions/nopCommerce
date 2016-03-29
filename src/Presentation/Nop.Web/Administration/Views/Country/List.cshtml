@@ -3,25 +3,30 @@
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Configuration.Countries")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
-        <input type="button" id="publish-selected" class="k-button" value="@T("Admin.Configuration.Countries.PublishSelected")" />
-        <input type="button" id="unpublish-selected" class="k-button" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
-        <a href="@Url.Action("ExportCsv")" class="k-button">@T("Admin.Configuration.Countries.ExportToCsv")</a>
-        <input type="submit" id="importcsv" name="importcsv" class="k-button" value="@T("Admin.Configuration.Countries.ImportFromCsv")" />
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+        <input type="button" id="publish-selected" class="btn btn-default" value="@T("Admin.Configuration.Countries.PublishSelected")" />
+        <input type="button" id="unpublish-selected" class="btn btn-default" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
+        <a href="@Url.Action("ExportCsv")" class="btn btn-default">@T("Admin.Configuration.Countries.ExportToCsv")</a>
+        <input type="submit" id="importcsv" name="importcsv" class="btn btn-default" value="@T("Admin.Configuration.Countries.ImportFromCsv")"/>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="countries-grid"></div>
 
-            <script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div id="countries-grid"></div>
+
+                    <script>
                 $(document).ready(function () {
                     $("#countries-grid").kendoGrid({
                         dataSource: {
@@ -123,12 +128,9 @@
                         }]
                     });
                 });
-            </script>
-        </td>
-    </tr>
-</table>
+                    </script>
 
-<script type="text/javascript">
+                    <script type="text/javascript">
         var selectedIds = [];
 
         $(document).ready(function () {
@@ -159,7 +161,7 @@
                 });
                 return false;
             });
-            
+
             //"unpublish selected" button
             $('#unpublish-selected').click(function (e) {
                 e.preventDefault();
@@ -186,7 +188,7 @@
                 });
                 return false;
             });
-            
+
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
             });
@@ -231,7 +233,12 @@
         var numChkBoxesChecked = $('#countries-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
         $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
     }
-</script>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @*import states form*@
 <div id="importcsv-window" style="display:none;">
