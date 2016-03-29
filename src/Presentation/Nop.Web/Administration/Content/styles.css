@@ -92,21 +92,22 @@ table.adminContent {
     border-color: #ddd;
 }
 
-.k-autocomplete.k-state-default, 
 .k-picker-wrap.k-state-default, 
-.k-numeric-wrap.k-state-default, 
-.k-dropdown-wrap.k-state-default {
+.k-numeric-wrap.k-state-default {
     border-color: #d2d6de;
     border-radius: 0;
+    border-right: none;
 }
 
-.k-state-default>.k-select {
+.k-picker-wrap.k-state-default>.k-select,
+.k-numeric-wrap.k-state-default>.k-select {
     margin-top: -1px;
-    border: none;
     border-radius: 0;
+    background-color: #3c8dbc;
+    border: none;
+    height: 34px;
 }
 
-.k-dropdown-wrap .k-input, 
 .k-picker-wrap .k-input, 
 .k-numeric-wrap .k-input {
     height: 32px;
@@ -114,18 +115,37 @@ table.adminContent {
     padding: 0.177em 8px;
 }
 
-.k-dropdown-wrap.k-state-focused, 
+.k-picker-wrap.k-state-focused.k-state-selected,
+.k-numeric-wrap.k-state-focused.k-state-selected,
+td.k-state-focused.k-state-selected{
+    -webkit-box-shadow: inset 0 0 3px 4px #5FA6D2;
+    box-shadow: inset 0 0 3px 4px #5FA6D2;
+}
+
+.k-state-selected, 
+.k-state-selected:link, 
+.k-state-selected:visited, 
+.k-list>.k-state-selected, 
+.k-list>.k-state-highlight, 
+.k-panel>.k-state-selected, 
+.k-ghost-splitbar-vertical, 
+.k-ghost-splitbar-horizontal, 
+.k-draghandle.k-state-selected:hover, 
+.k-scheduler .k-scheduler-toolbar 
+.k-state-selected, .k-scheduler 
+.k-today.k-state-selected, .k-marquee-color{
+    background-color: #3c8dbc;
+    border-color: #3c8dbc;
+}
+
 .k-picker-wrap.k-state-focused, 
 .k-numeric-wrap.k-state-focused {
-    border-color: #3c8dbc;
+    border-color: #00c0ef;
     box-shadow: none;
 }
 
 .k-numerictextbox .k-link {
     height: 17px;
-    width: 29px;
-    background-color: #3c8dbc;
-    border-radius: 0;
 }
 
 .k-numeric-wrap .k-link+.k-link {
@@ -136,12 +156,14 @@ table.adminContent {
     background-color: #00c0ef;
 }
 
-.k-numerictextbox .k-icon {
+.k-numerictextbox .k-i-arrow-n,
+.k-numerictextbox .k-i-arrow-s {
     height: 17px;
     background: none;
 }
 
-.k-numerictextbox .k-link .k-icon:before {
+.k-numerictextbox .k-select .k-i-arrow-n:before,
+.k-numerictextbox .k-select .k-i-arrow-s:before {
     color: #fff;
     font: normal normal normal 14px/1 FontAwesome;
     height: 17px;
@@ -154,4 +176,29 @@ table.adminContent {
 
 .k-numerictextbox .k-link .k-i-arrow-s:before {
     content: "\f0d7";
+}
+
+.k-picker-wrap .k-select .k-i-calendar:before,
+.k-picker-wrap .k-select .k-i-clock:before {
+    color: #fff;
+    font: normal normal normal 14px/1 FontAwesome;
+    height: 17px;
+    line-height: 17px;
+}
+
+.k-picker-wrap .k-i-calendar,
+.k-picker-wrap .k-i-clock {
+    background: none;
+}
+
+.k-picker-wrap .k-i-calendar:before {
+    content: "\f073";
+}
+
+.k-picker-wrap .k-i-clock:before {
+    content: "\f017";
+}
+
+.k-datetimepicker .k-picker-wrap .k-icon {
+    margin: 0 3px;
 }
