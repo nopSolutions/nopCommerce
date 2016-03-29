@@ -8,31 +8,37 @@
     ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.ContentManagement.News.Comments")
-    </div>
-    <div class="options">
-        <input type="button" id="delete-selected" class="k-button" value="@T("Admin.ContentManagement.News.Comments.DeleteSelected")" />
+    </h1>
+    <div class="pull-right">
+        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.ContentManagement.News.Comments.DeleteSelected")" />
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="comments-grid"></div>
-            @{
-                string readUrl = "";
-                if (filterByNewsItemId.HasValue)
-                {
-                    readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
-                }
-                else
-                {
-                    readUrl = Url.Action("Comments", "News");
-                }
-            }
-            <script>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div id="comments-grid"></div>
+                    @{
+                        string readUrl = "";
+                        if (filterByNewsItemId.HasValue)
+                        {
+                            readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
+                        }
+                        else
+                        {
+                            readUrl = Url.Action("Comments", "News");
+                        }
+                    }
+                    <script>
                 $(document).ready(function () {
                     $("#comments-grid").kendoGrid({
                         dataSource: {
@@ -126,8 +132,8 @@
                         }]
                     });
                 });
-            </script>
-            <script type="text/javascript">
+                    </script>
+                    <script type="text/javascript">
 
                 var selectedIds = [];
 
@@ -206,7 +212,9 @@
                     $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                 }
 
-            </script>
-        </td>
-    </tr>
-</table>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
