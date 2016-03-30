@@ -8,15 +8,15 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.EditValueDetails")
-        </div>
-        <div class="options">
+        </h1>
+        <div class="pull-right">
             <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
