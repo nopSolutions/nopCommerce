@@ -1,219 +1,225 @@
 ﻿@model OrderModel
-@if (Model.IsShippable)
-{
-    <table class="adminContent">
-        @if (Model.IsShippable && Model.ShippingAddress != null)
+<div class="panel-group">
+    @if (Model.IsShippable)
+    {
+        if (Model.IsShippable && Model.ShippingAddress != null)
         {
-            
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippingAddress):
-            </td>
-            <td class="adminData">
-                <table style="border: solid 1px black; padding: 5px;">
-                    @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ShippingAddress)
+                        </div>
+                        <div class="col-sm-9">
+                            <table class="table table-hover">
+                                @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.FullName"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.EmailEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.FullName")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.EmailEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Email"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.Email
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.PhoneEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Email")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.Email
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.PhoneEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Phone"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.PhoneNumber
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.FaxEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Phone")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.PhoneNumber
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.FaxEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Fax"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.FaxNumber
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.CompanyEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Fax")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.FaxNumber
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.CompanyEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Company"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.Company
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.StreetAddressEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Company")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.Company
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.StreetAddressEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Address1"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.Address1
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.StreetAddress2Enabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Address1")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.Address1
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.StreetAddress2Enabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Address2"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.Address2
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.CityEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Address2")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.Address2
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.CityEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.City"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.City
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.StateProvinceEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.City")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.City
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.StateProvinceEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.StateProvince"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.StateProvinceName
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.ZipPostalCodeEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.StateProvince")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.StateProvinceName
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.ZipPostalCodeEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.ZipPostalCode"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.ZipPostalCode
-                            </td>
-                        </tr>
-                    }
-                    @if (Model.ShippingAddress.CountryEnabled)
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.ZipPostalCode")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.ZipPostalCode
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.ShippingAddress.CountryEnabled)
                     {
-                        <tr>
-                            <td>
-                                @T("Admin.Orders.Address.Country"):
-                            </td>
-                            <td>
-                                @Model.ShippingAddress.CountryName
-                            </td>
-                        </tr>
-                    }
-                    @if (!String.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
+                                    <tr>
+                                        <td>
+                                            @T("Admin.Orders.Address.Country")
+                                        </td>
+                                        <td>
+                                            @Model.ShippingAddress.CountryName
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!String.IsNullOrEmpty(Model.ShippingAddress.FormattedCustomAddressAttributes))
                     {
-                        <tr class="custom-attributes-view">
-                            <td colspan="2">
-                                @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
-                            </td>
-                        </tr>
-                    }
-                    @if (!Model.IsLoggedInAsVendor)
+                                    <tr class="custom-attributes-view">
+                                        <td colspan="2">
+                                            @Html.Raw(Model.ShippingAddress.FormattedCustomAddressAttributes)
+                                        </td>
+                                    </tr>
+                                }
+                                @if (!Model.IsLoggedInAsVendor)
                     {
-                        <tr>
-                            <td colspan="2">
-                                <a href="@Url.Action("AddressEdit", new { addressId = Model.ShippingAddress.Id, orderId = Model.Id })" class="k-button">@T("Admin.Common.Edit")</a>
-                            </td>
-                        </tr>
-                    }
-                </table>
-                <div style="padding-top: 15px;">
-                    <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
-                    <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href="@Url.Action("AddressEdit", new {addressId = Model.ShippingAddress.Id, orderId = Model.Id})" class="k-button">@T("Admin.Common.Edit")</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                            <div style="padding-top: 15px;">
+                                <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
+                                <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </td>
-        </tr>
+            </div>
         }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippingMethod):
-            </td>
-            <td class="adminData">
-                <span id="lblShippingMethod">@Model.ShippingMethod</span>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.ShippingMethod)
+                    </div>
+                    <div class="col-sm-9">
+                        <span id="lblShippingMethod">@Model.ShippingMethod</span>
+                        @if (!Model.IsLoggedInAsVendor)
+                {
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    toggleEditShippingMethod(false);
+                                });
+
+
+                                function toggleEditShippingMethod(editmode) {
+                                    if (editmode) {
+                                        $('#lblShippingMethod').hide();
+                                        $('#divShippingMethod').show();
+                                        $('#btnEditShippingMethod').hide();
+                                        $('#btnSaveShippingMethod').show();
+                                        $('#btnCancelShippingMethod').show();
+                                    } else {
+                                        $('#lblShippingMethod').show();
+                                        $('#divShippingMethod').hide();
+                                        $('#btnEditShippingMethod').show();
+                                        $('#btnSaveShippingMethod').hide();
+                                        $('#btnCancelShippingMethod').hide();
+                                    }
+                                }
+
+                            </script>
+                            <div id="divShippingMethod" style="display: inline-block;">@Html.EditorFor(model => model.ShippingMethod)</div>
+                            <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="adminButton" />
+                            <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                            <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="adminButton" />
+                        }
+                    </div>
+                </div>
+
                 @if (!Model.IsLoggedInAsVendor)
                 {
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            toggleEditShippingMethod(false);
-                        });
-
-
-                        function toggleEditShippingMethod(editmode) {
-                            if (editmode) {
-                                $('#lblShippingMethod').hide();
-                                $('#divShippingMethod').show();
-                                $('#btnEditShippingMethod').hide();
-                                $('#btnSaveShippingMethod').show();
-                                $('#btnCancelShippingMethod').show();
-                            } else {
-                                $('#lblShippingMethod').show();
-                                $('#divShippingMethod').hide();
-                                $('#btnEditShippingMethod').show();
-                                $('#btnSaveShippingMethod').hide();
-                                $('#btnCancelShippingMethod').hide();
-                            }
-                        }
-
-                    </script>
-                    <div id="divShippingMethod" style="display: inline-block;">@Html.EditorFor(model => model.ShippingMethod)</div>
-                    <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="adminButton" />
-                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                    <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="adminButton" />
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ShippingStatus)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.ShippingStatus
+                        </div>
+                    </div>
                 }
-            </td>
-        </tr>
-        @if (!Model.IsLoggedInAsVendor)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.ShippingStatus):
-                </td>
-                <td class="adminData">
-                    @Model.ShippingStatus
-                </td>
-            </tr>
-        }
-    </table>
-    <p>
-        <strong>
-            @T("Admin.Orders.Shipments")
-        </strong>
-    </p>
-    <table class="adminContent">
-        <tr>
-            <td>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Orders.Shipments")
+            </div>
+            <div class="page-body">
                 <div id="shipments-grid"></div>
 
                 <script>
@@ -223,7 +229,7 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new { orderId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("ShipmentsByOrder", "Order", new {orderId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -234,7 +240,7 @@
                                     total: "Total",
                                     errors: "Errors"
                                 },
-                                error: function(e) {
+                                error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -252,40 +258,42 @@
                             //details grid
                             detailInit: detailInit,
                             scrollable: false,
-                            columns: [{
-                                field: "Id",
-                                title: "@T("Admin.Orders.Shipments.ID")",
-                                width: 50
-                            }, {
-                                field: "OrderId",
-                                title: "@T("Admin.Orders.Shipments.OrderID")",
-                                width: 100
-                            }, {
-                                field: "TrackingNumber",
-                                title: "@T("Admin.Orders.Shipments.TrackingNumber")",
-                                width: 100
-                            }, {
-                                field: "TotalWeight",
-                                title: "@T("Admin.Orders.Shipments.TotalWeight")",
-                                width: 100
-                            }, {
-                                field: "ShippedDate",
-                                title: "@T("Admin.Orders.Shipments.ShippedDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "DeliveryDate",
-                                title: "@T("Admin.Orders.Shipments.DeliveryDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.View")",
-                                width: 50,
-                                template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
-                            }]
+                            columns: [
+                                {
+                                    field: "Id",
+                                    title: "@T("Admin.Orders.Shipments.ID")",
+                                    width: 50
+                                }, {
+                                    field: "OrderId",
+                                    title: "@T("Admin.Orders.Shipments.OrderID")",
+                                    width: 100
+                                }, {
+                                    field: "TrackingNumber",
+                                    title: "@T("Admin.Orders.Shipments.TrackingNumber")",
+                                    width: 100
+                                }, {
+                                    field: "TotalWeight",
+                                    title: "@T("Admin.Orders.Shipments.TotalWeight")",
+                                    width: 100
+                                }, {
+                                    field: "ShippedDate",
+                                    title: "@T("Admin.Orders.Shipments.ShippedDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "DeliveryDate",
+                                    title: "@T("Admin.Orders.Shipments.DeliveryDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 50,
+                                    template: '<a href="@Url.Content("~/Admin/Order/ShipmentDetails/")#=Id#">@T("Admin.Common.View")</a>'
+                                }
+                            ]
                         });
                     });
 
@@ -296,7 +304,7 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId="+e.data.Id,
+                                        url: "@Html.Raw(Url.Action("ShipmentsItemsByShipmentId", "Order"))?shipmentId=" + e.data.Id,
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -307,7 +315,7 @@
                                     total: "Total",
                                     errors: "Errors"
                                 },
-                                error: function(e) {
+                                error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -329,19 +337,19 @@
                                     field: "ProductName",
                                     title: "@T("Admin.Orders.Shipments.Products.ProductName")",
                                     width: 400
-                                },{
+                                }, {
                                     field: "ShippedFromWarehouse",
                                     title: "@T("Admin.Orders.Shipments.Products.Warehouse")",
                                     width: 150
-                                },{
+                                }, {
                                     field: "QuantityInThisShipment",
                                     title: "@T("Admin.Orders.Shipments.Products.QtyShipped")",
                                     width: 150
-                                },{
+                                }, {
                                     field: "ItemWeight",
                                     title: "@T("Admin.Orders.Shipments.Products.ItemWeight")",
                                     width: 150
-                                },{
+                                }, {
                                     field: "ItemDimensions",
                                     title: "@T("Admin.Orders.Shipments.Products.ItemDimensions")",
                                     width: 150
@@ -350,26 +358,22 @@
                         });
                     }
                 </script>
-            </td>
-        </tr>
-        @if (Model.CanAddNewShipments)
-        {
-            <tr>
-                <td class="adminData">
-                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="k-button" />
-                </td>
-            </tr>
-        }
-    </table>
-}
-else
-{
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle"></td>
-            <td class="adminData">
+            </div>
+
+            @if (Model.CanAddNewShipments)
+            {
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="k-button" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="panel panel-default">
+            <div class="page-body">
                 @T("Admin.Orders.ShippingInfo.NotRequired")
-            </td>
-        </tr>
-    </table>
-}
+            </div>
+        </div>
+    }
+</div>
