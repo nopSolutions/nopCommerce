@@ -18,7 +18,7 @@
 {
     <script type="text/javascript">
         try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
+        catch (e){}
         window.close();
     </script>
 }
@@ -37,69 +37,75 @@
         }
     }
 </script>
-@(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Locales[item].Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Locales[item].Name)
-            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </td>
-    </tr>
-</table>
-,
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-</table>
-))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EnableColorSquaresRgb):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EnableColorSquaresRgb)
-            @Html.ValidationMessageFor(model => model.EnableColorSquaresRgb)
-        </td>
-    </tr>
-    <tr id="pnlColorSquaresRgb">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ColorSquaresRgb):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ColorSquaresRgb)
-            <div id="color-picker"></div>
-            <script type="text/javascript">
-                $(document).ready(function(){
-                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
-                });
-            </script>
-            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-</table>
 
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                @(Html.LocalizedEditor<SpecificationAttributeOptionModel, SpecificationAttributeOptionLocalizedModel>("specificationattribute-localized",
+                @<div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
+                    </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+,
+                @<div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+))
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.EnableColorSquaresRgb)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.EnableColorSquaresRgb)
+                            @Html.ValidationMessageFor(model => model.EnableColorSquaresRgb)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlColorSquaresRgb">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ColorSquaresRgb)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.ColorSquaresRgb)
+                            <div id="color-picker"></div>
+                            <script type="text/javascript">
+                                $(document).ready(function(){
+                                    $('#color-picker').farbtastic('#@Html.FieldIdFor(model => model.ColorSquaresRgb)');
+                                });
+                            </script>
+                            @Html.ValidationMessageFor(model => model.ColorSquaresRgb)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DisplayOrder)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DisplayOrder)
+                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
