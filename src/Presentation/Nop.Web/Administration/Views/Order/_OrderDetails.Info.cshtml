@@ -91,15 +91,15 @@
                         </strong>&nbsp;
                         @if (Model.CanCancelOrder)
                         {
-                            <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn bg-orange" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                            <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                         }
-                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="adminButton" />
+                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn bg-light-blue" />
                         <div id="pnlChangeOrderStatus">
                             <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
                             <br />
                             @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
-                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                            <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="adminButton" />
+                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn bg-light-blue" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-top: 3px" />
+                            <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-top: 3px" />
                         </div>
                     </div>
                 </div>
@@ -392,51 +392,49 @@
                     </div>
                 </div>
 
-
-
                 <div id="trEditOrderTotals">
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.OrderSubtotalInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.NopEditorFor(model => model.OrderSubtotalInclTaxValue)
+                        <div class="col-sm-2">
+                            @T("Admin.Orders.Fields.Edit.InclTax")&nbsp; @Html.NopEditorFor(model => model.OrderSubtotalInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.NopEditorFor(model => model.OrderSubtotalExclTaxValue)
+                        <div class="col-sm-7">
+                            @T("Admin.Orders.Fields.Edit.ExclTax")&nbsp; @Html.NopEditorFor(model => model.OrderSubtotalExclTaxValue)
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.NopEditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
+                        <div class="col-sm-2">
+                            @T("Admin.Orders.Fields.Edit.InclTax")&nbsp; @Html.NopEditorFor(model => model.OrderSubTotalDiscountInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.NopEditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
+                        <div class="col-sm-7">
+                            @T("Admin.Orders.Fields.Edit.ExclTax")&nbsp; @Html.NopEditorFor(model => model.OrderSubTotalDiscountExclTaxValue)
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.OrderShippingInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.NopEditorFor(model => model.OrderShippingInclTaxValue)
+                        <div class="col-sm-2">
+                            @T("Admin.Orders.Fields.Edit.InclTax")&nbsp; @Html.NopEditorFor(model => model.OrderShippingInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.NopEditorFor(model => model.OrderShippingExclTaxValue)
+                        <div class="col-sm-7">
+                            @T("Admin.Orders.Fields.Edit.ExclTax")&nbsp; @Html.NopEditorFor(model => model.OrderShippingExclTaxValue)
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.InclTax") @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
+                        <div class="col-sm-2">
+                            @T("Admin.Orders.Fields.Edit.InclTax")&nbsp; @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeInclTaxValue)
                         </div>
-                        <div class="col-sm-3">
-                            @T("Admin.Orders.Fields.Edit.ExclTax") @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
+                        <div class="col-sm-7">
+                            @T("Admin.Orders.Fields.Edit.ExclTax")&nbsp; @Html.NopEditorFor(model => model.PaymentMethodAdditionalFeeExclTaxValue)
                         </div>
                     </div>
                     <div class="form-group">
@@ -474,12 +472,13 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-sm-6">
-                        <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="adminButton" />
-                        <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                    <div class="col-sm-3">
+                        &nbsp;
                     </div>
-                    <div class="col-sm-6">
-                        <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="adminButton" />
+                    <div class="col-sm-9">
+                        <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="btn bg-light-blue" />
+                        <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="btn bg-teal" />
                     </div>
                 </div>
 
@@ -559,11 +558,11 @@
                 {
                     <div class="form-group">
                         <div class="col-sm-6">
-                            <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick=" toggleCC(true);return false; " id="btnEditCC" class="adminButton" />
-                            <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                            <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick=" toggleCC(true);return false; " id="btnEditCC" class="btn bg-light-blue" />
+                            <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btn bg-light-blue" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         </div>
                         <div class="col-sm-6">
-                            <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="adminButton" />
+                            <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="btn bg-teal" />
                         </div>
                     </div>
                 }
@@ -574,7 +573,7 @@
                             @Html.NopLabelFor(model => model.AuthorizationTransactionId)
                         </div>
                         <div class="col-sm-9">
-                            @Model.AuthorizationTransactionId
+                            <p>@Model.AuthorizationTransactionId</p>
                         </div>
                     </div>
                 }
@@ -585,7 +584,7 @@
                             @Html.NopLabelFor(model => model.CaptureTransactionId)
                         </div>
                         <div class="col-sm-9">
-                            @Model.CaptureTransactionId
+                            <p>@Model.CaptureTransactionId</p>
                         </div>
                     </div>
                 }
@@ -596,7 +595,7 @@
                             @Html.NopLabelFor(model => model.SubscriptionTransactionId)
                         </div>
                         <div class="col-sm-9">
-                            @Model.SubscriptionTransactionId
+                            <p>@Model.SubscriptionTransactionId</p>
                         </div>
                     </div>
                 }
@@ -605,94 +604,96 @@
                         @Html.NopLabelFor(model => model.PaymentMethod)
                     </div>
                     <div class="col-sm-9">
-                        @Model.PaymentMethod
+                        <p>@Model.PaymentMethod</p>
                     </div>
                 </div>
             }
         </div>
+    </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.PaymentStatus)
+                </div>
+                <div class="col-sm-9">
+                    <p>
+                        @Model.PaymentStatus
+                    </p>
+
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        if (Model.CanCapture)
+                        {
+                            <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanMarkOrderAsPaid)
+                        {
+                            <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanRefund)
+                        {
+                            <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanRefundOffline)
+                        {
+                            <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanPartiallyRefund)
+                        {
+                            <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanPartiallyRefundOffline)
+                        {
+                            <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanVoid)
+                        {
+                            <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                        if (Model.CanVoidOffline)
+                        {
+                            <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                        }
+                    }
+                </div>
+            </div>
+            @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
+            {
                 <div class="form-group">
                     <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.PaymentStatus)
+                        @Html.NopLabelFor(model => model.CustomValues)
                     </div>
                     <div class="col-sm-9">
-                        @Model.PaymentStatus &nbsp;
-
-                        @if (!Model.IsLoggedInAsVendor)
-            {
-                if (Model.CanCapture)
-                {
-                                <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanMarkOrderAsPaid)
+                        <table>
+                            @foreach (var item in Model.CustomValues)
                             {
-                                <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
+                                <tr>
+                                    <td>
+                                        @item.Key:
+                                    </td>
+                                    <td>@(item.Value != null ? item.Value.ToString() : "")</td>
+                                </tr>
                             }
-                            if (Model.CanRefund)
-                            {
-                                <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanRefundOffline)
-                            {
-                                <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanPartiallyRefund)
-                            {
-                                <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="adminButton" />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanPartiallyRefundOffline)
-                            {
-                                <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="adminButton" />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanVoid)
-                            {
-                                <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
-                            }
-                            if (Model.CanVoidOffline)
-                            {
-                                <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                                <text>&nbsp;</text>
-                            }
-                        }
+                        </table>
                     </div>
                 </div>
-                @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
-            {
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.CustomValues)
-                        </div>
-                        <div class="col-sm-9">
-                            <table>
-                                @foreach (var item in Model.CustomValues)
-                                {
-                                    <tr>
-                                        <td>
-                                            @item.Key:
-                                        </td>
-                                        <td>@(item.Value != null ? item.Value.ToString() : "")</td>
-                                    </tr>
-                                }
-                            </table>
-                        </div>
-                    </div>
-                }
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.CreatedOn)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.DisplayFor(model => model.CreatedOn)
-                    </div>
+            }
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.CreatedOn)
+                </div>
+                <div class="col-sm-9">
+                    <p>@Html.DisplayFor(model => model.CreatedOn)</p>
                 </div>
             </div>
         </div>
