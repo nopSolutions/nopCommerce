@@ -20,7 +20,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
 
         private ILocalizationService _localizationService;
         private Localizer _localizer;
-        private IWorkContext _workContext;
 
         /// <summary>
         /// Get a localized resources
@@ -51,15 +50,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                 return _localizer;
             }
         }
-
-        public IWorkContext WorkContext
-        {
-            get
-            {
-                return _workContext;
-            }
-        }
-        
         public override void InitHelpers()
         {
             base.InitHelpers();
@@ -67,7 +57,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
                 _localizationService = EngineContext.Current.Resolve<ILocalizationService>();
-                _workContext = EngineContext.Current.Resolve<IWorkContext>();
             }
         }
 
