@@ -204,6 +204,23 @@ td.k-state-focused.k-state-selected{
 
 .input-group.input-group-short .input-group-btn {
     width: auto;
-    display: inline-block;
-    margin-left: 10px;
+}
+
+.input-group.input-group-short .k-widget{
+    margin-right: 10px;
+}
+
+.input-group.input-group-short .text-to-hide{
+    margin-right: 10px;
+}
+
+table td .form-group {
+    margin-bottom: 0;
+    margin-top: 2px;
+}
+
+.form-horizontal span.required {
+    float: right;
+    margin-top: 8px;
+    margin-left: 5px;
 }
