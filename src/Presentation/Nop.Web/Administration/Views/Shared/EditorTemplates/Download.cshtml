@@ -5,7 +5,7 @@
     //register CSS and JS
     Html.AddCssFileParts("~/Scripts/fineuploader/fineuploader-4.2.2.min.css");
     Html.AddScriptParts("~/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
-    
+
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
@@ -16,10 +16,10 @@
 }
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#cbUseDownloadURL@(randomNumber)').click(toggleDownloadRecordType@(randomNumber));
 
-        $('#saveDownloadUrl@(randomNumber)').click(function() {
+        $('#saveDownloadUrl@(randomNumber)').click(function () {
             var downloadUrl = $("#downloadurl@(randomNumber)").val();
             $('#saveDownloadUrl@(randomNumber)').attr('disabled', true);
             $.ajax({
@@ -27,13 +27,13 @@
                 type: "POST",
                 url: "@(Url.Action("SaveDownloadUrl", "Download"))",
                 data: { "downloadUrl": downloadUrl },
-                success: function(data) {
+                success: function (data) {
                     $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
                     $("#@(clientId + "value") input").val(data.downloadId);
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
 
                 },
-                error: function(xhr, ajaxOptions, thrownError) {
+                error: function (xhr, ajaxOptions, thrownError) {
                     alert('Failed to save download object.');
                     $('#saveDownloadUrl@(randomNumber)').attr('disabled', false);
                 }
@@ -54,82 +54,81 @@
     }
 
 </script>
+
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>
-<table class="adminContent" border="1" style="width:500px">
-    @if (!disableUrl)
-    {
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Download.UseDownloadURL"):
-            </td>
-            <td class="adminData">
-                <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
-                       @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>   } />
-            </td>
-        </tr>
-    }
-    <tr id="pnlDownloadURL@(randomNumber)">
-        <td class="adminTitle">
-            @T("Admin.Download.DownloadURL"):
-        </td>
-        <td class="adminData">
-            <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl))
-                {
-                    <text>value="@(download.DownloadUrl)"</text>
-                }
-                />
-            <input type="button" id="saveDownloadUrl@(randomNumber)" class="k-button" value="@T("Admin.Download.SaveDownloadURL")" />
-            <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
-        </td>
-    </tr>
-    <tr id="pnlDownloadFile@(randomNumber)">
-        <td class="adminTitle">
-            @T("Admin.Download.UploadFile"):
-        </td>
-        <td class="adminData">
-            <div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @if (!disableUrl)
+        {
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label class="control-label">@T("Admin.Download.UseDownloadURL")</label>
+                </div>
+                <div class="col-sm-6">
+                    <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
+                           @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>        } />
+                </div>
+            </div>
+        }
+        <div class="form-group" id="pnlDownloadURL@(randomNumber)">
+            <div class="col-sm-6">
+                <label class="control-label">@T("Admin.Download.DownloadURL")</label>
+            </div>
+            <div class="col-sm-6">
+                <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
+                       @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text>      } />
+                <input type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-default" value="@T("Admin.Download.SaveDownloadURL")" />
+                <div id="pnlDownloadURLResult@(randomNumber)" style="display:none;">@T("Admin.Download.DownloadURLSaved")</div>
+            </div>
+        </div>
+        <div class="form-group" id="pnlDownloadFile@(randomNumber)">
+            <div class="col-sm-6">
+                <label class="control-label">@T("Admin.Download.UploadFile")</label>
+            </div>
+            <div class="col-sm-6">
                 @*fine uploader container*@
                 <div id="@clientId">
                     <noscript>
                         <p>
-                            Please enable JavaScript to use file uploader.</p>
+                            Please enable JavaScript to use file uploader.
+                        </p>
                         <!-- or put a simple form for upload here -->
                     </noscript>
-                </div>                    
+                </div>
                 @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
                 <script type="text/template" id="@(clientId)-qq-template">
-                        <div class="qq-uploader-selector qq-uploader">
-                            <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
-                                <span>@T("Common.FileUploader.DropFiles")</span>
-                            </div>
-                            <div class="qq-upload-button-selector qq-upload-button">
-                                <div>@T("Common.FileUploader.Upload")</div>
-                            </div>
-                            <span class="qq-drop-processing-selector qq-drop-processing">
-                                <span>@T("Common.FileUploader.Processing")</span>
-                                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                            </span>
-                            <ul class="qq-upload-list-selector qq-upload-list">
-                                <li>
-                                    <div class="qq-progress-bar-container-selector">
-                                        <div class="qq-progress-bar-selector qq-progress-bar"></div>
-                                    </div>
-                                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
-                                    <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
-                                    <span class="qq-upload-file-selector qq-upload-file"></span>
-                                    <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
-                                    <span class="qq-upload-size-selector qq-upload-size"></span>
-                                    <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
-                                    <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
-                                    <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
-                                    <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
-                                </li>
-                            </ul>
+                    <div class="qq-uploader-selector qq-uploader">
+                        <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+                            <span>@T("Common.FileUploader.DropFiles")</span>
                         </div>
-                    </script>
+                        <div class="qq-upload-button-selector qq-upload-button">
+                            <div>@T("Common.FileUploader.Upload")</div>
+                        </div>
+                        <span class="qq-drop-processing-selector qq-drop-processing">
+                            <span>@T("Common.FileUploader.Processing")</span>
+                            <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+                        </span>
+                        <ul class="qq-upload-list-selector qq-upload-list">
+                            <li>
+                                <div class="qq-progress-bar-container-selector">
+                                    <div class="qq-progress-bar-selector qq-progress-bar"></div>
+                                </div>
+                                <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                                <span class="qq-edit-filename-icon-selector qq-edit-filename-icon"></span>
+                                <span class="qq-upload-file-selector qq-upload-file"></span>
+                                <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                                <span class="qq-upload-size-selector qq-upload-size"></span>
+                                <a class="qq-upload-cancel-selector qq-upload-cancel" href="#">@T("Common.FileUploader.Cancel")</a>
+                                <a class="qq-upload-retry-selector qq-upload-retry" href="#">@T("Common.FileUploader.Retry")</a>
+                                <a class="qq-upload-delete-selector qq-upload-delete" href="#">@T("Common.FileUploader.Delete")</a>
+                                <span class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </script>
 
                 <script type="text/javascript">
 
@@ -146,8 +145,8 @@
                             $("#@(clientId + "remove")").show();
                         });
 
-        
-                        $("#@(clientId + "remove")").click(function(e){
+
+                        $("#@(clientId + "remove")").click(function (e) {
                             $("#@(clientId + "downloadurl")").html("");
                             $("#@(clientId + "value") input").val(0);
                             $(this).hide();
@@ -156,25 +155,25 @@
 
                 </script>
 
+                <div id="@(clientId + "downloadurl")">
+                    @if (download != null)
+                    {
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                    }
+                </div>
+                <div>
+                    @if (download != null)
+                    {
+                        <span id="@(clientId + "remove")" class="btn btn-default">@T("Admin.Download.RemoveDownload")</span>
+                    }
+                    else
+                    {
+                        <span id="@(clientId + "remove")" class="btn btn-default" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
+                    }
+                </div>
             </div>
-            <div id="@(clientId + "downloadurl")">
-                @if (download != null)
-                {
-                    <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
-                }
-            </div>
-            <div>
-                @if (download != null)
-                {
-                    <span id="@(clientId + "remove")" class="k-button">@T("Admin.Download.RemoveDownload")</span>
-                }
-                else
-                {
-                    <span id="@(clientId + "remove")" class="k-button" style="display:none;">@T("Admin.Download.RemoveDownload")</span>
-                }
-            </div>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>
 
 
