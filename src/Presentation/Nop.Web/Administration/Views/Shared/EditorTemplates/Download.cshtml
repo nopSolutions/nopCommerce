@@ -64,20 +64,20 @@
         @if (!disableUrl)
         {
             <div class="form-group">
-                <div class="col-sm-6">
+                <div class="col-xs-6">
                     <label class="control-label">@T("Admin.Download.UseDownloadURL")</label>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-xs-6">
                     <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)"
                            @if (download != null && download.UseDownloadUrl) { <text> checked="checked" </text>        } />
                 </div>
             </div>
         }
         <div class="form-group" id="pnlDownloadURL@(randomNumber)">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <label class="control-label">@T("Admin.Download.DownloadURL")</label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
                        @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl)) { <text> value="@(download.DownloadUrl)" </text>      } />
                 <input type="button" id="saveDownloadUrl@(randomNumber)" class="btn btn-default" value="@T("Admin.Download.SaveDownloadURL")" />
@@ -85,10 +85,10 @@
             </div>
         </div>
         <div class="form-group" id="pnlDownloadFile@(randomNumber)">
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 <label class="control-label">@T("Admin.Download.UploadFile")</label>
             </div>
-            <div class="col-sm-6">
+            <div class="col-xs-6">
                 @*fine uploader container*@
                 <div id="@clientId">
                     <noscript>
