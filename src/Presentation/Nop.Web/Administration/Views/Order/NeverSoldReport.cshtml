@@ -7,115 +7,125 @@
     ViewBag.Title = T("Admin.SalesReport.NeverSold").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.SalesReport.NeverSold")
-    </div>
-    <div class="options">
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StartDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.StartDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EndDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.EndDate)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-neversoldreport" class="k-button" value="@T("Admin.SalesReport.NeverSold.RunReport")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="neversoldreport-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#neversoldreport-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("NeverSoldReportList", "Order"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "ProductName",
-                            title: "@T("Admin.SalesReport.NeverSold.Fields.Name")"
-                        }, {
-                            field: "ProductId",
-                            title: "@T("Admin.Common.View")",
-                            width: 100,
-                            template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-                        }]
-                    });
-                });
-            </script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StartDate)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.StartDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.EndDate)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.EndDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="search-neversoldreport" class="btn btn-default" value="@T("Admin.SalesReport.NeverSold.RunReport")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="neversoldreport-grid"></div>
 
-            <script type="text/javascript">
+                    <script>
+                        $(document).ready(function () {
+                            $("#neversoldreport-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("NeverSoldReportList", "Order"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "ProductName",
+                                    title: "@T("Admin.SalesReport.NeverSold.Fields.Name")"
+                                }, {
+                                    field: "ProductId",
+                                    title: "@T("Admin.Common.View")",
+                                    width: 100,
+                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                }]
+                            });
+                        });
+                    </script>
 
-                $(document).ready(function () {
+                    <script type="text/javascript">
 
-                    $('#search-neversoldreport').click(function () {
-                        var grid = $('#neversoldreport-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
+                        $(document).ready(function () {
 
-                });
+                            $('#search-neversoldreport').click(function () {
+                                var grid = $('#neversoldreport-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
 
-                function additionalData() {
-                    var data = {
-                        StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
-                        EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
+                        });
 
-            </script>
-        </td>
-    </tr>
-</table>
+                        function additionalData() {
+                            var data = {
+                                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
