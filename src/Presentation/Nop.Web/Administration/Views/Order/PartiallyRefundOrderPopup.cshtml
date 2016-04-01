@@ -2,46 +2,63 @@
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
 @model OrderModel
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
 }
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Orders.Fields.PartialRefund")
-        </div>
-        <div class="options">
+        </h1>
+        <div class="pull-right">
+            &nbsp;
         </div>
     </div>
-    
-    @Html.ValidationSummary(false)
-    
-    if (ViewBag.RefreshPage == true)
-    {
-    <script type="text/javascript">
-        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
-        window.close();
-    </script>
-    }
-    <p>
-        <strong>
-            @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)</strong>
-    </p>
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AmountToRefund):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AmountToRefund): &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
-                    @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)</span>
-            </td>
-        </tr>
-    </table>
-    <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="adminButton" />
+
+    <div class="content">
+        @Html.ValidationSummary(false)
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @string.Format(T("Admin.Orders.Fields.PartialRefund.OrderInfo").Text, Model.Id)
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-xs-5">
+                                @Html.NopLabelFor(model => model.AmountToRefund)
+                            </div>
+                            <div class="col-xs-7">
+                                @Html.NopEditorFor(model => model.AmountToRefund)
+                                <span style="white-space: nowrap">
+                                    @string.Format(T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-5">
+                                &nbsp;
+                            </div>
+                            <div class="col-xs-7">
+                                <input type="submit" name="partialrefundorder" value="@T("Admin.Orders.Fields.Refund")" id="partialrefundorder" class="btn btn-default"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }

@@ -224,3 +224,7 @@ table td .form-group {
     margin-top: 8px;
     margin-left: 5px;
 }
+
+.form-horizontal .control-label {
+    padding-top: 7px;
+}
