@@ -1,9 +1,5 @@
-﻿#region Using...
-
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Web.Mvc;
-using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
@@ -11,13 +7,14 @@ using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 
-#endregion
-
 namespace Nop.Web.Framework.ViewEngines.Razor
 {
+    /// <summary>
+    /// Web view page
+    /// </summary>
+    /// <typeparam name="TModel">Model</typeparam>
     public abstract class WebViewPage<TModel> : System.Web.Mvc.WebViewPage<TModel>
     {
-
         private ILocalizationService _localizationService;
         private Localizer _localizer;
 
@@ -91,7 +88,8 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         /// <returns></returns>
         public bool ShouldUseRtlTheme()
         {
-            var supportRtl = _workContext.WorkingLanguage.Rtl;
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            var supportRtl = workContext.WorkingLanguage.Rtl;
             if (supportRtl)
             {
                 //ensure that the active theme also supports it
@@ -129,6 +127,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         }
     }
 
+    /// <summary>
+    /// Web view page
+    /// </summary>
     public abstract class WebViewPage : WebViewPage<dynamic>
     {
     }
