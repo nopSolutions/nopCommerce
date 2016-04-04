@@ -108,29 +108,29 @@
             var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
             if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToCategories).ToString())) {
                 $('#tab-applied-to-categories').show();
-                $('#tab-applied-to-manufacturers').hide();
-                $('#tab-applied-to-products').hide();
-                $('#pnlMaximumDiscountedQuantity').show();
-                $('#pnlAppliedToSubCategories').show();
-            } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').show();
+        } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToManufacturers).ToString())) {
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').show();
+            $('#tab-applied-to-products').hide();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').hide();
+        } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
+            $('#tab-applied-to-categories').hide();
+            $('#tab-applied-to-manufacturers').hide();
+            $('#tab-applied-to-products').show();
+            $('#pnlMaximumDiscountedQuantity').show();
+            $('#pnlAppliedToSubCategories').hide();
+        } else {
                 $('#tab-applied-to-categories').hide();
-                $('#tab-applied-to-manufacturers').show();
-                $('#tab-applied-to-products').hide();
-                $('#pnlMaximumDiscountedQuantity').show();
-                $('#pnlAppliedToSubCategories').hide();
-            } else if (selectedDiscountTypeId == @(((int) DiscountType.AssignedToSkus).ToString())) {
-                $('#tab-applied-to-categories').hide();
-                $('#tab-applied-to-manufacturers').hide();
-                $('#tab-applied-to-products').show();
-                $('#pnlMaximumDiscountedQuantity').show();
-                $('#pnlAppliedToSubCategories').hide();
-            } else {
-                $('#tab-applied-to-categories').hide();
-                $('#tab-applied-to-manufacturers').hide();
-                $('#tab-applied-to-products').hide();
-                $('#pnlMaximumDiscountedQuantity').hide();
-                $('#pnlAppliedToSubCategories').hide();
-            }
+        $('#tab-applied-to-manufacturers').hide();
+        $('#tab-applied-to-products').hide();
+        $('#pnlMaximumDiscountedQuantity').hide();
+        $('#pnlAppliedToSubCategories').hide();
+        }
         }
 
         function toggleLimitation() {
@@ -138,9 +138,9 @@
             if (selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int) DiscountLimitationType.NTimesPerCustomer).ToString())) {
                 //'N Times Only' or 'N Times Per Customer'
                 $('#pnlLimitationTimes').show();
-            } else {
+        } else {
                 $('#pnlLimitationTimes').hide();
-            }
+        }
         }
 
         function toggleUsePercentage() {
@@ -299,90 +299,90 @@
 }
 @helper TabRequirements()
 {
-    if (Model.Id > 0)
-    {
-        <script type="text/javascript">
-            $(document).ready(function() {
+    <div class="panel-group">
+        @if (Model.Id > 0)
+        {
+            <script type="text/javascript">
+                $(document).ready(function() {
 
-                $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
+                    $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
 
-                //load add requirement box
-                loadNewRequirementBox();
+                    //load add requirement box
+                    loadNewRequirementBox();
 
-                //load existing requirements
-                loadExistingRequirements();
+                    //load existing requirements
+                    loadExistingRequirements();
 
-                //adding requirement event
-                $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
+                    //adding requirement event
+                    $("#discountRequirementContainer").bind('nopnewdiscountruleadded', function(event, newRequirementId) {
 
-                    var discountId = @Model.Id;
+                        var discountId = @Model.Id;
 
-                    var postData = {
-                        discountRequirementId: newRequirementId,
-                        discountId: discountId
-                    };
-                    addAntiForgeryToken(postData);
+                        var postData = {
+                            discountRequirementId: newRequirementId,
+                            discountId: discountId
+                        };
+                        addAntiForgeryToken(postData);
 
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@(Url.Action("GetDiscountRequirementMetaInfo", "Discount"))",
+                            data: postData,
+                            success: function(result) {
+                                discountRequirements.push({ discountRequirementId: newRequirementId, ruleName: result.ruleName, url: result.url });
+                                loadExistingRequirements();
+                            },
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                alert('Failed to load new discount requirement info. Please refresh the page');
+                            }
+                        });
+
+                    });
+                });
+
+                //load requirement HTML
+                function loadRequirement(configureRuleUrl, placeholderName) {
                     $.ajax({
                         cache: false,
-                        type: "POST",
-                        url: "@(Url.Action("GetDiscountRequirementMetaInfo", "Discount"))",
-                        data: postData,
+                        url: configureRuleUrl,
+                        dataType: "html",
                         success: function(result) {
-                            discountRequirements.push({ discountRequirementId: newRequirementId, ruleName: result.ruleName, url: result.url });
-                            loadExistingRequirements();
+                            $(placeholderName).html(result);
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to load new discount requirement info. Please refresh the page');
+                            $(placeholderName).html('Failed to load requirement content.');
                         }
                     });
-
-                });
-            });
-
-
-            //load requirement HTML
-            function loadRequirement(configureRuleUrl, placeholderName) {
-                $.ajax({
-                    cache: false,
-                    url: configureRuleUrl,
-                    dataType: "html",
-                    success: function(result) {
-                        $(placeholderName).html(result);
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        $(placeholderName).html('Failed to load requirement content.');
-                    }
-                });
-            }
-
-            //load HTML for adding requirement
-            function loadNewRequirementBox() {
-                //load URL
-                var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
-                var discountId = @Model.Id;
-                if (ruleSystemName != '') {
-                    $.ajax({
-                        cache: false,
-                        url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
-                        data: { "systemName": ruleSystemName, "discountId": discountId },
-                        success: function(result) {
-                            var configureRuleUrl = result.url;
-                            //now load the content
-                            loadRequirement(configureRuleUrl, '#addrequirementplaceholder');
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            $('#addrequirementplaceholder').html('Failed to load requirement URL');
-                        }
-                    });
-                } else {
-                    $('#addrequirementplaceholder').html('');
                 }
-            }
 
-            //array of exisiting discount requirements
-            var discountRequirements = [
-                @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
+                //load HTML for adding requirement
+                function loadNewRequirementBox() {
+                    //load URL
+                    var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
+                    var discountId = @Model.Id;
+                    if (ruleSystemName != '') {
+                        $.ajax({
+                            cache: false,
+                            url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
+                            data: { "systemName": ruleSystemName, "discountId": discountId },
+                            success: function(result) {
+                                var configureRuleUrl = result.url;
+                                //now load the content
+                                loadRequirement(configureRuleUrl, '#addrequirementplaceholder');
+                            },
+                            error: function(xhr, ajaxOptions, thrownError) {
+                                $('#addrequirementplaceholder').html('Failed to load requirement URL');
+                            }
+                        });
+                    } else {
+                        $('#addrequirementplaceholder').html('');
+                    }
+                }
+
+                //array of exisiting discount requirements
+                var discountRequirements = [
+                    @for (int i = 0; i < Model.DiscountRequirementMetaInfos.Count; i++)
                 {
                     var drmi = Model.DiscountRequirementMetaInfos[i];
                     <text>{ discountRequirementId: @(drmi.DiscountRequirementId), ruleName: "@(drmi.RuleName)", url: "@(Html.Raw(drmi.ConfigurationUrl))" } </text>
@@ -392,119 +392,113 @@
                     }
 
                 }
-            ];
+                ];
 
-            //load HTML for exisiting requirements
-            function loadExistingRequirements() {
-                $("#discountRequirementContainer").html('');
-                $("#discountRequirementTemplate").tmpl(discountRequirements).appendTo("#discountRequirementContainer");
+                //load HTML for exisiting requirements
+                function loadExistingRequirements() {
+                    $("#discountRequirementContainer").html('');
+                    $("#discountRequirementTemplate").tmpl(discountRequirements).appendTo("#discountRequirementContainer");
 
-                var discountRequirementsLen = discountRequirements.length;
-                for (var i = 0; i < discountRequirementsLen; i++) {
-                    var url = discountRequirements[i].url;
-                    var discountRequirementId = discountRequirements[i].discountRequirementId;
-                    var placeholderName = '#editrequirementplaceholder' + discountRequirementId;
-                    $(placeholderName).html('loading...');
-                    loadRequirement(url, placeholderName);
-                }
-            }
-
-            //delete requirement rule
-            function deleteRequirement(discountRequirementId) {
-                var discountId = @Model.Id;
-
-                var postData = {
-                    discountRequirementId: discountRequirementId,
-                    discountId: discountId
-                };
-                addAntiForgeryToken(postData);
-
-                $.ajax({
-                    cache: false,
-                    type: "POST",
-                    url: "@(Url.Action("DeleteDiscountRequirement", "Discount"))",
-                    data: postData,
-                    success: function(data) {
-                        removeRequirementByElement(discountRequirements, discountRequirementId);
-                        loadExistingRequirements();
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to delete requirement.');
+                    var discountRequirementsLen = discountRequirements.length;
+                    for (var i = 0; i < discountRequirementsLen; i++) {
+                        var url = discountRequirements[i].url;
+                        var discountRequirementId = discountRequirements[i].discountRequirementId;
+                        var placeholderName = '#editrequirementplaceholder' + discountRequirementId;
+                        $(placeholderName).html('loading...');
+                        loadRequirement(url, placeholderName);
                     }
-                });
+                }
 
+                //delete requirement rule
+                function deleteRequirement(discountRequirementId) {
+                    var discountId = @Model.Id;
 
-                function removeRequirementByElement(arrayName, discountRequirementId) {
-                    for (var i = 0; i < arrayName.length; i++) {
-                        if (arrayName[i].discountRequirementId == discountRequirementId) {
-                            arrayName.splice(i, 1);
+                    var postData = {
+                        discountRequirementId: discountRequirementId,
+                        discountId: discountId
+                    };
+                    addAntiForgeryToken(postData);
+
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("DeleteDiscountRequirement", "Discount"))",
+                        data: postData,
+                        success: function(data) {
+                            removeRequirementByElement(discountRequirements, discountRequirementId);
+                            loadExistingRequirements();
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to delete requirement.');
+                        }
+                    });
+
+                    function removeRequirementByElement(arrayName, discountRequirementId) {
+                        for (var i = 0; i < arrayName.length; i++) {
+                            if (arrayName[i].discountRequirementId == discountRequirementId) {
+                                arrayName.splice(i, 1);
+                            }
                         }
                     }
                 }
-
-            }
-
-        </script>
+            </script>
         <!-- Template container -->
-        <div id="discountRequirementContainer">
-        </div>
+            <div id="discountRequirementContainer">
+            </div>
         <!-- Discount requirement template -->
-        <script id="discountRequirementTemplate" type="text/html">
-            <div id="editrequirement{{= discountRequirementId }}">
-                <div>@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <strong>{{= ruleName }}</strong>
-                </div>
-                <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float: left;"></div>
-                <div style="float: right;">
-                    <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({ {= discountRequirementId }})" class="k-button" value="@T("Admin.Promotions.Discounts.Requirements.Remove")"/>
-                </div>
-                <table class="adminContent">
-                    <tr class="adminSeparator">
-                        <td colspan="2">
-                            <hr/>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </script>
-
-        <table class="adminContent">
-            <tr>
-                <td colspan="2">
-                    <strong>@T("Admin.Promotions.Discounts.Requirements.AddNew")</strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AddDiscountRequirement):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
-                    @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
-                </td>
-            </tr>
-        </table>
-        <table class="adminContent">
-            <tr>
-                <td colspan="2">
-                    <div id="addrequirementplaceholder">
+            <script id="discountRequirementTemplate" type="text/html">
+                <div id="editrequirement{{= discountRequirementId }}">
+                    <div>
+                        @T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <strong>{{= ruleName }}</strong>
                     </div>
-                </td>
-            </tr>
-        </table>
-    }
-    else
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
+                    <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float: left;"></div>
+                    <div style="float: right;">
+                        <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({ {= discountRequirementId }})" class="k-button" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
+                    </div>
+                    <table class="adminContent">
+                        <tr class="adminSeparator">
+                            <td colspan="2">
+                                <hr />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </script>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @T("Admin.Promotions.Discounts.Requirements.AddNew")
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AddDiscountRequirement)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
+                            @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div id="addrequirementplaceholder"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    }
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.Requirements.SaveBeforeEdit")
+                </div>
+            </div>
+        }
+    </div>
 }
 @helper TabAppliedToProducts()
 {
-    if (Model.Id > 0)
-    {
+if (Model.Id > 0)
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="products-grid"></div>
@@ -584,8 +578,8 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default"/>
-                <input type="submit" id="btnRefreshProducts" style="display: none"/>
+                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                <input type="submit" id="btnRefreshProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function() {
                         $('#btnRefreshProducts').click(function() {
@@ -600,20 +594,20 @@
                 </script>
             </div>
         </div>
-    }
-    else
-    {
+}
+else
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
             </div>
         </div>
-    }
+}
 }
 @helper TabAppliedToCategories()
 {
-    if (Model.Id > 0)
-    {
+if (Model.Id > 0)
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="categories-grid"></div>
@@ -693,8 +687,8 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default"/>
-                <input type="submit" id="btnRefreshCategories" style="display: none"/>
+                <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                <input type="submit" id="btnRefreshCategories" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function() {
                         $('#btnRefreshCategories').click(function() {
@@ -709,20 +703,20 @@
                 </script>
             </div>
         </div>
-    }
-    else
-    {
+}
+else
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
             </div>
         </div>
-    }
+}
 }
 @helper TabAppliedToManufacturers()
 {
-    if (Model.Id > 0)
-    {
+if (Model.Id > 0)
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 <div id="manufacturers-grid"></div>
@@ -802,8 +796,8 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewManufacturer" value="@T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default"/>
-                <input type="submit" id="btnRefreshManufacturers" style="display: none"/>
+                <input type="submit" id="btnAddNewManufacturer" value="@T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                <input type="submit" id="btnRefreshManufacturers" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function() {
                         $('#btnRefreshManufacturers').click(function() {
@@ -818,20 +812,20 @@
                 </script>
             </div>
         </div>
-    }
-    else
-    {
+}
+else
+{
         <div class="panel panel-default">
             <div class="panel-body">
                 @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
             </div>
         </div>
-    }
+}
 }
 @helper TabHistory()
 {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel panel-default">
         <div class="panel-body">
@@ -908,8 +902,8 @@
                         }, {
                             command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                             title: "@T("Admin.Common.Delete")",
-                                width: 100
-                            }
+                            width: 100
+                        }
                         ]
                     });
                 });
