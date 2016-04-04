@@ -116,8 +116,6 @@
                             <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.ShippedDate)
                             </div>
-
-
                             <div class="col-sm-9">
                                 <div class="input-group input-group-short">
                                     <p id="lblShippedDate">@Model.ShippedDate &nbsp;</p>
@@ -202,7 +200,7 @@
                                 @foreach (var item in Model.Items)
                                 {
                                     <tr>
-                                        <td style="width: 40%;">
+                                        <td style="width: 40%; text-align: left;">
                                             <div>
                                                 <em><a href="@Url.Action("Edit", "Product", new {id = item.ProductId})">@item.ProductName</a></em>
                                                 @if (!String.IsNullOrEmpty(item.AttributeInfo))

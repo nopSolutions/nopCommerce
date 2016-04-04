@@ -19,21 +19,23 @@
             <small>@Html.ActionLink("(" + T("Admin.Orders.Products.AddNew.BackToList") + ")", "AddProductToOrder", new { orderId = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
+            &nbsp;
         </div>
     </div>
 
     <div class="content">
-        <div class="form-horizontal">
-            @if (Model.Warnings.Count > 0)
-                {
-                <div class="callout callout-danger">
-                    @foreach (var warning in Model.Warnings)
+        @if (Model.Warnings.Count > 0)
+        {
+            <div class="callout callout-danger">
+                @foreach (var warning in Model.Warnings)
                     {
-                        @warning
-                        <br />
-                    }
-                </div>
-            }
+                    @warning
+                    <br />
+                }
+            </div>
+        }
+
+        <div class="form-horizontal">
             <div class="panel-group">
                 @if (Model.ProductType == ProductType.SimpleProduct)
                 {
@@ -107,7 +109,7 @@
                                     &nbsp;
                                 </div>
                                 <div class="col-sm-9">
-                                    <input type="submit" class="btn btn-default" value="@T("Admin.Orders.Products.AddNew")" />
+                                    <input type="submit" class="btn btn-default" value="@T("Admin.Orders.Products.AddNew")"/>
                                 </div>
                             </div>
                         </div>
