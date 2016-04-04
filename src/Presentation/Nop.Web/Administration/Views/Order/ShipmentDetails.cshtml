@@ -118,23 +118,26 @@
                             </div>
                             <div class="col-sm-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblShippedDate">@Model.ShippedDate &nbsp;</p>
-                                    @if (Model.CanShip)
-                                    {
-                                        <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-default" />
-                                    }
+                                    <p id="lblShippedDate" class="input-group-text">@Model.ShippedDate</p>
                                     @if (Model.ShippedDateUtc.HasValue)
                                     {
                                         <div id="divShippedDate" style="display: inline-block;">
                                             @Html.NopEditorFor(model => model.ShippedDateUtc)
-                                            &nbsp;@T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
+                                            @T("Admin.Orders.Shipments.ShippedDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
-                                        <div class="input-group-btn">
+                                    }
+                                    <div class="input-group-btn">
+                                        @if (Model.CanShip)
+                                        {
+                                            <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="btn btn-info" />
+                                        }
+                                        @if (Model.ShippedDateUtc.HasValue)
+                                        {
                                             <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn bg-light-blue" />
                                             <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                             <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn bg-teal" />
-                                        </div>
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -145,23 +148,27 @@
 
                             <div class="col-sm-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblDeliveryDate">@Model.DeliveryDate &nbsp;</p>
-                                    @if (Model.CanDeliver)
-                                    {
-                                        <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-default" />
-                                    }
+                                    <p id="lblDeliveryDate" class="input-group-text">@Model.DeliveryDate</p>
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
                                         <div id="divDeliveryDate" style="display: inline-block;">
                                             @Html.NopEditorFor(model => model.DeliveryDateUtc)
-                                            &nbsp;@T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
+                                            @T("Admin.Orders.Shipments.DeliveryDate.EnterUtc")&nbsp;&nbsp;
                                         </div>
-                                        <div class="input-group-btn">
+                                    }
+                                    <div class="input-group-btn">
+                                        @if (Model.CanDeliver)
+                                        {
+                                            <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="btn btn-info" />
+                                        }
+                                        @if (Model.DeliveryDateUtc.HasValue)
+                                        {
+
                                             <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleDeliveryDate(true);return false; " id="btnEditDeliveryDate" class="btn bg-light-blue" />
                                             <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveDeliveryDate" name="savedeliverydate" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                             <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleDeliveryDate(false);return false; " id="btnCancelDeliveryDate" class="btn bg-teal" />
-                                        </div>
-                                    }
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>

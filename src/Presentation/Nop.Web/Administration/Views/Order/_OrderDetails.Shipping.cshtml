@@ -200,7 +200,7 @@
                                 }
                             </script>
                             <div class="input-group input-group-short">
-                                <p id="lblShippingMethod" class="text-to-hide">@Model.ShippingMethod</p>
+                                <p id="lblShippingMethod" class="input-group-text">@Model.ShippingMethod</p>
                                 <div id="divShippingMethod">@Html.NopEditorFor(model => model.ShippingMethod)</div>
                                 <span class="input-group-btn">
                                     <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn bg-light-blue" />
