@@ -25,7 +25,7 @@
             $.ajax({
                 cache: false,
                 type: "POST",
-                url: "@(Url.Action("SaveDownloadUrl", "Download"))",
+                url: "@(Url.Action("SaveDownloadUrl", "Download", new { area = "Admin" }))",
                 data: { "downloadUrl": downloadUrl },
                 success: function (data) {
                     $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
@@ -135,7 +135,7 @@
                     $(document).ready(function () {
                         $("#@clientId").fineUploader({
                             request: {
-                                endpoint: '@(Url.Content("~/Admin/Download/AsyncUpload"))'
+                                endpoint: '@(Url.Action("AsyncUpload", "Download", new { area = "Admin" }))'
                             },
                             template: "@(clientId)-qq-template",
                             multiple: false
@@ -158,7 +158,7 @@
                 <div id="@(clientId + "downloadurl")">
                     @if (download != null)
                     {
-                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid }))">@T("Admin.Download.DownloadUploadedFile")</a>
+                        <a href="@(Url.Action("DownloadFile", "Download", new { downloadGuid = download.DownloadGuid, area = "Admin" }))">@T("Admin.Download.DownloadUploadedFile")</a>
                     }
                 </div>
                 <div>
