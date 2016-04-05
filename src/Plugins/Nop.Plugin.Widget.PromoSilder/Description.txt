@@ -1,8 +1,0 @@
-﻿Group: Widgets
-FriendlyName: Promo Slider
-SystemName: Widgets.PromoSilder
-Version: 1.0
-SupportedVersions: 3.80
-Author: Zero Xiong (zero.xiong@gmail.com)
-DisplayOrder: 1
-FileName: Nop.Plugin.Widgets.PromoSilder.dll
