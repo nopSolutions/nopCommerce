@@ -2788,6 +2788,16 @@ label, label + * {
 	color: #4cb17c;
 }
 
+.customer-info-page .vat-status {
+    margin: 0 5px;
+    font-size: 14px;
+}
+.registration-page .vat-note,
+.customer-info-page .vat-note {
+    display: block;
+    font-size: 14px;
+    margin-top: 5px;
+}
 .login-page .customer-blocks {
 	margin: 0 0 30px;
 }
