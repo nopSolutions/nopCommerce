@@ -10,10 +10,10 @@
             var customerRoleId = $("#@Html.FieldIdFor(model => model.CustomerRoleId)").val();
             var discountId = @Model.DiscountId;
             var requirementId = @Model.RequirementId;
-                
+
             var postData = {
-                discountId: discountId, 
-                discountRequirementId: requirementId, 
+                discountId: discountId,
+                discountRequirementId: requirementId,
                 customerRoleId: customerRoleId
             };
             addAntiForgeryToken(postData);
@@ -33,20 +33,28 @@
                 },
                 error:function (xhr, ajaxOptions, thrownError){
                     alert('@Html.Raw(HttpUtility.JavaScriptStringEncode(T("Admin.Promotions.Discounts.Requirements.FailedToSave").Text))');
-                }  
+                }
             });
         });
     });
 </script>
-    
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CustomerRoleId):
-        </td>
-        <td class="adminData">
-            <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="k-button" value="@T("Admin.Common.Save")" /></div>
-            <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
-        </td>
-    </tr>
-</table>
+
+<div class="form-group">
+    <div class="col-sm-3">
+        @Html.NopLabelFor(model => model.CustomerRoleId)
+    </div>
+    <div class="col-sm-9">
+        @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+        <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none;">
+            @T("Admin.Promotions.Discounts.Requirements.Saved")
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-3">
+        &nbsp;
+    </div>
+    <div class="col-sm-9">
+        <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="btn btn-default" value="@T("Admin.Common.Save")" />
+    </div>
+</div>

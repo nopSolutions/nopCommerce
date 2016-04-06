@@ -228,3 +228,12 @@ table td .form-group {
 .form-horizontal .control-label {
     padding-top: 7px;
 }
+
+.please-wait {
+    background: url('images/ajax_loader_small.gif') no-repeat;
+    padding-left: 20px;
+}
+
+.form-group .please-wait {
+    margin-top: 10px;
+}
