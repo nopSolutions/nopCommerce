@@ -6,26 +6,25 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
-            @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <input type="button" id="sendemail" class="k-button" value="@T("Admin.Customers.Customers.SendEmail")" />
-            <input type="button" id="sendprivatemessage" class="k-button" value="@T("Admin.Customers.Customers.SendPM")" />
+            <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <input type="button" id="sendemail" class="btn btn-default" value="@T("Admin.Customers.Customers.SendEmail")" />
+            <input type="button" id="sendprivatemessage" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" />
             @if (Model.AllowSendingOfWelcomeMessage)
             {
-                <input type="submit" name="send-welcome-message" class="k-button" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="send-welcome-message" class="btn btn-default" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
-                <input type="submit" name="resend-activation-message" class="k-button" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="resend-activation-message" class="btn btn-default" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
-            <span id="customer-delete" class="k-button">@T("Admin.Common.Delete")</span>
+            <span id="customer-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
@@ -34,52 +33,55 @@
 
 @*send email form*@
 <div id="sendemail-window" style="display:none;">
-    @using (Html.BeginForm("SendEmail", "Customer", new {id = Model.Id}))
+    @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
     {
         @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td class="adminTitle">
+        <div style="text-align:left;">
+            <div class="form-group">
+                <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.SendEmail.Subject):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.Subject)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.SendEmail.Subject)
                     @Html.ValidationMessageFor(model => model.SendEmail.Subject)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.SendEmail.Body):
-                </td>
-                <td class="adminData">
-                    @Html.TextAreaFor(model => model.SendEmail.Body, new {style = "Width: 450px; Height: 350px;"})
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopTextAreaFor(model => model.SendEmail.Body)
                     @Html.ValidationMessageFor(model => model.SendEmail.Body)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.SendEmail.SendImmediately):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.SendImmediately)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.SendEmail.SendImmediately)
                     @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
-                </td>
-            </tr>
-            <tr id="pnl-send-date">
-                <td class="adminTitle">
+                </div>
+            </div>
+            <div class="form-group" id="pnl-send-date">
+                <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SendEmail.DontSendBeforeDate)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.SendEmail.DontSendBeforeDate)
                     @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Customers.Customers.SendEmail")" />
-                </td>
-            </tr>
-        </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    &nbsp;
+                </div>
+                <div class="col-sm-9">
+                    <input type="submit" class="btn btn-default" value="@T("Admin.Customers.Customers.SendEmail")" />
+                </div>
+            </div>
+        </div>
     }
 </div>
 <script type="text/javascript">
@@ -115,32 +117,35 @@
 <div id="sendprivatemessage-window" style="display:none;">
     @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
     {
-    @Html.AntiForgeryToken()
-    <table style="text-align: left;">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SendPm.Subject):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SendPm.Subject)
-                @Html.ValidationMessageFor(model => model.SendPm.Subject)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SendPm.Message):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.SendPm.Message, new { style = "Width: 350px; Height: 250px;" })
-                @Html.ValidationMessageFor(model => model.SendPm.Message)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" class="k-button" value="@T("Admin.Customers.Customers.SendPM")" />
-            </td>
-        </tr>
-    </table>
+        @Html.AntiForgeryToken()
+        <div style="text-align: left;">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.SendPm.Subject):
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.SendPm.Subject)
+                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.SendPm.Message):
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopTextAreaFor(model => model.SendPm.Message)
+                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    &nbsp;
+                </div>
+                <div class="col-sm-9">
+                    <input type="submit" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" />
+                </div>
+            </div>
+        </div>
     }
 </div>
 <script type="text/javascript">
