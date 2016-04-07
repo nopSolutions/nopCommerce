@@ -241,3 +241,7 @@ table td .form-group {
 .alert {
     margin-bottom: 0;
 }
+
+.field-validation-error, .validation-summary-errors {
+    color: red;
+}
