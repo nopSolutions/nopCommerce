@@ -6,273 +6,286 @@
 }
 @using (Html.BeginForm())
 {
-	@Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Currencies")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="k-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
-            <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="btn btn-default">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
+            <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
         </div>
     </div>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider"):
-            </td>
-            <td class="adminData">
-                @(Html.DropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled"):
-            </td>
-            <td class="adminData">
-                @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled)
-                      )
-            </td>
-        </tr>
-    </table>
-}
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="currencies-grid"></div>
-            <script>
-                $(document).ready(function() {
-                    $("#currencies-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ListGrid", "Currency"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">
+                                    @T("Admin.Configuration.Currencies.Fields.ExchangeRateProvider")
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                @(Html.NopDropDownList("exchangeRateProvider", ViewBag.ExchangeRateProviders as IEnumerable<SelectListItem>))
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label">
+                                    @T("Admin.Configuration.Currencies.Fields.CurrencyRateAutoUpdateEnabled")
+                                </label>
+                            </div>
+                            <div class="col-sm-9">
+                                @(Html.CheckBox("autoUpdateEnabled", autoUpdateEnabled))
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="currencies-grid"></div>
+                        <script>
+                            $(document).ready(function () {
+                                $("#currencies-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("ListGrid", "Currency"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors"
+                                        },
+                                        error: function (e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        numeric: false,
+                                        previousNext: false,
+                                        info: false
+                                    },
+                                    editable: {
+                                        confirmation: false,
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "Name",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.Name")",
+                                            width: 200
+                                        }, {
+                                            field: "CurrencyCode",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                                            width: 100
+                                        }, {
+                                            field: "Rate",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                                            width: 100
+                                        }, {
+                                            field: "IsPrimaryExchangeRateCurrency",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
+                                            width: 200,
+                                            template: '<a onclick="markAsPrimaryExchangeRateCurrency(#=Id#)" class="btn btn-default">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
+                                        }, {
+                                            field: "IsPrimaryStoreCurrency",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
+                                            width: 200,
+                                            template: '<a onclick="markAsPrimaryStoreCurrency(#=Id#)" class="btn btn-default">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
+                                        }, {
+                                            field: "Published",
+                                            title: "@T("Admin.Configuration.Currencies.Fields.Published")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                        }, {
+                                            field: "DisplayOrder",
+                                            title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
+                                            width: 100
+                                        }, {
+                                            field: "Id",
+                                            title: "@T("Admin.Common.Edit")",
+                                            width: 100,
+                                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                        }
+                                    ]
+                                });
+                            });
+                        </script>
+
+                        <script>
+                            function markAsPrimaryExchangeRateCurrency(id) {
+                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                                    var postData = {
+                                        id: id
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
+                                        data: postData,
+                                        success: function (data) {
+                                            var grid = $("#currencies-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to update currency');
+                                        }
+                                    });
                                 }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "Name",
-                                title: "@T("Admin.Configuration.Currencies.Fields.Name")"
-                            }, {
-                                field: "CurrencyCode",
-                                title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
-                                width: 200
-                            }, {
-                                field: "Rate",
-                                title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
-                                width: 200
-                            }, {
-                                field: "IsPrimaryExchangeRateCurrency",
-                                title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryExchangeRateCurrency")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
-                                template: '<a onclick="markAsPrimaryExchangeRateCurrency(#=Id#)" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")</a>'
-                            }, {
-                                field: "IsPrimaryStoreCurrency",
-                                title: "@T("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
-                                template: '<a onclick="markAsPrimaryStoreCurrency(#=Id#)" class="k-button">@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")</a>'
-                            }, {
-                                field: "Published",
-                                title: "@T("Admin.Configuration.Currencies.Fields.Published")",
-                                width: 100,
-                                headerAttributes: { style: "text-align:center" },
-                                attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }
-                        ]
-                    });
-                });
-            </script>
-            <script>
-                function markAsPrimaryExchangeRateCurrency(id) {
-                    if (confirm('@T("Admin.Common.AreYouSure")')) {
-                        var postData = {
-                            id: id
-                        };
-                        addAntiForgeryToken(postData);
-                        $.ajax({
-                            cache: false,
-                            type: "POST",
-                            url: "@(Url.Action("MarkAsPrimaryExchangeRateCurrency", "Currency"))",
-                            data: postData,
-                        success: function(data) {
-                            var grid = $("#currencies-grid").data('kendoGrid');
-                            grid.dataSource.read();
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to update currency');
-                        }
-                    });
-                    }
-                };
-                function markAsPrimaryStoreCurrency(id) {
-                    if (confirm('@T("Admin.Common.AreYouSure")')) {
-                        var postData = {
-                            id: id
-                        };
-                        addAntiForgeryToken(postData);
-                        $.ajax({
-                            cache: false,
-                            type: "POST",
-                            url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
-                            data: postData,
-                        success: function(data) {
-                            var grid = $("#currencies-grid").data('kendoGrid');
-                            grid.dataSource.read();
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert('Failed to update currency');
-                        }
-                    });
-                }
-                };
-            </script>
-        </td>
-    </tr>
-</table>
-@if (rates != null)
-{
-    <h4>@T("Admin.Configuration.Currencies.LiveRates")</h4>
-    <table class="adminContent" style="width: 300px">
-        <tr>
-            <td>
-                <div id="rate-grid"></div>
-                <script>
-                    //local datasource
-                    var rates = [
-                        @for (int i = 0; i < rates.Count; i++)
-                        {
-                            var rate = rates[i];
-                            <text>
-{
-    CurrencyCode: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.CurrencyCode)))",
-    Rate: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.Rate.ToString())))"
-}
-</text>
-                            if (i != rates.Count - 1)
-                            {
-                                <text>,</text>
-                            }
-                        }
-                    ];
-                    $(document).ready(function() {
-                        $("#rate-grid").kendoGrid({
-                            dataSource: {
-                                data: rates,
-                                schema: {
-                                    model: {
-                                        fields: {
-                                            CurrencyCode: { type: "string" },
-                                            Rate: { type: "number" }
+                            };
+                            function markAsPrimaryStoreCurrency(id) {
+                                if (confirm('@T("Admin.Common.AreYouSure")')) {
+                                    var postData = {
+                                        id: id
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("MarkAsPrimaryStoreCurrency", "Currency"))",
+                                        data: postData,
+                                        success: function (data) {
+                                            var grid = $("#currencies-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to update currency');
+                                        }
+                                    });
+                                }
+                            };
+                        </script>
+                    </div>
+                </div>
+                @if (rates != null)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @T("Admin.Configuration.Currencies.LiveRates")
+                        </div>
+                        <div class="panel-body">
+                            <div id="rate-grid"></div>
+
+                            <script>
+                                $(document).ready(function () {
+                                    $("#rate-grid").kendoGrid({
+                                        dataSource: {
+                                            data: rates,
+                                            schema: {
+                                                model: {
+                                                    fields: {
+                                                        CurrencyCode: { type: "string" },
+                                                        Rate: { type: "number" }
+                                                    }
+                                                }
+                                            },
+                                            error: function (e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
+                                            }
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            numeric: false,
+                                            previousNext: false,
+                                            info: false
+                                        },
+                                        scrollable: false,
+                                        columns: [
+                                            {
+                                                field: "CurrencyCode",
+                                                title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
+                                                width: 100
+                                            }, {
+                                                field: "Rate",
+                                                title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
+                                                width: 100
+                                            }, {
+                                                field: "CurrencyCode",
+                                                title: "@T("Admin.Configuration.Currencies.ApplyRate")",
+                                                template: '<a onclick="applyCurrencyRate(\'#=Rate#\', \'#=CurrencyCode#\')" class="btn btn-default">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
+                                            }
+                                        ]
+                                    });
+                                });
+
+                                function applyCurrencyRate(rate, currencyCode) {
+                                    var postData = {
+                                        rate: rate,
+                                        currencyCode: currencyCode
+                                    };
+                                    addAntiForgeryToken(postData);
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@(Url.Action("ApplyRate"))",
+                                        data: postData,
+                                        success: function (data) {
+                                            var grid = $("#currencies-grid").data('kendoGrid');
+                                            grid.dataSource.read();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to update currency');
+                                        }
+                                    });
+                                };
+
+                                //local datasource
+                                var rates = [
+                                    @for (int i = 0; i < rates.Count; i++)
+                                    {
+                                        var rate = rates[i];
+                                        <text>
+                                        {
+                                            CurrencyCode: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.CurrencyCode)))",
+                                            Rate: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(rate.Rate.ToString())))"
+                                        }
+                                        </text>
+                                        if (i != rates.Count - 1)
+                                        {
+                                            <text>,</text>
                                         }
                                     }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                }
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "CurrencyCode",
-                                    title: "@T("Admin.Configuration.Currencies.Fields.CurrencyCode")",
-                                    width: 100
-                                }, {
-                                    field: "Rate",
-                                    title: "@T("Admin.Configuration.Currencies.Fields.Rate")",
-                                    width: 100
-                                }, {
-                                    field: "CurrencyCode",
-                                    title: "@T("Admin.Configuration.Currencies.ApplyRate")",
-                                    template: '<a onclick="applyCurrencyRate(\'#=Rate#\', \'#=CurrencyCode#\')" class="k-button">@T("Admin.Configuration.Currencies.ApplyRate")</a>'
-                                }
-                            ]
-                        });
-                    });
-                </script>
-            </td>
-        </tr>
-    </table>
-    <script>
-        function applyCurrencyRate(rate, currencyCode) {
-            var postData = {
-                rate: rate,
-                currencyCode: currencyCode
-            };
-            addAntiForgeryToken(postData);
-            $.ajax({
-                cache: false,
-                type: "POST",
-                url: "@(Url.Action("ApplyRate"))",
-                data: postData,
-                success: function(data) {
-                    var grid = $("#currencies-grid").data('kendoGrid');
-                    grid.dataSource.read();
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert('Failed to update currency');
+                                ];
+                            </script>
+                        </div>
+                    </div>
                 }
-            });
-        };
-    </script>
+            </div>
+        </div>
+    </div>
 }
