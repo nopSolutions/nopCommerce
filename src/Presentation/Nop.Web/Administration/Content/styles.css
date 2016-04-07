@@ -237,3 +237,7 @@ table td .form-group {
 .form-group .please-wait {
     margin-top: 10px;
 }
+
+.alert {
+    margin-bottom: 0;
+}
