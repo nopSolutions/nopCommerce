@@ -6,13 +6,13 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
-            @T("Admin.Customers.Customers.Addresses.AddNew") @Html.ActionLink("(" + T("Admin.Customers.Customers.Addresses.BackToCustomer") + ")", "Edit", new { id = Model.CustomerId })
-        </div>
-        <div class="options">
-            <input type="submit" value="@T("Admin.Common.Save")" class="k-button" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Customers.Customers.Addresses.AddNew") 
+            <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.Addresses.BackToCustomer") + ")", "Edit", new { id = Model.CustomerId })</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" value="@T("Admin.Common.Save")" class="btn btn-default" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdateAddress", Model)
