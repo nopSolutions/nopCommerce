@@ -6,7 +6,7 @@
 <script>
     $(document).ready(function() {
         $("#customer-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -15,89 +15,93 @@
         });
     });
 </script>
-<div id="customer-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Customers.Customers.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Customers.Customers.CustomerRoles")
-        </li>
-        @if (Model.Id > 0)
-        {
-            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.Orders")
-            </li>
-            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.Addresses")
-            </li>
-            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.CurrentShoppingCart")
-            </li>
-            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.CurrentWishlist")
-            </li>
-            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.ActivityLog")
-            </li>
-            <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.Impersonate")
-            </li>
-            <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
-                @T("Admin.Customers.Customers.BackInStockSubscriptions")
-            </li>
-        }
-        @if (Model.DisplayRewardPointsHistory)
-        {
-            <li>
-                @T("Admin.Customers.Customers.RewardPoints")
-            </li>
-        }
-    </ul>
-    <div>
-        @TabInfo()
+<div class="content">
+    <div class="form-horizontal">
+        <div id="customer-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Customers.Customers.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.Customers.Customers.CustomerRoles")
+                </li>
+                @if (Model.Id > 0)
+                {
+                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.Orders")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.Addresses")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.CurrentShoppingCart")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.CurrentWishlist")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.ActivityLog")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.Impersonate")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
+                        @T("Admin.Customers.Customers.BackInStockSubscriptions")
+                    </li>
+                }
+                @if (Model.DisplayRewardPointsHistory)
+                {
+                    <li>
+                        @T("Admin.Customers.Customers.RewardPoints")
+                    </li>
+                }
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabCustomerRoles()
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div>
+                    @TabOrders()
+                </div>
+                <div>
+                    @TabAddresses()
+                </div>
+                <div>
+                    @TabCurrentShoppingCart()
+                </div>
+                <div>
+                    @TabCurrentWishlist()
+                </div>
+                <div>
+                    @TabActivityLog()
+                </div>
+                <div>
+                    @TabImpersonate()
+                </div>
+                <div>
+                    @TabBackInStockSubscriptions()
+                </div>
+            }
+            @if (Model.DisplayRewardPointsHistory)
+            {
+                <div>
+                    @TabRewardPoints()
+                </div>
+            }
+        </div>
     </div>
-    <div>
-        @TabCustomerRoles()
-    </div>
-    @if (Model.Id > 0)
-    {
-        <div>
-            @TabOrders()
-        </div>
-        <div>
-            @TabAddresses()
-        </div>
-        <div>
-            @TabCurrentShoppingCart()
-        </div>
-        <div>
-            @TabCurrentWishlist()
-        </div>
-        <div>
-            @TabActivityLog()
-        </div>
-        <div>
-            @TabImpersonate()
-        </div>
-        <div>
-            @TabBackInStockSubscriptions()
-        </div>
-    }
-    @if (Model.DisplayRewardPointsHistory)
-    {
-       <div>
-            @TabRewardPoints()
-        </div>
-    }
 </div>
 
 @{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
+            //custom tabs
+            var eventMessage = new AdminTabStripCreated(this.Html, "customer-edit");
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+            foreach (var eventBlock in eventMessage.BlocksToRender)
+            {
         @eventBlock
     }
 }
@@ -106,683 +110,712 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    { 
-        if (Model.CountryEnabled && Model.StateProvinceEnabled)
         {
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
-                
-                var postData = {
-                    countryId: selectedItem,
-                    addSelectStateItem: "true"
-                };
+if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                    var selectedItem = $(this).val();
+                    var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
 
-                $.ajax({
-                    cache: false,
-                    type: "GET",
-                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
-                    data: postData,
-                    success: function(data) {
-                        ddlStates.html('');
-                        $.each(data, function(id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('Failed to retrieve states.');
-                    }
+                    var postData = {
+                        countryId: selectedItem,
+                        addSelectStateItem: "true"
+                    };
+
+                    $.ajax({
+                        cache: false,
+                        type: "GET",
+                        url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                        data: postData,
+                        success: function(data) {
+                            ddlStates.html('');
+                            $.each(data, function(id, option) {
+                                ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                            });
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('Failed to retrieve states.');
+                        }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 }
-    <table class="adminContent customer-info-tab">
-        @if (Model.UsernamesEnabled)
-        {
-            if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
-            {
-                <tr>
-                    <td class="adminTitle">
-                        @Html.NopLabelFor(model => model.Username):
-                    </td>
-                    <td class="adminData">
-                        @Html.EditorFor(model => model.Username)
-                        @Html.ValidationMessageFor(model => model.Username)
-                    </td>
-                </tr>
-            }
-            else
-            {
-                <tr>
-                    <td class="adminTitle">
-                        @Html.NopLabelFor(model => model.Username):
-                    </td>
-                    <td class="adminData">
-                        @Model.Username
-                        @Html.HiddenFor(model => model.Username)
-                    </td>
-                </tr>
-            }
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Email):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Email)
-                @Html.ValidationMessageFor(model => model.Email)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Password):
-            </td>
-            <td class="adminData">
-                @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line" })
-                @Html.ValidationMessageFor(model => model.Password)
-                @if (Model.Id > 0)
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model.UsernamesEnabled)
                 {
-                    <input type="submit" name="changepassword" class="k-button" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                    if (Model.Id == 0 || Model.AllowUsersToChangeUsernames)
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Username)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Username)
+                                @Html.ValidationMessageFor(model => model.Username)
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Username)
+                            </div>
+                            <div class="col-sm-9">
+                                @Model.Username
+                                @Html.HiddenFor(model => model.Username)
+                            </div>
+                        </div>
+                    }
                 }
-            </td>
-        </tr>
-        @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AssociatedExternalAuthRecords):
-                </td>
-                <td class="adminData">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Email)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Email)
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Password)
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.Password, new { autocomplete = "off", @class = "text-box single-line form-control" })
+                            <div class="input-group-btn">
+                                @if (Model.Id > 0)
+                                {
+                                    <input type="submit" name="changepassword" class="btn btn-info" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
+                                }
+                            </div>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Password)
+                    </div>
+                </div>
+                @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AssociatedExternalAuthRecords)
+                        </div>
+                        <div class="col-sm-9">
 
-                    <div id="externalauthrecords-grid"></div>
+                            <div id="externalauthrecords-grid"></div>
 
-                    <script>
+                            <script>
 
-                        //local datasource
-                        var externalauthrecords = [
-                            @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
+                                //local datasource
+                                var externalauthrecords = [
+                                    @for (int i = 0; i < Model.AssociatedExternalAuthRecords.Count; i++)
                             {
                                 var aear = Model.AssociatedExternalAuthRecords[i];
                                 <text>
-    {
-        AuthMethodName: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.AuthMethodName)))",
-        Email: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.Email)))",
-        ExternalIdentifier: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.ExternalIdentifier)))"
-    }
-</text>
+            {
+                AuthMethodName: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.AuthMethodName)))",
+                Email: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.Email)))",
+                ExternalIdentifier: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(aear.ExternalIdentifier)))"
+            }
+        </text>
                                 if (i != Model.AssociatedExternalAuthRecords.Count - 1)
                                 {
                                     <text>,</text>
                                 }
                             }
-                        ];
+                                ];
 
-                        $(document).ready(function () {
-                            $("#externalauthrecords-grid").kendoGrid({
-                                dataSource: {
-                                    data: externalauthrecords,
-                                    schema: {
-                                        model: {
-                                            fields: {
-                                                AuthMethodName: { type: "string" },
-                                                Email: { type: "string" },
-                                                ExternalIdentifier: { type: "string" }
+                                $(document).ready(function () {
+                                    $("#externalauthrecords-grid").kendoGrid({
+                                        dataSource: {
+                                            data: externalauthrecords,
+                                            schema: {
+                                                model: {
+                                                    fields: {
+                                                        AuthMethodName: { type: "string" },
+                                                        Email: { type: "string" },
+                                                        ExternalIdentifier: { type: "string" }
+                                                    }
+                                                }
+                                            },
+                                            error: function (e) {
+                                                display_kendoui_grid_error(e);
+                                                // Cancel the changes
+                                                this.cancelChanges();
                                             }
-                                        }
-                                    },
-                                    error: function (e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    }
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    numeric: false,
-                                    previousNext: false,
-                                    info: false
-                                },
-                                scrollable: false,
-                                columns: [
-                                    {
-                                        field: "AuthMethodName",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
-                                        width: 100
-                                    }, {
-                                        field: "Email",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
-                                        width: 100
-                                    },{
-                                        field: "ExternalIdentifier",
-                                        title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
-                                        width: 300
-                                    }
-                                ]
-                            });
-                        });
+                                        },
+                                        pageable: {
+                                            refresh: true,
+                                            numeric: false,
+                                            previousNext: false,
+                                            info: false
+                                        },
+                                        scrollable: false,
+                                        columns: [
+                                            {
+                                                field: "AuthMethodName",
+                                                title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")",
+                                                width: 100
+                                            }, {
+                                                field: "Email",
+                                                title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")",
+                                                width: 100
+                                            },{
+                                                field: "ExternalIdentifier",
+                                                title: "@T("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")",
+                                                width: 300
+                                            }
+                                        ]
+                                    });
+                                });
 
-                    </script>
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.VendorId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.VendorId, Model.AvailableVendors)
-                @Html.ValidationMessageFor(model => model.VendorId)
-                <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
-            </td>
-        </tr>
-        @if (Model.GenderEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Gender):
-                </td>
-                <td class="adminData">
-                    <div class="gender">
-                        @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
-                        <label class="forcheckbox" for="Gender_Male">@T("Admin.Customers.Customers.Fields.Gender.Male")</label>
-                    </div>
-                    <div class="gender">
-                        @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
-                        <label class="forcheckbox" for="Gender_Female">@T("Admin.Customers.Customers.Fields.Gender.Female")</label>
-                    </div>
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FirstName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FirstName)
-                @Html.ValidationMessageFor(model => model.FirstName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LastName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LastName)
-                @Html.ValidationMessageFor(model => model.LastName)
-            </td>
-        </tr>
-        @if (Model.DateOfBirthEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.DateOfBirth):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.DateOfBirth)
-                    @Html.ValidationMessageFor(model => model.DateOfBirth)
-                </td>
-            </tr>
-        }
-        @if (Model.CompanyEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Company):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Company)
-                    @Html.ValidationMessageFor(model => model.Company)
-                </td>
-            </tr>
-        }
-        @if (Model.StreetAddressEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.StreetAddress):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.StreetAddress)
-                    @Html.ValidationMessageFor(model => model.StreetAddress)
-                </td>
-            </tr>
-        }
-        @if (Model.StreetAddress2Enabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.StreetAddress2):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.StreetAddress2)
-                    @Html.ValidationMessageFor(model => model.StreetAddress2)
-                </td>
-            </tr>
-        }
-        @if (Model.ZipPostalCodeEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.ZipPostalCode):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.ZipPostalCode)
-                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
-                </td>
-            </tr>
-        }
-        @if (Model.CityEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.City):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.City)
-                    @Html.ValidationMessageFor(model => model.City)
-                </td>
-            </tr>
-        }
-        @if (Model.CountryEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.CountryId):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownList("CountryId", Model.AvailableCountries)
-                    @Html.ValidationMessageFor(model => model.CountryId)
-                </td>
-            </tr>
-        }
-        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.StateProvinceId):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownList("StateProvinceId", Model.AvailableStates)
-                    @Html.ValidationMessageFor(model => model.StateProvinceId)
-                </td>
-            </tr>
-        }
-        @if (Model.PhoneEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Phone):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Phone)
-                    @Html.ValidationMessageFor(model => model.Phone)
-                </td>
-            </tr>
-        }
-        @if (Model.FaxEnabled)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Fax):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.Fax)
-                    @Html.ValidationMessageFor(model => model.Fax)
-                </td>
-            </tr>
-        }
-        @if (Model.CustomerAttributes.Count > 0)
-        {
-            @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdminComment):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.AdminComment)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsTaxExempt):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsTaxExempt)
-                @Html.ValidationMessageFor(model => model.IsTaxExempt)
-            </td>
-        </tr>
-        @if (Model.AllowCustomersToSetTimeZone)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.TimeZoneId):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
-                    @Html.ValidationMessageFor(model => model.TimeZoneId)
-                </td>
-            </tr>
-        }
-        @if (Model.AffiliateId > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AffiliateId):
-                </td>
-                <td class="adminData">
-                    <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                    <input type="submit" name="remove-affiliate" class="k-button" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
-                </td>
-            </tr>
-        }
-        @if (Model.DisplayVatNumber)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.VatNumber):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.VatNumber)
-                    (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                    <input type="submit" name="markVatNumberAsValid" class="k-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
-                    <input type="submit" name="markVatNumberAsInvalid" class="k-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
-                    @Html.ValidationMessageFor(model => model.VatNumber)
-                </td>
-            </tr>
-        }
-        @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SelectedNewsletterSubscriptionStoreIds):
-                </td>
-                <td class="adminData">
-                    @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
-                    {
-                        <div>
-                            <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />(@(store.Name))    
+                            </script>
                         </div>
-                        
-                    }
-                </td>
-            </tr>
-        }
-        else
-        {
-        @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Active):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Active)
-                @Html.ValidationMessageFor(model => model.Active)
-            </td>
-        </tr>
-        @if (Model.Id > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.LastIpAddress):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.LastIpAddress)
-                </td>
-            </tr>
-        }
-        @if (Model.Id > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.CreatedOn):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.CreatedOn)
-                </td>
-            </tr>
-        }
-        @if (Model.Id > 0)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.LastActivityDate):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.LastActivityDate)
-                </td>
-            </tr>
-        }
-        @if (Model.Id > 0 && !String.IsNullOrEmpty(Model.LastVisitedPage))
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.LastVisitedPage):
-                </td>
-                <td class="adminData">
-                    @Html.DisplayFor(model => model.LastVisitedPage)
-                </td>
-            </tr>
-        }
-    </table>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.VendorId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.VendorId, Model.AvailableVendors)
+                        @Html.ValidationMessageFor(model => model.VendorId)
+                        <em>@T("Admin.Customers.Customers.VendorShouldBeInVendorsRole")</em>
+                    </div>
+                </div>
+                @if (Model.GenderEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Gender)
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new {id = "Gender_Male"})
+                                    @T("Admin.Customers.Customers.Fields.Gender.Male")
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButton("Gender", "F", (Model.Gender == "F"), new { id = "Gender_Female" })
+                                    @T("Admin.Customers.Customers.Fields.Gender.Female")
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.FirstName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.FirstName)
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LastName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LastName)
+                        @Html.ValidationMessageFor(model => model.LastName)
+                    </div>
+                </div>
+                @if (Model.DateOfBirthEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DateOfBirth)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DateOfBirth)
+                            @Html.ValidationMessageFor(model => model.DateOfBirth)
+                        </div>
+                    </div>
+                }
+                @if (Model.CompanyEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Company)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Company)
+                            @Html.ValidationMessageFor(model => model.Company)
+                        </div>
+                    </div>
+                }
+                @if (Model.StreetAddressEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StreetAddress)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.StreetAddress)
+                            @Html.ValidationMessageFor(model => model.StreetAddress)
+                        </div>
+                    </div>
+                }
+                @if (Model.StreetAddress2Enabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StreetAddress2)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.StreetAddress2)
+                            @Html.ValidationMessageFor(model => model.StreetAddress2)
+                        </div>
+                    </div>
+                }
+                @if (Model.ZipPostalCodeEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ZipPostalCode)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.ZipPostalCode)
+                            @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                        </div>
+                    </div>
+                }
+                @if (Model.CityEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.City)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.City)
+                            @Html.ValidationMessageFor(model => model.City)
+                        </div>
+                    </div>
+                }
+                @if (Model.CountryEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CountryId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("CountryId", Model.AvailableCountries)
+                            @Html.ValidationMessageFor(model => model.CountryId)
+                        </div>
+                    </div>
+                }
+                @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StateProvinceId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                            @Html.ValidationMessageFor(model => model.StateProvinceId)
+                        </div>
+                    </div>
+                }
+                @if (Model.PhoneEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Phone)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Phone)
+                            @Html.ValidationMessageFor(model => model.Phone)
+                        </div>
+                    </div>
+                }
+                @if (Model.FaxEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Fax)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Fax)
+                            @Html.ValidationMessageFor(model => model.Fax)
+                        </div>
+                    </div>
+                }
+                @if (Model.CustomerAttributes.Count > 0)
+                {
+                    @Html.Partial("_CustomerAttributes", Model.CustomerAttributes)
+                }
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AdminComment)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.AdminComment)
+                        @Html.ValidationMessageFor(model => model.AdminComment)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.IsTaxExempt)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IsTaxExempt)
+                        @Html.ValidationMessageFor(model => model.IsTaxExempt)
+                    </div>
+                </div>
+                @if (Model.AllowCustomersToSetTimeZone)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.TimeZoneId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                            @Html.ValidationMessageFor(model => model.TimeZoneId)
+                        </div>
+                    </div>
+                }
+                @if (Model.AffiliateId > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AffiliateId)
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                            <input type="submit" name="remove-affiliate" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                        </div>
+                    </div>
+                }
+                @if (Model.DisplayVatNumber)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.VatNumber)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.VatNumber)
+                            (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
+                            <input type="submit" name="markVatNumberAsValid" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
+                            <input type="submit" name="markVatNumberAsInvalid" class="btn btn-default" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
+                            @Html.ValidationMessageFor(model => model.VatNumber)
+                        </div>
+                    </div>
+                }
+                @if (Model.AvailableNewsletterSubscriptionStores != null && Model.AvailableNewsletterSubscriptionStores.Count > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SelectedNewsletterSubscriptionStoreIds)
+                        </div>
+                        <div class="col-sm-9">
+                            @foreach (var store in Model.AvailableNewsletterSubscriptionStores)
+                            {
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="SelectedNewsletterSubscriptionStoreIds" value="@store.Id" checked="@(Model.SelectedNewsletterSubscriptionStoreIds != null && Model.SelectedNewsletterSubscriptionStoreIds.Contains(store.Id))" />
+                                        (@(store.Name))
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+                }
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.LastIpAddress)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.LastIpAddress)
+                        </div>
+                    </div>
+                }
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CreatedOn)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.CreatedOn)
+                        </div>
+                    </div>
+                }
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.LastActivityDate)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.LastActivityDate)
+                        </div>
+                    </div>
+                }
+                @if (Model.Id > 0 && !String.IsNullOrEmpty(Model.LastVisitedPage))
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.LastVisitedPage)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.LastVisitedPage)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }
 @helper TabCustomerRoles()
+        {
+if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
+{
+    foreach (var customerRole in Model.AvailableCustomerRoles)
     {
-        if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
-        {
-            foreach (var customerRole in Model.AvailableCustomerRoles)
-            {
-                <div>
-                    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
-                </div>
-            }
-        }
-        else
-        {
-    @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
-        }
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />
+                @customerRole.Name
+            </label>
+        </div>
+    }
+}
+else
+{
+        @T("Admin.Customers.Customers.Fields.CustomerRoles.NoRoles")
+}
 }
 @helper TabOrders()
-    {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+        {
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-    <div id="order-grid"></div>
-        
-    <script>
-        $(document).ready(function () {
-            $("#order-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    pageSize: @(defaultGridPageSize),
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    pageSizes: [@(gridPageSizes)]
-                },
-                editable: {
-                    confirmation: false,
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "Id",
-                    title: "@T("Admin.Customers.Customers.Orders.ID")",
-                    width: 50
-                }, {
-                    field: "OrderTotal",
-                    title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
-                    width: 200
-                }, {
-                    field: "OrderStatus",
-                    title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
-                    width: 200
-                }, {
-                    field: "PaymentStatus",
-                    title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
-                    width: 200
-                }, {
-                    field: "ShippingStatus",
-                    title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
-                    width: 200
-                }, {
-                    field: "StoreName",
-                    title: "@T("Admin.Customers.Customers.Orders.Store")",
-                    width: 200
-                }, {
-                    field: "CreatedOn",
-                    title: "@T("Admin.System.Log.Fields.CreatedOn")",
-                    width: 200,
-                    type: "date",
-                    format: "{0:G}"
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                }]
-            });
-        });
-    </script>
+                <div id="order-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#order-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("OrderList", "Customer", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            edidiv: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Id",
+                                title: "@T("Admin.Customers.Customers.Orders.ID")",
+                                width: 50
+                            }, {
+                                field: "OrderTotal",
+                                title: "@T("Admin.Customers.Customers.Orders.OrderTotal")",
+                                width: 200
+                            }, {
+                                field: "OrderStatus",
+                                title: "@T("Admin.Customers.Customers.Orders.OrderStatus")",
+                                width: 200
+                            }, {
+                                field: "PaymentStatus",
+                                title: "@T("Admin.Customers.Customers.Orders.PaymentStatus")",
+                                width: 200
+                            }, {
+                                field: "ShippingStatus",
+                                title: "@T("Admin.Customers.Customers.Orders.ShippingStatus")",
+                                width: 200
+                            }, {
+                                field: "StoreName",
+                                title: "@T("Admin.Customers.Customers.Orders.Store")",
+                                width: 200
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.System.Log.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
 }
 @helper TabRewardPoints()
-    {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+        {
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="customer-rewardpoints-grid"></div>
-        
-                    <script>
-                        $(document).ready(function () {
-                            $("#customer-rewardpoints-grid").kendoGrid({
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new { customerId = Model.Id }))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    schema: {
-                                        data: "Data",
-                                        total: "Total",
-                                        errors: "Errors"
-                                    },
-                                    error: function(e) {
-                                        display_kendoui_grid_error(e);
-                                        // Cancel the changes
-                                        this.cancelChanges();
-                                    },
-                                    pageSize: @(defaultGridPageSize),
-                                    serverPaging: true,
-                                    serverFiltering: true,
-                                    serverSorting: true
+
+                <script>
+                    $(document).ready(function() {
+                        $("#customer-rewardpoints-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("RewardPointsHistorySelect", "Customer", new {customerId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
                                 },
-                                pageable: {
-                                    refresh: true,
-                                    pageSizes: [@(gridPageSizes)]
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
                                 },
-                                editable: {
-                                    confirmation: false,
-                                    mode: "inline"
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
                                 },
-                                scrollable: false,
-                                columns: [{
-                                    field: "StoreName",
-                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
-                                },{
-                                    field: "Points",
-                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
-                                }, {
-                                    field: "PointsBalance",
-                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
-                                },{
-                                    field: "Message",
-                                    title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
-                                },{
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }]
-                            });
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            edidiv: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "StoreName",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Store")"
+                            }, {
+                                field: "Points",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Points")"
+                            }, {
+                                field: "PointsBalance",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.PointsBalance")"
+                            }, {
+                                field: "Message",
+                                title: "@T("Admin.Customers.Customers.RewardPoints.Fields.Message")"
+                            }, {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Promotions.Campaigns.Fields.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }
+                            ]
                         });
-                    </script>
-                </td>
-            </tr>
-        </table>
-    <p>
-        <strong>
-            @T("Admin.Customers.Customers.RewardPoints.AddTitle")
-        </strong>
-    </p>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddRewardPointsValue)
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddRewardPointsValue)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddRewardPointsMessage)
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddRewardPointsMessage)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddRewardPointsStoreId)
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.AddRewardPointsStoreId, Model.RewardPointsAvailableStores)
-                @Html.ValidationMessageFor(model => model.AddRewardPointsStoreId)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="left">
-                <input type="button" id="addRewardPoints" class="k-button" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
-            </td>
-        </tr>
-    </table>
-    
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @T("Admin.Customers.Customers.RewardPoints.AddTitle")
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AddRewardPointsValue)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AddRewardPointsValue)
+                        @Html.ValidationMessageFor(model => model.AddRewardPointsValue)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AddRewardPointsMessage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AddRewardPointsMessage)
+                        @Html.ValidationMessageFor(model => model.AddRewardPointsMessage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AddRewardPointsStoreId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.AddRewardPointsStoreId, Model.RewardPointsAvailableStores)
+                        @Html.ValidationMessageFor(model => model.AddRewardPointsStoreId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="button" id="addRewardPoints" class="btn btn-default" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#addRewardPoints').click(function () {
@@ -790,13 +823,13 @@
                 var rewardPointsMessage = $("#@Html.FieldIdFor(model => model.AddRewardPointsMessage)").val();
                 var rewardPointsStoreId = $("#@Html.FieldIdFor(model => model.AddRewardPointsStoreId)").val();
                 $('#addRewardPoints').attr('disabled', true);
-                
+
                 var postData = {
                     addRewardPointsValue: rewardPointsValue,
                     addRewardPointsMessage: rewardPointsMessage,
                     storeId: rewardPointsStoreId,
                     customerId: @Model.Id
-                };
+                    };
                 addAntiForgeryToken(postData);
 
                 $.ajax({
@@ -812,104 +845,111 @@
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add reward points.');
                         $('#addRewardPoints').attr('disabled', false);
-                    }  
+                    }
                 });
             });
         });
     </script>
 }
 @helper TabAddresses()
-    {
-    <div id="customer-addresses-grid"></div>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-    <script>
-        $(document).ready(function () {
-            $("#customer-addresses-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        },
-                        destroy: {
-                            url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors",
-                        model: {
-                            id: "Id"
-                        }
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    numeric: false,
-                    previousNext: false,
-                    info: false
-                },
-                editable: {
-                    confirmation: true,
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "FirstName",
-                    title: "@T("Admin.Address.Fields.FirstName")"
-                }, {
-                    field: "LastName",
-                    title: "@T("Admin.Address.Fields.LastName")"
-                }, {
-                    field: "Email",
-                    title: "@T("Admin.Address.Fields.Email")"
-                }, {
-                    field: "PhoneNumber",
-                    title: "@T("Admin.Address.Fields.PhoneNumber")"
-                }, {
-                    field: "FaxNumber",
-                    title: "@T("Admin.Address.Fields.FaxNumber")"
-                }, {
-                    field: "AddressHtml",
-                    title: "@T("Admin.Address")",
-                    encoded: false
-                }, {
-                    field: "Id",
-                    title: "@T("Admin.Common.Edit")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
-                }, {
-                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
-                    title: "@T("Admin.Common.Delete")",
-                    width: 100
-                }]
-            });
-        });
-    </script>
-    <p>
-        <input type="button" class="k-button" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
-    </p>
+                <div id="customer-addresses-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#customer-addresses-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("AddressesSelect", "Customer", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("AddressDelete", "Customer", new { customerId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            edidiv: {
+                                confirmation: true,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "FirstName",
+                                title: "@T("Admin.Address.Fields.FirstName")"
+                            }, {
+                                field: "LastName",
+                                title: "@T("Admin.Address.Fields.LastName")"
+                            }, {
+                                field: "Email",
+                                title: "@T("Admin.Address.Fields.Email")"
+                            }, {
+                                field: "PhoneNumber",
+                                title: "@T("Admin.Address.Fields.PhoneNumber")"
+                            }, {
+                                field: "FaxNumber",
+                                title: "@T("Admin.Address.Fields.FaxNumber")"
+                            }, {
+                                field: "AddressHtml",
+                                title: "@T("Admin.Address")",
+                                encoded: false
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Customer/AddressEdit?customerId=")@Model.Id&addressid=#=Id#">@T("Admin.Common.Edit")</a>'
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+            <div class="panel-footer">
+                <input type="button" class="btn btn-default" onclick="location.href='@Url.Action("AddressCreate", new { customerId = Model.Id })'" value='@T("Admin.Customers.Customers.Addresses.AddButton")' />
+            </div>
+        </div>
+    </div>
 }
 @helper TabCurrentShoppingCart()
-    {
-    <table class="adminContent">
-        <tr>
-            <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="currentshoppingcart-grid"></div>
 
                 <script>
@@ -945,7 +985,7 @@
                                 previousNext: false,
                                 info: false
                             },
-                            editable: {
+                            edidiv: {
                                 confirmation: false,
                                 mode: "inline"
                             },
@@ -982,15 +1022,15 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
 @helper TabCurrentWishlist()
-    {
-    <table class="adminContent">
-        <tr>
-            <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="currentwishlist-grid"></div>
 
                 <script>
@@ -1026,7 +1066,7 @@
                                 previousNext: false,
                                 info: false
                             },
-                            editable: {
+                            edidiv: {
                                 confirmation: false,
                                 mode: "inline"
                             },
@@ -1063,18 +1103,18 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
 @helper TabActivityLog()
-    {
-        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+        {
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="activitylog-grid"></div>
 
                 <script>
@@ -1109,7 +1149,7 @@
                                 refresh: true,
                                 pageSizes: [@(gridPageSizes)]
                             },
-                            editable: {
+                            edidiv: {
                                 confirmation: false,
                                 mode: "inline"
                             },
@@ -1131,33 +1171,33 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
 @helper TabImpersonate()
-    {
-    <table class="adminContent">
-        <tr>
-            <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 @T("Admin.Customers.Customers.Impersonate.Description1")
                 <br />
                 @T("Admin.Customers.Customers.Impersonate.Description2")
                 <br />
                 <br />
-                <input type="submit" name="impersonate" class="k-button" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
-            </td>
-        </tr>
-    </table>
+                <input type="submit" name="impersonate" class="btn btn-default" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
+            </div>
+        </div>
+    </div>
 }
 @helper TabBackInStockSubscriptions()
-{
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+        {
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="backinstock-subscriptions-grid"></div>
 
                 <script>
@@ -1192,7 +1232,7 @@
                                 refresh: true,
                                 pageSizes: [@(gridPageSizes)]
                             },
-                            editable: {
+                            edidiv: {
                                 confirmation: false,
                                 mode: "inline"
                             },
@@ -1216,7 +1256,7 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
