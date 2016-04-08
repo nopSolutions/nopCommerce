@@ -16,7 +16,7 @@
 
 <div class="content">
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#customer-reports").kendoTabStrip({
                 animation: {
                     open: {
@@ -80,5 +80,11 @@ dataDictAttributes.TemplateInfo.HtmlFieldPrefix = "bestbynumberoforders";
 }
 @helper TabRegisteredCustomers()
 {
-    @Html.Action("ReportRegisteredCustomers")
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.Action("ReportRegisteredCustomers")
+            </div>
+        </div>
+    </div>
 }
