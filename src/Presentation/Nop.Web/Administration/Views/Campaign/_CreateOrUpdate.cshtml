@@ -2,98 +2,107 @@
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@if (Model.Id > 0)
-{
-    <table class="adminContent">
-        <tr>
-            <td colspan="2">
-                <strong>
-                    @T("Admin.Promotions.Campaigns.Warning")
-                </strong>
-                <br />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TestEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TestEmail)
-                @Html.ValidationMessageFor(model => model.TestEmail)
-                &nbsp;&nbsp;
-                <input type="submit" name="send-test-email" class="k-button" value="@T("Admin.Promotions.Campaigns.SendTestEmail")" />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-            </td>
-            <td class="adminData">
-                <input type="submit" name="send-mass-email" class="k-button" value="@T("Admin.Promotions.Campaigns.SendMassEmail")" />
-            </td>
-        </tr>
-    </table>
-    <hr />
-}
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Name):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Name)
-            @Html.ValidationMessageFor(model => model.Name)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Subject):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Subject)
-            @Html.ValidationMessageFor(model => model.Subject)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Body):
-        </td>
-        <td class="adminData">
-            @{
-                //we use rich editor with BODY tag supported
-                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
-                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
-                //that's why we use this workaround
-                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
-                ViewData["nop.RichEditor.EnableFullPage"] = true;
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel panel-body">
+                        <strong>
+                            @T("Admin.Promotions.Campaigns.Warning")
+                        </strong>
+                        <br />
+                        <br/>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.TestEmail)
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    @Html.NopEditorFor(model => model.TestEmail)
+                                    <div class="input-group-btn">
+                                        <input type="submit" name="send-test-email" class="btn btn-info" value="@T("Admin.Promotions.Campaigns.SendTestEmail")" />
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.TestEmail)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="submit" name="send-mass-email" class="btn btn-default" value="@T("Admin.Promotions.Campaigns.SendMassEmail")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-            @Html.EditorFor(model => model.Body, "RichEditor")
-            @Html.ValidationMessageFor(model => model.Body)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DontSendBeforeDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DontSendBeforeDate)
-            @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.StoreId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.StoreId, Model.AvailableStores)
-            @Html.ValidationMessageFor(model => model.StoreId)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AllowedTokens):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.AllowedTokens)
-        </td>
-    </tr>
-</table>
+            <div class="panel panel-default">
+                <div class="panel panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Subject)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Subject)
+                            @Html.ValidationMessageFor(model => model.Subject)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Body)
+                        </div>
+                        <div class="col-sm-9">
+                            @{
+                                //we use rich editor with BODY tag supported
+                                //it could be a better practice to implement one more editor (similar to RichEditor.cshtml)
+                                //with "enableFullPage" property set to "true". but we do not want to duplicate source code
+                                //that's why we use this workaround
+                                //we store a value into "ViewData" and then use it in the RichEditor.cshtml file
+                                ViewData["nop.RichEditor.EnableFullPage"] = true;
+                            }
+                            @Html.EditorFor(model => model.Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DontSendBeforeDate)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DontSendBeforeDate)
+                            @Html.ValidationMessageFor(model => model.DontSendBeforeDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.StoreId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownListFor(model => model.StoreId, Model.AvailableStores)
+                            @Html.ValidationMessageFor(model => model.StoreId)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AllowedTokens)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.AllowedTokens)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
