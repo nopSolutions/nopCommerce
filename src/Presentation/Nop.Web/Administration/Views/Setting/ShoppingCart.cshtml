@@ -6,15 +6,15 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.ShoppingCart")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -44,180 +44,190 @@
                 $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
             }
         }
-        
+
     </script>
+
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayCartAfterAddingProduct):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayCartAfterAddingProduct)
-                @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayWishlistAfterAddingProduct):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayWishlistAfterAddingProduct)
-                @Html.ValidationMessageFor(model => model.DisplayWishlistAfterAddingProduct)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
-                @Html.ValidationMessageFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MaximumShoppingCartItems):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MaximumShoppingCartItems)
-                @Html.ValidationMessageFor(model => model.MaximumShoppingCartItems)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MaximumWishlistItems):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MaximumWishlistItems)
-                @Html.ValidationMessageFor(model => model.MaximumWishlistItems)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MoveItemsFromWishlistToCart):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MoveItemsFromWishlistToCart)
-                @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductImagesOnShoppingCart)
-                @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductImagesOnWishList):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductImagesOnWishList)
-                @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowDiscountBox):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowDiscountBox)
-                @Html.ValidationMessageFor(model => model.ShowDiscountBox)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowGiftCardBox):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowGiftCardBox)
-                @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CrossSellsNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CrossSellsNumber)
-                @Html.ValidationMessageFor(model => model.CrossSellsNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EmailWishlistEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EmailWishlistEnabled)
-                @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
-            </td>
-        </tr>
-        <tr id="pnlAllowAnonymousUsersToEmailWishlist">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailWishlist):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
-                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
-            </td>
-        </tr>        
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MiniShoppingCartEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MiniShoppingCartEnabled)
-                @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
-            </td>
-        </tr>
-        <tr id="pnlMiniShoppingCartProductNumber">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MiniShoppingCartProductNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MiniShoppingCartProductNumber)
-                @Html.ValidationMessageFor(model => model.MiniShoppingCartProductNumber)
-            </td>
-        </tr>
-        <tr id="pnlShowProductImagesInMiniShoppingCart">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductImagesInMiniShoppingCart):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductImagesInMiniShoppingCart)
-                @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowCartItemEditing):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowCartItemEditing)
-                @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
-            </td>
-        </tr>
-    </table>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayCartAfterAddingProduct_OverrideForStore, model => model.DisplayCartAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayCartAfterAddingProduct)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.DisplayCartAfterAddingProduct)
+                                @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayWishlistAfterAddingProduct_OverrideForStore, model => model.DisplayWishlistAfterAddingProduct, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayWishlistAfterAddingProduct)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.DisplayWishlistAfterAddingProduct)
+                                @Html.ValidationMessageFor(model => model.DisplayWishlistAfterAddingProduct)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist_OverrideForStore, model => model.AllowOutOfStockItemsToBeAddedToWishlist, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                                @Html.ValidationMessageFor(model => model.AllowOutOfStockItemsToBeAddedToWishlist)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MaximumShoppingCartItems_OverrideForStore, model => model.MaximumShoppingCartItems, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MaximumShoppingCartItems)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MaximumShoppingCartItems)
+                                @Html.ValidationMessageFor(model => model.MaximumShoppingCartItems)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MaximumWishlistItems_OverrideForStore, model => model.MaximumWishlistItems, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MaximumWishlistItems)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MaximumWishlistItems)
+                                @Html.ValidationMessageFor(model => model.MaximumWishlistItems)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MoveItemsFromWishlistToCart_OverrideForStore, model => model.MoveItemsFromWishlistToCart, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MoveItemsFromWishlistToCart)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MoveItemsFromWishlistToCart)
+                                @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnShoppingCart_OverrideForStore, model => model.ShowProductImagesOnShoppingCart, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowProductImagesOnShoppingCart)
+                                @Html.ValidationMessageFor(model => model.ShowProductImagesOnShoppingCart)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesOnWishList_OverrideForStore, model => model.ShowProductImagesOnWishList, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowProductImagesOnWishList)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowProductImagesOnWishList)
+                                @Html.ValidationMessageFor(model => model.ShowProductImagesOnWishList)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowDiscountBox_OverrideForStore, model => model.ShowDiscountBox, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowDiscountBox)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowDiscountBox)
+                                @Html.ValidationMessageFor(model => model.ShowDiscountBox)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowGiftCardBox_OverrideForStore, model => model.ShowGiftCardBox, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowGiftCardBox)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowGiftCardBox)
+                                @Html.ValidationMessageFor(model => model.ShowGiftCardBox)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.CrossSellsNumber_OverrideForStore, model => model.CrossSellsNumber, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.CrossSellsNumber)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.CrossSellsNumber)
+                                @Html.ValidationMessageFor(model => model.CrossSellsNumber)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.EmailWishlistEnabled_OverrideForStore, model => model.EmailWishlistEnabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.EmailWishlistEnabled)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.EmailWishlistEnabled)
+                                @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlAllowAnonymousUsersToEmailWishlist">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailWishlist_OverrideForStore, model => model.AllowAnonymousUsersToEmailWishlist, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartEnabled_OverrideForStore, model => model.MiniShoppingCartEnabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MiniShoppingCartEnabled)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MiniShoppingCartEnabled)
+                                @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlMiniShoppingCartProductNumber">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MiniShoppingCartProductNumber_OverrideForStore, model => model.MiniShoppingCartProductNumber, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MiniShoppingCartProductNumber)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MiniShoppingCartProductNumber)
+                                @Html.ValidationMessageFor(model => model.MiniShoppingCartProductNumber)
+                            </div>
+                        </div>
+                        <div class="form-group" id="pnlShowProductImagesInMiniShoppingCart">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInMiniShoppingCart_OverrideForStore, model => model.ShowProductImagesInMiniShoppingCart, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowProductImagesInMiniShoppingCart)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                                @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowCartItemEditing_OverrideForStore, model => model.AllowCartItemEditing, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowCartItemEditing)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.AllowCartItemEditing)
+                                @Html.ValidationMessageFor(model => model.AllowCartItemEditing)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
