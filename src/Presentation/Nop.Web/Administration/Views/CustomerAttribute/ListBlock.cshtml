@@ -1,17 +1,14 @@
-﻿<p>
-    <h4>@T("Admin.Customers.CustomerAttributes")</h4>
-</p>
-<p>
-    <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
-</p>
-<div>
-    <a href="@Url.Action("Create", "CustomerAttribute")" class="k-button">@T("Admin.Common.AddNew")</a>
-</div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="customerattributes-grid"></div>
-            <script>
+﻿<div class="panel panel-default">
+    <div class="panel-heading">
+        @T("Admin.Customers.CustomerAttributes")
+    </div>
+    <div class="panel-body">
+        <p>
+            <em>@T("Admin.Customers.CustomerAttributes.Description")</em>
+        </p>
+        <div id="customerattributes-grid"></div>
+
+        <script>
                 $(document).ready(function () {
                     $("#customerattributes-grid").kendoGrid({
                         dataSource: {
@@ -76,7 +73,9 @@
                         }]
                     });
                 });
-            </script>
-        </td>
-    </tr>
-</table>
+        </script>
+    </div>
+    <div class="panel-footer">
+        <a href="@Url.Action("Create", "CustomerAttribute")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
