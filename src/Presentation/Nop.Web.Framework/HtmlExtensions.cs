@@ -308,8 +308,8 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name, 
-            IList<SelectListItem> itemList, bool renderFormControlClass = true)
+        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
+            IEnumerable<SelectListItem> itemList, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
             object htmlAttributes = null;

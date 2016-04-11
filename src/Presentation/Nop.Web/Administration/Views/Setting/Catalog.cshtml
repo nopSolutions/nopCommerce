@@ -6,13 +6,12 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Catalog")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     
@@ -31,50 +30,55 @@
             });
         });
     </script>
-    <div id="catalogsettings-edit">
-        <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.General")
-            </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.Performance")
-            </li>
-            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.ProductReviews")
-            </li>
-            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.Search")
-            </li>
-            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.CompareProducts")
-            </li>
-            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.Sharing")
-            </li>
-            <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Catalog.SortOptions")
-            </li>
-        </ul>
-        <div>
-            @TabGeneralSettings()
-        </div>
-        <div>
-            @TabPerformance()
-        </div>
-        <div>
-            @TabProductReviews()
-        </div>
-        <div>
-            @TabSearchSettings()
-        </div>
-        <div>
-            @TabCompareProducts()
-        </div>
-        <div>
-            @TabSharing()
-        </div>
-        <div>
-            @TabSortOptions()
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div id="catalogsettings-edit">
+                <ul>
+                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.General")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.Performance")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.ProductReviews")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.Search")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.CompareProducts")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.Sharing")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Catalog.SortOptions")
+                    </li>
+                </ul>
+                <div>
+                    @TabGeneralSettings()
+                </div>
+                <div>
+                    @TabPerformance()
+                </div>
+                <div>
+                    @TabProductReviews()
+                </div>
+                <div>
+                    @TabSearchSettings()
+                </div>
+                <div>
+                    @TabCompareProducts()
+                </div>
+                <div>
+                    @TabSharing()
+                </div>
+                <div>
+                    @TabSortOptions()
+                </div>
+            </div>
         </div>
     </div>
 
@@ -178,438 +182,451 @@
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowViewUnpublishedProductPage_OverrideForStore, model => model.AllowViewUnpublishedProductPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowViewUnpublishedProductPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowViewUnpublishedProductPage)
-                @Html.ValidationMessageFor(model => model.AllowViewUnpublishedProductPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, model => model.DisplayDiscontinuedMessageForUnpublishedProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
-                @Html.ValidationMessageFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductSku):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductSku)
-                @Html.ValidationMessageFor(model => model.ShowProductSku)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowManufacturerPartNumber_OverrideForStore, model => model.ShowManufacturerPartNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowManufacturerPartNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowManufacturerPartNumber)
-                @Html.ValidationMessageFor(model => model.ShowManufacturerPartNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowGtin_OverrideForStore, model => model.ShowGtin, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowGtin):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowGtin)
-                @Html.ValidationMessageFor(model => model.ShowGtin)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowFreeShippingNotification_OverrideForStore, model => model.ShowFreeShippingNotification, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowFreeShippingNotification):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowFreeShippingNotification)
-                @Html.ValidationMessageFor(model => model.ShowFreeShippingNotification)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowProductSorting):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowProductSorting)
-                @Html.ValidationMessageFor(model => model.AllowProductSorting)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowProductViewModeChanging_OverrideForStore, model => model.AllowProductViewModeChanging, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowProductViewModeChanging):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowProductViewModeChanging)
-                @Html.ValidationMessageFor(model => model.AllowProductViewModeChanging)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductsFromSubcategories_OverrideForStore, model => model.ShowProductsFromSubcategories, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductsFromSubcategories):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductsFromSubcategories)
-                @Html.ValidationMessageFor(model => model.ShowProductsFromSubcategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumber_OverrideForStore, model => model.ShowCategoryProductNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowCategoryProductNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowCategoryProductNumber)
-                @Html.ValidationMessageFor(model => model.ShowCategoryProductNumber)
-            </td>
-        </tr>
-        <tr id="pnlShowCategoryProductNumberIncludingSubcategories">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, model => model.ShowCategoryProductNumberIncludingSubcategories, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
-                @Html.ValidationMessageFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CategoryBreadcrumbEnabled_OverrideForStore, model => model.CategoryBreadcrumbEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CategoryBreadcrumbEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CategoryBreadcrumbEnabled)
-                @Html.ValidationMessageFor(model => model.CategoryBreadcrumbEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.EmailAFriendEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.EmailAFriendEnabled)
-                @Html.ValidationMessageFor(model => model.EmailAFriendEnabled)
-            </td>
-        </tr>
-        <tr id="pnlAllowAnonymousUsersToEmailAFriend">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, model => model.AllowAnonymousUsersToEmailAFriend, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailAFriend):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
-                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsEnabled_OverrideForStore, model => model.RecentlyViewedProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.RecentlyViewedProductsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.RecentlyViewedProductsEnabled)
-                @Html.ValidationMessageFor(model => model.RecentlyViewedProductsEnabled)
-            </td>
-        </tr>
-        <tr id="pnlRecentlyViewedProductsNumber">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsNumber_OverrideForStore, model => model.RecentlyViewedProductsNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.RecentlyViewedProductsNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.RecentlyViewedProductsNumber)
-                @Html.ValidationMessageFor(model => model.RecentlyViewedProductsNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NewProductsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NewProductsEnabled)
-                @Html.ValidationMessageFor(model => model.NewProductsEnabled)
-            </td>
-        </tr>
-        <tr id="pnlNewProductsNumber">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NewProductsNumber_OverrideForStore, model => model.NewProductsNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NewProductsNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NewProductsNumber)
-                @Html.ValidationMessageFor(model => model.NewProductsNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowBestsellersOnHomepage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowBestsellersOnHomepage)
-                @Html.ValidationMessageFor(model => model.ShowBestsellersOnHomepage)
-            </td>
-        </tr>
-        <tr id="pnlNumberOfBestsellersOnHomepage">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, model => model.NumberOfBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NumberOfBestsellersOnHomepage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NumberOfBestsellersOnHomepage)
-                @Html.ValidationMessageFor(model => model.NumberOfBestsellersOnHomepage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedEnabled_OverrideForStore, model => model.ProductsAlsoPurchasedEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductsAlsoPurchasedEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductsAlsoPurchasedEnabled)
-                @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedEnabled)
-            </td>
-        </tr>
-        <tr id="pnlProductsAlsoPurchasedNumber">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedNumber_OverrideForStore, model => model.ProductsAlsoPurchasedNumber, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductsAlsoPurchasedNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductsAlsoPurchasedNumber)
-                @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedNumber)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NumberOfProductTags_OverrideForStore, model => model.NumberOfProductTags, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NumberOfProductTags):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NumberOfProductTags)
-                @Html.ValidationMessageFor(model => model.NumberOfProductTags)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, model => model.ProductsByTagAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
-            </td>
-        </tr>
-        <tr id="pnlProductsByTagPageSize">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSize_OverrideForStore, model => model.ProductsByTagPageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductsByTagPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductsByTagPageSize)
-                @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
-            </td>
-        </tr>
-        <tr id="pnlProductsByTagPageSizeOptions">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.ProductsByTagPageSizeOptions, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductsByTagPageSizeOptions)
-                @Html.ValidationMessageFor(model => model.ProductsByTagPageSizeOptions)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, model => model.ManufacturersBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ManufacturersBlockItemsToDisplay):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ManufacturersBlockItemsToDisplay)
-                @Html.ValidationMessageFor(model => model.ManufacturersBlockItemsToDisplay)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, model => model.DisplayTaxShippingInfoFooter, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoFooter):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoFooter)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoFooter)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoProductDetailsPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductDetailsPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductBoxes_OverrideForStore, model => model.DisplayTaxShippingInfoProductBoxes, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductBoxes):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoShoppingCart_OverrideForStore, model => model.DisplayTaxShippingInfoShoppingCart, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoShoppingCart):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoShoppingCart)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, model => model.DisplayTaxShippingInfoWishlist, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoWishlist):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoWishlist)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoWishlist)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayTaxShippingInfoOrderDetailsPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
-                @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
-            </td>
-        </tr>
-    </table>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllowViewUnpublishedProductPage_OverrideForStore, model => model.AllowViewUnpublishedProductPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllowViewUnpublishedProductPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AllowViewUnpublishedProductPage)
+                        @Html.ValidationMessageFor(model => model.AllowViewUnpublishedProductPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts_OverrideForStore, model => model.DisplayDiscontinuedMessageForUnpublishedProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                        @Html.ValidationMessageFor(model => model.DisplayDiscontinuedMessageForUnpublishedProducts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowProductSku_OverrideForStore, model => model.ShowProductSku, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowProductSku)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowProductSku)
+                        @Html.ValidationMessageFor(model => model.ShowProductSku)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowManufacturerPartNumber_OverrideForStore, model => model.ShowManufacturerPartNumber, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowManufacturerPartNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowManufacturerPartNumber)
+                        @Html.ValidationMessageFor(model => model.ShowManufacturerPartNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowGtin_OverrideForStore, model => model.ShowGtin, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowGtin)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowGtin)
+                        @Html.ValidationMessageFor(model => model.ShowGtin)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowFreeShippingNotification_OverrideForStore, model => model.ShowFreeShippingNotification, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowFreeShippingNotification)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowFreeShippingNotification)
+                        @Html.ValidationMessageFor(model => model.ShowFreeShippingNotification)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllowProductSorting_OverrideForStore, model => model.AllowProductSorting, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllowProductSorting)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AllowProductSorting)
+                        @Html.ValidationMessageFor(model => model.AllowProductSorting)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllowProductViewModeChanging_OverrideForStore, model => model.AllowProductViewModeChanging, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllowProductViewModeChanging)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AllowProductViewModeChanging)
+                        @Html.ValidationMessageFor(model => model.AllowProductViewModeChanging)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowProductsFromSubcategories_OverrideForStore, model => model.ShowProductsFromSubcategories, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowProductsFromSubcategories)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowProductsFromSubcategories)
+                        @Html.ValidationMessageFor(model => model.ShowProductsFromSubcategories)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumber_OverrideForStore, model => model.ShowCategoryProductNumber, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowCategoryProductNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowCategoryProductNumber)
+                        @Html.ValidationMessageFor(model => model.ShowCategoryProductNumber)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlShowCategoryProductNumberIncludingSubcategories">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowCategoryProductNumberIncludingSubcategories_OverrideForStore, model => model.ShowCategoryProductNumberIncludingSubcategories, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                        @Html.ValidationMessageFor(model => model.ShowCategoryProductNumberIncludingSubcategories)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CategoryBreadcrumbEnabled_OverrideForStore, model => model.CategoryBreadcrumbEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CategoryBreadcrumbEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.CategoryBreadcrumbEnabled)
+                        @Html.ValidationMessageFor(model => model.CategoryBreadcrumbEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.EmailAFriendEnabled_OverrideForStore, model => model.EmailAFriendEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.EmailAFriendEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.EmailAFriendEnabled)
+                        @Html.ValidationMessageFor(model => model.EmailAFriendEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlAllowAnonymousUsersToEmailAFriend">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToEmailAFriend_OverrideForStore, model => model.AllowAnonymousUsersToEmailAFriend, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                        @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailAFriend)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsEnabled_OverrideForStore, model => model.RecentlyViewedProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.RecentlyViewedProductsEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.RecentlyViewedProductsEnabled)
+                        @Html.ValidationMessageFor(model => model.RecentlyViewedProductsEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlRecentlyViewedProductsNumber">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.RecentlyViewedProductsNumber_OverrideForStore, model => model.RecentlyViewedProductsNumber, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.RecentlyViewedProductsNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.RecentlyViewedProductsNumber)
+                        @Html.ValidationMessageFor(model => model.RecentlyViewedProductsNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NewProductsEnabled_OverrideForStore, model => model.NewProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NewProductsEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NewProductsEnabled)
+                        @Html.ValidationMessageFor(model => model.NewProductsEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlNewProductsNumber">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NewProductsNumber_OverrideForStore, model => model.NewProductsNumber, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NewProductsNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NewProductsNumber)
+                        @Html.ValidationMessageFor(model => model.NewProductsNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowBestsellersOnHomepage_OverrideForStore, model => model.ShowBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowBestsellersOnHomepage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowBestsellersOnHomepage)
+                        @Html.ValidationMessageFor(model => model.ShowBestsellersOnHomepage)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlNumberOfBestsellersOnHomepage">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NumberOfBestsellersOnHomepage_OverrideForStore, model => model.NumberOfBestsellersOnHomepage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NumberOfBestsellersOnHomepage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NumberOfBestsellersOnHomepage)
+                        @Html.ValidationMessageFor(model => model.NumberOfBestsellersOnHomepage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedEnabled_OverrideForStore, model => model.ProductsAlsoPurchasedEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductsAlsoPurchasedEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductsAlsoPurchasedEnabled)
+                        @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlProductsAlsoPurchasedNumber">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsAlsoPurchasedNumber_OverrideForStore, model => model.ProductsAlsoPurchasedNumber, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductsAlsoPurchasedNumber)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductsAlsoPurchasedNumber)
+                        @Html.ValidationMessageFor(model => model.ProductsAlsoPurchasedNumber)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NumberOfProductTags_OverrideForStore, model => model.NumberOfProductTags, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NumberOfProductTags)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NumberOfProductTags)
+                        @Html.ValidationMessageFor(model => model.NumberOfProductTags)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagAllowCustomersToSelectPageSize_OverrideForStore, model => model.ProductsByTagAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                        @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlProductsByTagPageSize">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSize_OverrideForStore, model => model.ProductsByTagPageSize, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductsByTagPageSize)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductsByTagPageSize)
+                        @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlProductsByTagPageSizeOptions">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.ProductsByTagPageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductsByTagPageSizeOptions)
+                        @Html.ValidationMessageFor(model => model.ProductsByTagPageSizeOptions)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ManufacturersBlockItemsToDisplay_OverrideForStore, model => model.ManufacturersBlockItemsToDisplay, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ManufacturersBlockItemsToDisplay)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ManufacturersBlockItemsToDisplay)
+                        @Html.ValidationMessageFor(model => model.ManufacturersBlockItemsToDisplay)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoFooter_OverrideForStore, model => model.DisplayTaxShippingInfoFooter, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoFooter)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoFooter)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoFooter)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoProductDetailsPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductDetailsPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoProductBoxes_OverrideForStore, model => model.DisplayTaxShippingInfoProductBoxes, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoProductBoxes)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoShoppingCart_OverrideForStore, model => model.DisplayTaxShippingInfoShoppingCart, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoShoppingCart)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoWishlist_OverrideForStore, model => model.DisplayTaxShippingInfoWishlist, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoWishlist)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoWishlist)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoWishlist)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisplayTaxShippingInfoOrderDetailsPage_OverrideForStore, model => model.DisplayTaxShippingInfoOrderDetailsPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                        @Html.ValidationMessageFor(model => model.DisplayTaxShippingInfoOrderDetailsPage)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabPerformance()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreAcl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreAcl)
-                @Html.ValidationMessageFor(model => model.IgnoreAcl)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreStoreLimitations):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreStoreLimitations)
-                @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreDiscounts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreDiscounts)
-                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IgnoreFeaturedProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IgnoreFeaturedProducts)
-                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CacheProductPrices):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CacheProductPrices)
-                @Html.ValidationMessageFor(model => model.CacheProductPrices)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreAcl_OverrideForStore, model => model.IgnoreAcl, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IgnoreAcl)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IgnoreAcl)
+                        @Html.ValidationMessageFor(model => model.IgnoreAcl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreStoreLimitations_OverrideForStore, model => model.IgnoreStoreLimitations, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IgnoreStoreLimitations)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IgnoreStoreLimitations)
+                        @Html.ValidationMessageFor(model => model.IgnoreStoreLimitations)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreDiscounts_OverrideForStore, model => model.IgnoreDiscounts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IgnoreDiscounts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IgnoreDiscounts)
+                        @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IgnoreFeaturedProducts_OverrideForStore, model => model.IgnoreFeaturedProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IgnoreFeaturedProducts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IgnoreFeaturedProducts)
+                        @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CacheProductPrices_OverrideForStore, model => model.CacheProductPrices, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CacheProductPrices)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.CacheProductPrices)
+                        @Html.ValidationMessageFor(model => model.CacheProductPrices)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabProductReviews()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsMustBeApproved_OverrideForStore, model => model.ProductReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductReviewsMustBeApproved):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductReviewsMustBeApproved)
-                @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, model => model.AllowAnonymousUsersToReviewProduct, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowAnonymousUsersToReviewProduct):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowAnonymousUsersToReviewProduct)
-                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
-                @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductReviewsPerStore):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductReviewsPerStore)
-                @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductReviewsMustBeApproved_OverrideForStore, model => model.ProductReviewsMustBeApproved, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductReviewsMustBeApproved)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductReviewsMustBeApproved)
+                        @Html.ValidationMessageFor(model => model.ProductReviewsMustBeApproved)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AllowAnonymousUsersToReviewProduct_OverrideForStore, model => model.AllowAnonymousUsersToReviewProduct, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AllowAnonymousUsersToReviewProduct)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AllowAnonymousUsersToReviewProduct)
+                        @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToReviewProduct)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NotifyStoreOwnerAboutNewProductReviews_OverrideForStore, model => model.NotifyStoreOwnerAboutNewProductReviews, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                        @Html.ValidationMessageFor(model => model.NotifyStoreOwnerAboutNewProductReviews)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowProductReviewsPerStore_OverrideForStore, model => model.ShowProductReviewsPerStore, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowProductReviewsPerStore)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowProductReviewsPerStore)
+                        @Html.ValidationMessageFor(model => model.ShowProductReviewsPerStore)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSearchSettings()
 {
@@ -645,114 +662,124 @@
         }
         
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
-            </td>
-        </tr>
-        <tr id="pnlSearchPageProductsPerPage">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SearchPageProductsPerPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchPageProductsPerPage)
-                @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
-            </td>
-        </tr>
-        <tr id="pnlSearchPagePageSizeOptions">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SearchPagePageSizeOptions):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchPagePageSizeOptions)
-                @Html.ValidationMessageFor(model => model.SearchPagePageSizeOptions)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductSearchAutoCompleteEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductSearchAutoCompleteEnabled)
-                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
-            </td>
-        </tr>
-        <tr id="pnlProductSearchAutoCompleteNumberOfProducts">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
-                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
-            </td>
-        </tr>
-        <tr id="pnlShowProductImagesInSearchAutoComplete">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowProductImagesInSearchAutoComplete):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowProductImagesInSearchAutoComplete)
-                @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ProductSearchTermMinimumLength):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ProductSearchTermMinimumLength)
-                @Html.ValidationMessageFor(model => model.ProductSearchTermMinimumLength)
-            </td>
-        </tr>
-    </table>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SearchPageAllowCustomersToSelectPageSize_OverrideForStore, model => model.SearchPageAllowCustomersToSelectPageSize, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                        @Html.ValidationMessageFor(model => model.SearchPageAllowCustomersToSelectPageSize)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlSearchPageProductsPerPage">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SearchPageProductsPerPage_OverrideForStore, model => model.SearchPageProductsPerPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SearchPageProductsPerPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SearchPageProductsPerPage)
+                        @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlSearchPagePageSizeOptions">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductsByTagPageSizeOptions_OverrideForStore, model => model.SearchPagePageSizeOptions, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SearchPagePageSizeOptions)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SearchPagePageSizeOptions)
+                        @Html.ValidationMessageFor(model => model.SearchPagePageSizeOptions)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteEnabled_OverrideForStore, model => model.ProductSearchAutoCompleteEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductSearchAutoCompleteEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                        @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlProductSearchAutoCompleteNumberOfProducts">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductSearchAutoCompleteNumberOfProducts_OverrideForStore, model => model.ProductSearchAutoCompleteNumberOfProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                        @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlShowProductImagesInSearchAutoComplete">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowProductImagesInSearchAutoComplete_OverrideForStore, model => model.ShowProductImagesInSearchAutoComplete, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowProductImagesInSearchAutoComplete)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                        @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ProductSearchTermMinimumLength_OverrideForStore, model => model.ProductSearchTermMinimumLength, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ProductSearchTermMinimumLength)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ProductSearchTermMinimumLength)
+                        @Html.ValidationMessageFor(model => model.ProductSearchTermMinimumLength)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabCompareProducts()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.CompareProductsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CompareProductsEnabled)
-                @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IncludeShortDescriptionInCompareProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IncludeShortDescriptionInCompareProducts)
-                @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IncludeFullDescriptionInCompareProducts):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IncludeFullDescriptionInCompareProducts)
-                @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.CompareProductsEnabled_OverrideForStore, model => model.CompareProductsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.CompareProductsEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.CompareProductsEnabled)
+                        @Html.ValidationMessageFor(model => model.CompareProductsEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IncludeShortDescriptionInCompareProducts_OverrideForStore, model => model.IncludeShortDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                        @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IncludeFullDescriptionInCompareProducts_OverrideForStore, model => model.IncludeFullDescriptionInCompareProducts, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                        @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+                
 @helper TabSharing()
 {
     <script type="text/javascript">
@@ -772,34 +799,39 @@
             }
         }
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowShareButton):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowShareButton)
-                @Html.ValidationMessageFor(model => model.ShowShareButton)
-            </td>
-        </tr>
-        <tr id="pnlPageShareCode">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PageShareCode):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.PageShareCode, new { style = "Width: 500px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.PageShareCode)
-            </td>
-        </tr>
-    </table>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ShowShareButton_OverrideForStore, model => model.ShowShareButton, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ShowShareButton)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ShowShareButton)
+                        @Html.ValidationMessageFor(model => model.ShowShareButton)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlPageShareCode">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PageShareCode_OverrideForStore, model => model.PageShareCode, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PageShareCode)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.PageShareCode)
+                        @Html.ValidationMessageFor(model => model.PageShareCode)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSortOptions()
 {
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 <div id="sortoptions-grid"></div>
 
                 <script>
@@ -891,7 +923,7 @@
                     });
                 });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }
