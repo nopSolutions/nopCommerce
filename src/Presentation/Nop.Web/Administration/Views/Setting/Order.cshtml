@@ -6,22 +6,22 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Order")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#ordersettings-edit").kendoTabStrip({
-                animation:  {
+                animation: {
                     open: {
                         effects: "fadeIn"
                     }
@@ -30,20 +30,25 @@
             });
         });
     </script>
-    <div id="ordersettings-edit">
-        <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Order.OrderSettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
-            </li>
-        </ul>
-        <div>
-            @TabOrderSettings()
-        </div>
-        <div>
-            @TabReturnRequestSettings()
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div id="ordersettings-edit">
+                <ul>
+                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Order.OrderSettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestSettings")
+                    </li>
+                </ul>
+                <div>
+                    @TabOrderSettings()
+                </div>
+                <div>
+                    @TabReturnRequestSettings()
+                </div>
+            </div>
         </div>
     </div>
 
@@ -56,14 +61,14 @@
             @eventBlock
         }
     }
-     
 
-     @*save selected tab index*@
-	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+    @*save selected tab index*@
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 }
 @helper TabOrderSettings()
 {
-    
+
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -80,212 +85,219 @@
                 $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
             }
         }
-        
+
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.IsReOrderAllowed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsReOrderAllowed)
-                @Html.ValidationMessageFor(model => model.IsReOrderAllowed)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MinOrderSubtotalAmount):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MinOrderSubtotalAmount)
-                @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount) @Model.PrimaryStoreCurrencyCode
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MinOrderSubtotalAmountIncludingTax)
-                @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MinOrderTotalAmount):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MinOrderTotalAmount)
-                @Html.ValidationMessageFor(model => model.MinOrderTotalAmount) @Model.PrimaryStoreCurrencyCode
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AnonymousCheckoutAllowed_OverrideForStore, model => model.AnonymousCheckoutAllowed, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AnonymousCheckoutAllowed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AnonymousCheckoutAllowed)
-                @Html.ValidationMessageFor(model => model.AnonymousCheckoutAllowed)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TermsOfServiceOnShoppingCartPage)
-                @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TermsOfServiceOnOrderConfirmPage)
-                @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutEnabled_OverrideForStore, model => model.OnePageCheckoutEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.OnePageCheckoutEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.OnePageCheckoutEnabled)
-                @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
-            </td>
-        </tr>
-        <tr id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
-                @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, model => model.DisableBillingAddressCheckoutStep, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisableBillingAddressCheckoutStep):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisableBillingAddressCheckoutStep)
-                @Html.ValidationMessageFor(model => model.DisableBillingAddressCheckoutStep)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisableOrderCompletedPage_OverrideForStore, model => model.DisableOrderCompletedPage, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisableOrderCompletedPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisableOrderCompletedPage)
-                @Html.ValidationMessageFor(model => model.DisableOrderCompletedPage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPlacedEmail, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPlacedEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
-                @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPaidEmail, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPaidEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
-                @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderCompletedEmail, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderCompletedEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
-                @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.GiftCards_Activated_OrderStatusId, Model.GiftCards_Activated_OrderStatuses)
-                @Html.ValidationMessageFor(model => model.GiftCards_Activated_OrderStatusId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GiftCards_Deactivated_OrderStatusId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.GiftCards_Deactivated_OrderStatusId, Model.GiftCards_Deactivated_OrderStatuses)
-                @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
-            </td>
-        </tr>
-        @if (Model.OrderIdent.HasValue)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.OrderIdent):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.OrderIdent)
-                </td>
-            </tr>
-        }
-    </table>
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.IsReOrderAllowed_OverrideForStore, model => model.IsReOrderAllowed, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.IsReOrderAllowed)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IsReOrderAllowed)
+                        @Html.ValidationMessageFor(model => model.IsReOrderAllowed)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmount_OverrideForStore, model => model.MinOrderSubtotalAmount, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmount)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmount)
+                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmount) @Model.PrimaryStoreCurrencyCode
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderSubtotalAmountIncludingTax_OverrideForStore, model => model.MinOrderSubtotalAmountIncludingTax, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                        @Html.ValidationMessageFor(model => model.MinOrderSubtotalAmountIncludingTax)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.MinOrderTotalAmount_OverrideForStore, model => model.MinOrderTotalAmount, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.MinOrderTotalAmount)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.MinOrderTotalAmount)
+                        @Html.ValidationMessageFor(model => model.MinOrderTotalAmount) @Model.PrimaryStoreCurrencyCode
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AnonymousCheckoutAllowed_OverrideForStore, model => model.AnonymousCheckoutAllowed, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AnonymousCheckoutAllowed)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AnonymousCheckoutAllowed)
+                        @Html.ValidationMessageFor(model => model.AnonymousCheckoutAllowed)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnShoppingCartPage_OverrideForStore, model => model.TermsOfServiceOnShoppingCartPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TermsOfServiceOnShoppingCartPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.TermsOfServiceOnShoppingCartPage)
+                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnShoppingCartPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.TermsOfServiceOnOrderConfirmPage_OverrideForStore, model => model.TermsOfServiceOnOrderConfirmPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                        @Html.ValidationMessageFor(model => model.TermsOfServiceOnOrderConfirmPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutEnabled_OverrideForStore, model => model.OnePageCheckoutEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.OnePageCheckoutEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.OnePageCheckoutEnabled)
+                        @Html.ValidationMessageFor(model => model.OnePageCheckoutEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab_OverrideForStore, model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                        @Html.ValidationMessageFor(model => model.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisableBillingAddressCheckoutStep_OverrideForStore, model => model.DisableBillingAddressCheckoutStep, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisableBillingAddressCheckoutStep)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisableBillingAddressCheckoutStep)
+                        @Html.ValidationMessageFor(model => model.DisableBillingAddressCheckoutStep)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.DisableOrderCompletedPage_OverrideForStore, model => model.DisableOrderCompletedPage, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.DisableOrderCompletedPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisableOrderCompletedPage)
+                        @Html.ValidationMessageFor(model => model.DisableOrderCompletedPage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPlacedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPlacedEmail, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
+                        @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPlacedEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderPaidEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderPaidEmail, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
+                        @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderPaidEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.AttachPdfInvoiceToOrderCompletedEmail_OverrideForStore, model => model.AttachPdfInvoiceToOrderCompletedEmail, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
+                        @Html.ValidationMessageFor(model => model.AttachPdfInvoiceToOrderCompletedEmail)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.GiftCards_Activated_OrderStatusId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.GiftCards_Activated_OrderStatusId, Model.GiftCards_Activated_OrderStatuses)
+                        @Html.ValidationMessageFor(model => model.GiftCards_Activated_OrderStatusId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.GiftCards_Deactivated_OrderStatusId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.GiftCards_Deactivated_OrderStatusId, Model.GiftCards_Deactivated_OrderStatuses)
+                        @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
+                    </div>
+                </div>
+                @if (Model.OrderIdent.HasValue)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.OrderIdent)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.OrderIdent)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 }
 @helper TabReturnRequestSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle" colspan="2">
-                @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
-                <br/>
-                <br/>
-                @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ReturnRequestsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ReturnRequestsEnabled)
-                @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NumberOfDaysReturnRequestAvailable)
-                @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
-            </td>
-        </tr>
-    </table>
-    @Html.Partial("_ReturnRequestReasons")
-    @Html.Partial("_ReturnRequestActions")
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
+                    <br />
+                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
+                </p>   
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ReturnRequestsEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.ReturnRequestsEnabled)
+                        @Html.ValidationMessageFor(model => model.ReturnRequestsEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.NumberOfDaysReturnRequestAvailable_OverrideForStore, model => model.NumberOfDaysReturnRequestAvailable, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.NumberOfDaysReturnRequestAvailable)
+                        @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_ReturnRequestReasons")
+        @Html.Partial("_ReturnRequestActions")
+    </div>
+    
 }
