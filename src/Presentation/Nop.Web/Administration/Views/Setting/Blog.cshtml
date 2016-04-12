@@ -6,77 +6,87 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Blog")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.Enabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Enabled)
-                @Html.ValidationMessageFor(model => model.Enabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PostsPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PostsPageSize)
-                @Html.ValidationMessageFor(model => model.PostsPageSize)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
-                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NotifyAboutNewBlogComments)
-                @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.NumberOfTags_OverrideForStore, model => model.NumberOfTags, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.NumberOfTags):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.NumberOfTags)
-                @Html.ValidationMessageFor(model => model.NumberOfTags)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.ShowHeaderRssUrl)
-                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
-            </td>
-        </tr>
-    </table>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.Enabled)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Enabled)
+                                @Html.ValidationMessageFor(model => model.Enabled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PostsPageSize_OverrideForStore, model => model.PostsPageSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PostsPageSize)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.PostsPageSize)
+                                @Html.ValidationMessageFor(model => model.PostsPageSize)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowNotRegisteredUsersToLeaveComments_OverrideForStore, model => model.AllowNotRegisteredUsersToLeaveComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                                @Html.ValidationMessageFor(model => model.AllowNotRegisteredUsersToLeaveComments)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NotifyAboutNewBlogComments_OverrideForStore, model => model.NotifyAboutNewBlogComments, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.NotifyAboutNewBlogComments)
+                                @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.NumberOfTags_OverrideForStore, model => model.NumberOfTags, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.NumberOfTags)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.NumberOfTags)
+                                @Html.ValidationMessageFor(model => model.NumberOfTags)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ShowHeaderRssUrl_OverrideForStore, model => model.ShowHeaderRssUrl, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.ShowHeaderRssUrl)
+                                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
