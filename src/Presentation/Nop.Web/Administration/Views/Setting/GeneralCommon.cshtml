@@ -6,15 +6,16 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.GeneralCommon")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
 
@@ -30,44 +31,49 @@
             });
         });
     </script>
-    <div id="generalsettings-edit">
-        <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")
-            </li>
-            <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
-            </li>
-        </ul>
-        <div>
-            @TabStoreInformationSettings()
-        </div>
-        <div>
-            @TabSEOSettings()
-        </div>
-        <div>
-            @TabSecuritySettings()
-        </div>
-        <div>
-            @TabPdfSettings()
-        </div>
-        <div>
-            @TabLocalizationSettings()
-        </div>
-        <div>
-            @TabFullTextSettings()
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div id="generalsettings-edit">
+                <ul>
+                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
+                    </li>
+                </ul>
+                <div>
+                    @TabStoreInformationSettings()
+                </div>
+                <div>
+                    @TabSEOSettings()
+                </div>
+                <div>
+                    @TabSecuritySettings()
+                </div>
+                <div>
+                    @TabPdfSettings()
+                </div>
+                <div>
+                    @TabLocalizationSettings()
+                </div>
+                <div>
+                    @TabFullTextSettings()
+                </div>
+            </div>
         </div>
     </div>
 
@@ -81,270 +87,274 @@
         }
     }
 
-
-    
-    
     @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-    
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())"> 
 }
 @helper TabStoreInformationSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosed)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
-            </td>
-            <td class="adminData">
-                <ul class="clearer" style="list-style: none;" id="theme-selection-block">
-                    @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
-                    {
-                        <li style="float: left; width: 210px;">
-                            <p style="float: left; padding-top: 55px;">
-                                <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
-                                       @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>   }>
-                            </p>
-                            <p style="float: left;">
-                                <label for="id_image_@theme.ThemeName">
-                                    <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
-                                    <br />
-                                    <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
-                                </label>
-                            </p>
-                        </li>
-                    }
-                </ul>
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
-                <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">http://www.nopcommerce.com/extensions-and-themes.aspx</a></em>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.FacebookLink):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.FacebookLink)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.FacebookLink)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.TwitterLink_OverrideForStore, model => model.StoreInformationSettings.TwitterLink, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.TwitterLink):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.TwitterLink)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.TwitterLink)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.YoutubeLink_OverrideForStore, model => model.StoreInformationSettings.YoutubeLink, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.YoutubeLink):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.YoutubeLink)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.YoutubeLink)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.GooglePlusLink):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.GooglePlusLink)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.StoreClosed_OverrideForStore, model => model.StoreInformationSettings.StoreClosed, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.StoreClosed)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DefaultStoreTheme_OverrideForStore, "theme-selection-block", Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                    </div>
+                    <div class="col-sm-9">
+                        <ul class="clearer" style="list-style: none;" id="theme-selection-block">
+                            @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
+                            {
+                                <li style="float: left; width: 210px;">
+                                    <p style="float: left; padding-top: 55px;">
+                                        <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
+                                               @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>   }>
+                                    </p>
+                                    <p style="float: left;">
+                                        <label for="id_image_@theme.ThemeName">
+                                            <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                            <br />
+                                            <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
+                                        </label>
+                                    </p>
+                                </li>
+                            }
+                        </ul>
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                        <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">http://www.nopcommerce.com/extensions-and-themes.aspx</a></em>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme_OverrideForStore, model => model.StoreInformationSettings.AllowCustomerToSelectTheme, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning_OverrideForStore, model => model.StoreInformationSettings.DisplayEuCookieLawWarning, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.DisplayEuCookieLawWarning)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.FacebookLink_OverrideForStore, model => model.StoreInformationSettings.FacebookLink, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.FacebookLink)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.FacebookLink)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.FacebookLink)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.TwitterLink_OverrideForStore, model => model.StoreInformationSettings.TwitterLink, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.TwitterLink)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.TwitterLink)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.TwitterLink)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.YoutubeLink_OverrideForStore, model => model.StoreInformationSettings.YoutubeLink, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.YoutubeLink)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.YoutubeLink)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.YoutubeLink)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.GooglePlusLink_OverrideForStore, model => model.StoreInformationSettings.GooglePlusLink, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.GooglePlusLink)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.GooglePlusLink)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.GooglePlusLink)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm_OverrideForStore, model => model.StoreInformationSettings.SubjectFieldOnContactUsForm, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.SubjectFieldOnContactUsForm)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm_OverrideForStore, model => model.StoreInformationSettings.UseSystemEmailForContactUsForm, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                        @Html.ValidationMessageFor(model => model.StoreInformationSettings.UseSystemEmailForContactUsForm)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSEOSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.PageTitleSeparator)
-                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
-                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.DefaultTitle)
-                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.DefaultMetaKeywords)
-                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.DefaultMetaDescription)
-                @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.GenerateProductMetaDescription):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.GenerateProductMetaDescription)
-                @Html.ValidationMessageFor(model => model.SeoSettings.GenerateProductMetaDescription)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.ConvertNonWesternChars)
-                @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-                @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
-                @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.EnableJsBundling)
-                @Html.ValidationMessageFor(model => model.SeoSettings.EnableJsBundling)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.EnableCssBundling):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.EnableCssBundling)
-                @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.TwitterMetaTags):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.TwitterMetaTags)
-                @Html.ValidationMessageFor(model => model.SeoSettings.TwitterMetaTags)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.SeoSettings.OpenGraphMetaTags):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SeoSettings.OpenGraphMetaTags)
-                @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeparator_OverrideForStore, model => model.SeoSettings.PageTitleSeparator, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeparator)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.PageTitleSeparator)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeparator)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.PageTitleSeoAdjustment_OverrideForStore, model => model.SeoSettings.PageTitleSeoAdjustment, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment, Model.SeoSettings.PageTitleSeoAdjustmentValues)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultTitle_OverrideForStore, model => model.SeoSettings.DefaultTitle, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.DefaultTitle)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.DefaultTitle)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaKeywords_OverrideForStore, model => model.SeoSettings.DefaultMetaKeywords, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaKeywords)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.DefaultMetaKeywords)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaKeywords)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.DefaultMetaDescription_OverrideForStore, model => model.SeoSettings.DefaultMetaDescription, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.DefaultMetaDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.DefaultMetaDescription)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.DefaultMetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.GenerateProductMetaDescription_OverrideForStore, model => model.SeoSettings.GenerateProductMetaDescription, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.GenerateProductMetaDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.ConvertNonWesternChars_OverrideForStore, model => model.SeoSettings.ConvertNonWesternChars, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.ConvertNonWesternChars)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.ConvertNonWesternChars)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.CanonicalUrlsEnabled_OverrideForStore, model => model.SeoSettings.CanonicalUrlsEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.WwwRequirement_OverrideForStore, model => model.SeoSettings.WwwRequirement, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.WwwRequirement)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.SeoSettings.WwwRequirement, Model.SeoSettings.WwwRequirementValues)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.WwwRequirement)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableJsBundling_OverrideForStore, model => model.SeoSettings.EnableJsBundling, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.EnableJsBundling)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.EnableJsBundling)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.EnableJsBundling)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.EnableCssBundling_OverrideForStore, model => model.SeoSettings.EnableCssBundling, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.EnableCssBundling)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.EnableCssBundling)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.EnableCssBundling)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.TwitterMetaTags_OverrideForStore, model => model.SeoSettings.TwitterMetaTags, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.TwitterMetaTags)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.TwitterMetaTags)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.TwitterMetaTags)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.SeoSettings.OpenGraphMetaTags_OverrideForStore, model => model.SeoSettings.OpenGraphMetaTags, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.SeoSettings.OpenGraphMetaTags)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SeoSettings.OpenGraphMetaTags)
+                        @Html.ValidationMessageFor(model => model.SeoSettings.OpenGraphMetaTags)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabSecuritySettings()
 {
@@ -388,356 +398,375 @@
     }
     </script>
 
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.ForceSslForAllPages):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.ForceSslForAllPages)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.HoneypotEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.HoneypotEnabled)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <hr />
-                <br />
-                A CAPTCHA is a program that can tell whether its user is a human or a computer.
-                You've probably seen them — colorful images with distorted text at the bottom of
-                Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
-                "bots," or automated programs usually written to generate spam. No computer program
-                can read distorted text as well as humans can, so bots cannot navigate sites protected
-                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaEnabled)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnLoginPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnRegistrationPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnContactUsPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnEmailProductToFriendPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnBlogCommentPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnNewsCommentPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnProductReviewPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
-            </td>
-        </tr>
-        <tr id="ssCaptchaShowOnApplyVendorPagepnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
-            </td>
-        </tr>
-        <tr id="ssReCaptchaVersionpnl">
-
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaVersion):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
-            </td>
-        </tr>
-        <tr id="ssReCaptchaPublicKeypnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
-            </td>
-        </tr>
-        <tr id="ssReCaptchaPrivateKeypnl">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
-                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
+                        <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn btn-default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.ForceSslForAllPages)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.ForceSslForAllPages)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.ForceSslForAllPages)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForAdminArea)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.EnableXsrfProtectionForPublicStore)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.HoneypotEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.HoneypotEnabled)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.HoneypotEnabled)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    A CAPTCHA is a program that can tell whether its user is a human or a computer.
+                    You've probably seen them — colorful images with distorted text at the bottom of
+                    Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
+                    "bots," or automated programs usually written to generate spam. No computer program
+                    can read distorted text as well as humans can, so bots cannot navigate sites protected
+                    by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
+                </p>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaEnabled)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnLoginPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnRegistrationPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnContactUsPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnEmailProductToFriendPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnBlogCommentPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnBlogCommentPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnNewsCommentPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnNewsCommentPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnProductReviewPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnProductReviewPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssCaptchaShowOnApplyVendorPagepnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnApplyVendorPage)
+                    </div>
+                </div>
+                <div class="form-group" id="ssReCaptchaVersionpnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaVersion)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.SecuritySettings.ReCaptchaVersion, Model.SecuritySettings.AvailableReCaptchaVersions)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaVersion)
+                    </div>
+                </div>
+                <div class="form-group" id="ssReCaptchaPublicKeypnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                    </div>
+                </div>
+                <div class="form-group" id="ssReCaptchaPrivateKeypnl">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                        @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabPdfSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
-                @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
-            </td>
-            <td class="adminData" id="pdf-logo-picture">
-                @Html.EditorFor(model => model.PdfSettings.LogoPictureId)
-                @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
-                @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn1, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn2):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn2, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LetterPageSizeEnabled_OverrideForStore, model => model.PdfSettings.LetterPageSizeEnabled, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.LogoPictureId_OverrideForStore, "pdf-logo-picture", Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId)
+                    </div>
+                    <div class="col-sm-9" id="pdf-logo-picture">
+                        @Html.NopEditorFor(model => model.PdfSettings.LogoPictureId)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders_OverrideForStore, model => model.PdfSettings.DisablePdfInvoicesForPendingOrders, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.DisablePdfInvoicesForPendingOrders)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn1_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn1, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn1)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.PdfSettings.InvoiceFooterTextColumn2_OverrideForStore, model => model.PdfSettings.InvoiceFooterTextColumn2, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+                        @Html.ValidationMessageFor(model => model.PdfSettings.InvoiceFooterTextColumn2)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabLocalizationSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
-                @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.AutomaticallyDetectLanguage)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocaleRecordsOnStartup)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllLocalizedPropertiesOnStartup)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                        @Html.ValidationMessageFor(model => model.LocalizationSettings.LoadAllUrlRecordsOnStartup)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabFullTextSettings()
 {
-    <table class="adminContent">
-        <tr>
-            <td colspan="2">
-                @if (Model.FullTextSettings.Supported)
-                {
-                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
-                }
-                else
-                {
-                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
-                }
-            </td>
-        </tr>
-        @if (Model.FullTextSettings.Supported)
-        {
-            <tr>
-                <td colspan="2">
-                    @if (Model.FullTextSettings.Enabled)
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    @if (Model.FullTextSettings.Supported)
                     {
-                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
                     }
                     else
                     {
-                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
                     }
-                    <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="adminButton" />
-                </td>
-            </tr>
-            if (Model.FullTextSettings.Enabled)
-            {
-                <td colspan="2">
-                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords")
-                </td>
-            }
-            if (Model.FullTextSettings.Enabled)
+                </p>
+                @if (Model.FullTextSettings.Supported)
                 {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
-                </td>
-                <td class="adminData">
-                    @Html.DropDownListFor(model => model.FullTextSettings.SearchMode, Model.FullTextSettings.SearchModeValues)
-                    @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
-                </td>
-            </tr>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            <label class="control-label">
+                                @if (Model.FullTextSettings.Enabled)
+                                {
+                                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                                }
+                                else
+                                {
+                                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                                }
+                            </label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="btn btn-default" />
+                        </div>
+                    </div>
+                    if (Model.FullTextSettings.Enabled)
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NoiseWords")
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.FullTextSettings.SearchMode)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownListFor(model => model.FullTextSettings.SearchMode, Model.FullTextSettings.SearchModeValues)
+                                @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
+                            </div>
+                        </div>
+                    }
                 }
-        }
-    </table>
+            </div>
+        </div>
+    </div>
 }
