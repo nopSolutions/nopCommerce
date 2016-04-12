@@ -6,17 +6,17 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="k-button">@T("Admin.Configuration.Languages.Export")</a>
-            <input type="button" id="importxml" class="k-button" value="@T("Admin.Configuration.Languages.Import")" />
-            <span id="language-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name 
+            <small>@Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn btn-default">@T("Admin.Configuration.Languages.Export")</a>
+            <input type="button" id="importxml" class="btn btn-default" value="@T("Admin.Configuration.Languages.Import")" />
+            <span id="language-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
@@ -30,7 +30,7 @@
     {
         @Html.AntiForgeryToken()
         <table style="text-align: left;">
-            <tr>
+            <tr class="form-group">
                 <td>
                     @T("Admin.Configuration.Languages.XmlFile"):
                 </td>
@@ -38,16 +38,16 @@
                     <input type="file" id="importxmlfile" name="importxmlfile" />
                 </td>
             </tr>
-            <tr>
+            <tr class="form-group">
                 <td colspan="2">
                     <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
                     <br />
                     <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
                 </td>
             </tr>
-            <tr>
+            <tr class="form-group">
                 <td colspan="2">
-                    <input id="importxmlsubmit" type="submit" class="k-button" value="@T("Admin.Configuration.Languages.Import")" />
+                    <input id="importxmlsubmit" type="submit" class="btn btn-default" value="@T("Admin.Configuration.Languages.Import")" />
                 </td>
             </tr>
         </table>

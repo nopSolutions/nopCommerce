@@ -3,7 +3,7 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $("#language-edit").kendoTabStrip({
             animation: {
                 open: {
@@ -14,26 +14,31 @@
         });
     });
 </script>
-<div id="language-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.Stores")
-        </li>
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Languages.Resources")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabStores()
-    </div>
-    <div>
-        @TabResources()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="language-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Configuration.Languages.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.Configuration.Languages.Stores")
+                </li>
+                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                    @T("Admin.Configuration.Languages.Resources")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabStores()
+            </div>
+            <div>
+                @TabResources()
+            </div>
+        </div>
     </div>
 </div>
 
@@ -52,116 +57,119 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-{
+        {
     <script type="text/javascript">
         function toggleFlags() {
             $('#pnlAllFlags').toggle();
             if ($('#pnlAllFlags').css('display') == 'none') {
                 $('#displayAllFlags').html('@T("Admin.Common.Show")');
-            }
-            else {
+            } else {
                 $('#displayAllFlags').html('@T("Admin.Common.Hide")');
             }
         }
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LanguageCulture):
-            </td>
-            <td class="adminData">
-                 @{
-                    var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
-                        .OrderBy(x => x.EnglishName)
-                        .Select(x => new SelectListItem
-                                         {
-                                             Value = x.IetfLanguageTag,
-                                             Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
-                                         });
-                }
-                @Html.DropDownListFor(model => model.LanguageCulture, cultures)
-                @Html.ValidationMessageFor(model => model.LanguageCulture)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.UniqueSeoCode):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.UniqueSeoCode)
-                @Html.ValidationMessageFor(model => model.UniqueSeoCode)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FlagImageFileName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FlagImageFileName)
-                @Html.ValidationMessageFor(model => model.FlagImageFileName)
-                <br/>
-                <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
-                <div id="pnlAllFlags" style="display: none">
-                    @foreach (var fileName in Model.FlagFileNames)
-                    {
-                        <img alt="" src="@Url.Content("~/Content/Images/flags/" + fileName)"/>
-                        @fileName
-                        <text>, </text>
-                    }
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
                 </div>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Rtl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Rtl)
-                @Html.ValidationMessageFor(model => model.Rtl)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DefaultCurrencyId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
-                @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Published):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Published)
-                @Html.ValidationMessageFor(model => model.Published)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-    </table>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LanguageCulture)
+                    </div>
+                    <div class="col-sm-9">
+                        @{
+                            var cultures = System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.SpecificCultures)
+                                .OrderBy(x => x.EnglishName)
+                                .Select(x => new SelectListItem
+                                {
+                                    Value = x.IetfLanguageTag,
+                                    Text = string.Format("{0}. {1}", x.EnglishName, x.IetfLanguageTag)
+                                });
+                        }
+                        @Html.NopDropDownListFor(model => model.LanguageCulture, cultures)
+                        @Html.ValidationMessageFor(model => model.LanguageCulture)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.UniqueSeoCode)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.UniqueSeoCode)
+                        @Html.ValidationMessageFor(model => model.UniqueSeoCode)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.FlagImageFileName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.FlagImageFileName)
+                        @Html.ValidationMessageFor(model => model.FlagImageFileName)
+                        <br />
+                        <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
+                        <div id="pnlAllFlags" style="display: none">
+                            @foreach (var fileName in Model.FlagFileNames)
+                            {
+                                <img alt="" src="@Url.Content("~/Content/Images/flags/" + fileName)" />
+                                @fileName
+                                <text>, </text>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Rtl)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Rtl)
+                        @Html.ValidationMessageFor(model => model.Rtl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.DefaultCurrencyId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.DefaultCurrencyId, Model.AvailableCurrencies)
+                        @Html.ValidationMessageFor(model => model.DefaultCurrencyId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Published)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Published)
+                        @Html.ValidationMessageFor(model => model.Published)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabStores()
-{
+        {
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
 
@@ -172,90 +180,106 @@
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
-            }
-            else {
+            } else {
                 $('#pnl-available-stores').hide();
             }
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
-                    {
-                    <div>
-                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LimitedToStores)
+                        @Html.ValidationMessageFor(model => model.LimitedToStores)
+                    </div>
+                </div>
+                <div class="form-group" id="pnl-available-stores">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AvailableStores)
+                    </div>
+                    <div class="col-sm-9">
+                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                        {
+                            @Html.Action("MultistoreDisabledWarning", "Common")
+                            foreach (var store in Model.AvailableStores)
+                            {
+
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    </label>
+                                </div>                            }
+                        }
+                        else
+                        {
+                            <text>No stores defined</text>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @helper TabResources()
-{
-    <table class="adminContent">
-        <tr>
-            <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 @if (Model.Id > 0)
                 {
-                    <table width="100%">
-                        <tr>
-                            <td class="adminTitle">
-                                @Html.NopLabelFor(model => model.Search.SearchResourceName):
-                            </td>
-                            <td class="adminData">
-                                @Html.EditorFor(model => model.Search.SearchResourceName)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="adminTitle">
-                                @Html.NopLabelFor(model => model.Search.SearchResourceValue):
-                            </td>
-                            <td class="adminData">
-                                @Html.EditorFor(model => model.Search.SearchResourceValue)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <input type="button" id="search-resources" class="k-button" value="@T("Admin.Common.Search")" />
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Search.SearchResourceName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Search.SearchResourceName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Search.SearchResourceValue)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Search.SearchResourceValue)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="search-resources" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                        </div>
+                    </div>
                 }
                 else
                 {
-                    @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            @T("Admin.Configuration.Languages.Resources.SaveBeforeEdit")
+                        </div>
+                    </div>
                 }
-            </td>
-        </tr>
-        <tr>
-            <td>
-                @if (Model.Id > 0)
-                {
-                    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-                    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+            </div>
+        </div>
+
+
+        @if (Model.Id > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @{
+                        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>
+                        ().DefaultGridPageSize;
+                        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>
+                            ().GridPageSizes;
+                    }
                     <div id="resources-grid"></div>
 
                     <script>
@@ -369,7 +393,7 @@
                     </script>
                     <script type="text/javascript">
                         $(document).ready(function() {
-                            $('#search-resources').click(function () {
+                            $('#search-resources').click(function() {
                                 var grid = $('#resources-grid').data('kendoGrid');
                                 grid.dataSource.page(1);
                                 return false;
@@ -384,17 +408,18 @@
                             addAntiForgeryToken(data);
                             return data;
                         }
-                        
+
                         $("".concat("#@Html.FieldIdFor(model => model.Search.SearchResourceName),",
-                            "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function (event) {
-                            if (event.keyCode === 13) {
-                                $("#search-resources").click();
-                                return false;
-                            }
-                        });
+                            "#@Html.FieldIdFor(model => model.Search.SearchResourceValue)")).keydown(function(event) {
+                                if (event.keyCode === 13) {
+                                    $("#search-resources").click();
+                                    return false;
+                                }
+                            });
                     </script>
-                }
-            </td>
-        </tr>
-    </table>
+                </div>
+            </div>
+                        }
+    </div>
+
 }
