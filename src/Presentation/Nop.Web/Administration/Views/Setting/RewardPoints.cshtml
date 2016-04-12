@@ -7,136 +7,145 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Configuration.Settings.RewardPoints")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
+
     @Html.Action("StoreScopeConfiguration", "Setting")
     @Html.ValidationSummary(false)
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle" colspan="2">
-                @T("Admin.Configuration.Settings.RewardPoints.Description")
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.Enabled):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Enabled)
-                @Html.ValidationMessageFor(model => model.Enabled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.ExchangeRate):
-            </td>
-            <td class="adminData">
-                @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
-                @Html.EditorFor(model => model.ExchangeRate)
-                @Model.PrimaryStoreCurrencyCode
-                @Html.ValidationMessageFor(model => model.ExchangeRate)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.MinimumRewardPointsToUse):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.MinimumRewardPointsToUse)
-                @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-                @T("Admin.Configuration.Settings.RewardPoints.Earning")
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PointsForRegistration):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PointsForRegistration)
-                @Html.ValidationMessageFor(model => model.PointsForRegistration)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PointsForPurchases_Amount):
-            </td>
-            <td class="adminData">
-                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
-                @Html.EditorFor(model => model.PointsForPurchases_Amount)
-                @Model.PrimaryStoreCurrencyCode
-                &nbsp;
-                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")
-                @Html.EditorFor(model => model.PointsForPurchases_Points)
-                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")
-                @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
-                @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PointsForPurchases_Awarded):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
-                @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PointsForPurchases_Canceled):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
-                @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.DisplayHowMuchWillBeEarned):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayHowMuchWillBeEarned)
-                @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PointsAccumulatedForAllStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PointsAccumulatedForAllStores)
-                @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
-                @Html.NopLabelFor(model => model.PageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.PageSize)
-                @Html.ValidationMessageFor(model => model.PageSize)
-            </td>
-        </tr>
-    </table>
+
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <p>
+                            @T("Admin.Configuration.Settings.RewardPoints.Description")
+                        </p>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.Enabled)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Enabled)
+                                @Html.ValidationMessageFor(model => model.Enabled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.ExchangeRate_OverrideForStore, model => model.ExchangeRate, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.ExchangeRate)
+                            </div>
+                            <div class="col-sm-9">
+                                @T("Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2")
+                                @Html.NopEditorFor(model => model.ExchangeRate)
+                                @Model.PrimaryStoreCurrencyCode
+                                @Html.ValidationMessageFor(model => model.ExchangeRate)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MinimumRewardPointsToUse_OverrideForStore, model => model.MinimumRewardPointsToUse, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MinimumRewardPointsToUse)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MinimumRewardPointsToUse)
+                                @Html.ValidationMessageFor(model => model.MinimumRewardPointsToUse)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @T("Admin.Configuration.Settings.RewardPoints.Earning")
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PointsForRegistration_OverrideForStore, model => model.PointsForRegistration, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PointsForRegistration)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.PointsForRegistration)
+                                @Html.ValidationMessageFor(model => model.PointsForRegistration)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_OverrideForStore, model => model.PointsForPurchases_Amount, model => model.PointsForPurchases_Points, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PointsForPurchases_Amount)
+                            </div>
+                            <div class="col-sm-9">
+                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint1")
+                                @Html.NopEditorFor(model => model.PointsForPurchases_Amount)
+                                @Model.PrimaryStoreCurrencyCode
+                                &nbsp;
+                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint2")
+                                @Html.NopEditorFor(model => model.PointsForPurchases_Points)
+                                @T("Admin.Configuration.Settings.RewardPoints.Earning.Hint3")
+                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Amount)
+                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Points)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Awarded_OverrideForStore, model => model.PointsForPurchases_Awarded, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PointsForPurchases_Awarded)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
+                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PointsForPurchases_Canceled_OverrideForStore, model => model.PointsForPurchases_Canceled, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PointsForPurchases_Canceled)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
+                                @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.DisplayHowMuchWillBeEarned_OverrideForStore, model => model.DisplayHowMuchWillBeEarned, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.DisplayHowMuchWillBeEarned)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.DisplayHowMuchWillBeEarned)
+                                @Html.ValidationMessageFor(model => model.DisplayHowMuchWillBeEarned)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.PointsAccumulatedForAllStores)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.PointsAccumulatedForAllStores)
+                                @Html.ValidationMessageFor(model => model.PointsAccumulatedForAllStores)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.PageSize_OverrideForStore, model => model.PageSize, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.PageSize)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.PageSize)
+                                @Html.ValidationMessageFor(model => model.PageSize)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
