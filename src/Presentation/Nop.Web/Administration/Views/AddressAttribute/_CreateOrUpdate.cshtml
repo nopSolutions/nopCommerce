@@ -17,20 +17,25 @@
         });
     });
 </script>
-<div id="addressattribute-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Address.AddressAttributes.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Address.AddressAttributes.Values")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabValues()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="addressattribute-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Address.AddressAttributes.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.Address.AddressAttributes.Values")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabValues()
+            </div>
+        </div>
     </div>
 </div>
 
@@ -48,184 +53,187 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    {
-    @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                </div>
+            </div>
     ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-    </table>
-    ))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsRequired):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsRequired)
-                @Html.ValidationMessageFor(model => model.IsRequired)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AttributeControlTypeId):
-            </td>
-            <td class="adminData">
-                @{
-                    var attributeControlTypes = ((AttributeControlType) Model.AttributeControlTypeId)
-                        .ToSelectList(valuesToExclude:
-                        //these attributes don't support some control types
-                        new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
-                }
-                @Html.DropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
-                @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-    </table>
-        
-    }
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
+          ))
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.IsRequired)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IsRequired)
+                        @Html.ValidationMessageFor(model => model.IsRequired)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AttributeControlTypeId)
+                    </div>
+                    <div class="col-sm-9">
+                        @{
+                            var attributeControlTypes = ((AttributeControlType)Model.AttributeControlTypeId)
+                                .ToSelectList(valuesToExclude:
+                                //these attributes don't support some control types
+                                new[] { (int)AttributeControlType.FileUpload, (int)AttributeControlType.Datepicker, (int)AttributeControlType.ColorSquares, (int)AttributeControlType.ImageSquares });
+                        }
+                        @Html.NopDropDownListFor(model => model.AttributeControlTypeId, attributeControlTypes)
+                        @Html.ValidationMessageFor(model => model.AttributeControlTypeId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
 @helper TabValues()
-    { 
-        if (Model.Id > 0)
+        {
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
         {
             /*TODO display the following warning if values are not supported by selected attribute control type
-             'Values are not required for this attribute control type'
-             */
-            <table class="adminContent">
-                <tr>
-                    <td>
-                        <div id="addressattributevalues-grid"></div>
+            'Values are not required for this attribute control type'
+            */
+            <div class="panel-body">
+                <div id="addressattributevalues-grid"></div>
 
-                        <script>
-                            $(document).ready(function () {
-                                $("#addressattributevalues-grid").kendoGrid({
-                                    dataSource: {
-                                        type: "json",
-                                        transport: {
-                                            read: {
-                                                url: "@Html.Raw(Url.Action("ValueList", "AddressAttribute", new { addressAttributeId = Model.Id }))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            },
-                                            destroy: {
-                                                url: "@Html.Raw(Url.Action("ValueDelete", "AddressAttribute"))",
-                                                type: "POST",
-                                                dataType: "json",
-                                                data: addAntiForgeryToken
-                                            }
-                                        },
-                                        schema: {
-                                            data: "Data",
-                                            total: "Total",
-                                            errors: "Errors",
-                                            model: {
-                                                id: "Id"
-                                            }
-                                        },
-                                        error: function(e) {
-                                            display_kendoui_grid_error(e);
-                                            // Cancel the changes
-                                            this.cancelChanges();
-                                        },
-                                        serverPaging: true,
-                                        serverFiltering: true,
-                                        serverSorting: true
+                <script>
+                    $(document).ready(function () {
+                        $("#addressattributevalues-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ValueList", "AddressAttribute", new { addressAttributeId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     },
-                                    pageable: {
-                                        refresh: true,
-                                        numeric: false,
-                                        previousNext: false,
-                                        info: false
-                                    },
-                                    editable: {
-                                        confirmation: false,
-                                        mode: "inline"
-                                    },
-                                    scrollable: false,
-                                    columns: [{
-                                        field: "Name",
-                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.Name")"
-                                    }, {
-                                        field: "IsPreSelected",
-                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")",
-                                        width: 100,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
-                                    }, {
-                                        field: "DisplayOrder",
-                                        title: "@T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")",
-                                        width: 100
-                                    },{
-                                        field: "Id",
-                                        title: "@T("Admin.Common.Edit")",
-                                        width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=addressattribute-form', 800, 350, true); return false;\" class='k-button' />"
-                                    }, {
-                                        command: {name: "destroy", text: "@T("Admin.Common.Delete")"},
-                                        title: "@T("Admin.Common.Delete")",
-                                        width: 100
-                                    }]
-                                });
-                            });
-                        </script>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100%">
-                        <input type="submit" id="btnAddNewValue" value="@T("Admin.Address.AddressAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 350, true); return false;" class="k-button" />
-                        <input type="submit" id="btnRefresh" style="display: none" />
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefresh').click(function () {
-                                    //refresh grid
-                                    var grid = $("#addressattributevalues-grid").data('kendoGrid');
-                                    grid.dataSource.read();
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ValueDelete", "AddressAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id"
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Name",
+                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.Name")"
+                            }, {
+                                field: "IsPreSelected",
+                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.IsPreSelected")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Address.AddressAttributes.Values.Fields.DisplayOrder")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/AddressAttribute/ValueEditPopup/")#=Id#?btnId=btnRefresh&formId=addressattribute-form', 800, 350, true); return false;\" class='btn btn-default' />"
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Address.AddressAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "AddressAttribute", new { addressAttributeId = Model.Id, btnId = "btnRefresh", formId = "addressattribute-form" }))', 800, 350, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnRefresh" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefresh').click(function () {
+                                //refresh grid
+                                var grid = $("#addressattributevalues-grid").data('kendoGrid');
+                                grid.dataSource.read();
 
-                                    //return false to don't reload a page
-                                    return false;
-                                });                                
+                                //return false to don't reload a page
+                                return false;
                             });
-                        </script>
-                    </td>
-                </tr>
-            </table>
+                        });
+                    </script>
+                </div>
         }
         else
         {
-            @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
+            <div class="panel-body">
+                @T("Admin.Address.AddressAttributes.Values.SaveBeforeEdit")
+            </div>
         }
-    }
+    </div>
+}
