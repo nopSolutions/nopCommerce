@@ -148,34 +148,39 @@
                         @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
                     </div>
                 </div>
-            </div>
-            <div class="panel-footer">
-                <input type="button" id="savegeneralsettings" class="btn btn-default" value="@T("Admin.Common.Save")" />
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="button" id="savegeneralsettings" class="btn btn-default" value="@T("Admin.Common.Save")" />
 
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#savegeneralsettings').click(function () {
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#savegeneralsettings').click(function () {
 
-                            var postData = $(this.form).serialize();
-                            addAntiForgeryToken(postData);
+                                    var postData = $(this.form).serialize();
+                                    addAntiForgeryToken(postData);
 
-                            $.ajax({
-                                cache: false,
-                                type: 'POST',
-                                url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
-                                data: postData,
-                                dataType: 'json',
-                                success: function (data) {
-                                    alert('Saved');
-                                },
-                                error: function (xhr, ajaxOptions, thrownError) {
-                                    alert('Failed to add record.');
-                                }
+                                    $.ajax({
+                                        cache: false,
+                                        type: 'POST',
+                                        url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
+                                        data: postData,
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            alert('Saved');
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            alert('Failed to add record.');
+                                        }
+                                    });
+                                    return false;
+                                });
                             });
-                            return false;
-                        });
-                    });
-                </script>
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

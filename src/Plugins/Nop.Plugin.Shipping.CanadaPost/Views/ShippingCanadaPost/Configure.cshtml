@@ -37,9 +37,14 @@
                         @Html.ValidationMessageFor(model => model.CustomerId)
                     </div>
                 </div>
-            </div>
-            <div class="panel-footer">
-                <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
