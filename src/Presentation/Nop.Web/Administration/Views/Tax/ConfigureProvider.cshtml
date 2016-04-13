@@ -1,12 +1,15 @@
 ﻿@model TaxProviderModel
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers.Configure").Text + " - " + Model.FriendlyName;
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-        @T("Admin.Configuration.Tax.Providers.Configure") - @Model.FriendlyName @Html.ActionLink("(" + T("Admin.Configuration.Tax.Providers.BackToList") + ")", "Providers")
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Configuration.Tax.Providers.Configure") - @Model.FriendlyName
+        <small>@Html.ActionLink("(" + T("Admin.Configuration.Tax.Providers.BackToList") + ")", "Providers")</small>
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
 @if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
@@ -15,5 +18,15 @@
 }
 else
 {
-    @T("Admin.Common.ConfigurationNotRequired")
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Common.ConfigurationNotRequired")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
