@@ -4,60 +4,67 @@
 }
 @using System.ServiceModel.Syndication;
 @using Nop.Core.Domain.Common;
-<div class="nop-news">
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-news.gif")" alt="" />
+<div class="box">
+    <div class="box-header with-border clearfix">
+        <div class="box-title">
             @T("Admin.NopCommerceNews")
         </div>
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
     </div>
-    <div class="newsitem">
-        @foreach (var item in Model.Items)
-        {
-            <div class="newstitle">
-                @if (item.Links.Count > 0)
-                {
-                    <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
-                }
-                else
-                {
-                    @item.Title.Text
-                }
-            </div>
-            <div class="newsdate">
-                @item.PublishDate.ToString("d")
-            </div>
-            <div class="newsdetails">
-                @Html.Raw(item.Summary.Text)
-            </div>
-            
-        }
+    <div class="box-body">
+        <div class="panel-group">
+            @foreach (var item in Model.Items)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @if (item.Links.Count > 0)
+                        {
+                            <a href='@(item.Links[0].Uri.OriginalString)'>@item.Title.Text</a>
+                        }
+                        else
+                        {
+                            @item.Title.Text
+                        }
+                        <br/>
+                        @item.PublishDate.ToString("d")
+                    </div>
+                    <div class="panel-body">
+                        @Html.Raw(item.Summary.Text)
+                    </div>
+                </div>
+            }
+        </div>
     </div>
-    <div class="adv">
+    <div class="box-footer">
         <a id="nopcommerceNewsHideAdv" href="#">@(hideAdvertisements ? T("Admin.NopCommerceNews.ShowAdv") : T("Admin.NopCommerceNews.HideAdv"))</a>
         <script type="text/javascript">
-        
-        $(document).ready(function () {
-            $('#nopcommerceNewsHideAdv').click(function () {
-                var postData = {
-                };
-                addAntiForgeryToken(postData);
+            $(document).ready(function () {
+                $('#nopcommerceNewsHideAdv').click(function () {
+                    var postData = {
+                    };
+                    addAntiForgeryToken(postData);
 
-                $.ajax({
-                    cache:false,
-                    type: "POST",
-                    url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
-                    data: postData,
-                    success: function (data) {
-                         location.reload();
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to change setting.');
-                    }  
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "@(Url.Action("NopCommerceNewsHideAdv", "Home"))",
+                        data: postData,
+                        success: function (data) {
+                            location.reload();
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert('Failed to change setting.');
+                        }
+                    });
                 });
             });
-        });
-
         </script>
     </div>
 </div>
