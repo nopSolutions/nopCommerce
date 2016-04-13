@@ -1,62 +1,71 @@
 ﻿@model ShippingMethodModel
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-@(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Locales[item].Name)
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                @(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
+                @<div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
                             @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Locales[item].Description):
-                        </td>
-                        <td class="adminData">
-                            @Html.TextAreaFor(model => model.Locales[item].Description)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Description)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopTextAreaFor(model => model.Locales[item].Description)
                             @Html.ValidationMessageFor(model => model.Locales[item].Description)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                    </div>
+                </div>
                 ,
-                @<table class="adminContent">
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Name):
-                        </td>
-                        <td class="adminData">
-                            @Html.EditorFor(model => model.Name)
+                @<div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Name)
                             @Html.ValidationMessageFor(model => model.Name)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="adminTitle">
-                            @Html.NopLabelFor(model => model.Description):
-                        </td>
-                        <td class="adminData">
-                            @Html.TextAreaFor(model => model.Description)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Description)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopTextAreaFor(model => model.Description)
                             @Html.ValidationMessageFor(model => model.Description)
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             ))
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DisplayOrder):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DisplayOrder)
-            @Html.ValidationMessageFor(model => model.DisplayOrder)
-        </td>
-    </tr>
-</table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DisplayOrder)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DisplayOrder)
+                            @Html.ValidationMessageFor(model => model.DisplayOrder)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
