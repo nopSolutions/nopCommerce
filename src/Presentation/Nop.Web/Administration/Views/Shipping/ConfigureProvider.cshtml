@@ -5,7 +5,7 @@
 }
 <div class="content-header clearfix">
     <h1 class="pull-left">
-        @T("Admin.Configuration.Shipping.Providers.Configure") - @Model.FriendlyName 
+        @T("Admin.Configuration.Shipping.Providers.Configure") - @Model.FriendlyName
         <small>@Html.ActionLink("(" + T("Admin.Configuration.Shipping.Providers.BackToList") + ")", "Providers")</small>
     </h1>
     <div class="pull-right">
@@ -18,5 +18,15 @@
 }
 else
 {
-    @T("Admin.Common.ConfigurationNotRequired")
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Common.ConfigurationNotRequired")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
