@@ -3,41 +3,44 @@
 }
 @model Nop.Plugin.Shipping.AustraliaPost.Models.AustraliaPostShippingModel
 @using Nop.Web.Framework;
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GatewayUrl):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.GatewayUrl)
-                @Html.ValidationMessageFor(model => model.GatewayUrl)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdditionalHandlingCharge):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AdditionalHandlingCharge)
-                @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.HideDeliveryInformation):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.HideDeliveryInformation)
-                @Html.ValidationMessageFor(model => model.HideDeliveryInformation)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>    
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.GatewayUrl)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.GatewayUrl)
+                        @Html.ValidationMessageFor(model => model.GatewayUrl)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.AdditionalHandlingCharge)
+                        @Html.ValidationMessageFor(model => model.AdditionalHandlingCharge)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.HideDeliveryInformation)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.HideDeliveryInformation)
+                        @Html.ValidationMessageFor(model => model.HideDeliveryInformation)
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            </div>
+        </div>
+    </div> 
 }

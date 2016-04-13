@@ -3,34 +3,22 @@
 
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
 }
 @model ShippingByWeightListModel
 @using Nop.Plugin.Shipping.ByWeight.Models;
 @using Nop.Web.Framework;
 @using Nop.Core.Infrastructure;
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
     @Html.AntiForgeryToken()
-    <br />
-    <hr />
-    <br />
-    <table>
-        <tr>
-            <td class="adminTitle">
-                <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
-            </td>
-            <td class="adminData">
-                @T("Plugins.Shipping.ByWeight.Formula.Value")
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
-    <table class="adminContent">
-        <tr>
-            <td>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>
+                    <b>@T("Plugins.Shipping.ByWeight.Formula")</b> 
+                    @T("Plugins.Shipping.ByWeight.Formula.Value")
+                </p>
                 <div id="shipping-byweight-grid"></div>
 
                 <script>
@@ -87,11 +75,11 @@
                             columns: [{
                                 field: "StoreName",
                                 title: "@T("Plugins.Shipping.ByWeight.Fields.Store")",
-                                width: 300
+                                width: 200
                             }, {
                                 field: "WarehouseName",
                                 title: "@T("Plugins.Shipping.ByWeight.Fields.Warehouse")",
-                                width: 300
+                                width: 200
                             }, {
                                 field: "CountryName",
                                 title: "@T("Plugins.Shipping.ByWeight.Fields.Country")",
@@ -111,13 +99,13 @@
                             }, {
                                 field: "DataHtml",
                                 title: "@T("Plugins.Shipping.ByWeight.Fields.DataHtml")",
-                                width: 200,
+                                width: 400,
                                 encoded: false
                             }, {
                                 field: "Id",
                                 title: "@T("Admin.Common.Edit")",
                                 width: 100,
-                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='k-button' />"
+                                template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='btn btn-default' />"
                             },  {
                                 command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                 title: "@T("Admin.Common.Delete")",
@@ -126,53 +114,48 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-        <tr>
-            <td>
+            </div>
+            <div class="panel-footer">
                 @{
-    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
+                    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
                 }
-                <br />
-                <input type="submit" id="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 450, true); return false;" class="k-button" />
-                <input type="submit" id="btnRefresh" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('#btnRefresh').click(function () {
-                            //refresh grid
-                            var grid = $("#shipping-byweight-grid").data('kendoGrid');
-                            //grid.dataSource.page(1); //new search. Set page size to 1
-                            grid.dataSource.read();
+                <input type="submit" id="btnAddNewOption" class="btn btn-default" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 450, true); return false;"/>
+                <input type="submit" id="btnRefresh" class="btn btn-default" style="display: none" />
+            </div>
+                    
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefresh').click(function () {
+                        //refresh grid
+                        var grid = $("#shipping-byweight-grid").data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
 
-                            //return false to don't reload a page
-                            return false;
-                        });                                
+                        //return false to don't reload a page
+                        return false;
                     });
-                </script>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
-    <table>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitMethodsToCreated):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitMethodsToCreated)
-                @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <br/>
-                <input type="button" id="savegeneralsettings" class="k-button" value="@T("Admin.Common.Save")" />
+                });
+            </script>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LimitMethodsToCreated)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LimitMethodsToCreated)
+                        @Html.ValidationMessageFor(model => model.LimitMethodsToCreated)
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <input type="button" id="savegeneralsettings" class="btn btn-default" value="@T("Admin.Common.Save")" />
+
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('#savegeneralsettings').click(function () {
-                            
+
                             var postData = $(this.form).serialize();
                             addAntiForgeryToken(postData);
 
@@ -193,10 +176,7 @@
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
-    <br />
-    <hr />
-    <br />
+            </div>
+        </div>
+    </div>
 }
