@@ -5,14 +5,14 @@
 {
     <script type="text/javascript">
         try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-        catch (e){} 
+        catch (e){}
         window.close();
     </script>
 }
 <script>
     $(document).ready(function() {
         $("#plugin-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -21,20 +21,25 @@
         });
     });
 </script>
-<div id="plugin-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Plugins.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Configuration.Plugins.Stores")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabStores()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="plugin-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Configuration.Plugins.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.Configuration.Plugins.Stores")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabStores()
+            </div>
+        </div>
     </div>
 </div>
 
@@ -50,69 +55,74 @@
 
 
 @helper TabInfo()
-{
-    @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Locales[item].FriendlyName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Locales[item].FriendlyName)
-            @Html.ValidationMessageFor(model => model.Locales[item].FriendlyName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </td>
-    </tr>
-    </table>
-,
-@<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.FriendlyName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.FriendlyName)
-            @Html.ValidationMessageFor(model => model.FriendlyName)
-        </td>
-    </tr>
-    </table>
-))
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DisplayOrder):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.DisplayOrder)
-                @Html.ValidationMessageFor(model => model.DisplayOrder)
-            </td>
-        </tr>
-        @if (Model.CanChangeEnabled)
         {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.IsEnabled):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.IsEnabled)
-                    @Html.ValidationMessageFor(model => model.IsEnabled)
-                </td>
-            </tr>
-        }
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
+                  @<div class="panel-body">
+                      <div class="form-group">
+                          <div class="col-sm-3">
+                              @Html.NopLabelFor(model => model.Locales[item].FriendlyName)
+                          </div>
+                          <div class="col-sm-9">
+                              @Html.NopEditorFor(model => model.Locales[item].FriendlyName)
+                              @Html.ValidationMessageFor(model => model.Locales[item].FriendlyName)
+                          </div>
+                      </div>
+                      <div>
+                          @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                      </div>
+                  </div>
+    ,
+                  @<div class="panel-body">
+                      <div class="form-group">
+                          <div class="col-sm-3">
+                              @Html.NopLabelFor(model => model.FriendlyName)
+                          </div>
+                          <div class="col-sm-9">
+                              @Html.NopEditorFor(model => model.FriendlyName)
+                              @Html.ValidationMessageFor(model => model.FriendlyName)
+                          </div>
+                      </div>
+                  </div>
+                  ))
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.DisplayOrder)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </div>
+                </div>
+                @if (Model.CanChangeEnabled)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.IsEnabled)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.IsEnabled)
+                            @Html.ValidationMessageFor(model => model.IsEnabled)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 
 }
 @helper TabStores()
-{
+        {
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-        
+
             toggleStoreMapping();
         });
 
@@ -120,43 +130,49 @@
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
-            }
-            else {
+            } else {
                 $('#pnl-available-stores').hide();
             }
         }
 
     </script>
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.LimitedToStores):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.LimitedToStores)
-                @Html.ValidationMessageFor(model => model.LimitedToStores)
-            </td>
-        </tr>
-        <tr id="pnl-available-stores">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AvailableStores):
-            </td>
-            <td class="adminData">
-                @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                {
-                    @Html.Action("MultistoreDisabledWarning", "Common")
-                    foreach (var store in Model.AvailableStores)
-                    {
-                    <div>
-                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    }
-                }
-                else
-                {
-                    <div>No stores defined</div>
-                }
-            </td>
-        </tr>
-    </table>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.LimitedToStores)
+                        @Html.ValidationMessageFor(model => model.LimitedToStores)
+                    </div>
+                </div>
+                <div class="form-group" id="pnl-available-stores">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AvailableStores)
+                    </div>
+                    <div class="col-sm-9">
+                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
+                        {
+                            @Html.Action("MultistoreDisabledWarning", "Common")
+                            foreach (var store in Model.AvailableStores)
+                            {
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                    </label>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <text>No stores defined</text>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
