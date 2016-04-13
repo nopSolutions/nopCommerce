@@ -1,5 +1,5 @@
 ﻿@model MiscPluginModel
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Misc.Configure") + " - " + Model.FriendlyName;
 }
@@ -22,7 +22,13 @@
         }
         else
         {
-            @T("Admin.Common.ConfigurationNotRequired")
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @T("Admin.Common.ConfigurationNotRequired")
+                    </div>
+                </div>
+            </div>
         }
     </div>
 </div>
