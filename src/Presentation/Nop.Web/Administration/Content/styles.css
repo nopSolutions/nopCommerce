@@ -245,3 +245,7 @@ table td .form-group {
 .field-validation-error, .validation-summary-errors {
     color: red;
 }
+
+.k-grid tbody td>.k-grid-delete {
+    margin-top: 0;
+}
