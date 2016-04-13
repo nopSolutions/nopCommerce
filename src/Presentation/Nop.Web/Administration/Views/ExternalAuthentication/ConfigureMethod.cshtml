@@ -3,6 +3,7 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ExternalAuthenticationMethods.Configure").Text + " - " + @Model.FriendlyName;
 }
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ExternalAuthenticationMethods.Configure") - @Model.FriendlyName
@@ -12,21 +13,16 @@
         &nbsp;
     </div>
 </div>
-@if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
-{
-    @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
-}
-else
-{
-    <div class="content">
-        <div class="form-horizontal">
-            <div class="panel-group">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Common.ConfigurationNotRequired")
-                    </div>
-                </div>
-            </div>
-        </div>
+
+<div class="content">
+    <div class="form-horizontal">
+        @if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+        {
+            @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+        }
+        else
+        {
+            @T("Admin.Common.ConfigurationNotRequired")
+        }
     </div>
-}
+</div>
