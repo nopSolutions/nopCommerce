@@ -12,6 +12,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tax
 {
@@ -28,6 +29,7 @@ namespace Nop.Services.Tax
         private readonly IPluginFinder _pluginFinder;
         private readonly IGeoLookupService _geoLookupService;
         private readonly ICountryService _countryService;
+        private readonly ILogger _logger;
         private readonly CustomerSettings _customerSettings;
         private readonly AddressSettings _addressSettings;
 
@@ -52,6 +54,7 @@ namespace Nop.Services.Tax
             IPluginFinder pluginFinder,
             IGeoLookupService geoLookupService,
             ICountryService countryService,
+            ILogger logger,
             CustomerSettings customerSettings,
             AddressSettings addressSettings)
         {
@@ -61,6 +64,7 @@ namespace Nop.Services.Tax
             this._pluginFinder = pluginFinder;
             this._geoLookupService = geoLookupService;
             this._countryService = countryService;
+            this._logger = logger;
             this._customerSettings = customerSettings;
             this._addressSettings = addressSettings;
         }
@@ -267,6 +271,13 @@ namespace Nop.Services.Tax
                 
                 taxRate = calculateTaxResult.TaxRate;
             }
+            else
+            {
+                foreach (var error in calculateTaxResult.Errors)
+                {
+                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                }
+            }   
         }
         
 
