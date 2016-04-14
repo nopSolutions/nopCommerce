@@ -537,6 +537,7 @@ namespace Nop.Admin.Infrastructure.Mapper
                 cfg.CreateMap<SpecificationAttributeOption, SpecificationAttributeOptionModel>()
                     .ForMember(dest => dest.NumberOfAssociatedProducts, mo => mo.Ignore())
                     .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                    .ForMember(dest => dest.EnableColorSquaresRgb, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<SpecificationAttributeOptionModel, SpecificationAttributeOption>()
                     .ForMember(dest => dest.SpecificationAttribute, mo => mo.Ignore());
