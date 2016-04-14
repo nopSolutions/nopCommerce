@@ -94,11 +94,26 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <script type="text/javascript">
+                            function toggleLoadedAllowedTokens() {
+                                $('#pnlAllowedTokens').toggle();
+                                if ($('#pnlAllowedTokens').css('display') == 'none') {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
+                                }
+                                else {
+                                    $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
+                                }
+                            }
+                        </script>
+
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.AllowedTokens)
                         </div>
                         <div class="col-sm-9">
-                            @Html.DisplayFor(model => model.AllowedTokens)
+                            <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
+                            <div id="pnlAllowedTokens" style="display: none">
+                                @Html.DisplayFor(model => model.AllowedTokens)
+                            </div>
                         </div>
                     </div>
                 </div>
