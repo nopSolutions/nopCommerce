@@ -11,7 +11,6 @@ using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Media;
@@ -38,6 +37,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Kendoui;
 using Nop.Web.Framework.Mvc;
 using Nop.Core.Caching;
+using Nop.Core.Domain.Vendors;
 
 namespace Nop.Admin.Controllers
 {
@@ -85,6 +85,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IDownloadService _downloadService;
+        private readonly VendorSettings _vendorSettings;
 
         #endregion
 
@@ -129,7 +130,8 @@ namespace Nop.Admin.Controllers
             IShoppingCartService shoppingCartService,
             IProductAttributeFormatter productAttributeFormatter,
             IProductAttributeParser productAttributeParser,
-            IDownloadService downloadService)
+            IDownloadService downloadService,
+            VendorSettings vendorSettings)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
@@ -171,6 +173,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeFormatter = productAttributeFormatter;
             this._productAttributeParser = productAttributeParser;
             this._downloadService = downloadService;
+            this._vendorSettings = vendorSettings;
         }
 
         #endregion 
@@ -939,6 +942,15 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageProducts))
                 return AccessDeniedView();
 
+            if (_workContext.CurrentVendor != null)
+            {
+                if (_productService.GetProductNumberByVendorId(_workContext.CurrentVendor.Id) + 1 > _vendorSettings.MaximumProductNumber)
+                {
+                    ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+                    return RedirectToAction("List");
+                }
+            }
+
             var model = new ProductModel();
             PrepareProductModel(model, null, true, true);
             AddLocales(_languageService, model.Locales);
@@ -960,6 +972,21 @@ namespace Nop.Admin.Controllers
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
+
+                if (model.VendorId != 0)
+                {
+                    if (_productService.GetProductNumberByVendorId(model.VendorId) + 1 > _vendorSettings.MaximumProductNumber)
+                    {
+                        ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+
+                        //If we got this far, something failed, redisplay form
+                        PrepareProductModel(model, null, false, true);
+                        PrepareAclModel(model, null, true);
+                        PrepareStoresMappingModel(model, null, true);
+                        return View(model);
+                    }
+                }
+
                 //vendors cannot edit "Show on home page" property
                 if (_workContext.CurrentVendor != null && model.ShowOnHomePage)
                 {
@@ -1048,6 +1075,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var product = _productService.GetProductById(model.Id);
+           
             if (product == null || product.Deleted)
                 //No product found with the specified id
                 return RedirectToAction("List");
@@ -1063,6 +1091,21 @@ namespace Nop.Admin.Controllers
                 {
                     model.VendorId = _workContext.CurrentVendor.Id;
                 }
+
+                if (model.VendorId != 0)
+                {
+                    if (_productService.GetProductNumberByVendorId(model.VendorId) + 1 > _vendorSettings.MaximumProductNumber)
+                    {
+                        ErrorNotification(String.Format(_localizationService.GetResource("Admin.Catalog.Products.ExceededMaximumNumber"), _vendorSettings.MaximumProductNumber));
+
+                        //If we got this far, something failed, redisplay form
+                        PrepareProductModel(model, product, false, true);
+                        PrepareAclModel(model, product, true);
+                        PrepareStoresMappingModel(model, product, true);
+                        return View(model);
+                    }
+                }
+
                 //vendors cannot edit "Show on home page" property
                 if (_workContext.CurrentVendor != null && model.ShowOnHomePage != product.ShowOnHomePage)
                 {
@@ -1075,6 +1118,7 @@ namespace Nop.Admin.Controllers
 
                 //product
                 product = model.ToEntity(product);
+
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.UpdateProduct(product);
                 //search engine name
@@ -1109,6 +1153,7 @@ namespace Nop.Admin.Controllers
                             product.AppliedDiscounts.Remove(discount);
                     }
                 }
+
                 _productService.UpdateProduct(product);
                 _productService.UpdateHasDiscountsApplied(product);
                 //back in stock notifications
@@ -1139,7 +1184,7 @@ namespace Nop.Admin.Controllers
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
-                
+
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Updated"));
 
                 if (continueEditing)

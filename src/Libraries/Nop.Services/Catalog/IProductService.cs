@@ -251,6 +251,13 @@ namespace Nop.Services.Catalog
         /// <param name="product">Product</param>
         void UpdateHasDiscountsApplied(Product product);
 
+        /// <summary>
+        /// Gets product number by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Count of vendor products</returns>
+        int GetProductNumberByVendorId(int vendorId);
+
         #endregion
 
         #region Inventory management methods
