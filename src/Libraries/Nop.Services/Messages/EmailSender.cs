@@ -79,10 +79,11 @@ namespace Nop.Services.Messages
             message.IsBodyHtml = true;
 
             //headers
-            foreach (var header in headers)
-            {
-                message.Headers.Add(header.Key, header.Value);
-            }
+            if (headers != null)
+                foreach (var header in headers)
+                {
+                    message.Headers.Add(header.Key, header.Value);
+                }
 
             //create  the file attachment for this e-mail message
             if (!String.IsNullOrEmpty(attachmentFilePath) &&
