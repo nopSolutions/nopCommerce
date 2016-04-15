@@ -9,6 +9,7 @@ namespace Nop.Data.Mapping.Logging
             this.ToTable("ActivityLog");
             this.HasKey(al => al.Id);
             this.Property(al => al.Comment).IsRequired();
+            this.Property(al => al.IpAddress).HasMaxLength(40);
 
             this.HasRequired(al => al.ActivityLogType)
                 .WithMany()

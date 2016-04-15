@@ -315,6 +315,8 @@ namespace Nop.Admin.Models.Customers
             public string Comment { get; set; }
             [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.CreatedOn")]
             public DateTime CreatedOn { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.IpAddress")]
+            public string IpAddress { get; set; }
         }
 
         public partial class BackInStockSubscriptionModel : BaseNopEntityModel

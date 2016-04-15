@@ -365,6 +365,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress">
+    <Value>IP address</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress.Hint">
+    <Value>The IP address for the search.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -694,6 +700,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId])
 	VALUES (N'pdfsettings.fontfilename', N'FreeSerif.ttf', 0)
+END
+GO
+
+--new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ActivityLog]') and NAME='IpAddress')
+BEGIN
+	ALTER TABLE [ActivityLog]
+	ADD [IpAddress] nvarchar(40) NULL
 END
 GO
 

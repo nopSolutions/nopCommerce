@@ -8058,6 +8058,12 @@
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress">
+    <Value>IP address</Value>
+  </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.ActivityLog.IpAddress.Hint">
+    <Value>The IP address for the search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.Added">
     <Value>The new customer has been added successfully.</Value>
   </LocaleResource>
