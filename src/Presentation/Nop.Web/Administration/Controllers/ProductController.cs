@@ -2380,6 +2380,11 @@ namespace Nop.Admin.Controllers
             {
                 allowFiltering = false;
             }
+            //we don't allow CustomValue for "Option" attribute type
+            if (attributeTypeId == (int)SpecificationAttributeType.Option)
+            {
+                customValue = null;
+            }
 
             var psa = new ProductSpecificationAttribute
             {
