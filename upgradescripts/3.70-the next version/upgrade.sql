@@ -365,6 +365,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ProductAttributes.Attributes.AlreadyExists">
     <Value>This attribute is already added to this product</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.LoggedInAs">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
