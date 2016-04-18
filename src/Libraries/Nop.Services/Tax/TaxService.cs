@@ -276,13 +276,14 @@ namespace Nop.Services.Tax
                 
                 taxRate = calculateTaxResult.TaxRate;
             }
-            else
-            {
-                foreach (var error in calculateTaxResult.Errors)
+            else 
+                if (_taxSettings.LogErrors)
                 {
-                    _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
-                }
-            }   
+                    foreach (var error in calculateTaxResult.Errors)
+                    {
+                        _logger.Error(string.Format("{0} - {1}", activeTaxProvider.PluginDescriptor.FriendlyName, error), null, customer);
+                    }
+                }   
         }
         
 

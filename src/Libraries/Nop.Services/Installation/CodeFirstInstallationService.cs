@@ -4945,7 +4945,8 @@ namespace Nop.Services.Installation
                 EuVatAllowVatExemption = true,
                 EuVatUseWebService = false,
                 EuVatAssumeValid = false,
-                EuVatEmailAdminWhenNewVatSubmitted = false
+                EuVatEmailAdminWhenNewVatSubmitted = false,
+                LogErrors = true
             });
 
             settingService.SaveSetting(new DateTimeSettings
