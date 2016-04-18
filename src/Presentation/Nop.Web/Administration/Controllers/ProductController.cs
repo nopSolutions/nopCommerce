@@ -3075,6 +3075,7 @@ namespace Nop.Admin.Controllers
 
                         var prevStockQuantity = product.GetTotalStockQuantity();
 
+                        product.Name = pModel.Name;
                         product.Sku = pModel.Sku;
                         product.Price = pModel.Price;
                         product.OldPrice = pModel.OldPrice;
