@@ -15,7 +15,7 @@
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
             <input type="button" id="sendemail" class="btn btn-default" value="@T("Admin.Customers.Customers.SendEmail")" />
-            <input type="button" id="sendprivatemessage" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" />
+            <input type="button" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" data-toggle="modal" data-target="#sendprivatemessage-window"/>
             @if (Model.AllowSendingOfWelcomeMessage)
             {
                 <input type="submit" name="send-welcome-message" class="btn btn-default" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
@@ -114,54 +114,42 @@
 
 
 @*send PM form*@
-<div id="sendprivatemessage-window" style="display:none;">
-    @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
-    {
-        @Html.AntiForgeryToken()
-        <div style="text-align: left;">
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.SendPm.Subject):
-                </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.SendPm.Subject)
-                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
-                </div>
+<div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="sendprivatemessage-window-title">@T("Admin.Customers.Customers.SendPM")</h4>
             </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.SendPm.Message):
+            @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SendPm.Subject):
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SendPm.Subject)
+                                @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SendPm.Message):
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopTextAreaFor(model => model.SendPm.Message)
+                                @Html.ValidationMessageFor(model => model.SendPm.Message)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="@T("Admin.Customers.Customers.SendPM")" />
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopTextAreaFor(model => model.SendPm.Message)
-                    @Html.ValidationMessageFor(model => model.SendPm.Message)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    &nbsp;
-                </div>
-                <div class="col-sm-9">
-                    <input type="submit" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" />
-                </div>
-            </div>
-        </div>
-    }
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#sendprivatemessage").click(function (e) {
-            e.preventDefault();
-            var window = $("#sendprivatemessage-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "500px",
-                    title: "@T("Admin.Customers.Customers.SendPM")",
-                    actions: ["Close"]
-                });
             }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
+        </div>
+    </div>
+</div>
