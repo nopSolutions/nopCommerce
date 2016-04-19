@@ -17,7 +17,7 @@
         <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
         <a href="@Url.Action("ExportXml")" class="btn btn-default">@T("Admin.Common.ExportToXml")</a>
         <a href="@Url.Action("ExportXlsx")" class="btn btn-default">@T("Admin.Common.ExportToExcel")</a>
-        <input type="button" id="importexcel" name="importexcel" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")"/>
+        <input type="button" name="importexcel" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" data-toggle="modal" data-target="#importexcel-window"/>
     </div>
 </div>
 
@@ -155,53 +155,40 @@
 </div>
 
 
-@*import products form*@
-<div id="importexcel-window" style="display: none;">
-    @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        <table style="text-align: left;">
-            <tr>
-                <td colspan="2">
-                    <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <em>@T("Admin.Common.ImportToExcel.ManyRecordsWarning")</em>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @T("Admin.Common.ExcelFile"):
-                </td>
-                <td>
-                    <input type="file" id="importexcelfile" name="importexcelfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="btn btn-default" value="@T("Admin.Common.ImportFromExcel")" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#importexcel").click(function (e) {
-            e.preventDefault();
-            var window = $("#importexcel-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Common.ImportFromExcel")",
-                    actions: ["Close"]
-                });
+@*import categories form*@
+<div id="importexcel-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importexcel-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="importexcel-window-title">@T("Admin.Common.ImportFromExcel")</h4>
+            </div>
+            @using (Html.BeginForm("ImportFromXlsx", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <em>@T("Admin.Catalog.Category.List.ImportFromExcelTip")</em>
+                        <br />
+                        <em>@T("Admin.Common.ImportToExcel.ManyRecordsWarning")</em>
+                        <br />
+                        <br />
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">
+                                    @T("Admin.Common.ExcelFile")
+                                </label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="file" id="importexcelfile" name="importexcelfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromExcel")" />
+                    </div>
+                </div>
             }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
+        </div>
+    </div>
+</div>
