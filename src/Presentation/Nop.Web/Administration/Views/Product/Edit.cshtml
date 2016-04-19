@@ -15,7 +15,7 @@
             <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn btn-default" />
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <input type="submit" id="copyproduct" name="copyproduct" class="btn btn-default" value="@T("Admin.Catalog.Products.Copy")" />
+            <input type="button" name="copyproduct" class="btn btn-default" value="@T("Admin.Catalog.Products.Copy")" data-toggle="modal" data-target="#copyproduct-window"/>
             <span id="product-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
@@ -24,58 +24,49 @@
 @Html.DeleteConfirmation("product-delete")
 
 @*copy product form*@
-<div id="copyproduct-window" style="display:none;">
-    @using (Html.BeginForm("CopyProduct", "Product"))
-    {
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(model => model.CopyProductModel.Id)
-        <table style="text-align: left;">
-            <tr>
-                <td>
-                    @Html.NopLabelFor(model => model.CopyProductModel.Name)
-                </td>
-                <td>
-                    @Html.NopEditorFor(model => model.CopyProductModel.Name)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.NopLabelFor(model => model.CopyProductModel.Published)
-                </td>
-                <td>
-                    @Html.NopEditorFor(model => model.CopyProductModel.Published)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.NopLabelFor(model => model.CopyProductModel.CopyImages)
-                </td>
-                <td>
-                    @Html.NopEditorFor(model => model.CopyProductModel.CopyImages)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="btn btn-default" value="@T("Admin.Catalog.Products.Copy")" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#copyproduct").click(function (e) {
-            e.preventDefault();
-            var window = $("#copyproduct-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Catalog.Products.Copy")",
-                    actions: ["Close"]
-                });
+<div id="copyproduct-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="copyproduct-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="copyproduct-window-title">@T("Admin.Catalog.Products.Copy")</h4>
+            </div>
+            @using (Html.BeginForm("CopyProduct", "Product"))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.CopyProductModel.Id)
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.Name)
+                            </div>
+                            <div class="col-sm-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.Name)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.Published)
+                            </div>
+                            <div class="col-sm-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.Published)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                @Html.NopLabelFor(model => model.CopyProductModel.CopyImages)
+                            </div>
+                            <div class="col-sm-8">
+                                @Html.NopEditorFor(model => model.CopyProductModel.CopyImages)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="@T("Admin.Catalog.Products.Copy")" />
+                    </div>
+                </div>
             }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
+        </div>
+    </div>
+</div>
