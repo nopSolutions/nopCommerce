@@ -74,6 +74,16 @@
                                 @Html.ValidationMessageFor(model => model.AllowSearchByVendor)
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MaximumProductNumber_OverrideForStore, model => model.MaximumProductNumber, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MaximumProductNumber)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MaximumProductNumber)
+                                @Html.ValidationMessageFor(model => model.MaximumProductNumber)
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

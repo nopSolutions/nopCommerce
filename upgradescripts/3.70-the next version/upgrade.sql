@@ -368,6 +368,15 @@ set @resources='
   <LocaleResource Name="Admin.Header.LoggedInAs">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber">
+    <Value>Maximum number of products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Vendor.MaximumProductNumber.Hint">
+    <Value>Sets a maximum number of products per vendor</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.ExceededMaximumNumber">
+    <Value>The maximum allowed number of products has been exceeded ({0})</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -592,6 +601,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.recaptch
 BEGIN
 	INSERT [Setting] ([Name], [Value], [StoreId]) 
 	VALUES (N'captchasettings.recaptchalanguage',N'',0);
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'vendorsettings.maximumproductnumber')
+BEGIN
+	INSERT [Setting] ([Name], [Value], [StoreId]) 
+	VALUES (N'vendorsettings.maximumproductnumber',N'3000',0);
 END
 GO
 

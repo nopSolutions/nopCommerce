@@ -1215,6 +1215,17 @@ namespace Nop.Services.Catalog
             UpdateProduct(product);
         }
 
+
+        /// <summary>
+        /// Gets product number by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Count of vendor products</returns>
+        public int GetProductNumberByVendorId(int vendorId)
+        {
+            return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
+        }
+
         #endregion
 
         #region Inventory management methods
