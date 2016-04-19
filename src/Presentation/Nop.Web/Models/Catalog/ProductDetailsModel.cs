@@ -43,6 +43,8 @@ namespace Nop.Web.Models.Catalog
         public string MetaTitle { get; set; }
         public string SeName { get; set; }
 
+        public ProductType ProductType { get; set; }
+
         public bool ShowSku { get; set; }
         public string Sku { get; set; }
 

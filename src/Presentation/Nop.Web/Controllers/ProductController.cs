@@ -212,6 +212,7 @@ namespace Nop.Web.Controllers
                 MetaDescription = product.GetLocalized(x => x.MetaDescription),
                 MetaTitle = product.GetLocalized(x => x.MetaTitle),
                 SeName = product.GetSeName(),
+                ProductType = product.ProductType,
                 ShowSku = _catalogSettings.ShowProductSku,
                 Sku = product.Sku,
                 ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber,
