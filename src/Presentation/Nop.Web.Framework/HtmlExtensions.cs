@@ -336,15 +336,16 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true)
+            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true, int rows = 8, int columns = 20)
         {
             var result = new StringBuilder();
+
             object htmlAttributes = null;
 
             if (renderFormControlClass)
                 htmlAttributes = new { @class = "form-control" };
 
-            result.Append(helper.TextAreaFor(expression, htmlAttributes));
+            result.Append(helper.TextAreaFor(expression, rows, columns, htmlAttributes));
             
             return MvcHtmlString.Create(result.ToString());
         }
