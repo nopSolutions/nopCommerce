@@ -17,7 +17,7 @@
         </h1>
         <div class="pull-right">
             <input type="submit" name="exportcsv" class="btn btn-default" value="@T("Admin.Common.ExportToCsv")" />
-            <input type="submit" id="importcsv" name="importcsv" class="btn btn-default" value="@T("Admin.Common.ImportFromCsv")" />
+            <input type="button" name="importcsv" class="btn btn-default" value="@T("Admin.Common.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window" />
         </div>
     </div>
 
@@ -75,137 +75,137 @@
                         <div id="newsletter-subscriptions-grid"></div>
 
                         <script>
-                    $(document).ready(function() {
-                        $("#newsletter-subscriptions-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            Email: { editable: true, type: "string" },
-                                            Active: { editable: true, type: "boolean" },
-                                            StoreName: { editable: false, type: "string" },
-                                            CreatedOn: { editable: false, type: "date" }
-                                        }
-                                    }
-                                },
-                                requestEnd: function(e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "Email",
-                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")",
-                                    width: 300
-                                }, {
-                                    field: "Active",
-                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
-                                }, {
-                                    field: "StoreName",
-                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
-                                    width: 300
-                                }, {
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    command: [
-                                        {
-                                            name: "edit",
-                                            text: {
-                                                edit: "@T("Admin.Common.Edit")",
-                                                update: "@T("Admin.Common.Update")",
-                                                cancel: "@T("Admin.Common.Cancel")"
+                            $(document).ready(function() {
+                                $("#newsletter-subscriptions-grid").kendoGrid({
+                                    dataSource: {
+                                        type: "json",
+                                        transport: {
+                                            read: {
+                                                url: "@Html.Raw(Url.Action("SubscriptionList", "NewsLetterSubscription"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: additionalData
+                                            },
+                                            update: {
+                                                url: "@Html.Raw(Url.Action("SubscriptionUpdate", "NewsLetterSubscription"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
+                                            },
+                                            destroy: {
+                                                url: "@Html.Raw(Url.Action("SubscriptionDelete", "NewsLetterSubscription"))",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: addAntiForgeryToken
                                             }
+                                        },
+                                        schema: {
+                                            data: "Data",
+                                            total: "Total",
+                                            errors: "Errors",
+                                            model: {
+                                                id: "Id",
+                                                fields: {
+                                                    Email: { editable: true, type: "string" },
+                                                    Active: { editable: true, type: "boolean" },
+                                                    StoreName: { editable: false, type: "string" },
+                                                    CreatedOn: { editable: false, type: "date" }
+                                                }
+                                            }
+                                        },
+                                        requestEnd: function(e) {
+                                            if (e.type == "update") {
+                                                this.read();
+                                            }
+                                        },
+                                        error: function(e) {
+                                            display_kendoui_grid_error(e);
+                                            // Cancel the changes
+                                            this.cancelChanges();
+                                        },
+                                        pageSize: @(defaultGridPageSize),
+                                        serverPaging: true,
+                                        serverFiltering: true,
+                                        serverSorting: true
+                                    },
+                                    pageable: {
+                                        refresh: true,
+                                        pageSizes: [@(gridPageSizes)]
+                                    },
+                                    editable: {
+                                        confirmation: false,
+                                        mode: "inline"
+                                    },
+                                    scrollable: false,
+                                    columns: [
+                                        {
+                                            field: "Email",
+                                            title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")",
+                                            width: 300
                                         }, {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
+                                            field: "Active",
+                                            title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Active")",
+                                            width: 100,
+                                            headerAttributes: { style: "text-align:center" },
+                                            attributes: { style: "text-align:center" },
+                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                        }, {
+                                            field: "StoreName",
+                                            title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.Store")",
+                                            width: 300
+                                        }, {
+                                            field: "CreatedOn",
+                                            title: "@T("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")",
+                                            width: 200,
+                                            type: "date",
+                                            format: "{0:G}"
+                                        }, {
+                                            command: [
+                                                {
+                                                    name: "edit",
+                                                    text: {
+                                                        edit: "@T("Admin.Common.Edit")",
+                                                        update: "@T("Admin.Common.Update")",
+                                                        cancel: "@T("Admin.Common.Cancel")"
+                                                    }
+                                                }, {
+                                                    name: "destroy",
+                                                    text: "@T("Admin.Common.Delete")"
+                                                }
+                                            ],
+                                            width: 200
                                         }
-                                    ],
-                                    width: 200
-                                }
-                            ]
-                        });
-                    });
+                                    ]
+                                });
+                            });
                         </script>
                         <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#search-subscriptions').click(function() {
-                            var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            return false;
-                        });
+                            $(document).ready(function() {
+                                $('#search-subscriptions').click(function() {
+                                    var grid = $('#newsletter-subscriptions-grid').data('kendoGrid');
+                                    grid.dataSource.page(1); //new search. Set page size to 1
+                                    //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                    return false;
+                                });
 
-                        $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
-                            if (event.keyCode == 13) {
-                                $("#search-subscriptions").click();
-                                return false;
+                                $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function(event) {
+                                    if (event.keyCode == 13) {
+                                        $("#search-subscriptions").click();
+                                        return false;
+                                    }
+                                });
+                            });
+
+                            function additionalData() {
+                                var data = {
+                                    ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
+                                    StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
+                                    CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
+                                    SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
+                                };
+                                addAntiForgeryToken(data);
+                                return data;
                             }
-                        });
-                    });
-
-                    function additionalData() {
-                        var data = {
-                            ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
-                            StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
-                            CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
-                            SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
                         </script>
                     </div>
                 </div>
@@ -215,41 +215,34 @@
 }
 
 @*import emails form*@
-<div id="importcsv-window" style="display:none;">
-    @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-    @Html.AntiForgeryToken()
-        <table style="text-align:left;">
-            <tr>
-                <td>
-                    @T("Admin.Common.CsvFile"):
-                </td>
-                <td>
-                    <input type="file" id="importcsvfile" name="importcsvfile" />
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="submit" class="k-button" value="@T("Admin.Common.ImportFromCsv")" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#importcsv").click(function (e) {
-            e.preventDefault();
-            var window = $("#importcsv-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Common.ImportFromCsv")",
-                    actions: ["Close"]
-                });
+<div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="importcsv-window-title">@T("Admin.Common.ImportFromCsv")</h4>
+            </div>
+            @using (Html.BeginForm("ImportCsv", "NewsLetterSubscription", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">
+                                    @T("Admin.Common.CsvFile")
+                                </label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="file" id="importcsvfile" name="importcsvfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="@T("Admin.Common.ImportFromCsv")" />
+                    </div>
+                </div>
             }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
+        </div>
+    </div>
+</div>
