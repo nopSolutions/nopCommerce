@@ -21,6 +21,22 @@
             @Html.Action("StoreScopeConfiguration", "Setting")
             @Html.ValidationSummary(false)
 
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#@Html.FieldIdFor(model => model.AllowPostVoting)").click(toggleAllowVoting);
+                    toggleAllowVoting();
+                });
+
+                function toggleAllowVoting() {
+                    if ($('#@Html.FieldIdFor(model => model.AllowPostVoting)').is(':checked')) {
+                        $('#pnlMaxVotes').show();
+                    }
+                    else {
+                        $('#pnlMaxVotes').hide();
+                    }
+                }
+            </script>
+
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -92,6 +108,26 @@
                             <div class="col-sm-9">
                                 @Html.NopEditorFor(model => model.AllowCustomersToDeletePosts)
                                 @Html.ValidationMessageFor(model => model.AllowCustomersToDeletePosts)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.AllowPostVoting_OverrideForStore, model => model.AllowPostVoting, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.AllowPostVoting)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.AllowPostVoting)
+                                @Html.ValidationMessageFor(model => model.AllowPostVoting)
+                            </div>
+                        </div>
+                        <div class="form-group"  id="pnlMaxVotes">
+                            <div class="col-sm-3">
+                                @Html.OverrideStoreCheckboxFor(model => model.MaxVotesPerDay_OverrideForStore, model => model.MaxVotesPerDay, Model.ActiveStoreScopeConfiguration)
+                                @Html.NopLabelFor(model => model.MaxVotesPerDay)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.MaxVotesPerDay)
+                                @Html.ValidationMessageFor(model => model.MaxVotesPerDay)
                             </div>
                         </div>
                         <div class="form-group">

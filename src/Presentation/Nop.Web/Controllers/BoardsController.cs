@@ -17,6 +17,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;
@@ -94,6 +95,8 @@ namespace Nop.Web.Controllers
             var forumPosts = _forumService.GetAllPosts(topic.Id, 0, string.Empty, 1, _forumSettings.PostsPageSize);
             topicModel.TotalPostPages = forumPosts.TotalPages;
 
+            var firstPost = topic.GetFirstPost(_forumService);
+            topicModel.Votes = firstPost != null ? firstPost.VoteCount : 0;
             return topicModel;
         }
 
@@ -223,6 +226,7 @@ namespace Nop.Web.Controllers
             model.ViewAllLinkEnabled = true;
             model.ActiveDiscussionsFeedEnabled = _forumSettings.ActiveDiscussionsFeedEnabled;
             model.PostsPageSize = _forumSettings.PostsPageSize;
+            model.AllowPostVoting = _forumSettings.AllowPostVoting;
 
             return PartialView(model);
         }
@@ -250,6 +254,7 @@ namespace Nop.Web.Controllers
             model.ViewAllLinkEnabled = false;
             model.ActiveDiscussionsFeedEnabled = _forumSettings.ActiveDiscussionsFeedEnabled;
             model.PostsPageSize = _forumSettings.PostsPageSize;
+            model.AllowPostVoting = _forumSettings.AllowPostVoting;
             return View(model);
         }
 
@@ -329,6 +334,8 @@ namespace Nop.Web.Controllers
                 model.Description = forum.Description;
 
                 int pageSize = _forumSettings.TopicsPageSize > 0 ? _forumSettings.TopicsPageSize : 10;
+
+                model.AllowPostVoting = _forumSettings.AllowPostVoting;
 
                 //subscription                
                 if (_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
@@ -552,6 +559,16 @@ namespace Nop.Web.Controllers
                         var countryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                         var country = _countryService.GetCountryById(countryId);
                         forumPostModel.CustomerLocation = country != null ? country.GetLocalized(x => x.Name) : string.Empty;
+                    }
+
+                    //votes
+                    if (_forumSettings.AllowPostVoting)
+                    {
+                        forumPostModel.AllowPostVoting = true;
+                        forumPostModel.VoteCount = post.VoteCount;
+                        var postVote = _forumService.GetPostVote(post.Id, _workContext.CurrentCustomer);
+                        if (postVote != null)
+                            forumPostModel.VoteIsUp = postVote.IsUp;
                     }
 
                     // page number is needed for creating post link in _ForumPost partial view
@@ -1559,6 +1576,8 @@ namespace Nop.Web.Controllers
             model.NoResultsVisisble = false;
             model.PostsPageSize = _forumSettings.PostsPageSize;
 
+            model.AllowPostVoting = _forumSettings.AllowPostVoting;
+
             try
             {
                 if (!String.IsNullOrWhiteSpace(searchterms))
@@ -1773,6 +1792,64 @@ namespace Nop.Web.Controllers
             }
 
             return RedirectToRoute("CustomerForumSubscriptions");
+        }
+
+        [HttpPost]
+        public ActionResult PostVote(int postId, bool isUp)
+        {
+            if (!_forumSettings.AllowPostVoting)
+                return new NullJsonResult();
+
+            var forumPost = _forumService.GetPostById(postId);
+            if (forumPost == null)
+                return new NullJsonResult();
+
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Json(new
+                    {
+                        Error = _localizationService.GetResource("Forum.Votes.Login"),
+                        VoteCount = forumPost.VoteCount
+                    });
+
+            if (_workContext.CurrentCustomer.Id == forumPost.CustomerId)
+                return Json(new
+                    {
+                        Error = _localizationService.GetResource("Forum.Votes.OwnPost"),
+                        VoteCount = forumPost.VoteCount
+                    });
+
+            var forumPostVote = _forumService.GetPostVote(postId, _workContext.CurrentCustomer);
+            if (forumPostVote != null)
+            {
+                if ((forumPostVote.IsUp && isUp) || (!forumPostVote.IsUp && !isUp))
+                    return Json(new
+                        {
+                            Error = _localizationService.GetResource("Forum.Votes.AlreadyVoted"),
+                            VoteCount = forumPost.VoteCount
+                        });
+                else
+                {
+                    _forumService.DeletePostVote(forumPostVote);
+                    return Json(new { VoteCount = forumPost.VoteCount });
+                }
+            }
+
+            if (_forumService.GetNumberOfPostVotes(_workContext.CurrentCustomer, DateTime.UtcNow.AddDays(-1)) >= _forumSettings.MaxVotesPerDay)
+                return Json(new
+                {
+                    Error = string.Format(_localizationService.GetResource("Forum.Votes.MaxVotesReached"), _forumSettings.MaxVotesPerDay),
+                    VoteCount = forumPost.VoteCount
+                });
+
+
+            _forumService.InsertPostVote(new ForumPostVote
+            {
+                CustomerId = _workContext.CurrentCustomer.Id,
+                ForumPostId = postId,
+                IsUp = isUp,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            return Json(new { VoteCount = forumPost.VoteCount, IsUp = isUp });
         }
 
         #endregion

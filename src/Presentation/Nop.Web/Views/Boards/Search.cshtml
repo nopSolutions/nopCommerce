@@ -129,6 +129,12 @@
                                     <th class="views">
                                         @T("Forum.Views")
                                     </th>
+                                    @if (Model.AllowPostVoting)
+                                    {
+                                        <th class="votes">
+                                            @T("Forum.Votes")
+                                        </th>
+                                    }
                                     <th class="latest-post">
                                         @T("Forum.LatestPost")
                                     </th>
@@ -195,6 +201,12 @@
                                         <td class="views">
                                             @topic.Views
                                         </td>
+                                        @if (Model.AllowPostVoting)
+                                        { 
+                                            <td class="votes">
+                                                @topic.Votes
+                                            </td>
+                                        }
                                         <td class="latest-post">
                                             @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                         </td>
