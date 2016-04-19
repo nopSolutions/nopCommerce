@@ -8,14 +8,14 @@
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name 
+            @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name
             <small>@Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
             <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn btn-default">@T("Admin.Configuration.Languages.Export")</a>
-            <input type="button" id="importxml" class="btn btn-default" value="@T("Admin.Configuration.Languages.Import")" />
+            <input type="button" class="btn btn-default" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window" />
             <span id="language-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
@@ -25,48 +25,39 @@
 
 
 @*import resources form*@
-<div id="importxml-window" style="display:none;">
-    @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        @Html.AntiForgeryToken()
-        <table style="text-align: left;">
-            <tr class="form-group">
-                <td>
-                    @T("Admin.Configuration.Languages.XmlFile"):
-                </td>
-                <td>
-                    <input type="file" id="importxmlfile" name="importxmlfile" />
-                </td>
-            </tr>
-            <tr class="form-group">
-                <td colspan="2">
-                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
-                    <br />
-                    <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
-                </td>
-            </tr>
-            <tr class="form-group">
-                <td colspan="2">
-                    <input id="importxmlsubmit" type="submit" class="btn btn-default" value="@T("Admin.Configuration.Languages.Import")" />
-                </td>
-            </tr>
-        </table>
-    }
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#importxml").click(function (e) {
-            e.preventDefault();
-            var window = $("#importxml-window");
-            if (!window.data("kendoWindow")) {
-                window.kendoWindow({
-                    modal: true,
-                    width: "400px",
-                    title: "@T("Admin.Configuration.Languages.Import")",
-                    actions: ["Close"]
-                });
+<div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="importxml-window-title">@T("Admin.Configuration.Languages.Import")</h4>
+            </div>
+            @using (Html.BeginForm("ImportXml", "Language", new { id = Model.Id }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    <div class="modal-body">
+                        @Html.AntiForgeryToken()
+                        <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
+                        <br />
+                        <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
+                        <br />
+                        <br />
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <label class="control-label">
+                                    @T("Admin.Configuration.Languages.XmlFile")
+                                </label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="file" id="importxmlfile" name="importxmlfile" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input id="importxmlsubmit" type="submit" class="btn btn-primary" value="@T("Admin.Configuration.Languages.Import")" />
+                    </div>
+                </div>
             }
-            window.data('kendoWindow').center().open();
-        });
-    });
-</script>
+        </div>
+    </div>
+</div>
