@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -309,12 +310,13 @@ namespace Nop.Web.Framework
         }
 
         public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
-            IEnumerable<SelectListItem> itemList, bool renderFormControlClass = true)
+            IEnumerable<SelectListItem> itemList, object htmlAttributes = null, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
-            object htmlAttributes = null;
-            if (renderFormControlClass)
-                htmlAttributes = new { @class = "form-control" };
+
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            //if (renderFormControlClass)
+            //    htmlAttributes = AddFormControlClassToHtmlAttributes(htmlAttributes);
 
             result.Append(helper.DropDownList(name, itemList, htmlAttributes));
 
@@ -348,6 +350,17 @@ namespace Nop.Web.Framework
             result.Append(helper.TextAreaFor(expression, rows, columns, htmlAttributes));
             
             return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static IDictionary<string, object> AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        {
+            if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
+                htmlAttributes["class"] = "form-control";
+            else
+                if (!htmlAttributes["class"].ToString().Contains("form-control"))
+                htmlAttributes["class"] += " form-control";
+
+            return htmlAttributes;
         }
 
         #endregion

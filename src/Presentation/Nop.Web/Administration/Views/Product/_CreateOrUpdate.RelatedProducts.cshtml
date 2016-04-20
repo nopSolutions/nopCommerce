@@ -107,7 +107,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 800, true); return false;" class="btn btn-default" />
+                <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" class="btn btn-default" />
                 <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {

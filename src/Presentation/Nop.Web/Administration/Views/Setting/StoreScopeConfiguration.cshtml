@@ -20,7 +20,7 @@
 <div class="multi-store-scope">
     <div class="selector">
         <span class="title">@T("Admin.Configuration.Settings.StoreScope")</span>
-        @Html.DropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);" })
+        @Html.NopDropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);" })
     </div>
     @if (Model.StoreId > 0)
     {

@@ -437,34 +437,4 @@
         </div>
     </div>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#addVendorNote').click(function () {
-                    var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
-                    $('#addVendorNote').attr('disabled', true);
-
-                    var postData = {
-                        message: vendorNoteMessage,
-                        vendorId: @Model.Id
-                        };
-                    addAntiForgeryToken(postData);
-
-                    $.ajax({
-                        cache:false,
-                        type: "POST",
-                        url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
-                        data: postData,
-                        success: function (data) {
-                            var grid = $("#vendornotes-grid").data('kendoGrid');
-                            grid.dataSource.read();
-                            $('#addVendorNote').attr('disabled', false);
-                        },
-                        error:function (xhr, ajaxOptions, thrownError){
-                            alert('Failed to add vendor note.');
-                            $('#addVendorNote').attr('disabled', false);
-                        }
-                    });
-                });
-            });
-        </script>
 }

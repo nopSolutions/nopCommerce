@@ -133,7 +133,7 @@
                                         }
                                         @if (Model.ShippedDateUtc.HasValue)
                                         {
-                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn bg-light-blue" />
+                                            <input type="submit" value="@T("Admin.Common.Edit")" onclick="oggleShippedDate(true);return false; " id="btnEditShippedDate" class="btn bg-light-blue" />
                                             <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippedDate" name="saveshippeddate" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                             <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleShippedDate(false);return false; " id="btnCancelShippedDate" class="btn bg-teal" />
                                         }
