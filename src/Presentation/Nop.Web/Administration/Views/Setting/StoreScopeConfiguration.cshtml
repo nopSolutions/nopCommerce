@@ -4,11 +4,11 @@
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
     var stores = Model.Stores.Select(store => new SelectListItem
-        {
-            Text = store.Name,
-            Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = store.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
-            Selected = store.Id.Equals(Model.StoreId)
-        })
+    {
+        Text = store.Name,
+        Value = webHelper.ModifyQueryString(Url.Action("ChangeStoreScopeConfiguration", new { storeid = store.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+        Selected = store.Id.Equals(Model.StoreId)
+    })
         .ToList();
     stores.Insert(0, new SelectListItem
     {
@@ -17,17 +17,20 @@
         Selected = 0.Equals(Model.StoreId)
     });
 }
-<div class="multi-store-scope">
-    <div class="selector">
-        <span class="title">@T("Admin.Configuration.Settings.StoreScope")</span>
-        @Html.NopDropDownList("store-scope-configuration", stores, new { onchange = "setLocation(this.value);" })
+<div class="form-group">
+    <div class="col-sm-12">
+        <label class="control-label" style="float:left;margin-right:10px;">@T("Admin.Configuration.Settings.StoreScope")</label>
+        @Html.NopDropDownList("store-scope-configuration", stores, new {onchange = "setLocation(this.value);", style = "width: auto;min-width: 300px;" })
+        @if (Model.StoreId > 0)
+        {
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" onclick="checkAllOverriddenStoreValue(this)">
+                    <b>@T("Admin.Configuration.Settings.StoreScope.CheckAll")</b> @T("Admin.Configuration.Settings.StoreScope.CheckAll.Hint")
+                </label>
+            </div>
+        }
     </div>
-    @if (Model.StoreId > 0)
-    {
-        <div class="check-all">
-            <input type="checkbox" style="vertical-align: text-top" onclick="checkAllOverriddenStoreValue(this)">
-            <b>@T("Admin.Configuration.Settings.StoreScope.CheckAll")</b> @T("Admin.Configuration.Settings.StoreScope.CheckAll.Hint")
-        </div>
-    }
 </div>
+
 
