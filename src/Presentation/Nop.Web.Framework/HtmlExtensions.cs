@@ -315,10 +315,10 @@ namespace Nop.Web.Framework
             var result = new StringBuilder();
 
             var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
-            //if (renderFormControlClass)
-            //    htmlAttributes = AddFormControlClassToHtmlAttributes(htmlAttributes);
+            if (renderFormControlClass)
+                attrs = AddFormControlClassToHtmlAttributes(attrs);
 
-            result.Append(helper.DropDownList(name, itemList, htmlAttributes));
+            result.Append(helper.DropDownList(name, itemList, attrs));
 
             return MvcHtmlString.Create(result.ToString());
         }
@@ -352,7 +352,7 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static IDictionary<string, object> AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
         {
             if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
                 htmlAttributes["class"] = "form-control";
@@ -360,7 +360,7 @@ namespace Nop.Web.Framework
                 if (!htmlAttributes["class"].ToString().Contains("form-control"))
                 htmlAttributes["class"] += " form-control";
 
-            return htmlAttributes;
+            return htmlAttributes as RouteValueDictionary;
         }
 
         #endregion
