@@ -15,11 +15,11 @@
         </div>
     </div>
 
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-
     <div class="content">
         <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.ValidationSummary(false)
+
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -36,8 +36,8 @@
                                 {
                                     @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
                                 }
-                                <input type="submit" name="change-picture-storage" class="btn btn-default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
-                                <br />
+                                <input type="submit" name="change-picture-storage" class="btn btn-default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")"/>
+                                <br/>
                                 <span>@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note")</span>
                             </div>
                         </div>

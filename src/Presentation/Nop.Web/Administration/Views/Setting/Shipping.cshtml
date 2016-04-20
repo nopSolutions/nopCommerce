@@ -16,9 +16,6 @@
         </div>
     </div>
 
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-
     <script type="text/javascript">
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
@@ -50,6 +47,9 @@
 
     <div class="content">
         <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.ValidationSummary(false)
+
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">

@@ -17,11 +17,11 @@
         </div>
     </div>
 
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-
     <div class="content">
         <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.ValidationSummary(false)
+
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
@@ -100,7 +100,7 @@
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Awarded)
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus)Model.PointsForPurchases_Awarded).ToSelectList())
+                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Awarded, ((OrderStatus) Model.PointsForPurchases_Awarded).ToSelectList())
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Awarded)
                             </div>
                         </div>
@@ -110,7 +110,7 @@
                                 @Html.NopLabelFor(model => model.PointsForPurchases_Canceled)
                             </div>
                             <div class="col-sm-9">
-                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus)Model.PointsForPurchases_Canceled).ToSelectList())
+                                @Html.NopDropDownListFor(model => model.PointsForPurchases_Canceled, ((OrderStatus) Model.PointsForPurchases_Canceled).ToSelectList())
                                 @Html.ValidationMessageFor(model => model.PointsForPurchases_Canceled)
                             </div>
                         </div>

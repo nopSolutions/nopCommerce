@@ -16,9 +16,6 @@
         </div>
     </div>
 
-    @Html.Action("StoreScopeConfiguration", "Setting")
-    @Html.ValidationSummary(false)
-
     <script>
         $(document).ready(function() {
             $("#generalsettings-edit").kendoTabStrip({
@@ -34,6 +31,9 @@
 
     <div class="content">
         <div class="form-horizontal">
+            @Html.Action("StoreScopeConfiguration", "Setting")
+            @Html.ValidationSummary(false)
+
             <div id="generalsettings-edit">
                 <ul>
                     <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
