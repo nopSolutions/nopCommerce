@@ -10,156 +10,165 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Catalog.BulkEdit")
-        </div>
-        <div class="options">
+        </h1>
+        <div class="pull-right">
+            &nbsp;
         </div>
     </div>
-    
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchProductName)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchCategoryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchCategoryId", Model.AvailableCategories)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchManufacturerId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchManufacturerId", Model.AvailableManufacturers)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchProductTypeId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownList("SearchProductTypeId", Model.AvailableProductTypes)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-products" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="products-grid"></div>
 
-                <script>
-                    $(document).ready(function() {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("BulkEditSelect", "Product"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: additionalData
-                                    },
-                                    update: {
-                                        url: "@Html.Raw(Url.Action("BulkEditUpdate", "Product"))",
-                                        type: "POST",
-                                        dataType: "json"
-                                    },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("BulkEditDelete", "Product"))",
-                                        type: "POST",
-                                        dataType: "json"
-                                    },
-                                    parameterMap: function(data, operation) {
-                                        if (operation != "read") {
-                                            //post the entities so the ASP.NET DefaultModelBinder will understand them:
-                                            //products[0].Name="name"
-                                            //products[0].Id = 1
-                                            //products[1].Name="name"
-                                            //products[1].Id = 1
+    <div class="content">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductName)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SearchProductName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchCategoryId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchCategoryId", Model.AvailableCategories)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchManufacturerId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchManufacturerId", Model.AvailableManufacturers)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchProductTypeId)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopDropDownList("SearchProductTypeId", Model.AvailableProductTypes)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="button" id="search-products" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                                            var result = {};
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="products-grid"></div>
 
-                                            for (var i = 0; i < data.models.length; i++) {
-                                                var entity = data.models[i];
+                    <script>
+                        $(document).ready(function() {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("BulkEditSelect", "Product"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("BulkEditUpdate", "Product"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("BulkEditDelete", "Product"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        parameterMap: function(data, operation) {
+                                            if (operation != "read") {
+                                                //post the entities so the ASP.NET DefaultModelBinder will understand them:
+                                                //products[0].Name="name"
+                                                //products[0].Id = 1
+                                                //products[1].Name="name"
+                                                //products[1].Id = 1
 
-                                                for (var member in entity) {
-                                                    result["products[" + i + "]." + member] = entity[member];
+                                                var result = {};
+
+                                                for (var i = 0; i < data.models.length; i++) {
+                                                    var entity = data.models[i];
+
+                                                    for (var member in entity) {
+                                                        result["products[" + i + "]." + member] = entity[member];
+                                                    }
                                                 }
+
+                                                addAntiForgeryToken(result);
+                                                return result;
+                                            } else {
+                                                addAntiForgeryToken(data);
+                                                //return JSON.stringify(data);
+                                                return data;
                                             }
-                                            
-                                            addAntiForgeryToken(result);
-                                            return result;
-                                        } else {
-                                            addAntiForgeryToken(data);
-                                            //return JSON.stringify(data);
-                                            return data;
                                         }
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "Id",
-                                        fields: {
-                                            Name: { editable: false, type: "string" },
-                                            ProductId: { editable: false, type: "number" },
-                                            Sku: { editable: true, type: "string" },
-                                            Price: { editable: true, type: "number" },
-                                            OldPrice: { editable: true, type: "number" },
-                                            ManageInventoryMethod: { editable: false, type: "string" },
-                                            StockQuantity: { editable: true, type: "number" },
-                                            Published: { editable: true, type: "boolean" },
-                                            Id: { editable: false, type: "number" }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                ProductId: { editable: false, type: "number" },
+                                                Sku: { editable: true, type: "string" },
+                                                Price: { editable: true, type: "number" },
+                                                OldPrice: { editable: true, type: "number" },
+                                                ManageInventoryMethod: { editable: false, type: "string" },
+                                                StockQuantity: { editable: true, type: "number" },
+                                                Published: { editable: true, type: "boolean" },
+                                                Id: { editable: false, type: "number" }
+                                            }
                                         }
-                                    }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    //bulk editing
+                                    batch: true,
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
                                 },
-                                requestEnd: function (e) {
-                                    if (e.type == "update") {
-                                        this.read();
-                                    }
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
                                 },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
+                                toolbar: ["save", "cancel"],
+                                editable: {
+                                    confirmation: false,
+                                    //bulk editing
+                                    mode: "incell"
                                 },
-                                //bulk editing
-                                batch: true,
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            toolbar: ["save", "cancel"],
-                            editable: {
-                                confirmation: false,
-                                //bulk editing
-                                mode: "incell"
-                            },
-                            scrollable: false,
-                            columns: [ {
+                                scrollable: false,
+                                columns: [ {
                                     field: "Name",
                                     title: "@T("Admin.Catalog.BulkEdit.Fields.Name")",
                                     width: 200
@@ -211,45 +220,45 @@
                                     title: "@T("Admin.Catalog.BulkEdit.Fields.Published")",
                                     width: 200
                                 }, {
-                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" }, 
+                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",
                                     width: 100
                                 }
-                            ]
-                        } );
-                    });
-                </script>
-
-                <script type="text/javascript">
-
-                    $(document).ready(function () {
-                        $('#search-products').click(function () {
-                            var grid = $('#products-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            return false;
+                                ]
+                            } );
                         });
-        
-                        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
-                            if (event.keyCode == 13) {
-                                $("#search-products").click();
+                    </script>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#search-products').click(function () {
+                                var grid = $('#products-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
                                 return false;
-                            }
-                        });
-                    });
+                            });
 
-                    function additionalData() {
-                        var data = {
-                            SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
-                            SearchCategoryId: $('#SearchCategoryId').val(),
-                            SearchManufacturerId: $('#SearchManufacturerId').val(),
-                            SearchProductTypeId: $('#SearchProductTypeId').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
-                </script>
-            </td>
-        </tr>
-    </table>
+                            $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
+                                if (event.keyCode == 13) {
+                                    $("#search-products").click();
+                                    return false;
+                                }
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchProductName: $('#@Html.FieldIdFor(model => model.SearchProductName)').val(),
+                                SearchCategoryId: $('#SearchCategoryId').val(),
+                                SearchManufacturerId: $('#SearchManufacturerId').val(),
+                                SearchProductTypeId: $('#SearchProductTypeId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 }

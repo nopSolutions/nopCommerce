@@ -5,7 +5,7 @@
 <script>
     $(document).ready(function() {
         $("#affiliate-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -14,33 +14,38 @@
         });
     });
 </script>
-<div id="affiliate-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Affiliates.Info")
-        </li>
-        @if (Model.Id > 0)
-        {
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Admin.Affiliates.Customers")
-            </li>
-            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                @T("Admin.Affiliates.Orders")
-            </li>
-        }
-    </ul>
-    <div>
-        @TabInfo()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="affiliate-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Affiliates.Info")
+                </li>
+                @if (Model.Id > 0)
+                {
+                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        @T("Admin.Affiliates.Customers")
+                    </li>
+                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                        @T("Admin.Affiliates.Orders")
+                    </li>
+                }
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div>
+                    @TabCustomers()
+                </div>
+                <div>
+                    @TabOrders()
+                </div>
+            }
+        </div>
     </div>
-    @if (Model.Id > 0)
-    {
-        <div>
-            @TabCustomers()
-        </div>
-        <div>
-            @TabOrders()
-        </div>
-    }
 </div>
 
 @{
@@ -57,123 +62,140 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    {        
-    <table class="adminContent">
-        @if (Model.Id > 0)
         {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Id):
-                </td>
-                <td class="adminData">
-                    @Model.Id
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.Url):
-                </td>
-                <td class="adminData">
-                    @Model.Url
-                </td>
-            </tr>
-        }
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Active):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Active)
-                @Html.ValidationMessageFor(model => model.Active)
-            </td>
-        </tr>
-    </table>
-    @Html.EditorFor(model => model.Address, "Address")
-    <table>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AdminComment):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.AdminComment)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FriendlyUrlName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FriendlyUrlName)
-                @Html.ValidationMessageFor(model => model.FriendlyUrlName)
-            </td>
-        </tr>
-    </table>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @if (Model.Id > 0)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Id)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.Id
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Url)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.Url
+                        </div>
+                    </div>
+                }
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Active)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Active)
+                        @Html.ValidationMessageFor(model => model.Active)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.EditorFor(model => model.Address, "Address")
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.AdminComment)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.AdminComment)
+                        @Html.ValidationMessageFor(model => model.AdminComment)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.FriendlyUrlName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.FriendlyUrlName)
+                        @Html.ValidationMessageFor(model => model.FriendlyUrlName)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
+
 @helper TabCustomers()
-    {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+{
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
 
-    <div id="customers-grid"></div>
-        
-    <script>
-    $(document).ready(function () {
-        $("#customers-grid").kendoGrid({
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: {
-                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id }))",
-                        type: "POST",
-                        dataType: "json",
-                        data: addAntiForgeryToken
-                    }
-                },
-                schema: {
-                    data: "Data",
-                    total: "Total",
-                    errors: "Errors"
-                },
-                error: function(e) {
-                    display_kendoui_grid_error(e);
-                    // Cancel the changes
-                    this.cancelChanges();
-                },
-                pageSize: @(defaultGridPageSize),
-                serverPaging: true,
-                serverFiltering: true,
-                serverSorting: true
-            },
-            pageable: {
-                refresh: true,
-                pageSizes: [@(gridPageSizes)]
-            },
-            editable: {
-                confirmation: false,
-                mode: "inline"
-            },
-            scrollable: false,
-            columns: [{
-                field: "Id",
-                title: "ID",
-                width: 50
-            }, {
-                field: "Name",
-                title: "@T("Admin.Affiliates.Customers.Name")",
-                width: 200
-            }, {
-                field: "Id",
-                title: "@T("Admin.Common.View")",
-                width: 100,
-                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-            }]
-        });
-    });
-</script>
+                <div id="customers-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#customers-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "Id",
+                                title: "ID",
+                                width: 50
+                            }, {
+                                field: "Name",
+                                title: "@T("Admin.Affiliates.Customers.Name")",
+                                width: 200
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
 }
 @helper TabOrders()
 {
-        @Html.Action("AffiliatedOrderList", new { affiliateId = Model.Id })
+    @Html.Action("AffiliatedOrderList", new { affiliateId = Model.Id })
 }

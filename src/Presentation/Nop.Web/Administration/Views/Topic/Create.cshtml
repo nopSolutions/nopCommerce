@@ -6,14 +6,14 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-            @T("Admin.ContentManagement.Topics.AddNew") @Html.ActionLink("(" + T("Admin.ContentManagement.Topics.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.Topics.AddNew") 
+            <small>@Html.ActionLink("(" + T("Admin.ContentManagement.Topics.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

@@ -6,15 +6,15 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-            @T("Admin.ContentManagement.Polls.EditPollDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.ContentManagement.Polls.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="poll-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ContentManagement.Polls.EditPollDetails") - @Model.Name
+            <small>@Html.ActionLink("(" + T("Admin.ContentManagement.Polls.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")"/>
+            <span id="poll-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

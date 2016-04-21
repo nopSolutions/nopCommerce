@@ -14,7 +14,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -60,32 +59,34 @@ namespace Nop.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly CatalogSettings _catalogSettings;
         private readonly HttpContextBase _httpContext;
+        private readonly IMaintenanceService _maintenanceService;
 
         #endregion
 
         #region Constructors
 
-        public CommonController(IPaymentService paymentService, 
+        public CommonController(IPaymentService paymentService,
             IShippingService shippingService,
-            IShoppingCartService shoppingCartService, 
-            ICurrencyService currencyService, 
+            IShoppingCartService shoppingCartService,
+            ICurrencyService currencyService,
             IMeasureService measureService,
-            ICustomerService customerService, 
-            IUrlRecordService urlRecordService, 
-            IWebHelper webHelper, 
+            ICustomerService customerService,
+            IUrlRecordService urlRecordService,
+            IWebHelper webHelper,
             CurrencySettings currencySettings,
-            MeasureSettings measureSettings, 
+            MeasureSettings measureSettings,
             IDateTimeHelper dateTimeHelper,
-            ILanguageService languageService, 
+            ILanguageService languageService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            IPermissionService permissionService, 
+            IPermissionService permissionService,
             ILocalizationService localizationService,
             ISearchTermService searchTermService,
             ISettingService settingService,
             IStoreService storeService,
             CatalogSettings catalogSettings,
-            HttpContextBase httpContext)
+            HttpContextBase httpContext,
+            IMaintenanceService maintenanceService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -108,6 +109,7 @@ namespace Nop.Admin.Controllers
             this._storeService = storeService;
             this._catalogSettings = catalogSettings;
             this._httpContext = httpContext;
+            this._maintenanceService = maintenanceService;
         }
 
         #endregion
@@ -153,7 +155,7 @@ namespace Nop.Admin.Controllers
             {
                 model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly
                 {
-                    FullName =  assembly.FullName,
+                    FullName = assembly.FullName,
                     //we cannot use Location property in medium trust
                     //Location = assembly.Location
                 });
@@ -177,10 +179,10 @@ namespace Nop.Admin.Controllers
                 currentStoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
                 ))
                 model.Add(new SystemWarningModel
-                    {
-                        Level = SystemWarningLevel.Pass,
-                        Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
-                    });
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
+                });
             else
                 model.Add(new SystemWarningModel
                 {
@@ -328,7 +330,7 @@ namespace Nop.Admin.Controllers
                     model.Add(new SystemWarningModel
                     {
                         Level = SystemWarningLevel.Warning,
-                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName)
                     });
 
             //performance settings
@@ -351,7 +353,7 @@ namespace Nop.Admin.Controllers
 
             //validate write permissions (the same procedure like during installation)
             var dirPermissionsOk = true;
-            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(_webHelper);
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite();
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                 {
@@ -370,7 +372,7 @@ namespace Nop.Admin.Controllers
                 });
 
             var filePermissionsOk = true;
-            var filesToCheck = FilePermissionHelper.GetFilesWrite(_webHelper);
+            var filesToCheck = FilePermissionHelper.GetFilesWrite();
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                 {
@@ -394,7 +396,7 @@ namespace Nop.Admin.Controllers
                 var machineKeySection = ConfigurationManager.GetSection("system.web/machineKey") as MachineKeySection;
                 var machineKeySpecified = machineKeySection != null &&
                     !String.IsNullOrEmpty(machineKeySection.DecryptionKey) &&
-                    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate",StringComparison.InvariantCultureIgnoreCase);
+                    !machineKeySection.DecryptionKey.StartsWith("AutoGenerate", StringComparison.InvariantCultureIgnoreCase);
 
                 if (!machineKeySpecified)
                 {
@@ -417,11 +419,10 @@ namespace Nop.Admin.Controllers
             {
                 LogException(exc);
             }
-            
+
             return View(model);
         }
-
-
+        
         public ActionResult Maintenance()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
@@ -433,6 +434,7 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-guests")]
         public ActionResult MaintenanceDeleteGuests(MaintenanceModel model)
@@ -450,6 +452,7 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-abondoned-carts")]
         public ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
@@ -462,6 +465,7 @@ namespace Nop.Admin.Controllers
             model.DeleteAbandonedCarts.NumberOfDeletedItems = _shoppingCartService.DeleteExpiredShoppingCartItems(olderThanDateValue);
             return View(model);
         }
+
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]
         public ActionResult MaintenanceDeleteFiles(MaintenanceModel model)
@@ -487,7 +491,7 @@ namespace Nop.Admin.Controllers
                         continue;
 
                     var info = new FileInfo(fullPath);
-                    if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc)&&
+                    if ((!startDateValue.HasValue || startDateValue.Value < info.CreationTimeUtc) &&
                         (!endDateValue.HasValue || info.CreationTimeUtc < endDateValue.Value))
                     {
                         System.IO.File.Delete(fullPath);
@@ -503,6 +507,82 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        public ActionResult BackupFiles(DataSourceRequest command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var backupFiles = _maintenanceService.GetAllBackupFiles().ToList();
+            
+            var gridModel = new DataSourceResult
+            {
+                Data = backupFiles.Select(p=>new {p.Name,
+                    Length = string.Format("{0:F2} Mb", p.Length / 1024f / 1024f),
+                    Link = _webHelper.GetStoreLocation(false) + "Administration/backups/"+p.Name
+                }),
+                Total = backupFiles.Count
+            };
+            return Json(gridModel);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("backup-database")]
+        public ActionResult BackupDatabase(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            try
+            {
+                _maintenanceService.BackupDatabase();
+                this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupCreated"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("backupFileName", "action")]
+        public ActionResult BackupAction(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var action = this.Request.Form["action"];
+
+            var fileName = this.Request.Form["backupFileName"];
+            var backupPath = _maintenanceService.GetBackupPath(fileName);
+
+            try
+            {
+                switch (action)
+                {
+                    case "delete-backup":
+                    {
+                        System.IO.File.Delete(backupPath);
+                        this.SuccessNotification(string.Format(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.BackupDeleted"), fileName));
+                    }
+                        break;
+                    case "restore-backup":
+                    {
+                        _maintenanceService.RestoreDatabase(backupPath);
+                        this.SuccessNotification(_localizationService.GetResource("Admin.System.Maintenance.BackupDatabase.DatabaseRestored"));
+                    }
+                        break;
+                }
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+            
+            return View(model);
+        }
 
         [ChildActionOnly]
         public ActionResult LanguageSelector()
@@ -653,15 +733,7 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                var urlRecords = new List<UrlRecord>();
-                foreach (var id in selectedIds)
-                {
-                    var urlRecord = _urlRecordService.GetUrlRecordById(id);
-                    if (urlRecord != null)
-                        urlRecords.Add(urlRecord);
-                }
-                foreach (var urlRecord in urlRecords)
-                    _urlRecordService.DeleteUrlRecord(urlRecord);
+                _urlRecordService.DeleteUrlRecords(_urlRecordService.GetUrlRecordsByIds(selectedIds.ToArray()));
             }
 
             return Json(new { Result = true });

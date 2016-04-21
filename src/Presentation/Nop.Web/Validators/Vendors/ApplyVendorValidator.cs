@@ -5,7 +5,7 @@ using Nop.Web.Models.Vendors;
 
 namespace Nop.Web.Validators.Vendors
 {
-    public class ApplyVendorValidator : BaseNopValidator<ApplyVendorModel>
+    public partial class ApplyVendorValidator : BaseNopValidator<ApplyVendorModel>
     {
         public ApplyVendorValidator(ILocalizationService localizationService)
         {

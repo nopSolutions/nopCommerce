@@ -8,121 +8,134 @@
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt=""/>
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Configuration.Settings.AllSettings")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchSettingName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchSettingName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchSettingValue):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchSettingValue)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-settings" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="settings-grid"></div>
 
-            <script>
-                $(document).ready(function() {
-                    $("#settings-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    contentType: "application/json",
-                                    data: additionalData
-                                },
-                                create: {
-                                    url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                update: {
-                                    url: "@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                parameterMap: function(data, operation) {
-                                    if (operation != "read") {
-                                        return data;
-                                    } else {
-                                        //for some reasons only such "Filter" data be parsed
-                                        return JSON.stringify(data);
-                                    }
+<div class="content">
+<div class="form-horizontal">
+<div class="panel-group">
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="col-sm-3">
+                @Html.NopLabelFor(model => model.SearchSettingName)
+            </div>
+            <div class="col-sm-9">
+                @Html.NopEditorFor(model => model.SearchSettingName)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3">
+                @Html.NopLabelFor(model => model.SearchSettingValue)
+            </div>
+            <div class="col-sm-9">
+                @Html.NopEditorFor(model => model.SearchSettingValue)
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3">
+                &nbsp;
+            </div>
+            <div class="col-sm-9">
+                <input type="button" id="search-settings" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="settings-grid"></div>
+
+        <script>
+            $(document).ready(function() {
+                $("#settings-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("AllSettings", "Setting"))",
+                                type: "POST",
+                                dataType: "json",
+                                contentType: "application/json",
+                                data: additionalData
+                            },
+                            create: {
+                                url: "@Html.Raw(Url.Action("SettingAdd", "Setting"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            update: {
+                                url: "@Html.Raw(Url.Action("SettingUpdate", "Setting"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("SettingDelete", "Setting"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            },
+                            parameterMap: function(data, operation) {
+                                if (operation != "read") {
+                                    return data;
+                                } else {
+                                    //for some reasons only such "Filter" data be parsed
+                                    return JSON.stringify(data);
                                 }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        Name: { editable: true, type: "string" },
-                                        Value: { editable: true, type: "string" },
-                                        Store: { editable: true, type: "string" },
-                                        StoreId: { editable: true, type: "number" },
-                                        Id: { editable: false, type: "number" }
-                                    }
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Name: { editable: true, type: "string" },
+                                    Value: { editable: true, type: "string" },
+                                    Store: { editable: true, type: "string" },
+                                    StoreId: { editable: true, type: "number" },
+                                    Id: { editable: false, type: "number" }
                                 }
-                            },
-                            requestEnd: function(e) {
-                                if (e.type == "create" || e.type == "update") {
-                                    this.read();
-                                }
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
+                            }
                         },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
+                        requestEnd: function(e) {
+                            if (e.type == "create" || e.type == "update") {
+                                this.read();
+                            }
                         },
-                        toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
                         },
-                        scrollable: false,
-                        columns: [
+                        pageSize: @(defaultGridPageSize),
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    toolbar: [{ name: "create", text: "@T("Admin.Common.AddNewRecord")" }],
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
                         {
                             field: "Name",
                             title: "@T("Admin.Configuration.Settings.AllSettings.Fields.Name")",
@@ -139,80 +152,82 @@
                             template: "#:Store#"
                         }, {
                             command: [
-                            {
-                                name: "edit",
-                                text: {
-                                    edit: "@T("Admin.Common.Edit")",
-                                    update: "@T("Admin.Common.Update")",
-                                    cancel: "@T("Admin.Common.Cancel")"
-                                }
-                            }, {
-                                name: "destroy",
-                                text: "@T("Admin.Common.Delete")"
+                                {
+                                    name: "edit",
+                                    text: {
+                                        edit: "@T("Admin.Common.Edit")",
+                                        update: "@T("Admin.Common.Update")",
+                                        cancel: "@T("Admin.Common.Cancel")"
                                     }
-                                ],
-                                width: 200
-                            }
-                        ]
-                    });
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }
+                            ],
+                            width: 200
+                        }
+                    ]
                 });
+            });
 
-                //local datasource
-                var allStores = [
-                    {
-                        Id: 0,
-                        Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
-                    }
-                    @{
-                        var storeService = EngineContext.Current.Resolve<IStoreService>();
-                        var allStores = storeService.GetAllStores();
-                    }
-                    @foreach (var store in allStores)
-                    {
-                        <text>
-                    , {
-                        Id: @(store.Id),
-                        Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
-                    }
-                    </text>
-                    }
-                ];
-
-                function storeDropDownEditor(container, options) {
-                    $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
-                        .appendTo(container)
-                        .kendoDropDownList({
-                            autoBind: false,
-                            dataSource: allStores
-                        });
+            //local datasource
+            var allStores = [
+                {
+                    Id: 0,
+                    Name: "@T("Admin.Configuration.Settings.AllSettings.Fields.StoreName.AllStores")"
                 }
-            </script>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $('#search-settings').click(function () {
-                        var grid = $('#settings-grid').data('kendoGrid');
-                        grid.dataSource.page(1);
-                        return false;
-                    });
-                });
-
-                function additionalData() {
-                    var data = {
-                        SearchSettingName: $('#@Html.FieldIdFor(model => model.SearchSettingName)').val(),
-                        SearchSettingValue: $('#@Html.FieldIdFor(model => model.SearchSettingValue)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
+                @{
+                    var storeService = EngineContext.Current.Resolve<IStoreService>();
+                    var allStores = storeService.GetAllStores();
                 }
+                @foreach (var store in allStores)
+                {
+                    <text>
+                , {
+                    Id: @(store.Id),
+                    Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                }
+                </text>
+                }
+            ];
 
-                $("".concat("#@Html.FieldIdFor(model => model.SearchSettingName),",
-                    "#@Html.FieldIdFor(model => model.SearchSettingValue)")).keydown(function (event) {
-                    if (event.keyCode === 13) {
-                        $("#search-settings").click();
-                        return false;
-                    }
+            function storeDropDownEditor(container, options) {
+                $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:StoreId"/>')
+                    .appendTo(container)
+                    .kendoDropDownList({
+                        autoBind: false,
+                        dataSource: allStores
+                    });
+            }
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#search-settings').click(function() {
+                    var grid = $('#settings-grid').data('kendoGrid');
+                    grid.dataSource.page(1);
+                    return false;
                 });
-            </script>
-        </td>
-    </tr>
-</table>
+            });
+
+            function additionalData() {
+                var data = {
+                    SearchSettingName: $('#@Html.FieldIdFor(model => model.SearchSettingName)').val(),
+                    SearchSettingValue: $('#@Html.FieldIdFor(model => model.SearchSettingValue)').val()
+                };
+                addAntiForgeryToken(data);
+                return data;
+            }
+
+            $("".concat("#@Html.FieldIdFor(model => model.SearchSettingName),",
+                "#@Html.FieldIdFor(model => model.SearchSettingValue)")).keydown(function(event) {
+                if (event.keyCode === 13) {
+                    $("#search-settings").click();
+                    return false;
+                }
+            });
+        </script>
+    </div>
+</div>
+</div>
+</div>
+</div>

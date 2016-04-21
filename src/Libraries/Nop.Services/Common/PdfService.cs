@@ -50,7 +50,6 @@ namespace Nop.Services.Common
         private readonly IStoreService _storeService;
         private readonly IStoreContext _storeContext;
         private readonly ISettingService _settingContext;
-        private readonly IWebHelper _webHelper;
         private readonly IAddressAttributeFormatter _addressAttributeFormatter;
 
         private readonly CatalogSettings _catalogSettings;
@@ -79,7 +78,6 @@ namespace Nop.Services.Common
             IStoreService storeService,
             IStoreContext storeContext,
             ISettingService settingContext,
-            IWebHelper webHelper,
             IAddressAttributeFormatter addressAttributeFormatter,
             CatalogSettings catalogSettings, 
             CurrencySettings currencySettings,
@@ -103,7 +101,6 @@ namespace Nop.Services.Common
             this._storeService = storeService;
             this._storeContext = storeContext;
             this._settingContext = settingContext;
-            this._webHelper = webHelper;
             this._addressAttributeFormatter = addressAttributeFormatter;
             this._currencySettings = currencySettings;
             this._catalogSettings = catalogSettings;
@@ -117,12 +114,28 @@ namespace Nop.Services.Common
 
         #region Utilities
 
+        /// <summary>
+        /// Get font
+        /// </summary>
+        /// <returns>Font</returns>
         protected virtual Font GetFont()
         {
             //nopCommerce supports unicode characters
             //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
-            string fontPath = Path.Combine(_webHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
+            return GetFont(_pdfSettings.FontFileName);
+        }
+        /// <summary>
+        /// Get font
+        /// </summary>
+        /// <param name="fontFileName">Font file name</param>
+        /// <returns>Font</returns>
+        protected virtual Font GetFont(string fontFileName)
+        {
+            if (fontFileName == null)
+                throw new ArgumentNullException("fontFileName");
+
+            string fontPath = Path.Combine(CommonHelper.MapPath("~/App_Data/Pdf/"), fontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
@@ -169,7 +182,7 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("order");
 
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = Path.Combine(_webHelper.MapPath("~/content/files/ExportImport"), fileName);
+            string filePath = Path.Combine(CommonHelper.MapPath("~/content/files/ExportImport"), fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 var orders = new List<Order>();

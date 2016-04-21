@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.Routing;
 using System.Web.WebPages;
 using Nop.Core;
 using Nop.Core.Infrastructure;
@@ -33,6 +34,7 @@ namespace Nop.Web.Framework
             builder.MergeAttribute("src", url);
             builder.MergeAttribute("alt", value);
             builder.MergeAttribute("title", value);
+            builder.MergeAttribute("class", "ico-help");
 
             // Render tag
             return MvcHtmlString.Create(builder.ToString());
@@ -129,7 +131,7 @@ namespace Nop.Web.Framework
             if (String.IsNullOrEmpty(actionName))
                 actionName = "Delete";
 
-            var modalId =  MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
+            var modalId = MvcHtmlString.Create(helper.ViewData.ModelMetadata.ModelType.Name.ToLower() + "-delete-confirmation")
                 .ToHtmlString();
 
             var deleteConfirmationModel = new DeleteConfirmationModel
@@ -163,28 +165,6 @@ namespace Nop.Web.Framework
             window.AppendLine("</script>");
 
             return MvcHtmlString.Create(window.ToString());
-        }
-
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
-        {
-            var result = new StringBuilder();
-            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
-            var hintResource = string.Empty;
-            object value;
-            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
-            {
-                var resourceDisplayName = value as NopResourceDisplayName;
-                if (resourceDisplayName != null && displayHint)
-                {
-                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
-                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-
-                    result.Append(helper.Hint(hintResource).ToHtmlString());
-                }
-            }
-            result.Append(helper.LabelFor(expression, new { title = hintResource }));
-            return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString OverrideStoreCheckboxFor<TModel, TValue>(this HtmlHelper<TModel> helper,
@@ -276,15 +256,114 @@ namespace Nop.Web.Framework
             //ensure it's not negative
             if (indexToSelect < 0)
                 indexToSelect = 0;
-            
+
             //required validation
             if (indexToSelect == currentIndex)
             {
-            return new MvcHtmlString(" class='k-state-active'");
+                return new MvcHtmlString(" class='k-state-active'");
             }
 
             return new MvcHtmlString("");
         }
+
+
+        #region Form fields
+
+        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
+        {
+            var result = new StringBuilder();
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            var hintResource = string.Empty;
+            object value;
+
+            if (metadata.AdditionalValues.TryGetValue("NopResourceDisplayName", out value))
+            {
+                var resourceDisplayName = value as NopResourceDisplayName;
+                if (resourceDisplayName != null && displayHint)
+                {
+                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+                    hintResource = EngineContext.Current.Resolve<ILocalizationService>()
+                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
+
+                    result.Append(helper.Hint(hintResource).ToHtmlString());
+                }
+            }
+            result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+            Expression<Func<TModel, TValue>> expression, bool? renderFormControlClass = null)
+        {
+            var result = new StringBuilder();
+            object htmlAttributes = null;
+
+            var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
+            if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
+                (renderFormControlClass.HasValue && renderFormControlClass.Value))
+                htmlAttributes = new {@class = "form-control"};
+
+            result.Append(helper.EditorFor(expression, new { htmlAttributes }));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownList<TModel>(this HtmlHelper<TModel> helper, string name,
+            IEnumerable<SelectListItem> itemList, object htmlAttributes = null, bool renderFormControlClass = true)
+        {
+            var result = new StringBuilder();
+
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            if (renderFormControlClass)
+                attrs = AddFormControlClassToHtmlAttributes(attrs);
+
+            result.Append(helper.DropDownList(name, itemList, attrs));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList, bool renderFormControlClass = true)
+        {
+            var result = new StringBuilder();
+            object htmlAttributes = null;
+
+            if (renderFormControlClass)
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.DropDownListFor(expression, itemList, htmlAttributes));
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true, int rows = 8, int columns = 20)
+        {
+            var result = new StringBuilder();
+
+            object htmlAttributes = null;
+
+            if (renderFormControlClass)
+                htmlAttributes = new { @class = "form-control" };
+
+            result.Append(helper.TextAreaFor(expression, rows, columns, htmlAttributes));
+            
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
+        {
+            if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))
+                htmlAttributes["class"] = "form-control";
+            else
+                if (!htmlAttributes["class"].ToString().Contains("form-control"))
+                htmlAttributes["class"] += " form-control";
+
+            return htmlAttributes as RouteValueDictionary;
+        }
+
+        #endregion
 
         #endregion
 
@@ -379,7 +458,7 @@ namespace Nop.Web.Framework
             for (int i = 1; i <= 12; i++)
             {
                 months.AppendFormat("<option value='{0}'{1}>{2}</option>",
-                                    i, 
+                                    i,
                                     (selectedMonth.HasValue && selectedMonth.Value == i) ? " selected=\"selected\"" : null,
                                     CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
             }
@@ -431,7 +510,7 @@ namespace Nop.Web.Framework
         {
             string htmlFieldName = ExpressionHelper.GetExpressionText(expression);
             var metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
-            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new [] { '.' }).Last());
+            string resolvedLabelText = metadata.DisplayName ?? (metadata.PropertyName ?? htmlFieldName.Split(new[] { '.' }).Last());
             if (string.IsNullOrEmpty(resolvedLabelText))
             {
                 return MvcHtmlString.Empty;
@@ -453,4 +532,3 @@ namespace Nop.Web.Framework
         #endregion
     }
 }
-

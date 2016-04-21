@@ -3,142 +3,148 @@
     ViewBag.Title = T("Admin.ContentManagement.Forums.Manage").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.ContentManagement.Forums.Manage")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("CreateForumGroup")" class="k-button">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
-        <a href="@Url.Action("CreateForum")" class="k-button">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("CreateForumGroup")" class="btn btn-default">@T("Admin.ContentManagement.Forums.ForumGroup.CreateForumGroup")</a>
+        <a href="@Url.Action("CreateForum")" class="btn btn-default">@T("Admin.ContentManagement.Forums.Forum.CreateForum")</a>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="forumgroup-grid"></div>
 
-            <script>
-                $(document).ready(function() {
-                    $("#forumgroup-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ForumGroupList", "Forum"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div id="forumgroup-grid"></div>
+
+                    <script>
+                        $(document).ready(function() {
+                            $("#forumgroup-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ForumGroupList", "Forum"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                //details grid
+                                detailInit: detailInit,
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "CreatedOn",
+                                        title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: '<a href="EditForumGroup/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+
                         //details grid
-                        detailInit: detailInit,
-                        scrollable: false,
-                        columns: [
-                            {
-                                field: "Name",
-                                title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.Name")",
-                                width: 300
-                            }, {
-                                field: "DisplayOrder",
-                                title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.DisplayOrder")",
-                                width: 100
-                            }, {
-                                field: "CreatedOn",
-                                title: "@T("Admin.ContentManagement.Forums.ForumGroup.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="EditForumGroup/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }
-                        ]
-                    });
-                });
-
-                //details grid
-                function detailInit(e) {
-                    $("<div/>").appendTo(e.detailCell).kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        scrollable: false,
-                        sortable: true,
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        columns: [
-                            {
-                                field: "Name",
-                                title: "@T("Admin.ContentManagement.Forums.Forum.Fields.Name")",
-                                width: 300
-                            },{
-                                field: "DisplayOrder",
-                                title: "@T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")",
-                                width: 150
-                            },{
-                                field: "CreatedOn",
-                                title: "@T("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn")",
-                                width: 150,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="EditForum/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }
-                        ]
-                    });
-                }
-            </script>
-        </td>
-    </tr>
-</table>
+                        function detailInit(e) {
+                            $("<div/>").appendTo(e.detailCell).kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ForumList", "Forum"))?forumGroupId=" + e.data.Id,
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                scrollable: false,
+                                sortable: true,
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                columns: [
+                                    {
+                                        field: "Name",
+                                        title: "@T("Admin.ContentManagement.Forums.Forum.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.ContentManagement.Forums.Forum.Fields.DisplayOrder")",
+                                        width: 150
+                                    }, {
+                                        field: "CreatedOn",
+                                        title: "@T("Admin.ContentManagement.Forums.Forum.Fields.CreatedOn")",
+                                        width: 150,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 100,
+                                        template: '<a href="EditForum/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

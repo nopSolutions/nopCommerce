@@ -3,10 +3,12 @@
     //page title
     ViewBag.Title = T("Admin.System.SystemInfo").Text;
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.System.SystemInfo")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
 
@@ -31,104 +33,113 @@
         }
     }
 </script>
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.NopVersion):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.NopVersion)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OperatingSystem):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.OperatingSystem)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AspNetInfo):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.AspNetInfo)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.IsFullTrust):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.IsFullTrust)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ServerTimeZone):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.ServerTimeZone)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ServerLocalTime):
-        </td>
-        <td class="adminData">
-            @Model.ServerLocalTime.ToString("F")
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.UtcTime):
-        </td>
-        <td class="adminData">
-            @Model.UtcTime.ToString("F")
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.HttpHost):
-        </td>
-        <td class="adminData">
-            @Model.HttpHost
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ServerVariables):
-        </td>
-        <td class="adminData">
-            <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
-            <div id="pnlServerVariables" style="display:none">
-                @foreach (var serverVariable in Model.ServerVariables)
-                {
-                    @serverVariable.Name<text>:</text> @serverVariable.Value
-                    <br />
-                }
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.NopVersion)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.NopVersion)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.OperatingSystem)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.OperatingSystem)
+                        </div>
+                    </div>  
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AspNetInfo)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.AspNetInfo)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.IsFullTrust)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.IsFullTrust)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ServerTimeZone)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.ServerTimeZone)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ServerLocalTime)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.ServerLocalTime.ToString("F")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.UtcTime)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.UtcTime.ToString("F")
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.HttpHost)
+                        </div>
+                        <div class="col-sm-9">
+                            @Model.HttpHost
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ServerVariables)
+                        </div>
+                        <div class="col-sm-9">
+                            <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
+                            <div id="pnlServerVariables" style="display:none">
+                                @foreach (var serverVariable in Model.ServerVariables)
+                                {
+                                    @serverVariable.Name<text>:</text> @serverVariable.Value
+                                    <br />
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.LoadedAssemblies)
+                        </div>
+                        <div class="col-sm-9">
+                            <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
+                            <div id="pnlLoadedAssemblies" style="display:none">
+                                @foreach (var assembly in Model.LoadedAssemblies)
+                                {
+                                    @assembly.FullName
+                                    if (!String.IsNullOrEmpty(assembly.Location))
+                                    {
+                                        <br />
+                                        <em>@assembly.Location</em>
+                                    }
+                                    <br />
+                                }
+                            </div>
+                        </div>
+                    </div>  
+                </div>           
             </div>
-</td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LoadedAssemblies):
-        </td>
-        <td class="adminData">
-            <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
-            <div id="pnlLoadedAssemblies" style="display:none">
-                @foreach (var assembly in Model.LoadedAssemblies)
-                {
-                    @assembly.FullName
-                    if (!String.IsNullOrEmpty(assembly.Location))
-                    {
-                        <br />
-                        <em>@assembly.Location</em>
-                    }
-                    <br />
-                }
-            </div>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+</div>

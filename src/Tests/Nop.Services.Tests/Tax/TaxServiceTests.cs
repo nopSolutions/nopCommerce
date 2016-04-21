@@ -8,6 +8,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Events;
+using Nop.Services.Logging;
 using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Tax
         private ITaxService _taxService;
         private IGeoLookupService _geoLookupService;
         private ICountryService _countryService;
+        private ILogger _logger;
         private CustomerSettings _customerSettings;
         private AddressSettings _addressSettings;
 
@@ -47,11 +49,12 @@ namespace Nop.Services.Tests.Tax
 
             _geoLookupService = MockRepository.GenerateMock<IGeoLookupService>();
             _countryService = MockRepository.GenerateMock<ICountryService>();
+            _logger = MockRepository.GenerateMock<ILogger>();
             _customerSettings = new CustomerSettings();
             _addressSettings = new AddressSettings();
 
             _taxService = new TaxService(_addressService, _workContext, _taxSettings,
-                pluginFinder, _geoLookupService, _countryService
+                pluginFinder, _geoLookupService, _countryService, _logger
                 , _customerSettings, _addressSettings);
         }
 

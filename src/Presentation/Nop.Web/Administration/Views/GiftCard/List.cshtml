@@ -7,153 +7,163 @@
     ViewBag.Title = T("Admin.GiftCards").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.GiftCards")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ActivatedId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownListFor(model => model.ActivatedId, Model.ActivatedList)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CouponCode):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CouponCode)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.RecipientName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.RecipientName)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-giftcards" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="giftcards-grid"></div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ActivatedId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownListFor(model => model.ActivatedId, Model.ActivatedList)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CouponCode)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.CouponCode)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.RecipientName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.RecipientName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="search-giftcards" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#giftcards-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("GiftCardList", "GiftCard"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "AmountStr",
-                            title: "@T("Admin.GiftCards.Fields.Amount")"
-                        }, {
-                            field: "RemainingAmountStr",
-                            title: "@T("Admin.GiftCards.Fields.RemainingAmount")"
-                        }, {
-                            field: "GiftCardCouponCode",
-                            title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
-                        }, {
-                            field: "RecipientName",
-                            title: "@T("Admin.GiftCards.Fields.RecipientName")"
-                        }, {
-                            field: "IsGiftCardActivated",
-                            title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsGiftCardActivated#.gif" />'
-                        }, {
-                            field: "CreatedOn",
-                            title: "@T("Admin.GiftCards.Fields.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="giftcards-grid"></div>
 
-            <script type="text/javascript">
+                    <script>
+                        $(document).ready(function () {
+                            $("#giftcards-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("GiftCardList", "GiftCard"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "AmountStr",
+                                    title: "@T("Admin.GiftCards.Fields.Amount")"
+                                }, {
+                                    field: "RemainingAmountStr",
+                                    title: "@T("Admin.GiftCards.Fields.RemainingAmount")"
+                                }, {
+                                    field: "GiftCardCouponCode",
+                                    title: "@T("Admin.GiftCards.Fields.GiftCardCouponCode")"
+                                }, {
+                                    field: "RecipientName",
+                                    title: "@T("Admin.GiftCards.Fields.RecipientName")"
+                                }, {
+                                    field: "IsGiftCardActivated",
+                                    title: "@T("Admin.GiftCards.Fields.IsGiftCardActivated")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsGiftCardActivated#.gif" />'
+                                }, {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.GiftCards.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                }]
+                            });
+                        });
+                    </script>
 
-                $(document).ready(function () {
+                    <script type="text/javascript">
 
-                    $('#search-giftcards').click(function () {
-                        var grid = $('#giftcards-grid').data('kendoGrid');
-                        grid.dataSource.page(1); //new search. Set page size to 1
-                        //grid.dataSource.read(); we already loaded the grid above using "page" function
-                        return false;
-                    });
-                });
+                        $(document).ready(function () {
 
-                $("#@Html.FieldIdFor(model => model.CouponCode)").keydown(function (event) {
-                    if (event.keyCode == 13) {
-                        $("#search-giftcards").click();
-                        return false;
-                    }
-                });
+                            $('#search-giftcards').click(function () {
+                                var grid = $('#giftcards-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                return false;
+                            });
+                        });
 
-                function additionalData() {
-                    var data = {
-                        ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
-                        CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val(),
-                        RecipientName: $('#@Html.FieldIdFor(model => model.RecipientName)').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
+                        $("#@Html.FieldIdFor(model => model.CouponCode)").keydown(function (event) {
+                            if (event.keyCode == 13) {
+                                $("#search-giftcards").click();
+                                return false;
+                            }
+                        });
 
-            </script>
-        </td>
-    </tr>
-</table>
+                        function additionalData() {
+                            var data = {
+                                ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
+                                CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val(),
+                                RecipientName: $('#@Html.FieldIdFor(model => model.RecipientName)').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

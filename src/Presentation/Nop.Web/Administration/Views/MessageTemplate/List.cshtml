@@ -4,117 +4,133 @@
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.ContentManagement.MessageTemplates")
-    </div>
-    <div class="options">
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchStoreId):
-        </td>
-        <td class="adminData">
-            @Html.DropDownList("SearchStoreId", Model.AvailableStores)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-templates" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="templates-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#templates-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "MessageTemplate"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            numeric: false,
-                            previousNext: false,
-                            info: false
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Name")"
-                        }, {
-                            field: "Subject",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Subject")"
-                        }, {
-                            field: "IsActive",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.IsActive")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
-                        }, {
-                            field: "ListOfStores",
-                            title: "@T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")"
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
-                    });
-                });
-            </script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SearchStoreId)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="search-templates" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <script type="text/javascript">
+            <div class="panel panel-default">
+                <div class="panel-body">
 
-                $(document).ready(function () {
-                    //search button
-                    $('#search-templates').click(function () {
-                        //search
-                        var grid = $('#templates-grid').data('kendoGrid');
-                        grid.dataSource.read();
-                    });
-                });
+                    <div id="templates-grid"></div>
 
-                function additionalData() {
-                    var data = {
-                        SearchStoreId: $('#SearchStoreId').val()
-                    };
-                    addAntiForgeryToken(data);
-                    return data;
-                }
-            </script>
-        </td>
-    </tr>
-</table>
+                    <script>
+                        $(document).ready(function() {
+                            $("#templates-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "MessageTemplate"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: additionalData
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Name",
+                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Name")"
+                                }, {
+                                    field: "Subject",
+                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.Subject")"
+                                }, {
+                                    field: "IsActive",
+                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.IsActive")",
+                                    width: 100,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsActive#.gif" />'
+                                }, {
+                                    field: "ListOfStores",
+                                    title: "@T("Admin.ContentManagement.MessageTemplates.Fields.LimitedToStores")"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
+                            });
+                        });
+                    </script>
+
+                    <script type="text/javascript">
+
+                        $(document).ready(function() {
+                            //search button
+                            $('#search-templates').click(function() {
+                                //search
+                                var grid = $('#templates-grid').data('kendoGrid');
+                                grid.dataSource.read();
+                            });
+                        });
+
+                        function additionalData() {
+                            var data = {
+                                SearchStoreId: $('#SearchStoreId').val()
+                            };
+                            addAntiForgeryToken(data);
+                            return data;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

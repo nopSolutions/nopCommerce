@@ -2,185 +2,193 @@
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 
-<table class="adminContent">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.PriorityName):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.PriorityName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.From):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.From)
-            @Html.ValidationMessageFor(model => model.From)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.FromName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.FromName)
-            @Html.ValidationMessageFor(model => model.FromName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.To):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.To)
-            @Html.ValidationMessageFor(model => model.To)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ToName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ToName)
-            @Html.ValidationMessageFor(model => model.ToName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ReplyTo):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ReplyTo)
-            @Html.ValidationMessageFor(model => model.ReplyTo)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ReplyToName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.ReplyToName)
-            @Html.ValidationMessageFor(model => model.ReplyToName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CC):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.CC)
-            @Html.ValidationMessageFor(model => model.CC)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Bcc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Bcc)
-            @Html.ValidationMessageFor(model => model.Bcc)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Subject):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Subject)
-            @Html.ValidationMessageFor(model => model.Subject)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.Body):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.Body, "RichEditor")
-            @Html.ValidationMessageFor(model => model.Body)
-        </td>
-    </tr>
-    @if (!String.IsNullOrEmpty(Model.AttachmentFilePath))
-    {
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AttachmentFilePath):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.AttachmentFilePath)
-        </td>
-    </tr>
-    }
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.CreatedOn):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SendImmediately):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SendImmediately)
-            @Html.ValidationMessageFor(model => model.SendImmediately)
-        </td>
-    </tr>
-    <tr id="pnl-send-date">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.DontSendBeforeDate):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.DontSendBeforeDate)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SentTries):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SentTries)
-            @Html.ValidationMessageFor(model => model.SentTries)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SentOn):
-        </td>
-        <td class="adminData">
-            @if (Model.SentOn.HasValue)
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.PriorityName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.PriorityName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.From)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.From)
+                            @Html.ValidationMessageFor(model => model.From)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.FromName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.FromName)
+                            @Html.ValidationMessageFor(model => model.FromName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.To)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.To)
+                            @Html.ValidationMessageFor(model => model.To)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ToName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.ToName)
+                            @Html.ValidationMessageFor(model => model.ToName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ReplyTo)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.ReplyTo)
+                            @Html.ValidationMessageFor(model => model.ReplyTo)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.ReplyToName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.ReplyToName)
+                            @Html.ValidationMessageFor(model => model.ReplyToName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CC)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.CC)
+                            @Html.ValidationMessageFor(model => model.CC)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Bcc)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Bcc)
+                            @Html.ValidationMessageFor(model => model.Bcc)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Subject)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Subject)
+                            @Html.ValidationMessageFor(model => model.Subject)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Body)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.EditorFor(model => model.Body, "RichEditor")
+                            @Html.ValidationMessageFor(model => model.Body)
+                        </div>
+                    </div>
+                    @if (!String.IsNullOrEmpty(Model.AttachmentFilePath))
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.AttachmentFilePath)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.DisplayFor(model => model.AttachmentFilePath)
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.CreatedOn)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.CreatedOn)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SendImmediately)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.SendImmediately)
+                            @Html.ValidationMessageFor(model => model.SendImmediately)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnl-send-date">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.DontSendBeforeDate)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.DontSendBeforeDate)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SentTries)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.SentTries)
+                            @Html.ValidationMessageFor(model => model.SentTries)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SentOn)
+                        </div>
+                        <div class="col-sm-9">
+                            @if (Model.SentOn.HasValue)
             {
-                @Html.DisplayFor(model => model.SentOn)
-            }
-            else
-            {
-                @T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")
-            }
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.EmailAccountName):
-        </td>
-        <td class="adminData">
-            @Html.DisplayFor(model => model.EmailAccountName)
-        </td>
-    </tr>
-</table>
+                                @Html.DisplayFor(model => model.SentOn)
+                            }
+                            else
+                            {
+                                @T("Admin.System.QueuedEmails.Fields.SentOn.NotSent")
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.EmailAccountName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.DisplayFor(model => model.EmailAccountName)
+                        </div>
+                    </div>
+                </div>
 
-<script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
-            sendImmediately();
-        });
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#@Html.FieldIdFor(model => model.SendImmediately)").click(sendImmediately);
+                        sendImmediately();
+                    });
 
-        function sendImmediately() {
-            if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
-                $('#pnl-send-date').hide();
-            else
-                $('#pnl-send-date').show();
-        }
-</script>
+                    function sendImmediately() {
+                        if ($('#@Html.FieldIdFor(model => model.SendImmediately)').is(':checked'))
+                            $('#pnl-send-date').hide();
+                        else
+                            $('#pnl-send-date').show();
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

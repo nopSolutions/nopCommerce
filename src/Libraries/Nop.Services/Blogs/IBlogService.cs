@@ -24,6 +24,13 @@ namespace Nop.Services.Blogs
         BlogPost GetBlogPostById(int blogPostId);
 
         /// <summary>
+        /// Gets blog posts
+        /// </summary>
+        /// <param name="blogPostIds">Blog post identifiers</param>
+        /// <returns>Blog posts</returns>
+        IList<BlogPost> GetBlogPostsByIds(int[] blogPostIds);
+
+        /// <summary>
         /// Gets all blog posts
         /// </summary>
         /// <param name="storeId">The store identifier; pass 0 to load all records</param>
@@ -99,5 +106,11 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogComment">Blog comment</param>
         void DeleteBlogComment(BlogComment blogComment);
+
+        /// <summary>
+        /// Deletes blog comments
+        /// </summary>
+        /// <param name="blogComments">Blog comments</param>
+        void DeleteBlogComments(IList<BlogComment> blogComments);
     }
 }

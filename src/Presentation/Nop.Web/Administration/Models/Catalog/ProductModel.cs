@@ -769,17 +769,21 @@ namespace Nop.Admin.Models.Catalog
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.MaxLength")]
             [UIHint("Int32Nullable")]
             public int? ValidationMaxLength { get; set; }
+            [AllowHtml]
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileAllowedExtensions")]
             public string ValidationFileAllowedExtensions { get; set; }
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.FileMaximumSize")]
             [UIHint("Int32Nullable")]
             public int? ValidationFileMaximumSize { get; set; }
+            [AllowHtml]
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.DefaultValue")]
             public string DefaultValue { get; set; }
-
+            public string ValidationRulesString { get; set; }
+            
             //condition
             [NopResourceDisplayName("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")]
             public bool ConditionAllowed { get; set; }
+            public string ConditionString { get; set; }
         }
         public partial class ProductAttributeValueListModel : BaseNopModel
         {

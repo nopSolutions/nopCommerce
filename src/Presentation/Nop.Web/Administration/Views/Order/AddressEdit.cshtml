@@ -1,18 +1,18 @@
 ﻿@model OrderAddressModel
-@{  
+@{
     //page title
     ViewBag.Title = T("Admin.Orders.Address.EditAddress").Text;
 }
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.Orders.Address.EditAddress") @Html.ActionLink("(" + T("Admin.Orders.Address.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Orders.Address.EditAddress") 
+            <small>@Html.ActionLink("(" + T("Admin.Orders.Address.BackToOrder") + ")", "Edit", new { id = Model.OrderId })</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdateAddress", Model)

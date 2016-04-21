@@ -6,7 +6,7 @@
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
-    
+
     var permissionService = EngineContext.Current.Resolve<IPermissionService>();
     var allowJbimages = false;
     var allowRoxyFileman = permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures);
@@ -14,15 +14,17 @@
     //so if you're running in a virtual directory, then uncomment the code below:
     //allowJbimages = true;
     //allowRoxyFileman =false;
-    
+
 
     var random = CommonHelper.GenerateRandomInteger();
 
     //extend editor with additional settings
+    //Sample setting value (below):
+    //settings.plugins.push('textcolor'); settings.toolbar += ' | forecolor backcolor';
     var additionalEditorSettings = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAdditionalSettings;
     //is java-script supported?
     var allowJavaScript = EngineContext.Current.Resolve<AdminAreaSettings>().RichEditorAllowJavaScript;
-    
+
     //allow HTML body? Full page? - http://www.tinymce.com/wiki.php/Plugin:fullpage
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);

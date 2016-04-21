@@ -32,6 +32,11 @@ namespace Nop.Core.Domain.Catalog
         public string SpecificationAttributeOptionName { get; set; }
 
         /// <summary>
+        /// Gets or sets the specification attribute option color (RGB)
+        /// </summary>
+        public string SpecificationAttributeOptionColorRgb { get; set; }
+
+        /// <summary>
         /// Gets or sets the specification attribute option display order
         /// </summary>
         public int SpecificationAttributeOptionDisplayOrder { get; set; }

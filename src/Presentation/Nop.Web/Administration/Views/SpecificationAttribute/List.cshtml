@@ -6,74 +6,78 @@
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.SpecificationAttributes")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="specificationattributes-grid"></div>
 
-            <script>
-                $(document).ready(function () {
-                    $("#specificationattributes-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("List", "SpecificationAttribute"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div id="specificationattributes-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#specificationattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("List", "SpecificationAttribute"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
                             },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
                             },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
                             },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Name",
-                            title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
-                            width: 300
-                        }, {
-                            field: "DisplayOrder",
-                            title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
-                            width: 100
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.Edit")",
-                            width: 100,
-                            template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                        }]
+                            scrollable: false,
+                            columns: [{
+                                field: "Name",
+                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name")",
+                                width: 300
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder")",
+                                width: 100
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.Edit")",
+                                width: 100,
+                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                            }]
+                        });
                     });
-                });
-            </script>
-        </td>
-    </tr>
-</table>
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

@@ -536,7 +536,7 @@ namespace Nop.Admin.Controllers
             var states = _stateProvinceService.GetStateProvinces(true);
             string result = _exportManager.ExportStatesToTxt(states);
 
-            return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
+            return File(Encoding.UTF8.GetBytes(result), MimeTypes.TextCsv, fileName);
         }
 
         [HttpPost]

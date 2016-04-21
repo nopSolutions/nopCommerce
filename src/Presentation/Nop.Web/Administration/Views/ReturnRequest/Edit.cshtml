@@ -6,16 +6,16 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.ReturnRequests.EditReturnRequestDetails") @Html.ActionLink("(" + T("Admin.ReturnRequests.BackToList") + ")", "List")
-        </div>
-        <div class="options">
-            <input type="submit" name="notify-customer" class="k-button" value="@T("Admin.ReturnRequests.NotifyCustomer")" />
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="returnrequest-delete" class="k-button">@T("Admin.Common.Delete")</span>
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.ReturnRequests.EditReturnRequestDetails") 
+            <small>@Html.ActionLink("(" + T("Admin.ReturnRequests.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="notify-customer" class="btn btn-default" value="@T("Admin.ReturnRequests.NotifyCustomer")" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <span id="returnrequest-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

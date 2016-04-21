@@ -2,35 +2,54 @@
 @if (Model.IsGiftCard)
 {
     //Actually just a copy of \Presentation\Nop.Web\Views\Catalog\_GiftCardInfo.cshtml
-    <div class="giftCard">
-        <dl>
-            <dt>@Html.LabelFor(model => model.RecipientName):</dt>
-            <dd>
-                @Html.TextBoxFor(model => model.RecipientName)
-            </dd>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.RecipientName)
+                </div>
+                <div class="col-sm-6">
+                    @Html.NopEditorFor(model => model.RecipientName)
+                </div>
+            </div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
-            <dt>@Html.LabelFor(model => model.RecipientEmail): </dt>
-            <dd>
-                @Html.TextBoxFor(model => model.RecipientEmail)
-            </dd>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.RecipientEmail)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditorFor(model => model.RecipientEmail)
+                    </div>
+                </div>
             }
-            <dt>
-                @Html.LabelFor(model => model.SenderName): </dt>
-            <dd>
-                @Html.TextBoxFor(model => model.SenderName)
-            </dd>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.SenderName)
+                </div>
+                <div class="col-sm-6">
+                    @Html.NopEditorFor(model => model.SenderName)
+                </div>
+            </div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
-            <dt>@Html.LabelFor(model => model.SenderEmail):</dt>
-            <dd>
-                @Html.TextBoxFor(model => model.SenderEmail)</dd>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.SenderEmail)
+                    </div>
+                    <div class="col-sm-6">
+                        @Html.NopEditorFor(model => model.SenderEmail)
+                    </div>
+                </div>
             }
-            <dt>
-                @Html.LabelFor(model => model.Message): </dt>
-            <dd>
-                @Html.TextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
-            </dd>
-        </dl>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.Message)
+                </div>
+                <div class="col-sm-6">
+                    @Html.NopTextAreaFor(model => model.Message)
+                </div>
+            </div>
+        </div>
     </div>
 }

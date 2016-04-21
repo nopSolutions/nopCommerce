@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Settings
 {
-    public class ReturnRequestActionValidator : BaseNopValidator<ReturnRequestActionModel>
+    public partial class ReturnRequestActionValidator : BaseNopValidator<ReturnRequestActionModel>
     {
         public ReturnRequestActionValidator(ILocalizationService localizationService)
         {

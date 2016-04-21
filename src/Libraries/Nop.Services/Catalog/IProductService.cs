@@ -21,6 +21,12 @@ namespace Nop.Services.Catalog
         void DeleteProduct(Product product);
 
         /// <summary>
+        /// Delete products
+        /// </summary>
+        /// <param name="products">Products</param>
+        void DeleteProducts(IList<Product> products);
+
+        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
@@ -51,6 +57,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateProduct(Product product);
+
+        /// <summary>
+        /// Updates the products
+        /// </summary>
+        /// <param name="products">Product</param>
+        void UpdateProducts(IList<Product> products);
 
         /// <summary>
         /// Get (visible) product number in certain category
@@ -221,6 +233,13 @@ namespace Nop.Services.Catalog
         Product GetProductBySku(string sku);
 
         /// <summary>
+        /// Gets a products by SKU array
+        /// </summary>
+        /// <param name="skuArray">SKU array</param>
+        /// <returns>Products</returns>
+        IList<Product> GetProductsBySku(string[] skuArray);
+
+        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
@@ -231,6 +250,13 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="product">Product</param>
         void UpdateHasDiscountsApplied(Product product);
+
+        /// <summary>
+        /// Gets product number by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Count of vendor products</returns>
+        int GetProductNumberByVendorId(int vendorId);
 
         #endregion
 
@@ -459,6 +485,12 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productReview">Product review</param>
         void DeleteProductReview(ProductReview productReview);
+
+        /// <summary>
+        /// Deletes product reviews
+        /// </summary>
+        /// <param name="productReviews">Product reviews</param>
+        void DeleteProductReviews(IList<ProductReview> productReviews);
 
         #endregion
 

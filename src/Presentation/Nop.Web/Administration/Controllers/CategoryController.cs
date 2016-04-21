@@ -606,7 +606,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes =_exportManager.ExportCategoriesToXlsx(_categoryService.GetAllCategories(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, "text/xls", "categories.xlsx");
+                return File(bytes, MimeTypes.TextXls, "categories.xlsx");
             }
             catch (Exception exc)
             {
@@ -630,7 +630,7 @@ namespace Nop.Admin.Controllers
                 var file = Request.Files["importexcelfile"];
                 if (file != null && file.ContentLength > 0)
                 {
-                    _importManager.ImportCategoryFromXlsx(file.InputStream);
+                    _importManager.ImportCategoriesFromXlsx(file.InputStream);
                 }
                 else
                 {

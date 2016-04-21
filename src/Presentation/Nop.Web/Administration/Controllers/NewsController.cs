@@ -357,7 +357,7 @@ namespace Nop.Admin.Controllers
 
             return new NullJsonResult();
         }
-
+        
         [HttpPost]
         public ActionResult DeleteSelectedComments(ICollection<int> selectedIds)
         {
@@ -367,11 +367,12 @@ namespace Nop.Admin.Controllers
             if (selectedIds != null)
             {
                 var comments = _newsService.GetNewsCommentsByIds(selectedIds.ToArray());
-                foreach (var comment in comments)
+                var news = _newsService.GetNewsByIds(comments.Select(p => p.NewsItemId).Distinct().ToArray());
+
+                _newsService.DeleteNewsComments(comments);
+                //update totals
+                foreach (var newsItem in news)
                 {
-                    var newsItem = comment.NewsItem;
-                    _newsService.DeleteNewsComment(comment);
-                    //update totals
                     newsItem.CommentCount = newsItem.NewsComments.Count;
                     _newsService.UpdateNews(newsItem);
                 }

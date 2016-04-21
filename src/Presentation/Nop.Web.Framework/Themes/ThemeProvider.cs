@@ -9,25 +9,25 @@ namespace Nop.Web.Framework.Themes
 {
     public partial class ThemeProvider : IThemeProvider
     {
-		#region Fields
+        #region Fields
 
         private readonly IList<ThemeConfiguration> _themeConfigurations = new List<ThemeConfiguration>();
         private readonly string _basePath = string.Empty;
 
-		#endregion
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
-        public ThemeProvider(IWebHelper webHelper)
+        public ThemeProvider()
         {
-            _basePath = webHelper.MapPath("~/Themes/");
+            _basePath = CommonHelper.MapPath("~/Themes/");
             LoadConfigurations();
         }
 
-		#endregion 
-        
+        #endregion
+
         #region IThemeProvider
-        
+
         public ThemeConfiguration GetThemeConfiguration(string themeName)
         {
             return _themeConfigurations
@@ -54,7 +54,7 @@ namespace Nop.Web.Framework.Themes
             foreach (string themeName in Directory.GetDirectories(_basePath))
             {
                 var configuration = CreateThemeConfiguration(themeName);
-                if(configuration != null)
+                if (configuration != null)
                 {
                     _themeConfigurations.Add(configuration);
                 }
@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Themes
             var themeDirectory = new DirectoryInfo(themePath);
             var themeConfigFile = new FileInfo(Path.Combine(themeDirectory.FullName, "theme.config"));
 
-            if(themeConfigFile.Exists)
+            if (themeConfigFile.Exists)
             {
                 var doc = new XmlDocument();
                 doc.Load(themeConfigFile.FullName);

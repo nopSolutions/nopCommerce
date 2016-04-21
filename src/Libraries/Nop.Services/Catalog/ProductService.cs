@@ -175,6 +175,24 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Delete products
+        /// </summary>
+        /// <param name="products">Products</param>
+        public virtual void DeleteProducts(IList<Product> products)
+        {
+            if (products == null)
+                throw new ArgumentNullException("products");
+
+            foreach (var product in products)
+            {
+                product.Deleted = true;
+            }
+
+            //delete product
+            UpdateProducts(products);
+        }
+
+        /// <summary>
         /// Gets all products displayed on the home page
         /// </summary>
         /// <returns>Products</returns>
@@ -265,6 +283,24 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(product);
+        }
+
+        public virtual void UpdateProducts(IList<Product> products)
+        {
+            if (products == null)
+                throw new ArgumentNullException("products");
+
+            //update
+            _productRepository.Update(products);
+
+            //cache
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+
+            //event notification
+            foreach (var product in products)
+            {
+                _eventPublisher.EntityUpdated(product);
+            }
         }
 
         /// <summary>
@@ -421,7 +457,7 @@ namespace Nop.Services.Catalog
             out IList<int> filterableSpecificationAttributeOptionIds,
             bool loadFilterableSpecificationAttributeOptionIds = false,
             int pageIndex = 0,
-            int pageSize = 2147483647,  //Int32.MaxValue
+            int pageSize = int.MaxValue,
             IList<int> categoryIds = null,
             int manufacturerId = 0,
             int storeId = 0,
@@ -499,7 +535,7 @@ namespace Nop.Services.Catalog
                 //prepare parameters
                 var pCategoryIds = _dataProvider.GetParameter();
                 pCategoryIds.ParameterName = "CategoryIds";
-                pCategoryIds.Value = commaSeparatedCategoryIds != null ? (object)commaSeparatedCategoryIds : DBNull.Value;
+                pCategoryIds.Value = (object)commaSeparatedCategoryIds ?? DBNull.Value;
                 pCategoryIds.DbType = DbType.String;
                 
                 var pManufacturerId = _dataProvider.GetParameter();
@@ -589,7 +625,7 @@ namespace Nop.Services.Catalog
 
                 var pFilteredSpecs = _dataProvider.GetParameter();
                 pFilteredSpecs.ParameterName = "FilteredSpecs";
-                pFilteredSpecs.Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value;
+                pFilteredSpecs.Value = (object)commaSeparatedSpecIds ?? DBNull.Value;
                 pFilteredSpecs.DbType = DbType.String;
 
                 var pLanguageId = _dataProvider.GetParameter();
@@ -1140,6 +1176,20 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
+        /// Gets a products by SKU array
+        /// </summary>
+        /// <param name="skuArray">SKU array</param>
+        /// <returns>Products</returns>
+        public IList<Product> GetProductsBySku(string[] skuArray)
+        {
+            if (skuArray == null)
+                throw new ArgumentNullException("skuArray");
+
+            var query = _productRepository.Table;
+            return query.Where(p => skuArray.Contains(p.Sku)).ToList();
+        }
+
+        /// <summary>
         /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="product">Product</param>
@@ -1163,6 +1213,17 @@ namespace Nop.Services.Catalog
 
             product.HasDiscountsApplied = product.AppliedDiscounts.Count > 0;
             UpdateProduct(product);
+        }
+
+
+        /// <summary>
+        /// Gets product number by vendor identifier
+        /// </summary>
+        /// <param name="vendorId">Vendor identifier</param>
+        /// <returns>Count of vendor products</returns>
+        public int GetProductNumberByVendorId(int vendorId)
+        {
+            return _productRepository.Table.Count(p => p.VendorId == vendorId && !p.Deleted);
         }
 
         #endregion
@@ -1909,6 +1970,25 @@ namespace Nop.Services.Catalog
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             //event notification
             _eventPublisher.EntityDeleted(productReview);
+        }
+
+        /// <summary>
+        /// Deletes product reviews
+        /// </summary>
+        /// <param name="productReviews">Product reviews</param>
+        public virtual void DeleteProductReviews(IList<ProductReview> productReviews)
+        {
+            if (productReviews == null)
+                throw new ArgumentNullException("productReviews");
+
+            _productReviewRepository.Delete(productReviews);
+
+            _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
+            //event notification
+            foreach (var productReview in productReviews)
+            {
+                _eventPublisher.EntityDeleted(productReview);
+            }
         }
 
         #endregion

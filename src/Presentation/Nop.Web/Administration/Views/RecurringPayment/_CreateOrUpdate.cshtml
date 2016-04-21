@@ -15,20 +15,25 @@
         });
     });
 </script>
-<div id="recurringpayment-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.RecurringPayments.Info")
-        </li>
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.RecurringPayments.History")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    <div>
-        @TabHistory()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="recurringpayment-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.RecurringPayments.Info")
+                </li>
+                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                    @T("Admin.RecurringPayments.History")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            <div>
+                @TabHistory()
+            </div>
+        </div>
     </div>
 </div>
 
@@ -46,108 +51,121 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    {
-        
-    <table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.InitialOrderId):
-            </td>
-            <td class="adminData">
-                @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerEmail):
-            </td>
-            <td class="adminData">
-                @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CycleLength):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CycleLength)
-                @Html.ValidationMessageFor(model => model.CycleLength)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CyclePeriodId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
-                @Html.ValidationMessageFor(model => model.CyclePeriodId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TotalCycles):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TotalCycles)
-                @Html.ValidationMessageFor(model => model.TotalCycles)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CyclesRemaining):
-            </td>
-            <td class="adminData">
-                @Model.CyclesRemaining
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.PaymentType):
-            </td>
-            <td class="adminData">
-                @Model.PaymentType
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StartDate):
-            </td>
-            <td class="adminData">
-                @Model.StartDate
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsActive):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.IsActive)
-                @Html.ValidationMessageFor(model => model.IsActive)
-            </td>
-        </tr>
-    </table>
+{
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.InitialOrderId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.InitialOrderId }, new { })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.CustomerEmail)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.CycleLength)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.CycleLength)
+                        @Html.ValidationMessageFor(model => model.CycleLength)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.CyclePeriodId)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopDropDownListFor(model => model.CyclePeriodId, ((RecurringProductCyclePeriod)Model.CyclePeriodId).ToSelectList())
+                        @Html.ValidationMessageFor(model => model.CyclePeriodId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.TotalCycles)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.TotalCycles)
+                        @Html.ValidationMessageFor(model => model.TotalCycles)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.CyclesRemaining)
+                    </div>
+                    <div class="col-sm-9">
+                        @Model.CyclesRemaining
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.PaymentType)
+                    </div>
+                    <div class="col-sm-9">
+                        @Model.PaymentType
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.StartDate)
+                    </div>
+                    <div class="col-sm-9">
+                        @Model.StartDate
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.IsActive)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.IsActive)
+                        @Html.ValidationMessageFor(model => model.IsActive)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 @helper TabHistory()
-    { 
-    <table class="adminContent">
-        <tr>
-            <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
                 @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
-                        {
-                    @T("Admin.RecurringPayments.History.NextPaymentDate")
-                    <text>:</text> @Model.NextPaymentDate
-                    <input type="submit" name="processnextpayment" class="k-button" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
-                        }
-                @if (Model.CanCancelRecurringPayment)
-                        {
-                    <input type="submit" name="cancelpayment" class="k-button" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
-                        }
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
+                {
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            @T("Admin.RecurringPayments.History.NextPaymentDate")
+                            <text>:</text>
+                            @Model.NextPaymentDate
+                        </div>
+                    </div>
+                }
+                @if (!String.IsNullOrEmpty(Model.NextPaymentDate) || Model.CanCancelRecurringPayment)
+                {
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
+                            {
+                                <input type="submit" name="processnextpayment" class="btn btn-default" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
+                            }
+                            @if (Model.CanCancelRecurringPayment)
+                            {
+                                <input type="submit" name="cancelpayment" class="btn btn-default" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
+                            }
+                        </div>
+                    </div>
+                }
+
                 <div id="history-grid"></div>
 
                 <script>
@@ -157,7 +175,7 @@
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new { recurringPaymentId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("HistoryList", "RecurringPayment", new {recurringPaymentId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -168,7 +186,7 @@
                                     total: "Total",
                                     errors: "Errors"
                                 },
-                                error: function(e) {
+                                error: function (e) {
                                     display_kendoui_grid_error(e);
                                     // Cancel the changes
                                     this.cancelChanges();
@@ -188,7 +206,8 @@
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "OrderId",
                                 title: "@T("Admin.RecurringPayments.History.Order")",
                                 width: 200,
@@ -211,11 +230,12 @@
                                 width: 200,
                                 type: "date",
                                 format: "{0:G}"
-                            }]
+                            }
+                            ]
                         });
                     });
                 </script>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 }

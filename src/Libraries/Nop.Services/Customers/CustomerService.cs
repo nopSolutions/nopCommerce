@@ -148,8 +148,8 @@ namespace Nop.Services.Customers
             string firstName = null, string lastName = null,
             int dayOfBirth = 0, int monthOfBirth = 0,
             string company = null, string phone = null, string zipPostalCode = null,
-            bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
-            int pageIndex = 0, int pageSize = 2147483647)
+            string ipAddress = null, bool loadOnlyWithShoppingCart = false, ShoppingCartType? sct = null,
+            int pageIndex = 0, int pageSize = int.MaxValue)
         {
             var query = _customerRepository.Table;
             if (createdFromUtc.HasValue)
@@ -262,6 +262,12 @@ namespace Nop.Services.Customers
                         z.Attribute.Key == SystemCustomerAttributeNames.ZipPostalCode &&
                         z.Attribute.Value.Contains(zipPostalCode)))
                     .Select(z => z.Customer);
+            }
+
+            //search by IpAddress
+            if (!String.IsNullOrWhiteSpace(ipAddress) && CommonHelper.IsValidIpAddress(ipAddress))
+            {
+                    query = query.Where(w => w.LastIpAddress == ipAddress);
             }
 
             if (loadOnlyWithShoppingCart)
@@ -700,9 +706,7 @@ namespace Nop.Services.Customers
                     {
                         //delete attributes
                         var attributes = _genericAttributeService.GetAttributesForEntity(c.Id, "Customer");
-                        foreach (var attribute in attributes)
-                            _genericAttributeService.DeleteAttribute(attribute);
-
+                        _genericAttributeService.DeleteAttributes(attributes);
 
                         //delete from database
                         _customerRepository.Delete(c);

@@ -7,70 +7,17 @@
     ViewBag.Title = T("Admin.Affiliates").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.Affiliates")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+        <small>@Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToTreeView") + ")", "Tree")</small>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table width="100%">
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchFirstName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchFirstName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchLastName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchLastName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.SearchFriendlyUrlName):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.SearchFriendlyUrlName)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.LoadOnlyWithOrders):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.LoadOnlyWithOrders)
-        </td>
-    </tr>
-    <tr id="pnlOrdersCreatedFromUtc">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrdersCreatedFromUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OrdersCreatedFromUtc)
-        </td>
-    </tr>
-    <tr id="pnlOrdersCreatedToUtc">
-        <td class="adminTitle">
-            @Html.NopLabelFor(model => model.OrdersCreatedToUtc):
-        </td>
-        <td class="adminData">
-            @Html.EditorFor(model => model.OrdersCreatedToUtc)
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <input type="button" id="search-affiliates" class="k-button" value="@T("Admin.Common.Search")" />
-        </td>
-    </tr>
-</table>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#@Html.FieldIdFor(model => model.LoadOnlyWithOrders)").click(toggleLoadOnlyWithOrders);
@@ -88,13 +35,75 @@
         }
     }
 </script>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SearchFirstName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.SearchFirstName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SearchLastName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.SearchLastName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.SearchFriendlyUrlName)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.SearchFriendlyUrlName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.LoadOnlyWithOrders)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.LoadOnlyWithOrders)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlOrdersCreatedFromUtc">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.OrdersCreatedFromUtc)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.OrdersCreatedFromUtc)
+                        </div>
+                    </div>
+                    <div class="form-group" id="pnlOrdersCreatedToUtc">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.OrdersCreatedToUtc)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.OrdersCreatedToUtc)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            &nbsp;
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="button" id="search-affiliates" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="affiliates-grid"></div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div id="affiliates-grid"></div>
 
-            <script>
+                    <script>
                     $(document).ready(function () {
                         $("#affiliates-grid").kendoGrid({
                             dataSource: {
@@ -154,8 +163,8 @@
                             }]
                         });
                     });
-            </script>
-            <script type="text/javascript">
+                    </script>
+                    <script type="text/javascript">
                 $(document).ready(function () {
 
                     $('#search-affiliates').click(function () {
@@ -189,7 +198,10 @@
                     return data;
                 }
 
-            </script>
-        </td>
-    </tr>
-</table>
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

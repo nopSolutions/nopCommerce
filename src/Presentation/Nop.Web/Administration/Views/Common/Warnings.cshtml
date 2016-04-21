@@ -3,36 +3,53 @@
     //page title
     ViewBag.Title = T("Admin.System.Warnings").Text;
 }
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-warnings.gif")" alt="" />
+<div class="content-header clearfix">
+    <h1 class="pull-left">
         @T("Admin.System.Warnings")
+    </h1>
+    <div class="pull-right">
+        &nbsp;
     </div>
 </div>
-<div class="system-warnings">
-    <ul>
-        @foreach (var warning in Model)
-        {
-            <li>
-                @switch (warning.Level)
-                {
-                    case SystemWarningLevel.Pass:
-                        {
-                    <span class="pass">@warning.Text</span>
-                        }
-                        break;
-                    case SystemWarningLevel.Warning:
-                        {
-                    <span class="warning">@warning.Text</span>
-                        }
-                        break;
-                    case SystemWarningLevel.Fail:
-                        {
-                    <span class="fail">@warning.Text</span>
-                        }
-                        break;
-                }
-            </li>
-        }
-    </ul>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="system-warnings">
+                <ul>
+                    @foreach (var warning in Model)
+                    {
+                        <li>
+                            @switch (warning.Level)
+                            {
+                                case SystemWarningLevel.Pass:
+                                    {
+                                        <p class="text-green">
+                                            <i class="icon fa fa-check"></i>
+                                            @warning.Text
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.Warning:
+                                    {
+                                        <p class="text-yellow">
+                                            <i class="icon fa fa-warning"></i>
+                                            @warning.Text
+                                        </p>
+                                    }
+                                    break;
+                                case SystemWarningLevel.Fail:
+                                    {
+                                        <p class="text-red">
+                                            <i class="icon fa fa-ban"></i>
+                                            @warning.Text
+                                        </p>
+                                    }
+                                    break;
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>

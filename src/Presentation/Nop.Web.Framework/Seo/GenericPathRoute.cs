@@ -102,7 +102,7 @@ namespace Nop.Web.Framework.Seo
                     data.Values["action"] = "PageNotFound";
                     return data;
                 }
-                //ensre that URL record is active
+                //ensure that URL record is active
                 if (!urlRecord.IsActive)
                 {
                     //URL record is not active. let's find the latest one

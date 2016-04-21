@@ -5,7 +5,7 @@
 <script>
     $(document).ready(function() {
         $("#product-attribute-edit").kendoTabStrip({
-            animation:  {
+            animation: {
                 open: {
                     effects: "fadeIn"
                 }
@@ -14,41 +14,46 @@
         });
     });
 </script>
-<div id="product-attribute-edit">
-    <ul>
-        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Attributes.ProductAttributes.Info")
-        </li>
-        @if (Model.Id > 0)
-        {
-        <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
-        </li>
-        }
-        <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
-        </li>
-    </ul>
-    <div>
-        @TabInfo()
-    </div>
-    @if (Model.Id > 0)
-    {
-        <div>
-            @TabUsedByProducts()
+
+<div class="content">
+    <div class="form-horizontal">
+        <div id="product-attribute-edit">
+            <ul>
+                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Attributes.ProductAttributes.Info")
+                </li>
+                @if (Model.Id > 0)
+                {
+                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                        @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
+                    </li>
+                }
+                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                    @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
+                </li>
+            </ul>
+            <div>
+                @TabInfo()
+            </div>
+            @if (Model.Id > 0)
+            {
+                <div>
+                    @TabUsedByProducts()
+                </div>
+            }
+            <div>
+                @TabPredefinedValues()
+            </div>
         </div>
-    }
-    <div>
-        @TabPredefinedValues()
     </div>
 </div>
 
 @{
-    //custom tabs
-    var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
-    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-    foreach (var eventBlock in eventMessage.BlocksToRender)
-    {
+            //custom tabs
+            var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+            foreach (var eventBlock in eventMessage.BlocksToRender)
+            {
         @eventBlock
     }
 }
@@ -58,133 +63,144 @@
 <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
 
 @helper TabInfo()
-    {
-    @(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Name)
-                @Html.ValidationMessageFor(model => model.Locales[item].Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Locales[item].Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Locales[item].Description)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+
+            @(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Description)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(model => model.Locales[item].Description, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                    </div>
+                </div>
                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
-            </td>
-        </tr>
-    </table>
+            </div>
     ,
-    @<table class="adminContent">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Name):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.Name)
-                @Html.ValidationMessageFor(model => model.Name)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Description):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.Description, "RichEditor")
-                @Html.ValidationMessageFor(model => model.Description)
-            </td>
-        </tr>
-    </table>
+            @<div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Description)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(x => x.Description, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Description)
+                    </div>
+                </div>
+            </div>
     ))
+        </div>
+    </div>
 }
+
 @helper TabUsedByProducts()
-{
-        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-        var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-    <p>
-        @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
-    </p>
-    <div id="used-by-products-grid"></div>
-    <script>
-        $(document).ready(function () {
-            $("#used-by-products-grid").kendoGrid({
-                dataSource: {
-                    type: "json",
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        data: "Data",
-                        total: "Total",
-                        errors: "Errors"
-                    },
-                    error: function(e) {
-                        display_kendoui_grid_error(e);
-                        // Cancel the changes
-                        this.cancelChanges();
-                    },
-                    pageSize: @(defaultGridPageSize),
-                    serverPaging: true,
-                    serverFiltering: true,
-                    serverSorting: true
-                },
-                pageable: {
-                    refresh: true,
-                    pageSizes: [@(gridPageSizes)]
-                },
-                editable: {
-                    confirmation: false,
-                    mode: "inline"
-                },
-                scrollable: false,
-                columns: [{
-                    field: "ProductName",
-                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
-                    width: 400
-                }, {
-                    field: "Published",
-                    title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
-                    width: 100,
-                    headerAttributes: { style: "text-align:center" },
-                    attributes: { style: "text-align:center" },
-                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                },
-                {
-                    field: "Id",
-                    title: "@T("Admin.Common.View")",
-                    width: 100,
-                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                }]
-            });
-        });
-    </script>
+        {
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <p>
+                    @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Hint")
+                </p>
+                <div id="used-by-products-grid"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("#used-by-products-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("UsedByProducts", "ProductAttribute", new { productAttributeId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Product")",
+                                width: 400
+                            }, {
+                                field: "Published",
+                                title: "@T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts.Published")",
+                                width: 100,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                            },
+                            {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=Id#">@T("Admin.Common.View")</a>'
+                            }]
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
 }
+
 @helper TabPredefinedValues()
-{
-    if (Model.Id > 0)
-    {
-        <p>
-            @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
-        </p>
-        <table class="adminContent">
-            <tr>
-                <td>
+        {
+    <div class="panel-group">
+        <div class="panel panel-default">
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <p>
+                        @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Hint")
+                    </p>
+
                     <div id="productattributevalues-grid"></div>
 
                     <script>
@@ -194,7 +210,7 @@
                                     type: "json",
                                     transport: {
                                         read: {
-                                            url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute", new { productAttributeId = Model.Id }))",
+                                            url: "@Html.Raw(Url.Action("PredefinedProductAttributeValueList", "ProductAttribute", new {productAttributeId = Model.Id}))",
                                             type: "POST",
                                             dataType: "json",
                                             data: addAntiForgeryToken
@@ -266,7 +282,7 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='k-button' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
@@ -276,11 +292,9 @@
                             });
                         });
                     </script>
-                </td>
-            </tr>
-            <tr>
-                <td width="100%">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false; " class="k-button" />
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false; " class="btn btn-default" />
                     <input type="submit" id="btnRefresh" style="display:none" />
                     <script type="text/javascript">
                         $(document).ready(function() {
@@ -294,12 +308,14 @@
                             });
                         });
                     </script>
-                </td>
-            </tr>
-        </table>
-    }
-    else
-    {
-        @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
-    }
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.SaveBeforeEdit")
+                </div>
+            }
+        </div>
+    </div>
 }

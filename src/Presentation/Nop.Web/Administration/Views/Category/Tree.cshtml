@@ -3,52 +3,54 @@
     ViewBag.Title = T("Admin.Catalog.Categories.Manage").Text;
 }
 @Html.AntiForgeryToken()
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-        @T("Admin.Catalog.Categories.Manage") @Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToListView") + ")", "List")
-    </div>
-    <div class="options">
-        <a href="@Url.Action("Create")" class="k-button">@T("Admin.Common.AddNew")</a>
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("Admin.Catalog.Categories.Manage")
+        <small>@Html.ActionLink("(" + T("Admin.Catalog.Categories.SwitchToListView") + ")", "List")</small>
+    </h1>
+    <div class="pull-right">
+        <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
     </div>
 </div>
-<table class="adminContent">
-    <tr>
-        <td>
-            <div id="category-treeview"></div>
 
-            <script>
-                categories = new kendo.data.HierarchicalDataSource({
-                    transport: {
-                        read: {
-                            url: "@Html.Raw(Url.Action("TreeLoadChildren", "Category"))",
-                            type: "POST",
-                            dataType: "json",
-                            data: addAntiForgeryToken
-                        }
-                    },
-                    schema: {
-                        model: {
-                            id: "id",
-                            hasChildren: "hasChildren"
-                        }
-                    }
-                });
+<div class="content">
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="category-treeview"></div>
 
-                $(document).ready(function() {
-                    $("#category-treeview").kendoTreeView({
-                        dataSource: categories,
-                        dataTextField: "Name",
-                        select: function (e) {
-                            var dataItem = this.dataItem(e.node);
-                            var url = "@(Url.Action("Edit"))" + "/" + dataItem.id;
-                            window.location = url;
+                <script>
+                    categories = new kendo.data.HierarchicalDataSource({
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("TreeLoadChildren", "Category"))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            model: {
+                                id: "id",
+                                hasChildren: "hasChildren"
+                            }
                         }
                     });
-                });
 
-                
-            </script>
-        </td>
-    </tr>
-</table>
+                    $(document).ready(function () {
+                        $("#category-treeview").kendoTreeView({
+                            dataSource: categories,
+                            dataTextField: "Name",
+                            select: function (e) {
+                                var dataItem = this.dataItem(e.node);
+                                var url = "@(Url.Action("Edit"))" + "/" + dataItem.id;
+                                window.location = url;
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

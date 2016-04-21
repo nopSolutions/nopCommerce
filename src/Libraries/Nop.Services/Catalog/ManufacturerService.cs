@@ -439,6 +439,39 @@ namespace Nop.Services.Catalog
             _eventPublisher.EntityUpdated(productManufacturer);
         }
 
+
+        /// <summary>
+        /// Get manufacturer IDs for products
+        /// </summary>
+        /// <param name="productIds">Products IDs</param>
+        /// <returns>Manufacturer IDs for products</returns>
+        public virtual IDictionary<int, int[]> GetProductManufacturerIds(int[] productIds)
+        {
+            var query = _productManufacturerRepository.Table;
+
+            return query.Where(p => productIds.Contains(p.ProductId))
+                .Select(p => new {p.ProductId, p.ManufacturerId}).ToList()
+                .GroupBy(a => a.ProductId)
+                .ToDictionary(items => items.Key, items => items.Select(a => a.ManufacturerId).ToArray());
+        }
+
+
+        /// <summary>
+        /// Returns a list of IDs of not existing manufacturers
+        /// </summary>
+        /// <param name="manufacturerIds">The IDs of the manufacturers to check</param>
+        /// <returns>List of IDs not existing manufacturers</returns>
+        public virtual int[] GetNotExistingManufacturers(int[] manufacturerIds)
+        {
+            if (manufacturerIds == null)
+                throw new ArgumentNullException("manufacturerIds");
+
+            var query = _manufacturerRepository.Table;
+            var queryFilter = manufacturerIds.Distinct().ToArray();
+            var filter = query.Select(m => m.Id).Where(m => queryFilter.Contains(m)).ToList();
+            return queryFilter.Except(filter).ToArray();
+        }
+
         #endregion
     }
 }

@@ -32,6 +32,27 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// A value indicating whether this checkout attribute can be used as condition for some other attribute
+        /// </summary>
+        /// <param name="checkoutAttribute">Checkout attribute</param>
+        /// <returns>Result</returns>
+        public static bool CanBeUsedAsCondition(this CheckoutAttribute checkoutAttribute)
+        {
+            if (checkoutAttribute == null)
+                return false;
+
+            if (checkoutAttribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.TextBox ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
+                return false;
+
+            //other attribute controle types support it
+            return true;
+        }
+
+        /// <summary>
         /// Remove attributes which require shippable products
         /// </summary>
         /// <param name="checkoutAttributes">Checkout attributes</param>

@@ -1,24 +1,28 @@
 ﻿@model ReturnRequestReasonModel
-
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails").Text;
 }
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-            @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList") + ")", "ReturnRequestReasonList")
-        </div>
-        <div class="options">
-            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
-            <span id="returnrequestreason-delete" class="k-button">@T("Admin.Common.Delete")</span>
+
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @T("Admin.Configuration.Settings.Order.ReturnRequestReasons.EditDetails") - @Model.Name
+            <small>@Html.ActionLink("(" + T("Admin.Configuration.Settings.Order.ReturnRequestReasons.BackToList") + ")", "ReturnRequestReasonList")</small>
+        </h1>
+        <div class="pull-right">
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <span id="returnrequestreason-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
         </div>
     </div>
-    @Html.Partial("_CreateOrUpdate.ReturnRequestReason", Model)
+
+    <div class="content">
+        <div class="form-horizontal">
+            @Html.Partial("_CreateOrUpdate.ReturnRequestReason", Model)
+        </div>
+    </div>
 }
 @Html.DeleteConfirmation("ReturnRequestReasonDelete", "returnrequestreason-delete")

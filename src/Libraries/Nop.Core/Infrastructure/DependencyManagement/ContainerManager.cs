@@ -137,7 +137,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 
                 }
             }
-            throw new NopException("No contructor was found that had all the dependencies satisfied.");
+            throw new NopException("No constructor  was found that had all the dependencies satisfied.");
         }
         
         /// <summary>

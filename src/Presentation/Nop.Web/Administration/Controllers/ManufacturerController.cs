@@ -553,7 +553,7 @@ namespace Nop.Admin.Controllers
             {
                 var bytes = _exportManager.ExportManufacturersToXlsx(_manufacturerService.GetAllManufacturers(showHidden: true).Where(p=>!p.Deleted));
                  
-                return File(bytes, "text/xls", "manufacturers.xlsx");
+                return File(bytes, MimeTypes.TextXls, "manufacturers.xlsx");
             }
             catch (Exception exc)
             {
@@ -577,7 +577,7 @@ namespace Nop.Admin.Controllers
                 var file = Request.Files["importexcelfile"];
                 if (file != null && file.ContentLength > 0)
                 {
-                    _importManager.ImportManufacturerFromXlsx(file.InputStream);
+                    _importManager.ImportManufacturersFromXlsx(file.InputStream);
                 }
                 else
                 {

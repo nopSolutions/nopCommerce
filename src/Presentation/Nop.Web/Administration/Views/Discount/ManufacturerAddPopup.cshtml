@@ -14,151 +14,162 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
             @T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")
+        </h1>
+        <div class="pull-right">
+            &nbsp;
         </div>
-    </div>    
-    
-       if (ViewBag.RefreshPage == true)
-       {
+    </div>
+
+    if (ViewBag.RefreshPage == true)
+    {
         <script type="text/javascript">
             try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
-            catch (e){} 
+            catch (e){}
             window.close();
         </script>
-       }
+    }
 
-    
-    <table width="100%">
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SearchManufacturerName):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.SearchManufacturerName)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="button" id="search-manufacturers" class="k-button" value="@T("Admin.Common.Search")" />
-            </td>
-        </tr>
-    </table>
-    <table class="adminContent">
-        <tr>
-            <td>
-                <div id="manufacturers-grid"></div>
+    <div class="content">
+        <div class="form-horizontal">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SearchManufacturerName)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SearchManufacturerName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="button" id="search-manufacturers" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            </div>
+                        </div>
 
-                <script>
-                $(document).ready(function () {
-                    $("#manufacturers-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "Discount"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: additionalData
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors"
-                            },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
-                            },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [{
-                            field: "Id",
-                            headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                            headerAttributes: { style: "text-align:center" },
-                            template: "<input type='checkbox' name='SelectedManufacturerIds' value='#=Id#' class='checkboxGroups' />",
-                            attributes: { style: "text-align:center" },
-                            width: 50
-                        }, {
-                            field: "Name",
-                            title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
-                        }, {
-                            field: "Published",
-                            title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
-                            width: 100,
-                            headerAttributes: { style: "text-align:center" },
-                            attributes: { style: "text-align:center" },
-                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                        }]
-                    });
-                });
-                </script>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div id="manufacturers-grid"></div>
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#search-manufacturers').click(function() {
-                            var grid = $('#manufacturers-grid').data('kendoGrid');
-                            grid.dataSource.page(1); //new search. Set page size to 1
-                            //grid.dataSource.read(); we already loaded the grid above using "page" function
-                            //clear selected checkboxes
-                            $('.checkboxGroups').attr('checked', false).change();
-                            return false;
-                        });
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#manufacturers-grid").kendoGrid({
+                                            dataSource: {
+                                                type: "json",
+                                                transport: {
+                                                    read: {
+                                                        url: "@Html.Raw(Url.Action("ManufacturerAddPopupList", "Discount"))",
+                                                        type: "POST",
+                                                        dataType: "json",
+                                                        data: additionalData
+                                                    }
+                                                },
+                                                schema: {
+                                                    data: "Data",
+                                                    total: "Total",
+                                                    errors: "Errors"
+                                                },
+                                                error: function(e) {
+                                                    display_kendoui_grid_error(e);
+                                                    // Cancel the changes
+                                                    this.cancelChanges();
+                                                },
+                                                pageSize: @(defaultGridPageSize),
+                                                serverPaging: true,
+                                                serverFiltering: true,
+                                                serverSorting: true
+                                            },
+                                            pageable: {
+                                                refresh: true,
+                                                pageSizes: [@(gridPageSizes)]
+                                            },
+                                            editable: {
+                                                confirmation: false,
+                                                mode: "inline"
+                                            },
+                                            scrollable: false,
+                                            columns: [{
+                                                field: "Id",
+                                                headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                                headerAttributes: { style: "text-align:center" },
+                                                template: "<input type='checkbox' name='SelectedManufacturerIds' value='#=Id#' class='checkboxGroups' />",
+                                                attributes: { style: "text-align:center" },
+                                                width: 50
+                                            }, {
+                                                field: "Name",
+                                                title: "@T("Admin.Catalog.Manufacturers.Fields.Name")"
+                                            }, {
+                                                field: "Published",
+                                                title: "@T("Admin.Catalog.Manufacturers.Fields.Published")",
+                                                width: 100,
+                                                headerAttributes: { style: "text-align:center" },
+                                                attributes: { style: "text-align:center" },
+                                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                            }]
+                                        });
+                                    });
+                                </script>
 
-                        $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function(event) {
-                            if (event.keyCode == 13) {
-                                $("#search-manufacturers").click();
-                                return false;
-                            }
-                        });
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $('#search-manufacturers').click(function() {
+                                            var grid = $('#manufacturers-grid').data('kendoGrid');
+                                            grid.dataSource.page(1); //new search. Set page size to 1
+                                            //grid.dataSource.read(); we already loaded the grid above using "page" function
+                                            //clear selected checkboxes
+                                            $('.checkboxGroups').attr('checked', false).change();
+                                            return false;
+                                        });
 
-                        //wire up checkboxes
-                        $('#mastercheckbox').click(function() {
-                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
-                        });
+                                        $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function(event) {
+                                            if (event.keyCode == 13) {
+                                                $("#search-manufacturers").click();
+                                                return false;
+                                            }
+                                        });
 
-                        $('#manufacturers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
-                            updateMasterCheckbox();
-                        });
-                    });
-                    
-                    function additionalData() {
-                        var data = {
-                            SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
-                        };
-                        addAntiForgeryToken(data);
-                        return data;
-                    }
+                                        //wire up checkboxes
+                                        $('#mastercheckbox').click(function() {
+                                            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+                                        });
 
-                    function updateMasterCheckbox() {
-                        var numChkBoxes = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]').length;
-                        var numChkBoxesChecked = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
-                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
-                    }
+                                        $('#manufacturers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
+                                            updateMasterCheckbox();
+                                        });
+                                    });
 
-                </script>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
-            </td>
-        </tr>
-    </table>
+                                    function additionalData() {
+                                        var data = {
+                                            SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
+                                        };
+                                        addAntiForgeryToken(data);
+                                        return data;
+                                    }
+
+                                    function updateMasterCheckbox() {
+                                        var numChkBoxes = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]').length;
+                                        var numChkBoxesChecked = $('#manufacturers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+                                        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+                                    }
+
+                                </script>
+                            </div>
+                            <div class="panel-footer">
+                                <div colspan="2">
+                                    <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }

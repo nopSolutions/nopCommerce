@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Plugins
 {
-    public class PluginValidator : BaseNopValidator<PluginModel>
+    public partial class PluginValidator : BaseNopValidator<PluginModel>
     {
         public PluginValidator(ILocalizationService localizationService)
         {

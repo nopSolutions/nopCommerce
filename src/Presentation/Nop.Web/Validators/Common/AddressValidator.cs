@@ -8,7 +8,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Validators.Common
 {
-    public class AddressValidator : BaseNopValidator<AddressModel>
+    public partial class AddressValidator : BaseNopValidator<AddressModel>
     {
         public AddressValidator(ILocalizationService localizationService,
             IStateProvinceService stateProvinceService,

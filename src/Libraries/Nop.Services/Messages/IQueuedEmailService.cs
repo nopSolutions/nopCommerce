@@ -26,6 +26,12 @@ namespace Nop.Services.Messages
         void DeleteQueuedEmail(QueuedEmail queuedEmail);
 
         /// <summary>
+        /// Deleted a queued emails
+        /// </summary>
+        /// <param name="queuedEmails">Queued emails</param>
+        void DeleteQueuedEmails(IList<QueuedEmail> queuedEmails);
+
+        /// <summary>
         /// Gets a queued email by identifier
         /// </summary>
         /// <param name="queuedEmailId">Queued email identifier</param>

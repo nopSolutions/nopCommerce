@@ -6,54 +6,58 @@
 }
 @helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item)
 {
-    string url = null;
-    if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
-    {
-        url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
-    }
-    else if (!string.IsNullOrEmpty(item.Url))
-    {
-        url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
-    }
-    <li>
-        @if (!String.IsNullOrEmpty(url))
-        {
+string url = null;
+if (!string.IsNullOrEmpty(item.ControllerName) && !string.IsNullOrEmpty(item.ActionName))
+{
+    url = Url.Action(item.ActionName, item.ControllerName, item.RouteValues, null, null);
+}
+else if (!string.IsNullOrEmpty(item.Url))
+{
+    url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
+}
+if (!String.IsNullOrEmpty(url))
+{
+        <li>
             <a href="@url">
-                @if (!String.IsNullOrEmpty(item.ImageUrl))
+                @if (!String.IsNullOrEmpty(item.IconClass))
                 {
                     <text>
-                        <img alt="" src="@Url.Content(item.ImageUrl)" />
+                        <i class="fa @Url.Content(item.IconClass)"></i>
                     </text>
                 }
-                @item.Title
+                <span>@item.Title</span>
             </a>
-        }
-        else
-        {
-            if (!String.IsNullOrEmpty(item.ImageUrl))
-            {
-                <text>
-                    <img alt="" src="@Url.Content(item.ImageUrl)" />
-                </text>
-            }
-            @item.Title
-        }
-        @{
-            var childNodes = item.ChildNodes.Where(x => x.Visible).ToList();
-        }
-        @if (childNodes.Any())
-        {
-            <ul>
-                @foreach (var childItem in childNodes)
+        </li>
+}
+else
+{
+        <li class="treeview">
+            <a href="#">
+                @if (!String.IsNullOrEmpty(item.IconClass))
                 {
-                    @RenderMenuItem(childItem)
+                    <text>
+                        <i class="fa @Url.Content(item.IconClass)"></i>
+                    </text>
                 }
-            </ul>
-        }
-    </li>
+                <span>@item.Title</span>
+                <i class="fa fa-angle-left pull-right"></i>
+            </a>
+
+            @{ var childNodes = item.ChildNodes.Where(x => x.Visible).ToList(); }
+            @if (childNodes.Any())
+            {
+                <ul class="treeview-menu">
+                    @foreach (var childItem in childNodes)
+                    {
+                        @RenderMenuItem(childItem)
+                    }
+                </ul>
+            }
+        </li>
+                }
 }
 
-<ul id="admin-menu">
+<ul class="sidebar-menu">
     @{
         //standard (default) items
         var rootNode = siteMap.RootNode;
@@ -80,8 +84,3 @@
         @RenderMenuItem(item)
     }
 </ul>
-<script>
-    $(document).ready(function() {
-        $("#admin-menu").kendoMenu();
-    });
-</script>
