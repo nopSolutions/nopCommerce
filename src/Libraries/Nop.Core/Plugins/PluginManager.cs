@@ -260,7 +260,7 @@ namespace Nop.Core.Plugins
         /// <summary>
         /// Get description files
         /// </summary>
-        /// <param name="pluginFolder">Plugin direcotry info</param>
+        /// <param name="pluginFolder">Plugin directory info</param>
         /// <returns>Original and parsed description files</returns>
         private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
         {
@@ -309,7 +309,7 @@ namespace Nop.Core.Plugins
             {
                 string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
                 if (fileNameWithoutExt == null)
-                    throw new Exception(string.Format("Cannot get file extnension for {0}", fileInfo.Name));
+                    throw new Exception(string.Format("Cannot get file extension for {0}", fileInfo.Name));
                 foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
@@ -333,14 +333,14 @@ namespace Nop.Core.Plugins
         {
             if (plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name +
-                                                    " file exists in a folder outside of the allowed nopCommerce folder heirarchy");
+                                                    " file exists in a folder outside of the allowed nopCommerce folder hierarchy");
 
             FileInfo shadowCopiedPlug;
 
             if (CommonHelper.GetTrustLevel() != AspNetHostingPermissionLevel.Unrestricted)
             {
                 //all plugins will need to be copied to ~/Plugins/bin/
-                //this is aboslutely required because all of this relies on probingPaths being set statically in the web.config
+                //this is absolutely required because all of this relies on probingPaths being set statically in the web.config
                 
                 //were running in med trust, so copy to custom bin folder
                 var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
