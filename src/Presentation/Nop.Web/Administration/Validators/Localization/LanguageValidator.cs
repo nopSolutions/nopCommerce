@@ -8,7 +8,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Localization
 {
-    public class LanguageValidator : BaseNopValidator<LanguageModel>
+    public partial class LanguageValidator : BaseNopValidator<LanguageModel>
     {
         public LanguageValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

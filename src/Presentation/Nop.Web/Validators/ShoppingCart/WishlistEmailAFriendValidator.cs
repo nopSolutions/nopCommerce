@@ -5,7 +5,7 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Validators.ShoppingCart
 {
-    public class WishlistEmailAFriendValidator : BaseNopValidator<WishlistEmailAFriendModel>
+    public partial class WishlistEmailAFriendValidator : BaseNopValidator<WishlistEmailAFriendModel>
     {
         public WishlistEmailAFriendValidator(ILocalizationService localizationService)
         {

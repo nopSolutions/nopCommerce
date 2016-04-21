@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class CountryValidator : BaseNopValidator<CountryModel>
+    public partial class CountryValidator : BaseNopValidator<CountryModel>
     {
         public CountryValidator(ILocalizationService localizationService)
         {

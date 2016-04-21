@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Vendors
 {
-    public class VendorValidator : BaseNopValidator<VendorModel>
+    public partial class VendorValidator : BaseNopValidator<VendorModel>
     {
         public VendorValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

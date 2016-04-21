@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Tax
 {
-    public class TaxCategoryValidator : BaseNopValidator<TaxCategoryModel>
+    public partial class TaxCategoryValidator : BaseNopValidator<TaxCategoryModel>
     {
         public TaxCategoryValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

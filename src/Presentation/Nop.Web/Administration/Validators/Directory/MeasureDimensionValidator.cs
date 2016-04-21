@@ -7,7 +7,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Directory
 {
-    public class MeasureDimensionValidator : BaseNopValidator<MeasureDimensionModel>
+    public partial class MeasureDimensionValidator : BaseNopValidator<MeasureDimensionModel>
     {
         public MeasureDimensionValidator(ILocalizationService localizationService, IDbContext dbContext)
         {

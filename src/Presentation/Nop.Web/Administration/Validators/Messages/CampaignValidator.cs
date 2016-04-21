@@ -5,7 +5,7 @@ using Nop.Web.Framework.Validators;
 
 namespace Nop.Admin.Validators.Messages
 {
-    public class CampaignValidator : BaseNopValidator<CampaignModel>
+    public partial class CampaignValidator : BaseNopValidator<CampaignModel>
     {
         public CampaignValidator(ILocalizationService localizationService)
         {
