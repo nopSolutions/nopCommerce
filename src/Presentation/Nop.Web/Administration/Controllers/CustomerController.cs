@@ -1050,6 +1050,12 @@ namespace Nop.Admin.Controllers
             {
                 try
                 {
+                    if (!customer.Active && model.Active)
+                    {
+                        var languageId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LanguageId, _genericAttributeService);
+                        _workflowMessageService.SendCustomerAccountActivatedMessage(customer, languageId);
+                    }
+
                     customer.AdminComment = model.AdminComment;
                     customer.IsTaxExempt = model.IsTaxExempt;
                     customer.Active = model.Active;
