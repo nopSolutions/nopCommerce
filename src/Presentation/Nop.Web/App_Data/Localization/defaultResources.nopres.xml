@@ -4599,6 +4599,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Catalog">
     <Value>Catalog settings</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PublishBackProductWhenCancellingOrders">
+    <Value>Publish back product when cancelling orders</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.PublishBackProductWhenCancellingOrders.Hint">
+    <Value>Check to publish back product when cancelling orders.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.AllowAnonymousUsersToEmailAFriend">
     <Value>Allow anonymous users to email a friend</Value>
   </LocaleResource>
