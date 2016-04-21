@@ -1088,6 +1088,9 @@ namespace Nop.Web.Controllers
                             }
                         case UserRegistrationType.AdminApproval:
                             {
+                                //send customer admin approval message
+                                _workflowMessageService.SendCustomerAdminApprovalMessage(customer, _workContext.WorkingLanguage.Id);
+
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
                             }
                         case UserRegistrationType.Standard:

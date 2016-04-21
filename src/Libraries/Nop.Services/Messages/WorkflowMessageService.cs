@@ -237,6 +237,42 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
+        /// Sends a welcome message to a customer, telling him the registered account needs to be approved by an admin
+        /// </summary>
+        /// <param name="customer">Customer instance</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public int SendCustomerAdminApprovalMessage(Customer customer, int languageId)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var store = _storeContext.CurrentStore;
+            languageId = EnsureLanguageIsActive(languageId, store.Id);
+
+            var messageTemplate = GetActiveMessageTemplate("Customer.AdminApprovalMessage", store.Id);
+            if (messageTemplate == null)
+                return 0;
+
+            //email account
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+
+            //tokens
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens, store, emailAccount);
+            _messageTokenProvider.AddCustomerTokens(tokens, customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
         /// Sends an email validation message to a customer
         /// </summary>
         /// <param name="customer">Customer instance</param>
