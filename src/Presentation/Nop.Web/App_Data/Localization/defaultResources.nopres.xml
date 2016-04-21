@@ -10236,6 +10236,18 @@
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.SearchStore.Hint">
     <Value>Search by a specific store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.RecurringPayments">
     <Value>Recurring payments</Value>
   </LocaleResource>

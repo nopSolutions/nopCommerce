@@ -102,8 +102,13 @@ namespace Nop.Admin.Controllers
             else if (model.ActiveId == 2)
                 isActive = false;
 
+            var startDateValue = (model.StartDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = (model.EndDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
             var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive, model.CustomerRoleId,
+                startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId,
                 command.Page - 1, command.PageSize);
 
             var gridModel = new DataSourceResult
@@ -168,8 +173,13 @@ namespace Nop.Admin.Controllers
             else if (model.ActiveId == 2)
                 isActive = false;
 
-			var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
-                model.StoreId, isActive, model.CustomerRoleId);
+            var startDateValue = (model.StartDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+            var endDateValue = (model.EndDate == null) ? null
+                : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var subscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail,
+                startDateValue, endDateValue, model.StoreId, isActive, model.CustomerRoleId);
 
 		    string result = _exportManager.ExportNewsletterSubscribersToTxt(subscriptions);
 

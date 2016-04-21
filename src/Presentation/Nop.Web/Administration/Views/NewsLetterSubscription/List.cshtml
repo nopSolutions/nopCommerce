@@ -28,6 +28,22 @@
                     <div class="panel-body">
                         <div class="form-group">
                             <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.StartDate)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.StartDate)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.EndDate)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.EditorFor(model => model.EndDate)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.SearchEmail)
                             </div>
                             <div class="col-sm-9">
@@ -198,6 +214,8 @@
 
                             function additionalData() {
                                 var data = {
+                                    StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                                    EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
                                     ActiveId: $('#@Html.FieldIdFor(model => model.ActiveId)').val(),
                                     StoreId: $('#@Html.FieldIdFor(model => model.StoreId)').val(),
                                     CustomerRoleId: $('#@Html.FieldIdFor(model => model.CustomerRoleId)').val(),
