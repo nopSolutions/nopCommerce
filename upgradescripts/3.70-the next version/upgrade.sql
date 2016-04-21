@@ -377,6 +377,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.ExceededMaximumNumber">
     <Value>The maximum allowed number of products has been exceeded ({0})</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
 </Language>
 '
 
