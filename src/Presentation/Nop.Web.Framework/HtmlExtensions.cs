@@ -62,12 +62,15 @@ namespace Nop.Web.Framework
                 if (localizationSupported)
                 {
                     var tabStrip = new StringBuilder();
-                    tabStrip.AppendLine(string.Format("<div id='{0}'>", name));
-                    tabStrip.AppendLine("<ul>");
+                    tabStrip.AppendLine(string.Format("<div id=\"{0}\" class=\"nav-tabs-custom\">", name));
+                    tabStrip.AppendLine("<ul class=\"nav nav-tabs\">");
 
                     //default tab
-                    tabStrip.AppendLine("<li class='k-state-active'>");
-                    tabStrip.AppendLine("Standard");
+                    tabStrip.AppendLine("<li class=\"active\">");
+                    tabStrip.AppendLine(
+                        string.Format(
+                            "<a data-tab-name=\"{0}-localized-tab\" href=\"#{0}-localized-tab\" data-toggle=\"tab\">{1}</a>",
+                            "standard", "Standard"));
                     tabStrip.AppendLine("</li>");
 
                     foreach (var locale in helper.ViewData.Model.Locales)
@@ -78,8 +81,12 @@ namespace Nop.Web.Framework
                         tabStrip.AppendLine("<li>");
                         var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
                         var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
-                        tabStrip.AppendLine(string.Format("<img class='k-image' alt='' src='{0}'>", iconUrl));
-                        tabStrip.AppendLine(HttpUtility.HtmlEncode(language.Name));
+                        tabStrip.AppendLine(
+                            string.Format(
+                                "<a data-tab-name=\"{0}-localized-tab\" href=\"#{0}-localized-tab\" data-toggle=\"tab\"><img alt='' src='{1}'>{2}</a>",
+                                HttpUtility.HtmlEncode(language.Name).ToLower(), iconUrl,
+                                HttpUtility.HtmlEncode(language.Name)));
+
                         tabStrip.AppendLine("</li>");
                     }
                     tabStrip.AppendLine("</ul>");
@@ -87,30 +94,25 @@ namespace Nop.Web.Framework
 
 
                     //default tab
-                    tabStrip.AppendLine("<div>");
+                    tabStrip.AppendLine("<div class=\"tab-content\">");
+                    tabStrip.AppendLine("<div class=\"tab-pane active\" id=\"standard-localized-tab\">");
                     tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                     tabStrip.AppendLine("</div>");
 
                     for (int i = 0; i < helper.ViewData.Model.Locales.Count; i++)
                     {
                         //languages
-                        tabStrip.AppendLine("<div>");
+                        var language =
+                            EngineContext.Current.Resolve<ILanguageService>()
+                                .GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
+
+                        tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-localized-tab\">",
+                            HttpUtility.HtmlEncode(language.Name).ToLower()));
                         tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                         tabStrip.AppendLine("</div>");
                     }
                     tabStrip.AppendLine("</div>");
-                    tabStrip.AppendLine("<script>");
-                    tabStrip.AppendLine("$(document).ready(function() {");
-                    tabStrip.AppendLine(string.Format("$('#{0}').kendoTabStrip(", name));
-                    tabStrip.AppendLine("{");
-                    tabStrip.AppendLine("animation:  {");
-                    tabStrip.AppendLine("open: {");
-                    tabStrip.AppendLine("effects: \"fadeIn\"");
-                    tabStrip.AppendLine("}");
-                    tabStrip.AppendLine("}");
-                    tabStrip.AppendLine("});");
-                    tabStrip.AppendLine("});");
-                    tabStrip.AppendLine("</script>");
+                    tabStrip.AppendLine("</div>");
                     writer.Write(new MvcHtmlString(tabStrip.ToString()));
                 }
                 else

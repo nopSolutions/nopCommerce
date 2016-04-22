@@ -273,3 +273,7 @@ table td .form-group {
     background-color: #00a65a;
     border-color: #008d4c;
 }
+
+.nav>li>a>img {
+    max-height: 16px;
+}

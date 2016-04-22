@@ -62,7 +62,7 @@ function tabstrip_on_tab_select(e) {
 }
 
 function bindBootstrapTabSelectEvent(tabsId) {
-    $('#' + tabsId+ ' a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('#' + tabsId+ ' > ul li a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var tabName = $(e.target).attr("data-tab-name");
         $("#selected-tab-name").val(tabName);
     });
