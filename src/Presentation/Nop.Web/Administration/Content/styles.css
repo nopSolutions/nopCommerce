@@ -277,3 +277,22 @@ table td .form-group {
 .nav>li>a>img {
     max-height: 16px;
 }
+
+.nav-tabs-custom>.nav-tabs {
+    border-bottom-color: #ddd;
+}
+
+.nav-tabs-custom .nav-tabs-custom>.tab-content {
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active>a {
+    border-left-color: #ddd;
+    border-right-color: #ddd;
+}
+
+.nav-tabs-custom .nav-tabs-custom>.nav-tabs>li.active>a {
+    border-right: 1px solid #ddd !important;
+    border-left: 1px solid #ddd !important;
+}
