@@ -723,6 +723,12 @@
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started">
+    <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished">
+    <Value>Finished customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
@@ -2633,6 +2639,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotifyAdminForQuantityBelow.Hint">
     <Value>When the current stock quantity falls below (reaches) this quantity, a store owner will receive a notification.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotReturnable">
+    <Value>Not returnable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotReturnable.Hint">
+    <Value>Check if this product is not returnable. In this case a customer won't be allowed to submit return request.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Fields.OldPrice">
     <Value>Old price</Value>

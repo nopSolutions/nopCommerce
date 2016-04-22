@@ -1362,6 +1362,15 @@
                     @Html.ValidationMessageFor(model => model.AllowAddingOnlyExistingAttributeCombinations)
                 </div>
             </div>
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.NotReturnable)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.NotReturnable)
+                    @Html.ValidationMessageFor(model => model.NotReturnable)
+                </div>
+            </div>
         </div>
     </div>
 
