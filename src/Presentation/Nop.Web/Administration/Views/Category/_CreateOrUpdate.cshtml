@@ -5,57 +5,28 @@
 
 <script>
     $(document).ready(function() {
-        $("#category-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('category-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="category-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Products")
-                </li>
-                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Discounts")
-                </li>
-                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Acl")
-                </li>
-                <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Categories.Stores")
-                </li>
+        <div id="category-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Categories.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-products", @T("Admin.Catalog.Categories.Products"))
+                @Html.RenderBootstrapTabHeader("tab-discounts", @T("Admin.Catalog.Categories.Discounts"))
+                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.Catalog.Categories.Acl"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Categories.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabSeo()
-            </div>
-            <div>
-                @TabProducts()
-            </div>
-            <div>
-                @TabDiscounts()
-            </div>
-            <div>
-                @TabAcl()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @Html.RenderBootstrapTabContent("tab-products", @TabProducts())
+                @Html.RenderBootstrapTabContent("tab-discounts", @TabDiscounts())
+                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -73,7 +44,7 @@
 
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
 {
@@ -477,15 +448,15 @@
                     </script>
                 </div>
             </div>
-            }
-            else
-            {
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
-                    </div>
-                </div>
-            }
+                        }
+                        else
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+                                </div>
+                            </div>
+                        }
     </div>
 }
 
@@ -502,10 +473,10 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>} />
-                                    @discount.Name
-                                </label>
-                            </div>
+                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>   } />
+                                @discount.Name
+                            </label>
+                        </div>
                     }
                 }
                 else
