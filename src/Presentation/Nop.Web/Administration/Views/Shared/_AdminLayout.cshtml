@@ -7,7 +7,7 @@
 @using Nop.Services.Security;
 @{
     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-    var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
+    //var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
     //var adminName = usernamesEnabled ? currentCustomer.Username : currentCustomer.Email;
     var adminName = currentCustomer.GetFullName();
 
@@ -76,7 +76,7 @@
 
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
 
-    //info: we specify "Admin" area for actions adn widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
+    //info: we specify "Admin" area for actions and widgets here for cases when we use this layout in a plugin that is running in a different area than "admin"
 }
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
