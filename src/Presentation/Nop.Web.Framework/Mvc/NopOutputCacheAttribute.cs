@@ -496,6 +496,7 @@ namespace Nop.Web.Framework.Mvc
                     response.Cache.SetCacheability(HttpCacheability.Public);
                     response.Cache.SetOmitVaryStar(true);
                     response.Cache.SetMaxAge(maxAge);
+                    response.Cache.SetSlidingExpiration(true);
                 }
             }
             
