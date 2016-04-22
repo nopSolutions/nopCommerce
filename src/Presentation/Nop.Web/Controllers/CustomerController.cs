@@ -710,15 +710,22 @@ namespace Nop.Web.Controllers
 
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
+                //activity log
+                _customerActivityService.InsertActivity("Impersonation.Finished", 
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished"), 
+                    _workContext.OriginalCustomerIfImpersonated,
+                    _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+
                 //logout impersonated customer
                 _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,
                     SystemCustomerAttributeNames.ImpersonatedCustomerId, null);
+                
                 //redirect back to customer details page (admin area)
                 return this.RedirectToAction("Edit", "Customer", new { id = _workContext.CurrentCustomer.Id, area = "Admin" });
 
             }
 
-            //activity log
+           //activity log
             _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
             //standard logout 
             _authenticationService.SignOut();

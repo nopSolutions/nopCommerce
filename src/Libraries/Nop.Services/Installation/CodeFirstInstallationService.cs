@@ -9793,6 +9793,18 @@ namespace Nop.Services.Installation
                                                   Enabled = true,
                                                   Name = "Edit a widget"
                                               },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Started",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Started"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "Impersonation.Finished",
+                                                  Enabled = true,
+                                                  Name = "Customer impersonation session. Finished"
+                                              },
                                               //public store activities
                                           new ActivityLogType
                                               {

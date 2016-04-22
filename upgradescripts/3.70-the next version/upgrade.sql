@@ -395,6 +395,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.NotReturnable.Hint">
     <Value>Check if this product is not returnable. In this case a customer won''t be allowed to submit return request.</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started">
+    <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished">
+    <Value>Finished customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1432,4 +1438,20 @@ WHERE [NotReturnable] IS NULL
 GO
 
 ALTER TABLE [Product] ALTER COLUMN [NotReturnable] bit NOT NULL
+GO
+
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'Impersonation.Started')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'Impersonation.Started', N'Customer impersonation session. Started', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'Impersonation.Finished')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'Impersonation.Finished', N'Customer impersonation session. Finished', N'true')
+END
 GO

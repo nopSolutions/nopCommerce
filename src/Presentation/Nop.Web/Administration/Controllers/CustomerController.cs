@@ -1383,6 +1383,8 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("Edit", customer.Id);
             }
 
+            //activity log
+            _customerActivityService.InsertActivity("Impersonation.Started", _localizationService.GetResource("ActivityLog.Impersonation.Started"), customer.Email, customer.Id);
 
             _genericAttributeService.SaveAttribute<int?>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);

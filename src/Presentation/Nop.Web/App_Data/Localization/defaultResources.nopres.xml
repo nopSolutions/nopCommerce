@@ -723,6 +723,12 @@
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started">
+    <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished">
+    <Value>Finished customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
