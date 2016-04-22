@@ -431,7 +431,7 @@ namespace Nop.Services.Common
                 doc.Add(new Paragraph(" "));
 
 
-                var orderItems = _orderService.GetAllOrderItems(order.Id, null, null, null, null, null, null);
+                var orderItems = order.OrderItems;
 
                 var productsTable = new PdfPTable(_catalogSettings.ShowProductSku ? 5 : 4);
                 productsTable.RunDirection = GetDirection(lang);

@@ -389,6 +389,12 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.List.EndDate.Hint">
     <Value>The end date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotReturnable">
+    <Value>Not returnable</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.NotReturnable.Hint">
+    <Value>Check if this product is not returnable. In this case a customer won''t be allowed to submit return request.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1409,3 +1415,21 @@ GO
  	VALUES (N'taxsettings.logerrors', N'True', 0)
  END
  GO
+
+
+
+ --new column
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[Product]') and NAME='NotReturnable')
+BEGIN
+	ALTER TABLE [Product]
+	ADD [NotReturnable] bit NULL
+END
+GO
+
+UPDATE [Product]
+SET [NotReturnable] = 0
+WHERE [NotReturnable] IS NULL
+GO
+
+ALTER TABLE [Product] ALTER COLUMN [NotReturnable] bit NOT NULL
+GO

@@ -83,6 +83,7 @@ namespace Nop.Data.Tests.Catalog
                 OrderMaximumQuantity = 19,
                 AllowedQuantities = "1, 5,6,10",
                 AllowAddingOnlyExistingAttributeCombinations = true,
+                NotReturnable = true,
                 DisableBuyButton = true,
                 DisableWishlistButton = true,
                 AvailableForPreOrder = true,
@@ -191,6 +192,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
             fromDb.AllowedQuantities.ShouldEqual("1, 5,6,10");
             fromDb.AllowAddingOnlyExistingAttributeCombinations.ShouldEqual(true);
+            fromDb.NotReturnable.ShouldEqual(true);
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.DisableWishlistButton.ShouldEqual(true);
             fromDb.AvailableForPreOrder.ShouldEqual(true);
