@@ -276,6 +276,8 @@ table td .form-group {
 
 .nav>li>a>img {
     max-height: 16px;
+    margin-right: 8px;
+    vertical-align: baseline;
 }
 
 .nav-tabs-custom>.nav-tabs {
