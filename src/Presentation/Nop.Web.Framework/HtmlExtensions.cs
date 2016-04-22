@@ -292,7 +292,6 @@ namespace Nop.Web.Framework
                 InnerHtml = content.ToHtmlString(),
                 Attributes =
                 {
-                    new KeyValuePair<string, string>("data-index", currentTabName),
                     new KeyValuePair<string, string>("class", string.Format("tab-pane{0}", tabNameToSelect == currentTabName ? " active" : "")),
                     new KeyValuePair<string, string>("id", string.Format("{0}", currentTabName))
                 }
@@ -326,6 +325,7 @@ namespace Nop.Web.Framework
             {
                 Attributes =
                 {
+                    new KeyValuePair<string, string>("data-tab-name", currentTabName),
                     new KeyValuePair<string, string>("href", string.Format("#{0}", currentTabName)),
                     new KeyValuePair<string, string>("data-toggle", "tab"),
                 },

@@ -61,6 +61,13 @@ function tabstrip_on_tab_select(e) {
     $("#selected-tab-index").val($(e.item).index());
 }
 
+function bindBootstrapTabSelectEvent(tabsId) {
+    $('#' + tabsId+ ' a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var tabName = $(e.target).attr("data-tab-name");
+        $("#selected-tab-name").val(tabName);
+    });
+}
+
 function display_kendoui_grid_error(e) {
     if (e.errors) {
         if ((typeof e.errors) == 'string') {
