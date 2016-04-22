@@ -110,14 +110,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
             int index = 0;
             string dataKey = "nop.selected-tab-index";
-            if (ViewData[dataKey] is int)
-            {
-                index = (int)ViewData[dataKey];
-            }
-            if (TempData[dataKey] is int)
-            {
-                index = (int)TempData[dataKey];
-            }
+
+            if (ViewData.ContainsKey(dataKey)) int.TryParse(ViewData[dataKey].ToString(), out index);
+            if (TempData.ContainsKey(dataKey)) int.TryParse(TempData[dataKey].ToString(), out index);
 
             //ensure it's not negative
             if (index < 0)

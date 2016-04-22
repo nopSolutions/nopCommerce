@@ -266,10 +266,107 @@ namespace Nop.Web.Framework
             return new MvcHtmlString("");
         }
 
+        /// <summary>
+        /// Render CSS styles of selected index 
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="currentTabName">Current tab name (where appropriate CSS style should be rendred)</param>
+        /// <param name="content">Tab content</param>
+        /// <param name="isDefaultTab">Indicates that the tab is default</param>
+        /// <param name="tabNameToSelect">Tab name to select</param>
+        /// <returns>MvcHtmlString</returns>
+        public static MvcHtmlString RenderBootstrapTabContent(this HtmlHelper helper, string currentTabName,
+            HelperResult content, bool isDefaultTab = false, string tabNameToSelect = "")
+        {
+            if (helper == null)
+                throw new ArgumentNullException("helper");
+
+            if (string.IsNullOrEmpty(tabNameToSelect))
+                tabNameToSelect = helper.GetSelectedTabName();
+
+            if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
+                tabNameToSelect = currentTabName;
+
+            var tag = new TagBuilder("div")
+            {
+                InnerHtml = content.ToHtmlString(),
+                Attributes =
+                {
+                    new KeyValuePair<string, string>("data-index", currentTabName),
+                    new KeyValuePair<string, string>("class", string.Format("tab-pane{0}", tabNameToSelect == currentTabName ? " active" : "")),
+                    new KeyValuePair<string, string>("id", string.Format("{0}", currentTabName))
+                }
+            };
+
+            return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
+        }
+
+        /// <summary>
+        /// Render CSS styles of selected index 
+        /// </summary>
+        /// <param name="helper">HTML helper</param>
+        /// <param name="currentTabName">Current tab name (where appropriate CSS style should be rendred)</param>
+        /// <param name="title">Tab title</param>
+        /// <param name="isDefaultTab">Indicates that the tab is default</param>
+        /// <param name="tabNameToSelect">Tab name to select</param>
+        /// <returns>MvcHtmlString</returns>
+        public static MvcHtmlString RenderBootstrapTabHeader(this HtmlHelper helper, string currentTabName,
+            LocalizedString title, bool isDefaultTab = false, string tabNameToSelect = "")
+        {
+            if (helper == null)
+                throw new ArgumentNullException("helper");
+
+            if (string.IsNullOrEmpty(tabNameToSelect))
+                tabNameToSelect = helper.GetSelectedTabName();
+
+            if (string.IsNullOrEmpty(tabNameToSelect) && isDefaultTab)
+                tabNameToSelect = currentTabName;
+
+            var a = new TagBuilder("a")
+            {
+                Attributes =
+                {
+                    new KeyValuePair<string, string>("href", string.Format("#{0}", currentTabName)),
+                    new KeyValuePair<string, string>("data-toggle", "tab"),
+                },
+                InnerHtml = title.Text
+            };
+            var li = new TagBuilder("li")
+            {
+                Attributes =
+                {
+                    new KeyValuePair<string, string>("class", tabNameToSelect == currentTabName ? " active" : ""),
+                },
+                InnerHtml = a.ToString(TagRenderMode.Normal)
+            };
+
+            return MvcHtmlString.Create(li.ToString(TagRenderMode.Normal));
+        }
+
+        /// <summary>
+        /// Gets a selected tab name (used in admin area to store selected tab name)
+        /// </summary>
+        /// <returns>Name</returns>
+        public static string GetSelectedTabName(this HtmlHelper helper)
+        {
+            //keep this method synchornized with
+            //"SaveSelectedTabName" method of \Administration\Controllers\BaseNopController.cs
+            var tabName = string.Empty;
+            const string dataKey = "nop.selected-tab-index";
+
+            if (helper.ViewData.ContainsKey(dataKey))
+                tabName = helper.ViewData[dataKey].ToString();
+
+            if (helper.ViewContext.Controller.TempData.ContainsKey(dataKey))
+                tabName = helper.ViewContext.Controller.TempData[dataKey].ToString();
+
+            return tabName;
+        }
 
         #region Form fields
 
-        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression, bool displayHint = true)
+        public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+                Expression<Func<TModel, TValue>> expression, bool displayHint = true)
         {
             var result = new StringBuilder();
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
