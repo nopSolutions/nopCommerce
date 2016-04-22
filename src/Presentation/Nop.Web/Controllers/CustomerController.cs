@@ -711,10 +711,10 @@ namespace Nop.Web.Controllers
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //activity log
-                _customerActivityService.InsertActivity("Impersonation.Finished", 
-                    _localizationService.GetResource("ActivityLog.Impersonation.Finished"), 
-                    _workContext.OriginalCustomerIfImpersonated,
-                    _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+                _customerActivityService.InsertActivity(_workContext.OriginalCustomerIfImpersonated, "Impersonation.Finished", 
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.StoreOwner"), _workContext.CurrentCustomer.Email, _workContext.CurrentCustomer.Id);
+                _customerActivityService.InsertActivity("Impersonation.Finished",
+                    _localizationService.GetResource("ActivityLog.Impersonation.Finished.Customer"), _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id);
 
                 //logout impersonated customer
                 _genericAttributeService.SaveAttribute<int?>(_workContext.OriginalCustomerIfImpersonated,

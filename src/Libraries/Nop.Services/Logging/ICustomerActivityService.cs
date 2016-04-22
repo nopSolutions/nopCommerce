@@ -54,13 +54,12 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Inserts an activity log item
         /// </summary>
+        /// <param name="customer">The customer</param>
         /// <param name="systemKeyword">The system keyword</param>
         /// <param name="comment">The activity comment</param>
-        /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, 
-            string comment, Customer customer, params object[] commentParams);
+        ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment,  params object[] commentParams);
 
         /// <summary>
         /// Deletes an activity log item

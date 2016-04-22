@@ -723,11 +723,17 @@
   <LocaleResource Name="ActivityLog.EditWidget">
     <Value>Edited a widget (ID = {0})</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.Impersonation.Started">
+  <LocaleResource Name="ActivityLog.Impersonation.Started.StoreOwner">
     <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
   </LocaleResource>
-  <LocaleResource Name="ActivityLog.Impersonation.Finished">
+  <LocaleResource Name="ActivityLog.Impersonation.Finished.StoreOwner">
     <Value>Finished customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started.Customer">
+    <Value>Impersonated by store owner (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
+    <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>

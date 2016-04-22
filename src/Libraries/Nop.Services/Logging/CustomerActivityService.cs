@@ -192,20 +192,19 @@ namespace Nop.Services.Logging
         public virtual ActivityLog InsertActivity(string systemKeyword,
             string comment, params object[] commentParams)
         {
-            return InsertActivity(systemKeyword, comment, _workContext.CurrentCustomer, commentParams);
+            return InsertActivity(_workContext.CurrentCustomer, systemKeyword, comment, commentParams);
         }
-        
+
 
         /// <summary>
         /// Inserts an activity log item
         /// </summary>
+        /// <param name="customer">The customer</param>
         /// <param name="systemKeyword">The system keyword</param>
         /// <param name="comment">The activity comment</param>
-        /// <param name="customer">The customer</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, 
-            string comment, Customer customer, params object[] commentParams)
+        public virtual ActivityLog InsertActivity(Customer customer, string systemKeyword, string comment, params object[] commentParams)
         {
             if (customer == null)
                 return null;

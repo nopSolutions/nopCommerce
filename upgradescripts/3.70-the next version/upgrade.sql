@@ -396,10 +396,22 @@ set @resources='
     <Value>Check if this product is not returnable. In this case a customer won''t be allowed to submit return request.</Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Started">
-    <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="ActivityLog.Impersonation.Finished">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started.StoreOwner">
+    <Value>Started customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished.StoreOwner">
     <Value>Finished customer impersonation (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Started.Customer">
+    <Value>Impersonated by store owner (Email: {0}, ID = {1})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
+    <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
 </Language>
 '
