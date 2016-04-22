@@ -1632,8 +1632,7 @@ namespace Nop.Web.Controllers
             var customer = _workContext.CurrentCustomer;
 
             var model = new CustomerDownloadableProductsModel();
-            var items = _orderService.GetAllOrderItems(null, customer.Id, null, null,
-                null, null, null, true);
+            var items = _orderService.GetDownloadableOrderItems(customer.Id);
             foreach (var item in items)
             {
                 var itemModel = new CustomerDownloadableProductsModel.DownloadableProductsModel
