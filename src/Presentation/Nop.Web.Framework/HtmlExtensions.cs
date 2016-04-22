@@ -390,16 +390,16 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
+        public static MvcHtmlString NopEditorFor<TModel, TValue>(this HtmlHelper<TModel> helper,
             Expression<Func<TModel, TValue>> expression, bool? renderFormControlClass = null)
         {
             var result = new StringBuilder();
-            object htmlAttributes = null;
 
+            object htmlAttributes = null;
             var metadata = ModelMetadata.FromLambdaExpression(expression, helper.ViewData);
             if ((!renderFormControlClass.HasValue && metadata.ModelType.Name.Equals("String")) ||
                 (renderFormControlClass.HasValue && renderFormControlClass.Value))
-                htmlAttributes = new {@class = "form-control"};
+                htmlAttributes = new { @class = "form-control" };
 
             result.Append(helper.EditorFor(expression, new { htmlAttributes }));
 
@@ -420,32 +420,33 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
-        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper, 
-            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList, bool renderFormControlClass = true)
+        public static MvcHtmlString NopDropDownListFor<TModel, TValue>(this HtmlHelper<TModel> helper,
+            Expression<Func<TModel, TValue>> expression, IEnumerable<SelectListItem> itemList,
+            object htmlAttributes = null, bool renderFormControlClass = true)
         {
             var result = new StringBuilder();
-            object htmlAttributes = null;
 
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             if (renderFormControlClass)
-                htmlAttributes = new { @class = "form-control" };
+                attrs = AddFormControlClassToHtmlAttributes(attrs);
 
-            result.Append(helper.DropDownListFor(expression, itemList, htmlAttributes));
+            result.Append(helper.DropDownListFor(expression, itemList, attrs));
 
             return MvcHtmlString.Create(result.ToString());
         }
 
         public static MvcHtmlString NopTextAreaFor<TModel, TValue>(this HtmlHelper<TModel> helper,
-            Expression<Func<TModel, TValue>> expression, bool renderFormControlClass = true, int rows = 8, int columns = 20)
+            Expression<Func<TModel, TValue>> expression, object htmlAttributes = null,
+            bool renderFormControlClass = true, int rows = 8, int columns = 20)
         {
             var result = new StringBuilder();
 
-            object htmlAttributes = null;
-
+            var attrs = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
             if (renderFormControlClass)
-                htmlAttributes = new { @class = "form-control" };
+                attrs = AddFormControlClassToHtmlAttributes(attrs);
 
-            result.Append(helper.TextAreaFor(expression, rows, columns, htmlAttributes));
-            
+            result.Append(helper.TextAreaFor(expression, rows, columns, attrs));
+
             return MvcHtmlString.Create(result.ToString());
         }
 
