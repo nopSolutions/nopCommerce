@@ -855,12 +855,12 @@ namespace Nop.Web.Controllers
         {
             var sb = new StringBuilder();
 
-            //if robots.txt exists, let's use it
-            string robotsFile = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
-            if (System.IO.File.Exists(robotsFile))
+            //if robots.custom.txt exists, let's use it instead of hard-coded data below
+            string robotsFilePath = System.IO.Path.Combine(CommonHelper.MapPath("~/"), "robots.custom.txt");
+            if (System.IO.File.Exists(robotsFilePath))
             {
                 //the robots.txt file exists
-                string robotsFileContent = System.IO.File.ReadAllText(robotsFile);
+                string robotsFileContent = System.IO.File.ReadAllText(robotsFilePath);
                 sb.Append(robotsFileContent);
             }
             else
