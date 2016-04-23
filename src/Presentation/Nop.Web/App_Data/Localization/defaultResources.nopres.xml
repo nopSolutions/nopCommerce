@@ -11850,6 +11850,9 @@
   <LocaleResource Name="Common.LoadingNextStep">
     <Value>Loading next step...</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.ManagePage">
+    <Value>Manage this page</Value>
+  </LocaleResource>
   <LocaleResource Name="Common.Month">
     <Value>Month</Value>
   </LocaleResource>

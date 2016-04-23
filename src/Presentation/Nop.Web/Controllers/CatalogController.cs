@@ -621,6 +621,10 @@ namespace Nop.Web.Controllers
                     return template.ViewPath;
                 });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageCategories))
+                DisplayEditLink(Url.Action("Edit", "Category", new { id = category.Id, area = "Admin" }));
+
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
 
@@ -871,6 +875,10 @@ namespace Nop.Web.Controllers
                 return template.ViewPath;
             });
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageManufacturers))
+                DisplayEditLink(Url.Action("Edit", "Manufacturer", new { id = manufacturer.Id, area = "Admin" }));
+
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
 
@@ -1006,6 +1014,10 @@ namespace Nop.Web.Controllers
             model.Products = PrepareProductOverviewModels(products).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
+
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageVendors))
+                DisplayEditLink(Url.Action("Edit", "Vendor", new { id = vendor.Id, area = "Admin" }));
 
             return View(model);
         }

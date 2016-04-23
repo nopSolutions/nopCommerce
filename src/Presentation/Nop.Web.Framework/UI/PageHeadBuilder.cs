@@ -26,6 +26,7 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
+        private string _editPageUrl;
         #endregion
 
         #region Ctor
@@ -429,6 +430,15 @@ namespace Nop.Web.Framework.UI
             return result.ToString();
         }
 
+        
+        public virtual void AddEditPageUrl(string url)
+        {
+            _editPageUrl = url;
+        }
+        public virtual string GetEditPageUrl()
+        {
+            return _editPageUrl;
+        }
 
         #endregion
 

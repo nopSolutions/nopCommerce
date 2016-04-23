@@ -37,6 +37,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.UI;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
@@ -69,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly ICacheManager _cacheManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IVendorService _vendorService;
+        private readonly IPageHeadBuilder _pageHeadBuilder;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -108,6 +110,7 @@ namespace Nop.Web.Controllers
             ICacheManager cacheManager,
             ICustomerActivityService customerActivityService,
             IVendorService vendorService,
+            IPageHeadBuilder pageHeadBuilder,
             CustomerSettings customerSettings,
             TaxSettings taxSettings,
             CatalogSettings catalogSettings,
@@ -142,6 +145,8 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
             this._customerActivityService = customerActivityService;
             this._vendorService = vendorService;
+            this._pageHeadBuilder = pageHeadBuilder;
+
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -417,6 +422,7 @@ namespace Nop.Web.Controllers
                 ImpersonatedCustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                EditPageUrl = _pageHeadBuilder.GetEditPageUrl()
             };
 
             return PartialView(model);

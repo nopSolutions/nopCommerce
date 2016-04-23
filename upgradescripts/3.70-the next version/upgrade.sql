@@ -413,6 +413,9 @@ set @resources='
   <LocaleResource Name="ActivityLog.Impersonation.Finished.Customer">
     <Value>Impersonation by store owner was finished (Email: {0}, ID = {1})</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.ManagePage">
+    <Value>Manage this page</Value>
+  </LocaleResource>
 </Language>
 '
 

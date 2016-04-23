@@ -2,6 +2,9 @@
 
 namespace Nop.Web.Framework.UI
 {
+    /// <summary>
+    /// Page head builder
+    /// </summary>
     public partial interface IPageHeadBuilder
     {
         void AddTitleParts(string part);
@@ -32,5 +35,9 @@ namespace Nop.Web.Framework.UI
         void AddHeadCustomParts(string part);
         void AppendHeadCustomParts(string part);
         string GenerateHeadCustom();
+
+
+        void AddEditPageUrl(string url);
+        string GetEditPageUrl();
     }
 }

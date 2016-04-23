@@ -1018,6 +1018,10 @@ namespace Nop.Web.Controllers
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
+            //display "edit" (manage) link
+            if (_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel) && _permissionService.Authorize(StandardPermissionProvider.ManageProducts))
+                DisplayEditLink(Url.Action("Edit", "Product", new { id = product.Id, area = "Admin" }));
+
             //activity log
             _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
 
