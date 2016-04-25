@@ -1,42 +1,23 @@
 ﻿@model LanguageModel
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-
 <script>
     $(document).ready(function() {
-        $("#language-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('language-edit');
     });
 </script>
-
 <div class="content">
     <div class="form-horizontal">
-        <div id="language-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Languages.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Languages.Stores")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Languages.Resources")
-                </li>
+        <div id="language-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Languages.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Configuration.Languages.Stores"))
+                @Html.RenderBootstrapTabHeader("tab-resources", @T("Admin.Configuration.Languages.Resources"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabStores()
-            </div>
-            <div>
-                @TabResources()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
+                @Html.RenderBootstrapTabContent("tab-resources", @TabResources())
             </div>
         </div>
     </div>
@@ -54,7 +35,7 @@
 
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
