@@ -15,63 +15,32 @@
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-
     <script>
-        $(document).ready(function() {
-            $("#generalsettings-edit").kendoTabStrip({
-                animation:  {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('generalsettings-edit');
+    });
     </script>
-
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
             @Html.ValidationSummary(false)
 
-            <div id="generalsettings-edit">
-                <ul>
-                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings")
-                    </li>
+            <div id="generalsettings-edit" class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings"), true)
+                    @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Configuration.Settings.GeneralCommon.SEOSettings"))
+                    @Html.RenderBootstrapTabHeader("tab-security", @T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings"))
+                    @Html.RenderBootstrapTabHeader("tab-pdf", @T("Admin.Configuration.Settings.GeneralCommon.PdfSettings"))
+                    @Html.RenderBootstrapTabHeader("tab-localization", @T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings"))
+                    @Html.RenderBootstrapTabHeader("tab-fulltext", @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings"))
                 </ul>
-                <div>
-                    @TabStoreInformationSettings()
-                </div>
-                <div>
-                    @TabSEOSettings()
-                </div>
-                <div>
-                    @TabSecuritySettings()
-                </div>
-                <div>
-                    @TabPdfSettings()
-                </div>
-                <div>
-                    @TabLocalizationSettings()
-                </div>
-                <div>
-                    @TabFullTextSettings()
+                <div class="tab-content">
+                    @Html.RenderBootstrapTabContent("tab-info", @TabStoreInformationSettings(), true)
+                    @Html.RenderBootstrapTabContent("tab-seo", @TabSEOSettings())
+                    @Html.RenderBootstrapTabContent("tab-security", @TabSecuritySettings())
+                    @Html.RenderBootstrapTabContent("tab-pdf", @TabPdfSettings())
+                    @Html.RenderBootstrapTabContent("tab-localization", @TabLocalizationSettings())
+                    @Html.RenderBootstrapTabContent("tab-fulltext", @TabFullTextSettings())
                 </div>
             </div>
         </div>
@@ -88,7 +57,7 @@
     }
 
     @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())"> 
+    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 }
 @helper TabStoreInformationSettings()
 {

@@ -354,7 +354,7 @@ namespace Nop.Web.Framework
             //keep this method synchornized with
             //"SaveSelectedTabName" method of \Administration\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
-            const string dataKey = "nop.selected-tab-name";
+            const string dataKey = "nop.selected-tab-index";
 
             if (helper.ViewData.ContainsKey(dataKey))
                 tabName = helper.ViewData[dataKey].ToString();
