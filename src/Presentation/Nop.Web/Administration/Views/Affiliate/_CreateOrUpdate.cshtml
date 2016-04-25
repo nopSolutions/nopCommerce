@@ -15,16 +15,16 @@
                 @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Affiliates.Info"), true)
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Affiliates.Customers"))
-                    @Html.RenderBootstrapTabHeader("tab-products", @T("Admin.Affiliates.Orders"))
+                    @Html.RenderBootstrapTabHeader("tab-customers", @T("Admin.Affiliates.Customers"))
+                    @Html.RenderBootstrapTabHeader("tab-orders", @T("Admin.Affiliates.Orders"))
                 }
             </ul>
             <div class="tab-content">
                 @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
                 @if (Model.Id > 0)
                 {
-                    @Html.RenderBootstrapTabContent("tab-seo", @TabCustomers())
-                    @Html.RenderBootstrapTabContent("tab-products", @TabOrders())
+                    @Html.RenderBootstrapTabContent("tab-customers", @TabCustomers())
+                    @Html.RenderBootstrapTabContent("tab-orders", @TabOrders())
                 }
             </div>
         </div>
