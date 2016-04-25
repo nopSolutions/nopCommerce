@@ -38,58 +38,33 @@
 
     <script>
         $(document).ready(function () {
-            $("#order-edit").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
+            bindBootstrapTabSelectEvent('order-edit');
         });
     </script>
 
     <div class="content">
         <div class="form-horizontal">
-            <div id="order-edit">
-                <ul>
-                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                        @T("Admin.Orders.Info")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                        @T("Admin.Orders.BillingInfo")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                        @T("Admin.Orders.ShippingInfo")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                        @T("Admin.Orders.Products")
-                    </li>
+            <div id="order-edit" class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Orders.Info"), true)
+                    @Html.RenderBootstrapTabHeader("tab-billing-info", @T("Admin.Orders.BillingInfo"))
+                    @Html.RenderBootstrapTabHeader("tab-shipping-info", @T("Admin.Orders.ShippingInfo"))
+                    @Html.RenderBootstrapTabHeader("tab-products", @T("Admin.Orders.Products"))
                     @if (!Model.IsLoggedInAsVendor)
                     {
-                        <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                            @T("Admin.Orders.OrderNotes")
-                        </li>
+                        @Html.RenderBootstrapTabHeader("tab-order-notes", @T("Admin.Orders.OrderNotes"))
                     }
                 </ul>
-                <div>
-                    @TabInfo()
+                <div class="tab-content">
+                    @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                    @Html.RenderBootstrapTabContent("tab-billing-info", @TabBillingInfo())
+                    @Html.RenderBootstrapTabContent("tab-shipping-info", @TabShippingInfo())
+                    @Html.RenderBootstrapTabContent("tab-products", @TabProducts())
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        @Html.RenderBootstrapTabContent("tab-order-notes", @TabOrderNotes())
+                    }
                 </div>
-                <div>
-                    @TabBillingInfo()
-                </div>
-                <div>
-                    @TabShippingInfo()
-                </div>
-                <div>
-                    @TabProducts()
-                </div>
-                @if (!Model.IsLoggedInAsVendor)
-                {
-                    <div>
-                        @TabOrderNotes()
-                    </div>
-                }
             </div>
         </div>
     </div>
@@ -105,9 +80,8 @@
         }
     }
 
-
-    @*save selected tab index*@
-    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+    @*save selected tab name*@
+    <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 }
 @Html.DeleteConfirmation("order-delete")
