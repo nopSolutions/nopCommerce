@@ -15,56 +15,29 @@
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
         </div>
     </div>
-    
     @Html.ValidationSummary(false)
-
     <script>
-        $(document).ready(function() {
-            $("#customersettings-edit").kendoTabStrip({
-                animation:  {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('customersettings-edit');
+    });
     </script>
-
     <div class="content">
         <div class="form-horizontal">
-            <div id="customersettings-edit">
-                <ul>
-                    <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                        @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings")
-                    </li>
+
+            <div id="customersettings-edit" class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    @Html.RenderBootstrapTabHeader("tab-customer", @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings"), true)
+                    @Html.RenderBootstrapTabHeader("tab-customerformfields", @T("Admin.Configuration.Settings.CustomerUser.CustomerFormFields"))
+                    @Html.RenderBootstrapTabHeader("tab-addressformfields", @T("Admin.Configuration.Settings.CustomerUser.AddressFormFields"))
+                    @Html.RenderBootstrapTabHeader("tab-datetime", @T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings"))
+                    @Html.RenderBootstrapTabHeader("tab-externalauth", @T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings"))
                 </ul>
-                <div>
-                    @TabCustomerSettings()
-                </div>
-                <div>
-                    @TabCustomerFormFields()
-                </div>
-                <div>
-                    @TabAddressFormFields()
-                </div>
-                <div>
-                    @TabDateTimeSettings()
-                </div>
-                <div>
-                    @TabExternalAuthenticationSettings()
+                <div class="tab-content">
+                    @Html.RenderBootstrapTabContent("tab-customer", @TabCustomerSettings(), true)
+                    @Html.RenderBootstrapTabContent("tab-customerformfields", @TabCustomerFormFields())
+                    @Html.RenderBootstrapTabContent("tab-addressformfields", @TabAddressFormFields())
+                    @Html.RenderBootstrapTabContent("tab-datetime", @TabDateTimeSettings())
+                    @Html.RenderBootstrapTabContent("tab-externalauth", @TabExternalAuthenticationSettings())
                 </div>
             </div>
         </div>
@@ -81,8 +54,8 @@
     }
 
     @*save selected tab index*@
-	<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
-    
+	<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
 }
 @helper TabCustomerSettings()
 {
