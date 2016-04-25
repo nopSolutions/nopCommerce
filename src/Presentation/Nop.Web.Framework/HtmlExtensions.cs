@@ -301,7 +301,7 @@ namespace Nop.Web.Framework
             {
                 Attributes =
                 {
-                    new KeyValuePair<string, string>("class", tabNameToSelect == currentTabName ? " active" : ""),
+                    new KeyValuePair<string, string>("class", tabNameToSelect == currentTabName ? "active" : ""),
                 },
                 InnerHtml = a.ToString(TagRenderMode.Normal)
             };
