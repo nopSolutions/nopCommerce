@@ -14,31 +14,18 @@
 
     <script>
         $(document).ready(function() {
-            $("#googlebase-configure").kendoTabStrip({
-                animation: {
-                    open: {
-                        effects: "fadeIn"
-                    }
-                },
-                select: tabstrip_on_tab_select
-            });
+            bindBootstrapTabSelectEvent('googlebase-configure');
         });
     </script>
 
-    <div id="googlebase-configure">
-        <ul>
-            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                @T("Plugins.Feed.Froogle.General")
-            </li>
-            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                @T("Plugins.Feed.Froogle.Override")
-            </li>
+    <div id="googlebase-configure" class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            @Html.RenderBootstrapTabHeader("tab-general", @T("Plugins.Feed.Froogle.General"), true)
+            @Html.RenderBootstrapTabHeader("tab-override", @T("Plugins.Feed.Froogle.Override"))
         </ul>
-        <div>
-            @TabGeneral()
-        </div>
-        <div>
-            @TabOverride()
+        <div class="tab-content">
+            @Html.RenderBootstrapTabContent("tab-general", @TabGeneral(), true)
+            @Html.RenderBootstrapTabContent("tab-override", @TabOverride())
         </div>
     </div>
 }
@@ -157,8 +144,8 @@
 }
 @helper TabOverride()
 {
-    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel-group">
         <div class="panel panel-default">
