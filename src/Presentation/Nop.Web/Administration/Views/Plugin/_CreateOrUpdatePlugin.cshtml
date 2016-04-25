@@ -9,35 +9,17 @@
         window.close();
     </script>
 }
-<script>
-    $(document).ready(function() {
-        $("#plugin-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
-    });
-</script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="plugin-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Plugins.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Plugins.Stores")
-                </li>
+        <div id="plugin-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Plugins.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Configuration.Plugins.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores(), true)
             </div>
         </div>
     </div>
@@ -53,11 +35,10 @@
     }
 }
 
-
 @helper TabInfo()
         {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
                   @<div class="panel-body">
                       <div class="form-group">
