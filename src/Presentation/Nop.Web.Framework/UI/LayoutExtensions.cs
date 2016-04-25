@@ -5,7 +5,6 @@ namespace Nop.Web.Framework.UI
 {
     public static class LayoutExtensions
     {
-
         /// <summary>
         /// Add title element to the <![CDATA[<head>]]>
         /// </summary>
@@ -33,7 +32,7 @@ namespace Nop.Web.Framework.UI
         /// <param name="addDefaultTitle">A value indicating whether to insert a default title</param>
         /// <param name="part">Title part</param>
         /// <returns>Generated string</returns>
-        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, string part = "")
+        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle = true, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendTitleParts(part);
