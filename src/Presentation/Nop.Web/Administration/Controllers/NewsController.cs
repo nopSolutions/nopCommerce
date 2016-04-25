@@ -195,7 +195,16 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(newsItem, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = newsItem.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = newsItem.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form

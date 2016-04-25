@@ -310,7 +310,15 @@ namespace Nop.Admin.Controllers
                 //activity log
                 _customerActivityService.InsertActivity("AddNewTopic", _localizationService.GetResource("ActivityLog.AddNewTopic"), topic.Title ?? topic.SystemName);
 
-                return continueEditing ? RedirectToAction("Edit", new { id = topic.Id }) : RedirectToAction("List");
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = topic.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form

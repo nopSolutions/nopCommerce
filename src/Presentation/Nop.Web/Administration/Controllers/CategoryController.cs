@@ -419,7 +419,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Categories.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = category.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = category.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

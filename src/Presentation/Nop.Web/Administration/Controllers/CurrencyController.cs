@@ -270,7 +270,15 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = currency.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

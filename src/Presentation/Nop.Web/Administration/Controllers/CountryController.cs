@@ -200,7 +200,15 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = country.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

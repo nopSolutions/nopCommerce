@@ -108,7 +108,16 @@ namespace Nop.Admin.Controllers
                 _pollService.InsertPoll(poll);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Polls.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = poll.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = poll.Id });
+                }
+                return RedirectToAction("List");
+
             }
 
             //If we got this far, something failed, redisplay form

@@ -997,7 +997,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customer.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new {id = customer.Id});
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
