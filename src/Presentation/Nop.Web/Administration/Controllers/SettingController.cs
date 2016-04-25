@@ -1757,9 +1757,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the order settings page
 
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            //select "return request" tab
+            SaveSelectedTabIndex("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]
@@ -1883,9 +1882,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the order settings page
 
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+            //select "return request" tab
+            SaveSelectedTabIndex("tab-returnrequest");
             return RedirectToAction("Order", "Setting");
         }
         [HttpPost]

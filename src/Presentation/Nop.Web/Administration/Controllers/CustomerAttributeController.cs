@@ -92,10 +92,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //we just redirect a user to the customer settings page
-            
-            //select second tab
-            const int customerFormFieldIndex = 1;
-            SaveSelectedTabIndex(customerFormFieldIndex);
+
+            //select "customer form fields" tab
+            SaveSelectedTabIndex("tab-customerformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 

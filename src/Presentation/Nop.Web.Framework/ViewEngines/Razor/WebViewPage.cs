@@ -99,27 +99,6 @@ namespace Nop.Web.Framework.ViewEngines.Razor
             }
             return supportRtl;
         }
-
-        /// <summary>
-        /// Gets a selected tab index (used in admin area to store selected tab index)
-        /// </summary>
-        /// <returns>Index</returns>
-        public int GetSelectedTabIndex()
-        {
-            //keep this method synchornized with
-            //"SetSelectedTabIndex" method of \Administration\Controllers\BaseNopController.cs
-            int index = 0;
-            string dataKey = "nop.selected-tab-index";
-
-            if (ViewData.ContainsKey(dataKey)) int.TryParse(ViewData[dataKey].ToString(), out index);
-            if (TempData.ContainsKey(dataKey)) int.TryParse(TempData[dataKey].ToString(), out index);
-
-            //ensure it's not negative
-            if (index < 0)
-                index = 0;
-
-            return index;
-        }
     }
 
     /// <summary>

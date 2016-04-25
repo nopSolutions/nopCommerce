@@ -78,39 +78,27 @@ namespace Nop.Admin.Controllers
         /// <summary>
         /// Save selected TAB index (or name)
         /// </summary>
-        /// <param name="index">Index to save; null to automatically detect it</param>
         /// <param name="tabName">Name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabIndex(int? index = null, string tabName = "", bool persistForTheNextRequest = true)
+        protected void SaveSelectedTabIndex(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedTabIndex" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
-            if (!index.HasValue)
-            {
-                int tmp;
-                if (int.TryParse(this.Request.Form["selected-tab-index"], out tmp))
-                {
-                    index = tmp;
-                }
-            }
-
+            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
             if (string.IsNullOrEmpty(tabName))
             {
                 tabName = this.Request.Form["selected-tab-name"];
             }
-
-            var value = index.HasValue ? index.ToString() : tabName;
-
-            if (!string.IsNullOrEmpty(value))
+            
+            if (!string.IsNullOrEmpty(tabName))
             {
-                const string dataKey = "nop.selected-tab-index";
+                const string dataKey = "nop.selected-tab-name";
                 if (persistForTheNextRequest)
                 {
-                    TempData[dataKey] = value;
+                    TempData[dataKey] = tabName;
                 }
                 else
                 {
-                    ViewData[dataKey] = value;
+                    ViewData[dataKey] = tabName;
                 }
             }
         }

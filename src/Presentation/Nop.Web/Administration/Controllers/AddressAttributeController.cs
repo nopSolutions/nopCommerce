@@ -93,9 +93,8 @@ namespace Nop.Admin.Controllers
 
             //we just redirect a user to the address settings page
             
-            //select third tab
-            const int addressFormFieldIndex = 2;
-            SaveSelectedTabIndex(addressFormFieldIndex);
+            //select "address form fields" tab
+            SaveSelectedTabIndex("tab-addressformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 
