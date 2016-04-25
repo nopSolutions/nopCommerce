@@ -4,118 +4,53 @@
 
 <script>
     $(document).ready(function () {
-        $("#product-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('product-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="product-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Pictures")
-                </li>
-                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Categories")
-                </li>
-                <li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Manufacturers")
-                </li>
-                <li @Html.RenderSelectedTabIndex(5, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.SpecificationAttributes")
-                </li>
-                <li @Html.RenderSelectedTabIndex(6, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.ProductAttributes")
-                </li>
-                <li @Html.RenderSelectedTabIndex(7, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.TierPrices")
-                </li>
-                <li @Html.RenderSelectedTabIndex(8, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Discounts")
-                </li>
-                <li @Html.RenderSelectedTabIndex(9, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Acl")
-                </li>
-                <li @Html.RenderSelectedTabIndex(10, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.Stores")
-                </li>
-                <li @Html.RenderSelectedTabIndex(11, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.RelatedProducts")
-                </li>
-                <li @Html.RenderSelectedTabIndex(12, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Products.CrossSells")
-                </li>
-                <li @Html.RenderSelectedTabIndex(13, GetSelectedTabIndex()) id="tab-associated-products">
-                    @T("Admin.Catalog.Products.AssociatedProducts")
-                </li>
+        <div id="product-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Products.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-pictures", @T("Admin.Catalog.Products.Pictures"))
+                @Html.RenderBootstrapTabHeader("tab-categories", @T("Admin.Catalog.Products.Categories"))
+                @Html.RenderBootstrapTabHeader("tab-manufacturers", @T("Admin.Catalog.Products.Manufacturers"))
+                @Html.RenderBootstrapTabHeader("tab-specification-attributes", @T("Admin.Catalog.Products.SpecificationAttributes"))
+                @Html.RenderBootstrapTabHeader("tab-product-attributes", @T("Admin.Catalog.Products.ProductAttributes"))
+                @Html.RenderBootstrapTabHeader("tab-tier-prices", @T("Admin.Catalog.Products.TierPrices"))
+                @Html.RenderBootstrapTabHeader("tab-discounts", @T("Admin.Catalog.Products.Discounts"))
+                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.Catalog.Products.Acl"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Products.Stores"))
+                @Html.RenderBootstrapTabHeader("tab-related-products", @T("Admin.Catalog.Products.RelatedProducts"))
+                @Html.RenderBootstrapTabHeader("tab-cross-sells", @T("Admin.Catalog.Products.CrossSells"))
+                @Html.RenderBootstrapTabHeader("tab-associated-products", @T("Admin.Catalog.Products.AssociatedProducts"))
                 @if (Model.Id > 0)
                 {
-                    <li @Html.RenderSelectedTabIndex(14, GetSelectedTabIndex())>
-                        @T("Admin.Catalog.Products.PurchasedWithOrders")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-purchased-with-orders", @T("Admin.Catalog.Products.PurchasedWithOrders"))
                 }
             </ul>
-            <div>
-                @TabInfo()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @Html.RenderBootstrapTabContent("tab-pictures", @TabPictures())
+                @Html.RenderBootstrapTabContent("tab-categories", @TabCategories())
+                @Html.RenderBootstrapTabContent("tab-manufacturers", @TabManufacturers())
+                @Html.RenderBootstrapTabContent("tab-specification-attributes", @TabSpecificationAttributes())
+                @Html.RenderBootstrapTabContent("tab-product-attributes", @TabProductAttributes())
+                @Html.RenderBootstrapTabContent("tab-tier-prices", @TabTierPrices())
+                @Html.RenderBootstrapTabContent("tab-discounts", @TabDiscounts())
+                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
+                @Html.RenderBootstrapTabContent("tab-related-products", @TabRelatedProducts())
+                @Html.RenderBootstrapTabContent("tab-cross-sells", @TabCrossSells())
+                @Html.RenderBootstrapTabContent("tab-associated-products", @TabAssociatedProducts())
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-purchased-with-orders", @TabPurchasedWithOrders())
+                }
             </div>
-            <div>
-                @TabSeo()
-            </div>
-            <div>
-                @TabPictures()
-            </div>
-            <div>
-                @TabCategories()
-            </div>
-            <div>
-                @TabManufacturers()
-            </div>
-            <div>
-                @TabSpecificationAttributes()
-            </div>
-            <div>
-                @TabProductAttributes()
-            </div>
-            <div>
-                @TabTierPrices()
-            </div>
-            <div>
-                @TabDiscounts()
-            </div>
-            <div>
-                @TabAcl()
-            </div>
-            <div>
-                @TabStores()
-            </div>
-            <div>
-                @TabRelatedProducts()
-            </div>
-            <div>
-                @TabCrossSells()
-            </div>
-            <div>
-                @TabAssociatedProducts()
-            </div>
-            @if (Model.Id > 0)
-            {
-                <div>
-                    @TabPurchasedWithOrders()
-                </div>
-            }
         </div>
     </div>
 </div>
@@ -130,8 +65,8 @@
     }
 }
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
