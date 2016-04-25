@@ -4,46 +4,29 @@
 
 <script>
     $(document).ready(function() {
-        $("#affiliate-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('affiliate-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="affiliate-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Affiliates.Info")
-                </li>
+        <div id="affiliate-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Affiliates.Info"), true)
                 @if (Model.Id > 0)
                 {
-                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                        @T("Admin.Affiliates.Customers")
-                    </li>
-                    <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                        @T("Admin.Affiliates.Orders")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Affiliates.Customers"))
+                    @Html.RenderBootstrapTabHeader("tab-products", @T("Admin.Affiliates.Orders"))
                 }
             </ul>
-            <div>
-                @TabInfo()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-seo", @TabCustomers())
+                    @Html.RenderBootstrapTabContent("tab-products", @TabOrders())
+                }
             </div>
-            @if (Model.Id > 0)
-            {
-                <div>
-                    @TabCustomers()
-                </div>
-                <div>
-                    @TabOrders()
-                </div>
-            }
         </div>
     </div>
 </div>
@@ -59,7 +42,7 @@
 }
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
