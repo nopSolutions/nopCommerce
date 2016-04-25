@@ -4,68 +4,52 @@
 
 <script>
     $(document).ready(function() {
-        $("#product-attribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('product-attribute-edit');
     });
 </script>
 
+
 <div class="content">
     <div class="form-horizontal">
-        <div id="product-attribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.ProductAttributes.Info")
-                </li>
+        <div id="product-attribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.ProductAttributes.Info"), true)
                 @if (Model.Id > 0)
                 {
-                    <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                        @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-used-by-products", @T("Admin.Catalog.Attributes.ProductAttributes.UsedByProducts"))
                 }
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues")
-                </li>
+                @Html.RenderBootstrapTabHeader("tab-predefined-values", @T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            @if (Model.Id > 0)
-            {
-                <div>
-                    @TabUsedByProducts()
-                </div>
-            }
-            <div>
-                @TabPredefinedValues()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @if (Model.Id > 0)
+                {
+                    @Html.RenderBootstrapTabContent("tab-used-by-products", @TabUsedByProducts())
+                }
+                @Html.RenderBootstrapTabContent("tab-predefined-values", @TabPredefinedValues())
             </div>
         </div>
     </div>
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "product-attribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
 
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
 
             @(Html.LocalizedEditor<ProductAttributeModel, ProductAttributeLocalizedModel>("productattribute-localized",
             @<div class="panel-body">
