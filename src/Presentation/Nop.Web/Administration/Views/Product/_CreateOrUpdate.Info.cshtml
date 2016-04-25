@@ -74,7 +74,7 @@
         $('#group-shipping').show();
         $('#group-tax').show();
         $('#group-inventory').show();
-        $('#tab-associated-products').hide();
+        $('[data-tab-name=tab-associated-products]').hide();
     } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
         $('#group-prices').hide();
         $('#group-required-other-products').hide();
@@ -85,7 +85,7 @@
         $('#group-shipping').hide();
         $('#group-tax').hide();
         $('#group-inventory').hide();
-        $('#tab-associated-products').show();
+        $('[data-tab-name=tab-associated-products]').show();
     }
     }
 
