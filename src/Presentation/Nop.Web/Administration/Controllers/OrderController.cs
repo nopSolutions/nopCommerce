@@ -1874,7 +1874,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -1964,7 +1964,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2007,7 +2007,7 @@ namespace Nop.Admin.Controllers
                 ErrorNotification("This order item has an associated gift card record. Please delete it first.", false);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
 
@@ -2034,7 +2034,7 @@ namespace Nop.Admin.Controllers
                 PrepareOrderDetailsModel(model, order);
 
                 //selected tab
-                SaveSelectedTabIndex(persistForTheNextRequest: false);
+                SaveSelectedTabName(persistForTheNextRequest: false);
 
                 return View(model);
             }
@@ -2075,7 +2075,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }
@@ -2115,7 +2115,7 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
 
             //selected tab
-            SaveSelectedTabIndex(persistForTheNextRequest: false);
+            SaveSelectedTabName(persistForTheNextRequest: false);
 
             return View(model);
         }

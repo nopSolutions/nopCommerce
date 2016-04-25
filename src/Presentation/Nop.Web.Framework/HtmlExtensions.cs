@@ -242,32 +242,7 @@ namespace Nop.Web.Framework
             }
             return MvcHtmlString.Create(result.ToString());
         }
-
-        /// <summary>
-        /// Render CSS styles of selected index 
-        /// </summary>
-        /// <param name="helper">HTML helper</param>
-        /// <param name="currentIndex">Current tab index (where appropriate CSS style should be rendred)</param>
-        /// <param name="indexToSelect">Tab index to select</param>
-        /// <returns>MvcHtmlString</returns>
-        public static MvcHtmlString RenderSelectedTabIndex(this HtmlHelper helper, int currentIndex, int indexToSelect)
-        {
-            if (helper == null)
-                throw new ArgumentNullException("helper");
-
-            //ensure it's not negative
-            if (indexToSelect < 0)
-                indexToSelect = 0;
-
-            //required validation
-            if (indexToSelect == currentIndex)
-            {
-                return new MvcHtmlString(" class='k-state-active'");
-            }
-
-            return new MvcHtmlString("");
-        }
-
+        
         /// <summary>
         /// Render CSS styles of selected index 
         /// </summary>
@@ -352,7 +327,7 @@ namespace Nop.Web.Framework
         public static string GetSelectedTabName(this HtmlHelper helper)
         {
             //keep this method synchornized with
-            //"SaveSelectedTabIndex" method of \Administration\Controllers\BaseAdminController.cs
+            //"SaveSelectedTab" method of \Administration\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
             const string dataKey = "nop.selected-tab-name";
 

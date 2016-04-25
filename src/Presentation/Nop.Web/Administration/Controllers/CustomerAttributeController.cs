@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
             //we just redirect a user to the customer settings page
 
             //select "customer form fields" tab
-            SaveSelectedTabIndex("tab-customerformfields");
+            SaveSelectedTabName("tab-customerformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -193,7 +193,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = customerAttribute.Id});
                 }

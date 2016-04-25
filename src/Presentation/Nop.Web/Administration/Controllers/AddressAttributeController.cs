@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
             //we just redirect a user to the address settings page
             
             //select "address form fields" tab
-            SaveSelectedTabIndex("tab-addressformfields");
+            SaveSelectedTabName("tab-addressformfields");
             return RedirectToAction("CustomerUser", "Setting");
         }
 
@@ -193,7 +193,7 @@ namespace Nop.Admin.Controllers
                 if (continueEditing)
                 {
                     //selected tab
-                    SaveSelectedTabIndex();
+                    SaveSelectedTabName();
 
                     return RedirectToAction("Edit", new {id = addressAttribute.Id});
                 }

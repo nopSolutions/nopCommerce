@@ -1226,7 +1226,7 @@ namespace Nop.Admin.Controllers
                     if (continueEditing)
                     {
                         //selected tab
-                        SaveSelectedTabIndex();
+                        SaveSelectedTabName();
 
                         return RedirectToAction("Edit",  new {id = customer.Id});
                     }

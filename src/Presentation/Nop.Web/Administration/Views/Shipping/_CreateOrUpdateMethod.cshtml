@@ -1,11 +1,10 @@
 ﻿@model ShippingMethodModel
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default no-border">
                 @(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
                 @<div class="panel-body">
                     <div class="form-group">

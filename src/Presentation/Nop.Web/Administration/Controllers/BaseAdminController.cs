@@ -50,37 +50,9 @@ namespace Nop.Admin.Controllers
         /// <summary>
         /// Save selected TAB name
         /// </summary>
-        /// <param name="tabName">Name to save; null to automatically detect it</param>
+        /// <param name="tabName">Tab name to save; empty to automatically detect it</param>
         /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
         protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
-        {
-            //keep this method synchronized with
-            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
-            if (string.IsNullOrEmpty(tabName))
-            {
-                tabName = this.Request.Form["selected-tab-name"];
-            }
-
-            if (!string.IsNullOrEmpty(tabName))
-            {
-                const string dataKey = "nop.selected-tab-name";
-                if (persistForTheNextRequest)
-                {
-                    TempData[dataKey] = tabName;
-                }
-                else
-                {
-                    ViewData[dataKey] = tabName;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Save selected TAB index (or name)
-        /// </summary>
-        /// <param name="tabName">Name to save; empty to automatically detect it</param>
-        /// <param name="persistForTheNextRequest">A value indicating whether a message should be persisted for the next request</param>
-        protected void SaveSelectedTabIndex(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
             //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
