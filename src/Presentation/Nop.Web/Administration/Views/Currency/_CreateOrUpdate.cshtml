@@ -1,37 +1,21 @@
 ﻿@model CurrencyModel
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
-
-
 <script>
-    $(document).ready(function () {
-        $("#currency-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('currency-edit');
     });
 </script>
-
 <div class="content">
     <div class="form-horizontal">
-        <div id="currency-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Currencies.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Configuration.Currencies.Stores")
-                </li>
+        <div id="currency-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Configuration.Currencies.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Configuration.Currencies.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -49,12 +33,12 @@
 
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
             @<div class="panel-body">
                 <div class="form-group">
