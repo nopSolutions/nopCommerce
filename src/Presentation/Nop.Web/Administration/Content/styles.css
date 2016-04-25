@@ -298,3 +298,7 @@ table td .form-group {
     border-right: 1px solid #ddd !important;
     border-left: 1px solid #ddd !important;
 }
+
+.nav-tabs-custom {
+    margin-bottom: 0;
+}
