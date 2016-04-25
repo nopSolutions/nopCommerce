@@ -4,7 +4,7 @@
     var themeName = EngineContext.Current.Resolve<IThemeContext>().WorkingThemeName;
 }
 <!DOCTYPE html>
-<html>
+<html @Html.NopHeadCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

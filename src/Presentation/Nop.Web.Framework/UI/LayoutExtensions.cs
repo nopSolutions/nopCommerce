@@ -3,6 +3,9 @@ using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.UI
 {
+    /// <summary>
+    /// Layout extensions
+    /// </summary>
     public static class LayoutExtensions
     {
         /// <summary>
@@ -166,8 +169,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             return MvcHtmlString.Create(pageHeadBuilder.GenerateScripts(urlHelper, location, bundleFiles));
         }
-
-
+        
 
         /// <summary>
         /// Add CSS element
@@ -258,8 +260,9 @@ namespace Nop.Web.Framework.UI
             return MvcHtmlString.Create(pageHeadBuilder.GenerateCanonicalUrls());
         }
 
+
         /// <summary>
-        /// Add any custom element to the <![CDATA[<head>]]>
+        /// Add any custom element to the <![CDATA[<head>]]> element
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">The entire element. For example, <![CDATA[<meta name="msvalidate.01" content="123121231231313123123" />]]></param>
@@ -269,7 +272,7 @@ namespace Nop.Web.Framework.UI
             pageHeadBuilder.AddHeadCustomParts(part);
         }
         /// <summary>
-        /// Append any custom element to the <![CDATA[<head>]]>
+        /// Append any custom element to the <![CDATA[<head>]]> element
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">The entire element. For example, <![CDATA[<meta name="msvalidate.01" content="123121231231313123123" />]]></param>
@@ -287,6 +290,47 @@ namespace Nop.Web.Framework.UI
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             return MvcHtmlString.Create(pageHeadBuilder.GenerateHeadCustom());
+        }
+
+
+        /// <summary>
+        /// Add CSS class to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="part">CSS class</param>
+        public static void AddHeadCssClassParts(this HtmlHelper html, string part)
+        {
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            pageHeadBuilder.AddHeadCssClassParts(part);
+        }
+        /// <summary>
+        /// Append CSS class to the <![CDATA[<head>]]> element
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="part">CSS class</param>
+        public static void AppendHeadCssClassParts(this HtmlHelper html, string part)
+        {
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            pageHeadBuilder.AppendHeadCssClassParts(part);
+        }
+        /// <summary>
+        /// Generate all title parts
+        /// </summary>
+        /// <param name="html">HTML helper</param>
+        /// <param name="part">CSS class</param>
+        /// <param name="includeClassElement">A value indicating whether to include "class" attributes</param>
+        /// <returns>Generated string</returns>
+        public static MvcHtmlString NopHeadCssClasses(this HtmlHelper html, string part = "", bool includeClassElement = true)
+        {
+            var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
+            html.AppendHeadCssClassParts(part);
+            var classes = pageHeadBuilder.GenerateHeadCssClasses();
+
+            if (string.IsNullOrEmpty(classes))
+                return null;
+
+            var result = includeClassElement ? string.Format("class=\"{0}\"", classes) : classes;
+            return MvcHtmlString.Create(result);
         }
     }
 }

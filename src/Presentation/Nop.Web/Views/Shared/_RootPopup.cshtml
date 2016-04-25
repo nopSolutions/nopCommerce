@@ -3,7 +3,7 @@
     Html.AppendScriptParts("~/Scripts/jquery-1.10.2.min.js");
 }
 <!DOCTYPE html>
-<html @Html.Partial("LanguageAttributes")>
+<html @Html.Partial("LanguageAttributes") @Html.NopHeadCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />

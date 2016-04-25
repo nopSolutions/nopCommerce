@@ -12,6 +12,9 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {
+    /// <summary>
+    /// Page head builder
+    /// </summary>
     public partial class PageHeadBuilder : IPageHeadBuilder
     {
         #region Fields
@@ -26,11 +29,16 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
+        private readonly List<string> _headCssClassParts;
         private string _editPageUrl;
         #endregion
 
         #region Ctor
 
+        /// <summary>
+        /// Constuctor
+        /// </summary>
+        /// <param name="seoSettings">SEO settings</param>
         public PageHeadBuilder(SeoSettings seoSettings)
         {
             this._seoSettings = seoSettings;
@@ -41,6 +49,7 @@ namespace Nop.Web.Framework.UI
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
+            this._headCssClassParts = new List<string>();
         }
 
         #endregion
@@ -183,7 +192,7 @@ namespace Nop.Web.Framework.UI
             var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
         }
-
+    
 
         public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
         {
@@ -400,6 +409,7 @@ namespace Nop.Web.Framework.UI
             return result.ToString();
         }
 
+
         public virtual void AddHeadCustomParts(string part)
         {
             if (string.IsNullOrEmpty(part))
@@ -431,6 +441,27 @@ namespace Nop.Web.Framework.UI
         }
 
         
+        public virtual void AddHeadCssClassParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _headCssClassParts.Add(part);
+        }
+        public virtual void AppendHeadCssClassParts(string part)
+        {
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _headCssClassParts.Insert(0, part);
+        }
+        public virtual string GenerateHeadCssClasses()
+        {
+            string result = string.Join(" ", _headCssClassParts.AsEnumerable().Reverse().ToArray());
+            return result;
+        }
+
+
         public virtual void AddEditPageUrl(string url)
         {
             _editPageUrl = url;
