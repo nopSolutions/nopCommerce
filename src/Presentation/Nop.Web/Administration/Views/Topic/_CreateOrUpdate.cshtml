@@ -1,47 +1,27 @@
 ﻿@model TopicModel
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
+
 <script>
-    $(document).ready(function () {
-        $("#topic-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('topic-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="topic-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Common.SEO")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Acl")
-                </li>
-                <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Topics.Stores")
-                </li>
+        <div id="topic-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Topics.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-seo", @T("Admin.Common.SEO"))
+                @Html.RenderBootstrapTabHeader("tab-acl", @T("Admin.ContentManagement.Topics.Acl"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.ContentManagement.Topics.Stores"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabSeo()
-            </div>
-            <div>
-                @TabAcl()
-            </div>
-            <div>
-                @TabStores()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-seo", @TabSeo())
+                @Html.RenderBootstrapTabContent("tab-acl", @TabAcl())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
             </div>
         </div>
     </div>
@@ -57,8 +37,8 @@
     }
 }
 
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
@@ -77,7 +57,7 @@
         }
     </script>
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
             @<div class="panel-body">
                 <div class="form-group">
@@ -254,7 +234,7 @@
 @helper TabSeo()
         {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
             @<div class="panel-body">
                 <div class="form-group">
