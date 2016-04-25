@@ -144,7 +144,15 @@ namespace Nop.Admin.Controllers
                 UpdateAttributeLocales(addressAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Address.AddressAttributes.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = addressAttribute.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = addressAttribute.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

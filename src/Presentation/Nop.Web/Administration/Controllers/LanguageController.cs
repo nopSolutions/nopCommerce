@@ -201,7 +201,15 @@ namespace Nop.Admin.Controllers
                 SaveStoreMappings(language, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = language.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

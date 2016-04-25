@@ -144,7 +144,15 @@ namespace Nop.Admin.Controllers
                 UpdateAttributeLocales(customerAttribute, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerAttributes.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = customerAttribute.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = customerAttribute.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

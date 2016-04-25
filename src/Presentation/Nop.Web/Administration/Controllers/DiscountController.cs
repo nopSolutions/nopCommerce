@@ -213,7 +213,15 @@ namespace Nop.Admin.Controllers
                 _customerActivityService.InsertActivity("AddNewDiscount", _localizationService.GetResource("ActivityLog.AddNewDiscount"), discount.Name);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Discounts.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = discount.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = discount.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form

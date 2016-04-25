@@ -145,24 +145,13 @@ namespace Nop.Web.Framework
             };
 
             var window = new StringBuilder();
-            window.AppendLine(string.Format("<div id='{0}' style='display:none;'>", modalId));
+            window.AppendLine(string.Format("<div id='{0}' class=\"modal fade\"  tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"{0}-title\">", modalId));
             window.AppendLine(helper.Partial("Delete", deleteConfirmationModel).ToHtmlString());
             window.AppendLine("</div>");
+
             window.AppendLine("<script>");
             window.AppendLine("$(document).ready(function() {");
-            window.AppendLine(string.Format("$('#{0}').click(function (e) ", buttonsSelector));
-            window.AppendLine("{");
-            window.AppendLine("e.preventDefault();");
-            window.AppendLine(string.Format("var window = $('#{0}');", modalId));
-            window.AppendLine("if (!window.data('kendoWindow')) {");
-            window.AppendLine("window.kendoWindow({");
-            window.AppendLine("modal: true,");
-            window.AppendLine(string.Format("title: '{0}',", EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.AreYouSure")));
-            window.AppendLine("actions: ['Close']");
-            window.AppendLine("});");
-            window.AppendLine("}");
-            window.AppendLine("window.data('kendoWindow').center().open();");
-            window.AppendLine("});");
+            window.AppendLine(string.Format("$('#{0}').attr(\"data-toggle\", \"modal\").attr(\"data-target\", \"#{1}\")", buttonsSelector, modalId));
             window.AppendLine("});");
             window.AppendLine("</script>");
 

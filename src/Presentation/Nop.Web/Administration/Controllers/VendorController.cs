@@ -189,7 +189,15 @@ namespace Nop.Admin.Controllers
                 UpdatePictureSeoNames(vendor);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Vendors.Added"));
-                return continueEditing ? RedirectToAction("Edit", new { id = vendor.Id }) : RedirectToAction("List");
+
+                if (continueEditing)
+                {
+                    //selected tab
+                    SaveSelectedTabName();
+
+                    return RedirectToAction("Edit", new { id = vendor.Id });
+                }
+                return RedirectToAction("List");
             }
 
             //If we got this far, something failed, redisplay form
