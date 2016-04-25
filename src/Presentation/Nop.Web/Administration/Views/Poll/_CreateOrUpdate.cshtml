@@ -3,34 +3,21 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function () {
-        $("#poll-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('poll-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="poll-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Polls.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.ContentManagement.Polls.Answers")
-                </li>
+        <div id="poll-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.ContentManagement.Polls.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-answers", @T("Admin.ContentManagement.Polls.Answers"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabAnswers()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-answers", @TabAnswers())
             </div>
         </div>
     </div>
@@ -46,9 +33,8 @@
     }
 }
 
-
-@*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+@*save selected tab name*@
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
 {
