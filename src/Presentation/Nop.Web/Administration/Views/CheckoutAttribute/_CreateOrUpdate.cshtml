@@ -1,79 +1,54 @@
 ﻿@model CheckoutAttributeModel
-
 @using Nop.Core.Domain.Catalog;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 <script>
     $(document).ready(function() {
-        $("#checkoutattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+        bindBootstrapTabSelectEvent('checkoutattribute-edit');
     });
 </script>
-
 <div class="content">
     <div class="form-horizontal">
-        <div id="checkoutattribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Values")
-                </li>
-                <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
-                    @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores")
-                </li>
+        <div id="checkoutattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Catalog.Attributes.CheckoutAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Catalog.Attributes.CheckoutAttributes.Values"))
+                @Html.RenderBootstrapTabHeader("tab-stores", @T("Admin.Catalog.Attributes.CheckoutAttributes.Stores"))
                 @if (Model.ConditionAllowed)
                 {
-                    <li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
-                        @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition")
-                    </li>
+                    @Html.RenderBootstrapTabHeader("tab-condition", @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition"))
                 }
             </ul>
-            <div>
-                @TabInfo()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-values", @TabValues())
+                @Html.RenderBootstrapTabContent("tab-stores", @TabStores())
+                @if (Model.ConditionAllowed)
+                {
+                    @Html.RenderBootstrapTabContent("tab-condition", @TabCondition())
+                }
             </div>
-            <div>
-                @TabValues()
-            </div>
-            <div>
-                @TabStores()
-            </div>
-            @if (Model.ConditionAllowed)
-            {
-                <div>
-                    @TabCondition()
-                </div>
-            }
         </div>
     </div>
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "checkoutattribute-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
             $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").change(toggleAttributeControlType);
@@ -94,34 +69,34 @@
             var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
             if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
                 $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-            $('#pnlValidationMinLength').show();
-            $('#pnlValidationMaxLength').show();
-            $('#pnlValidationFileMaximumSize').hide();
-            $('#pnlValidationFileAllowedExtensions').hide();
-            $('#pnlDefaultValue').show();
-        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
-            $('#pnlValidationMinLength').hide();
-            $('#pnlValidationMaxLength').hide();
-            $('#pnlValidationFileMaximumSize').show();
-            $('#pnlValidationFileAllowedExtensions').show();
-            $('#pnlDefaultValue').hide();
-        } else {
-                    $('#pnlValidationMinLength').hide();
-        $('#pnlValidationMaxLength').hide();
-        $('#pnlValidationFileMaximumSize').hide();
-        $('#pnlValidationFileAllowedExtensions').hide();
-        $('#pnlDefaultValue').hide();
-        }
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+                $('#pnlValidationMinLength').show();
+                $('#pnlValidationMaxLength').show();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').show();
+            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').show();
+                $('#pnlValidationFileAllowedExtensions').show();
+                $('#pnlDefaultValue').hide();
+            } else {
+                $('#pnlValidationMinLength').hide();
+                $('#pnlValidationMaxLength').hide();
+                $('#pnlValidationFileMaximumSize').hide();
+                $('#pnlValidationFileAllowedExtensions').hide();
+                $('#pnlDefaultValue').hide();
+            }
         }
     </script>
 
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
             @<div class="panel-body">
                 <div class="form-group">
@@ -401,7 +376,6 @@
     </div>
 
 }
-
 @helper TabStores()
 {
     <script type="text/javascript">
@@ -460,7 +434,7 @@
     </div>
 }
 @helper TabCondition()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             @if (Model.Id > 0)
