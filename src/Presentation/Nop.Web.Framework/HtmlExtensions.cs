@@ -352,7 +352,7 @@ namespace Nop.Web.Framework
         public static string GetSelectedTabName(this HtmlHelper helper)
         {
             //keep this method synchornized with
-            //"SaveSelectedTabName" method of \Administration\Controllers\BaseNopController.cs
+            //"SaveSelectedTabName" method of \Administration\Controllers\BaseAdminController.cs
             var tabName = string.Empty;
             const string dataKey = "nop.selected-tab-index";
 

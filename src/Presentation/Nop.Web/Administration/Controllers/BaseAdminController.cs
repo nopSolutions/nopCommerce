@@ -55,7 +55,7 @@ namespace Nop.Admin.Controllers
         protected void SaveSelectedTabName(string tabName = "", bool persistForTheNextRequest = true)
         {
             //keep this method synchronized with
-            //"GetSelectedTabName" method of \Nop.Web.Framework\ViewEngines\Razor\WebViewPage.cs
+            //"GetSelectedTabName" method of \Nop.Web.Framework\HtmlExtensions.cs
             if (string.IsNullOrEmpty(tabName))
             {
                 tabName = this.Request.Form["selected-tab-name"];
