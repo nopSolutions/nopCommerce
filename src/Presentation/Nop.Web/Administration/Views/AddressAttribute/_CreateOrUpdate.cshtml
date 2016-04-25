@@ -6,34 +6,21 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function () {
-        $("#addressattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('addressattribute-edit');
     });
 </script>
 
 <div class="content">
     <div class="form-horizontal">
-        <div id="addressattribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Address.AddressAttributes.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Address.AddressAttributes.Values")
-                </li>
+        <div id="addressattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Address.AddressAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Address.AddressAttributes.Values"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabValues()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-values", @TabValues())
             </div>
         </div>
     </div>
@@ -50,12 +37,12 @@
 }
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
         {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
             @<div class="panel-body">
                 <div class="form-group">

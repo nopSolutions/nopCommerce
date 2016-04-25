@@ -1,39 +1,22 @@
 ﻿@model CustomerAttributeModel
-
 @using Nop.Core.Domain.Catalog;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-
 <script>
-    $(document).ready(function () {
-        $("#customerattribute-edit").kendoTabStrip({
-            animation: {
-                open: {
-                    effects: "fadeIn"
-                }
-            },
-            select: tabstrip_on_tab_select
-        });
+    $(document).ready(function() {
+        bindBootstrapTabSelectEvent('customerattribute-edit');
     });
 </script>
-
 <div class="content">
     <div class="form-horizontal">
-        <div id="customerattribute-edit">
-            <ul>
-                <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
-                    @T("Admin.Customers.CustomerAttributes.Info")
-                </li>
-                <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
-                    @T("Admin.Customers.CustomerAttributes.Values")
-                </li>
+        <div id="customerattribute-edit" class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                @Html.RenderBootstrapTabHeader("tab-info", @T("Admin.Customers.CustomerAttributes.Info"), true)
+                @Html.RenderBootstrapTabHeader("tab-values", @T("Admin.Customers.CustomerAttributes.Values"))
             </ul>
-            <div>
-                @TabInfo()
-            </div>
-            <div>
-                @TabValues()
+            <div class="tab-content">
+                @Html.RenderBootstrapTabContent("tab-info", @TabInfo(), true)
+                @Html.RenderBootstrapTabContent("tab-values", @TabValues())
             </div>
         </div>
     </div>
@@ -50,12 +33,12 @@
 }
 
 @*save selected tab index*@
-<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
 {
     <div class="panel-group">
-        <div class="panel panel-default">
+        <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
             @<div class="panel-body">
                 <div class="form-group">

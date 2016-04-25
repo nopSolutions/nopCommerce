@@ -1370,6 +1370,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "East Timor",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "TL",
+                                        ThreeLetterIsoCode = "TLS",
+                                        NumericIsoCode = 626,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Ecuador",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1706,6 +1718,18 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
+                                        Name = "Palestine",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "PS",
+                                        ThreeLetterIsoCode = "PSE",
+                                        NumericIsoCode = 275,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
                                         Name = "Paraguay",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
@@ -1802,7 +1826,7 @@ namespace Nop.Services.Installation
                                     },
                                     new Country
                                     {
-                                        Name = "Russia",
+                                        Name = "Russian Federation",
                                         AllowsBilling = true,
                                         AllowsShipping = true,
                                         TwoLetterIsoCode = "RU",
@@ -2372,6 +2396,18 @@ namespace Nop.Services.Installation
                                         TwoLetterIsoCode = "CG",
                                         ThreeLetterIsoCode = "COG",
                                         NumericIsoCode = 178,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
+                                        Name = "Congo (Democratic Republic of the)",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "CD",
+                                        ThreeLetterIsoCode = "COD",
+                                        NumericIsoCode = 180,
                                         SubjectToVat = false,
                                         DisplayOrder = 100,
                                         Published = true
@@ -3512,6 +3548,18 @@ namespace Nop.Services.Installation
                                         TwoLetterIsoCode = "GS",
                                         ThreeLetterIsoCode = "SGS",
                                         NumericIsoCode = 239,
+                                        SubjectToVat = false,
+                                        DisplayOrder = 100,
+                                        Published = true
+                                    },
+                                    new Country
+                                    {
+                                        Name = "South Sudan",
+                                        AllowsBilling = true,
+                                        AllowsShipping = true,
+                                        TwoLetterIsoCode = "SS",
+                                        ThreeLetterIsoCode = "SSD",
+                                        NumericIsoCode = 728,
                                         SubjectToVat = false,
                                         DisplayOrder = 100,
                                         Published = true
