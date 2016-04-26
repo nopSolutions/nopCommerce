@@ -16,9 +16,9 @@
         </div>
     </div>
     <script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('generalsettings-edit');
-    });
+        $(document).ready(function () {
+            bindBootstrapTabSelectEvent('generalsettings-edit');
+        });
     </script>
     <div class="content">
         <div class="form-horizontal">
@@ -80,24 +80,21 @@
                         @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme)
                     </div>
                     <div class="col-sm-9">
-                        <ul class="clearer" style="list-style: none;" id="theme-selection-block">
+                        <div id="theme-selection-block" class="clearfix">
                             @foreach (var theme in Model.StoreInformationSettings.AvailableStoreThemes)
                             {
-                                <li style="float: left; width: 210px;">
-                                    <p style="float: left; padding-top: 55px;">
-                                        <input type="radio" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName" id="id_image_@theme.ThemeName"
-                                               @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>   }>
-                                    </p>
-                                    <p style="float: left;">
-                                        <label for="id_image_@theme.ThemeName">
-                                            <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
-                                            <br />
-                                            <label style="text-align:center;font-weight:bold;width:170px;">@theme.ThemeTitle</label>
-                                        </label>
-                                    </p>
-                                </li>
+                                <div class="checkbox" style="float: left;">
+                                    <label style="padding-left: 0; padding-right: 20px;">
+                                        <span style="display: block">
+                                            <input type="radio" style="margin: 0 5px 8px 0;" name="@Html.FieldNameFor(x => x.StoreInformationSettings.DefaultStoreTheme)" value="@theme.ThemeName"
+                                                   @if (theme.ThemeName == Model.StoreInformationSettings.DefaultStoreTheme) { <text> checked="checked" </text>      }>
+                                            @theme.ThemeTitle
+                                        </span>
+                                        <img src="@Url.Content(theme.PreviewImageUrl)" alt="@theme.PreviewText" title="@theme.PreviewText" width="175">
+                                    </label>
+                                </div>
                             }
-                        </ul>
+                        </div>
                         @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
                         <em>@T("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.GetMore") <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?category=4&utm_source=admin-panel&utm_medium=theme-settings&utm_campaign=admin-panel" target="_blank">http://www.nopcommerce.com/extensions-and-themes.aspx</a></em>
                     </div>
@@ -328,43 +325,43 @@
 @helper TabSecuritySettings()
 {
     <script type="text/javascript">
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
 
-        toggleReCaptcha();
-    });
+            toggleReCaptcha();
+        });
 
-    function toggleReCaptcha() {
-        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-            $('#ssCaptchaShowOnLoginPagepnl').show();
-            $('#ssCaptchaShowOnRegistrationPagepnl').show();
-            $('#ssCaptchaShowOnContactUsPagepnl').show();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-            $('#ssCaptchaShowOnProductReviewPagepnl').show();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').show();
-            $('#ssReCaptchaPublicKeypnl').show();
-            $('#ssReCaptchaPrivateKeypnl').show();
-            $('#ssReCaptchaVersionpnl').show();
+        function toggleReCaptcha() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                $('#ssCaptchaShowOnLoginPagepnl').show();
+                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').show();
+                $('#ssReCaptchaPublicKeypnl').show();
+                $('#ssReCaptchaPrivateKeypnl').show();
+                $('#ssReCaptchaVersionpnl').show();
+            }
+            else {
+                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
+                $('#ssReCaptchaPublicKeypnl').hide();
+                $('#ssReCaptchaPrivateKeypnl').hide();
+                $('#ssReCaptchaVersionpnl').hide();
+            }
         }
-        else {
-            $('#ssCaptchaShowOnLoginPagepnl').hide();
-            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-            $('#ssCaptchaShowOnContactUsPagepnl').hide();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-            $('#ssCaptchaShowOnApplyVendorPagepnl').hide();
-            $('#ssReCaptchaPublicKeypnl').hide();
-            $('#ssReCaptchaPrivateKeypnl').hide();
-            $('#ssReCaptchaVersionpnl').hide();
-        }
-    }
     </script>
 
     <div class="panel-group">
