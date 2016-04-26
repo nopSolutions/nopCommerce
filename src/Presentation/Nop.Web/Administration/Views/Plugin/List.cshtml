@@ -142,7 +142,7 @@
                                                 '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled") <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
                                                 //allow configuration only when a plugin has a configuration URL specified
                                                 '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-default" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
-                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 300, true);">@T("Admin.Common.Edit")</a>'
+                                                '<a class="btn btn-default" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'
                                         }, {
                                             field: "Installed",
                                             title: "@T("Admin.Configuration.Plugins.Fields.Installation")",
