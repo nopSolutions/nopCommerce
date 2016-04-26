@@ -302,3 +302,7 @@ table td .form-group {
 .nav-tabs-custom {
     margin-bottom: 0;
 }
+
+.sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header {
+    white-space: normal;
+}
