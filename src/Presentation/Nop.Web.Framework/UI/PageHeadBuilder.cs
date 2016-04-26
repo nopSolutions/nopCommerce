@@ -29,7 +29,7 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly List<string> _headCustomParts;
-        private readonly List<string> _headCssClassParts;
+        private readonly List<string> _pageCssClassParts;
         private string _editPageUrl;
         #endregion
 
@@ -49,7 +49,7 @@ namespace Nop.Web.Framework.UI
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
             this._headCustomParts = new List<string>();
-            this._headCssClassParts = new List<string>();
+            this._pageCssClassParts = new List<string>();
         }
 
         #endregion
@@ -441,23 +441,23 @@ namespace Nop.Web.Framework.UI
         }
 
         
-        public virtual void AddHeadCssClassParts(string part)
+        public virtual void AddPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _headCssClassParts.Add(part);
+            _pageCssClassParts.Add(part);
         }
-        public virtual void AppendHeadCssClassParts(string part)
+        public virtual void AppendPageCssClassParts(string part)
         {
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _headCssClassParts.Insert(0, part);
+            _pageCssClassParts.Insert(0, part);
         }
-        public virtual string GenerateHeadCssClasses()
+        public virtual string GeneratePageCssClasses()
         {
-            string result = string.Join(" ", _headCssClassParts.AsEnumerable().Reverse().ToArray());
+            string result = string.Join(" ", _pageCssClassParts.AsEnumerable().Reverse().ToArray());
             return result;
         }
 

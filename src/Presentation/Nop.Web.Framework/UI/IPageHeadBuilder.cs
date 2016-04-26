@@ -35,9 +35,9 @@ namespace Nop.Web.Framework.UI
         void AppendHeadCustomParts(string part);
         string GenerateHeadCustom();
         
-        void AddHeadCssClassParts(string part);
-        void AppendHeadCssClassParts(string part);
-        string GenerateHeadCssClasses();
+        void AddPageCssClassParts(string part);
+        void AppendPageCssClassParts(string part);
+        string GeneratePageCssClasses();
 
         void AddEditPageUrl(string url);
         string GetEditPageUrl();

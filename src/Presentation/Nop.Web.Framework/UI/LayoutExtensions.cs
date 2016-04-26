@@ -298,20 +298,20 @@ namespace Nop.Web.Framework.UI
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">CSS class</param>
-        public static void AddHeadCssClassParts(this HtmlHelper html, string part)
+        public static void AddPageCssClassParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddHeadCssClassParts(part);
+            pageHeadBuilder.AddPageCssClassParts(part);
         }
         /// <summary>
         /// Append CSS class to the <![CDATA[<head>]]> element
         /// </summary>
         /// <param name="html">HTML helper</param>
         /// <param name="part">CSS class</param>
-        public static void AppendHeadCssClassParts(this HtmlHelper html, string part)
+        public static void AppendPageCssClassParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendHeadCssClassParts(part);
+            pageHeadBuilder.AppendPageCssClassParts(part);
         }
         /// <summary>
         /// Generate all title parts
@@ -320,11 +320,11 @@ namespace Nop.Web.Framework.UI
         /// <param name="part">CSS class</param>
         /// <param name="includeClassElement">A value indicating whether to include "class" attributes</param>
         /// <returns>Generated string</returns>
-        public static MvcHtmlString NopHeadCssClasses(this HtmlHelper html, string part = "", bool includeClassElement = true)
+        public static MvcHtmlString NopPageCssClasses(this HtmlHelper html, string part = "", bool includeClassElement = true)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            html.AppendHeadCssClassParts(part);
-            var classes = pageHeadBuilder.GenerateHeadCssClasses();
+            html.AppendPageCssClassParts(part);
+            var classes = pageHeadBuilder.GeneratePageCssClasses();
 
             if (string.IsNullOrEmpty(classes))
                 return null;
