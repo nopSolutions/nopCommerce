@@ -114,7 +114,7 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Product/ProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 750, true); return false;\" class='btn btn-default' />"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
@@ -126,7 +126,7 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 550, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "Product", new { productAttributeMappingId = Model.ProductAttributeMappingId, btnId = "btnRefresh", formId = "productattribute-form" }))', 800, 750, true); return false;" class="btn btn-default" />
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {
