@@ -306,3 +306,7 @@ table td .form-group {
 .sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header {
     white-space: normal;
 }
+
+input[type=file].form-control {
+    height: auto;
+}
