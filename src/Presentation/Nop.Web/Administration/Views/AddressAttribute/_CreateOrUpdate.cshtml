@@ -1,9 +1,5 @@
 ﻿@model AddressAttributeModel
-
 @using Nop.Core.Domain.Catalog;
-
-@Html.ValidationSummary(false)
-@Html.HiddenFor(model => model.Id)
 
 <script>
     $(document).ready(function() {
@@ -12,6 +8,9 @@
 </script>
 
 <div class="content">
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(model => model.Id)
+
     <div class="form-horizontal">
         <div id="addressattribute-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
