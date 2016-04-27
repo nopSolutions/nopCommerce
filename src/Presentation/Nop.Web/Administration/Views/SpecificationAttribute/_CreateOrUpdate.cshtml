@@ -157,7 +157,7 @@
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 350, true); return false;\" class='btn btn-default' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/SpecificationAttribute/OptionEditPopup/")#=Id#?btnId=btnRefresh&formId=specificationattribute-form', 800, 400, true); return false;\" class='btn btn-default' />"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
@@ -169,7 +169,7 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 350, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewOption" value="@T("Admin.Catalog.Attributes.SpecificationAttributes.Options.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("OptionCreatePopup", "SpecificationAttribute", new { specificationAttributeId = Model.Id, btnId = "btnRefresh", formId = "specificationattribute-form" }))', 800, 400, true); return false;" class="btn btn-default" />
                     <input type="submit" id="btnRefresh" style="display: none" />
                     <script type="text/javascript">
                         $(document).ready(function () {
