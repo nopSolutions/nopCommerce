@@ -76,10 +76,11 @@ namespace Nop.Services.Logging
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="ipAddress">IP address; null or empty to load all customers</param>
         /// <returns>Activity log items</returns>
         IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom = null,
             DateTime? createdOnTo = null, int? customerId = null, int activityLogTypeId = 0,
-            int pageIndex = 0, int pageSize = int.MaxValue);
+            int pageIndex = 0, int pageSize = int.MaxValue, string ipAddress = null);
         
         /// <summary>
         /// Gets an activity log item

@@ -23,6 +23,7 @@ namespace Nop.Services.Tests.Logging
         private ActivityLogType _activityType1, _activityType2;
         private ActivityLog _activity1, _activity2;
         private Customer _customer1, _customer2;
+        private IWebHelper _webHelper;
 
         [SetUp]
         public new void SetUp()
@@ -75,7 +76,7 @@ namespace Nop.Services.Tests.Logging
             _activityLogTypeRepository = MockRepository.GenerateMock<IRepository<ActivityLogType>>();
             _activityLogTypeRepository.Expect(x => x.Table).Return(new List<ActivityLogType> { _activityType1, _activityType2 }.AsQueryable());
             _activityLogRepository.Expect(x => x.Table).Return(new List<ActivityLog> { _activity1, _activity2 }.AsQueryable());
-            _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository, _activityLogTypeRepository, _workContext, null, null, null);
+            _customerActivityService = new CustomerActivityService(_cacheManager, _activityLogRepository, _activityLogTypeRepository, _workContext, null, null, null, _webHelper);
         }
 
         [Test]

@@ -41,6 +41,14 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.IpAddress)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.IpAddress)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.ActivityLogTypeId)
                         </div>
                         <div class="col-sm-9">
@@ -125,6 +133,10 @@
                                     width: 100,
                                     template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerEmail#</a>'
                                 }, {
+                                    field: "IpAddress",
+                                    title: "@T("Admin.Customers.Customers.ActivityLog.IpAddress")",
+                                    width: 100
+                                }, {
                                     field: "Comment",
                                     title: "@T("Admin.Configuration.ActivityLog.ActivityLog.Fields.Comment")"
                                 }, {
@@ -158,6 +170,7 @@
                             var data = {
                                 CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
+                                IpAddress: $('#@Html.FieldIdFor(model => model.IpAddress)').val(),
                                 ActivityLogTypeId: $('#ActivityLogTypeId').val()
                             };
                             addAntiForgeryToken(data);
