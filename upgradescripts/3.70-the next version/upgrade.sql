@@ -766,7 +766,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=object_id('[ActivityLog]') and NAME='IpAddress')
 BEGIN
 	ALTER TABLE [ActivityLog]
-	ADD [IpAddress] nvarchar(40) NULL
+	ADD [IpAddress] nvarchar(200) NULL
 END
 GO
 
