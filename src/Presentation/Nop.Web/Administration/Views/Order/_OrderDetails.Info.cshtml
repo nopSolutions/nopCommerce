@@ -624,56 +624,60 @@
                     <p>@Model.PaymentStatus</p>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    &nbsp;
+            @if (Model.CanCapture || Model.CanMarkOrderAsPaid || Model.CanRefund || Model.CanRefundOffline ||
+                Model.CanPartiallyRefund || Model.CanPartiallyRefundOffline || Model.CanVoid || Model.CanVoidOffline)
+            {
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-sm-9">
+                        @if (!Model.IsLoggedInAsVendor)
+                        {
+                            if (Model.CanCapture)
+                            {
+                                <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanMarkOrderAsPaid)
+                            {
+                                <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanRefund)
+                            {
+                                <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanRefundOffline)
+                            {
+                                <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanPartiallyRefund)
+                            {
+                                <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanPartiallyRefundOffline)
+                            {
+                                <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanVoid)
+                            {
+                                <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                            if (Model.CanVoidOffline)
+                            {
+                                <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <text>&nbsp;</text>
+                            }
+                        }
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @if (!Model.IsLoggedInAsVendor)
-                    {
-                        if (Model.CanCapture)
-                        {
-                            <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanMarkOrderAsPaid)
-                        {
-                            <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanRefund)
-                        {
-                            <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanRefundOffline)
-                        {
-                            <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanPartiallyRefund)
-                        {
-                            <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanPartiallyRefundOffline)
-                        {
-                            <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanVoid)
-                        {
-                            <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                        if (Model.CanVoidOffline)
-                        {
-                            <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
-                            <text>&nbsp;</text>
-                        }
-                    }
-                </div>
-            </div>
+            }
             @if (Model.CustomValues != null && Model.CustomValues.Count > 0)
             {
                 <div class="form-group">
