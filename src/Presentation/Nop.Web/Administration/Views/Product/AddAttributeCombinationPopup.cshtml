@@ -38,8 +38,6 @@
             @Html.ValidationSummary(false)
             <div class="form-horizontal">
                 <div class="panel-group">
-                    @Html.Partial("_ProductAttributes", Model.ProductAttributes)
-
                     <div class="panel panel-default">
                         <div class="panel-body">
                             @if (Model.Warnings.Count > 0)
@@ -53,6 +51,7 @@
                                 <br>
                             }
 
+                            @Html.Partial("_ProductAttributes", Model.ProductAttributes)
                             <div class="form-group">
                                 <div class="col-sm-4">
                                     @Html.NopLabelFor(model => model.StockQuantity)
