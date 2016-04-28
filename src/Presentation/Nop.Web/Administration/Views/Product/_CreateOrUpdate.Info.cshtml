@@ -871,9 +871,12 @@
                 <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.DownloadId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-3">
                     @Html.NopEditorFor(model => model.DownloadId)
                     @Html.ValidationMessageFor(model => model.DownloadId)
+                </div>
+                <div class="col-sm-3">
+                    &nbsp;
                 </div>
             </div>
             <div class="form-group" id="pnlUnlimitedDownloads">
@@ -943,9 +946,12 @@
                 <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.SampleDownloadId)
                 </div>
-                <div class="col-sm-9">
+                <div class="col-sm-3">
                     @Html.NopEditorFor(model => model.SampleDownloadId)
                     @Html.ValidationMessageFor(model => model.SampleDownloadId)
+                </div>
+                <div class="col-sm-3">
+                    &nbsp;
                 </div>
             </div>
         </div>
