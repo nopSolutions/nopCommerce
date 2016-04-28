@@ -8,7 +8,8 @@
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Customers.Customers.AddNew") @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
+            @T("Admin.Customers.Customers.AddNew")
+            <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
             <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
