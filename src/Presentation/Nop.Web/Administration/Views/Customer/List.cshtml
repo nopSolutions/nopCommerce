@@ -105,15 +105,17 @@
                                             dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
                                         }
                                     }
-                                    <div class="col-sm-2">
-                                        @Html.NopDropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
-                                    </div>
-                                    <div class="col-sm-2">
-                                        @Html.NopDropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            @Html.NopDropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
+                                        </div>
+                                        <div class="col-sm-2">
+                                            @Html.NopDropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                                        }
+                        }
                         @if (Model.CompanyEnabled)
                         {
                             <div class="form-group">
