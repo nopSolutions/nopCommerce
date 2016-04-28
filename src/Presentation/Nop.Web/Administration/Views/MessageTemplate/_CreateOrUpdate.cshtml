@@ -203,10 +203,16 @@
                         @Html.NopLabelFor(model => model.DelayBeforeSend)
                     </div>
                     <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.DelayBeforeSend)
-                        @Html.ValidationMessageFor(model => model.DelayBeforeSend)
-                        @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
-                        @Html.ValidationMessageFor(model => model.DelayPeriodId)
+                        <div class="row">
+                            <div class="col-sm-2">
+                                @Html.NopEditorFor(model => model.DelayBeforeSend)
+                                @Html.ValidationMessageFor(model => model.DelayBeforeSend)
+                            </div>
+                            <div class="col-sm-2">
+                                @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
+                                @Html.ValidationMessageFor(model => model.DelayPeriodId)
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
