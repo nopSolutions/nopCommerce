@@ -228,7 +228,7 @@
                                     field: "Id",
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
-                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 250, true); return false;\" class='btn btn-default' />"
+                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/Country/StateEditPopup/")#=Id#?btnId=btnRefresh&formId=country-form', 800, 450, true); return false;\" class='btn btn-default' />"
                                 }, {
                                     command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                     title: "@T("Admin.Common.Delete")",
@@ -240,7 +240,7 @@
                 </div>
                 <div class="panel-footer">
                     <div width="100%">
-                        <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 250, true); return false;" class="btn btn-default" />
+                        <input type="submit" id="btnAddNewState" value="@T("Admin.Configuration.Countries.States.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("StateCreatePopup", "Country", new { countryId = Model.Id, btnId = "btnRefresh", formId = "country-form" }))', 800, 450, true); return false;" class="btn btn-default" />
                         <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {

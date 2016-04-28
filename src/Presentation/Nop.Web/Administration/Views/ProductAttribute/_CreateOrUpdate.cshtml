@@ -265,7 +265,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",
                                         width: 100,
-                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 500, true); return false;\" class='btn btn-default' />"
+                                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.Content("~/Admin/ProductAttribute/PredefinedProductAttributeValueEditPopup/")#=Id#?btnId=btnRefresh&formId=productattribute-form', 800, 550, true); return false;\" class='btn btn-default' />"
                                     }, {
                                         command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
                                         title: "@T("Admin.Common.Delete")",
