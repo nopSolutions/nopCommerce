@@ -213,7 +213,7 @@
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.AttachedDownloadId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
                         @{
                             //Static file attachments do not support URLs yet
                             //A store owner have to upload a file
@@ -230,6 +230,9 @@
                             @Html.NopEditorFor(model => model.AttachedDownloadId)
                             @Html.ValidationMessageFor(model => model.AttachedDownloadId)
                         </div>
+                    </div>
+                    <div class="col-sm-3">
+                        &nbsp;
                     </div>
                 </div>
             </div>
