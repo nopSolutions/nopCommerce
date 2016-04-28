@@ -361,7 +361,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                             @Html.NopLabelFor(model => model.CountryId)
                         </div>
                         <div class="col-sm-9">
-                            @Html.DropDownList("CountryId", Model.AvailableCountries)
+                            @Html.NopDropDownList("CountryId", Model.AvailableCountries)
                             @Html.ValidationMessageFor(model => model.CountryId)
                         </div>
                     </div>
@@ -373,7 +373,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                             @Html.NopLabelFor(model => model.StateProvinceId)
                         </div>
                         <div class="col-sm-9">
-                            @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                            @Html.NopDropDownList("StateProvinceId", Model.AvailableStates)
                             @Html.ValidationMessageFor(model => model.StateProvinceId)
                         </div>
                     </div>
@@ -431,7 +431,7 @@ if (Model.CountryEnabled && Model.StateProvinceEnabled)
                             @Html.NopLabelFor(model => model.TimeZoneId)
                         </div>
                         <div class="col-sm-9">
-                            @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                            @Html.NopDropDownList("TimeZoneId", Model.AvailableTimeZones)
                             @Html.ValidationMessageFor(model => model.TimeZoneId)
                         </div>
                     </div>
