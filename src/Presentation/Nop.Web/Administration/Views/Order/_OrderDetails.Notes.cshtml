@@ -91,70 +91,70 @@
             </script>
         </div>
     </div>
-</div>
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        @T("Admin.Orders.OrderNotes.AddTitle")
-    </div>
+    <div class="panel panel-default">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
+                toggleAddOrderNoteHasDownload();
+            });
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)").change(toggleAddOrderNoteHasDownload);
-            toggleAddOrderNoteHasDownload();
-        });
-
-        function toggleAddOrderNoteHasDownload() {
-            if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
-                $('#pnlAddOrderNoteDownloadId').show();
+            function toggleAddOrderNoteHasDownload() {
+                if ($('#@Html.FieldIdFor(model => model.AddOrderNoteHasDownload)').is(':checked')) {
+                    $('#pnlAddOrderNoteDownloadId').show();
+                }
+                else {
+                    $('#pnlAddOrderNoteDownloadId').hide();
+                }
             }
-            else {
-                $('#pnlAddOrderNoteDownloadId').hide();
-            }
-        }
-    </script>
+        </script>
 
-    <div class="panel-body">
-        <div class="form-group">
-            <div class="col-sm-3">
-                @Html.NopLabelFor(model => model.AddOrderNoteMessage)
-            </div>
-            <div class="col-sm-9">
-                @Html.NopTextAreaFor(model => model.AddOrderNoteMessage)
-                @Html.ValidationMessageFor(model => model.AddOrderNoteMessage)
-            </div>
+        <div class="panel-heading">
+            @T("Admin.Orders.OrderNotes.AddTitle")
         </div>
-        <div class="form-group">
-            <div class="col-sm-3">
-                @Html.NopLabelFor(model => model.AddOrderNoteDownloadId)
-            </div>
-            <div class="col-sm-3">
-                @Html.NopEditorFor(model => model.AddOrderNoteHasDownload)
-                @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
-                <div id="pnlAddOrderNoteDownloadId">
-                    @Html.NopEditorFor(model => model.AddOrderNoteDownloadId)
-                    @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
+
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.AddOrderNoteMessage)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopTextAreaFor(model => model.AddOrderNoteMessage)
+                    @Html.ValidationMessageFor(model => model.AddOrderNoteMessage)
                 </div>
             </div>
-            <div class="col-sm-6">
-                &nbsp;
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.AddOrderNoteDownloadId)
+                </div>
+                <div class="col-sm-3">
+                    @Html.NopEditorFor(model => model.AddOrderNoteHasDownload)
+                    @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                    <div id="pnlAddOrderNoteDownloadId">
+                        @Html.NopEditorFor(model => model.AddOrderNoteDownloadId)
+                        @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    &nbsp;
+                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-3">
-                @Html.NopLabelFor(model => model.AddOrderNoteDisplayToCustomer)
+            <div class="form-group">
+                <div class="col-sm-3">
+                    @Html.NopLabelFor(model => model.AddOrderNoteDisplayToCustomer)
+                </div>
+                <div class="col-sm-9">
+                    @Html.NopEditorFor(model => model.AddOrderNoteDisplayToCustomer)
+                    @Html.ValidationMessageFor(model => model.AddOrderNoteDisplayToCustomer)
+                </div>
             </div>
-            <div class="col-sm-9">
-                @Html.NopEditorFor(model => model.AddOrderNoteDisplayToCustomer)
-                @Html.ValidationMessageFor(model => model.AddOrderNoteDisplayToCustomer)
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-3">
-                &nbsp;
-            </div>
-            <div class="col-sm-9">
-                <input type="button" id="addOrderNote" class="btn btn-default" value="@T("Admin.Orders.OrderNotes.AddButton")" />
+            <div class="form-group">
+                <div class="col-sm-3">
+                    &nbsp;
+                </div>
+                <div class="col-sm-9">
+                    <input type="button" id="addOrderNote" class="btn btn-default" value="@T("Admin.Orders.OrderNotes.AddButton")"/>
+                </div>
             </div>
         </div>
     </div>
