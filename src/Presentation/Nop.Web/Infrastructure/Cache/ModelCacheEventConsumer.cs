@@ -731,6 +731,13 @@ namespace Nop.Web.Infrastructure.Cache
         public const string WIDGET_MODEL_KEY = "Nop.pres.widget-{0}-{1}-{2}";
         public const string WIDGET_PATTERN_KEY = "Nop.pres.widget";
 
+        public const string HOMEPAGE_OUTPUT_PATTERN_KEY = "Nop.output.homepage";
+        public const string CATEGORY_OUTPUT_PATTERN_KEY = "Nop.output.category";
+        public const string PRODUCT_OUTPUT_PATTERN_KEY = "Nop.output.product";
+        public const string SEARCH_OUTPUT_PATTERN_KEY = "Nop.output.search";
+        public const string MANUFACTURERS_OUTPUT_PATTERN_KEY = "output.pres.manufacturers";
+        public const string VENDORS_OUTPUT_PATTERN_KEY = "Nop.output.vendors";
+
         #endregion
 
         #region Methods

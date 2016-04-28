@@ -329,5 +329,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a display order of ProductSortingEnum values 
         /// </summary>
         public Dictionary<int, int> ProductSortingEnumDisplayOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether output cache is enabled
+        /// </summary>
+        public bool EnableOutputCache { get; set; }
     }
 }

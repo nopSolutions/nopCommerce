@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Caching\CacheProfiles.cs" />
     <Compile Include="Caching\IRedisConnectionWrapper.cs" />
     <Compile Include="Caching\RedisConnectionWrapper.cs" />
     <Compile Include="Caching\RedisCacheManager.cs" />
