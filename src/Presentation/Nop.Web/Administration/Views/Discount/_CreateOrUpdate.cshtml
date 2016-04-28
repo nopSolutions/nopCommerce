@@ -92,8 +92,8 @@
             $('#pnlAppliedToSubCategories').hide();
         } else {
                 $('[data-tab-name=tab-applied-to-categories]').hide();
-                $('[data-tab-name=tab-applied-to-manufacturers]').hide();
-                $('[data-tab-name=tab-applied-to-products]').hide();
+        $('[data-tab-name=tab-applied-to-manufacturers]').hide();
+        $('[data-tab-name=tab-applied-to-products]').hide();
         $('#pnlMaximumDiscountedQuantity').hide();
         $('#pnlAppliedToSubCategories').hide();
         }
@@ -426,8 +426,8 @@
                                 <input type="button"
                                        id="deleterequirement{{= discountRequirementId }}"
                                        onclick="deleteRequirement({{= discountRequirementId }})"
-                                       class="btn bg-red pull-right" 
-                                       value="@T("Admin.Promotions.Discounts.Requirements.Remove")"/>
+                                       class="btn bg-red pull-right"
+                                       value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
                             </div>
                         </div>
                     </div>
@@ -464,417 +464,419 @@
 }
 @helper TabAppliedToProducts()
 {
-if (Model.Id > 0)
-{
+    <div class="panel-group">
         <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="products-grid"></div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="products-grid"></div>
 
-                <script>
-                    $(document).ready(function() {
-                        $("#products-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ProductList", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
+                    <script>
+                        $(document).ready(function() {
+                            $("#products-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ProductList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ProductDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
                                     },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ProductDelete", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "ProductId",
-                                        fields: {
-                                            ProductName: { editable: false, type: "string" },
-                                            ProductId: { editable: false, type: "number" }
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ProductId",
+                                            fields: {
+                                                ProductName: { editable: false, type: "string" },
+                                                ProductId: { editable: false, type: "number" }
+                                            }
                                         }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ProductName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
+                                    }, {
+                                        field: "ProductId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
                                     }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Promotions.Discounts.AppliedToProducts.Product")"
-                                }, {
-                                    field: "ProductId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 150,
-                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
-                                        {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 150
-                                }
-                            ]
+                                ]
+                            });
                         });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <input type="submit" id="btnAddNewProduct" value="@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
-                <input type="submit" id="btnRefreshProducts" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#btnRefreshProducts').click(function() {
-                            //refresh grid
-                            var grid = $("#products-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewProduct" value="@T("Admin.Promotions.Discounts.AppliedToProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshProducts", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnRefreshProducts" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshProducts').click(function() {
+                                //refresh grid
+                                var grid = $("#products-grid").data('kendoGrid');
+                                grid.dataSource.read();
 
-                            //return false to don't reload a page
-                            return false;
+                                //return false to don't reload a page
+                                return false;
+                            });
                         });
-                    });
-                </script>
-            </div>
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
+                </div>
+            }
         </div>
-}
-else
-{
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.AppliedToProducts.SaveBeforeEdit")
-            </div>
-        </div>
-}
+    </div>
 }
 @helper TabAppliedToCategories()
-{
-if (Model.Id > 0)
-{
+        {
+    <div class="panel-group">
         <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="categories-grid"></div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="categories-grid"></div>
 
-                <script>
-                    $(document).ready(function() {
-                        $("#categories-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("CategoryList", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
+                    <script>
+                        $(document).ready(function() {
+                            $("#categories-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("CategoryList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
                                     },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("CategoryDelete", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "CategoryId",
-                                        fields: {
-                                            CategoryName: { editable: false, type: "string" },
-                                            CategoryId: { editable: false, type: "number" }
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "CategoryId",
+                                            fields: {
+                                                CategoryName: { editable: false, type: "string" },
+                                                CategoryId: { editable: false, type: "number" }
+                                            }
                                         }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "CategoryName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
+                                    }, {
+                                        field: "CategoryId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
                                     }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "CategoryName",
-                                    title: "@T("Admin.Promotions.Discounts.AppliedToCategories.Category")"
-                                }, {
-                                    field: "CategoryId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 150,
-                                    template: '<a href="@Url.Content("~/Admin/Category/Edit/")#=CategoryId#">@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
-                                        {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 150
-                                }
-                            ]
+                                ]
+                            });
                         });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
-                <input type="submit" id="btnRefreshCategories" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#btnRefreshCategories').click(function() {
-                            //refresh grid
-                            var grid = $("#categories-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewCategory" value="@T("Admin.Promotions.Discounts.AppliedToCategories.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CategoryAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshCategories", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnRefreshCategories" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshCategories').click(function() {
+                                //refresh grid
+                                var grid = $("#categories-grid").data('kendoGrid');
+                                grid.dataSource.read();
 
-                            //return false to don't reload a page
-                            return false;
+                                //return false to don't reload a page
+                                return false;
+                            });
                         });
-                    });
-                </script>
-            </div>
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
+                </div>
+            }
         </div>
-}
-else
-{
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.AppliedToCategories.SaveBeforeEdit")
-            </div>
-        </div>
-}
+    </div>
 }
 @helper TabAppliedToManufacturers()
-{
-if (Model.Id > 0)
-{
+        {
+    <div class="panel-group">
         <div class="panel panel-default">
-            <div class="panel-body">
-                <div id="manufacturers-grid"></div>
+            @if (Model.Id > 0)
+            {
+                <div class="panel-body">
+                    <div id="manufacturers-grid"></div>
 
-                <script>
-                    $(document).ready(function() {
-                        $("#manufacturers-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
+                    <script>
+                        $(document).ready(function() {
+                            $("#manufacturers-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerList", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new {discountId = Model.Id}))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
                                     },
-                                    destroy: {
-                                        url: "@Html.Raw(Url.Action("ManufacturerDelete", "Discount", new {discountId = Model.Id}))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
-                                    }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors",
-                                    model: {
-                                        id: "ManufacturerId",
-                                        fields: {
-                                            ManufacturerName: { editable: false, type: "string" },
-                                            ManufacturerId: { editable: false, type: "number" }
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "ManufacturerId",
+                                            fields: {
+                                                ManufacturerName: { editable: false, type: "string" },
+                                                ManufacturerId: { editable: false, type: "number" }
+                                            }
                                         }
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                    {
+                                        field: "ManufacturerName",
+                                        title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
+                                    }, {
+                                        field: "ManufacturerId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 150,
+                                        template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 150
                                     }
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                numeric: false,
-                                previousNext: false,
-                                info: false
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [
-                                {
-                                    field: "ManufacturerName",
-                                    title: "@T("Admin.Promotions.Discounts.AppliedToManufacturers.Manufacturer")"
-                                }, {
-                                    field: "ManufacturerId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 150,
-                                    template: '<a href="@Url.Content("~/Admin/Manufacturer/Edit/")#=ManufacturerId#">@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
-                                        {
-                                            name: "destroy",
-                                            text: "@T("Admin.Common.Delete")"
-                                        }
-                                    ],
-                                    width: 150
-                                }
-                            ]
+                                ]
+                            });
                         });
-                    });
-                </script>
-            </div>
-            <div class="panel-footer">
-                <input type="submit" id="btnAddNewManufacturer" value="@T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
-                <input type="submit" id="btnRefreshManufacturers" style="display: none" />
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#btnRefreshManufacturers').click(function() {
-                            //refresh grid
-                            var grid = $("#manufacturers-grid").data('kendoGrid');
-                            grid.dataSource.read();
+                    </script>
+                </div>
+                <div class="panel-footer">
+                    <input type="submit" id="btnAddNewManufacturer" value="@T("Admin.Promotions.Discounts.AppliedToManufacturers.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ManufacturerAddPopup", "Discount", new {discountId = Model.Id, btnId = "btnRefreshManufacturers", formId = "discount-form"}))', 800, 800, true); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnRefreshManufacturers" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function() {
+                            $('#btnRefreshManufacturers').click(function() {
+                                //refresh grid
+                                var grid = $("#manufacturers-grid").data('kendoGrid');
+                                grid.dataSource.read();
 
-                            //return false to don't reload a page
-                            return false;
+                                //return false to don't reload a page
+                                return false;
+                            });
                         });
-                    });
-                </script>
-            </div>
+                    </script>
+                </div>
+            }
+            else
+            {
+                <div class="panel-body">
+                    @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
+                </div>
+            }
         </div>
-}
-else
-{
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @T("Admin.Promotions.Discounts.AppliedToManufacturers.SaveBeforeEdit")
-            </div>
-        </div>
-}
+    </div>
 }
 @helper TabHistory()
-{
+        {
 var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
 var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="usagehistory-grid"></div>
+    <div class="panel-group">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="usagehistory-grid"></div>
 
-            <script>
-                $(document).ready(function() {
-                    $("#usagehistory-grid").kendoGrid({
-                        dataSource: {
-                            type: "json",
-                            transport: {
-                                read: {
-                                    url: "@Html.Raw(Url.Action("UsageHistoryList", "Discount", new {discountId = Model.Id}))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                },
-                                destroy: {
-                                    url: "@Html.Raw(Url.Action("UsageHistoryDelete", "Discount"))",
-                                    type: "POST",
-                                    dataType: "json",
-                                    data: addAntiForgeryToken
-                                }
-                            },
-                            schema: {
-                                data: "Data",
-                                total: "Total",
-                                errors: "Errors",
-                                model: {
-                                    id: "Id",
-                                    fields: {
-                                        //do not implicitly specify all fields
-                                        //we do it only for fields which implicitly require it
-                                        //otherwise, they'll be formatted wrong way
-                                        CreatedOn: { type: "date" }
+                <script>
+                    $(document).ready(function() {
+                        $("#usagehistory-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("UsageHistoryList", "Discount", new {discountId = Model.Id}))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("UsageHistoryDelete", "Discount"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: addAntiForgeryToken
                                     }
-                                }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            //do not implicitly specify all fields
+                                            //we do it only for fields which implicitly require it
+                                            //otherwise, they'll be formatted wrong way
+                                            CreatedOn: { type: "date" }
+                                        }
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
                             },
-                            error: function(e) {
-                                display_kendoui_grid_error(e);
-                                // Cancel the changes
-                                this.cancelChanges();
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
                             },
-                            pageSize: @(defaultGridPageSize),
-                            serverPaging: true,
-                            serverFiltering: true,
-                            serverSorting: true
-                        },
-                        pageable: {
-                            refresh: true,
-                            pageSizes: [@(gridPageSizes)]
-                        },
-                        editable: {
-                            confirmation: false,
-                            mode: "inline"
-                        },
-                        scrollable: false,
-                        columns: [
-                        {
-                            field: "CreatedOn",
-                            title: "@T("Admin.Promotions.Discounts.History.CreatedOn")",
-                            width: 200,
-                            type: "date",
-                            format: "{0:G}"
-                        }, {
-                            field: "OrderId",
-                            title: "@T("Admin.Promotions.Discounts.History.Order")",
-                            width: 200,
-                            template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
-                        }, {
-                            field: "OrderTotal",
-                            title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
-                            width: 200
-                        }, {
-                            command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                            title: "@T("Admin.Common.Delete")",
-                            width: 100
-                        }
-                        ]
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                            {
+                                field: "CreatedOn",
+                                title: "@T("Admin.Promotions.Discounts.History.CreatedOn")",
+                                width: 200,
+                                type: "date",
+                                format: "{0:G}"
+                            }, {
+                                field: "OrderId",
+                                title: "@T("Admin.Promotions.Discounts.History.Order")",
+                                width: 200,
+                                template: '<a href="@Url.Content("~/Admin/Order/Edit/")#=OrderId#">#=OrderId# - @T("Admin.Common.View")</a>'
+                            }, {
+                                field: "OrderTotal",
+                                title: "@T("Admin.Promotions.Discounts.History.OrderTotal")",
+                                width: 200
+                            }, {
+                                command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                title: "@T("Admin.Common.Delete")",
+                                width: 100
+                            }
+                            ]
+                        });
                     });
-                });
-            </script>
+                </script>
+            </div>
         </div>
     </div>
 }
