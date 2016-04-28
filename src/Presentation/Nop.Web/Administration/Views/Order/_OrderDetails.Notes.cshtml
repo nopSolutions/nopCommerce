@@ -128,8 +128,12 @@
                     @Html.NopLabelFor(model => model.AddOrderNoteDownloadId)
                 </div>
                 <div class="col-sm-3">
-                    @Html.NopEditorFor(model => model.AddOrderNoteHasDownload)
-                    @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                    <div class="checkbox">
+                        <label>
+                            @Html.NopEditorFor(model => model.AddOrderNoteHasDownload)
+                            @T("Admin.Orders.OrderNotes.Fields.Download.HasDownload")
+                        </label>
+                    </div>
                     <div id="pnlAddOrderNoteDownloadId">
                         @Html.NopEditorFor(model => model.AddOrderNoteDownloadId)
                         @Html.ValidationMessageFor(model => model.AddOrderNoteDownloadId)
