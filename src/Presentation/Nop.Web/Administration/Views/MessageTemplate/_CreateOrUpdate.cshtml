@@ -3,7 +3,7 @@
 @Html.HiddenFor(model => model.Id)
 @using Nop.Core.Domain.Messages;
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         bindBootstrapTabSelectEvent('template-edit');
     });
 </script>
@@ -294,7 +294,6 @@
     </script>
     <div class="panel-group">
         <div class="panel panel-default">
-
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
@@ -306,26 +305,28 @@
                     </div>
                 </div>
                 <div id="pnl-available-stores">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.AvailableStores)
-                    </div>
-                    <div class="col-sm-9">
-                        @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
-                        {
-                            @Html.Action("MultistoreDisabledWarning", "Common")
-                            foreach (var store in Model.AvailableStores)
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.AvailableStores)
+                        </div>
+                        <div class="col-sm-9">
+                            @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                             {
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
-                                    </label>
-                                </div>
+                                @Html.Action("MultistoreDisabledWarning", "Common")
+                                foreach (var store in Model.AvailableStores)
+                                {
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
+                                        </label>
+                                    </div>
+                                }
                             }
-                        }
-                        else
-                        {
-                            <div>No stores defined</div>
-                        }
+                            else
+                            {
+                                <div>No stores defined</div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
