@@ -41,10 +41,10 @@
 
 <div class="form-group">
     <div class="col-sm-3">
-        @Html.LabelFor(model => model.CustomerRoleId)
+        @Html.NopLabelFor(model => model.CustomerRoleId)
     </div>
     <div class="col-sm-9">
-        @Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
+        @Html.NopDropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles)
         <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none;">
             @T("Admin.Promotions.Discounts.Requirements.Saved")
         </div>
