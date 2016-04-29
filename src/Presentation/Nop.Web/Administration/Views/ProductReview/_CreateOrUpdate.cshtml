@@ -27,7 +27,7 @@
                             @Html.NopLabelFor(model => model.CustomerInfo)
                         </div>
                         <div class="col-sm-9">
-                            <p>@Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })</p>
+                            @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                         </div>
                     </div>
                     <div class="form-group">
