@@ -788,28 +788,36 @@
                     @Html.ValidationMessageFor(model => model.RequireOtherProducts)
                 </div>
             </div>
-            <div class="form-group" id="pnlRequiredProductIds">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.RequiredProductIds)
+            <div id="pnlRequiredProductIds">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.RequiredProductIds)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.RequiredProductIds)
+                        @Html.ValidationMessageFor(model => model.RequiredProductIds)
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.RequiredProductIds)
-                    @Html.ValidationMessageFor(model => model.RequiredProductIds)
-                    <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
-                    <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 800, true); return false;" class="btn btn-default" />
-                    <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                    <script type="text/javascript">
-                        $(document).ready(function() {
-                            $('#btnRefreshRequiredProducts').click(function() {
-                                //refresh product list
-                                loadRequiredProductFriendlyNames();
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                    </div>
+                    <div class="col-sm-9">
+                        <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 800, true); return false;" class="btn btn-default" />
+                        <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $('#btnRefreshRequiredProducts').click(function() {
+                                    //refresh product list
+                                    loadRequiredProductFriendlyNames();
 
-                                //return false to don't reload a page
-                                return false;
+                                    //return false to don't reload a page
+                                    return false;
+                                });
                             });
-                        });
-                    </script>
-                    <span id="required-product-names" class="required-product-names"></span>
+                        </script>
+                        <span id="required-product-names" style="margin-left: 10px;"></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group" id="pnlAutomaticallyAddRequiredProducts">
@@ -1234,10 +1242,10 @@
                                                         }
                                                     </script>
                                                 <td style="width: 20%;">
-                                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control"/>
+                                                    <input id="warehouse_qty_@(item.WarehouseId)" name="warehouse_qty_@(item.WarehouseId)" type="text" value="@item.StockQuantity" class="form-control" />
                                                 </td>
                                                 <td style="width: 20%;">
-                                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="form-control"/>
+                                                    <input id="warehouse_reserved_@(item.WarehouseId)" name="warehouse_reserved_@(item.WarehouseId)" type="text" value="@item.ReservedQuantity" class="form-control" />
                                                 </td>
                                                 <td style="width: 10%;">
                                                     @item.PlannedQuantity
