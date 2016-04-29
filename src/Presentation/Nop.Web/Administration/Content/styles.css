@@ -56,6 +56,7 @@ table.adminContent {
 
 .form-horizontal .control-label {
     float: right;
+    max-width: 90%;
 }
 .form-horizontal img.ico-help {
     float: right;
@@ -223,10 +224,6 @@ table td .form-group {
     float: right;
     margin-top: 8px;
     margin-left: 5px;
-}
-
-.form-horizontal .control-label {
-    padding-top: 7px;
 }
 
 .please-wait {
