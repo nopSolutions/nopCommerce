@@ -310,3 +310,11 @@ table td .form-group {
 input[type=file].form-control {
     height: auto;
 }
+
+.qq-upload-list {
+    margin-top: 5px !important;
+}
+
+.qq-upload-list li.qq-upload-success {
+    background-color: #3c8dbc !important;
+}
