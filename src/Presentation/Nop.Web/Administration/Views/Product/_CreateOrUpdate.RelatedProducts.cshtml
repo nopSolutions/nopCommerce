@@ -1,9 +1,9 @@
 ﻿@model ProductModel
 
 <div class="panel-group">
-    @if (Model.Id > 0)
-    {
-        <div class="panel panel-default">
+    <div class="panel panel-default">
+        @if (Model.Id > 0)
+        {
             <div class="panel-body">
                 <div id="relatedproducts-grid"></div>
 
@@ -107,7 +107,7 @@
                 </script>
             </div>
             <div class="panel-footer">
-                <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" class="btn btn-default" />
+                <input type="submit" id="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" class="btn btn-default" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))', 800, 800, true); return false;" />
                 <input type="submit" id="btnRefreshRelatedProducts" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -122,14 +122,12 @@
                     });
                 </script>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="panel panel-default">
+        }
+        else
+        {
             <div class="panel-body">
                 @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
