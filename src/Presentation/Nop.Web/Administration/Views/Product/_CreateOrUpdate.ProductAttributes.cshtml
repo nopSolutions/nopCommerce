@@ -9,11 +9,11 @@
         {
             <div id="productattribute-edit" class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
-                    @Html.RenderBootstrapTabHeader("tab-attributes", @T("Admin.Catalog.Products.ProductAttributes.Attributes"), true)
+                    @Html.RenderBootstrapTabHeader("tab-attributes", @T("Admin.Catalog.Products.ProductAttributes.Attributes"), true, "tab-attributes")
                     @Html.RenderBootstrapTabHeader("tab-attribute-combinations", @T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations"))
                 </ul>
                 <div class="tab-content">
-                    @Html.RenderBootstrapTabContent("tab-attributes", @TabAttributes(), true)
+                    @Html.RenderBootstrapTabContent("tab-attributes", @TabAttributes(), true, "tab-attributes")
                     @Html.RenderBootstrapTabContent("tab-attribute-combinations", @TabAttributeCombinations())
                 </div>
             </div>
