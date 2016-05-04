@@ -376,9 +376,13 @@
                         @Html.NopLabelFor(model => model.SecuritySettings.EncryptionKey)
                     </div>
                     <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
+                        <div class="input-group input-group-short">
+                            @Html.NopEditorFor(model => model.SecuritySettings.EncryptionKey)
+                            <span class="input-group-btn">
+                                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn btn-info btn-flat" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                            </span>
+                        </div>
                         @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                        <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="btn btn-default" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                     </div>
                 </div>
                 <div class="form-group">
