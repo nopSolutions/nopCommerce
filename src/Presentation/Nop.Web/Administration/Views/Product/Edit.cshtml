@@ -1,8 +1,10 @@
 ﻿@model ProductModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
     @Html.AntiForgeryToken()

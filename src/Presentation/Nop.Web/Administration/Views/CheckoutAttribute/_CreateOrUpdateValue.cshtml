@@ -1,8 +1,10 @@
 ﻿@model CheckoutAttributeValueModel
+
 @{
     Html.AddScriptParts("~/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.CheckoutAttributeId)
@@ -52,7 +54,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.DisplayColorSquaresRgb)
-            {
+                    {
                         <div class="form-group">
                             <div class="col-sm-3">
                                 @Html.NopLabelFor(model => model.ColorSquaresRgb)

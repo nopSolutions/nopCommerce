@@ -1,4 +1,5 @@
 ﻿@model PollModel
+
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 
@@ -126,6 +127,7 @@
         </div>
     </div>
 }
+
 @helper TabAnswers()
 {
     <div class="panel-group">

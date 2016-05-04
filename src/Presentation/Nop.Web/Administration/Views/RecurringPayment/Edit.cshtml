@@ -1,8 +1,10 @@
 ﻿@model RecurringPaymentModel
+
 @{  
     //page title
     ViewBag.Title = T("Admin.RecurringPayments.EditPaymentDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

@@ -1,11 +1,14 @@
 ﻿@model CurrencyModel
+
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
+
 <script>
     $(document).ready(function() {
         bindBootstrapTabSelectEvent('currency-edit');
     });
 </script>
+
 <div class="content">
     <div class="form-horizontal">
         <div id="currency-edit" class="nav-tabs-custom">
@@ -31,12 +34,11 @@
     }
 }
 
-
 @*save selected tab name*@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<CurrencyModel, CurrencyLocalizedModel>("currency-info-localized",
@@ -157,15 +159,12 @@
 }
 
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
-
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
@@ -174,8 +173,8 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

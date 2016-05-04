@@ -1,12 +1,13 @@
 ﻿@model NewsSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.News")

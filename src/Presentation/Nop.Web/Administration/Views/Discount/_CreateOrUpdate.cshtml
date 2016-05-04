@@ -1,9 +1,12 @@
 ﻿@model DiscountModel
+
 @using Nop.Core.Domain.Discounts;
 @using Nop.Web.Framework.UI;
+
 @{
     Html.AddScriptParts("~/Scripts/jquery.tmpl.min.js");
 }
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -263,6 +266,7 @@
         </div>
     </div>
 }
+
 @helper TabRequirements()
 {
     <div class="panel-group">
@@ -270,7 +274,6 @@
         {
             <script type="text/javascript">
                 $(document).ready(function() {
-
                     $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").change(loadNewRequirementBox);
 
                     //load add requirement box
@@ -303,7 +306,6 @@
                                 alert('Failed to load new discount requirement info. Please refresh the page');
                             }
                         });
-
                     });
                 });
 
@@ -356,7 +358,6 @@
                         {
                             <text>, </text>
                         }
-
                     }
                 ];
 
@@ -462,6 +463,7 @@
         }
     </div>
 }
+
 @helper TabAppliedToProducts()
 {
     <div class="panel-group">
@@ -571,8 +573,9 @@
         </div>
     </div>
 }
+
 @helper TabAppliedToCategories()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             @if (Model.Id > 0)
@@ -680,8 +683,9 @@
         </div>
     </div>
 }
+
 @helper TabAppliedToManufacturers()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             @if (Model.Id > 0)
@@ -789,10 +793,11 @@
         </div>
     </div>
 }
+
 @helper TabHistory()
-        {
-var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel-group">
         <div class="panel panel-default">

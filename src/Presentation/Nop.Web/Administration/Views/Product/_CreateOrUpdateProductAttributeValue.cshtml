@@ -1,9 +1,12 @@
-﻿@using Nop.Core.Domain.Catalog
-@model ProductModel.ProductAttributeValueModel
+﻿@model ProductModel.ProductAttributeValueModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     Html.AddScriptParts("~/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.ProductAttributeMappingId)
@@ -18,6 +21,7 @@
         window.close();
     </script>
 }
+
 <script type="text/javascript">
     $(document).ready(function() {
         $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").change(toggleProductType);
@@ -28,16 +32,16 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
         if (selectedProductTypeId == @(((int) AttributeValueType.Simple).ToString())) {
             $('#group-associated-product').hide();
-        $('#group-quantity').hide();
-        $('#group-price-adjustment').show();
-        $('#group-weight-adjustment').show();
-        $('#group-cost').show();
+            $('#group-quantity').hide();
+            $('#group-price-adjustment').show();
+            $('#group-weight-adjustment').show();
+            $('#group-cost').show();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
-        $('#group-associated-product').show();
-        $('#group-quantity').show();
-        $('#group-price-adjustment').hide();
-        $('#group-weight-adjustment').hide();
-        $('#group-cost').hide();
+            $('#group-associated-product').show();
+            $('#group-quantity').show();
+            $('#group-price-adjustment').hide();
+            $('#group-weight-adjustment').hide();
+            $('#group-cost').hide();
     }
     }
 </script>

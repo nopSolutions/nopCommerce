@@ -1,8 +1,10 @@
 ﻿@model CurrencyModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies.AddNew").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

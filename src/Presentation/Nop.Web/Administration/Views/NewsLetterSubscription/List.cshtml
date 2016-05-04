@@ -1,4 +1,5 @@
 ﻿@model NewsLetterSubscriptionListModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -6,11 +7,10 @@
     //page title
     ViewBag.Title = T("Admin.Promotions.newsLetterSubscriptions").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Promotions.NewsLetterSubscriptions")
@@ -87,7 +87,6 @@
 
                 <div class="panel panel-default">
                     <div class="panel-body">
-
                         <div id="newsletter-subscriptions-grid"></div>
 
                         <script>
@@ -195,6 +194,7 @@
                                 });
                             });
                         </script>
+
                         <script type="text/javascript">
                             $(document).ready(function() {
                                 $('#search-subscriptions').click(function() {

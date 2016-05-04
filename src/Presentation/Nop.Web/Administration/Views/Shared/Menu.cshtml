@@ -1,9 +1,11 @@
 ﻿@using Nop.Web.Framework.Menu;
+
 @{
     //load sitemap
     var siteMap = new Nop.Web.Framework.Menu.XmlSiteMap();
     siteMap.LoadFrom("~/Administration/sitemap.config");
 }
+
 @helper RenderMenuItem(Nop.Web.Framework.Menu.SiteMapNode item)
 {
 string url = null;

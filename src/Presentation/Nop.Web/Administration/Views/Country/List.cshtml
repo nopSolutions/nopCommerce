@@ -2,9 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Countries")
@@ -23,7 +22,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="countries-grid"></div>
 
                     <script>
@@ -61,71 +59,73 @@
                                 },
                                 scrollable: false,
                                 dataBound: onDataBound,
-                                columns: [{
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                }, {
-                                    field: "Name",
-                                    title: "@T("Admin.Configuration.Countries.Fields.Name")",
-                                    width: 300
-                                }, {
-                                    field: "AllowsBilling",
-                                    title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
-                                }, {
-                                    field: "AllowsShipping",
-                                    title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
-                                }, {
-                                    field: "TwoLetterIsoCode",
-                                    title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
-                                    width: 100
-                                }, {
-                                    field: "ThreeLetterIsoCode",
-                                    title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
-                                    width: 100
-                                }, {
-                                    field: "NumericIsoCode",
-                                    title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
-                                    width: 100
-                                }, {
-                                    field: "SubjectToVat",
-                                    title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
-                                }, {
-                                    field: "NumberOfStates",
-                                    title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
-                                    width: 100
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
-                                    width: 100
-                                }, {
-                                    field: "Published",
-                                    title: "@T("Admin.Configuration.Countries.Fields.Published")",
-                                    width: 100,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
-                                }, {
-                                    field: "Id",
-                                    title: "@T("Admin.Common.Edit")",
-                                    width: 50,
-                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                }]
+                                columns: [
+                                    {
+                                        field: "Id",
+                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                        width: 50
+                                    }, {
+                                        field: "Name",
+                                        title: "@T("Admin.Configuration.Countries.Fields.Name")",
+                                        width: 300
+                                    }, {
+                                        field: "AllowsBilling",
+                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsBilling")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
+                                    }, {
+                                        field: "AllowsShipping",
+                                        title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
+                                    }, {
+                                        field: "TwoLetterIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
+                                        width: 100
+                                    }, {
+                                        field: "ThreeLetterIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.ThreeLetterIsoCode")",
+                                        width: 100
+                                    }, {
+                                        field: "NumericIsoCode",
+                                        title: "@T("Admin.Configuration.Countries.Fields.NumericIsoCode")",
+                                        width: 100
+                                    }, {
+                                        field: "SubjectToVat",
+                                        title: "@T("Admin.Configuration.Countries.Fields.SubjectToVat")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
+                                    }, {
+                                        field: "NumberOfStates",
+                                        title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
+                                        width: 100
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Configuration.Countries.Fields.DisplayOrder")",
+                                        width: 100
+                                    }, {
+                                        field: "Published",
+                                        title: "@T("Admin.Configuration.Countries.Fields.Published")",
+                                        width: 100,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                    }, {
+                                        field: "Id",
+                                        title: "@T("Admin.Common.Edit")",
+                                        width: 50,
+                                        template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
+                                    }
+                                ]
                             });
                         });
                     </script>
@@ -134,7 +134,6 @@
                         var selectedIds = [];
 
                         $(document).ready(function () {
-
                             //"publish selected" button
                             $('#publish-selected').click(function (e) {
                                 e.preventDefault();
@@ -202,8 +201,7 @@
                                         //add id to selectedIds.
                                         selectedIds.push($check.val());
                                     }
-                                }
-                                else {
+                                } else {
                                     var checked = jQuery.inArray($check.val(), selectedIds);
                                     if (checked > -1) {
                                         //remove id from selectedIds.
@@ -239,6 +237,7 @@
         </div>
     </div>
 </div>
+
 @*import states form*@
 <div id="importcsv-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importcsv-window-title">
     <div class="modal-dialog">

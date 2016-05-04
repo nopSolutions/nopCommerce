@@ -1,12 +1,13 @@
 ﻿@model ForumSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Forums").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Forums")

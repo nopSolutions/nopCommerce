@@ -8,7 +8,6 @@
 }
 
 @Html.AntiForgeryToken()
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.ActivityLog.ActivityLog")
@@ -68,8 +67,8 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="activityLog-grid"></div>
+
                     <script>
                         $(document).ready(function() {
                             $("#activityLog-grid").kendoGrid({
@@ -155,9 +154,7 @@
                         });
                     </script>
                     <script type="text/javascript">
-
                         $(document).ready(function() {
-
                             $('#search-log').click(function() {
                                 var grid = $('#activityLog-grid').data('kendoGrid');
                                 grid.dataSource.page(1); //new search. Set page size to 1

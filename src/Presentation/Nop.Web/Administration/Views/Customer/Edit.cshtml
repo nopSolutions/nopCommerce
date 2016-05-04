@@ -1,8 +1,10 @@
 ﻿@model CustomerModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.EditCustomerDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -103,7 +105,6 @@
             $('#pnl-send-date').show();
     }
 </script>
-
 
 @*send PM form*@
 <div id="sendprivatemessage-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="sendprivatemessage-window-title">

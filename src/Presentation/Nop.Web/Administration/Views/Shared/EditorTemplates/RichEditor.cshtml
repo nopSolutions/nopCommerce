@@ -1,8 +1,10 @@
 ﻿@model String
+
 @using Nop.Core
 @using Nop.Core.Domain.Common
 @using Nop.Services.Security
 @using Nop.Web.Framework.UI
+
 @{
     //we do not bundle this script file (does not work for some reasons in bundle)
     Html.AddScriptParts("~/Content/tinymce/tinymce.min.js", true);
@@ -29,15 +31,15 @@
     //false by default
     var enableFullPage = Convert.ToBoolean(ViewData["nop.RichEditor.EnableFullPage"] ?? false);
 }
+
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         @* wooncherk contribution *@
         function RoxyFileBrowser@(random)(field_name, url, type, win) {
             var roxyFileman = '@Url.Content("~/Content/Roxy_Fileman/index.html")';
             if (roxyFileman.indexOf("?") < 0) {
                 roxyFileman += "?type=" + type;
-            }
-            else {
+            } else {
                 roxyFileman += "&type=" + type;
             }
             roxyFileman += '&input=' + field_name + '&value=' + document.getElementById(field_name).value;
@@ -67,12 +69,14 @@
             toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image@(allowJbimages ? " jbimages" : null)",
             //"relative_urls" required by jbimages plugin to be set to "false"
             relative_urls: false,
-            @if (allowJavaScript){
+            @if (allowJavaScript)
+            {
                 <text>
             valid_elements: "*[*]",
                 </text>
             }
-            @if (allowRoxyFileman){
+            @if (allowRoxyFileman)
+            {
                 <text>
             //picture manager
             file_browser_callback: RoxyFileBrowser@(random),
@@ -91,6 +95,7 @@
         tinyMCE.init(getAdditionalEditorSettings@(random)(defaultEditorSettings@(random)));
     });
 </script>
+
 @Html.TextArea(string.Empty, /* Name suffix */
     ViewData.TemplateInfo.FormattedModelValue /* Initial value */
 )

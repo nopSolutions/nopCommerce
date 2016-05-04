@@ -5,8 +5,8 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Polls").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Polls")
@@ -21,7 +21,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="polls-grid"></div>
 
                     <script>

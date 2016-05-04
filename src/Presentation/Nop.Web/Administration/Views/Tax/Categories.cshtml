@@ -1,10 +1,9 @@
-﻿
-@{    
+﻿@{    
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Categories").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Tax.Categories")
@@ -19,7 +18,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="tax-categories-grid"></div>
 
                     <script>

@@ -5,6 +5,7 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "product-tags-form"}))
 {
     @Html.AntiForgeryToken()

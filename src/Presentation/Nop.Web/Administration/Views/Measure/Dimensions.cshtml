@@ -2,9 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Dimensions").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Measures.Dimensions")
@@ -19,8 +18,8 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="measuredimension-grid"></div>
+
                     <script>
                         $(document).ready(function() {
                             $("#measuredimension-grid").kendoGrid({
@@ -153,6 +152,7 @@
                             });
                         });
                     </script>
+
                     <script>
                         function markAsPrimaryDimension(id) {
                             if (confirm('@T("Admin.Common.AreYouSure")')) {

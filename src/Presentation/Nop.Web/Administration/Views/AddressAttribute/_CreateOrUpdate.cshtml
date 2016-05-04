@@ -10,7 +10,6 @@
 <div class="content">
     @Html.ValidationSummary(false)
     @Html.HiddenFor(model => model.Id)
-
     <div class="form-horizontal">
         <div id="addressattribute-edit" class="nav-tabs-custom">
             <ul class="nav nav-tabs">
@@ -39,7 +38,7 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<AddressAttributeModel, AddressAttributeLocalizedModel>("addressattribute-localized",
@@ -113,7 +112,7 @@
 }
 
 @helper TabValues()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             @if (Model.Id > 0)

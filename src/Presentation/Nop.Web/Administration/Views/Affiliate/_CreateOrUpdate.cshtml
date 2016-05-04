@@ -45,7 +45,7 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -111,8 +111,8 @@
 
 @helper TabCustomers()
 {
-var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     <div class="panel-group">
         <div class="panel panel-default">
@@ -121,13 +121,13 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                 <div id="customers-grid"></div>
 
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $("#customers-grid").kendoGrid({
                             dataSource: {
                                 type: "json",
                                 transport: {
                                     read: {
-                                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new { affiliateId = Model.Id }))",
+                                        url: "@Html.Raw(Url.Action("AffiliatedCustomerList", "Affiliate", new {affiliateId = Model.Id}))",
                                         type: "POST",
                                         dataType: "json",
                                         data: addAntiForgeryToken
@@ -157,7 +157,8 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 mode: "inline"
                             },
                             scrollable: false,
-                            columns: [{
+                            columns: [
+                            {
                                 field: "Id",
                                 title: "ID",
                                 width: 50
@@ -170,7 +171,8 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                                 title: "@T("Admin.Common.View")",
                                 width: 100,
                                 template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=Id#">@T("Admin.Common.View")</a>'
-                            }]
+                                }
+                            ]
                         });
                     });
                 </script>
@@ -178,6 +180,7 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
         </div>
     </div>
 }
+
 @helper TabOrders()
 {
     @Html.Action("AffiliatedOrderList", new { affiliateId = Model.Id })

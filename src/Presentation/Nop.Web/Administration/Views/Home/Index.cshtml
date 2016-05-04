@@ -1,5 +1,7 @@
-﻿@using Nop.Services.Security
-@model DashboardModel
+﻿@model DashboardModel
+
+@using Nop.Services.Security
+
 @{
     //page title
     ViewBag.Title = T("Admin.Dashboard").Text;
@@ -9,6 +11,7 @@
     var canManageCustomers = permissionService.Authorize(StandardPermissionProvider.ManageCustomers);
     var canManageProducts = permissionService.Authorize(StandardPermissionProvider.ManageProducts);
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header">
     <h1>
@@ -16,6 +19,7 @@
         <small>@T("Admin.Dashboard.StoreStatistics")</small>
     </h1>
 </div>
+
 <div class="content">
     <div class="row">
         <div class="col-md-10">
@@ -44,7 +48,7 @@
                 {
                     <div class="row">
                         @if (canManageOrders)
-                    {
+                        {
                             <div class="col-md-6">
                                 <div class="box">
                                     <div class="box-header with-border">
@@ -59,8 +63,9 @@
                                 </div>
                             </div>
                         }
+
                         @if (canManageCustomers)
-                    {
+                        {
                             <div class="col-md-3">
                                 <div class="box">
                                     <div class="box-header with-border">
@@ -77,8 +82,9 @@
                                 </div>
                             </div>
                         }
+
                         @if (canManageProducts)
-                    {
+                        {
                             <div class="col-md-3">
                                 <div class="box">
                                     <div class="box-header with-border">
@@ -98,6 +104,7 @@
                     </div>
                 }
             }
+
             @if (canManageOrders)
             {
                 <div class="row">

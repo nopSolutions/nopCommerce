@@ -1,6 +1,8 @@
 ﻿@model PluginModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.SystemName)
+
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">
@@ -36,7 +38,7 @@
 }
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
@@ -95,18 +97,15 @@
             </div>
         </div>
     </div>
-
 }
+
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function() {
-
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
@@ -115,7 +114,6 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
 
     <div class="panel-group">

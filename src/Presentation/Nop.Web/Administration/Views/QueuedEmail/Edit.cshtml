@@ -1,8 +1,10 @@
 ﻿@model QueuedEmailModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails.EditQueuedEmailDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

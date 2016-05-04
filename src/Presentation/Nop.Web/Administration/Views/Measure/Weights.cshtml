@@ -2,9 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Weights").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Measures.Weights")
@@ -19,7 +18,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="measureweight-grid"></div>
 
                     <script>
@@ -154,6 +152,7 @@
                             });
                         });
                     </script>
+
                     <script>
                         function markAsPrimaryWeight(id) {
                             if (confirm('@T("Admin.Common.AreYouSure")')) {

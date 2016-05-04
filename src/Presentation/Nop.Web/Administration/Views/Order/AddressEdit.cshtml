@@ -1,8 +1,10 @@
 ﻿@model OrderAddressModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.Address.EditAddress").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

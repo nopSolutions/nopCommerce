@@ -1,11 +1,11 @@
 ﻿@model MessageTemplateListModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.MessageTemplates")
@@ -41,7 +41,6 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="templates-grid"></div>
 
                     <script>
@@ -111,7 +110,6 @@
                     </script>
 
                     <script type="text/javascript">
-
                         $(document).ready(function() {
                             //search button
                             $('#search-templates').click(function() {

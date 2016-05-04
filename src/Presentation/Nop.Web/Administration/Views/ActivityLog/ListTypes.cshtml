@@ -3,10 +3,10 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
 }
+
 @using (Html.BeginForm("SaveTypes", "ActivityLog"))
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.ActivityLog.ActivityLogType")
@@ -21,10 +21,9 @@
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
-
                         <div id="activityLogType-grid"></div>
-                        <script>
 
+                        <script>
                             //local datasource
                             var activityLogTypes = [
                                 @for (int i = 0; i < Model.Count; i++)
@@ -89,9 +88,7 @@
 
                         </script>
                         <script type="text/javascript">
-
                             $(document).ready(function() {
-
                                 updateMasterCheckbox();
 
                                 $('#mastercheckbox').click(function() {

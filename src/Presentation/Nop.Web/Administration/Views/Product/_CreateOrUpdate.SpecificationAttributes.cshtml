@@ -3,13 +3,12 @@
 
 <div class="panel-group">
     @if (Model.Id > 0)
-            {
-                /*hide "add spec" table if no attributes are defined*/
-                if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
-                {
+    {
+        /*hide "add spec" table if no attributes are defined*/
+        if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
+        {
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="specificationattributes-grid"></div>
 
                     <script>
@@ -220,7 +219,6 @@
 
                         $(document).ready(function() {
                             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AttributeTypeId)").change(toggleAttributeType);
-
                             toggleAttributeType();
                         });
 

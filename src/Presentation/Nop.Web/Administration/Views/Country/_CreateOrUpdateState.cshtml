@@ -1,7 +1,9 @@
 ﻿@model StateProvinceModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.CountryId)
+
 @if (ViewBag.RefreshPage == true)
 {
     <script type="text/javascript">

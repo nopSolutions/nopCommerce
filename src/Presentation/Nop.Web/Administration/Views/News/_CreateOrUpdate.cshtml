@@ -1,11 +1,14 @@
 ﻿@model NewsItemModel
+
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
+
 <script>
     $(document).ready(function() {
         bindBootstrapTabSelectEvent('news-edit');
     });
 </script>
+
 <div class="content">
     <div class="form-horizontal">
         <div id="news-edit" class="nav-tabs-custom">
@@ -23,7 +26,6 @@
     </div>
 </div>
 
-
 @{
     //custom tabs
     var eventMessage = new AdminTabStripCreated(this.Html, "news-edit");
@@ -33,7 +35,6 @@
         @eventBlock
     }
 }
-
 
 @*save selected tab name*@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
@@ -165,12 +166,12 @@
         </div>
     </div>
 }
+
 @helper TabStores()
 {
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
 
@@ -182,6 +183,7 @@
             }
         }
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

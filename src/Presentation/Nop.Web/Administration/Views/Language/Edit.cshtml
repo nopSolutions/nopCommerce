@@ -1,8 +1,10 @@
 ﻿@model LanguageModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages.EditLanguageDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -22,7 +24,6 @@
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("language-delete")
-
 
 @*import resources form*@
 <div id="importxml-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importxml-window-title">

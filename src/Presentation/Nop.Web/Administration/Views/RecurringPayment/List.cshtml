@@ -1,11 +1,11 @@
-﻿
-@{
+﻿@{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 
     //page title
     ViewBag.Title = T("Admin.RecurringPayments").Text;
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -15,6 +15,7 @@
         &nbsp;
     </div>
 </div>
+
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">

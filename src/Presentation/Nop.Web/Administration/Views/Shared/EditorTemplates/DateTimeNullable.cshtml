@@ -1,5 +1,6 @@
-@using System.Globalization
 @model DateTime?
+@using System.Globalization
+
 <input id="@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)" name="@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" value="@(Model > DateTime.MinValue || Model.HasValue ? Model.Value.ToString(CultureInfo.CurrentCulture.DateTimeFormat) : null)" />
 <script>
     $(document).ready(function () {

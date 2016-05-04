@@ -1,4 +1,5 @@
 ﻿@model TopicModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -28,11 +29,11 @@
 </div>
 
 @{
-            //custom tabs
-            var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
-            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
-            foreach (var eventBlock in eventMessage.BlocksToRender)
-            {
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "topic-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
         @eventBlock
     }
 }
@@ -41,9 +42,9 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
             togglePassword();
         });
@@ -56,6 +57,7 @@
             }
         }
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-info-localized",
@@ -231,8 +233,9 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<TopicModel, TopicLocalizedModel>("topic-seo-localized",
@@ -321,26 +324,22 @@
 }
 
 @helper TabAcl()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
-
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
-
             toggleAcl();
         });
-
 
         function toggleAcl() {
             if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
                 $('#pnl-acl').show();
-            }
-            else {
+            } else {
                 $('#pnl-acl').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -383,26 +382,22 @@
 }
 
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
-
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
                 $('#pnl-available-stores').show();
-            }
-            else {
+            } else {
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

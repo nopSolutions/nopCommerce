@@ -1,8 +1,10 @@
 ﻿@model BestCustomersReportModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
 }
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -120,16 +122,13 @@
             </script>
 
             <script type="text/javascript">
-
                 $(document).ready(function() {
-
                     $('#search-best-customers-ordertotal').click(function() {
                         var grid = $('#best-customers-ordertotal-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         //grid.dataSource.read(); we already loaded the grid above using "page" function
                         return false;
                     });
-
                 });
 
                 function bestCustomersOrderTotalAdditionalData(e) {
@@ -143,9 +142,7 @@
                     addAntiForgeryToken(data);
                     return data;
                 }
-
             </script>
-
         </div>
     </div>
 </div>

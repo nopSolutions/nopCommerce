@@ -101,17 +101,17 @@
                                     template: "#:Manufacturer#"
                                 },
                                     @if (!Model.IsLoggedInAsVendor)
-                            {
-                                //vendor cannot edit this field
-                                <text>{
-                                        field: "IsFeaturedProduct",
-                                        title: "@T("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")",
-                                        width: 200,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
-                                    },</text>
-                            }
+                                    {
+                                        //vendor cannot edit this field
+                                        <text>{
+                                                field: "IsFeaturedProduct",
+                                                title: "@T("Admin.Catalog.Products.Manufacturers.Fields.IsFeaturedProduct")",
+                                                width: 200,
+                                                headerAttributes: { style: "text-align:center" },
+                                                attributes: { style: "text-align:center" },
+                                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
+                                        },</text>
+                                    }
 
                                 {
                                     field: "DisplayOrder",

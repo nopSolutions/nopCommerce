@@ -1,12 +1,13 @@
 ﻿@model NewsItemModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.News.NewsItems.AddNew").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.News.NewsItems.AddNew")

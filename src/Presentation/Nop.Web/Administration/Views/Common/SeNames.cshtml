@@ -1,4 +1,5 @@
 ﻿@model UrlRecordListModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -13,9 +14,10 @@
         @T("Admin.System.SeNames")
     </h1>
     <div class="pull-right">
-        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.System.SeNames.DeleteSelected")" />
+        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.System.SeNames.DeleteSelected")"/>
     </div>
 </div>
+
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
@@ -130,7 +132,6 @@
     var selectedIds = [];
 
     $(document).ready(function() {
-
         //search button
         $('#search-senames').click(function() {
             //search

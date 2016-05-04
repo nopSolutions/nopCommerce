@@ -1,9 +1,11 @@
 ﻿@{
     List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
     bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
+
     //page title
     ViewBag.Title = T("Admin.Configuration.Currencies").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -12,11 +14,12 @@
             @T("Admin.Configuration.Currencies")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
             <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="btn btn-default">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
             <a href="@Url.Action("Create")" class="btn btn-default">@T("Admin.Common.AddNew")</a>
         </div>
     </div>
+
     <div class="content">
         <div class="form-horizontal">
             <div class="panel-group">

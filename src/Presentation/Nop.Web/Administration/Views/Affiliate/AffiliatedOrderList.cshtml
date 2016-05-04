@@ -2,8 +2,8 @@
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
 }
+
 <div class="panel-group">
     <div class="panel panel-default">
         <div class="panel-body">
@@ -52,11 +52,12 @@
                     &nbsp;
                 </div>
                 <div class="col-sm-9">
-                    <input type="button" id="search-orders" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                    <input type="button" id="search-orders" class="btn btn-default" value="@T("Admin.Common.Search")"/>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="orders-grid"></div>
@@ -130,12 +131,10 @@
             </script>
 
             <script type="text/javascript">
-
                 var selectedIds = [];
                 var reportAggregates = "";
 
                 $(document).ready(function () {
-
                     //search button
                     $('#search-orders').click(function () {
                         //search

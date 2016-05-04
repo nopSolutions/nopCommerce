@@ -1,12 +1,13 @@
 ﻿@model BulkEditListModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
-
-
+    
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

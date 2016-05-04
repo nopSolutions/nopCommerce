@@ -1,12 +1,13 @@
 ﻿@model TaxSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Tax")
@@ -18,12 +19,10 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectTaxDisplayType)").click(toggleTaxDisplayType);
             $("#@Html.FieldIdFor(model => model.ShippingIsTaxable)").click(toggleShipping);
             $("#@Html.FieldIdFor(model => model.PaymentMethodAdditionalFeeIsTaxable)").click(togglePayment);
             $("#@Html.FieldIdFor(model => model.EuVatEnabled)").click(toggleEUVAT);
-
 
             toggleTaxDisplayType();
             toggleShipping();

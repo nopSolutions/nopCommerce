@@ -1,9 +1,12 @@
-﻿@using Nop.Core.Domain.Catalog
-@model OrderModel.AddOrderProductModel.ProductDetailsModel
+﻿@model OrderModel.AddOrderProductModel.ProductDetailsModel
+
+@using Nop.Core.Domain.Catalog
+
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
 }
+
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@
 @using (Html.BeginForm("AddProductToOrderDetails", "Order",
                                                     new RouteValueDictionary(new { orderId = Model.OrderId, productId = Model.ProductId }),
@@ -12,7 +15,6 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false)
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId)

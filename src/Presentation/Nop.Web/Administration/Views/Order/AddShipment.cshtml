@@ -1,5 +1,7 @@
-﻿@using System.Text
-@model ShipmentModel
+﻿@model ShipmentModel
+
+@using System.Text
+
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId);
@@ -8,6 +10,7 @@
         .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)
         .ToList();
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -204,4 +207,4 @@
             </div>
         </div>
     </div>
-    }
+}

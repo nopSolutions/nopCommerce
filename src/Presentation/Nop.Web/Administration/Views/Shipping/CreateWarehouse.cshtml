@@ -1,8 +1,10 @@
 ﻿@model WarehouseModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.Warehouses.AddNew").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

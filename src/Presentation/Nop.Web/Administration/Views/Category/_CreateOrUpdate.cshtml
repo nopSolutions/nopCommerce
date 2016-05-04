@@ -42,7 +42,6 @@
     }
 }
 
-
 @*save selected tab name*@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
@@ -220,6 +219,7 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
 {
     <div class="panel-group">
@@ -306,6 +306,7 @@
         </div>
     </div>
 }
+
 @helper TabProducts()
 {
     <div class="panel-group">
@@ -386,43 +387,43 @@
                                 },
                                 scrollable: false,
                                 columns: [
-                                {
-                                    field: "ProductName",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
-                                }, {
-                                    field: "IsFeaturedProduct",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
-                                    width: 150,
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
-                                }, {
-                                    field: "DisplayOrder",
-                                    title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
-                                    //integer format
-                                    format: "{0:0}",
-                                    width: 150
-                                }, {
-                                    field: "ProductId",
-                                    title: "@T("Admin.Common.View")",
-                                    width: 100,
-                                    template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
-                                }, {
-                                    command: [
                                     {
-                                        name: "edit",
-                                        text: {
-                                            edit: "@T("Admin.Common.Edit")",
-                                            update: "@T("Admin.Common.Update")",
-                                            cancel: "@T("Admin.Common.Cancel")"
-                                        }
+                                        field: "ProductName",
+                                        title: "@T("Admin.Catalog.Categories.Products.Fields.Product")"
                                     }, {
-                                        name: "destroy",
-                                        text: "@T("Admin.Common.Delete")"
+                                        field: "IsFeaturedProduct",
+                                        title: "@T("Admin.Catalog.Categories.Products.Fields.IsFeaturedProduct")",
+                                        width: 150,
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsFeaturedProduct#.gif" />'
+                                    }, {
+                                        field: "DisplayOrder",
+                                        title: "@T("Admin.Catalog.Categories.Products.Fields.DisplayOrder")",
+                                        //integer format
+                                        format: "{0:0}",
+                                        width: 150
+                                    }, {
+                                        field: "ProductId",
+                                        title: "@T("Admin.Common.View")",
+                                        width: 100,
+                                        template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                    }, {
+                                        command: [
+                                            {
+                                                name: "edit",
+                                                text: {
+                                                    edit: "@T("Admin.Common.Edit")",
+                                                    update: "@T("Admin.Common.Update")",
+                                                    cancel: "@T("Admin.Common.Cancel")"
+                                                }
+                                            }, {
+                                                name: "destroy",
+                                                text: "@T("Admin.Common.Delete")"
+                                            }
+                                        ],
+                                        width: 200
                                     }
-                                    ],
-                                    width: 200
-                                }
                                 ]
                             });
                         });
@@ -448,18 +449,17 @@
                     </script>
                 </div>
             </div>
-                        }
-                        else
-                        {
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
-                                </div>
-                            </div>
-                        }
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Catalog.Categories.Products.SaveBeforeEdit")
+                </div>
+            </div>
+        }
     </div>
 }
-
 
 @helper TabDiscounts()
 {
@@ -487,6 +487,7 @@
         </div>
     </div>
 }
+
 @helper TabAcl()
 {
     <div class="panel-group">

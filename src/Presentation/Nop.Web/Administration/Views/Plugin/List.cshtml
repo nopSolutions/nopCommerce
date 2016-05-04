@@ -1,8 +1,10 @@
 ﻿@model PluginListModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
 {
     @Html.AntiForgeryToken()
@@ -81,6 +83,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div id="plugins-grid"></div>
+
                         <script>
                             $(document).ready(function () {
                                 $("#plugins-grid").kendoGrid({
@@ -159,8 +162,8 @@
                     <div>
                         <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefresh').click(function () {
+                            $(document).ready(function() {
+                                $('#btnRefresh').click(function() {
                                     //refresh grid
                                     var grid = $("#plugins-grid").data('kendoGrid');
                                     grid.dataSource.read();
@@ -170,6 +173,7 @@
                                 });
                             });
                         </script>
+
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 //search button
@@ -190,7 +194,6 @@
                                 addAntiForgeryToken(data);
                                 return data;
                             }
-
                         </script>
                     </div>
                 </div>

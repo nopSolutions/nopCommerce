@@ -1,12 +1,16 @@
 ﻿@model MessageTemplateModel
+
+@using Nop.Core.Domain.Messages;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
-@using Nop.Core.Domain.Messages;
+
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         bindBootstrapTabSelectEvent('template-edit');
     });
 </script>
+
 <div class="content">
     <div class="form-horizontal">
         <div id="template-edit" class="nav-tabs-custom">
@@ -36,7 +40,7 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -175,7 +179,6 @@
                 </div>
             </div>
           ))
-
         </div>
 
         <div class="panel panel-default">
@@ -268,20 +271,16 @@
             else
                 $('#pnl-send-after').show();
         }
-
     </script>
 }
 
 @helper TabStores()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
-
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
-
             toggleStoreMapping();
         });
-
 
         function toggleStoreMapping() {
             if ($('#@Html.FieldIdFor(model => model.LimitedToStores)').is(':checked')) {
@@ -290,8 +289,8 @@
                 $('#pnl-available-stores').hide();
             }
         }
-
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

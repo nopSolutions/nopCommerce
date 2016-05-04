@@ -1,11 +1,12 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model StateProvinceModel
+﻿@model StateProvinceModel
+
 @{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries.States.EditStateDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

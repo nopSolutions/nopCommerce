@@ -1,8 +1,10 @@
 ﻿@model TopicModel
+
 @{    
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Topics.EditTopicDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

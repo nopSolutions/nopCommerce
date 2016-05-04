@@ -1,4 +1,5 @@
 ﻿@model VendorModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -45,7 +46,7 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
         $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
@@ -62,6 +63,7 @@
             }
         }
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
@@ -215,8 +217,9 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default no-border">
             @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
@@ -303,6 +306,7 @@
         </div>
     </div>
 }
+
 @helper TabVendorNotes()
 {
     <div class="panel-group">

@@ -1,12 +1,13 @@
 ﻿@model BlogSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Blog").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Blog")
@@ -20,6 +21,7 @@
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
             @Html.ValidationSummary(false)
+
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">

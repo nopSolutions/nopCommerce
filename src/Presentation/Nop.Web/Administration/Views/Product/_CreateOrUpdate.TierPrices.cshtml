@@ -150,11 +150,11 @@
                         @foreach (var store in allStores)
                         {
                             <text>
-                                    , {
-                                        Id: @(store.Id),
-                                        Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
-                                    }
-                                    </text>
+                            , {
+                                Id: @(store.Id),
+                                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(store.Name)))"
+                            }
+                            </text>
                         }
                     ];
 

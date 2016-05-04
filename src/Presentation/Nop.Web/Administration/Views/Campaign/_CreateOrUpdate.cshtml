@@ -2,6 +2,7 @@
 
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
+
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
@@ -12,7 +13,7 @@
                         <strong>
                             @T("Admin.Promotions.Campaigns.Warning")
                         </strong>
-                        <br />
+                        <br/>
                         <br/>
                         <div class="form-group">
                             <div class="col-sm-3">
@@ -38,6 +39,7 @@
                     </div>
                 </div>
             }
+
             <div class="panel panel-default">
                 <div class="panel panel-body">
                     <div class="form-group">
@@ -94,13 +96,13 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        
                         <script type="text/javascript">
                             function toggleLoadedAllowedTokens() {
                                 $('#pnlAllowedTokens').toggle();
                                 if ($('#pnlAllowedTokens').css('display') == 'none') {
                                     $('#allowedTokensShowHide').html('@T("Admin.Common.Show")');
-                                }
-                                else {
+                                } else {
                                     $('#allowedTokensShowHide').html('@T("Admin.Common.Hide")');
                                 }
                             }

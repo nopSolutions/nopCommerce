@@ -1,8 +1,10 @@
 ﻿@model MediaSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Media").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

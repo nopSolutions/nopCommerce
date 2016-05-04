@@ -1,4 +1,5 @@
 ﻿@model BestCustomersReportModel
+
 @{
     var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
     var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
@@ -61,6 +62,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div id="best-customers-numberoforders-grid"></div>
+
             <script>
                 $(document).ready(function() {
                     $("#best-customers-numberoforders-grid").kendoGrid({
@@ -99,36 +101,34 @@
                         },
                         scrollable: false,
                         columns: [
-                        {
-                            field: "CustomerName",
-                            title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")"
-                        }, {
-                            field: "OrderTotal",
-                            title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
-                        }, {
-                            field: "OrderCount",
-                            title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
-                        }, {
-                            field: "Id",
-                            title: "@T("Admin.Common.View")",
-                            width: 100,
-                            template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">@T("Admin.Common.View")</a>'
+                            {
+                                field: "CustomerName",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.Customer")"
+                            }, {
+                                field: "OrderTotal",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderTotal")"
+                            }, {
+                                field: "OrderCount",
+                                title: "@T("Admin.Customers.Reports.BestBy.Fields.OrderCount")"
+                            }, {
+                                field: "Id",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">@T("Admin.Common.View")</a>'
                             }
                         ]
                     });
                 });
             </script>
+
             <script type="text/javascript">
-
                 $(document).ready(function() {
-
                     $('#search-best-customers-numberoforders-grid').click(function() {
                         var grid = $('#best-customers-numberoforders-grid').data('kendoGrid');
                         grid.dataSource.page(1); //new search. Set page size to 1
                         //grid.dataSource.read(); we already loaded the grid above using "page" function
                         return false;
                     });
-
                 });
 
                 function bestCustomersNumberOfOrdersAdditionalData(e) {
@@ -142,7 +142,6 @@
                     addAntiForgeryToken(data);
                     return data;
                 }
-
             </script>
         </div>
     </div>

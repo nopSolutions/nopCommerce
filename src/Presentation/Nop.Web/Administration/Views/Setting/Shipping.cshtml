@@ -1,12 +1,13 @@
 ﻿@model ShippingSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.Shipping")
@@ -17,10 +18,9 @@
     </div>
 
     <script type="text/javascript">
-    $(document).ready(function () {
-        $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
-        $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
-
+        $(document).ready(function() {
+            $("#@Html.FieldIdFor(model => model.AllowPickUpInStore)").click(toggleAllowPickUpInStore);
+            $("#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)").click(toggleFreeShippingOverX);
             toggleAllowPickUpInStore();
             toggleFreeShippingOverX();
         });
@@ -35,13 +35,13 @@
 
         function toggleFreeShippingOverX() {
             if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
-            $('#pnlValueOfX').show();
-            $('#pnlValueOfXincltax').show();
-        } else {
-            $('#pnlValueOfX').hide();
-            $('#pnlValueOfXincltax').hide();
+                $('#pnlValueOfX').show();
+                $('#pnlValueOfXincltax').show();
+            } else {
+                $('#pnlValueOfX').hide();
+                $('#pnlValueOfXincltax').hide();
+            }
         }
-    }
 
     </script>
 

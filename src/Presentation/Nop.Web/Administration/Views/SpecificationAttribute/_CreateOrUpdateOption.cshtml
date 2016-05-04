@@ -1,11 +1,14 @@
 ﻿@model SpecificationAttributeOptionModel
+
 @{
     Html.AddScriptParts("~/Scripts/farbtastic.js");
     Html.AddCssFileParts("~/Content/farbtastic/farbtastic.css");
 }
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.HiddenFor(model => model.SpecificationAttributeId)
+
 @{
     //pre-set some color (required for farbtastic)
     if (String.IsNullOrEmpty(Model.ColorSquaresRgb))

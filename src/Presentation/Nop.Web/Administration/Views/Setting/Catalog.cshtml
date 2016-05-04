@@ -1,8 +1,10 @@
 ﻿@model CatalogSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Catalog").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -11,14 +13,16 @@
             @T("Admin.Configuration.Settings.Catalog")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
         </div>
     </div>
+
     <script>
         $(document).ready(function() {
             bindBootstrapTabSelectEvent('catalogsettings-edit');
         });
     </script>
+
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
@@ -60,11 +64,11 @@
     @*save selected tab name*@
     <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 }
+
 @helper TabGeneralSettings()
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)").click(toggleShowCategoryProductNumberIncludingSubcategories);
             $("#@Html.FieldIdFor(model => model.EmailAFriendEnabled)").click(toggleEmailAFriend);
             $("#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)").click(toggleRecentlyViewedProducts);
@@ -485,6 +489,7 @@
         </div>
     </div>
 }
+
 @helper TabPerformance()
 {
     <div class="panel-group">
@@ -544,6 +549,7 @@
         </div>
     </div>
 }
+
 @helper TabProductReviews()
 {
     <div class="panel-group">
@@ -593,11 +599,11 @@
         </div>
     </div>
 }
+
 @helper TabSearchSettings()
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.SearchPageAllowCustomersToSelectPageSize)").click(toggleSearchPagePageSize);
             $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
 
@@ -625,7 +631,6 @@
                 $('#pnlShowProductImagesInSearchAutoComplete').hide();
             }
         }
-        
     </script>
 
     <div class="panel-group">
@@ -705,6 +710,7 @@
         </div>
     </div>
 }
+
 @helper TabCompareProducts()
 {
     <div class="panel-group">
@@ -749,9 +755,7 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.ShowShareButton)").click(togglePageShareCode);
-
             togglePageShareCode();
         });
 
@@ -792,6 +796,7 @@
         </div>
     </div>
 }
+
 @helper TabSortOptions()
 {
     <div class="panel-group">

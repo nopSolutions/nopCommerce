@@ -1,5 +1,7 @@
 ﻿@model RecurringPaymentModel
+
 @using Nop.Core.Domain.Catalog;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -122,8 +124,9 @@
         </div>
     </div>
 }
+
 @helper TabHistory()
-        {
+{
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

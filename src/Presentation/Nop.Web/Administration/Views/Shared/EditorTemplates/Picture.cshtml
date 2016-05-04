@@ -1,6 +1,8 @@
 ﻿@model int
+
 @using Nop.Core;
 @using Nop.Web.Framework.UI;
+
 @{
     //register CSS and JS
     Html.AddCssFileParts("~/Scripts/fineuploader/fineuploader-4.2.2.min.css");
@@ -12,6 +14,7 @@
     var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
     var picture = pictureService.GetPictureById(Model);
 }
+
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>

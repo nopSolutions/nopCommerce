@@ -1,11 +1,12 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model ProductTagModel
+﻿@model ProductTagModel
+
 @{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

@@ -1,9 +1,12 @@
 ﻿@model SyndicationFeed
+
+@using System.ServiceModel.Syndication;
+@using Nop.Core.Domain.Common;
+
 @{
     var hideAdvertisements = EngineContext.Current.Resolve<CommonSettings>().HideAdvertisementsOnAdminArea;
 }
-@using System.ServiceModel.Syndication;
-@using Nop.Core.Domain.Common;
+
 <div class="box">
     <div class="box-header with-border clearfix">
         <div class="box-title">

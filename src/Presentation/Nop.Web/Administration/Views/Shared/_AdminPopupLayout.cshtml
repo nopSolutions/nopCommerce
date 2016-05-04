@@ -2,6 +2,7 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+
 @{
     var kendoVersion = "2014.1.318";
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
@@ -60,6 +61,7 @@
         Html.AppendHeadCustomParts(string.Format("<meta http-equiv=\"X-UA-Compatible\" content=\"{0}\"/>", commonSettings.XuaCompatibleValue));
     }
 }
+
 <!DOCTYPE html>
 <html @(supportRtl ? Html.Raw("dir=\"rtl\"") : null)>
 <head>

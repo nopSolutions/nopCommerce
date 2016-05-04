@@ -1,4 +1,5 @@
 ﻿@model OrderModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
@@ -7,7 +8,6 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.EditOrderDetails") - @Model.Id
@@ -82,9 +82,9 @@
 
     @*save selected tab name*@
     <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-
 }
 @Html.DeleteConfirmation("order-delete")
+
 @helper TabInfo()
 {
     @Html.Partial("_OrderDetails.Info", Model)

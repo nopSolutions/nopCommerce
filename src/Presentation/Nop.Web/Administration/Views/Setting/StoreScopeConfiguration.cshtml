@@ -1,8 +1,9 @@
 ﻿@model StoreScopeConfigurationModel
+
 @using Nop.Core
+
 @{
     var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-
     var stores = Model.Stores.Select(store => new SelectListItem
     {
         Text = store.Name,
@@ -17,6 +18,7 @@
         Selected = 0.Equals(Model.StoreId)
     });
 }
+
 <div class="form-group">
     <div class="col-sm-12">
         <label class="control-label" style="float:left;margin-right:10px;">@T("Admin.Configuration.Settings.StoreScope")</label>

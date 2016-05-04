@@ -1,4 +1,5 @@
 ﻿@model ProductModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -69,64 +70,76 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Info", Model)
 }
+
 @helper TabSeo()
-        {
+{
     @Html.Partial("_CreateOrUpdate.SEO", Model)
 }
+
 @helper TabCategories()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Categories", Model)
 }
+
 @helper TabManufacturers()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Manufacturers", Model)
 }
+
 @helper TabPictures()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Pictures", Model)
 }
+
 @helper TabSpecificationAttributes()
-        {
+{
     @Html.Partial("_CreateOrUpdate.SpecificationAttributes", Model)
 }
+
 @helper TabAcl()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Acl", Model)
 }
+
 @helper TabStores()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Stores", Model)
 }
 
 @helper TabTierPrices()
-        {
+{
     @Html.Partial("_CreateOrUpdate.TierPrices", Model)
 }
+
 @helper TabProductAttributes()
-        {
+{
     @Html.Partial("_CreateOrUpdate.ProductAttributes", Model)
 }
+
 @helper TabDiscounts()
-        {
+{
     @Html.Partial("_CreateOrUpdate.Discounts", Model)
 }
+
 @helper TabRelatedProducts()
-        {
+{
     @Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
 }
+
 @helper TabCrossSells()
-        {
+{
     @Html.Partial("_CreateOrUpdate.CrossSells", Model)
 }
+
 @helper TabAssociatedProducts()
-        {
+{
     @Html.Partial("_CreateOrUpdate.AssociatedProducts", Model)
 }
+
 @helper TabPurchasedWithOrders()
-        {
+{
     @Html.Partial("_CreateOrUpdate.PurchasedWithOrders", Model)
 }
-

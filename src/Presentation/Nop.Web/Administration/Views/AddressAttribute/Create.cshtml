@@ -3,17 +3,18 @@
     //page title
     ViewBag.Title = T("Admin.Address.AddressAttributes.AddNew").Text;
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addressattribute-form" }))
 {
     @Html.AntiForgeryToken()
     <div class="content-header clearfix">
         <h1 class="pull-left">
-            @T("Admin.Address.AddressAttributes.AddNew") 
+            @T("Admin.Address.AddressAttributes.AddNew")
             <small>@Html.ActionLink("(" + T("Admin.Address.AddressAttributes.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
+            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")"/>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

@@ -1,4 +1,5 @@
 ﻿@model ManufacturerModel
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -189,6 +190,7 @@
         </div>
     </div>
 }
+
 @helper TabSeo()
 {
     <div class="panel-group">
@@ -275,6 +277,7 @@
         </div>
     </div>
 }
+
 @helper TabProducts()
 {
     <div class="panel-group">
@@ -417,18 +420,19 @@
                     </script>
                 </div>
             </div>
-                        }
-                        else
-                        {
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
-                                </div>
-                            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @T("Admin.Catalog.Manufacturers.Products.SaveBeforeEdit")
+                </div>
+            </div>
 
-                        }
+        }
     </div>
 }
+
 @helper TabDiscounts()
 {
     <div class="panel-group">
@@ -455,6 +459,7 @@
         </div>
     </div>
 }
+
 @helper TabAcl()
 {
     <div class="panel-group">

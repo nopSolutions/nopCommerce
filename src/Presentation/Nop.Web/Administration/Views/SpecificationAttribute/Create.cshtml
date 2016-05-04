@@ -1,8 +1,10 @@
 ﻿@model SpecificationAttributeModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.AddNew").Text;
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "specificationattribute-form" }))
 {
     @Html.AntiForgeryToken()

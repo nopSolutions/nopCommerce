@@ -1,13 +1,12 @@
-﻿@{
-    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-
-@model CustomerAttributeValueModel
+﻿@model CustomerAttributeValueModel
 
 @{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerAttributes.Values.EditValueDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

@@ -1,13 +1,16 @@
 ﻿@model ShipmentModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Orders.Shipments.ViewDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             toggleShippedDate(false);
             toggleDeliveryDate(false);
         });
@@ -19,8 +22,7 @@
                 $('#btnEditShippedDate').hide();
                 $('#btnSaveShippedDate').show();
                 $('#btnCancelShippedDate').show();
-            }
-            else {
+            } else {
                 $('#lblShippedDate').show();
                 $('#divShippedDate').hide();
                 $('#btnEditShippedDate').show();
@@ -36,8 +38,7 @@
                 $('#btnEditDeliveryDate').hide();
                 $('#btnSaveDeliveryDate').show();
                 $('#btnCancelDeliveryDate').show();
-            }
-            else {
+            } else {
                 $('#lblDeliveryDate').show();
                 $('#divDeliveryDate').hide();
                 $('#btnEditDeliveryDate').show();
@@ -46,6 +47,7 @@
             }
         }
     </script>
+
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
@@ -59,7 +61,6 @@
 
     <div class="content">
         @Html.ValidationSummary(false)
-
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default">

@@ -1,16 +1,18 @@
 ﻿@model ProductModel
+
+@using Nop.Core.Domain.Catalog;
+@using Nop.Services.Catalog;
+@using System.Text;
+
 @{
     //resources for product tags input
     Html.AppendCssFileParts("~/Content/tagEditor/jquery.tag-editor.css");
     Html.AppendScriptParts("~/Scripts/tagEditor/jquery.tag-editor.min.js");
     Html.AppendScriptParts("~/Scripts/tagEditor/jquery.caret.min.js");
 }
-@using Nop.Core.Domain.Catalog;
-@using Nop.Services.Catalog;
-@using System.Text;
+
 <script type="text/javascript">
     $(document).ready(function() {
-
         @if (!Model.IsLoggedInAsVendor)
         {
             <text>$("#@Html.FieldIdFor(model => model.ShowOnHomePage)").click(toggleShowOnHomePage);</text>
@@ -66,27 +68,27 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-prices').show();
-        $('#group-required-other-products').show();
-        $('#group-giftcard').show();
-        $('#group-downloads').show();
-        $('#group-recurring').show();
-        $('#group-rental').show();
-        $('#group-shipping').show();
-        $('#group-tax').show();
-        $('#group-inventory').show();
-        $('[data-tab-name=tab-associated-products]').hide();
+            $('#group-required-other-products').show();
+            $('#group-giftcard').show();
+            $('#group-downloads').show();
+            $('#group-recurring').show();
+            $('#group-rental').show();
+            $('#group-shipping').show();
+            $('#group-tax').show();
+            $('#group-inventory').show();
+            $('[data-tab-name=tab-associated-products]').hide();
     } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-        $('#group-prices').hide();
-        $('#group-required-other-products').hide();
-        $('#group-giftcard').hide();
-        $('#group-downloads').hide();
-        $('#group-recurring').hide();
-        $('#group-rental').hide();
-        $('#group-shipping').hide();
-        $('#group-tax').hide();
-        $('#group-inventory').hide();
-        $('[data-tab-name=tab-associated-products]').show();
-    }
+            $('#group-prices').hide();
+            $('#group-required-other-products').hide();
+            $('#group-giftcard').hide();
+            $('#group-downloads').hide();
+            $('#group-recurring').hide();
+            $('#group-rental').hide();
+            $('#group-shipping').hide();
+            $('#group-tax').hide();
+            $('#group-inventory').hide();
+            $('[data-tab-name=tab-associated-products]').show();
+        }
     }
 
     function togglePreOrder() {
@@ -143,7 +145,6 @@
 
     function toggleDownloadableProduct() {
         if ($('#@Html.FieldIdFor(model => model.IsDownload)').is(':checked')) {
-
             $('#pnlDownloadFile').show();
             $('#pnlUnlimitedDownloads').show();
             if ($('#@Html.FieldIdFor(model => model.UnlimitedDownloads)').is(':checked')) {
@@ -237,17 +238,17 @@
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
         if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').hide();
-        $('#pnlWarehouse').show();
-        $('#pnlMultipleWarehouses').hide();
-        $('#pnlStockQuantity').hide();
-        $('#pnlDisplayStockAvailability').hide();
-        $('#pnlDisplayStockQuantity').hide();
-        $('#pnlMinStockQuantity').hide();
-        $('#pnlLowStockActivity').hide();
-        $('#pnlNotifyForQuantityBelow').hide();
-        $('#pnlAllowBackInStockSubscriptions').hide();
-        $('#pnlBackorders').hide();
-        $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+            $('#pnlWarehouse').show();
+            $('#pnlMultipleWarehouses').hide();
+            $('#pnlStockQuantity').hide();
+            $('#pnlDisplayStockAvailability').hide();
+            $('#pnlDisplayStockQuantity').hide();
+            $('#pnlMinStockQuantity').hide();
+            $('#pnlLowStockActivity').hide();
+            $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
+            $('#pnlBackorders').hide();
+            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
     } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
         $('#pnlUseMultipleWarehouses').show();
 
@@ -329,6 +330,7 @@
         }
         productTagsSb.Append("]");
     }
+
     //tags
     $(document).ready(function() {
         @Html.Raw(productTagsSb.ToString())
@@ -343,11 +345,11 @@
         });
     });
 
-
     //required product friendly names
     $(document).ready(function() {
         loadRequiredProductFriendlyNames();
     });
+
     $(document).ready(function() {
         $('#@Html.FieldIdFor(model => model.RequiredProductIds)')
             .data('timeout', null)

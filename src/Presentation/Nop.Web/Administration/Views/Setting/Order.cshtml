@@ -1,8 +1,10 @@
 ﻿@model OrderSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Order").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -11,14 +13,16 @@
             @T("Admin.Configuration.Settings.Order")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
         </div>
     </div>
+
     <script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('ordersettings-edit');
-    });
+        $(document).ready(function() {
+            bindBootstrapTabSelectEvent('ordersettings-edit');
+        });
     </script>
+
     <div class="content">
         <div class="form-horizontal">
             @Html.Action("StoreScopeConfiguration", "Setting")
@@ -47,18 +51,15 @@
         }
     }
 
-
     @*save selected tab name*@
     <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 }
+
 @helper TabOrderSettings()
 {
-
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.OnePageCheckoutEnabled)").click(toggleOnePageCheckoutEnabled);
-
             toggleOnePageCheckoutEnabled();
         });
 
@@ -70,7 +71,6 @@
                 $('#pnlOnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab').hide();
             }
         }
-
     </script>
 
     <div class="panel-group">
@@ -249,6 +249,7 @@
         </div>
     </div>
 }
+
 @helper TabReturnRequestSettings()
 {
     <div class="panel-group">
@@ -284,5 +285,4 @@
         @Html.Partial("_ReturnRequestReasons")
         @Html.Partial("_ReturnRequestActions")
     </div>
-    
 }

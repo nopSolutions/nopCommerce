@@ -1,8 +1,10 @@
 ﻿@model DeliveryDateModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.EditDeliveryDateDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

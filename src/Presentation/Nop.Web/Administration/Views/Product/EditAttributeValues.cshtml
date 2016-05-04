@@ -4,6 +4,7 @@
     //page title
     ViewBag.Title = string.Format(T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductAttributeName, Model.ProductName);
 }
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productattribute-form" }))
 {
     @Html.AntiForgeryToken()
@@ -16,6 +17,7 @@
             &nbsp;
         </div>
     </div>
+
     <div class="content">
         <div class="panel-group">
             <div class="panel panel-default">

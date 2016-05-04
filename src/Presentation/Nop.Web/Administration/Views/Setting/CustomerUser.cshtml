@@ -1,9 +1,12 @@
 ﻿@model CustomerUserSettingsModel
+
 @using Nop.Core.Domain.Customers;
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.CustomerUser").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -16,14 +19,15 @@
         </div>
     </div>
     @Html.ValidationSummary(false)
+
     <script>
-    $(document).ready(function() {
-        bindBootstrapTabSelectEvent('customersettings-edit');
-    });
+        $(document).ready(function() {
+            bindBootstrapTabSelectEvent('customersettings-edit');
+        });
     </script>
+
     <div class="content">
         <div class="form-horizontal">
-
             <div id="customersettings-edit" class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     @Html.RenderBootstrapTabHeader("tab-customer", @T("Admin.Configuration.Settings.CustomerUser.CustomerSettings"), true)
@@ -55,16 +59,14 @@
 
     @*save selected tab name*@
 	<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
-
 }
+
 @helper TabCustomerSettings()
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
-
 
             toggleAvatar();
             toggleUsername();
@@ -89,7 +91,6 @@
                 $('#pnlCheckUsernameAvailability').hide();
             }
         }
-        
     </script>
 
     <div class="panel-group">
@@ -279,11 +280,11 @@
         </div>
     </div>
 }
+
 @helper TabCustomerFormFields()
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthEnabled)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.DateOfBirthRequired)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCustomerCountryFormField);
@@ -297,8 +298,7 @@
             $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleCustomerRequiredFormField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.NewsletterEnabled)").click(toggleNewsletterEnabledField);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.HideNewsletterBlock)").click(toggleHideNewsletterBlock);
-
-
+            
             toggleCustomerCountryFormField();
             toggleCustomerStateProvinceFormField();
             toggleCustomerRequiredFormField();
@@ -400,7 +400,6 @@
                 $('#pnlNewsletterBlockAllowToUnsubscribe').show();
             }
         }
-        
     </script>
 
     <div class="panel-group">
@@ -640,11 +639,11 @@
         @Html.Action("ListBlock", "CustomerAttribute")      
     </div>
 }
+
 @helper TabAddressFormFields()
 {
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.AddressSettings.CountryEnabled)").click(toggleAddressCountryFormField);
             $("#@Html.FieldIdFor(model => model.AddressSettings.CompanyEnabled)").click(toggleAddressRequiredFormField);
             $("#@Html.FieldIdFor(model => model.AddressSettings.StreetAddressEnabled)").click(toggleAddressRequiredFormField);
@@ -653,7 +652,6 @@
             $("#@Html.FieldIdFor(model => model.AddressSettings.CityEnabled)").click(toggleAddressRequiredFormField);
             $("#@Html.FieldIdFor(model => model.AddressSettings.PhoneEnabled)").click(toggleAddressRequiredFormField);
             $("#@Html.FieldIdFor(model => model.AddressSettings.FaxEnabled)").click(toggleAddressRequiredFormField);
-
 
             toggleAddressCountryFormField();
             toggleAddressRequiredFormField();
@@ -718,7 +716,6 @@
                 $('#pnlAddressFaxRequired').hide();
             }
         }
-
     </script>
 
     <div class="panel-group">
@@ -877,6 +874,7 @@
         @Html.Action("ListBlock", "AddressAttribute")
     </div>
 }
+
 @helper TabDateTimeSettings()
 {
     <div class="panel-group">
@@ -904,6 +902,7 @@
         </div>
     </div>
 }
+
 @helper TabExternalAuthenticationSettings()
 {
     <div class="panel-group">

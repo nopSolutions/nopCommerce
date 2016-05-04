@@ -1,5 +1,7 @@
 ﻿@model IList<AddressModel.AddressAttributeModel>
+
 @using Nop.Core.Domain.Catalog;
+
 @foreach (var attribute in Model)
 {
     string controlId = string.Format("address_attribute_{0}", attribute.Id);

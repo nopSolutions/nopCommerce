@@ -1,8 +1,10 @@
 ﻿@model ReturnRequestModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.ReturnRequests.EditReturnRequestDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

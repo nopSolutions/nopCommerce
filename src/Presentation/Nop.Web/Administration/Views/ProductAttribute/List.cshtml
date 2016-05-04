@@ -5,8 +5,8 @@
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.ProductAttributes").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Catalog.Attributes.ProductAttributes")
@@ -20,7 +20,6 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-
                 <div id="productattributes-grid"></div>
 
                 <script>

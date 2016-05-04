@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.Customers.CustomerRoles").Text;
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -17,7 +18,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="customerroles-grid"></div>
 
                     <script>

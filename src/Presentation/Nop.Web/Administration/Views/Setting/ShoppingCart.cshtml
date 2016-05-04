@@ -1,8 +1,10 @@
 ﻿@model ShoppingCartSettingsModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.ShoppingCart").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -17,7 +19,6 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-
             $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
             $("#@Html.FieldIdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
 

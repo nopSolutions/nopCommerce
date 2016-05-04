@@ -1,11 +1,12 @@
-﻿@{
+﻿@model PluginModel
+
+@{
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
-}
-@model PluginModel
-@{    
+
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.EditDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

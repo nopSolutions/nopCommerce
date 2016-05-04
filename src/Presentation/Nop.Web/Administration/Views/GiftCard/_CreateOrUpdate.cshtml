@@ -1,5 +1,7 @@
 ﻿@model GiftCardModel
+
 @using Nop.Core.Domain.Catalog;
+
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 
@@ -44,27 +46,27 @@
 <input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
 
 @helper TabInfo()
-        {
+{
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
             toggleGiftCardType();
         });
 
         function toggleGiftCardType() {
             var selectedGiftCardTypeId = $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").val();
-            if (selectedGiftCardTypeId == @(((int)GiftCardType.Virtual).ToString())) {
+            if (selectedGiftCardTypeId == @(((int) GiftCardType.Virtual).ToString())) {
                 $('#pnlRecipientEmail').show();
-            $('#pnlSenderEmail').show();
-            $('#pnlNotifyRecipient').show();
-        }
-        else {
-            $('#pnlRecipientEmail').hide();
-        $('#pnlSenderEmail').hide();
-        $('#pnlNotifyRecipient').hide();
-        }
+                $('#pnlSenderEmail').show();
+                $('#pnlNotifyRecipient').show();
+            } else {
+                $('#pnlRecipientEmail').hide();
+                $('#pnlSenderEmail').hide();
+                $('#pnlNotifyRecipient').hide();
+            }
         }
     </script>
+
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
@@ -130,10 +132,8 @@
                                 <script type="text/javascript">
                                     $(document).ready(function() {
                                         $('#generateCouponCode').click(function() {
+                                            var postData = {};
 
-                                            var postData = {
-
-                                            };
                                             addAntiForgeryToken(postData);
 
                                             $.ajax({
@@ -231,10 +231,11 @@
         </div>
     </div>
 }
+
 @helper TabHistory()
 {
-var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
-var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">

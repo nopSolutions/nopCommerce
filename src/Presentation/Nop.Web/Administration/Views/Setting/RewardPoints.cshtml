@@ -1,13 +1,15 @@
 ﻿@model RewardPointsSettingsModel
+
 @using Nop.Core.Domain.Orders;
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Settings.RewardPoints")

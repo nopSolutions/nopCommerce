@@ -5,11 +5,8 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.BlogPosts")
@@ -24,82 +21,83 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="blogpost-grid"></div>
 
                     <script>
-                    $(document).ready(function () {
-                        $("#blogpost-grid").kendoGrid({
-                            dataSource: {
-                                type: "json",
-                                transport: {
-                                    read: {
-                                        url: "@Html.Raw(Url.Action("List", "Blog"))",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: addAntiForgeryToken
+                        $(document).ready(function() {
+                            $("#blogpost-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("List", "Blog"))",
+                                            type: "POST",
+                                            dataType: "json",
+                                            data: addAntiForgeryToken
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors"
+                                    },
+                                    error: function(e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                {
+                                    field: "Title",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")"
+                                }, {
+                                    field: "LanguageName",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
+                                }, {
+                                    field: "Comments",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
+                                    template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
+                                }, {
+                                    field: "StartDate",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "EndDate",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "CreatedOn",
+                                    title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")",
+                                    width: 200,
+                                    type: "date",
+                                    format: "{0:G}"
+                                }, {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
                                     }
-                                },
-                                schema: {
-                                    data: "Data",
-                                    total: "Total",
-                                    errors: "Errors"
-                                },
-                                error: function(e) {
-                                    display_kendoui_grid_error(e);
-                                    // Cancel the changes
-                                    this.cancelChanges();
-                                },
-                                pageSize: @(defaultGridPageSize),
-                                serverPaging: true,
-                                serverFiltering: true,
-                                serverSorting: true
-                            },
-                            pageable: {
-                                refresh: true,
-                                pageSizes: [@(gridPageSizes)]
-                            },
-                            editable: {
-                                confirmation: false,
-                                mode: "inline"
-                            },
-                            scrollable: false,
-                            columns: [{
-                                field: "Title",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Title")"
-                            }, {
-                                field: "LanguageName",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")"
-                            }, {
-                                field: "Comments",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")",
-                                template: '<a href="Comments?filterByBlogPostId=#=Id#">@T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments") - #=Comments# </a>'
-                            }, {
-                                field: "StartDate",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "EndDate",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            },  {
-                                field: "CreatedOn",
-                                title: "@T("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")",
-                                width: 200,
-                                type: "date",
-                                format: "{0:G}"
-                            }, {
-                                field: "Id",
-                                title: "@T("Admin.Common.Edit")",
-                                width: 100,
-                                template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                            }]
+                                ]
+                            });
                         });
-                    });
                     </script>
                 </div>
             </div>

@@ -2,8 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Languages")
@@ -16,10 +16,8 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="languages-grid"></div>
 
                     <script>

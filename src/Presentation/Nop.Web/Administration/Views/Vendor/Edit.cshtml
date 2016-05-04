@@ -1,8 +1,10 @@
 ﻿@model VendorModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Vendors.EditVendorDetails").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

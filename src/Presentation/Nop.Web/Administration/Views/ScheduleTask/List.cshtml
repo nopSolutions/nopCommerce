@@ -2,6 +2,7 @@
     //page title
     ViewBag.Title = T("Admin.System.ScheduleTasks").Text;
 }
+
 @Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
@@ -29,6 +30,7 @@
                         <strong>@T("Admin.System.ScheduleTasks.RestartApplication")</strong>
                     </p>
                     <div id="schedule-tasks-grid"></div>
+
                     <script>
                         $(document).ready(function () {
                             $("#schedule-tasks-grid").kendoGrid({

@@ -2,8 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.Methods").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Payment.Methods")
@@ -18,7 +18,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="paymentmethods-grid"></div>
 
                     <script>

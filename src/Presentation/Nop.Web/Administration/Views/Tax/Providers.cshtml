@@ -2,9 +2,8 @@
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
 }
+
 @Html.AntiForgeryToken()
-
-
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.Configuration.Tax.Providers")
@@ -19,7 +18,6 @@
         <div class="panel-group">
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="tax-providers-grid"></div>
 
                     <script>

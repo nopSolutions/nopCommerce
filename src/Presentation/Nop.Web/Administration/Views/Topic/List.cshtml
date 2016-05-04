@@ -1,10 +1,11 @@
 ﻿@model TopicListModel
+
 @{    
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Topics").Text;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Topics")
@@ -40,7 +41,6 @@
 
             <div class="panel panel-default">
                 <div class="panel-body">
-
                     <div id="topics-grid"></div>
 
                     <script>
@@ -150,7 +150,6 @@
                     </script>
 
                     <script type="text/javascript">
-
                         $(document).ready(function() {
                             //search button
                             $('#search-topics').click(function() {
@@ -169,7 +168,6 @@
                             return data;
                         }
                     </script>
-
                 </div>
             </div>
         </div>

@@ -209,40 +209,40 @@
                 //local datasource
                 var allProductAttributes = [
                     @for (int i = 0; i < Model.AvailableProductAttributes.Count; i++)
-            {
-                var productAttributeItem = Model.AvailableProductAttributes[i];
-                <text>
                     {
-                        Id: @(productAttributeItem.Value),
-                        Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(productAttributeItem.Text)))"
+                        var productAttributeItem = Model.AvailableProductAttributes[i];
+                        <text>
+                            {
+                                Id: @(productAttributeItem.Value),
+                                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(productAttributeItem.Text)))"
+                            }
+                                </text>
+                        if (i != Model.AvailableProductAttributes.Count - 1)
+                        {
+                            <text>,</text>
+                        }
                     }
-                        </text>
-                if (i != Model.AvailableProductAttributes.Count - 1)
-                {
-                    <text>,</text>
-                }
-            }
                 ];
 
                 var allAttributeControlTypes = [
                     @{
-                var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
-                    select new {Id = act.Value, Name = act.Text}).ToList();
-            }
-                    @for (int i = 0; i < allAttributeControlTypes.Count; i++)
-            {
-                var attributeControlType = allAttributeControlTypes[i];
-                <text>
-                    {
-                        Id: @(attributeControlType.Id),
-                        Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(attributeControlType.Name)))"
+                        var allAttributeControlTypes = (from act in AttributeControlType.DropdownList.ToSelectList()
+                            select new {Id = act.Value, Name = act.Text}).ToList();
                     }
-                    </text>
-                if (i != allAttributeControlTypes.Count - 1)
-                {
-                    <text>,</text>
-                }
-            }
+                            @for (int i = 0; i < allAttributeControlTypes.Count; i++)
+                    {
+                        var attributeControlType = allAttributeControlTypes[i];
+                        <text>
+                            {
+                                Id: @(attributeControlType.Id),
+                                Name: "@(Html.Raw(HttpUtility.JavaScriptStringEncode(attributeControlType.Name)))"
+                            }
+                            </text>
+                        if (i != allAttributeControlTypes.Count - 1)
+                        {
+                            <text>,</text>
+                        }
+                    }
                 ];
 
                 function productAttributeDropDownEditor(container, options) {
@@ -281,7 +281,7 @@
 }
 
 @helper TabAttributeCombinations()
-        {
+{
     <div class="panel panel-default">
         <div class="panel-body">
             <p>
@@ -447,8 +447,7 @@
                         //return false to don't reload a page
                         return false;
                     });
-
-
+                
                     //generate combinations
                     $('#btnGenerateAllCombinations').click(function() {
                         if (confirm('@T("Admin.Common.AreYouSure")')) {

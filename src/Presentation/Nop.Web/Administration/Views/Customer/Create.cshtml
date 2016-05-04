@@ -1,8 +1,10 @@
 ﻿@model CustomerModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.AddNew").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

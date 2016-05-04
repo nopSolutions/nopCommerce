@@ -1,8 +1,10 @@
 ﻿@model MaintenanceModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.System.Maintenance").Text;
 }
+
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.System.Maintenance")
@@ -11,6 +13,7 @@
         &nbsp;
     </div>
 </div>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()

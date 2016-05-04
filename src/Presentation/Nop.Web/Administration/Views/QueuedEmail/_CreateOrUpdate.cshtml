@@ -1,4 +1,5 @@
 ﻿@model QueuedEmailModel
+
 @Html.ValidationSummary(true)
 @Html.HiddenFor(model => model.Id)
 
@@ -156,7 +157,7 @@
                         </div>
                         <div class="col-sm-9">
                             @if (Model.SentOn.HasValue)
-            {
+                            {
                                 @Html.DisplayFor(model => model.SentOn)
                             }
                             else

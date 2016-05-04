@@ -1,8 +1,10 @@
 ﻿@model PaymentMethodRestrictionModel
+
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Payment.MethodRestrictions").Text;
 }
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -24,7 +26,7 @@
                         <br />
                         <br />
                         @if (Model.AvailablePaymentMethods.Count == 0)
-                {
+                        {
                             <text>No payment methods installed</text>
                         }
                         else if (Model.AvailableCountries.Count == 0)
@@ -36,15 +38,14 @@
                             <script type="text/javascript">
                                 $(document).ready(function () {
                                     @foreach (var pm in Model.AvailablePaymentMethods)
-                            {
-                                var systemNameWithoutDot = pm.SystemName.Replace(".", "");
-                                <text>
-                                    $('#selectall-@(systemNameWithoutDot)').click(function () {
-                                        $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
-                                    });
-
-                                    </text>
-                            }
+                                    {
+                                        var systemNameWithoutDot = pm.SystemName.Replace(".", "");
+                                        <text>
+                                            $('#selectall-@(systemNameWithoutDot)').click(function () {
+                                                $('.restrict_@(systemNameWithoutDot)').attr('checked', $(this).is(':checked')).change();
+                                            });
+                                        </text>
+                                    }
                                 });
                             </script>
                                     <table class="table table-hover table-bordered">

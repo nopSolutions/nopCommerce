@@ -4,12 +4,11 @@
 
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
-}
-@{
+
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
-@Html.AntiForgeryToken()
 
+@Html.AntiForgeryToken()
 <div class="content-header clearfix">
     <h1 class="pull-left">
         @T("Admin.ContentManagement.Blog.Comments")
@@ -22,10 +21,10 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="comments-grid"></div>
+
                     @{
                         string readUrl = "";
                         if (filterByBlogPostId.HasValue)
@@ -91,52 +90,51 @@
                                 scrollable: false,
                                 dataBound: onDataBound,
                                 columns: [
-                                {
-                                    field: "Id",
-                                    headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
-                                    headerAttributes: { style: "text-align:center" },
-                                    attributes: { style: "text-align:center" },
-                                    template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
-                                    width: 50
-                                }, {
-                                    field: "Id",
-                                    title: "ID",
-                                    width: 50
-                                }, {
-                                    field: "BlogPostTitle",
-                                    title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
-                                    width: 200,
-                                    template: '<a href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:BlogPostTitle#</a>'
-                                }, {
-                                    field: "CustomerId",
-                                    title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
-                                    width: 200,
-                                    template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
-                                }, {
-                                    field: "Comment",
-                                    title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",
-                                    encoded: false
-                                }, {
-                                    field: "CreatedOn",
-                                    title: "@T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")",
-                                    width: 200,
-                                    type: "date",
-                                    format: "{0:G}"
-                                }, {
-                                    command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
-                                    title: "@T("Admin.Common.Delete")",
+                                    {
+                                        field: "Id",
+                                        headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                        headerAttributes: { style: "text-align:center" },
+                                        attributes: { style: "text-align:center" },
+                                        template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                        width: 50
+                                    }, {
+                                        field: "Id",
+                                        title: "ID",
+                                        width: 50
+                                    }, {
+                                        field: "BlogPostTitle",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")",
+                                        width: 200,
+                                        template: '<a href="@Url.Content("~/Admin/Blog/Edit/")#=BlogPostId#">#:BlogPostTitle#</a>'
+                                    }, {
+                                        field: "CustomerId",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Customer")",
+                                        width: 200,
+                                        template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+                                    }, {
+                                        field: "Comment",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.Comment")",
+                                        encoded: false
+                                    }, {
+                                        field: "CreatedOn",
+                                        title: "@T("Admin.ContentManagement.Blog.Comments.Fields.CreatedOn")",
+                                        width: 200,
+                                        type: "date",
+                                        format: "{0:G}"
+                                    }, {
+                                        command: { name: "destroy", text: "@T("Admin.Common.Delete")" },
+                                        title: "@T("Admin.Common.Delete")",
                                         width: 100
                                     }
                                 ]
                             });
                         });
                     </script>
-                    <script type="text/javascript">
 
+                    <script type="text/javascript">
                         var selectedIds = [];
 
                         $(document).ready(function() {
-
                             //"delete selected" button
                             $('#delete-selected').click(function(e) {
                                 e.preventDefault();
@@ -163,8 +161,7 @@
                                 });
                                 return false;
                             });
-
-
+                            
                             $('#mastercheckbox').click(function() {
                                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
                             });
@@ -208,7 +205,6 @@
                             var numChkBoxesChecked = $('#comments-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
                             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                         }
-
                     </script>
                 </div>
             </div>
