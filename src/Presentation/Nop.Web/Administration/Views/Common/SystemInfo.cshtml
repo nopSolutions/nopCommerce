@@ -111,7 +111,7 @@
                         </div>
                         <div class="col-sm-9">
                             <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
-                            <div id="pnlServerVariables" style="display:none">
+                            <div id="pnlServerVariables" style="display: none; word-break: break-all">
                                 @foreach (var serverVariable in Model.ServerVariables)
                                 {
                                     @serverVariable.Name<text>:</text> @serverVariable.Value
