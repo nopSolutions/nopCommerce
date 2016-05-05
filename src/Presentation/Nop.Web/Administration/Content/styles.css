@@ -304,7 +304,7 @@ table td .form-group {
     padding: 5px;
 }
 
-.nav-tabs-custom + .panel{
+.nav-tabs-custom + .panel, .panel + .nav-tabs-custom {
     margin-top: 5px;
 }
 
