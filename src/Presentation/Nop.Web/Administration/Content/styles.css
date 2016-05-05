@@ -295,13 +295,22 @@ table td .form-group {
     margin-bottom: 0;
 }
 
-.nav-tabs-custom .tab-pane > .panel.panel-default{
+.nav-tabs-custom .tab-pane > .panel{
     border: none;
     box-shadow: none;
 }
 
-.nav-tabs-custom .tab-pane > .panel.panel-default .panel-body{
+.nav-tabs-custom .tab-pane > .panel .panel-body{
     padding: 5px;
+}
+
+.nav-tabs-custom + .panel{
+    margin-top: 5px;
+}
+
+.nav-tabs-custom .nav-tabs-custom {
+    border-bottom: 1px solid #ddd;
+    box-shadow: none;
 }
 
 .sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header {
