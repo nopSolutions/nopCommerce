@@ -447,6 +447,13 @@ namespace Nop.Services.Catalog
         /// <param name="productPicture">Product picture</param>
         void UpdateProductPicture(ProductPicture productPicture);
 
+        /// <summary>
+        /// Get the IDs of all product images 
+        /// </summary>
+        /// <param name="productsIds">Products IDs</param>
+        /// <returns>All picture identifiers grouped by product ID</returns>
+        IDictionary<int, int[]> GetProductsImagesIds(int [] productsIds);
+
         #endregion
 
         #region Product reviews

@@ -10,6 +10,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -4822,7 +4823,8 @@ namespace Nop.Services.Installation
                 MaximumImageSize = 1980,
                 DefaultPictureZoomEnabled = false,
                 DefaultImageQuality = 80,
-                MultipleThumbDirectories = false
+                MultipleThumbDirectories = false,
+                ImportProductImagesUsingHash = true
             });
 
             settingService.SaveSetting(new StoreInformationSettings

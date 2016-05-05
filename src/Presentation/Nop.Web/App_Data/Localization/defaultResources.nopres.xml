@@ -5937,6 +5937,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Media.DefaultImageQuality.Hint">
     <Value>The image quality to be used for uploaded images. Once changed you have to manually delete already generated thumbs.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash">
+    <Value>Import product images using hash</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash.Hint">
+    <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Media.ManufacturerThumbPictureSize">
     <Value>Manufacturer thumbnail image size</Value>
   </LocaleResource>

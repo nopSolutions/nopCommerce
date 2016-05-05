@@ -5,15 +5,18 @@ using System.Linq;
 using System.Web;
 using System.Web.WebPages;
 using Nop.Core;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport.Help;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using OfficeOpenXml;
 
@@ -35,6 +38,9 @@ namespace Nop.Services.ExportImport
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
+        private readonly IEncryptionService _encryptionService;
+        private readonly IDataProvider _dataProvider;
+        private readonly MediaSettings _mediaSettings;
 
         #endregion
 
@@ -48,7 +54,10 @@ namespace Nop.Services.ExportImport
             IStoreContext storeContext,
             INewsLetterSubscriptionService newsLetterSubscriptionService,
             ICountryService countryService,
-            IStateProvinceService stateProvinceService)
+            IStateProvinceService stateProvinceService,
+            IEncryptionService encryptionService,
+            IDataProvider dataProvider,
+            MediaSettings mediaSettings)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -59,6 +68,9 @@ namespace Nop.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
+            this._encryptionService = encryptionService;
+            this._dataProvider = dataProvider;
+            this._mediaSettings = mediaSettings;
         }
 
         #endregion
@@ -135,6 +147,98 @@ namespace Nop.Services.ExportImport
             return newPicture;
         }
 
+        protected virtual void ImportProductImagesUsingServices(IList<ProductPictureMetadata> productPictureMetadata)
+        {
+            foreach (var product in productPictureMetadata)
+            {
+                foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
+                {
+                    if (String.IsNullOrEmpty(picturePath))
+                        continue;
+
+                    var mimeType = GetMimeTypeFromFilePath(picturePath);
+                    var newPictureBinary = File.ReadAllBytes(picturePath);
+                    var pictureAlreadyExists = false;
+                    if (!product.IsNew)
+                    {
+                        //compare with existing product pictures
+                        var existingPictures = _pictureService.GetPicturesByProductId(product.ProductItem.Id);
+                        foreach (var existingPicture in existingPictures)
+                        {
+                            var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
+                            //picture binary after validation (like in database)
+                            var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
+                            if (!existingBinary.SequenceEqual(validatedPictureBinary) &&
+                                !existingBinary.SequenceEqual(newPictureBinary))
+                                continue;
+                            //the same picture content
+                            pictureAlreadyExists = true;
+                            break;
+                        }
+                    }
+
+                    if (pictureAlreadyExists)
+                        continue;
+                    var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                    product.ProductItem.ProductPictures.Add(new ProductPicture
+                    {
+                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                        //pictures are duplicated
+                        //maybe because entity size is too large
+                        PictureId = newPicture.Id,
+                        DisplayOrder = 1,
+                    });
+                    _productService.UpdateProduct(product.ProductItem);
+                }
+            }
+        }
+
+        protected virtual void ImportProductImagesUsingHash(IList<ProductPictureMetadata> productPictureMetadata, IList<Product> allProductsBySku)
+        {
+            //performance optimization, load all pictures hashes
+            //it will only be used if the images are stored in the SQL Server database (not compact)
+            var takeCount = _dataProvider.SupportedLengthOfBinaryHash() - 1;
+            var productsImagesIds = _productService.GetProductsImagesIds(allProductsBySku.Select(p => p.Id).ToArray());
+            var allPicturesHashes = _pictureService.GetPicturesHash(productsImagesIds.SelectMany(p => p.Value).ToArray());
+
+            foreach (var product in productPictureMetadata)
+            {
+                foreach (var picturePath in new[] { product.Picture1Path, product.Picture2Path, product.Picture3Path })
+                {
+                    if (String.IsNullOrEmpty(picturePath))
+                        continue;
+
+                    var mimeType = GetMimeTypeFromFilePath(picturePath);
+                    var newPictureBinary = File.ReadAllBytes(picturePath);
+                    var pictureAlreadyExists = false;
+                    if (!product.IsNew)
+                    {
+                        var newImageHash = _encryptionService.CreateHash(newPictureBinary.Take(takeCount).ToArray());
+                        var newValidatedImageHash = _encryptionService.CreateHash(_pictureService.ValidatePicture(newPictureBinary, mimeType).Take(takeCount).ToArray());
+
+                        var imagesIds = productsImagesIds.ContainsKey(product.ProductItem.Id)
+                            ? productsImagesIds[product.ProductItem.Id]
+                            : new int[0];
+
+                        pictureAlreadyExists = allPicturesHashes.Where(p => imagesIds.Contains(p.Key)).Select(p => p.Value).Any(p => p == newImageHash || p == newValidatedImageHash);
+                    }
+
+                    if (pictureAlreadyExists)
+                        continue;
+                    var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.ProductItem.Name));
+                    product.ProductItem.ProductPictures.Add(new ProductPicture
+                    {
+                        //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
+                        //pictures are duplicated
+                        //maybe because entity size is too large
+                        PictureId = newPicture.Id,
+                        DisplayOrder = 1,
+                    });
+                    _productService.UpdateProduct(product.ProductItem);
+                }
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -146,104 +250,104 @@ namespace Nop.Services.ExportImport
         public virtual void ImportProductsFromXlsx(Stream stream)
         {
             //var start = DateTime.Now;
-                //the columns
-                var properties = new []
-                {
-                    new PropertyByName<Product>("ProductTypeId"),
-                    new PropertyByName<Product>("ParentGroupedProductId"),
-                    new PropertyByName<Product>("VisibleIndividually"),
-                    new PropertyByName<Product>("Name"),
-                    new PropertyByName<Product>("ShortDescription"),
-                    new PropertyByName<Product>("FullDescription"),
-                    new PropertyByName<Product>("VendorId"),
-                    new PropertyByName<Product>("ProductTemplateId"),
-                    new PropertyByName<Product>("ShowOnHomePage"),
-                    new PropertyByName<Product>("MetaKeywords"),
-                    new PropertyByName<Product>("MetaDescription"),
-                    new PropertyByName<Product>("MetaTitle"),
-                    new PropertyByName<Product>("SeName"),
-                    new PropertyByName<Product>("AllowCustomerReviews"),
-                    new PropertyByName<Product>("Published"),
-                    new PropertyByName<Product>("SKU"),
-                    new PropertyByName<Product>("ManufacturerPartNumber"),
-                    new PropertyByName<Product>("Gtin"),
-                    new PropertyByName<Product>("IsGiftCard"),
-                    new PropertyByName<Product>("GiftCardTypeId"),
-                    new PropertyByName<Product>("OverriddenGiftCardAmount"),
-                    new PropertyByName<Product>("RequireOtherProducts"),
-                    new PropertyByName<Product>("RequiredProductIds"),
-                    new PropertyByName<Product>("AutomaticallyAddRequiredProducts"),
-                    new PropertyByName<Product>("IsDownload"),
-                    new PropertyByName<Product>("DownloadId"),
-                    new PropertyByName<Product>("UnlimitedDownloads"),
-                    new PropertyByName<Product>("MaxNumberOfDownloads"),
-                    new PropertyByName<Product>("DownloadActivationTypeId"),
-                    new PropertyByName<Product>("HasSampleDownload"),
-                    new PropertyByName<Product>("SampleDownloadId"),
-                    new PropertyByName<Product>("HasUserAgreement"),
-                    new PropertyByName<Product>("UserAgreementText"),
-                    new PropertyByName<Product>("IsRecurring"),
-                    new PropertyByName<Product>("RecurringCycleLength"),
-                    new PropertyByName<Product>("RecurringCyclePeriodId"),
-                    new PropertyByName<Product>("RecurringTotalCycles"),
-                    new PropertyByName<Product>("IsRental"),
-                    new PropertyByName<Product>("RentalPriceLength"),
-                    new PropertyByName<Product>("RentalPricePeriodId"),
-                    new PropertyByName<Product>("IsShipEnabled"),
-                    new PropertyByName<Product>("IsFreeShipping"),
-                    new PropertyByName<Product>("ShipSeparately"),
-                    new PropertyByName<Product>("AdditionalShippingCharge"),
-                    new PropertyByName<Product>("DeliveryDateId"),
-                    new PropertyByName<Product>("IsTaxExempt"),
-                    new PropertyByName<Product>("TaxCategoryId"),
-                    new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices"),
-                    new PropertyByName<Product>("ManageInventoryMethodId"),
-                    new PropertyByName<Product>("UseMultipleWarehouses"),
-                    new PropertyByName<Product>("WarehouseId"),
-                    new PropertyByName<Product>("StockQuantity"),
-                    new PropertyByName<Product>("DisplayStockAvailability"),
-                    new PropertyByName<Product>("DisplayStockQuantity"),
-                    new PropertyByName<Product>("MinStockQuantity"),
-                    new PropertyByName<Product>("LowStockActivityId"),
-                    new PropertyByName<Product>("NotifyAdminForQuantityBelow"),
-                    new PropertyByName<Product>("BackorderModeId"),
-                    new PropertyByName<Product>("AllowBackInStockSubscriptions"),
-                    new PropertyByName<Product>("OrderMinimumQuantity"),
-                    new PropertyByName<Product>("OrderMaximumQuantity"),
-                    new PropertyByName<Product>("AllowedQuantities"),
-                    new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations"),
-                    new PropertyByName<Product>("DisableBuyButton"),
-                    new PropertyByName<Product>("DisableWishlistButton"),
-                    new PropertyByName<Product>("AvailableForPreOrder"),
-                    new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc"),
-                    new PropertyByName<Product>("CallForPrice"),
-                    new PropertyByName<Product>("Price"),
-                    new PropertyByName<Product>("OldPrice"),
-                    new PropertyByName<Product>("ProductCost"),
-                    new PropertyByName<Product>("SpecialPrice"),
-                    new PropertyByName<Product>("SpecialPriceStartDateTimeUtc"),
-                    new PropertyByName<Product>("SpecialPriceEndDateTimeUtc"),
-                    new PropertyByName<Product>("CustomerEntersPrice"),
-                    new PropertyByName<Product>("MinimumCustomerEnteredPrice"),
-                    new PropertyByName<Product>("MaximumCustomerEnteredPrice"),
-                    new PropertyByName<Product>("BasepriceEnabled"),
-                    new PropertyByName<Product>("BasepriceAmount"),
-                    new PropertyByName<Product>("BasepriceUnitId"),
-                    new PropertyByName<Product>("BasepriceBaseAmount"),
-                    new PropertyByName<Product>("BasepriceBaseUnitId"),
-                    new PropertyByName<Product>("MarkAsNew"),
-                    new PropertyByName<Product>("MarkAsNewStartDateTimeUtc"),
-                    new PropertyByName<Product>("MarkAsNewEndDateTimeUtc"),
-                    new PropertyByName<Product>("Weight"),
-                    new PropertyByName<Product>("Length"),
-                    new PropertyByName<Product>("Width"),
-                    new PropertyByName<Product>("Height"),
-                    new PropertyByName<Product>("CategoryIds"),
-                    new PropertyByName<Product>("ManufacturerIds"),
-                    new PropertyByName<Product>("Picture1"),
-                    new PropertyByName<Product>("Picture2"),
-                    new PropertyByName<Product>("Picture3")
-                };
+            //the columns
+            var properties = new[]
+            {
+                new PropertyByName<Product>("ProductTypeId"),
+                new PropertyByName<Product>("ParentGroupedProductId"),
+                new PropertyByName<Product>("VisibleIndividually"),
+                new PropertyByName<Product>("Name"),
+                new PropertyByName<Product>("ShortDescription"),
+                new PropertyByName<Product>("FullDescription"),
+                new PropertyByName<Product>("VendorId"),
+                new PropertyByName<Product>("ProductTemplateId"),
+                new PropertyByName<Product>("ShowOnHomePage"),
+                new PropertyByName<Product>("MetaKeywords"),
+                new PropertyByName<Product>("MetaDescription"),
+                new PropertyByName<Product>("MetaTitle"),
+                new PropertyByName<Product>("SeName"),
+                new PropertyByName<Product>("AllowCustomerReviews"),
+                new PropertyByName<Product>("Published"),
+                new PropertyByName<Product>("SKU"),
+                new PropertyByName<Product>("ManufacturerPartNumber"),
+                new PropertyByName<Product>("Gtin"),
+                new PropertyByName<Product>("IsGiftCard"),
+                new PropertyByName<Product>("GiftCardTypeId"),
+                new PropertyByName<Product>("OverriddenGiftCardAmount"),
+                new PropertyByName<Product>("RequireOtherProducts"),
+                new PropertyByName<Product>("RequiredProductIds"),
+                new PropertyByName<Product>("AutomaticallyAddRequiredProducts"),
+                new PropertyByName<Product>("IsDownload"),
+                new PropertyByName<Product>("DownloadId"),
+                new PropertyByName<Product>("UnlimitedDownloads"),
+                new PropertyByName<Product>("MaxNumberOfDownloads"),
+                new PropertyByName<Product>("DownloadActivationTypeId"),
+                new PropertyByName<Product>("HasSampleDownload"),
+                new PropertyByName<Product>("SampleDownloadId"),
+                new PropertyByName<Product>("HasUserAgreement"),
+                new PropertyByName<Product>("UserAgreementText"),
+                new PropertyByName<Product>("IsRecurring"),
+                new PropertyByName<Product>("RecurringCycleLength"),
+                new PropertyByName<Product>("RecurringCyclePeriodId"),
+                new PropertyByName<Product>("RecurringTotalCycles"),
+                new PropertyByName<Product>("IsRental"),
+                new PropertyByName<Product>("RentalPriceLength"),
+                new PropertyByName<Product>("RentalPricePeriodId"),
+                new PropertyByName<Product>("IsShipEnabled"),
+                new PropertyByName<Product>("IsFreeShipping"),
+                new PropertyByName<Product>("ShipSeparately"),
+                new PropertyByName<Product>("AdditionalShippingCharge"),
+                new PropertyByName<Product>("DeliveryDateId"),
+                new PropertyByName<Product>("IsTaxExempt"),
+                new PropertyByName<Product>("TaxCategoryId"),
+                new PropertyByName<Product>("IsTelecommunicationsOrBroadcastingOrElectronicServices"),
+                new PropertyByName<Product>("ManageInventoryMethodId"),
+                new PropertyByName<Product>("UseMultipleWarehouses"),
+                new PropertyByName<Product>("WarehouseId"),
+                new PropertyByName<Product>("StockQuantity"),
+                new PropertyByName<Product>("DisplayStockAvailability"),
+                new PropertyByName<Product>("DisplayStockQuantity"),
+                new PropertyByName<Product>("MinStockQuantity"),
+                new PropertyByName<Product>("LowStockActivityId"),
+                new PropertyByName<Product>("NotifyAdminForQuantityBelow"),
+                new PropertyByName<Product>("BackorderModeId"),
+                new PropertyByName<Product>("AllowBackInStockSubscriptions"),
+                new PropertyByName<Product>("OrderMinimumQuantity"),
+                new PropertyByName<Product>("OrderMaximumQuantity"),
+                new PropertyByName<Product>("AllowedQuantities"),
+                new PropertyByName<Product>("AllowAddingOnlyExistingAttributeCombinations"),
+                new PropertyByName<Product>("DisableBuyButton"),
+                new PropertyByName<Product>("DisableWishlistButton"),
+                new PropertyByName<Product>("AvailableForPreOrder"),
+                new PropertyByName<Product>("PreOrderAvailabilityStartDateTimeUtc"),
+                new PropertyByName<Product>("CallForPrice"),
+                new PropertyByName<Product>("Price"),
+                new PropertyByName<Product>("OldPrice"),
+                new PropertyByName<Product>("ProductCost"),
+                new PropertyByName<Product>("SpecialPrice"),
+                new PropertyByName<Product>("SpecialPriceStartDateTimeUtc"),
+                new PropertyByName<Product>("SpecialPriceEndDateTimeUtc"),
+                new PropertyByName<Product>("CustomerEntersPrice"),
+                new PropertyByName<Product>("MinimumCustomerEnteredPrice"),
+                new PropertyByName<Product>("MaximumCustomerEnteredPrice"),
+                new PropertyByName<Product>("BasepriceEnabled"),
+                new PropertyByName<Product>("BasepriceAmount"),
+                new PropertyByName<Product>("BasepriceUnitId"),
+                new PropertyByName<Product>("BasepriceBaseAmount"),
+                new PropertyByName<Product>("BasepriceBaseUnitId"),
+                new PropertyByName<Product>("MarkAsNew"),
+                new PropertyByName<Product>("MarkAsNewStartDateTimeUtc"),
+                new PropertyByName<Product>("MarkAsNewEndDateTimeUtc"),
+                new PropertyByName<Product>("Weight"),
+                new PropertyByName<Product>("Length"),
+                new PropertyByName<Product>("Width"),
+                new PropertyByName<Product>("Height"),
+                new PropertyByName<Product>("CategoryIds"),
+                new PropertyByName<Product>("ManufacturerIds"),
+                new PropertyByName<Product>("Picture1"),
+                new PropertyByName<Product>("Picture2"),
+                new PropertyByName<Product>("Picture3")
+            };
 
             var manager = new PropertyManager<Product>(properties);
 
@@ -275,10 +379,12 @@ namespace Nop.Services.ExportImport
                         break;
 
                     var categoryIds = worksheet.Cells[endRow, categoryCellNum].Value.Return(p => p.ToString(), string.Empty);
-                    if(!categoryIds.IsEmpty())
+
+                    if (!categoryIds.IsEmpty())
                         allCategoriesIds.AddRange(categoryIds.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())));
 
                     var sku = worksheet.Cells[endRow, skuCellNum].Value.Return(p => p.ToString(), string.Empty);
+
                     if (!sku.IsEmpty())
                         allSku.Add(sku);
 
@@ -293,7 +399,7 @@ namespace Nop.Services.ExportImport
                 var notExistingCategories = _categoryService.GetNotExistingCategories(allCategoriesIds.ToArray());
                 if (notExistingCategories.Any())
                 {
-                    throw (new ArgumentException(string.Format("The following category ID(s) don't exist - {0}", string.Join(", ", notExistingCategories))));
+                    throw new ArgumentException(string.Format("The following category ID(s) don't exist - {0}", string.Join(", ", notExistingCategories)));
                 }
 
                 //performance optimization, the check for the existence of the manufacturers in one SQL request
@@ -312,11 +418,14 @@ namespace Nop.Services.ExportImport
                 //performance optimization, load all manufacturers IDs for products in one SQL request
                 var allProductsManufacturerIds = _manufacturerService.GetProductManufacturerIds(allProductsBySku.Select(p => p.Id).ToArray());
 
+                //product to import images
+                var productPictureMetadata = new List<ProductPictureMetadata>();
+
                 for (var iRow = 2; iRow < endRow; iRow++)
                 {
                     manager.ReadFromXlsx(worksheet, iRow);
 
-                    var product = allProductsBySku.FirstOrDefault(p=>p.Sku == manager.GetProperty("SKU").StringValue);
+                    var product = allProductsBySku.FirstOrDefault(p => p.Sku == manager.GetProperty("SKU").StringValue);
 
                     var isNew = product == null;
 
@@ -470,50 +579,24 @@ namespace Nop.Services.ExportImport
                         _manufacturerService.InsertProductManufacturer(productManufacturer);
                     }
 
-                    //pictures
-                    foreach (var picturePath in new[] { picture1, picture2, picture3 })
+                    productPictureMetadata.Add(new ProductPictureMetadata
                     {
-                        if (String.IsNullOrEmpty(picturePath))
-                            continue;
-
-                        var mimeType = GetMimeTypeFromFilePath(picturePath);
-                        var newPictureBinary = File.ReadAllBytes(picturePath);
-                        var pictureAlreadyExists = false;
-                        if (!isNew)
-                        {
-                            //compare with existing product pictures
-                            var existingPictures = _pictureService.GetPicturesByProductId(product.Id);
-                            foreach (var existingPicture in existingPictures)
-                            {
-                                var existingBinary = _pictureService.LoadPictureBinary(existingPicture);
-                                //picture binary after validation (like in database)
-                                var validatedPictureBinary = _pictureService.ValidatePicture(newPictureBinary, mimeType);
-                                if (!existingBinary.SequenceEqual(validatedPictureBinary) && !existingBinary.SequenceEqual(newPictureBinary))
-                                    continue;
-                                //the same picture content
-                                pictureAlreadyExists = true;
-                                break;
-                            }
-                        }
-
-                        if (pictureAlreadyExists)
-                            continue;
-                        var newPicture = _pictureService.InsertPicture(newPictureBinary, mimeType, _pictureService.GetPictureSeName(product.Name));
-                        product.ProductPictures.Add(new ProductPicture
-                        {
-                            //EF has some weird issue if we set "Picture = newPicture" instead of "PictureId = newPicture.Id"
-                            //pictures are duplicated
-                            //maybe because entity size is too large
-                            PictureId = newPicture.Id,
-                            DisplayOrder = 1,
-                        });
-                        _productService.UpdateProduct(product);
-                    }
+                        ProductItem = product,
+                        Picture1Path = picture1,
+                        Picture2Path = picture2,
+                        Picture3Path = picture3,
+                        IsNew = isNew
+                    });
 
                     //update "HasTierPrices" and "HasDiscountsApplied" properties
                     //_productService.UpdateHasTierPricesProperty(product);
                     //_productService.UpdateHasDiscountsApplied(product);
                 }
+               
+                if (_mediaSettings.ImportProductImagesUsingHash && _pictureService.StoreInDb && _dataProvider.SupportedLengthOfBinaryHash() > 0)
+                    ImportProductImagesUsingHash(productPictureMetadata, allProductsBySku);
+                else
+                    ImportProductImagesUsingServices(productPictureMetadata);
             }
             //Trace.WriteLine(DateTime.Now-start);
         }
@@ -786,7 +869,6 @@ namespace Nop.Services.ExportImport
 
                     manager.ReadFromXlsx(worksheet, iRow);
 
-
                     var category = _categoryService.GetCategoryById(manager.GetProperty("Id").IntValue);
 
                     var isNew = category == null;
@@ -827,6 +909,19 @@ namespace Nop.Services.ExportImport
                     iRow++;
                 }
             }
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        protected class ProductPictureMetadata
+        {
+            public Product ProductItem { get; set; }
+            public string Picture1Path { get; set; }
+            public string Picture2Path { get; set; }
+            public string Picture3Path { get; set; }
+            public bool IsNew { get; set; }
         }
 
         #endregion
