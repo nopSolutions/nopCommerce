@@ -295,6 +295,15 @@ table td .form-group {
     margin-bottom: 0;
 }
 
+.nav-tabs-custom .tab-pane > .panel.panel-default{
+    border: none;
+    box-shadow: none;
+}
+
+.nav-tabs-custom .tab-pane > .panel.panel-default .panel-body{
+    padding: 5px;
+}
+
 .sidebar-menu, .main-sidebar .user-panel, .sidebar-menu>li.header {
     white-space: normal;
 }
