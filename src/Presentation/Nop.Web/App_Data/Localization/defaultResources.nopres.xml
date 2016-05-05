@@ -5430,6 +5430,12 @@
   <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowGuestsToCreateTopics.Hint">
     <Value>Set if you want to allow guests to create topics.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPostVoting">
+    <Value>Allow users to vote for posts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPostVoting.Hint">
+    <Value>Set if you want to allow users to vote for posts.</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.AllowPrivateMessages">
     <Value>Allow private messages</Value>
   </LocaleResource>
@@ -5459,6 +5465,12 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.ForumsEnabled.Hint">
     <Value>Check to enable forums.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.MaxVotesPerDay">
+    <Value>Maximum votes per day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.MaxVotesPerDay.Hint">
+    <Value>Maximum number of votes for user per day.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Forums.NotifyAboutPrivateMessages">
     <Value>Notify about private messages</Value>
@@ -12785,6 +12797,21 @@
   </LocaleResource>
   <LocaleResource Name="Forum.UnwatchTopic">
     <Value>Unwatch Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Votes">
+    <Value>Votes</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Votes.AlreadyVoted">
+    <Value>You already voted for this post</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Votes.Login">
+    <Value>You need to log in to vote for post</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Votes.MaxVotesReached">
+    <Value>A maximum of {0} votes can be cast per user per day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Votes.OwnPost">
+    <Value>You cannot vote for your own post</Value>
   </LocaleResource>
   <LocaleResource Name="Forum.Views">
     <Value>Views</Value>

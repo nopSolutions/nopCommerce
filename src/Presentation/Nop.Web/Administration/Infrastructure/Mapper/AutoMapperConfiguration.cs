@@ -664,6 +664,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.AllowGuestsToCreateTopics_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToEditPosts_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToDeletePosts_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.AllowPostVoting_OverrideForStore, mo => mo.Ignore())
+                    .ForMember(dest => dest.MaxVotesPerDay_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.AllowCustomersToManageSubscriptions_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.TopicsPageSize_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.PostsPageSize_OverrideForStore, mo => mo.Ignore())

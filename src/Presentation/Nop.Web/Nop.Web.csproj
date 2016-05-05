@@ -1722,6 +1722,10 @@
     <Content Include="Themes\DefaultClean\Content\images\topic-type3.png" />
     <Content Include="Themes\DefaultClean\Content\images\view-grid.png" />
     <Content Include="Themes\DefaultClean\Content\images\view-list.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-down.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-down-selected.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-up.png" />
+    <Content Include="Themes\DefaultClean\Content\images\vote-up-selected.png" />
     <Content Include="Themes\DefaultClean\Content\images\watch.png" />
     <Content Include="Themes\DefaultClean\Content\images\wishlist-button.png" />
     <Content Include="Themes\DefaultClean\preview.jpg" />
