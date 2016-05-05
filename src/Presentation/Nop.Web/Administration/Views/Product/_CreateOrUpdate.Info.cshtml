@@ -68,27 +68,27 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.ProductTypeId)").val();
         if (selectedProductTypeId == @(((int) ProductType.SimpleProduct).ToString())) {
             $('#group-prices').show();
-            $('#group-required-other-products').show();
-            $('#group-giftcard').show();
-            $('#group-downloads').show();
-            $('#group-recurring').show();
-            $('#group-rental').show();
-            $('#group-shipping').show();
-            $('#group-tax').show();
-            $('#group-inventory').show();
-            $('[data-tab-name=tab-associated-products]').hide();
+        $('#group-required-other-products').show();
+        $('#group-giftcard').show();
+        $('#group-downloads').show();
+        $('#group-recurring').show();
+        $('#group-rental').show();
+        $('#group-shipping').show();
+        $('#group-tax').show();
+        $('#group-inventory').show();
+        $('[data-tab-name=tab-associated-products]').hide();
     } else if (selectedProductTypeId == @(((int) ProductType.GroupedProduct).ToString())) {
-            $('#group-prices').hide();
-            $('#group-required-other-products').hide();
-            $('#group-giftcard').hide();
-            $('#group-downloads').hide();
-            $('#group-recurring').hide();
-            $('#group-rental').hide();
-            $('#group-shipping').hide();
-            $('#group-tax').hide();
-            $('#group-inventory').hide();
-            $('[data-tab-name=tab-associated-products]').show();
-        }
+        $('#group-prices').hide();
+        $('#group-required-other-products').hide();
+        $('#group-giftcard').hide();
+        $('#group-downloads').hide();
+        $('#group-recurring').hide();
+        $('#group-rental').hide();
+        $('#group-shipping').hide();
+        $('#group-tax').hide();
+        $('#group-inventory').hide();
+        $('[data-tab-name=tab-associated-products]').show();
+    }
     }
 
     function togglePreOrder() {
@@ -238,17 +238,17 @@
         var selectedManageInventoryMethodId = $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").val();
         if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.DontManageStock).ToString())) {
             $('#pnlUseMultipleWarehouses').hide();
-            $('#pnlWarehouse').show();
-            $('#pnlMultipleWarehouses').hide();
-            $('#pnlStockQuantity').hide();
-            $('#pnlDisplayStockAvailability').hide();
-            $('#pnlDisplayStockQuantity').hide();
-            $('#pnlMinStockQuantity').hide();
-            $('#pnlLowStockActivity').hide();
-            $('#pnlNotifyForQuantityBelow').hide();
-            $('#pnlAllowBackInStockSubscriptions').hide();
-            $('#pnlBackorders').hide();
-            $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
+        $('#pnlWarehouse').show();
+        $('#pnlMultipleWarehouses').hide();
+        $('#pnlStockQuantity').hide();
+        $('#pnlDisplayStockAvailability').hide();
+        $('#pnlDisplayStockQuantity').hide();
+        $('#pnlMinStockQuantity').hide();
+        $('#pnlLowStockActivity').hide();
+        $('#pnlNotifyForQuantityBelow').hide();
+        $('#pnlAllowBackInStockSubscriptions').hide();
+        $('#pnlBackorders').hide();
+        $('#pnlAllowAddingOnlyExistingAttributeCombinations').hide();
     } else if (selectedManageInventoryMethodId == @(((int) ManageInventoryMethod.ManageStock).ToString())) {
         $('#pnlUseMultipleWarehouses').show();
 
@@ -452,70 +452,72 @@
         </div>
     </div>
 
-    <div class="panel panel-default no-border">
-        @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
-        @<div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].Name)
+    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
+        @<div class="panel panel-default no-border">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].Name)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Locales[item].Name)
-                    @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].ShortDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.Locales[item].ShortDescription)
+                        @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].ShortDescription)
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].FullDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(model => model.Locales[item].FullDescription, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopTextAreaFor(model => model.Locales[item].ShortDescription)
-                    @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].FullDescription)
-                </div>
-                <div class="col-sm-9">
-                    @Html.EditorFor(model => model.Locales[item].FullDescription, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.Locales[item].FullDescription)
-                </div>
-            </div>
-            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-        </div>
-                ,
-        @<div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Name)
-                </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Name)
-                    @Html.ValidationMessageFor(model => model.Name)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.ShortDescription)
-                </div>
-                <div class="col-sm-9">
-                    @Html.NopTextAreaFor(x => x.ShortDescription)
-                    @Html.ValidationMessageFor(model => model.ShortDescription)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.FullDescription)
-                </div>
-                <div class="col-sm-9">
-                    @Html.EditorFor(x => x.FullDescription, "RichEditor")
-                    @Html.ValidationMessageFor(model => model.FullDescription)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
         </div>
-            ))
-    </div>
+    ,
+        @<div class="panel panel-default">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Name)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Name)
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.ShortDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(x => x.ShortDescription)
+                        @Html.ValidationMessageFor(model => model.ShortDescription)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.FullDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.EditorFor(x => x.FullDescription, "RichEditor")
+                        @Html.ValidationMessageFor(model => model.FullDescription)
+                    </div>
+                </div>
+            </div>
+        </div>
+    ))
 
     <div class="panel panel-default">
         <div class="panel-body">
