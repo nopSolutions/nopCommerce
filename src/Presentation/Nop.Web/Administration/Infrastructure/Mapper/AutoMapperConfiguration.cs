@@ -642,7 +642,8 @@ namespace Nop.Admin.Infrastructure.Mapper
                     .ForMember(dest => dest.EuVatEmailAdminWhenNewVatSubmitted_OverrideForStore, mo => mo.Ignore())
                     .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
                 cfg.CreateMap<TaxSettingsModel, TaxSettings>()
-                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore());
+                    .ForMember(dest => dest.ActiveTaxProviderSystemName, mo => mo.Ignore())
+                    .ForMember(dest => dest.LogErrors, mo => mo.Ignore());
                 cfg.CreateMap<NewsSettings, NewsSettingsModel>()
                     .ForMember(dest => dest.ActiveStoreScopeConfiguration, mo => mo.Ignore())
                     .ForMember(dest => dest.Enabled_OverrideForStore, mo => mo.Ignore())
