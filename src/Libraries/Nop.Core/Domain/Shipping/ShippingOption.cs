@@ -13,6 +13,11 @@ namespace Nop.Core.Domain.Shipping
     /// </summary>
     public partial class ShippingOption
     {
+        public ShippingOption()
+        {
+            LimitPaymentList = new List<string>();
+        }
+
         /// <summary>
         /// Gets or sets the system name of shipping rate computation method
         /// </summary>
@@ -32,6 +37,11 @@ namespace Nop.Core.Domain.Shipping
         /// Gets or sets a shipping option description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Get or sets limit payment's name list.
+        /// </summary>
+        public List<string> LimitPaymentList { get; set; }
     }
 
 
