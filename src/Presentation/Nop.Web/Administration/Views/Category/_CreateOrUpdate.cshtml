@@ -65,9 +65,9 @@
     </script>
 
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-info-localized",
+        @<div class="panel panel-default no-border">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -86,12 +86,12 @@
                         @Html.ValidationMessageFor(model => model.Locales[item].Description)
                     </div>
                 </div>
-                <div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+        </div>
     ,
-            @<div class="panel-body">
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Name)
@@ -111,8 +111,8 @@
                     </div>
                 </div>
             </div>
-                      ))
         </div>
+    ))
 
         <div class="panel panel-default">
             <div class="panel-body">
@@ -223,9 +223,9 @@
 @helper TabSeo()
 {
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<CategoryModel, CategoryLocalizedModel>("category-seo-localized",
+        @<div class="panel panel-default no-border">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
@@ -264,8 +264,10 @@
                 </div>
                 @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+        </div>
     ,
-            @<div class="panel-body">
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.MetaKeywords)
@@ -302,8 +304,8 @@
                         @Html.ValidationMessageFor(model => model.SeName)
                     </div>
                 </div>
-            </div>))
-        </div>
+            </div>
+        </div>))
     </div>
 }
 
@@ -473,7 +475,7 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="SelectedDiscountIds" value="@discount.Id"
-                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>   } />
+                                       @if (Model.SelectedDiscountIds != null && Model.SelectedDiscountIds.Contains(discount.Id)) { <text> checked="checked" </text>      } />
                                 @discount.Name
                             </label>
                         </div>
