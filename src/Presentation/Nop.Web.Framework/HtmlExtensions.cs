@@ -69,8 +69,8 @@ namespace Nop.Web.Framework
                     tabStrip.AppendLine("<li class=\"active\">");
                     tabStrip.AppendLine(
                         string.Format(
-                            "<a data-tab-name=\"{0}-localized-tab\" href=\"#{0}-localized-tab\" data-toggle=\"tab\">{1}</a>",
-                            "standard", "Standard"));
+                            "<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\">{2}</a>",
+                            name, "standard", "Standard"));
                     tabStrip.AppendLine("</li>");
 
                     foreach (var locale in helper.ViewData.Model.Locales)
@@ -83,19 +83,17 @@ namespace Nop.Web.Framework
                         var iconUrl = urlHelper.Content("~/Content/images/flags/" + language.FlagImageFileName);
                         tabStrip.AppendLine(
                             string.Format(
-                                "<a data-tab-name=\"{0}-localized-tab\" href=\"#{0}-localized-tab\" data-toggle=\"tab\"><img alt='' src='{1}'>{2}</a>",
-                                HttpUtility.HtmlEncode(language.Name).ToLower(), iconUrl,
+                                "<a data-tab-name=\"{0}-{1}-tab\" href=\"#{0}-{1}-tab\" data-toggle=\"tab\"><img alt='' src='{2}'>{3}</a>",
+                                name, HttpUtility.HtmlEncode(language.Name).ToLower(), iconUrl,
                                 HttpUtility.HtmlEncode(language.Name)));
 
                         tabStrip.AppendLine("</li>");
                     }
                     tabStrip.AppendLine("</ul>");
-
-
-
+                    
                     //default tab
                     tabStrip.AppendLine("<div class=\"tab-content\">");
-                    tabStrip.AppendLine("<div class=\"tab-pane active\" id=\"standard-localized-tab\">");
+                    tabStrip.AppendLine(string.Format("<div class=\"tab-pane active\" id=\"{0}-{1}-tab\">", name, "standard"));
                     tabStrip.AppendLine(standardTemplate(helper.ViewData.Model).ToHtmlString());
                     tabStrip.AppendLine("</div>");
 
@@ -106,8 +104,8 @@ namespace Nop.Web.Framework
                             EngineContext.Current.Resolve<ILanguageService>()
                                 .GetLanguageById(helper.ViewData.Model.Locales[i].LanguageId);
 
-                        tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-localized-tab\">",
-                            HttpUtility.HtmlEncode(language.Name).ToLower()));
+                        tabStrip.AppendLine(string.Format("<div class=\"tab-pane\" id=\"{0}-{1}-tab\">",
+                                            name, HttpUtility.HtmlEncode(language.Name).ToLower()));
                         tabStrip.AppendLine(localizedTemplate(i).ToHtmlString());
                         tabStrip.AppendLine("</div>");
                     }
