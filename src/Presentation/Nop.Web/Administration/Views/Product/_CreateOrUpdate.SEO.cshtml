@@ -1,51 +1,53 @@
 ﻿@model ProductModel
 
 <div class="panel-group">
-    <div class="panel panel-default no-border">
-        @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
-        @<div class="panel-body">
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+    @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
+        @<div class="panel panel-default no-border">
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
-                    @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
+                        @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
+                    </div>
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
-                    @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
+                <div class="form-group">
+                    <div class="col-sm-3">
+                        @Html.NopLabelFor(model => model.Locales[item].SeName)
+                    </div>
+                    <div class="col-sm-9">
+                        @Html.NopEditorFor(model => model.Locales[item].SeName)
+                        @Html.ValidationMessageFor(model => model.Locales[item].SeName)
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
+                <div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
-                    @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-3">
-                    @Html.NopLabelFor(model => model.Locales[item].SeName)
-                </div>
-                <div class="col-sm-9">
-                    @Html.NopEditorFor(model => model.Locales[item].SeName)
-                    @Html.ValidationMessageFor(model => model.Locales[item].SeName)
-                </div>
-            </div>
-            <div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
         </div>
     ,
-        @<div class="panel-body">
+    @<div class="panel panel-default">
+        <div class="panel-body">
             <div class="form-group">
                 <div class="col-sm-3">
                     @Html.NopLabelFor(model => model.MetaKeywords)
@@ -82,6 +84,6 @@
                     @Html.ValidationMessageFor(model => model.SeName)
                 </div>
             </div>
-        </div>))
-    </div>
+        </div>
+    </div>))
 </div>
