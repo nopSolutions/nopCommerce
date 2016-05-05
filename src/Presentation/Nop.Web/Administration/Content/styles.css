@@ -44,11 +44,6 @@ table.adminContent {
     margin-top: 3px;
 }
 
-.form-group p {
-    margin-top: 6px;
-    margin-bottom: 0px;
-}
-
 .tag-editor {
     border: 1px solid #d2d6de !important;
     line-height: 26px !important;
@@ -314,4 +309,9 @@ input[type=file].form-control {
 
 .qq-upload-list li.qq-upload-success {
     background-color: #3c8dbc !important;
+}
+
+.form-group > div > a {
+    display: inline-block;
+    padding-top: 7px;
 }
