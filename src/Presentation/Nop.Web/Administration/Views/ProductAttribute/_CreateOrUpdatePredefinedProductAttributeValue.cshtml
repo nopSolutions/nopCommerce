@@ -16,9 +16,9 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default no-border">
-                @(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
-                @<div class="panel-body">
+            @(Html.LocalizedEditor<PredefinedProductAttributeValueModel, PredefinedProductAttributeValueLocalizedModel>("productattributevalue-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -30,8 +30,10 @@
                     </div>
                     @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-,
-                @<div class="panel-body">
+            </div>
+    ,
+            @<div class="panel panel-default">
+                <div class="panel-body">
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.Name)
@@ -42,8 +44,8 @@
                         </div>
                     </div>
                 </div>
-                ))
             </div>
+    ))
 
             <div class="panel panel-default">
                 <div class="panel-body">
