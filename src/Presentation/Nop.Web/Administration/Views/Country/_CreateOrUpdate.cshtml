@@ -4,7 +4,7 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         bindBootstrapTabSelectEvent('country-edit');
     });
 </script>
@@ -43,37 +43,38 @@
 @helper TabInfo()
 {
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
+        @(Html.LocalizedEditor<CountryModel, CountryLocalizedModel>("country-info-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                    </div>
-                </div>
-                <div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
-            </div>
-                ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Name)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
+                    <div>
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
                     </div>
                 </div>
             </div>
-            ))
-        </div>
-
+    ,
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
+                    </div>
+                </div>
+            </div>
+    ))
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
@@ -274,7 +275,7 @@
 @helper TabStores()
 {
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#@Html.FieldIdFor(model => model.LimitedToStores)").click(toggleStoreMapping);
             toggleStoreMapping();
         });
@@ -312,7 +313,7 @@
                             {
                                 <div class="checkbox">
                                     <label>
-                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))"/>@store.Name
+                                        <input type="checkbox" name="SelectedStoreIds" value="@store.Id" checked="@(Model.SelectedStoreIds != null && Model.SelectedStoreIds.Contains(store.Id))" />@store.Name
                                     </label>
                                 </div>
                             }
