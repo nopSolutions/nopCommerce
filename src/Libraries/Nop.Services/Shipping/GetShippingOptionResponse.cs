@@ -28,7 +28,7 @@ namespace Nop.Services.Shipping
         public bool ShippingFromMultipleLocations { get; set; }
 
         /// <summary>
-        /// Gets or sets an address
+        /// Gets or sets an Errors
         /// </summary>
         public IList<string> Errors { get; set; }
 
