@@ -92,6 +92,7 @@ table.adminContent {
 .k-numeric-wrap.k-state-default {
     border-radius: 0;
     border: none;
+    height: 34px;
 }
 
 .k-picker-wrap.k-state-default>.k-select,
