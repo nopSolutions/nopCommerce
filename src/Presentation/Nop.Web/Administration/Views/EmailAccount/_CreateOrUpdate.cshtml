@@ -69,7 +69,7 @@
                                 &nbsp;
                             </div>
                             <div class="col-sm-9">
-                                <input type="submit" name="changepassword" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")"/>
+                                <input type="submit" name="changepassword" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
                             </div>
                         </div>
                     }
@@ -93,34 +93,34 @@
                     </div>
                 </div>
             </div>
-        </div>
-        @if (Model.Id > 0)
-        {
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <strong>@T("Admin.Configuration.EmailAccounts.SendTestEmail")</strong>
+            @if (Model.Id > 0)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <strong>@T("Admin.Configuration.EmailAccounts.SendTestEmail")</strong>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.SendTestEmailTo)
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.SendTestEmailTo)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.SendTestEmailTo)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.SendTestEmailTo)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="submit" name="sendtestemail" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                &nbsp;
+                            </div>
+                            <div class="col-sm-9">
+                                <input type="submit" name="sendtestemail" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>
