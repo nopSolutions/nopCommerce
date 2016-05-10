@@ -63,7 +63,7 @@ table.adminContent {
     border-color: #d2d6de !important;
 }
 
-.k-grid tbody td>.k-button {
+.k-button {
     display: inline-block;
     padding: 6px 12px;
     margin-bottom: 0;
@@ -87,6 +87,26 @@ table.adminContent {
     color: #444;
     border-color: #ddd;
 }
+
+.k-button:hover, .k-button:focus, .k-button.k-state-focused {
+    background-color: #e7e7e7;
+    background-image: none;
+    color: #333;
+    border-color: #adadad;
+    text-decoration: none;
+}
+
+.k-button:active {
+    color: #333;
+    background-color: #e7e7e7;
+    border-color: #adadad;
+}
+
+.k-button:focus:active:not(.k-state-disabled):not([disabled]) {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
 
 .k-picker-wrap.k-state-default, 
 .k-numeric-wrap.k-state-default {
@@ -340,4 +360,8 @@ input[type=file].form-control {
 .k-numerictextbox, .k-dropdown, .k-selectbox, 
 .k-textbox, .k-datetimepicker {
     width: 200px !important;
+}
+
+.k-window-titlebar {
+    height: 2em;
 }
