@@ -1062,7 +1062,7 @@ BEGIN
 		END
 
 		--PRINT (@sql)
-		EXEC sp_executesql @sql, N'@Keywords nvarchar(4000)', @Keywords
+		EXEC sp_executesql @sql, N'@Keywords nvarchar(4000), @OriginalKeywords nvarchar(4000)', @Keywords, @OriginalKeywords
 
 	END
 	ELSE

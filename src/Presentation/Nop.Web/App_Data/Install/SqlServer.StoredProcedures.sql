@@ -116,7 +116,6 @@ BEGIN
 	SET @Keywords = isnull(@Keywords, '')
 	SET @Keywords = rtrim(ltrim(@Keywords))
 	SET @OriginalKeywords = @Keywords
-	PRINT @OriginalKeywords
 	IF ISNULL(@Keywords, '') != ''
 	BEGIN
 		SET @SearchKeywords = 1
