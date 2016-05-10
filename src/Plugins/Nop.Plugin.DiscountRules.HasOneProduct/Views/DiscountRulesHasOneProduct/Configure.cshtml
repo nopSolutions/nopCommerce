@@ -62,18 +62,21 @@
             @T("Common.Wait...")
         </div>
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-9">
         <input type="submit"
                id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                value="@T("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew")"
-               onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 800, true); return false;" 
-               class="btn btn-default" />
-        <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none" />
+               onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 800, true); return false;"
+               class="btn btn-default"/>
+        <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
     </div>
-    <div class="col-sm-8">
+</div>
+<div>
+    <div class="col-sm-9 col-sm-offset-3">
         <p id="discountrequirement-product-names@(Model.RequirementId)"></p>
     </div>
 </div>
+
 
 <script type="text/javascript">
     $(document).ready(function() {
