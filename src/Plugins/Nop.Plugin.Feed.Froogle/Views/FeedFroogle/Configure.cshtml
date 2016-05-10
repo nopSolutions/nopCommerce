@@ -155,23 +155,60 @@ var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAr
                 </p>
 
                 <script id="google-popup-editor" type="text/x-kendo-template">
-                    <div class="editor-label"><label for="GoogleCategory">@T("Plugins.Feed.Froogle.Products.GoogleCategory")</label></div>
-                    <div class="editor-field"><input name="GoogleCategory" /></div>
-
-                    <div class="editor-label"><label for="Gender">@T("Plugins.Feed.Froogle.Products.Gender")</label></div>
-                    <div class="editor-field"><input name="Gender" /></div>
-
-                    <div class="editor-label"><label for="AgeGroup">@T("Plugins.Feed.Froogle.Products.AgeGroup")</label></div>
-                    <div class="editor-field"><input name="AgeGroup" /></div>
-
-                    <div class="editor-label"><label for="Color">@T("Plugins.Feed.Froogle.Products.Color")</label></div>
-                    <div class="editor-field"><input name="Color" /></div>
-
-                    <div class="editor-label"><label for="GoogleSize">@T("Plugins.Feed.Froogle.Products.Size")</label></div>
-                    <div class="editor-field"><input name="GoogleSize" /></div>
-
-                    <div class="editor-label"><label for="CustomGoods">@T("Plugins.Feed.Froogle.Products.CustomGoods")</label></div>
-                    <div class="editor-field"><input name="CustomGoods" type="checkbox" /></div>
+                    <div class="content" style="width: 360px;">
+                        <div class="form-horizontal">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="GoogleCategory" class="control-label">@T("Plugins.Feed.Froogle.Products.GoogleCategory")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="GoogleCategory" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="Gender" class="control-label">@T("Plugins.Feed.Froogle.Products.Gender")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="Gender" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="AgeGroup" class="control-label">@T("Plugins.Feed.Froogle.Products.AgeGroup")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="AgeGroup" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="Color" class="control-label">@T("Plugins.Feed.Froogle.Products.Color")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="Color" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="GoogleSize" class="control-label">@T("Plugins.Feed.Froogle.Products.Size")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="GoogleSize" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <label for="CustomGoods" class="control-label">@T("Plugins.Feed.Froogle.Products.CustomGoods")</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input name="CustomGoods" type="checkbox" />
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
                 </script>
 
                 <div id="froogleproducts-grid"></div>
