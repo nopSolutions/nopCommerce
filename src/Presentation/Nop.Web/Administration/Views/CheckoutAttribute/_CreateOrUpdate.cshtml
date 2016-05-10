@@ -499,10 +499,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-3">
-                                    &nbsp;
-                                </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-9 col-sm-offset-3">
                                     @for (int i = 0; i < Model.ConditionModel.ConditionAttributes.Count; i++)
                                     {
                                         @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Id)
@@ -553,10 +550,7 @@
                         else
                         {
                             <div class="form-group">
-                                <div class="col-sm-3">
-                                    &nbsp;
-                                </div>
-                                <div class="col-sm-9">
+                                <div class="col-sm-9 col-sm-offset-3">
                                     @T("Admin.Catalog.Attributes.CheckoutAttributes.Condition.NoAttributeExists")
                                 </div>
                             </div>

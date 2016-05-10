@@ -474,10 +474,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 col-sm-offset-3">
                         <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="btn bg-light-blue" />
                         <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="btn bg-teal" />
@@ -559,10 +556,7 @@
                 if (Model.AllowStoringCreditCardNumber)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
-                            &nbsp;
-                        </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 col-sm-offset-3">
                             <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick="toggleCC(true);return false; " id="btnEditCC" class="btn bg-light-blue" />
                             <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btn bg-light-blue" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                             <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="btn bg-teal"/>
@@ -628,10 +622,7 @@
                 Model.CanPartiallyRefund || Model.CanPartiallyRefundOffline || Model.CanVoid || Model.CanVoidOffline)
             {
                 <div class="form-group">
-                    <div class="col-sm-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 col-sm-offset-3">
                         @if (!Model.IsLoggedInAsVendor)
                         {
                             if (Model.CanCapture)
