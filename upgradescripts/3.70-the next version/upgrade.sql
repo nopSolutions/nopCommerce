@@ -861,6 +861,7 @@ BEGIN
 
 	DECLARE
 		@SearchKeywords bit,
+		@OriginalKeywords nvarchar(4000),
 		@sql nvarchar(max),
 		@sql_orderby nvarchar(max)
 
@@ -869,6 +870,7 @@ BEGIN
 	--filter by keywords
 	SET @Keywords = isnull(@Keywords, '')
 	SET @Keywords = rtrim(ltrim(@Keywords))
+	SET @OriginalKeywords = @Keywords
 	IF ISNULL(@Keywords, '') != ''
 	BEGIN
 		SET @SearchKeywords = 1
@@ -1028,30 +1030,26 @@ BEGIN
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
 		END
 
-		--SKU
+		--SKU (exact match)
 		IF @SearchSku = 1
 		BEGIN
 			SET @sql = @sql + '
 			UNION
 			SELECT p.Id
 			FROM Product p with (NOLOCK)
-			WHERE PATINDEX(@Keywords, p.[Sku]) > 0 '
+			WHERE p.[Sku] = @OriginalKeywords '
 		END
 
 		IF @SearchProductTags = 1
 		BEGIN
-			--product tag
+			--product tags (exact match)
 			SET @sql = @sql + '
 			UNION
 			SELECT pptm.Product_Id
 			FROM Product_ProductTag_Mapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTag_Id
-			WHERE '
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + 'CONTAINS(pt.[Name], @Keywords) '
-			ELSE
-				SET @sql = @sql + 'PATINDEX(@Keywords, pt.[Name]) > 0 '
+			WHERE pt.[Name] = @OriginalKeywords '
 
-			--localized product tag
+			--localized product tags
 			SET @sql = @sql + '
 			UNION
 			SELECT pptm.Product_Id
@@ -1059,11 +1057,8 @@ BEGIN
 			WHERE
 				lp.LocaleKeyGroup = N''ProductTag''
 				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-				AND lp.LocaleKey = N''Name'''
-			IF @UseFullTextSearch = 1
-				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
-			ELSE
-				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+				AND lp.LocaleKey = N''Name''
+				AND lp.[LocaleValue] = @OriginalKeywords '
 		END
 
 		--PRINT (@sql)
