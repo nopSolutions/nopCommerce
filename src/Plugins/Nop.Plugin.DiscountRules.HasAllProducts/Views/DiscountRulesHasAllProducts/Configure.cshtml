@@ -62,7 +62,7 @@
             @T("Common.Wait...")
         </div>
     </div>
-    <div class="col-sm-1">
+    <div class="col-sm-9">
         <input type="submit"
                id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                value="@T("Plugins.DiscountRules.HasAllProducts.Fields.Products.AddNew")"
@@ -70,10 +70,13 @@
                class="btn btn-default"/>
         <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
     </div>
-    <div class="col-sm-8">
+</div>
+<div>
+    <div class="col-sm-9 col-sm-offset-3">
         <p id="discountrequirement-product-names@(Model.RequirementId)"></p>
     </div>
 </div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
