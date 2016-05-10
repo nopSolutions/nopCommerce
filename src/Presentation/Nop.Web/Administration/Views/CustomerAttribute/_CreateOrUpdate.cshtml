@@ -5,7 +5,7 @@
 @Html.HiddenFor(model => model.Id)
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         bindBootstrapTabSelectEvent('customerattribute-edit');
     });
 </script>
@@ -41,9 +41,9 @@
 @helper TabInfo()
 {
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<CustomerAttributeModel, CustomerAttributeLocalizedModel>("customerattribute-localized",
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -53,12 +53,12 @@
                         @Html.ValidationMessageFor(model => model.Locales[item].Name)
                     </div>
                 </div>
-                <div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+        </div>
     ,
-            @<div class="panel-body">
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Name)
@@ -69,9 +69,8 @@
                     </div>
                 </div>
             </div>
-                  ))
         </div>
-
+            ))
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">

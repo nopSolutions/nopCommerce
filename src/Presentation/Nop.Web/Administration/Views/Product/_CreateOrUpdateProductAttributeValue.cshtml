@@ -32,16 +32,16 @@
         var selectedProductTypeId = $("#@Html.FieldIdFor(model => model.AttributeValueTypeId)").val();
         if (selectedProductTypeId == @(((int) AttributeValueType.Simple).ToString())) {
             $('#group-associated-product').hide();
-            $('#group-quantity').hide();
-            $('#group-price-adjustment').show();
-            $('#group-weight-adjustment').show();
-            $('#group-cost').show();
+        $('#group-quantity').hide();
+        $('#group-price-adjustment').show();
+        $('#group-weight-adjustment').show();
+        $('#group-cost').show();
     } else if (selectedProductTypeId == @(((int) AttributeValueType.AssociatedToProduct).ToString())) {
-            $('#group-associated-product').show();
-            $('#group-quantity').show();
-            $('#group-price-adjustment').hide();
-            $('#group-weight-adjustment').hide();
-            $('#group-cost').hide();
+        $('#group-associated-product').show();
+        $('#group-quantity').show();
+        $('#group-price-adjustment').hide();
+        $('#group-weight-adjustment').hide();
+        $('#group-cost').hide();
     }
     }
 </script>
@@ -83,36 +83,36 @@
                 </div>
             </div>
 
-            <div class="panel panel-default no-border">
-                @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
-                @<div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Name)
+            @(Html.LocalizedEditor<ProductModel.ProductAttributeValueModel, ProductModel.ProductAttributeValueLocalizedModel>("productattributevalue-localized",
+                @<div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Locales[item].Name)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Locales[item].Name)
+                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-
-                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                        </div>
+                        @Html.HiddenFor(model => model.Locales[item].LanguageId)
                     </div>
                 </div>
     ,
-                @<div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Name)
-                        </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Name)
-                            @Html.ValidationMessageFor(model => model.Name)
+                @<div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Name)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
                         </div>
                     </div>
                 </div>
     ))
-            </div>
-
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.DisplayColorSquaresRgb)
@@ -199,7 +199,7 @@
                                 <li style="float: left; width: 110px;">
                                     <p style="float: left; padding-top: 20px;">
                                         <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="0" id="id_image_0"
-                                               @if (Model.PictureId == 0) { <text> checked="checked" </text>                           }>
+                                               @if (Model.PictureId == 0) { <text> checked="checked" </text>                            }>
                                     </p>
                                     <p style="float: left; padding-top: 20px;">
                                         <label for="id_image_0">
@@ -212,7 +212,7 @@
                                     <li style="float: left; width: 110px;">
                                         <p style="float: left; padding-top: 20px;">
                                             <input type="radio" name="@Html.FieldNameFor(x => x.PictureId)" value="@picture.PictureId" id="id_image_@picture.PictureId"
-                                                   @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>                           }>
+                                                   @if (picture.PictureId == Model.PictureId) { <text> checked="checked" </text>                            }>
                                         </p>
                                         <p style="float: left;">
                                             <label for="id_image_@picture.PictureId">

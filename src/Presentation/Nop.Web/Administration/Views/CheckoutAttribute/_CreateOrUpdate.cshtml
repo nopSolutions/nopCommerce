@@ -72,80 +72,81 @@
             var selectedAttributeControlTypeId = $("#@Html.FieldIdFor(model => model.AttributeControlTypeId)").val();
             if (selectedAttributeControlTypeId == @(((int) AttributeControlType.TextBox).ToString())) {
                 $('#pnlValidationMinLength').show();
-                $('#pnlValidationMaxLength').show();
-                $('#pnlValidationFileMaximumSize').hide();
-                $('#pnlValidationFileAllowedExtensions').hide();
-                $('#pnlDefaultValue').show();
-            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
-                $('#pnlValidationMinLength').show();
-                $('#pnlValidationMaxLength').show();
-                $('#pnlValidationFileMaximumSize').hide();
-                $('#pnlValidationFileAllowedExtensions').hide();
-                $('#pnlDefaultValue').show();
-            } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationFileMaximumSize').hide();
+            $('#pnlValidationFileAllowedExtensions').hide();
+            $('#pnlDefaultValue').show();
+        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.MultilineTextbox).ToString())) {
+            $('#pnlValidationMinLength').show();
+            $('#pnlValidationMaxLength').show();
+            $('#pnlValidationFileMaximumSize').hide();
+            $('#pnlValidationFileAllowedExtensions').hide();
+            $('#pnlDefaultValue').show();
+        } else if (selectedAttributeControlTypeId == @(((int) AttributeControlType.FileUpload).ToString())) {
+            $('#pnlValidationMinLength').hide();
+            $('#pnlValidationMaxLength').hide();
+            $('#pnlValidationFileMaximumSize').show();
+            $('#pnlValidationFileAllowedExtensions').show();
+            $('#pnlDefaultValue').hide();
+        } else {
                 $('#pnlValidationMinLength').hide();
-                $('#pnlValidationMaxLength').hide();
-                $('#pnlValidationFileMaximumSize').show();
-                $('#pnlValidationFileAllowedExtensions').show();
-                $('#pnlDefaultValue').hide();
-            } else {
-                $('#pnlValidationMinLength').hide();
-                $('#pnlValidationMaxLength').hide();
-                $('#pnlValidationFileMaximumSize').hide();
-                $('#pnlValidationFileAllowedExtensions').hide();
-                $('#pnlDefaultValue').hide();
-            }
+        $('#pnlValidationMaxLength').hide();
+        $('#pnlValidationFileMaximumSize').hide();
+        $('#pnlValidationFileAllowedExtensions').hide();
+        $('#pnlDefaultValue').hide();
+        }
         }
     </script>
 
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].Name)
+        @(Html.LocalizedEditor<CheckoutAttributeModel, CheckoutAttributeLocalizedModel>("checkoutattribute-localized",
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].Name)
-                        @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Locales[item].TextPrompt)
+                            @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
+                        </div>
                     </div>
+                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Locales[item].TextPrompt)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Locales[item].TextPrompt)
-                        @Html.ValidationMessageFor(model => model.Locales[item].TextPrompt)
-                    </div>
-                </div>
-                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
     ,
-            @<div class="panel-body">
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.Name)
+            @<div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.Name)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </div>
                     </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.Name)
-                        @Html.ValidationMessageFor(model => model.Name)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.TextPrompt)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.TextPrompt)
-                        @Html.ValidationMessageFor(model => model.TextPrompt)
+                    <div class="form-group">
+                        <div class="col-sm-3">
+                            @Html.NopLabelFor(model => model.TextPrompt)
+                        </div>
+                        <div class="col-sm-9">
+                            @Html.NopEditorFor(model => model.TextPrompt)
+                            @Html.ValidationMessageFor(model => model.TextPrompt)
+                        </div>
                     </div>
                 </div>
             </div>
     ))
-        </div>
-
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">

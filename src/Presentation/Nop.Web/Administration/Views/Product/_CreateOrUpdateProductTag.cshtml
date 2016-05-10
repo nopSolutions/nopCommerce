@@ -15,24 +15,24 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default no-border">
-                @(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
-                @<div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-sm-3">
-                            @Html.NopLabelFor(model => model.Locales[item].Name)
+            @(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
+                @<div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                @Html.NopLabelFor(model => model.Locales[item].Name)
+                            </div>
+                            <div class="col-sm-9">
+                                @Html.NopEditorFor(model => model.Locales[item].Name)
+                                @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                            </div>
                         </div>
-                        <div class="col-sm-9">
-                            @Html.NopEditorFor(model => model.Locales[item].Name)
-                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
-                        </div>
-                    </div>
-                    <div>
                         @Html.HiddenFor(model => model.Locales[item].LanguageId)
                     </div>
                 </div>
     ,
-                @<div class="panel-body">
+            @<div class="panel panel-default">
+                <div class="panel-body">
                     <div class="form-group">
                         <div class="col-sm-3">
                             @Html.NopLabelFor(model => model.Name)
@@ -43,8 +43,8 @@
                         </div>
                     </div>
                 </div>
-              ))
             </div>
+    ))
         </div>
     </div>
 </div>

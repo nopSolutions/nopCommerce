@@ -65,9 +65,9 @@
     </script>
 
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-info-localized",
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].Name)
@@ -86,12 +86,12 @@
                         @Html.ValidationMessageFor(model => model.Locales[item].Description)
                     </div>
                 </div>
-                <div>
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
+        </div>
     ,
-            @<div class="panel-body">
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Name)
@@ -111,8 +111,8 @@
                     </div>
                 </div>
             </div>
-                      ))
         </div>
+    ))
 
         <div class="panel panel-default">
             <div class="panel-body">
@@ -139,7 +139,7 @@
                                     @Html.ActionLink(Model.AssociatedCustomers[i].Email, "Edit", "Customer", new { id = Model.AssociatedCustomers[i].Id }, new { })
                                     if (i != Model.AssociatedCustomers.Count - 1)
                                     {
-                                        <text>, </text>
+                                        <text>,  </text>
                                     }
                                 }
                             }
@@ -221,9 +221,9 @@
 @helper TabSeo()
 {
     <div class="panel-group">
-        <div class="panel panel-default no-border">
-            @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
-            @<div class="panel-body">
+        @(Html.LocalizedEditor<VendorModel, VendorLocalizedModel>("vendor-seo-localized",
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
@@ -260,12 +260,12 @@
                         @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                     </div>
                 </div>
-                <div class="form-group">
-                    @Html.HiddenFor(model => model.Locales[item].LanguageId)
-                </div>
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
             </div>
-        ,
-            @<div class="panel-body">
+        </div>
+    ,
+        @<div class="panel panel-default">
+            <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.MetaKeywords)
@@ -302,8 +302,8 @@
                         @Html.ValidationMessageFor(model => model.SeName)
                     </div>
                 </div>
-            </div>))
-        </div>
+            </div>
+        </div>))
     </div>
 }
 
@@ -417,33 +417,33 @@
     </div>
 
     <script type="text/javascript">
-            $(document).ready(function () {
-                $('#addVendorNote').click(function () {
-                    var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
-                    $('#addVendorNote').attr('disabled', true);
+        $(document).ready(function () {
+            $('#addVendorNote').click(function () {
+                var vendorNoteMessage = $("#@Html.FieldIdFor(model => model.AddVendorNoteMessage)").val();
+                $('#addVendorNote').attr('disabled', true);
 
-                    var postData = {
-                        message: vendorNoteMessage,
-                        vendorId: @Model.Id
-                        };
-                    addAntiForgeryToken(postData);
+                var postData = {
+                    message: vendorNoteMessage,
+                    vendorId: @Model.Id
+                    };
+                addAntiForgeryToken(postData);
 
-                    $.ajax({
-                        cache:false,
-                        type: "POST",
-                        url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
-                        data: postData,
-                        success: function (data) {
-                            var grid = $("#vendornotes-grid").data('kendoGrid');
-                            grid.dataSource.read();
-                            $('#addVendorNote').attr('disabled', false);
-                        },
-                        error:function (xhr, ajaxOptions, thrownError){
-                            alert('Failed to add vendor note.');
-                            $('#addVendorNote').attr('disabled', false);
-                        }
-                    });
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("VendorNoteAdd", "Vendor"))",
+                    data: postData,
+                    success: function (data) {
+                        var grid = $("#vendornotes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+                        $('#addVendorNote').attr('disabled', false);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add vendor note.');
+                        $('#addVendorNote').attr('disabled', false);
+                    }
                 });
             });
+        });
     </script>
 }
