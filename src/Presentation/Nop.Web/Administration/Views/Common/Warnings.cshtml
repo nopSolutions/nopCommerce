@@ -17,41 +17,39 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="system-warnings">
-                <ul>
+            <div class="panel panel-default">
+                <div class="panel-body">
                     @foreach (var warning in Model)
                     {
-                        <li>
-                            @switch (warning.Level)
-                            {
-                                case SystemWarningLevel.Pass:
-                                    {
-                                        <p class="text-green">
-                                            <i class="icon fa fa-check"></i>
-                                            @warning.Text
-                                        </p>
-                                    }
-                                    break;
-                                case SystemWarningLevel.Warning:
-                                    {
-                                        <p class="text-yellow">
-                                            <i class="icon fa fa-warning"></i>
-                                            @warning.Text
-                                        </p>
-                                    }
-                                    break;
-                                case SystemWarningLevel.Fail:
-                                    {
-                                        <p class="text-red">
-                                            <i class="icon fa fa-ban"></i>
-                                            @warning.Text
-                                        </p>
-                                    }
-                                    break;
-                            }
-                        </li>
+                        switch (warning.Level)
+                        {
+                            case SystemWarningLevel.Pass:
+                                {
+                                    <p class="text-green">
+                                        <i class="icon fa fa-check"></i>
+                                        @warning.Text
+                                    </p>
+                                }
+                                break;
+                            case SystemWarningLevel.Warning:
+                                {
+                                    <p class="text-yellow">
+                                        <i class="icon fa fa-warning"></i>
+                                        @warning.Text
+                                    </p>
+                                }
+                                break;
+                            case SystemWarningLevel.Fail:
+                                {
+                                    <p class="text-red">
+                                        <i class="icon fa fa-ban"></i>
+                                        @warning.Text
+                                    </p>
+                                }
+                                break;
+                        }
                     }
-                </ul>
+                </div>
             </div>
         </div>
     </div>
