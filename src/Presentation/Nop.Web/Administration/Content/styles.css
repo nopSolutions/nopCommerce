@@ -334,3 +334,10 @@ input[type=file].form-control {
     display: inline-block;
     padding-top: 7px;
 }
+
+.k-autocomplete, .k-combobox, .k-datepicker, 
+.k-timepicker, .k-datetimepicker, .k-colorpicker, 
+.k-numerictextbox, .k-dropdown, .k-selectbox, 
+.k-textbox, .k-datetimepicker {
+    width: 200px !important;
+}
