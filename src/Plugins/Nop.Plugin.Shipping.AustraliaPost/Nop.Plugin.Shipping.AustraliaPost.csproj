@@ -52,6 +52,10 @@
       <Private>False</Private>
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -104,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AustraliaPostComputationMethod.cs" />
+    <Compile Include="AustraliaPostExtensions.cs" />
     <Compile Include="Controllers\ShippingAustraliaPostController.cs" />
     <Compile Include="Models\AustraliaPostShippingModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -12,11 +12,11 @@
             <div class="panel-body">
                 <div class="form-group">
                     <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.GatewayUrl)
+                        @Html.NopLabelFor(model => model.ApiKey)
                     </div>
                     <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.GatewayUrl)
-                        @Html.ValidationMessageFor(model => model.GatewayUrl)
+                        @Html.NopEditorFor(model => model.ApiKey)
+                        @Html.ValidationMessageFor(model => model.ApiKey)
                     </div>
                 </div>
                 <div class="form-group">
@@ -29,19 +29,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
-                        @Html.NopLabelFor(model => model.HideDeliveryInformation)
-                    </div>
-                    <div class="col-sm-9">
-                        @Html.NopEditorFor(model => model.HideDeliveryInformation)
-                        @Html.ValidationMessageFor(model => model.HideDeliveryInformation)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-sm-9">
+                    <div class="col-sm-9 col-sm-offset-3">
                         <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
