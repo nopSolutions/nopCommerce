@@ -404,10 +404,16 @@ input[type=file].form-control {
     .form-horizontal .control-label {
         float: none;
         margin-bottom: 5px;
+        width: 100%;
+        text-align: left;
     }
 
     .form-group input[type=checkbox] {
         margin-top: 2px;
+    }
+
+    .form-control {
+        margin-bottom: 3px;
     }
 
     .k-autocomplete, .k-combobox, .k-datepicker, .k-timepicker, .k-datetimepicker, 
