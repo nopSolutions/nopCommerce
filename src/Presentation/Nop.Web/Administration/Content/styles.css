@@ -398,6 +398,15 @@ input[type=file].form-control {
     .main-header .navbar-custom-menu > .navbar-nav {
         float: none;
     }
+
+    .form-control {
+        margin-bottom: 3px;
+    }
+
+    .k-autocomplete, .k-combobox, .k-datepicker, .k-timepicker, .k-datetimepicker, 
+    .k-colorpicker, .k-numerictextbox, .k-dropdown, .k-selectbox, .k-textbox, .k-datetimepicker {
+        margin-bottom: 3px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -410,15 +419,6 @@ input[type=file].form-control {
 
     .form-group input[type=checkbox] {
         margin-top: 2px;
-    }
-
-    .form-control {
-        margin-bottom: 3px;
-    }
-
-    .k-autocomplete, .k-combobox, .k-datepicker, .k-timepicker, .k-datetimepicker, 
-    .k-colorpicker, .k-numerictextbox, .k-dropdown, .k-selectbox, .k-textbox, .k-datetimepicker {
-        margin-bottom: 3px;
     }
 }
 
