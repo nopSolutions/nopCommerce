@@ -359,8 +359,65 @@ input[type=file].form-control {
 .k-numerictextbox, .k-dropdown, .k-selectbox, 
 .k-textbox, .k-datetimepicker {
     width: 200px !important;
+    max-width: 100%;
 }
 
 .k-window-titlebar {
     height: 2em;
+}
+
+.navbar-custom-menu>.navbar-nav>li {
+    height: 50px;
+}
+
+.main-header {
+    max-height: 150px;
+}
+
+.content-header>h1 {
+    margin-bottom: 10px;
+}
+
+.content-header .btn {
+    margin-bottom: 5px;
+}
+
+.mce-container {
+    max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .form-horizontal img.ico-help {
+         display: none;
+    }
+
+    .main-header .navbar-custom-menu {
+        float: none;
+    }
+
+    .main-header .navbar-custom-menu > .navbar-nav {
+        float: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .form-horizontal .control-label {
+        float: none;
+        margin-bottom: 5px;
+    }
+
+    .form-group input[type=checkbox] {
+        margin-top: 2px;
+    }
+
+    .k-autocomplete, .k-combobox, .k-datepicker, .k-timepicker, .k-datetimepicker, 
+    .k-colorpicker, .k-numerictextbox, .k-dropdown, .k-selectbox, .k-textbox, .k-datetimepicker {
+        margin-bottom: 3px;
+    }
+}
+
+@media (max-width: 767px) {
+    .main-sidebar, .left-side {
+    padding-top: 155px;
+}
 }
