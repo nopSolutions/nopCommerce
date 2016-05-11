@@ -203,12 +203,12 @@
                     </div>
                     <div class="col-sm-9">
                         <div class="row">
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 @Html.NopEditorFor(model => model.DelayBeforeSend)
                                 @Html.ValidationMessageFor(model => model.DelayBeforeSend)
                             </div>
-                            <div class="col-sm-2">
-                                @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList())
+                            <div class="col-sm-3">
+                                @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList(), new {style = "max-width: 200px;"})
                                 @Html.ValidationMessageFor(model => model.DelayPeriodId)
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                     <div class="col-sm-3">
                         @Html.NopLabelFor(model => model.AttachedDownloadId)
                     </div>
-                    <div class="col-sm-3">
+                    <div class="col-sm-6">
                         @{
                             //Static file attachments do not support URLs yet
                             //A store owner have to upload a file
