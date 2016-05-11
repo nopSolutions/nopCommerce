@@ -54,10 +54,10 @@
 @if (Model.FirstNameEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.FirstName)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.FirstName)
             @Html.ValidationMessageFor(model => model.FirstName)
         </div>
@@ -66,10 +66,10 @@
 @if (Model.LastNameEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.LastName)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.LastName)
             @Html.ValidationMessageFor(model => model.LastName)
         </div>
@@ -78,10 +78,10 @@
 @if (Model.EmailEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.Email)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.Email)
             @Html.ValidationMessageFor(model => model.Email)
         </div>
@@ -90,10 +90,10 @@
 @if (Model.CompanyEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.Company)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.Company)
             @Html.ValidationMessageFor(model => model.Company)
         </div>
@@ -102,10 +102,10 @@
 @if (Model.CountryEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.CountryId)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopDropDownListFor(model => model.CountryId, Model.AvailableCountries)
             @Html.ValidationMessageFor(model => model.CountryId)
         </div>
@@ -114,10 +114,10 @@
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.StateProvinceId)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopDropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
             @Html.ValidationMessageFor(model => model.StateProvinceId)
         </div>
@@ -126,10 +126,10 @@
 @if (Model.CityEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.City)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.City)
             @Html.ValidationMessageFor(model => model.City)
         </div>
@@ -138,10 +138,10 @@
 @if (Model.StreetAddressEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.Address1)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.Address1)
             @Html.ValidationMessageFor(model => model.Address1)
         </div>
@@ -150,10 +150,10 @@
 @if (Model.StreetAddress2Enabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.Address2)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.Address2)
             @Html.ValidationMessageFor(model => model.Address2)
         </div>
@@ -162,10 +162,10 @@
 @if (Model.ZipPostalCodeEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.ZipPostalCode)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.ZipPostalCode)
             @Html.ValidationMessageFor(model => model.ZipPostalCode)
         </div>
@@ -174,10 +174,10 @@
 @if (Model.PhoneEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.PhoneNumber)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.PhoneNumber)
             @Html.ValidationMessageFor(model => model.PhoneNumber)
         </div>
@@ -186,10 +186,10 @@
 @if (Model.FaxEnabled)
 {
     <div class="form-group">
-        <div class="col-sm-3">
+        <div class="col-md-3">
             @Html.NopLabelFor(model => model.FaxNumber)
         </div>
-        <div class="col-sm-9">
+        <div class="col-md-9">
             @Html.NopEditorFor(model => model.FaxNumber)
             @Html.ValidationMessageFor(model => model.FaxNumber)
         </div>

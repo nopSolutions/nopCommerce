@@ -47,37 +47,37 @@
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 @Html.NopLabelFor(model => model.SendEmail.Subject)
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-md-7">
                                 @Html.NopEditorFor(model => model.SendEmail.Subject)
                                 @Html.ValidationMessageFor(model => model.SendEmail.Subject)
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 @Html.NopLabelFor(model => model.SendEmail.Body)
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-md-7">
                                 @Html.NopTextAreaFor(model => model.SendEmail.Body)
                                 @Html.ValidationMessageFor(model => model.SendEmail.Body)
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 @Html.NopLabelFor(model => model.SendEmail.SendImmediately)
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-md-7">
                                 @Html.NopEditorFor(model => model.SendEmail.SendImmediately)
                                 @Html.ValidationMessageFor(model => model.SendEmail.SendImmediately)
                             </div>
                         </div>
                         <div class="form-group" id="pnl-send-date">
-                            <div class="col-sm-5">
+                            <div class="col-md-5">
                                 @Html.NopLabelFor(model => model.SendEmail.DontSendBeforeDate)
                             </div>
-                            <div class="col-sm-7">
+                            <div class="col-md-7">
                                 @Html.NopEditorFor(model => model.SendEmail.DontSendBeforeDate)
                                 @Html.ValidationMessageFor(model => model.SendEmail.DontSendBeforeDate)
                             </div>
@@ -120,19 +120,19 @@
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.SendPm.Subject)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.SendPm.Subject)
                                 @Html.ValidationMessageFor(model => model.SendPm.Subject)
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.SendPm.Message)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopTextAreaFor(model => model.SendPm.Message)
                                 @Html.ValidationMessageFor(model => model.SendPm.Message)
                             </div>

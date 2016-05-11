@@ -137,127 +137,127 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Name)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Name)
                         @Html.ValidationMessageFor(model => model.Name)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DiscountTypeId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
                         @Html.ValidationMessageFor(model => model.DiscountTypeId)
                     </div>
                 </div>
                 <div class="form-group" id="pnlAppliedToSubCategories">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AppliedToSubCategories)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.AppliedToSubCategories)
                         @Html.ValidationMessageFor(model => model.AppliedToSubCategories)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.UsePercentage)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.UsePercentage)
                         @Html.ValidationMessageFor(model => model.UsePercentage)
                     </div>
                 </div>
                 <div class="form-group" id="pnlDiscountAmount">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DiscountAmount)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                         @Html.ValidationMessageFor(model => model.DiscountAmount)
                     </div>
                 </div>
                 <div class="form-group" id="pnlDiscountPercentage">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DiscountPercentage)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.DiscountPercentage)
                         @Html.ValidationMessageFor(model => model.DiscountPercentage)
                     </div>
                 </div>
                 <div class="form-group" id="pnlMaximumDiscountAmount">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.MaximumDiscountAmount)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.MaximumDiscountAmount) [@Model.PrimaryStoreCurrencyCode]
                         @Html.ValidationMessageFor(model => model.MaximumDiscountAmount)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.StartDateUtc)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.StartDateUtc)
                         @Html.ValidationMessageFor(model => model.StartDateUtc)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.EndDateUtc)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.EndDateUtc)
                         @Html.ValidationMessageFor(model => model.EndDateUtc)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.RequiresCouponCode)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.RequiresCouponCode)
                         @Html.ValidationMessageFor(model => model.RequiresCouponCode)
                     </div>
                 </div>
                 <div class="form-group" id="pnlCouponCode">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.CouponCode)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.CouponCode)
                         @Html.ValidationMessageFor(model => model.CouponCode)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DiscountLimitationId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.DiscountLimitationId, ((DiscountLimitationType)Model.DiscountLimitationId).ToSelectList())
                         @Html.ValidationMessageFor(model => model.DiscountLimitationId)
                     </div>
                 </div>
                 <div class="form-group" id="pnlLimitationTimes">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitationTimes)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitationTimes)
                         @Html.ValidationMessageFor(model => model.LimitationTimes) @T("Admin.Promotions.Discounts.Fields.LimitationTimes.Times")
                     </div>
                 </div>
                 <div class="form-group" id="pnlMaximumDiscountedQuantity">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.MaximumDiscountedQuantity)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.MaximumDiscountedQuantity)
                         @Html.ValidationMessageFor(model => model.MaximumDiscountedQuantity)
                     </div>
@@ -423,7 +423,7 @@
                     <div class="panel-body">
                         <div id="editrequirementplaceholder{{= discountRequirementId }}"></div>
                         <div class="form-group">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <input type="button"
                                        id="deleterequirement{{= discountRequirementId }}"
                                        onclick="deleteRequirement({{= discountRequirementId }})"
@@ -441,10 +441,10 @@
                 </div>
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AddDiscountRequirement)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.AddDiscountRequirement, Model.AvailableDiscountRequirementRules)
                             @Html.ValidationMessageFor(model => model.AddDiscountRequirement)
                         </div>

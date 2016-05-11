@@ -8,10 +8,10 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ShippingAddress)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <table class="table table-hover table-bordered" style="max-width: 400px;">
                                 @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                                 {
@@ -146,13 +146,13 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-2 col-sm-offset-3">
+                        <div class="col-md-2 col-md-offset-3">
                             @if (!Model.IsLoggedInAsVendor)
                             {
                                 <a href="@Url.Action("AddressEdit", new {addressId = Model.ShippingAddress.Id, orderId = Model.Id})" class="btn btn-default">@T("Admin.Common.Edit")</a>
                             }
                         </div>
-                        <div class="col-sm-7">
+                        <div class="col-md-7">
                             <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
                             <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
                         </div>
@@ -164,10 +164,10 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ShippingMethod)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (!Model.IsLoggedInAsVendor)
                         {
                             <script type="text/javascript">
@@ -211,10 +211,10 @@
                 @if (!Model.IsLoggedInAsVendor)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ShippingStatus)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <p>@Model.ShippingStatus</p>
                         </div>
                     </div>

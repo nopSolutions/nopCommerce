@@ -11,96 +11,96 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Id)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Model.Id
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.OrderId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = Model.OrderId }, new { })
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.CustomerId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.ActionLink(Model.CustomerInfo, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ProductName)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.ActionLink(Model.ProductName, "Edit", "Product", new { id = Model.ProductId }, new { })
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Quantity)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Quantity)
                             @Html.ValidationMessageFor(model => model.Quantity)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ReturnRequestStatusId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.ReturnRequestStatusId, ((ReturnRequestStatus)Model.ReturnRequestStatusId).ToSelectList())
                             @Html.ValidationMessageFor(model => model.ReturnRequestStatusId)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.ReasonForReturn)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.ReasonForReturn)
                             @Html.ValidationMessageFor(model => model.ReasonForReturn)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.RequestedAction)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.RequestedAction)
                             @Html.ValidationMessageFor(model => model.RequestedAction)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.CustomerComments)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopTextAreaFor(model => model.CustomerComments)
                             @Html.ValidationMessageFor(model => model.CustomerComments)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.StaffNotes)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopTextAreaFor(model => model.StaffNotes)
                             @Html.ValidationMessageFor(model => model.StaffNotes)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.DisplayFor(model => model.CreatedOn)
                         </div>
                     </div>

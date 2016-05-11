@@ -6,7 +6,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="form-group">
-                <div class="col-sm-12">
+                <div class="col-md-12">
                     @foreach (var item in Model.Items)
                     {
                         <script type="text/javascript">
@@ -219,18 +219,18 @@
                                     }
                                     <div id="pnlEditPvUnitPrice@(item.Id)">
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.InclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvUnitPriceInclTax@(item.Id)" type="text" value="@item.UnitPriceInclTaxValue" id="pvUnitPriceInclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.ExclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvUnitPriceExclTax@(item.Id)" type="text" value="@item.UnitPriceExclTaxValue" id="pvUnitPriceExclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
@@ -240,7 +240,7 @@
                                     <div>@item.Quantity</div>
                                     <div id="pnlEditPvQuantity@(item.Id)">
                                         <div class="form-group">
-                                            <div class="col-sm-8 col-sm-offset-2">
+                                            <div class="col-md-8 col-md-offset-2">
                                                 <input name="pvQuantity@(item.Id)" type="text" value="@item.Quantity" id="pvQuantity@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
@@ -273,18 +273,18 @@
                                     }
                                     <div id="pnlEditPvDiscount@(item.Id)">
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.InclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvDiscountInclTax@(item.Id)" type="text" value="@item.DiscountInclTaxValue" id="pvDiscountInclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.ExclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvDiscountExclTax@(item.Id)" type="text" value="@item.DiscountExclTaxValue" id="pvDiscountExclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
@@ -317,18 +317,18 @@
                                     }
                                     <div id="pnlEditPvPrice@(item.Id)">
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.InclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvPriceInclTax@(item.Id)" type="text" value="@item.SubTotalInclTaxValue" id="pvPriceInclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-5">
+                                            <div class="col-md-5">
                                                 <p>@T("Admin.Orders.Products.Edit.ExclTax")</p>
                                             </div>
-                                            <div class="col-sm-7">
+                                            <div class="col-md-7">
                                                 <input name="pvPriceExclTax@(item.Id)" type="text" value="@item.SubTotalExclTaxValue" id="pvPriceExclTax@(item.Id)" class="form-control input-sm"/>
                                             </div>
                                         </div>
@@ -352,7 +352,7 @@
             @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo) && !Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
                         @Html.Raw(Model.CheckoutAttributeInfo)
                     </div>
                 </div>
@@ -360,7 +360,7 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 <div class="form-group">
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
                         <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new {orderId = Model.Id}))'); return false; " class="btn btn-default" />
                     </div>
                 </div>

@@ -71,10 +71,10 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.GiftCardTypeId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
                         @Html.ValidationMessageFor(model => model.GiftCardTypeId)
                     </div>
@@ -82,19 +82,19 @@
                 @if (Model.PurchasedWithOrderId.HasValue)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.PurchasedWithOrderId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <a href="@Url.Action("Edit", "Order", new { Id = Model.PurchasedWithOrderId.Value })">@Model.PurchasedWithOrderId.Value - @T("Admin.Common.View")</a>
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Amount)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
                         @Html.ValidationMessageFor(model => model.Amount)
                     </div>
@@ -102,28 +102,28 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.RemainingAmountStr)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Model.RemainingAmountStr
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsGiftCardActivated)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsGiftCardActivated)
                         @Html.ValidationMessageFor(model => model.IsGiftCardActivated)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.GiftCardCouponCode)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <div class="input-group">
                             @Html.NopEditorFor(model => model.GiftCardCouponCode)
                             @Html.ValidationMessageFor(model => model.GiftCardCouponCode)
@@ -156,46 +156,46 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.RecipientName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.RecipientName)
                         @Html.ValidationMessageFor(model => model.RecipientName)
                     </div>
                 </div>
                 <div class="form-group" id="pnlRecipientEmail">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.RecipientEmail)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.RecipientEmail)
                         @Html.ValidationMessageFor(model => model.RecipientEmail)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SenderName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SenderName)
                         @Html.ValidationMessageFor(model => model.SenderName)
                     </div>
                 </div>
                 <div class="form-group" id="pnlSenderEmail">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SenderEmail)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SenderEmail)
                         @Html.ValidationMessageFor(model => model.SenderEmail)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Message)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.Message)
                         @Html.ValidationMessageFor(model => model.Message)
                     </div>
@@ -203,10 +203,10 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group" id="pnlNotifyRecipient">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.IsRecipientNotified)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <div class="input-group input-group-short">
                                 <p class="input-group-text">@Model.IsRecipientNotified.ToString()</p>
                                 <div class="input-group-btn">
@@ -219,10 +219,10 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.DisplayFor(model => model.CreatedOn)
                         </div>
                     </div>

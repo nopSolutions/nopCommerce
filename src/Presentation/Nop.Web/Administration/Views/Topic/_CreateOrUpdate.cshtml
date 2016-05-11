@@ -63,19 +63,19 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Title)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].Title)
                             @Html.ValidationMessageFor(model => model.Locales[item].Title)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Body)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
                             @Html.ValidationMessageFor(model => model.Locales[item].Body)
                         </div>
@@ -87,19 +87,19 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Title)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Title)
                             @Html.ValidationMessageFor(model => model.Title)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Body)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.EditorFor(x => x.Body, "RichEditor")
                             @Html.ValidationMessageFor(model => model.Body)
                         </div>
@@ -111,10 +111,10 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SystemName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SystemName)
                         @Html.ValidationMessageFor(model => model.SystemName)
                     </div>
@@ -122,109 +122,109 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Url)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <a href="@Model.Url"> @Model.Url </a>
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Published)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Published)
                         @Html.ValidationMessageFor(model => model.Published)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsPasswordProtected)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsPasswordProtected)
                         @Html.ValidationMessageFor(model => model.IsPasswordProtected)
                     </div>
                 </div>
                 <div class="form-group" id="pnlPasswordEnabled">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Password)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Password)
                         @Html.ValidationMessageFor(model => model.Password)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInSitemap)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInSitemap)
                         @Html.ValidationMessageFor(model => model.IncludeInSitemap)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInTopMenu)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInTopMenu)
                         @Html.ValidationMessageFor(model => model.IncludeInTopMenu)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn1)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn1)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn1)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn2)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn2)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn2)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IncludeInFooterColumn3)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.IncludeInFooterColumn3)
                         @Html.ValidationMessageFor(model => model.IncludeInFooterColumn3)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DisplayOrder)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.DisplayOrder)
                         @Html.ValidationMessageFor(model => model.DisplayOrder)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AccessibleWhenStoreClosed)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(x => x.AccessibleWhenStoreClosed)
                         @Html.ValidationMessageFor(model => model.AccessibleWhenStoreClosed)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.TopicTemplateId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.TopicTemplateId, Model.AvailableTopicTemplates)
                         @Html.ValidationMessageFor(model => model.TopicTemplateId)
                     </div>
@@ -241,37 +241,37 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].MetaKeywords)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].MetaKeywords)
                             @Html.ValidationMessageFor(model => model.Locales[item].MetaKeywords)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].MetaDescription)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopTextAreaFor(model => model.Locales[item].MetaDescription)
                             @Html.ValidationMessageFor(model => model.Locales[item].MetaDescription)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].MetaTitle)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].MetaTitle)
                             @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].SeName)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].SeName)
                             @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                         </div>
@@ -283,37 +283,37 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.MetaKeywords)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(x => x.MetaKeywords)
                             @Html.ValidationMessageFor(model => model.MetaKeywords)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.MetaDescription)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopTextAreaFor(x => x.MetaDescription)
                             @Html.ValidationMessageFor(model => model.MetaDescription)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.MetaTitle)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(x => x.MetaTitle)
                             @Html.ValidationMessageFor(model => model.MetaTitle)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.SeName)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(x => x.SeName)
                             @Html.ValidationMessageFor(model => model.SeName)
                         </div>
@@ -344,19 +344,19 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SubjectToAcl)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SubjectToAcl)
                         @Html.ValidationMessageFor(model => model.SubjectToAcl)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-acl">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableCustomerRoles)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
                         {
                             @Html.Action("AclDisabledWarning", "Common")
@@ -402,19 +402,19 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitedToStores)
                         @Html.ValidationMessageFor(model => model.LimitedToStores)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-available-stores">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AvailableStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                         {
                             @Html.Action("MultistoreDisabledWarning", "Common")

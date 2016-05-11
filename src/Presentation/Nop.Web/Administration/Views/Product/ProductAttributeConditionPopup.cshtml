@@ -62,10 +62,10 @@
                             </p>
 
                             <div class="form-group">
-                                <div class="col-sm-3">
+                                <div class="col-md-3">
                                     @Html.NopLabelFor(model => model.EnableCondition)
                                 </div>
-                                <div class="col-sm-9">
+                                <div class="col-md-9">
                                     @Html.NopEditorFor(model => model.EnableCondition)
                                     @Html.ValidationMessageFor(model => model.EnableCondition)
                                 </div>
@@ -80,10 +80,10 @@
                                         attributesList.Add(new SelectListItem { Text = attribute.Name, Value = attribute.Id.ToString() });
                                     }
                                     <div class="form-group" id="pnlBasepriceUnit">
-                                        <div class="col-sm-3">
+                                        <div class="col-md-3">
                                             @Html.NopLabelFor(model => model.SelectedProductAttributeId)
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-md-9">
                                             @Html.NopDropDownListFor(model => model.SelectedProductAttributeId, attributesList)
 
                                             <script type="text/javascript">
@@ -102,7 +102,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-sm-9 col-sm-offset-3">
+                                        <div class="col-md-9 col-md-offset-3">
                                             @foreach (var attribute in Model.ProductAttributes)
                                             {
                                                 string controlId = string.Format("product_attribute_{0}", attribute.Id);
@@ -170,14 +170,14 @@
                                 else
                                 {
                                     <div class="form-group" id="pnlBasepriceUnit">
-                                        <div class="col-sm-9 col-sm-offset-3">
+                                        <div class="col-md-9 col-md-offset-3">
                                             No attribute exists that could be used as condition
                                         </div>
                                     </div>
                                 }
                             </div>
                             <div class="form-group">
-                                <div class="col-sm-9 col-sm-offset-3">
+                                <div class="col-md-9 col-md-offset-3">
                                     <input type="submit" class="btn btn-default" value="@T("Admin.Common.Save")" />
                                 </div>
                             </div>

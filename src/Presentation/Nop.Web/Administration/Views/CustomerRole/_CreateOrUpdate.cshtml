@@ -23,65 +23,65 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Name)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Name)
                             @Html.ValidationMessageFor(model => model.Name)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.SystemName)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.SystemName)
                             @Html.ValidationMessageFor(model => model.SystemName)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.FreeShipping)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.FreeShipping)
                             @Html.ValidationMessageFor(model => model.FreeShipping)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.TaxExempt)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.TaxExempt)
                             @Html.ValidationMessageFor(model => model.TaxExempt)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Active)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Active)
                             @Html.ValidationMessageFor(model => model.Active)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.IsSystemRole)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Model.IsSystemRole.ToString()
                             @Html.HiddenFor(model => model.IsSystemRole)
                             @Html.ValidationMessageFor(model => model.IsSystemRole)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.PurchasedWithProductId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.HiddenFor(model => model.PurchasedWithProductId)
                             <span id="purchased-with-product-name">@Model.PurchasedWithProductName</span>
                             @Html.ValidationMessageFor(model => model.PurchasedWithProductId)

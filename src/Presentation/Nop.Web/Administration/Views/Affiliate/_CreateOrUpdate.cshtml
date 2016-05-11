@@ -52,27 +52,27 @@
                 @if (Model.Id > 0)
                 {
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Id)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Model.Id
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Url)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Model.Url
                         </div>
                     </div>
                 }
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Active)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Active)
                         @Html.ValidationMessageFor(model => model.Active)
                     </div>
@@ -87,19 +87,19 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AdminComment)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.AdminComment)
                         @Html.ValidationMessageFor(model => model.AdminComment)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.FriendlyUrlName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.FriendlyUrlName)
                         @Html.ValidationMessageFor(model => model.FriendlyUrlName)
                     </div>

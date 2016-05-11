@@ -14,14 +14,14 @@
                         string controlId = string.Format("product_attribute_{0}", attribute.Id);
                         string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
                     }
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @if (attribute.IsRequired)
                         {
                             <span class="required">*</span>
                         }
                         <label class="control-label">@textPrompt</label>
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @switch (attribute.AttributeControlType)
                         {
                             case AttributeControlType.DropdownList:

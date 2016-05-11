@@ -52,19 +52,19 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AttributeValueTypeId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.AttributeValueTypeId, ((AttributeValueType)Model.AttributeValueTypeId).ToSelectList())
                             @Html.ValidationMessageFor(model => model.AttributeValueTypeId)
                         </div>
                     </div>
                     <div class="form-group" id="group-associated-product">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AssociatedProductId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.HiddenFor(model => model.AssociatedProductId)
                             <span id="associate-product-name">@Model.AssociatedProductName</span>
                             @Html.ValidationMessageFor(model => model.AssociatedProductId)
@@ -72,10 +72,10 @@
                         </div>
                     </div>
                     <div class="form-group" id="group-quantity">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Quantity)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Quantity)
                             @Html.ValidationMessageFor(model => model.Quantity)
                         </div>
@@ -87,10 +87,10 @@
                 @<div class="panel panel-default">
                     <div class="panel-body">
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.Locales[item].Name)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.Locales[item].Name)
                                 @Html.ValidationMessageFor(model => model.Locales[item].Name)
                             </div>
@@ -102,10 +102,10 @@
                 @<div class="panel panel-default">
                     <div class="panel-body">
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.Name)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.Name)
                                 @Html.ValidationMessageFor(model => model.Name)
                             </div>
@@ -118,10 +118,10 @@
                     @if (Model.DisplayColorSquaresRgb)
                     {
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.ColorSquaresRgb)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.ColorSquaresRgb)
                                 <div id="color-picker"></div>
                                 <script type="text/javascript">
@@ -136,65 +136,65 @@
                     @if (Model.DisplayImageSquaresPicture)
                     {
                         <div class="form-group">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopLabelFor(model => model.ImageSquaresPictureId)
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 @Html.NopEditorFor(model => model.ImageSquaresPictureId)
                                 @Html.ValidationMessageFor(model => model.ImageSquaresPictureId)
                             </div>
                         </div>
                     }
                     <div class="form-group" id="group-price-adjustment">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.PriceAdjustment)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.PriceAdjustment)
                             @Html.ValidationMessageFor(model => model.PriceAdjustment)
                         </div>
                     </div>
                     <div class="form-group" id="group-weight-adjustment">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.WeightAdjustment)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.WeightAdjustment)
                             @Html.ValidationMessageFor(model => model.WeightAdjustment)
                         </div>
                     </div>
                     <div class="form-group" id="group-cost">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Cost)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Cost)
                             @Html.ValidationMessageFor(model => model.Cost)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.IsPreSelected)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.IsPreSelected)
                             @Html.ValidationMessageFor(model => model.IsPreSelected)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.DisplayOrder)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.DisplayOrder)
                             @Html.ValidationMessageFor(model => model.DisplayOrder)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.PictureId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <ul style="list-style: none;">
                                 <li style="float: left; width: 110px;">
                                     <p style="float: left; padding-top: 20px;">

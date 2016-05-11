@@ -45,10 +45,10 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AllowedTokens)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
                         <div id="pnlAllowedTokens" style="display: none">
                             @Html.DisplayFor(model => model.AllowedTokens)
@@ -56,10 +56,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.Name)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Model.Name
                         @Html.HiddenFor(model => model.Name)
                     </div>
@@ -81,46 +81,46 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Subject)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].Subject)
                             @Html.ValidationMessageFor(model => model.Locales[item].Subject)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].Body)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Locales[item].Body, "RichEditor")
                             @Html.ValidationMessageFor(model => model.Locales[item].Body)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].BccEmailAddresses)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Locales[item].BccEmailAddresses)
                             @Html.ValidationMessageFor(model => model.Locales[item].BccEmailAddresses)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Locales[item].EmailAccountId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.Locales[item].EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))
                             @Html.ValidationMessageFor(model => model.Locales[item].EmailAccountId)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             <label class="control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <input type="button" class="btn btn-default" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id, languageId = Model.Locales[item].LanguageId}))')" />
                         </div>
                     </div>
@@ -131,46 +131,46 @@
             @<div class="panel panel-default">
                 <div class="panel-body">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Subject)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.Subject)
                             @Html.ValidationMessageFor(model => model.Subject)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.Body)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.Body, "RichEditor")
                             @Html.ValidationMessageFor(model => model.Body)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.BccEmailAddresses)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopEditorFor(model => model.BccEmailAddresses)
                             @Html.ValidationMessageFor(model => model.BccEmailAddresses)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.EmailAccountId)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @Html.NopDropDownListFor(model => model.EmailAccountId, new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName"))
                             @Html.ValidationMessageFor(model => model.EmailAccountId)
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             <label class="control-label">@T("Admin.ContentManagement.MessageTemplates.Test")</label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             <input type="button" class="btn btn-default" value="@T("Admin.ContentManagement.MessageTemplates.Test")" onclick="setLocation('@(Url.Action("TestTemplate", new {id = Model.Id}))')" />
                         </div>
                     </div>
@@ -180,34 +180,34 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.IsActive)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IsActive)
                         @Html.ValidationMessageFor(model => model.IsActive)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.SendImmediately)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.SendImmediately)
                         @Html.ValidationMessageFor(model => model.SendImmediately)
                     </div>
                 </div>
                 <div class="form-group" id="pnl-send-after">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.DelayBeforeSend)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <div class="row">
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopEditorFor(model => model.DelayBeforeSend)
                                 @Html.ValidationMessageFor(model => model.DelayBeforeSend)
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-md-3">
                                 @Html.NopDropDownListFor(model => model.DelayPeriodId, ((MessageDelayPeriod)Model.DelayPeriodId).ToSelectList(), new {style = "max-width: 200px;"})
                                 @Html.ValidationMessageFor(model => model.DelayPeriodId)
                             </div>
@@ -215,10 +215,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AttachedDownloadId)
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-md-6">
                         @{
                             //Static file attachments do not support URLs yet
                             //A store owner have to upload a file
@@ -288,20 +288,20 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.LimitedToStores)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.LimitedToStores)
                         @Html.ValidationMessageFor(model => model.LimitedToStores)
                     </div>
                 </div>
                 <div id="pnl-available-stores">
                     <div class="form-group">
-                        <div class="col-sm-3">
+                        <div class="col-md-3">
                             @Html.NopLabelFor(model => model.AvailableStores)
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-md-9">
                             @if (Model.AvailableStores != null && Model.AvailableStores.Count > 0)
                             {
                                 @Html.Action("MultistoreDisabledWarning", "Common")
