@@ -515,21 +515,24 @@
                                                 case AttributeControlType.ImageSquares:
                                                     foreach (var value in Model.ConditionModel.ConditionAttributes[i].Values)
                                                     {
-                                                        <div>
-                                                            @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
-                                                        value.Selected ? new { @checked = true } : null)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Text)
+                                                        <div class="radio">
+                                                            <label>
+                                                                @Html.RadioButtonFor(model => Model.ConditionModel.ConditionAttributes[i].SelectedValueId, value.Value,
+                                                                    value.Selected ? new {@checked = true} : null)
+                                                                @value.Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;
                                                 case AttributeControlType.Checkboxes:
                                                     for (var j = 0; j < Model.ConditionModel.ConditionAttributes[i].Values.Count; j++)
                                                     {
-                                                        <div>
-                                                            @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
-                                                            @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
-                                                            @Html.LabelFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected,
-                                                        Model.ConditionModel.ConditionAttributes[i].Values[j].Text)
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                @Html.HiddenFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Value)
+                                                                @Html.CheckBoxFor(model => Model.ConditionModel.ConditionAttributes[i].Values[j].Selected)
+                                                                @Model.ConditionModel.ConditionAttributes[i].Values[j].Text
+                                                            </label>
                                                         </div>
                                                     }
                                                     break;
