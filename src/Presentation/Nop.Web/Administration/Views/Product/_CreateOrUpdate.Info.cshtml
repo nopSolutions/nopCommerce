@@ -402,9 +402,7 @@
                         @Html.NopLabelFor(model => model.Id)
                     </div>
                     <div class="col-md-9">
-                        <p>
-                            @Model.Id.ToString()
-                        </p>
+                        @Model.Id.ToString()
                         @Html.ValidationMessageFor(model => model.Id)
                     </div>
                 </div>
@@ -434,9 +432,7 @@
                         @Html.NopLabelFor(model => model.AssociatedToProductId)
                     </div>
                     <div class="col-md-9">
-                        <p>
-                            @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
-                        </p>
+                        @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
                     </div>
                 </div>
             }
@@ -1457,9 +1453,7 @@
                         @Html.NopLabelFor(model => model.CreatedOn)
                     </div>
                     <div class="col-md-9">
-                        <p>
-                            @Model.CreatedOn.Value.ToString("F")
-                        </p>
+                        @Model.CreatedOn.Value.ToString("F")
                     </div>
                 </div>
             }
@@ -1470,9 +1464,7 @@
                         @Html.NopLabelFor(model => model.UpdatedOn)
                     </div>
                     <div class="col-md-9">
-                        <p>
-                            @Model.UpdatedOn.Value.ToString("F")
-                        </p>
+                        @Model.UpdatedOn.Value.ToString("F")
                     </div>
                 </div>
             }

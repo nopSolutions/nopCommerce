@@ -70,9 +70,7 @@
                                 @Html.NopLabelFor(model => model.OrderId)
                             </div>
                             <div class="col-md-9">
-                                <p>
-                                    <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
-                                </p>
+                                <a href="@Url.Action("Edit", "Order", new {Id = Model.OrderId})">@Model.OrderId - @T("Admin.Common.View")</a>
                             </div>
                         </div>
                         <div class="form-group">
@@ -110,7 +108,7 @@
                                 @Html.NopLabelFor(model => model.TotalWeight)
                             </div>
                             <div class="col-md-9">
-                                <p>@Model.TotalWeight</p>
+                                @Model.TotalWeight
                             </div>
                         </div>
                         <div class="form-group">
