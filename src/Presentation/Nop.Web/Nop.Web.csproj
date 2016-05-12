@@ -1093,7 +1093,6 @@
     <Content Include="Content\tinymce\tinymce.min.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
-    <Content Include="Scripts\adminLTE\demo.js" />
     <Content Include="Scripts\bootstrap\bootstrap-3.3.4.js" />
     <Content Include="Scripts\bootstrap\bootstrap-3.3.4.min.js" />
     <Content Include="Scripts\bootstrap\npm.js" />
