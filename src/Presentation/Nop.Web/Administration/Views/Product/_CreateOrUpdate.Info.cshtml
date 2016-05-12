@@ -798,7 +798,24 @@
                         @Html.NopLabelFor(model => model.RequiredProductIds)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.RequiredProductIds)
+                        <div class="input-group">
+                            @Html.NopEditorFor(model => model.RequiredProductIds)
+                            <span class="input-group-btn">
+                                <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 800, true); return false;" class="btn btn-info btn-flat" />
+                                <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
+                                <script type="text/javascript">
+                                    $(document).ready(function() {
+                                        $('#btnRefreshRequiredProducts').click(function() {
+                                            //refresh product list
+                                            loadRequiredProductFriendlyNames();
+
+                                            //return false to don't reload a page
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                             </span>
+                        </div>
                         @Html.ValidationMessageFor(model => model.RequiredProductIds)
                     </div>
                 </div>
@@ -807,20 +824,7 @@
                         <span id="required-products-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                     </div>
                     <div class="col-md-9">
-                        <input type="submit" id="btnAddNewRequiredProduct" value="@T("Admin.Catalog.Products.Fields.RequiredProductIds.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RequiredProductAddPopup", "Product", new {btnId = "btnRefreshRequiredProducts", productIdsInput = "RequiredProductIds"}))', 800, 800, true); return false;" class="btn btn-default" />
-                        <input type="submit" id="btnRefreshRequiredProducts" style="display: none" />
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('#btnRefreshRequiredProducts').click(function() {
-                                    //refresh product list
-                                    loadRequiredProductFriendlyNames();
-
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                        <span id="required-product-names" style="margin-left: 10px;"></span>
+                        <span id="required-product-names"></span>
                     </div>
                 </div>
             </div>
