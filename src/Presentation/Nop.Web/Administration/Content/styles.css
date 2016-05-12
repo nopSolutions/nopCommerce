@@ -30,12 +30,6 @@ table.adminContent {
     border-color: #c5c5c5 !important;
 }
 
-.k-animation-container, .k-widget, .k-widget *, .k-animation-container *, .k-widget *:before, .k-animation-container *:after, .k-block .k-header, .k-list-container {
-    -webkit-box-sizing: border-box !important;
-    -moz-box-sizing: border-box !important;
-    box-sizing: border-box !important;
-}
-
 .form-group input[type=checkbox] {
     margin-top: 10px;
 }
@@ -125,7 +119,7 @@ table.adminContent {
 
 .k-picker-wrap .k-input, 
 .k-numeric-wrap .k-input {
-    height: 34px;
+    height: 27px;
     border-radius: 0;
     padding: 0.177em 8px;
     border: 1px solid #d2d6de;
