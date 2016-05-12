@@ -413,6 +413,10 @@ input[type=file].form-control {
         text-align: left;
     }
 
+    .form-horizontal span.required {
+        float: none;
+    }
+
     .form-group input[type=checkbox] {
         margin-top: 2px;
     }
@@ -420,6 +424,6 @@ input[type=file].form-control {
 
 @media (max-width: 767px) {
     .main-sidebar, .left-side {
-    padding-top: 155px;
-}
+        padding-top: 155px;
+    }
 }
