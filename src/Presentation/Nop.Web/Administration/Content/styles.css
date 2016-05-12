@@ -355,10 +355,10 @@ input[type=file].form-control {
     padding-top: 7px;
 }
 
-.k-autocomplete, .k-combobox, .k-datepicker, 
-.k-timepicker, .k-datetimepicker, .k-colorpicker, 
-.k-numerictextbox, .k-dropdown, .k-selectbox, 
-.k-textbox, .k-datetimepicker {
+.form-group .k-autocomplete, .form-group .k-combobox, .form-group .k-datepicker, 
+.form-group .k-timepicker, .form-group .k-datetimepicker, .form-group .k-colorpicker, 
+.form-group .k-numerictextbox, .form-group .k-dropdown, .form-group .k-selectbox, 
+.form-group .k-textbox, .form-group .k-datetimepicker {
     width: 200px !important;
     max-width: 100%;
 }
