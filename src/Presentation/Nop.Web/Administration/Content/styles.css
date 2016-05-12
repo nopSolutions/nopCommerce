@@ -285,6 +285,7 @@ table td .form-group {
     border-radius: 4px;
     background-color: #00a65a;
     border-color: #008d4c;
+    margin-top: 5px;
 }
 
 .nav>li>a>img {
