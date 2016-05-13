@@ -30,6 +30,10 @@ table.adminContent {
     border-color: #c5c5c5 !important;
 }
 
+.form-group {
+    margin-bottom: 5px;
+}
+
 .form-group input[type=checkbox] {
     margin-top: 10px;
 }
