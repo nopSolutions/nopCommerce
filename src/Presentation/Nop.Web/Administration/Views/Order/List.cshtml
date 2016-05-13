@@ -34,170 +34,176 @@
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.StartDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.StartDate)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.EndDate)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.EndDate)
-                            </div>
-                        </div>
-                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.OrderStatusIds)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.OrderStatusIds, Model.AvailableOrderStatuses)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.PaymentStatusIds)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.PaymentStatusIds, Model.AvailablePaymentStatuses)
-                            </div>
-                        </div>
-                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ShippingStatusIds)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownListFor(model => model.ShippingStatusIds, Model.AvailableShippingStatuses )
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.StoreId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("StoreId", Model.AvailableStores)
-                            </div>
-                        </div>
-                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.VendorId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("VendorId", Model.AvailableVendors)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.WarehouseId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.BillingEmail)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.BillingEmail)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.BillingLastName)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.BillingLastName)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.BillingCountryId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
-                            </div>
-                        </div>
-                        <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.PaymentMethodSystemName)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.ProductId)
-                            </div>
-                            <div class="col-md-9">
-                                <input type="text" id="search-product-name" autocomplete="off" class="form-control text-box single-line"/>
-                                <span id="search-product-friendly-name"></span>
-                                <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.StartDate)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.StartDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.EndDate)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.EndDate)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.StoreId)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownList("StoreId", Model.AvailableStores)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.VendorId)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownList("VendorId", Model.AvailableVendors)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.WarehouseId)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.ProductId)
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control text-box single-line" />
+                                        <span id="search-product-friendly-name"></span>
+                                        <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
 
-                                @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
-                                <script type="text/javascript">
-                                    $(document).ready(function() {
-                                        $('#search-product-name').autocomplete({
-                                            delay: 500,
-                                            minLength: 3,
-                                            source: '@(Url.Action("ProductSearchAutoComplete"))',
-                                            select: function(event, ui) {
-                                                $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
-                                                $('#search-product-friendly-name').text(ui.item.label);
+                                        @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
+                                        <script type="text/javascript">
+                                            $(document).ready(function() {
+                                                $('#search-product-name').autocomplete({
+                                                    delay: 500,
+                                                    minLength: 3,
+                                                    source: '@(Url.Action("ProductSearchAutoComplete"))',
+                                                    select: function(event, ui) {
+                                                        $('#@Html.FieldIdFor(model => model.ProductId)').val(ui.item.productid);
+                                                        $('#search-product-friendly-name').text(ui.item.label);
 
-                                                $('#search-product-clear').show();
-                                                return false;
-                                            }
-                                        });
+                                                        $('#search-product-clear').show();
+                                                        return false;
+                                                    }
+                                                });
 
-                                        //remove button
-                                        $('#search-product-clear').click(function() {
-                                            $('#@Html.FieldIdFor(model => model.ProductId)').val('0');
-                                            $('#search-product-friendly-name').text('');
-                                            $('#search-product-clear').hide();
-                                            return false;
-                                        });
-                                    });
-                                </script>
+                                                //remove button
+                                                $('#search-product-clear').click(function() {
+                                                    $('#@Html.FieldIdFor(model => model.ProductId)').val('0');
+                                                    $('#search-product-friendly-name').text('');
+                                                    $('#search-product-clear').hide();
+                                                    return false;
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.OrderNotes)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.OrderNotes)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.OrderGuid)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.OrderGuid)
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.OrderNotes)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.OrderNotes)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.OrderGuid)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.OrderGuid)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.GoDirectlyToNumber)
-                            </div>
-                            <div class="col-md-9">
-                                <div class="input-group input-group-short">
-                                    @Html.NopEditorFor(model => model.GoDirectlyToNumber)
-                                    <span class="input-group-btn">
-                                        <input type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat" value="@T("Admin.Common.Go")" />
-                                    </span>
+                            <div class="col-md-6">
+                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.OrderStatusIds)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownListFor(model => model.OrderStatusIds, Model.AvailableOrderStatuses)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.PaymentStatusIds)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownListFor(model => model.PaymentStatusIds, Model.AvailablePaymentStatuses)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.ShippingStatusIds)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownListFor(model => model.ShippingStatusIds, Model.AvailableShippingStatuses)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.BillingEmail)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.BillingEmail)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.BillingLastName)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.BillingLastName)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.BillingCountryId)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
+                                    </div>
+                                </div>
+                                <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.PaymentMethodSystemName)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopDropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.GoDirectlyToNumber)
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="input-group input-group-short">
+                                            @Html.NopEditorFor(model => model.GoDirectlyToNumber)
+                                            <span class="input-group-btn">
+                                                <input type="submit" id="go-to-order-by-number" name="go-to-order-by-number" class="btn btn-info btn-flat" value="@T("Admin.Common.Go")" />
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="button" id="search-orders" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                            <div class="col-md-7 col-md-offset-5">
+                                <input type="button" id="search-orders" class="btn btn-lg btn-primary" value="@T("Admin.Common.Search")" style="min-width: 170px;margin-top: 20px;"/>
                             </div>
                         </div>
                     </div>
