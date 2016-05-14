@@ -439,6 +439,7 @@
     <Content Include="App_Data\Localization\Installation\installation.hr-HR.xml" />
     <Content Include="App_Data\Localization\Installation\installation.hu.xml" />
     <Content Include="App_Data\Localization\Installation\installation.hy-am.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.id.xml" />
     <Content Include="App_Data\Localization\Installation\installation.is.xml" />
     <Content Include="App_Data\Localization\Installation\installation.it.xml" />
     <Content Include="App_Data\Localization\Installation\installation.jp.xml" />
