@@ -38,40 +38,44 @@
             </script>
 
             <div class="panel-group">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-search">
                     <div class="panel-body">
-                        <p>
-                            <h4>@T("Admin.Configuration.Plugins.Description")</h4>
-                            <ol>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-                            </ol>
-                            You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
-                        </p>
-                        <br/>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>
+                                    <h4>@T("Admin.Configuration.Plugins.Description")</h4>
+                                    <ol>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                                        <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                                    </ol>
+                                    You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
+                                </p>
+                                <br />
 
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchLoadModeId)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchGroup)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="button" id="search-plugins" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchLoadModeId)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchLoadModeId", Model.AvailableLoadModes)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        @Html.NopLabelFor(model => model.SearchGroup)
+                                    </div>
+                                    <div class="col-md-8">
+                                        @Html.NopDropDownList("SearchGroup", Model.AvailableGroups)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-8 col-md-offset-4">
+                                        <input type="button" id="search-plugins" class="btn btn-lg btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -159,8 +163,8 @@
                     <div>
                         <input type="submit" id="btnRefresh" style="display: none" />
                         <script type="text/javascript">
-                            $(document).ready(function() {
-                                $('#btnRefresh').click(function() {
+                            $(document).ready(function () {
+                                $('#btnRefresh').click(function () {
                                     //refresh grid
                                     var grid = $("#plugins-grid").data('kendoGrid');
                                     grid.dataSource.read();
