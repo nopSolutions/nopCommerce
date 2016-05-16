@@ -31,137 +31,143 @@
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
-                            </div>
-                            <div class="col-md-9">
-                                @foreach (var customerRole in Model.AvailableCustomerRoles)
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.SearchCustomerRoleIds)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @foreach (var customerRole in Model.AvailableCustomerRoles)
+                                        {
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
+                                                           @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id))
+                                                           {
+                                                               <text> checked="checked" </text>
+                                                           }/>
+                                                    @customerRole.Name
+                                                </label>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.SearchEmail)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.SearchEmail)
+                                    </div>
+                                </div>
+                                @if (Model.UsernamesEnabled)
                                 {
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
-                                                   @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id))
-                                                   {
-                                                       <text> checked="checked" </text>
-                                                   }/>
-                                                @customerRole.Name
-                                            </label>
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @Html.NopLabelFor(model => model.SearchUsername)
                                         </div>
+                                        <div class="col-md-9">
+                                            @Html.NopEditorFor(model => model.SearchUsername)
+                                        </div>
+                                    </div>
                                 }
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchEmail)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchEmail)
-                            </div>
-                        </div>
-                        @if (Model.UsernamesEnabled)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    @Html.NopLabelFor(model => model.SearchUsername)
-                                </div>
-                                <div class="col-md-9">
-                                    @Html.NopEditorFor(model => model.SearchUsername)
-                                </div>
-                            </div>
-                        }
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchFirstName)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchFirstName)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchLastName)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchLastName)
-                            </div>
-                        </div>
-                        @if (Model.DateOfBirthEnabled)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    @Html.NopLabelFor(model => model.SearchDayOfBirth)
-                                </div>
-                                <div class="col-md-9">
-                                    @{
-                                        var monthOfBirthValues = new List<SelectListItem>();
-                                        monthOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
-                                        for (int i = 1; i <= 12; i++)
-                                        {
-                                            monthOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
-                                        }
-                                        var dayOfBirthValues = new List<SelectListItem>();
-                                        dayOfBirthValues.Add(new SelectListItem { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
-                                        for (int i = 1; i <= 31; i++)
-                                        {
-                                            dayOfBirthValues.Add(new SelectListItem { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
-                                        }
-                                    }
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            @Html.NopDropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
-                                        </div>
-                                        <div class="col-md-2">
-                                            @Html.NopDropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
-                                        </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.SearchFirstName)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.SearchFirstName)
                                     </div>
                                 </div>
                             </div>
-                        }
-                        @if (Model.CompanyEnabled)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    @Html.NopLabelFor(model => model.SearchCompany)
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.SearchLastName)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.SearchLastName)
+                                    </div>
                                 </div>
-                                <div class="col-md-9">
-                                    @Html.NopEditorFor(model => model.SearchCompany)
+                                @if (Model.DateOfBirthEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @Html.NopLabelFor(model => model.SearchDayOfBirth)
+                                        </div>
+                                        <div class="col-md-9">
+                                            @{
+                                                var monthOfBirthValues = new List<SelectListItem>();
+                                                monthOfBirthValues.Add(new SelectListItem {Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0"});
+                                                for (int i = 1; i <= 12; i++)
+                                                {
+                                                    monthOfBirthValues.Add(new SelectListItem {Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture)});
+                                                }
+                                                var dayOfBirthValues = new List<SelectListItem>();
+                                                dayOfBirthValues.Add(new SelectListItem {Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0"});
+                                                for (int i = 1; i <= 31; i++)
+                                                {
+                                                    dayOfBirthValues.Add(new SelectListItem {Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture)});
+                                                }
+                                            }
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    @Html.NopDropDownListFor(model => model.SearchMonthOfBirth, monthOfBirthValues)
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @Html.NopDropDownListFor(model => model.SearchDayOfBirth, dayOfBirthValues)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.CompanyEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @Html.NopLabelFor(model => model.SearchCompany)
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.NopEditorFor(model => model.SearchCompany)
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.PhoneEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @Html.NopLabelFor(model => model.SearchPhone)
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.NopEditorFor(model => model.SearchPhone)
+                                        </div>
+                                    </div>
+                                }
+                                @if (Model.ZipPostalCodeEnabled)
+                                {
+                                    <div class="form-group">
+                                        <div class="col-md-3">
+                                            @Html.NopLabelFor(model => model.SearchZipPostalCode)
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.NopEditorFor(model => model.SearchZipPostalCode)
+                                        </div>
+                                    </div>
+                                }
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        @Html.NopLabelFor(model => model.SearchIpAddress)
+                                    </div>
+                                    <div class="col-md-9">
+                                        @Html.NopEditorFor(model => model.SearchIpAddress)
+                                    </div>
                                 </div>
                             </div>
-                        }
-                        @if (Model.PhoneEnabled)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    @Html.NopLabelFor(model => model.SearchPhone)
-                                </div>
-                                <div class="col-md-9">
-                                    @Html.NopEditorFor(model => model.SearchPhone)
-                                </div>
                             </div>
-                        }
-                        @if (Model.ZipPostalCodeEnabled)
-                        {
-                            <div class="form-group">
-                                <div class="col-md-3">
-                                    @Html.NopLabelFor(model => model.SearchZipPostalCode)
-                                </div>
-                                <div class="col-md-9">
-                                    @Html.NopEditorFor(model => model.SearchZipPostalCode)
-                                </div>
-                            </div>
-                        }
-                        <div class="form-group">
-                            <div class="col-md-3">
-                                @Html.NopLabelFor(model => model.SearchIpAddress)
-                            </div>
-                            <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SearchIpAddress)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="button" id="search-customers" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <input type="button" id="search-customers" class="btn btn-lg btn-primary btn-search" value="@T("Admin.Common.Search")" style="float: none"/>
                             </div>
                         </div>
                     </div>
@@ -225,10 +231,10 @@
                                         @if (Model.UsernamesEnabled)
                                         {
                                             <text>{
-                                                field: "Username",
-                                                title: "@T("Admin.Customers.Customers.Fields.Username")",
-                                                width: 200
-                                            },</text>
+                                            field: "Username",
+                                            title: "@T("Admin.Customers.Customers.Fields.Username")",
+                                            width: 200
+                                        },</text>
                                         }
                                         {
                                             field: "FullName",
@@ -243,28 +249,28 @@
                                         @if (Model.CompanyEnabled)
                                         {
                                             <text>{
-                                                field: "Company",
-                                                title: "@T("Admin.Customers.Customers.Fields.Company")",
-                                                width: 200
-                                            },</text>
+                                            field: "Company",
+                                            title: "@T("Admin.Customers.Customers.Fields.Company")",
+                                            width: 200
+                                        },</text>
                                         }
 
                                         @if (Model.PhoneEnabled)
                                         {
                                             <text>{
-                                                field: "Phone",
-                                                title: "@T("Admin.Customers.Customers.Fields.Phone")",
-                                                width: 200
-                                            },</text>
+                                            field: "Phone",
+                                            title: "@T("Admin.Customers.Customers.Fields.Phone")",
+                                            width: 200
+                                        },</text>
                                         }
 
                                         @if (Model.ZipPostalCodeEnabled)
                                         {
                                             <text>{
-                                                field: "ZipPostalCode",
-                                                title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
-                                                width: 200
-                                            },</text>
+                                            field: "ZipPostalCode",
+                                            title: "@T("Admin.Customers.Customers.Fields.ZipPostalCode")",
+                                            width: 200
+                                        },</text>
                                         }
                                         {
                                             field: "Active",
@@ -396,7 +402,7 @@
             </div>
         </div>
     </div>
-}
+                                                }
 
 @*export selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
 @using (Html.BeginForm("ExportXmlSelected", "Customer", FormMethod.Post, new { id = "export-xml-selected-form" }))
