@@ -302,18 +302,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            IList<BlogComment> comments;
-            if (filterByBlogPostId.HasValue)
-            {
+            IList<BlogComment> comments = filterByBlogPostId.HasValue ?
                 //filter comments by blog
-                var blogPost = _blogService.GetBlogPostById(filterByBlogPostId.Value);
-                comments = blogPost.BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
-            }
-            else
-            {
+                _blogService.GetBlogPostById(filterByBlogPostId.Value).BlogComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all blog comments
-                comments = _blogService.GetAllComments(0);
-            }
+                _blogService.GetAllComments(0);
 
             var gridModel = new DataSourceResult
             {

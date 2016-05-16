@@ -313,18 +313,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            IList<NewsComment> comments;
-            if (filterByNewsItemId.HasValue)
-            {
+            IList<NewsComment> comments = filterByNewsItemId.HasValue ?
                 //filter comments by news item
-                var newsItem = _newsService.GetNewsById(filterByNewsItemId.Value);
-                comments = newsItem.NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList();
-            }
-            else
-            {
+                _newsService.GetNewsById(filterByNewsItemId.Value).NewsComments.OrderBy(bc => bc.CreatedOnUtc).ToList() :
                 //load all news comments
-                comments = _newsService.GetAllComments(0);
-            }
+                _newsService.GetAllComments(0);
 
             var gridModel = new DataSourceResult
             {
