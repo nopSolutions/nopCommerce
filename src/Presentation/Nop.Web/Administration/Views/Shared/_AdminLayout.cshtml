@@ -12,7 +12,6 @@
     //var adminName = usernamesEnabled ? currentCustomer.Username : currentCustomer.Email;
     var adminName = currentCustomer.GetFullName();
 
-    var currentVersion = NopVersion.CurrentVersion;
     var kendoVersion = "2014.1.318";
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
         !EngineContext.Current.Resolve<LocalizationSettings>().IgnoreRtlPropertyForAdminArea;
@@ -305,13 +304,9 @@
                                 <li>
                                     @Html.Widget("admin_header_middle", area: "Admin")
                                 </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "Home", new {area = ""})">
-                                        <span>@T("Admin.Header.PublicStore")</span>
-                                        @*<i class="fa fa-gears"></i>*@
-                                    </a>
-                                </li>
-                                @if (canManageMaintenance)
+
+
+                            @if (canManageMaintenance)
                                     {
                                 <li>
                                     <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
@@ -328,10 +323,12 @@
 
                                     }
                                 <li>
-                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
+                                    @Html.Action("LanguageSelector", "Common", new {area = "Admin"})
                                 </li>
                                 <li>
-                                    <span class="version">nopCommerce @currentVersion</span>
+                                    <a href="@Url.Action("Index", "Home", new {area = ""})">
+                                        <span class="public-store">@T("Admin.Header.PublicStore")</span>
+                                    </a>
                                 </li>
                                 <li>
                                     @Html.Widget("admin_header_after", area: "Admin")
