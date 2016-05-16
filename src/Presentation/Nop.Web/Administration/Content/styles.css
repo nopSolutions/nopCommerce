@@ -398,6 +398,10 @@ input[type=file].form-control {
     max-width: 100%;
 }
 
+.modal-dialog {
+    margin-top: 200px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
@@ -445,5 +449,9 @@ input[type=file].form-control {
 @media (max-width: 767px) {
     .main-sidebar, .left-side {
         padding-top: 155px;
+    }
+
+    .modal-dialog {
+        margin-top: 30px;
     }
 }
