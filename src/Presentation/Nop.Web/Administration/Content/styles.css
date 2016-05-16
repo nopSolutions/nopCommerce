@@ -89,7 +89,6 @@ table.adminContent {
 .btn-search {
     margin-top: 10px;
     min-width: 170px;
-    float: right;
 }
 
 .k-button:hover, .k-button:focus, .k-button.k-state-focused {
