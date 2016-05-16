@@ -181,9 +181,11 @@
                                 </li>
                                 }
                                 <li>
-                                    <a href="@Url.Action("Index", "Home", new {area = ""})">
-                                        <span class="public-store">@T("Admin.Header.PublicStore")</span>
-                                    </a>
+                                    <span class="public-store">
+                                        <a href="@Url.Action("Index", "Home", new {area = ""})">
+                                            @T("Admin.Header.PublicStore")
+                                        </a>
+                                    </span>
                                 </li>
                                 <li>
                                     @Html.Widget("admin_header_after", area: "Admin")
