@@ -119,6 +119,9 @@
                         </a>
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
+                                <li>
+                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
+                                </li>
                                 @if (currentCustomer.IsRegistered())
                                 {
                                     <li class="dropdown user user-menu">
@@ -138,7 +141,7 @@
                                             <!-- Menu Footer-->
                                             <li class="user-footer">
                                                 <div class="pull-left">
-                                                    <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
+                                                    <a href="@Url.Action("Edit", "Customer", new {id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
                                                 </div>
                                                 <div class="pull-right">
                                                     <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)" class="btn btn-default btn-flat">@T("Admin.Header.Logout")</a>
@@ -148,24 +151,21 @@
                                     </li>
                                 }
                                 <li>
-                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
-                                </li>
-                                <li>
                                     @Html.Widget("admin_header_middle", area: "Admin")
                                 </li>
                                 @if (canManageMaintenance)
                                 {
-                                <li>
-                                    <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                        <span>@T("Admin.Header.ClearCache")</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                        <span>@T("Admin.Header.RestartApplication")</span>
-                                        @*<i class="fa fa-gears"></i>*@
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <span>@T("Admin.Header.ClearCache")</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <span>@T("Admin.Header.RestartApplication")</span>
+                                            @*<i class="fa fa-gears"></i>*@
+                                        </a>
+                                    </li>
                                 }
                                 <li>
                                     <span class="public-store">
