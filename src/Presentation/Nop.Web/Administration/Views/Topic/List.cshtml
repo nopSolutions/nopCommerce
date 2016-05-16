@@ -1,6 +1,6 @@
 ﻿@model TopicListModel
 
-@{    
+@{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Topics").Text;
 }
@@ -18,19 +18,23 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SearchStoreId)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="search-topics" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SearchStoreId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownList("SearchStoreId", Model.AvailableStores)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <input type="button" id="search-topics" class="btn btn-lg btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -41,7 +45,7 @@
                     <div id="topics-grid"></div>
 
                     <script>
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             $("#topics-grid").kendoGrid({
                                 dataSource: {
                                     type: "json",
@@ -58,7 +62,7 @@
                                         total: "Total",
                                         errors: "Errors"
                                     },
-                                    error: function(e) {
+                                    error: function (e) {
                                         display_kendoui_grid_error(e);
                                         // Cancel the changes
                                         this.cancelChanges();
@@ -140,16 +144,16 @@
                                     title: "@T("Admin.Common.Edit")",
                                     width: 100,
                                     template: '<a href="Edit/#=Id#">@T("Admin.Common.Edit")</a>'
-                                    }
+                                }
                                 ]
                             });
                         });
                     </script>
 
                     <script type="text/javascript">
-                        $(document).ready(function() {
+                        $(document).ready(function () {
                             //search button
-                            $('#search-topics').click(function() {
+                            $('#search-topics').click(function () {
                                 //search
                                 var grid = $('#topics-grid').data('kendoGrid');
                                 grid.dataSource.read();
