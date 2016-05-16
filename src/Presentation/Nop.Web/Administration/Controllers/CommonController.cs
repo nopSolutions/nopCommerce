@@ -141,6 +141,7 @@ namespace Nop.Admin.Controllers
             model.ServerTimeZone = TimeZone.CurrentTimeZone.StandardName;
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
+            model.CurrentUserTime = _dateTimeHelper.ConvertToUserTime(DateTime.Now);
             model.HttpHost = _webHelper.ServerVariables("HTTP_HOST");
             foreach (var key in _httpContext.Request.ServerVariables.AllKeys)
             {
@@ -162,7 +163,6 @@ namespace Nop.Admin.Controllers
             }
             return View(model);
         }
-
 
         public ActionResult Warnings()
         {
