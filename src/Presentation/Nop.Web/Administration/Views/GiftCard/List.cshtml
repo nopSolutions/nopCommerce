@@ -21,35 +21,39 @@
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.ActivatedId)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopDropDownListFor(model => model.ActivatedId, Model.ActivatedList)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.CouponCode)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.CouponCode)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.RecipientName)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.RecipientName)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="search-giftcards" class="btn btn-default" value="@T("Admin.Common.Search")"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.ActivatedId)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopDropDownListFor(model => model.ActivatedId, Model.ActivatedList)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.CouponCode)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.CouponCode)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.RecipientName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.RecipientName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <input type="button" id="search-giftcards" class="btn btn-lg btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
