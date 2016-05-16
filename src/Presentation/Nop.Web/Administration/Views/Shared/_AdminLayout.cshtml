@@ -2,6 +2,7 @@
 @using Nop.Core.Domain.Localization
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
+@using Nop.Core.Domain
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Domain.Media
 @using Nop.Services.Common
@@ -203,12 +204,25 @@
                 </div>
             </div>
         }
-
         <div class="content-wrapper">
             @Html.Partial("Notifications")
             <div>
                 @RenderBody()
             </div>
+        </div>
+        <div class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>nopCommerce version @NopVersion.CurrentVersion</b>
+            </div>
+            @*<strong>
+                @T("Content.CopyrightNotice", DateTime.Now.Year, EngineContext.Current.Resolve<IStoreContext>().CurrentStore.Name)
+            </strong>*@
+            @if (!EngineContext.Current.Resolve<StoreInformationSettings>().HidePoweredByNopCommerce)
+            {
+                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer? 
+                    Please find more info at http://www.nopcommerce.com/copyrightremoval.aspx*@
+                <text>Powered by <a href="http://www.nopcommerce.com/" target="_blank">nopCommerce</a></text>
+            }
         </div>
     </div>
     @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
