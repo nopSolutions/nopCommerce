@@ -390,6 +390,11 @@ input[type=file].form-control {
     margin-bottom: 10px;
 }
 
+.content-header>h1>small {
+    font-size: 16px;
+    color: #0076BB;
+}
+
 .content-header .btn {
     margin-bottom: 5px;
 }
