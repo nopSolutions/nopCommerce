@@ -14,26 +14,30 @@
         @T("Admin.System.SeNames")
     </h1>
     <div class="pull-right">
-        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.System.SeNames.DeleteSelected")"/>
+        <input type="button" id="delete-selected" class="btn btn-default" value="@T("Admin.System.SeNames.DeleteSelected")" />
     </div>
 </div>
 
 <div class="content">
     <div class="form-horizontal">
         <div class="panel-group">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-search">
                 <div class="panel-body">
-                    <div class="form-group">
-                        <div class="col-md-3">
-                            @Html.NopLabelFor(model => model.SeName)
-                        </div>
-                        <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.SeName)
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-9 col-md-offset-3">
-                            <input type="button" id="search-senames" class="btn btn-default" value="@T("Admin.Common.Search")" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    @Html.NopLabelFor(model => model.SeName)
+                                </div>
+                                <div class="col-md-8">
+                                    @Html.NopEditorFor(model => model.SeName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <input type="button" id="search-senames" class="btn btn-lg btn-primary btn-search" value="@T("Admin.Common.Search")" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -41,7 +45,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div id="sename-grid"></div>
-                        
+
                     <script>
                         $(document).ready(function () {
                             $("#sename-grid").kendoGrid({
@@ -183,19 +187,19 @@
             $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
         });
 
-        //wire up checkboxes. 
+        //wire up checkboxes.
         $('#sename-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function(e) {
             var $check = $(this);
             if ($check.is(":checked") == true) {
                 var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked == -1) {
-                    //add id to selectedIds.  
+                    //add id to selectedIds.
                     selectedIds.push($check.val());
                 }
             } else {
                 var checked = jQuery.inArray($check.val(), selectedIds);
                 if (checked > -1) {
-                    //remove id from selectedIds.  
+                    //remove id from selectedIds.
                     selectedIds = $.grep(selectedIds, function(item, index) {
                         return item != $check.val();
                     });
@@ -218,7 +222,7 @@
         $('#sename-grid input[type=checkbox][id!=mastercheckbox]').each(function() {
             var currentId = $(this).val();
             var checked = jQuery.inArray(currentId, selectedIds);
-            //set checked based on if current checkbox's value is in selectedIds.  
+            //set checked based on if current checkbox's value is in selectedIds.
             $(this).attr('checked', checked > -1);
         });
 
