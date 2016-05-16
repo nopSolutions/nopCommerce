@@ -3,14 +3,17 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Media
+@using Nop.Services.Common
 @using Nop.Services.Customers
+@using Nop.Services.Media
 @using Nop.Services.Security;
 
 @{
     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-    //var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
-    //var adminName = usernamesEnabled ? currentCustomer.Username : currentCustomer.Email;
-    var adminName = currentCustomer.GetFullName();
+    var avatarUrl = EngineContext.Current.Resolve<IPictureService>()
+        .GetPictureUrl(currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+        160, true, defaultPictureType: PictureType.Avatar);
 
     var kendoVersion = "2014.1.318";
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
@@ -31,15 +34,11 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 
-     <!-- Font Awesome -->
     Html.AppendCssFileParts("~/Administration/Content/fontAwesome/font-awesome-4.4.0.min.css");
-     <!-- Ionicons -->
     @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
     <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
-    <!-- Theme style -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
-    <!-- Bootstrap 3.3.5 -->
     Html.AppendCssFileParts("~/Administration/Content/bootstrap/bootstrap-3.3.5.min.css");
 
 
@@ -124,29 +123,17 @@
                                 {
                                     <li class="dropdown user user-menu">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            <img src="@Url.Content("~/Administration/Content/adminLTE/img/user2-160x160.jpg")" class="user-image" alt="@adminName">
-                                            <span class="hidden-xs">@adminName</span>
+                                            <img src="@avatarUrl" class="user-image" alt="">
+                                            <span class="hidden-xs">@currentCustomer.GetFullName()</span>
                                         </a>
                                         <ul class="dropdown-menu">
                                             <!-- User image -->
                                             <li class="user-header">
-                                                <img src="@Url.Content("~/Administration/Content/adminLTE/img/user2-160x160.jpg")" class="img-circle" alt="@adminName">
+                                                <img src="@avatarUrl" class="img-circle" alt="">
                                                 <p>
-                                                    @adminName
-                                                    <small>Member since Nov. 2012</small>
+                                                    @currentCustomer.GetFullName()
+                                                    <small>@currentCustomer.Email</small>
                                                 </p>
-                                            </li>
-                                            <!-- Menu Body -->
-                                            <li class="user-body">
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Followers</a>
-                                                </div>
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Sales</a>
-                                                </div>
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Friends</a>
-                                                </div>
                                             </li>
                                             <!-- Menu Footer-->
                                             <li class="user-footer">
