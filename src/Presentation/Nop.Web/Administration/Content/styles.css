@@ -436,6 +436,7 @@ input[type=file].form-control {
         margin-bottom: 5px;
         width: 100%;
         text-align: left;
+        padding-top: 0;
     }
 
     .panel-search .form-control{
