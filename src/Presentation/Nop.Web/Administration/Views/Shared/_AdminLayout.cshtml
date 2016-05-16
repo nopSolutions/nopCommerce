@@ -216,18 +216,6 @@
         }
 
         <div class="content-wrapper">
-            @*@if (IsSectionDefined("statusbar"))
-            {
-                @RenderSection("statusbar")
-            }
-            else
-            {
-                <div class="status-bar">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-
-                    - Нужен ли??
-                </div>
-            }*@
             @Html.Partial("Notifications")
             <div>
                 @RenderBody()
