@@ -11154,6 +11154,12 @@
   <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
     <Value>ASP.NET info.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime">
+    <Value>Current user time</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
+    <Value>Current user time (based on specified datetime and timezone settings).</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.HTTPHOST">
     <Value>HTTP_HOST</Value>
   </LocaleResource>
@@ -11203,10 +11209,10 @@
     <Value>A list of server variables.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
-    <Value>Greenwich Mean Time (GMT/UTC)</Value>
+    <Value>Coordinated Universal Time (UTC)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
-    <Value>Greenwich Mean Time (GMT/UTC).</Value>
+    <Value>Coordinated Universal Time (UTC).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Templates">
     <Value>Templates</Value>

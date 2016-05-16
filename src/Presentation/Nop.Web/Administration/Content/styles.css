@@ -11,11 +11,14 @@
     height: 50px;
     background-color: #fff !important;
 }
-.navbar-nav>li>span.public-store {
+.navbar-nav span.public-store {
     padding: 15px;
     display: block;
     color: #fff;
     background-color: #367fa9;
+}
+.navbar-nav span.public-store a {
+    color: #fff;
 }
 table.adminContent {
     border-collapse: collapse;

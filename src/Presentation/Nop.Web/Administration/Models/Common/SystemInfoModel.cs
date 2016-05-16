@@ -34,6 +34,9 @@ namespace Nop.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
 
+        [NopResourceDisplayName("Admin.System.SystemInfo.CurrentUserTime")]
+        public DateTime CurrentUserTime { get; set; }
+
         [NopResourceDisplayName("Admin.System.SystemInfo.HTTPHOST")]
         public string HttpHost { get; set; }
 

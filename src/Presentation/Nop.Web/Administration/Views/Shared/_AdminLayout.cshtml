@@ -3,14 +3,17 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Media
+@using Nop.Services.Common
 @using Nop.Services.Customers
+@using Nop.Services.Media
 @using Nop.Services.Security;
 
 @{
     var currentCustomer = EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer;
-    //var usernamesEnabled = EngineContext.Current.Resolve<CustomerSettings>().UsernamesEnabled;
-    //var adminName = usernamesEnabled ? currentCustomer.Username : currentCustomer.Email;
-    var adminName = currentCustomer.GetFullName();
+    var avatarUrl = EngineContext.Current.Resolve<IPictureService>()
+        .GetPictureUrl(currentCustomer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
+        160, true, defaultPictureType: PictureType.Avatar);
 
     var kendoVersion = "2014.1.318";
     var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl &&
@@ -31,15 +34,11 @@
     Html.AppendCssFileParts(string.Format("~/Content/kendo/{0}/kendo.common.min.css", kendoVersion));
     Html.AppendCssFileParts("~/Content/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
 
-     <!-- Font Awesome -->
     Html.AppendCssFileParts("~/Administration/Content/fontAwesome/font-awesome-4.4.0.min.css");
-     <!-- Ionicons -->
     @*<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
     <!-- AdminLTE Skins. Choose a skin from the css/skins. Folder instead of downloading all of them to reduce the load. -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/skins/_all-skins.min.css");
-    <!-- Theme style -->
     Html.AppendCssFileParts("~/Administration/Content/adminLTE/AdminLTE-2.3.0.min.css");
-    <!-- Bootstrap 3.3.5 -->
     Html.AppendCssFileParts("~/Administration/Content/bootstrap/bootstrap-3.3.5.min.css");
 
 
@@ -120,179 +119,29 @@
                         </a>
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
-                                @*<li class="dropdown messages-menu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-envelope-o"></i>
-                                        <span class="label label-success">4</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header">You have 4 messages</li>
-                                        <li>
-                                            <!-- inner menu: contains the actual data -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <!-- start message -->
-                                                    <a href="#">
-                                                        <div class="pull-left">
-                                                            <img src="@Url.Content("~/Administration/Content/adminLTE/img/user2-160x160.jpg")" class="img-circle" alt="User Image">
-                                                        </div>
-                                                        <h4>
-                                                            Support Team
-                                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                                        </h4>
-                                                        <p>Why not buy a new awesome theme?</p>
-                                                    </a>
-                                                </li><!-- end message -->
-                                            </ul>
-                                        </li>
-                                        <li class="footer"><a href="#">See All Messages</a></li>
-                                    </ul>
+                                <li>
+                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
                                 </li>
-                                <li class="dropdown notifications-menu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-bell-o"></i>
-                                        <span class="label label-warning">10</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header">You have 10 notifications</li>
-                                        <li>
-                                            <!-- inner menu: contains the actual data -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the page and may cause design problems
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-users text-red"></i> 5 new members joined
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#">
-                                                        <i class="fa fa-user text-red"></i> You changed your username
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="footer"><a href="#">View all</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown tasks-menu">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-flag-o"></i>
-                                        <span class="label label-danger">9</span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="header">You have 9 tasks</li>
-                                        <li>
-                                            <!-- inner menu: contains the actual data -->
-                                            <ul class="menu">
-                                                <li>
-                                                    <!-- Task item -->
-                                                    <a href="#">
-                                                        <h3>
-                                                            Design some buttons
-                                                            <small class="pull-right">20%</small>
-                                                        </h3>
-                                                        <div class="progress xs">
-                                                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">20% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li><!-- end task item -->
-                                                <li>
-                                                    <!-- Task item -->
-                                                    <a href="#">
-                                                        <h3>
-                                                            Create a nice theme
-                                                            <small class="pull-right">40%</small>
-                                                        </h3>
-                                                        <div class="progress xs">
-                                                            <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">40% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li><!-- end task item -->
-                                                <li>
-                                                    <!-- Task item -->
-                                                    <a href="#">
-                                                        <h3>
-                                                            Some task I need to do
-                                                            <small class="pull-right">60%</small>
-                                                        </h3>
-                                                        <div class="progress xs">
-                                                            <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">60% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li><!-- end task item -->
-                                                <li>
-                                                    <!-- Task item -->
-                                                    <a href="#">
-                                                        <h3>
-                                                            Make beautiful transitions
-                                                            <small class="pull-right">80%</small>
-                                                        </h3>
-                                                        <div class="progress xs">
-                                                            <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                                                                <span class="sr-only">80% Complete</span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li><!-- end task item -->
-                                            </ul>
-                                        </li>
-                                        <li class="footer">
-                                            <a href="#">View all tasks</a>
-                                        </li>
-                                    </ul>
-                                </li>*@
                                 @if (currentCustomer.IsRegistered())
                                 {
                                     <li class="dropdown user user-menu">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                            <img src="@Url.Content("~/Administration/Content/adminLTE/img/user2-160x160.jpg")" class="user-image" alt="@adminName">
-                                            <span class="hidden-xs">@adminName</span>
+                                            <img src="@avatarUrl" class="user-image" alt="">
+                                            <span class="hidden-xs">@currentCustomer.GetFullName()</span>
                                         </a>
                                         <ul class="dropdown-menu">
                                             <!-- User image -->
                                             <li class="user-header">
-                                                <img src="@Url.Content("~/Administration/Content/adminLTE/img/user2-160x160.jpg")" class="img-circle" alt="@adminName">
+                                                <img src="@avatarUrl" class="img-circle" alt="">
                                                 <p>
-                                                    @adminName
-                                                    <small>Member since Nov. 2012</small>
+                                                    @currentCustomer.GetFullName()
+                                                    <small>@currentCustomer.Email</small>
                                                 </p>
-                                            </li>
-                                            <!-- Menu Body -->
-                                            <li class="user-body">
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Followers</a>
-                                                </div>
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Sales</a>
-                                                </div>
-                                                <div class="col-xs-4 text-center">
-                                                    <a href="#">Friends</a>
-                                                </div>
                                             </li>
                                             <!-- Menu Footer-->
                                             <li class="user-footer">
                                                 <div class="pull-left">
-                                                    <a href="@Url.Action("Edit", "Customer", new { id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
+                                                    <a href="@Url.Action("Edit", "Customer", new {id = currentCustomer.Id})" class="btn btn-default btn-flat">Profile</a>
                                                 </div>
                                                 <div class="pull-right">
                                                     <a href="@Url.Action("Logout", "Customer", new {area = ""}, null)" class="btn btn-default btn-flat">@T("Admin.Header.Logout")</a>
@@ -302,30 +151,28 @@
                                     </li>
                                 }
                                 <li>
-                                    @Html.Action("LanguageSelector", "Common", new { area = "Admin" })
-                                </li>
-                                <li>
                                     @Html.Widget("admin_header_middle", area: "Admin")
                                 </li>
                                 @if (canManageMaintenance)
                                 {
-                                <li>
-                                    <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                        <span>@T("Admin.Header.ClearCache")</span>
-                                        @*<i class="fa fa-gears"></i>*@
-                                    </a>
-                                </li>
-                                <li>
-                                    <a id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
-                                        <span>@T("Admin.Header.RestartApplication")</span>
-                                        @*<i class="fa fa-gears"></i>*@
-                                    </a>
-                                </li>
+                                    <li>
+                                        <a href="@webHelper.ModifyQueryString(Url.Action("ClearCache", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <span>@T("Admin.Header.ClearCache")</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a id="restart-application" href="@webHelper.ModifyQueryString(Url.Action("RestartApplication", "Common", new RouteValueDictionary {{"area", "Admin"}}), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)">
+                                            <span>@T("Admin.Header.RestartApplication")</span>
+                                            @*<i class="fa fa-gears"></i>*@
+                                        </a>
+                                    </li>
                                 }
                                 <li>
-                                    <a href="@Url.Action("Index", "Home", new {area = ""})">
-                                        <span class="public-store">@T("Admin.Header.PublicStore")</span>
-                                    </a>
+                                    <span class="public-store">
+                                        <a href="@Url.Action("Index", "Home", new {area = ""})">
+                                            @T("Admin.Header.PublicStore")
+                                        </a>
+                                    </span>
                                 </li>
                                 <li>
                                     @Html.Widget("admin_header_after", area: "Admin")
@@ -358,18 +205,6 @@
         }
 
         <div class="content-wrapper">
-            @*@if (IsSectionDefined("statusbar"))
-            {
-                @RenderSection("statusbar")
-            }
-            else
-            {
-                <div class="status-bar">
-                    @(EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(DateTime.Now).ToString("f"))
-
-                    - Нужен ли??
-                </div>
-            }*@
             @Html.Partial("Notifications")
             <div>
                 @RenderBody()
