@@ -86,6 +86,12 @@ table.adminContent {
     border-color: #ddd;
 }
 
+.btn-search {
+    margin-top: 10px;
+    min-width: 170px;
+    float: right;
+}
+
 .k-button:hover, .k-button:focus, .k-button.k-state-focused {
     background-color: #e7e7e7;
     background-image: none;
