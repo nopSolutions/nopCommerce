@@ -421,19 +421,19 @@ namespace Nop.Admin.Models.Orders
             {
                 public bool IsGiftCard { get; set; }
 
-                [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientName")]
                 [AllowHtml]
                 public string RecipientName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.RecipientEmail")]
                 [AllowHtml]
                 public string RecipientEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderName")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderName")]
                 [AllowHtml]
                 public string SenderName { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.SenderEmail")]
                 [AllowHtml]
                 public string SenderEmail { get; set; }
-                [NopResourceDisplayName("Products.GiftCard.Message")]
+                [NopResourceDisplayName("Admin.GiftCards.Fields.Message")]
                 [AllowHtml]
                 public string Message { get; set; }
 
