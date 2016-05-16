@@ -37,50 +37,50 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StartDate)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.StartDate)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.EndDate)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.EndDate)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.StoreId)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownList("StoreId", Model.AvailableStores)
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.VendorId)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownList("VendorId", Model.AvailableVendors)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.WarehouseId)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownList("WarehouseId", Model.AvailableWarehouses)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.ProductId)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         <input type="text" id="search-product-name" autocomplete="off" class="form-control text-box single-line" />
                                         <span id="search-product-friendly-name"></span>
                                         <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
@@ -113,84 +113,84 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderNotes)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.OrderNotes)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderGuid)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.OrderGuid)
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.OrderStatusIds)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownListFor(model => model.OrderStatusIds, Model.AvailableOrderStatuses)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.PaymentStatusIds)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownListFor(model => model.PaymentStatusIds, Model.AvailablePaymentStatuses)
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.ShippingStatusIds)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownListFor(model => model.ShippingStatusIds, Model.AvailableShippingStatuses)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingEmail)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.BillingEmail)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingLastName)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopEditorFor(model => model.BillingLastName)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.BillingCountryId)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownList("BillingCountryId", Model.AvailableCountries)
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.PaymentMethodSystemName)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         @Html.NopDropDownList("PaymentMethodSystemName", Model.AvailablePaymentMethods)
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         @Html.NopLabelFor(model => model.GoDirectlyToNumber)
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-8">
                                         <div class="input-group input-group-short">
                                             @Html.NopEditorFor(model => model.GoDirectlyToNumber)
                                             <span class="input-group-btn">

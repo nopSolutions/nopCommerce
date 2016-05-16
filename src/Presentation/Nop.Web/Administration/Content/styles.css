@@ -343,6 +343,10 @@ table td .form-group {
     white-space: normal;
 }
 
+.panel-search .form-control{
+    max-width: 425px;
+}
+
 input[type=file].form-control {
     height: auto;
 }
@@ -421,6 +425,10 @@ input[type=file].form-control {
         margin-bottom: 5px;
         width: 100%;
         text-align: left;
+    }
+
+    .panel-search .form-control{
+        max-width: 100%;
     }
 
     .form-horizontal span.required {
