@@ -14,19 +14,19 @@
             <small>@Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <input type="button" class="btn btn-default" value="@T("Admin.Customers.Customers.SendEmail")" data-toggle="modal" data-target="#sendemail-window"/>
-            <input type="button" class="btn btn-default" value="@T("Admin.Customers.Customers.SendPM")" data-toggle="modal" data-target="#sendprivatemessage-window"/>
+            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
+            <input type="button" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendEmail")" data-toggle="modal" data-target="#sendemail-window"/>
+            <input type="button" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendPM")" data-toggle="modal" data-target="#sendprivatemessage-window"/>
             @if (Model.AllowSendingOfWelcomeMessage)
             {
-                <input type="submit" name="send-welcome-message" class="btn btn-default" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="send-welcome-message" class="btn bg-olive" value="@T("Admin.Customers.Customers.SendWelcomeMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
             @if (Model.AllowReSendingOfActivationMessage)
             {
-                <input type="submit" name="resend-activation-message" class="btn btn-default" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                <input type="submit" name="resend-activation-message" class="btn bg-olive" value="@T("Admin.Customers.Customers.ReSendActivationMessage")" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             }
-            <span id="customer-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <span id="customer-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
