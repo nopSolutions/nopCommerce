@@ -258,7 +258,7 @@
                                         confirmation: false,
                                         mode: "inline"
                                     },
-                                    scrollable: false,
+                                    scrollable: true,
                                     dataBound: onDataBound,
                                     columns: [
                                         {
@@ -272,7 +272,7 @@
                                         {
                                             field: "Id",
                                             title: "@T("Admin.Orders.Fields.ID")",
-                                            width: 50
+                                            width: 80
                                         },
                                         @if (!Model.IsLoggedInAsVendor)
                                         {
@@ -280,13 +280,13 @@
                                             <text>{
                                                 field: "OrderStatus",
                                                 title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                                width: 200
+                                                width: 150
                                             },</text>
                                         }
                                         {
                                             field: "PaymentStatus",
                                             title: "@T("Admin.Orders.Fields.PaymentStatus")",
-                                            width: 200
+                                            width: 150
                                         },
                                         @if (!Model.IsLoggedInAsVendor)
                                         {
@@ -294,23 +294,23 @@
                                             <text>{
                                                 field: "ShippingStatus",
                                                 title: "@T("Admin.Orders.Fields.ShippingStatus")",
-                                                width: 200
+                                                width: 150
                                             },</text>
                                         }
                                         {
                                             field: "CustomerEmail",
                                             title: "@T("Admin.Orders.Fields.Customer")",
-                                            width: 300,
+                                            width: 250,
                                             template: '#=CustomerFullName# (#=CustomerEmail#)'
                                         },
                                         {
                                             field: "StoreName",
                                             title: "@T("Admin.Orders.Fields.Store")",
-                                            width: 200
+                                            width: 150
                                         }, {
                                             field: "CreatedOn",
                                             title: "@T("Admin.Orders.Fields.CreatedOn")",
-                                            width: 200,
+                                            width: 150,
                                             type: "date",
                                             format: "{0:G}"
                                         },
@@ -320,7 +320,7 @@
                                             <text>{
                                                 field: "OrderTotal",
                                                 title: "@T("Admin.Orders.Fields.OrderTotal")",
-                                                width: 200,
+                                                width: 150,
                                                 footerTemplate: '<div><strong>@T("Admin.Orders.Report.Summary")</strong></div>' +
                                                                         '<div>@T("Admin.Orders.Report.Profit") <span id=\"aggregator-profit-block\"></span></div>' +
                                                                         '<div>@T("Admin.Orders.Report.Shipping") <span id=\"aggregator-shipping-block\"></span></div>' +
@@ -331,7 +331,7 @@
                                         {
                                             field: "Id",
                                             title: "@T("Admin.Common.View")",
-                                            width: 100,
+                                            width: 80,
                                             template: '<a href="Edit/#=Id#">@T("Admin.Common.View")</a>'
                                         }
                                     ]
