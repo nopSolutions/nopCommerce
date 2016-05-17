@@ -466,7 +466,25 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.System.SystemInfo.CurrentUserTime.Hint">
     <Value>Current user time (based on specified datetime and timezone settings).</Value>
-  </LocaleResource> 
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint1">
+    <Value>Each</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint2">
+    <Value>spent will earn</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint3">
+    <Value>reward points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
+    <Value>1 reward point =</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.SwitchToTreeView">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Treeview">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -60,9 +60,11 @@
             selector: "#@ViewData.TemplateInfo.GetFullHtmlFieldId(string.Empty)",
             fontsize_formats: "8pt 9pt 10pt 11pt 12pt 26pt 36pt",
             height: 350,
-            width: 790,
+            width: '100%',
+            autoresize_min_height: 350,
+            autoresize_max_height: 350,
             plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
+                "advlist autolink autoresize lists link image charmap print preview anchor",
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste@(allowJbimages ? " jbimages" : null)@(enableFullPage ? " fullpage" : null)"
             ],

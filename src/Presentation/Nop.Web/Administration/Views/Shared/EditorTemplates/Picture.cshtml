@@ -13,13 +13,15 @@
     var clientId = "picture" + random;
     var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
     var picture = pictureService.GetPictureById(Model);
+
+    const int pictureSize = 100;
 }
 
 <div id="@(clientId + "value")">
     @Html.HiddenFor(x => x)
 </div>
 <div id="@(clientId + "image")">
-    <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
+    <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))" />
 </div>
 @if (picture != null)
 {
@@ -88,7 +90,7 @@ else
         });
 
         $("#@(clientId + "remove")").click(function(e) {
-            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl()'/>");
+            $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
             $(this).hide();
         });

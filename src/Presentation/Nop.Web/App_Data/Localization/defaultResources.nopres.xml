@@ -1851,9 +1851,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.SwitchToListView">
     <Value>switch to list view</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.SwitchToTreeView">
-    <Value>switch to tree view</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Updated">
     <Value>The category has been updated successfully.</Value>
   </LocaleResource>
@@ -3569,9 +3566,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Standard">
     <Value>Standard</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Common.Treeview">
-    <Value>Tree view</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Update">
     <Value>Update</Value>
@@ -6283,13 +6277,13 @@
     <Value>Earning Reward Points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint1">
-    <Value>Each.</Value>
+    <Value>Each</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint2">
-    <Value>spent will earn.</Value>
+    <Value>spent will earn</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint3">
-    <Value>reward points.</Value>
+    <Value>reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Enabled">
     <Value>Enabled</Value>
@@ -6304,7 +6298,7 @@
     <Value>Specify reward points exchange rate.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
-    <Value>1 reward point =.</Value>
+    <Value>1 reward point =</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse">
     <Value>Minimum reward points to use</Value>
