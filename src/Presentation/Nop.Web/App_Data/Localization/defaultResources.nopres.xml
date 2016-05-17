@@ -1851,9 +1851,6 @@
   <LocaleResource Name="Admin.Catalog.Categories.SwitchToListView">
     <Value>switch to list view</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Catalog.Categories.SwitchToTreeView">
-    <Value>switch to tree view</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Categories.Updated">
     <Value>The category has been updated successfully.</Value>
   </LocaleResource>
@@ -3569,9 +3566,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Standard">
     <Value>Standard</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Common.Treeview">
-    <Value>Tree view</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Update">
     <Value>Update</Value>

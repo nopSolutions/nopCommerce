@@ -288,7 +288,7 @@ namespace Nop.Admin.Controllers
 
         #endregion
         
-        #region List / tree
+        #region List
 
         public ActionResult Index()
         {
@@ -328,29 +328,6 @@ namespace Nop.Admin.Controllers
             return Json(gridModel);
         }
         
-        public ActionResult Tree()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCategories))
-                return AccessDeniedView();
-
-            return View();
-        }
-
-        [HttpPost,]
-        public ActionResult TreeLoadChildren(int id = 0)
-        {
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(id, true)
-                .Select(x => new
-                             {
-                                 id = x.Id,
-                                 Name = x.Name,
-                                 hasChildren = _categoryService.GetAllCategoriesByParentCategoryId(x.Id, true).Count > 0,
-                                 imageUrl = Url.Content("~/Administration/Content/images/ico-content.png")
-                             });
-
-            return Json(categories);
-        }
-
         #endregion
 
         #region Create / Edit / Delete
