@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -14,7 +13,6 @@ using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Logging;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
 
@@ -351,7 +349,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey", "Australia Post Api Key");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint", "Specify Australia Post Api Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint", "Specify Australia Post Api Key.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
 
