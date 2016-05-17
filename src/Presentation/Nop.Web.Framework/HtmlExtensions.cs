@@ -22,24 +22,6 @@ namespace Nop.Web.Framework
     {
         #region Admin area extensions
 
-        public static MvcHtmlString Hint(this HtmlHelper helper, string value)
-        {
-            // Create tag builder
-            var builder = new TagBuilder("img");
-
-            // Add attributes
-            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
-            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
-
-            builder.MergeAttribute("src", url);
-            builder.MergeAttribute("alt", value);
-            builder.MergeAttribute("title", value);
-            builder.MergeAttribute("class", "ico-help");
-
-            // Render tag
-            return MvcHtmlString.Create(builder.ToString());
-        }
-
         public static HelperResult LocalizedEditor<T, TLocalizedModelLocal>(this HtmlHelper<T> helper,
             string name,
             Func<int, HelperResult> localizedTemplate,
@@ -329,6 +311,24 @@ namespace Nop.Web.Framework
 
         #region Form fields
 
+        public static MvcHtmlString Hint(this HtmlHelper helper, string value)
+        {
+            // Create tag builder
+            var builder = new TagBuilder("img");
+
+            // Add attributes
+            var urlHelper = new UrlHelper(helper.ViewContext.RequestContext);
+            var url = MvcHtmlString.Create(urlHelper.Content("~/Administration/Content/images/ico-help.gif")).ToHtmlString();
+
+            builder.MergeAttribute("src", url);
+            builder.MergeAttribute("alt", value);
+            builder.MergeAttribute("title", value);
+            builder.MergeAttribute("class", "ico-help");
+
+            // Render tag
+            return MvcHtmlString.Create(builder.ToString());
+        }
+
         public static MvcHtmlString NopLabelFor<TModel, TValue>(this HtmlHelper<TModel> helper,
                 Expression<Func<TModel, TValue>> expression, bool displayHint = true)
         {
@@ -344,9 +344,11 @@ namespace Nop.Web.Framework
                 {
                     var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     hintResource = EngineContext.Current.Resolve<ILocalizationService>()
-                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
-
-                    result.Append(helper.Hint(hintResource).ToHtmlString());
+                        .GetResource(resourceDisplayName.ResourceKey + ".Hint",  langId, returnEmptyIfNotFound: true, logIfNotFound: false);
+                    if (!String.IsNullOrEmpty(hintResource))
+                    {
+                        result.Append(helper.Hint(hintResource).ToHtmlString());
+                    }
                 }
             }
             result.Append(helper.LabelFor(expression, new { title = hintResource, @class = "control-label" }));
