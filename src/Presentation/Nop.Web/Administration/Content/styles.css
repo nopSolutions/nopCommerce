@@ -407,6 +407,28 @@ input[type=file].form-control {
     margin-top: 200px;
 }
 
+/*order list statuses*/
+#orders-grid span.order-status {
+    padding: .2em .6em .3em;
+    border-radius: .25em;
+    color: #2e2e2e;
+}
+#orders-grid span.order-status-pending {
+    background-color: #f39c12;
+    color: #fff;
+}
+#orders-grid span.order-status-processing {
+    background-color: #00c0ef;
+    color: #fff;
+}
+#orders-grid span.order-status-complete {
+    background-color: #00a65a;
+    color: #fff;
+}
+#orders-grid span.order-status-cancelled {
+    background-color: #dd4b39;
+    color: #fff;
+}
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;

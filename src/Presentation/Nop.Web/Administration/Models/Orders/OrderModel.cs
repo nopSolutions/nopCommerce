@@ -132,6 +132,8 @@ namespace Nop.Admin.Models.Orders
         //payment info
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
         public string PaymentStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.PaymentStatus")]
+        public int PaymentStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.PaymentMethod")]
         public string PaymentMethod { get; set; }
 
@@ -169,6 +171,8 @@ namespace Nop.Admin.Models.Orders
         public bool PickUpInStore { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
         public string ShippingStatus { get; set; }
+        [NopResourceDisplayName("Admin.Orders.Fields.ShippingStatus")]
+        public int ShippingStatusId { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingAddress")]
         public AddressModel ShippingAddress { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingMethod")]

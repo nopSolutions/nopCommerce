@@ -826,33 +826,33 @@ namespace Nop.Admin.Controllers
             var model = new OrderListModel();
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem
-                { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (orderStatusIds != null && orderStatusIds.Count() > 0)
+            { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
+            if (orderStatusIds != null && orderStatusIds.Any())
             {
                 foreach (var item in model.AvailableOrderStatuses.Where(os => orderStatusIds.Contains(os.Value)))
                     item.Selected = true;
-                model.AvailableOrderStatuses.FirstOrDefault().Selected = false;
+                model.AvailableOrderStatuses.First().Selected = false;
             }
             //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem
             { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (paymentStatusIds != null && paymentStatusIds.Count > 0)
+            if (paymentStatusIds != null && paymentStatusIds.Any())
             {
                 foreach (var item in model.AvailablePaymentStatuses.Where(ps => paymentStatusIds.Contains(ps.Value)))
                     item.Selected = true;
-                model.AvailablePaymentStatuses.FirstOrDefault().Selected = false;
+                model.AvailablePaymentStatuses.First().Selected = false;
             }
 
             //shipping statuses
             model.AvailableShippingStatuses = ShippingStatus.NotYetShipped.ToSelectList(false).ToList();
             model.AvailableShippingStatuses.Insert(0, new SelectListItem
             { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0", Selected = true });
-            if (shippingStatusIds != null && shippingStatusIds.Count > 0)
+            if (shippingStatusIds != null && shippingStatusIds.Any())
             {
                 foreach (var item in model.AvailableShippingStatuses.Where(ss => shippingStatusIds.Contains(ss.Value)))
                     item.Selected = true;
-                model.AvailableShippingStatuses.FirstOrDefault().Selected = false;
+                model.AvailableShippingStatuses.First().Selected = false;
             }
 
             //stores
@@ -886,9 +886,9 @@ namespace Nop.Admin.Controllers
             model.IsLoggedInAsVendor = _workContext.CurrentVendor != null;
 
             return View(model);
-		}
+        }
 
-		[HttpPost]
+        [HttpPost]
 		public ActionResult OrderList(DataSourceRequest command, OrderListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
@@ -944,8 +944,11 @@ namespace Nop.Admin.Controllers
                         StoreName = store != null ? store.Name : "Unknown",
                         OrderTotal = _priceFormatter.FormatPrice(x.OrderTotal, true, false),
                         OrderStatus = x.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        OrderStatusId = x.OrderStatusId,
                         PaymentStatus = x.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        PaymentStatusId = x.PaymentStatusId,
                         ShippingStatus = x.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ShippingStatusId = x.ShippingStatusId,
                         CustomerEmail = x.BillingAddress.Email,
                         CustomerFullName = string.Format("{0} {1}", x.BillingAddress.FirstName, x.BillingAddress.LastName),
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)

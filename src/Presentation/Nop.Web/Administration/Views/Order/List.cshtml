@@ -280,7 +280,13 @@
                                             <text>{
                                                 field: "OrderStatus",
                                                 title: "@T("Admin.Orders.Fields.OrderStatus")",
-                                                width: 100
+                                                width: 100,
+                                                template: '<span class="order-status ' +
+                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
+                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
+                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
+                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                    '">#=OrderStatus#</span>'
                                             },</text>
                                         }
                                         {
