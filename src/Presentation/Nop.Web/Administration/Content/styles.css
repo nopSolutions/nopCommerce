@@ -3,13 +3,11 @@
 }
 .main-header .logo-lg {
     background: url(images/logo.png) no-repeat 50% 50%;
-    background-color: #fff !important;
     height: 50px;
 }
 .main-header .logo-mini {
     background: url(images/logo-mini.png) no-repeat 50% 50%;
     height: 50px;
-    background-color: #fff !important;
 }
 .navbar-nav span.public-store {
     padding: 15px;
