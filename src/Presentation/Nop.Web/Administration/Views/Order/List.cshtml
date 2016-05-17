@@ -135,7 +135,7 @@
                                         @Html.NopLabelFor(model => model.OrderStatusIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownListFor(model => model.OrderStatusIds, Model.AvailableOrderStatuses)
+                                        @Html.EditorFor(model => model.OrderStatusIds, new { SelectList = Model.AvailableOrderStatuses })
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -143,7 +143,7 @@
                                         @Html.NopLabelFor(model => model.PaymentStatusIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownListFor(model => model.PaymentStatusIds, Model.AvailablePaymentStatuses)
+                                        @Html.EditorFor(model => model.PaymentStatusIds, new { SelectList = Model.AvailablePaymentStatuses })
                                     </div>
                                 </div>
                                 <div class="form-group" @(Model.IsLoggedInAsVendor ? Html.Raw("style='display: none;'") : null)>
@@ -151,7 +151,7 @@
                                         @Html.NopLabelFor(model => model.ShippingStatusIds)
                                     </div>
                                     <div class="col-md-8">
-                                        @Html.NopDropDownListFor(model => model.ShippingStatusIds, Model.AvailableShippingStatuses)
+                                        @Html.EditorFor(model => model.ShippingStatusIds, new { SelectList = Model.AvailableShippingStatuses })
                                     </div>
                                 </div>
                                 <div class="form-group">
