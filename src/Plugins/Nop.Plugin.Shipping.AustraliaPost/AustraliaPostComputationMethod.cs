@@ -44,6 +44,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         #region Fields
 
+        private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly IShippingService _shippingService;
         private readonly ISettingService _settingService;
@@ -52,10 +53,11 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         #endregion
 
         #region Ctor
-        public AustraliaPostComputationMethod(IMeasureService measureService,
-            IShippingService shippingService, ISettingService settingService,
-            AustraliaPostSettings australiaPostSettings)
+        public AustraliaPostComputationMethod(ICurrencyService currencyService, 
+            IMeasureService measureService, IShippingService shippingService, 
+            ISettingService settingService, AustraliaPostSettings australiaPostSettings)
         {
+            this._currencyService = currencyService;
             this._measureService = measureService;
             this._shippingService = shippingService;
             this._settingService = settingService;
@@ -144,7 +146,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                             foreach (var option in options)
                             {
                                 var service = (JObject)option;
-                                var shippingOption = service.ParseShippingOption();
+                                var shippingOption = service.ParseShippingOption(_currencyService);
                                 if (shippingOption != null)
                                 {
                                     shippingOption.Rate = shippingOption.Rate * totalPackages;
@@ -228,9 +230,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             int weight = GetWeight(getShippingOptionRequest);
             decimal lengthTmp, widthTmp, heightTmp;
             _shippingService.GetDimensions(getShippingOptionRequest.Items, out widthTmp, out lengthTmp, out heightTmp);
-            int length = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
-            int width = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
-            int height = Math.Min(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int length = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(lengthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int width = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(widthTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
+            int height = Math.Max(Convert.ToInt32(Math.Ceiling(this._measureService.ConvertFromPrimaryMeasureDimension(heightTmp, this.GatewayMeasureDimension))), MIN_LENGTH);
 
             //estimate packaging
             int totalPackagesDims = 1;
@@ -279,10 +281,10 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             // Australia post takes the dimensions in centimeters and weight in kilograms, 
             // so dimensions should be converted and rounded up from millimeters to centimeters,
             // grams should be converted to kilograms and rounded to two decimal.
-            length = length / ONE_CENTIMETER + length % ONE_CENTIMETER > 0 ? 1 : 0;
-            width = width / ONE_CENTIMETER + width % ONE_CENTIMETER > 0 ? 1 : 0;
-            height = height / ONE_CENTIMETER + height % ONE_CENTIMETER > 0 ? 1 : 0;
-            var kgWeight = Math.Round((weight / (decimal)ONE_KILO), 2);
+            length = length / ONE_CENTIMETER + (length % ONE_CENTIMETER > 0 ? 1 : 0);
+            width = width / ONE_CENTIMETER + (width % ONE_CENTIMETER > 0 ? 1 : 0);
+            height = height / ONE_CENTIMETER + (height % ONE_CENTIMETER > 0 ? 1 : 0);
+            var kgWeight = Math.Round(weight / (decimal)ONE_KILO, 2);
 
             try
             {
@@ -304,7 +306,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 response.AddError("Australia Post Service is currently unavailable, try again later");
                 return response;
             }
-
+            
             foreach (var shippingOption in response.ShippingOptions)
             {
                 shippingOption.Rate += _australiaPostSettings.AdditionalHandlingCharge;

@@ -1,12 +1,15 @@
 ﻿using Newtonsoft.Json.Linq;
+using Nop.Core;
 using Nop.Core.Domain.Shipping;
+using Nop.Services.Directory;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
 {
     public static class AustraliaPostExtensions
     {
-        public static ShippingOption ParseShippingOption(this JObject obj)
+        public static ShippingOption ParseShippingOption(this JObject obj, ICurrencyService currencyService)
         {
+            var audCurrency = currencyService.GetCurrencyByCode("AUD");
             if (obj.HasValues)
             {
                 var shippingOption = new ShippingOption();
@@ -20,7 +23,10 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                         case "price":
                             decimal rate;
                             if (decimal.TryParse(property.Value.ToString(), out rate))
-                                shippingOption.Rate = rate;
+                            {
+                                var convertedRate = currencyService.ConvertToPrimaryStoreCurrency(rate, audCurrency);
+                                shippingOption.Rate = convertedRate;
+                            }
                             break;
                     }
                 }
