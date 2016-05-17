@@ -6304,7 +6304,7 @@
     <Value>Specify reward points exchange rate.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
-    <Value>1 reward point =.</Value>
+    <Value>1 reward point =</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.MinimumRewardPointsToUse">
     <Value>Minimum reward points to use</Value>

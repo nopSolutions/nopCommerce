@@ -476,6 +476,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.Earning.Hint3">
     <Value>reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.RewardPoints.ExchangeRate.Hint2">
+    <Value>1 reward point =</Value>
+  </LocaleResource>
 </Language>
 '
 
