@@ -412,6 +412,10 @@ input[type=file].form-control {
          display: none;
     }
 
+    .form-horizontal .panel-search-popup img.ico-help {
+         display: block;
+    }
+
     .main-header .navbar-custom-menu {
         float: none;
     }
@@ -439,6 +443,12 @@ input[type=file].form-control {
         padding-top: 0;
     }
 
+    .form-horizontal .panel-search-popup .control-label {
+        float: right;
+        width: auto;
+        padding-top: 6px;
+    }
+
     .panel-search .form-control{
         max-width: 100%;
     }
@@ -459,5 +469,15 @@ input[type=file].form-control {
 
     .modal-dialog {
         margin-top: 30px;
+    }
+
+    .form-horizontal .panel-search-popup .control-label {
+        float: none;
+        width: 100%;
+        padding-top: 0;
+    }
+
+    .form-horizontal .panel-search-popup img.ico-help {
+         display: none;
     }
 }
