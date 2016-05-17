@@ -61,7 +61,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
-            <div id="orders-grid"></div>
+            <div id="orders-grid" class="order-list"></div>
 
             <script>
                 $(document).ready(function () {
@@ -106,7 +106,13 @@
                             width: 50
                         }, {
                             field: "OrderStatus",
-                            title: "@T("Admin.Affiliates.Orders.OrderStatus")"
+                            title: "@T("Admin.Affiliates.Orders.OrderStatus")",
+                            template: '<span class="order-status ' +
+                                                    '# if(OrderStatusId == 10) {# order-status-pending #} #' +
+                                                    '# if(OrderStatusId == 20) {# order-status-processing #} #' +
+                                                    '# if(OrderStatusId == 30) {# order-status-complete #} #' +
+                                                    '# if(OrderStatusId == 40) {# order-status-cancelled #} #' +
+                                                    '">#=OrderStatus#</span>'
                         }, {
                             field: "PaymentStatus",
                             title: "@T("Admin.Affiliates.Orders.PaymentStatus")"

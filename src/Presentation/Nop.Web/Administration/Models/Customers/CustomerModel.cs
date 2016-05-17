@@ -290,6 +290,8 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
             public string OrderStatus { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]
+            public int OrderStatusId { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.PaymentStatus")]
             public string PaymentStatus { get; set; }

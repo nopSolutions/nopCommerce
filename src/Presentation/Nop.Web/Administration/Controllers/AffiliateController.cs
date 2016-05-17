@@ -353,6 +353,7 @@ namespace Nop.Admin.Controllers
                         var orderModel = new AffiliateModel.AffiliatedOrderModel();
                         orderModel.Id = order.Id;
                         orderModel.OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext);
+                        orderModel.OrderStatusId = order.OrderStatusId;
                         orderModel.PaymentStatus = order.PaymentStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext);
                         orderModel.OrderTotal = _priceFormatter.FormatPrice(order.OrderTotal, true, false);

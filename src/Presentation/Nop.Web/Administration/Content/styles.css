@@ -408,24 +408,24 @@ input[type=file].form-control {
 }
 
 /*order list statuses*/
-#orders-grid span.order-status {
+.order-list span.order-status {
     padding: .2em .6em .3em;
     border-radius: .25em;
     color: #2e2e2e;
 }
-#orders-grid span.order-status-pending {
+.order-list span.order-status-pending {
     background-color: #f39c12;
     color: #fff;
 }
-#orders-grid span.order-status-processing {
+.order-list span.order-status-processing {
     background-color: #00c0ef;
     color: #fff;
 }
-#orders-grid span.order-status-complete {
+.order-list span.order-status-complete {
     background-color: #00a65a;
     color: #fff;
 }
-#orders-grid span.order-status-cancelled {
+.order-list span.order-status-cancelled {
     background-color: #dd4b39;
     color: #fff;
 }
