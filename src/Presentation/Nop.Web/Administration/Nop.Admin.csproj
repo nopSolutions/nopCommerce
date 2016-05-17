@@ -525,7 +525,6 @@
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Category\Edit.cshtml" />
     <Content Include="Views\Category\List.cshtml" />
-    <Content Include="Views\Category\Tree.cshtml" />
     <Content Include="Views\Category\_CreateOrUpdate.cshtml" />
     <Content Include="Views\EmailAccount\Create.cshtml" />
     <Content Include="Views\EmailAccount\List.cshtml" />
