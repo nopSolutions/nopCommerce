@@ -14,9 +14,9 @@
             <small>@Html.ActionLink("(" + T("Admin.Configuration.Stores.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn btn-default" value="@T("Admin.Common.SaveContinue")" />
-            <span id="store-delete" class="btn btn-default">@T("Admin.Common.Delete")</span>
+            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
+            <span id="store-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
