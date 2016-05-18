@@ -13,7 +13,7 @@
             @T("Admin.Configuration.Settings.GeneralCommon")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn btn-default" value="@T("Admin.Common.Save")"/>
+            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")"/>
         </div>
     </div>
 
@@ -719,7 +719,7 @@
                             </label>
                         </div>
                         <div class="col-md-9">
-                            <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="btn btn-default" />
+                            <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="btn btn-primary" />
                         </div>
                     </div>
                     if (Model.FullTextSettings.Enabled)
