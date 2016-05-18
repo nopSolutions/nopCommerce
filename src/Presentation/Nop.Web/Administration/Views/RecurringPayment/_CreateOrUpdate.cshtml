@@ -146,11 +146,11 @@
                         <div class="col-md-12">
                             @if (!String.IsNullOrEmpty(Model.NextPaymentDate))
                             {
-                                <input type="submit" name="processnextpayment" class="btn btn-default" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
+                                <input type="submit" name="processnextpayment" class="btn bg-green" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
                             }
                             @if (Model.CanCancelRecurringPayment)
                             {
-                                <input type="submit" name="cancelpayment" class="btn btn-default" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
+                                <input type="submit" name="cancelpayment" class="btn bg-navy" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
                             }
                         </div>
                     </div>
