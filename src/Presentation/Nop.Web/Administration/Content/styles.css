@@ -94,6 +94,12 @@ table.adminContent {
     font-size: 18px;
 }
 
+.panel-search-popup .btn-search{
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
 .k-button:hover, .k-button:focus, .k-button.k-state-focused {
     background-color: #e7e7e7;
     background-image: none;
