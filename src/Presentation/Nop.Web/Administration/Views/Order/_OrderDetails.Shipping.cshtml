@@ -12,6 +12,9 @@
                             @Html.NopLabelFor(model => model.ShippingAddress)
                         </div>
                         <div class="col-md-9">
+                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")"/>
+                            <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" style="margin-bottom: 10px;" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
+                            
                             <table class="table table-hover table-bordered" style="max-width: 400px;">
                                 @if (Model.ShippingAddress.FirstNameEnabled || Model.ShippingAddress.LastNameEnabled)
                                 {
@@ -145,18 +148,14 @@
                             </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-2 col-md-offset-3">
-                            @if (!Model.IsLoggedInAsVendor)
-                            {
-                                <a href="@Url.Action("AddressEdit", new {addressId = Model.ShippingAddress.Id, orderId = Model.Id})" class="btn btn-default">@T("Admin.Common.Edit")</a>
-                            }
+                    @if (!Model.IsLoggedInAsVendor)
+                    {
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <a href="@Url.Action("AddressEdit", new {addressId = Model.ShippingAddress.Id, orderId = Model.Id})" class="btn btn-primary">@T("Admin.Common.Edit")</a>
+                            </div>
                         </div>
-                        <div class="col-md-7">
-                            <img alt="google maps" src="@Url.Content("~/Administration/Content/images/google-maps.gif")" />
-                            <a href="@Html.Raw(Model.ShippingAddressGoogleMapsUrl)" target="_blank">@T("Admin.Orders.Fields.ShippingAddress.ViewOnGoogleMaps")</a>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         }
@@ -195,8 +194,8 @@
                                 <p id="lblShippingMethod" class="input-group-text">@Model.ShippingMethod</p>
                                 <div id="divShippingMethod">@Html.NopEditorFor(model => model.ShippingMethod)</div>
                                 <span class="input-group-btn">
-                                    <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn bg-light-blue" />
-                                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                    <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn btn-primary" />
+                                    <input type="submit" value="@T("Admin.Common.Save")" id="btnSaveShippingMethod" name="save-shipping-method" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                     <input type="submit" value="@T("Admin.Common.Cancel")" onclick=" toggleEditShippingMethod(false);return false; " id="btnCancelShippingMethod" class="btn bg-teal" />
                                 </span>
                             </div>
@@ -370,7 +369,7 @@
             @if (Model.CanAddNewShipments)
             {
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-default" />
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new {orderId = Model.Id}))'); return false;" class="btn btn-primary" />
                 </div>
             }
         </div>

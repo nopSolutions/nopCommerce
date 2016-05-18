@@ -167,13 +167,13 @@
                                         {
                                             <div>
                                                 @string.Format(T("Admin.Orders.Products.Download.DownloadCount").Text, item.DownloadCount)
-                                                <input type="submit" name="btnResetDownloadCount@(item.Id)" value="@T("Admin.Orders.Products.Download.ResetDownloadCount")" title="@T("Admin.Orders.Products.Download.ResetDownloadCount.Title")" id="btnResetDownloadCount@(item.Id)" class="btn btn-default btn-sm"/>
+                                                <input type="submit" name="btnResetDownloadCount@(item.Id)" value="@T("Admin.Orders.Products.Download.ResetDownloadCount")" title="@T("Admin.Orders.Products.Download.ResetDownloadCount.Title")" id="btnResetDownloadCount@(item.Id)" class="btn btn-sm bg-navy"/>
                                                 <hr/>
                                             </div>
                                             if (item.DownloadActivationType == DownloadActivationType.Manually)
                                             {
                                                 <div>
-                                                    <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="btn btn-default btn-sm"/>
+                                                    <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="btn btn-sm bg-green"/>
                                                     <hr/>
                                                 </div>
                                             }
@@ -187,7 +187,7 @@
                                                     <a href="@Url.Action("DownloadFile", "Download", new {downloadGuid = item.LicenseDownloadGuid})">@T("Admin.Orders.Products.License.DownloadLicense")</a>
                                                     <br/>
                                                 }
-                                                <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new {id = Model.Id, orderItemId = item.Id, btnId = "btnRefreshPage", formId = "order-form"}))', 500, 400, true); return false;" class="btn btn-default btn-sm"/>
+                                                <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new {id = Model.Id, orderItemId = item.Id, btnId = "btnRefreshPage", formId = "order-form"}))', 500, 400, true); return false;" class="btn btn-sm bg-olive"/>
                                             </div>
                                         }
                                     </td>
@@ -337,10 +337,10 @@
                                 @if (!Model.IsLoggedInAsVendor)
                                 {
                                     <td style="width: 10%;">
-                                        <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="btn btn-default btn-sm"/>
-                                        <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="btn btn-default btn-sm" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
-                                        <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="btn btn-default btn-sm" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
-                                        <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)(false);return false; " id="btnCancelOrderItem@(item.Id)" class="btn btn-default btn-sm" style="display: none;"/>
+                                        <input type="submit" name="btnEditOrderItem@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOrderItemEdit@(item.Id)(true);return false; " id="btnEditOrderItem@(item.Id)" class="btn btn-sm btn-primary"/>
+                                        <input type="submit" name="btnDeleteOrderItem@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOrderItem@(item.Id)" class="btn btn-sm bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
+                                        <input type="submit" name="btnSaveOrderItem@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOrderItem@(item.Id)" class="btn btn-sm btn-primary" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")'); "/>
+                                        <input type="submit" name="btnCancelOrderItem@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOrderItemEdit@(item.Id)(false);return false; " id="btnCancelOrderItem@(item.Id)" class="btn btn-sm bg-teal" style="display: none;"/>
                                     </td>
                                 }
                                 </tr>
@@ -361,7 +361,7 @@
             {
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new {orderId = Model.Id}))'); return false; " class="btn btn-default" />
+                        <input type="submit" id="btnAddNewProduct" name="btnAddNewProduct" value="@T("Admin.Orders.Products.AddNew")" onclick=" javascript:setLocation('@(Url.Action("AddProductToOrder", "Order", new {orderId = Model.Id}))'); return false; " class="btn btn-primary" />
                     </div>
                 </div>
             }

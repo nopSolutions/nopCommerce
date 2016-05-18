@@ -93,12 +93,12 @@
                         {
                             <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                         }
-                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn bg-light-blue" />
+                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary" />
                         <div id="pnlChangeOrderStatus">
                             <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
                             <br />
                             @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
-                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn bg-light-blue" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-top: 3px" />
+                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-top: 3px" />
                             <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-top: 3px" />
                         </div>
                     </div>
@@ -467,8 +467,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-9 col-md-offset-3">
-                        <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="btn bg-light-blue" />
-                        <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                        <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick=" toggleOrderTotals(true);return false; " id="btnEditOrderTotals" class="btn btn-primary" />
+                        <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                         <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick=" toggleOrderTotals(false);return false; " id="btnCancelOrderTotals" class="btn bg-teal" />
                     </div>
                 </div>
@@ -549,8 +549,8 @@
                 {
                     <div class="form-group">
                         <div class="col-md-9 col-md-offset-3">
-                            <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick="toggleCC(true);return false; " id="btnEditCC" class="btn bg-light-blue" />
-                            <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btn bg-light-blue" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                            <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick="toggleCC(true);return false; " id="btnEditCC" class="btn btn-primary" />
+                            <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                             <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick=" toggleCC(false);return false; " id="btnCancelCC" class="btn bg-teal"/>
                         </div>
                     </div>
@@ -619,42 +619,42 @@
                         {
                             if (Model.CanCapture)
                             {
-                                <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanMarkOrderAsPaid)
                             {
-                                <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanRefund)
                             {
-                                <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanRefundOffline)
                             {
-                                <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanPartiallyRefund)
                             {
-                                <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn btn-primary" />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanPartiallyRefundOffline)
                             {
-                                <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn bg-light-blue" />
+                                <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick=" javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false; " class="btn btn-primary" />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanVoid)
                             {
-                                <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                             if (Model.CanVoidOffline)
                             {
-                                <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="btn bg-light-blue" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
+                                <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="btn btn-primary" onclick=" return confirm('@T("Admin.Common.AreYouSure")'); " />
                                 <text>&nbsp;</text>
                             }
                         }
