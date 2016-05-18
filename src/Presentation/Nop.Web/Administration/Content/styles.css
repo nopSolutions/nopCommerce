@@ -412,7 +412,9 @@ input[type=file].form-control {
 .modal-dialog {
     margin-top: 200px;
 }
-
+.uploaded-image {
+    margin-bottom: 5px;
+}
 /*order list statuses*/
 .order-list span.order-status {
     padding: .2em .6em .3em;
