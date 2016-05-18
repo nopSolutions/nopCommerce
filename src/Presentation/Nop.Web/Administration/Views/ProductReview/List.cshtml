@@ -56,11 +56,7 @@
                                     @Html.NopLabelFor(model => model.SearchProductId)
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="text" class="text-box single-line form-control" id="search-product-name" autocomplete="off" />
-                                    <span id="search-product-friendly-name"></span>
-                                    <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
-                                    @Html.TextBoxFor(model => model.SearchProductId, new { autocomplete = "off", style = "display:none;" })
-
+                                    <input type="text" class="form-control" id="search-product-name" autocomplete="off"/>
                                     <script type="text/javascript">
                                         $(document).ready(function() {
                                             $('#search-product-name').autocomplete({
@@ -74,14 +70,20 @@
                                                     return false;
                                                 }
                                             });
+                                        });
+                                    </script>
 
-                                            //remove button
-                                            $('#search-product-clear').click(function() {
-                                                $('#@Html.FieldIdFor(model => model.SearchProductId)').val('0');
-                                                $('#search-product-friendly-name').text('');
-                                                $('#search-product-clear').hide();
-                                                return false;
-                                            });
+                                    <span id="search-product-friendly-name"></span>
+                                    <input type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;" value="@T("Admin.Common.Clear")"/>
+                                    @Html.TextBoxFor(model => model.SearchProductId, new {autocomplete = "off", style = "display:none;"})
+
+                                    <script>
+                                        //remove button
+                                        $('#search-product-clear').click(function() {
+                                            $('#@Html.FieldIdFor(model => model.SearchProductId)').val('0');
+                                            $('#search-product-friendly-name').text('');
+                                            $('#search-product-clear').hide();
+                                            return false;
                                         });
                                     </script>
                                 </div>
