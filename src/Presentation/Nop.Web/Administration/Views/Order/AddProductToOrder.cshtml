@@ -69,9 +69,6 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    @T("Admin.Orders.Products.AddNew.Note1")
-                </div>
                 <div class="panel-body">
                     <div id="products-grid"></div>
 
@@ -114,9 +111,13 @@
                                 scrollable: false,
                                 //selectable
                                 selectable: true,
-                                change: onChange,
                                 columns: [
                                 {
+                                    field: "Name",
+                                    title: "@T("Admin.Common.Select")",
+                                    width: 50,
+                                    template: '<input type="button" value="@T("Admin.Common.Select")" onclick="addProductToOrder(#=Id#)" class="btn btn-default" />'
+                                },{
                                     field: "Id",
                                     title: "ID",
                                     width: 50
@@ -161,10 +162,7 @@
                             return data;
                         }
 
-                        function onChange(e) {
-                            var grid = $('#products-grid').data('kendoGrid');
-                            var selectedItem = grid.dataItem(grid.select());
-                            var productId = selectedItem.Id;
+                        function addProductToOrder(productId) {
                             //load "product details page" block
                             var productDetailsActionUrl = '@Html.Raw(Url.Action("AddProductToOrderDetails", "Order", new {orderId = Model.OrderId, productId = "productidplaceholder"}))';
                             productDetailsActionUrl = productDetailsActionUrl.replace("productidplaceholder", productId);

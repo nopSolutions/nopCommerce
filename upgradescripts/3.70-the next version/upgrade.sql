@@ -485,6 +485,15 @@ set @resources='
   <LocaleResource Name="Admin.Common.Treeview">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note1">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note2">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UpdateTotals">
+    <Value>Do not to forget to update order totals after adding this product.</Value>
+  </LocaleResource>
 </Language>
 '
 
