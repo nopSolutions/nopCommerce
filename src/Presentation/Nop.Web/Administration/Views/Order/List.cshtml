@@ -81,9 +81,9 @@
                                         @Html.NopLabelFor(model => model.ProductId)
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control text-box single-line" />
+                                        <input type="text" id="search-product-name" autocomplete="off" class="form-control" />
                                         <span id="search-product-friendly-name"></span>
-                                        <input type="button" id="search-product-clear" class="btn btn-default" style="display: none;" value="@T("Admin.Common.Clear")" />
+                                        <input type="button" id="search-product-clear" class="btn bg-gray" style="display: none; margin-top: 5px;" value="@T("Admin.Common.Clear")" />
 
                                         @Html.TextBoxFor(model => model.ProductId, new { autocomplete = "off", style = "display:none;" })
                                         <script type="text/javascript">
