@@ -53,7 +53,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-9 col-md-offset-3">
-                                <input type="submit" name="delete-guests" class="btn btn-default" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-guests" class="btn bg-red" value="@T("Admin.Common.Delete")" />
                             </div>
                         </div>
                         @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
@@ -83,7 +83,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-9 col-md-offset-3">
-                                <input type="submit" name="delete-abondoned-carts" class="btn btn-default" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-abondoned-carts" class="btn bg-red" value="@T("Admin.Common.Delete")" />
                             </div>
                         </div>
                         @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
@@ -121,7 +121,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-md-9 col-md-offset-3">
-                                <input type="submit" name="delete-exported-files" class="btn btn-default" value="@T("Admin.Common.Delete")" />
+                                <input type="submit" name="delete-exported-files" class="btn bg-red" value="@T("Admin.Common.Delete")" />
                             </div>
                         </div>
                         @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)
@@ -142,7 +142,7 @@
                         <div id="backup-list"></div>    
                     </div>
                     <div class="panel-footer">
-                        <input type="submit" id="backup-database" name="backup-database" class="btn btn-default" value="@T("Admin.System.Maintenance.BackupDatabase.BackupNow")" />
+                        <input type="submit" id="backup-database" name="backup-database" class="btn btn-primary" value="@T("Admin.System.Maintenance.BackupDatabase.BackupNow")" />
                     </div>
                 </div>
                 <div id="backup-data" style="display: none"></div>
@@ -219,12 +219,12 @@
                             }, {
                                 field: "Name",
                                 title: "@T("Admin.System.Maintenance.BackupDatabase.Restore")",
-                                template: '<input type="submit" class="btn btn-default restore" value="@T("Admin.System.Maintenance.BackupDatabase.Restore")" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')"/>'
+                                template: '<input type="submit" class="btn bg-green" value="@T("Admin.System.Maintenance.BackupDatabase.Restore")" onclick="SubmitBackupAction(\'#=Name#\',\'restore-backup\')"/>'
                             },
                             {
                                 field: "Name",
                                 title: "@T("Admin.System.Maintenance.BackupDatabase.Delete")",
-                                template: '<input type="submit" class="btn btn-default delete" value="@T("Admin.System.Maintenance.BackupDatabase.Delete")" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')" />'
+                                template: '<input type="submit" class="btn bg-red" value="@T("Admin.System.Maintenance.BackupDatabase.Delete")" onclick="SubmitBackupAction(\'#=Name#\',\'delete-backup\')" />'
                             }
                         ]
                     });
