@@ -58,18 +58,18 @@
                             @Html.NopLabelFor(model => model.Password)
                         </div>
                         <div class="col-md-9">
-                            @Html.NopEditorFor(model => model.Password)
+                            <div class="input-group">
+                                @Html.NopEditorFor(model => model.Password)
+                                <div class="input-group-btn">
+                                    @if (Model.Id > 0)
+                                    {
+                                        <input type="submit" name="changepassword" class="btn btn-info" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
+                                    }
+                                </div>
+                            </div>
                             @Html.ValidationMessageFor(model => model.Password)
                         </div>
                     </div>
-                    @if (Model.Id > 0)
-                    {
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="submit" name="changepassword" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
-                            </div>
-                        </div>
-                    }
                     <div class="form-group">
                         <div class="col-md-3">
                             @Html.NopLabelFor(model => model.EnableSsl)
@@ -102,12 +102,13 @@
                                 @Html.NopLabelFor(model => model.SendTestEmailTo)
                             </div>
                             <div class="col-md-9">
-                                @Html.NopEditorFor(model => model.SendTestEmailTo)
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-9 col-md-offset-3">
-                                <input type="submit" name="sendtestemail" class="btn btn-default" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                                <div class="input-group">
+                                    @Html.NopEditorFor(model => model.SendTestEmailTo)
+                                    <div class="input-group-btn">
+                                        <input type="submit" name="sendtestemail" class="btn btn-info" value="@T("Admin.Configuration.EmailAccounts.SendTestEmail.Button")" />
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Password)
                             </div>
                         </div>
                     </div>
