@@ -278,7 +278,7 @@
                     </script>
                 </div>
                 <div class="panel-footer">
-                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false; " class="btn btn-default" />
+                    <input type="submit" id="btnAddNewValue" value="@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.AddNew")" onclick=" javascript:OpenWindow('@(Url.Action("PredefinedProductAttributeValueCreatePopup", "ProductAttribute", new {productAttributeId = Model.Id, btnId = "btnRefresh", formId = "productattribute-form"}))', 800, 550, true); return false; " class="btn btn-primary" />
                     <input type="submit" id="btnRefresh" style="display:none" />
                     <script type="text/javascript">
                         $(document).ready(function() {
