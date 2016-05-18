@@ -494,6 +494,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.AddNew.UpdateTotals">
     <Value>Do not to forget to update order totals after adding this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.List.SearchIncludeSubCategories">
+    <Value>Search sub categories</Value>
+  </LocaleResource>
 </Language>
 '
 
