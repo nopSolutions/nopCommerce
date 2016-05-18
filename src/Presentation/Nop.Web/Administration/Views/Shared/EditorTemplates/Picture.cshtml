@@ -25,11 +25,11 @@
 </div>
 @if (picture != null)
 {
-    <span id="@(clientId + "remove")" class="btn btn-default">@T("Admin.Picture.RemovePicture")</span>
+    <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
 }
 else
 {
-    <span id="@(clientId + "remove")" class="btn btn-default" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
+    <span id="@(clientId + "remove")" class="btn bg-red" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
 }
 <br />
     @*fine uploader container*@
