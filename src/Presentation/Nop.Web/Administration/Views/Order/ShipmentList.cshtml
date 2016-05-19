@@ -16,10 +16,19 @@
             @T("Admin.Orders.Shipments.List")
         </h1>
         <div class="pull-right">
-            <input type="submit" name="exportpackagingslips-all" class="btn bg-purple" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" />
-            <input type="button" id="exportpackagingslips-selected" class="btn bg-purple" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" />
-            <input type="button" id="ship-selected" class="btn bg-aqua" value="@T("Admin.Orders.Shipments.ShipSelected")" />
-            <input type="button" id="deliver-selected" class="btn bg-green" value="@T("Admin.Orders.Shipments.DeliverySelected")" />
+            <div class="btn-group">
+                <button type="button" class="btn bg-purple">@T("Admin.Common.Print")</button>
+                <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><input type="submit" name="exportpackagingslips-all" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.All")" /></li>
+                    <li><input type="button" id="exportpackagingslips-selected" value="@T("Admin.Orders.Shipments.PrintPackagingSlip.Selected")" /></li>
+                </ul>
+            </div>
+            <input type="button" id="ship-selected" class="btn bg-aqua" value="@T("Admin.Orders.Shipments.ShipSelected")"/>
+            <input type="button" id="deliver-selected" class="btn bg-green" value="@T("Admin.Orders.Shipments.DeliverySelected")"/>
         </div>
     </div>
     <div class="content">
