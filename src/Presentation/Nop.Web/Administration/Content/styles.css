@@ -456,7 +456,6 @@ input[type=file].form-control {
     box-shadow: 3px 3px 5px rgba(0,0,0,0.1);
 }
 
-/*add product to */
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
