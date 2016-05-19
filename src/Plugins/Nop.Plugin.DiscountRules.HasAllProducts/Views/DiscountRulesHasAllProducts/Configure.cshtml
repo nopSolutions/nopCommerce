@@ -40,10 +40,10 @@
 </script>
 
 <div class="form-group">
-    <div class="col-sm-3">
+    <div class="col-md-3">
         @Html.NopLabelFor(model => model.Products)
     </div>
-    <div class="col-sm-9">
+    <div class="col-md-9">
         <div class="input-group">
             @Html.NopEditorFor(model => model.Products)
             <div class="input-group-btn">
@@ -53,7 +53,7 @@
     </div>
 </div>
 <div class="form-group">
-    <div class="col-sm-3">
+    <div class="col-md-3">
         &nbsp;
         <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display: none; margin-top: 10px;" class="text-green pull-right">
             @T("Admin.Promotions.Discounts.Requirements.Saved")
@@ -62,7 +62,7 @@
             @T("Common.Wait...")
         </div>
     </div>
-    <div class="col-sm-9">
+    <div class="col-md-9">
         <input type="submit"
                id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                value="@T("Plugins.DiscountRules.HasAllProducts.Fields.Products.AddNew")"
@@ -72,7 +72,7 @@
     </div>
 </div>
 <div class="form-group">
-    <div class="col-sm-9 col-sm-offset-3">
+    <div class="col-md-9 col-sm-offset-3">
         <p id="discountrequirement-product-names@(Model.RequirementId)"></p>
     </div>
 </div>

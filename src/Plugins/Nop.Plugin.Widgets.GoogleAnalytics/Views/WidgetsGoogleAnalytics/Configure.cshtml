@@ -116,69 +116,69 @@
                     <em>Please note that {ECOMMERCE} line works only when you have "Disable order completed page" order setting unticked.</em>
                 </p>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.GoogleId_OverrideForStore, model => model.GoogleId, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.GoogleId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.GoogleId)
                         @Html.ValidationMessageFor(model => model.GoogleId)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.TrackingScript_OverrideForStore, model => model.TrackingScript, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.TrackingScript)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.TrackingScript)
                         @Html.ValidationMessageFor(model => model.TrackingScript)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.EcommerceScript_OverrideForStore, model => model.EcommerceScript, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.EcommerceScript)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.EcommerceScript)
                         @Html.ValidationMessageFor(model => model.EcommerceScript)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.EcommerceDetailScript_OverrideForStore, model => model.EcommerceDetailScript, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.EcommerceDetailScript)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopTextAreaFor(model => model.EcommerceDetailScript)
                         @Html.ValidationMessageFor(model => model.EcommerceDetailScript)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.IncludingTax_OverrideForStore, model => model.IncludingTax, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.IncludingTax)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.IncludingTax)
                         @Html.ValidationMessageFor(model => model.IncludingTax)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.NopLabelFor(model => model.ZoneId)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownListFor(model => model.ZoneId, Model.AvailableZones)
                         @Html.ValidationMessageFor(model => model.ZoneId)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         &nbsp;
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>

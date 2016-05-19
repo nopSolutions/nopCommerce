@@ -33,79 +33,79 @@
                     6. Click Save, and you should get a message that you have successfully activatedIPN.
                 </p>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.TransactModeId_OverrideForStore, model => model.TransactModeId, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.TransactModeValues)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopDropDownList("TransactModeId", Model.TransactModeValues)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.UseSandbox_OverrideForStore, model => model.UseSandbox, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.UseSandbox)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.UseSandbox)
                         @Html.ValidationMessageFor(model => model.UseSandbox)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ApiAccountName_OverrideForStore, model => model.ApiAccountName, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.ApiAccountName)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ApiAccountName)
                         @Html.ValidationMessageFor(model => model.ApiAccountName)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ApiAccountPassword_OverrideForStore, model => model.ApiAccountPassword, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.ApiAccountPassword)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.ApiAccountPassword)
                         @Html.ValidationMessageFor(model => model.ApiAccountPassword)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.Signature_OverrideForStore, model => model.Signature, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.Signature)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.Signature)
                         @Html.ValidationMessageFor(model => model.Signature)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AdditionalFee_OverrideForStore, model => model.AdditionalFee, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AdditionalFee)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.AdditionalFee)
                         @Html.ValidationMessageFor(model => model.AdditionalFee)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.AdditionalFeePercentage_OverrideForStore, model => model.AdditionalFeePercentage, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.AdditionalFeePercentage)
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         @Html.NopEditorFor(model => model.AdditionalFeePercentage)
                         @Html.ValidationMessageFor(model => model.AdditionalFeePercentage)
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-3">
+                    <div class="col-md-3">
                         &nbsp;
                     </div>
-                    <div class="col-sm-9">
+                    <div class="col-md-9">
                         <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
