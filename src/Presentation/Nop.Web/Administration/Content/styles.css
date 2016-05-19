@@ -456,6 +456,15 @@ input[type=file].form-control {
     box-shadow: 3px 3px 5px rgba(0,0,0,0.1);
 }
 
+.bg-green, .callout.callout-success, .alert-success, 
+.label-success, .modal-success .modal-body {
+    background-color: #6AC171 !important;
+}
+
+.alert-success {
+    border-color: #02A91E;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
