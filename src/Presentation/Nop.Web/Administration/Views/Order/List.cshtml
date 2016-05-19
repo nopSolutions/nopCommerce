@@ -19,13 +19,32 @@
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot export/import orders
-                <input type="submit" name="exportxml-all" class="btn bg-green" value="@T("Admin.Common.ExportToXml.All")" />
-                <input type="button" id="exportxml-selected" class="btn bg-green" value="@T("Admin.Common.ExportToXml.Selected")" />
-                <input type="submit" name="exportexcel-all" class="btn bg-green" value="@T("Admin.Common.ExportToExcel.All")" />
-                <input type="button" id="exportexcel-selected" class="btn bg-green" value="@T("Admin.Common.ExportToExcel.Selected")" />
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success">@T("Admin.Common.Export")</button>
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
+                        <li><input type="button" id="exportxml-selected" value="@T("Admin.Common.ExportToXml.Selected")"/></li>
+                        <li class="divider"></li>
+                        <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
+                        <li><input type="button" id="exportexcel-selected" value="@T("Admin.Common.ExportToExcel.Selected")" /></li>
+                    </ul>
+                </div>
             }
-            <input type="submit" name="pdf-invoice-all" class="btn bg-purple" value="@T("Admin.Orders.PdfInvoice.All")" />
-            <input type="button" id="pdf-invoice-selected" class="btn bg-purple" value="@T("Admin.Orders.PdfInvoice.Selected")" />
+            <div class="btn-group">
+                <button type="button" class="btn bg-purple">@T("Admin.Common.Print")</button>
+                <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><input type="submit" name="pdf-invoice-all" value="@T("Admin.Orders.PdfInvoice.All")" /></li>
+                    <li><input type="button" id="pdf-invoice-selected" value="@T("Admin.Orders.PdfInvoice.Selected")" /></li>
+                </ul>
+            </div>
         </div>
     </div>
 

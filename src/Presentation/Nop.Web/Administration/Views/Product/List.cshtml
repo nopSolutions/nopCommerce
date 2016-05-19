@@ -19,11 +19,21 @@
         </h1>
         <div class="pull-right">
             <a href="@Url.Action("Create")" class="btn bg-blue">@T("Admin.Common.AddNew")</a>
-            <input type="submit" name="download-catalog-pdf" class="btn bg-purple" value="@T("Admin.Catalog.Products.List.DownloadPDF")" />
-            <input type="submit" name="exportxml-all" class="btn bg-green" value="@T("Admin.Common.ExportToXml.All")" />
-            <input type="button" id="exportxml-selected" class="btn bg-green" value="@T("Admin.Common.ExportToXml.Selected")" />
-            <input type="submit" name="exportexcel-all" class="btn bg-green" value="@T("Admin.Common.ExportToExcel.All")" />
-            <input type="button" id="exportexcel-selected" class="btn bg-green" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            <input type="submit" name="download-catalog-pdf" class="btn bg-purple" value="@T("Admin.Catalog.Products.List.DownloadPDF")"/>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success">@T("Admin.Common.Export")</button>
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><input type="submit" name="exportxml-all" value="@T("Admin.Common.ExportToXml.All")" /></li>
+                    <li><input type="button" id="exportxml-selected" value="@T("Admin.Common.ExportToXml.Selected")" /></li>
+                    <li class="divider"></li>
+                    <li><input type="submit" name="exportexcel-all" value="@T("Admin.Common.ExportToExcel.All")" /></li>
+                    <li><input type="button" id="exportexcel-selected" value="@T("Admin.Common.ExportToExcel.Selected")" /></li>
+                </ul>
+            </div>
             @if (!Model.IsLoggedInAsVendor)
             {
                 //a vendor cannot import products
