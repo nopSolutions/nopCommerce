@@ -497,6 +497,18 @@ input[type=file].form-control {
     .k-colorpicker, .k-numerictextbox, .k-dropdown, .k-selectbox, .k-textbox, .k-datetimepicker {
         margin-bottom: 3px;
     }
+
+    .k-grid.k-widget {
+        overflow-x: scroll;
+    }
+
+    .k-grid.k-widget > table{
+        min-width: 400px;
+    }
+
+    .k-grid-header .k-header {
+        white-space: normal;
+    }
 }
 
 @media (max-width: 992px) {
