@@ -545,4 +545,8 @@ input[type=file].form-control {
     .form-horizontal .panel-search-popup img.ico-help {
          display: none;
     }
+
+    .navbar-nav>.user-menu .user-image {
+        margin-top: -2px;
+    }
 }
