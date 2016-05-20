@@ -60,7 +60,10 @@
                         {
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
-                                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</strong>
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        @string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -90,7 +93,10 @@
                         {
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
-                                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)</strong>
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        @string.Format(T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -128,7 +134,10 @@
                         {
                             <div class="form-group">
                                 <div class="col-md-9 col-md-offset-3">
-                                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</strong>
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                        @string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)
+                                    </div>
                                 </div>
                             </div>
                         }
