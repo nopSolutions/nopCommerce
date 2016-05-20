@@ -15,8 +15,17 @@
     </h1>
     <div class="pull-right">
         <a href="@Url.Action("Create")" class="btn bg-blue">@T("Admin.Common.AddNew")</a>
-        <a href="@Url.Action("ExportXml")" class="btn bg-green">@T("Admin.Common.ExportToXml")</a>
-        <a href="@Url.Action("ExportXlsx")" class="btn bg-green">@T("Admin.Common.ExportToExcel")</a>
+        <div class="btn-group">
+            <button type="button" class="btn btn-success">@T("Admin.Common.Export")</button>
+            <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+                <span class="sr-only">&nbsp;</span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="@Url.Action("ExportXml")">@T("Admin.Common.ExportToXml")</a></li>
+                <li><a href="@Url.Action("ExportXlsx")">@T("Admin.Common.ExportToExcel")</a></li>
+            </ul>
+        </div>
         <input type="button" name="importexcel" class="btn bg-olive" value="@T("Admin.Common.ImportFromExcel")" data-toggle="modal" data-target="#importexcel-window" />
     </div>
 </div>

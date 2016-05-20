@@ -438,7 +438,8 @@ input[type=file].form-control {
     color: #fff;
 }
 
-.dropdown-menu input {
+.dropdown-menu input,
+.dropdown-menu a {
     display: block;
     background: none;
     border: none;
@@ -448,6 +449,12 @@ input[type=file].form-control {
     line-height: 1.42857143;
     color: #777;
     white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    text-decoration: none;
+    background: transparent!important;
+    color: #777!important;
 }
 
 .content-header .pull-right .dropdown-menu {
