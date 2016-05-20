@@ -9546,7 +9546,6 @@
   <LocaleResource Name="Admin.Orders.Products.AddNew.Name">
     <Value>Name</Value>
   </LocaleResource>
-  <LocaleResource Name="A
   <LocaleResource Name="Admin.Orders.Products.AddNew.Quantity">
     <Value>Quantity</Value>
   </LocaleResource>
