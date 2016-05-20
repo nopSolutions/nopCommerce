@@ -9519,13 +9519,16 @@
   <LocaleResource Name="Admin.Orders.PdfInvoice">
     <Value>Invoice (PDF)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.PdfInvoice.All">
-    <Value>Print PDF invoices (all found)</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Orders.PdfInvoice.NoOrders">
     <Value>No orders selected</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.PdfInvoice.Selected">
+  <LocaleResource Name="Admin.Orders.PdfInvoices">
+    <Value>Print PDF invoices</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoices.All">
+    <Value>Print PDF invoices (all found)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PdfInvoices.Selected">
     <Value>Print PDF invoices (selected)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Products">
@@ -9781,10 +9784,13 @@
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip">
     <Value>Print packaging slip</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips">
+    <Value>Print packaging slips</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips.All">
     <Value>Print packaging slips (all found)</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlips.Selected">
     <Value>Print packaging slips (selected)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Orders.Shipments.Products">
