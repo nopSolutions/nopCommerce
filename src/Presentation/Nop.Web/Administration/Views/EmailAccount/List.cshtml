@@ -65,11 +65,12 @@
                                     title: "@T("Admin.Configuration.EmailAccounts.Fields.Email")"
                                 }, {
                                     field: "DisplayName",
-                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.DisplayName")"
+                                    title: "@T("Admin.Configuration.EmailAccounts.Fields.DisplayName")",
+                                    width: 200
                                 }, {
                                     field: "IsDefaultEmailAccount",
                                     title: "@T("Admin.Configuration.EmailAccounts.Fields.IsDefaultEmailAccount")",
-                                    width: 100,
+                                    width: 200,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
                                     template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsDefaultEmailAccount#.gif" />'

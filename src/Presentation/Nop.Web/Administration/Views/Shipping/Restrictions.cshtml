@@ -21,7 +21,7 @@
         <div class="form-horizontal">
             <div class="panel-group">
                 <div class="panel panel-default">
-                    <div class="panel-body">
+                    <div class="panel-body" style="overflow-x: auto;">
                         @T("Admin.Configuration.Shipping.Restrictions.Description")
                         <br />
                         <br />
@@ -48,37 +48,37 @@
                                 });
                             </script>
 
-                                    <table class="table table-hover table-bordered">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="col">
-                                                    <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
-                                                </th>
-                                                @foreach (var sm in Model.AvailableShippingMethods)
-                                                {
-                                                    <th scope="col">
-                                                        <strong>@sm.Name</strong>
-                                                        <input type="checkbox" id="selectall-@(sm.Id)" />
-                                                    </th>
-                                                }
-                                            </tr>
-                                            @foreach (var c in Model.AvailableCountries)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        <span>@c.Name</span>
-                                                    </td>
-                                                    @foreach (var sm in Model.AvailableShippingMethods)
-                                                    {
-                                                        var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
-                                                        <td>
-                                                            <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null) />
-                                                        </td>
-                                                    }
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                <tr>
+                                    <th scope="col">
+                                        <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
+                                    </th>
+                                    @foreach (var sm in Model.AvailableShippingMethods)
+                                    {
+                                        <th scope="col">
+                                            <strong>@sm.Name</strong>
+                                            <input type="checkbox" id="selectall-@(sm.Id)"/>
+                                        </th>
+                                    }
+                                </tr>
+                                @foreach (var c in Model.AvailableCountries)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span>@c.Name</span>
+                                        </td>
+                                        @foreach (var sm in Model.AvailableShippingMethods)
+                                        {
+                                            var restricted = Model.Restricted.ContainsKey(c.Id) && Model.Restricted[c.Id][sm.Id];
+                                            <td>
+                                                <input id="restrict_@(sm.Id)" class="restrict_@(sm.Id)" type="checkbox" value="@(c.Id)" name="restrict_@(sm.Id)" @(restricted ? " checked=checked" : null)/>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
                         }
                     </div>
                 </div>

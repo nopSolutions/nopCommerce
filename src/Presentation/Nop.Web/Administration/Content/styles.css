@@ -472,6 +472,14 @@ input[type=file].form-control {
     border-color: #02A91E;
 }
 
+.k-grid-header .k-header {
+    white-space: normal;
+}
+
+.k-grid.k-widget {
+    overflow-x: auto;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;
@@ -498,16 +506,8 @@ input[type=file].form-control {
         margin-bottom: 3px;
     }
 
-    .k-grid.k-widget {
-        overflow-x: scroll;
-    }
-
     .k-grid.k-widget > table{
         min-width: 400px;
-    }
-
-    .k-grid-header .k-header {
-        white-space: normal;
     }
 }
 

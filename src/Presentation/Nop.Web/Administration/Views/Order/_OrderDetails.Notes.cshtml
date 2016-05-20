@@ -72,11 +72,12 @@
                         }, {
                             field: "DownloadId",
                             title: "@T("Admin.Orders.OrderNotes.Fields.Download")",
+                            width: 200,
                             template: '# if(DownloadId > 0) {# <a href="@Url.Content("~/Admin/Download/DownloadFile")?downloadGuid=#=DownloadGuid#">@T("Admin.Orders.OrderNotes.Fields.Download.Link")</a> #} else {# @T("Admin.Orders.OrderNotes.Fields.Download.Link.No") #} #'
                         }, {
                             field: "DisplayToCustomer",
                             title: "@T("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")",
-                            width: 100,
+                            width: 150,
                             headerAttributes: { style: "text-align:center" },
                             attributes: { style: "text-align:center" },
                             template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=DisplayToCustomer#.gif" />'
