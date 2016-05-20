@@ -231,6 +231,41 @@ td.k-state-focused.k-state-selected{
     margin: 0 3px;
 }
 
+.k-multiselect.k-header {
+    border-color: #d2d6de;
+    border-radius: 0;
+    max-width: 423px;
+}
+
+.k-multiselect.k-header.k-state-hover, .k-multiselect.k-header.k-state-focused {
+    border-color: #3c8dbc !important;
+    box-shadow: none !important;
+}
+
+.k-multiselect-wrap {
+    height: 34px;
+}
+
+.k-multiselect-wrap li {
+    line-height: 27px;
+}
+
+.k-list-container {
+    border-color: #DEDEDE;
+    background-color: #FFFFFF;
+}
+
+.k-popup .k-list .k-item.k-state-hover {
+    background: #3c8dbc;
+    border-color: #367fa9;
+    color: #fff;
+    box-shadow: none;
+}
+
+.k-popup .k-list .k-item.k-state-focused {
+    box-shadow: none;
+}
+
 .input-group.input-group-short .input-group-btn {
     width: auto;
 }
