@@ -1470,6 +1470,7 @@ namespace Nop.Web.Controllers
             var products = _productService.SearchProducts(
                 storeId: _storeContext.CurrentStore.Id,
                 keywords: term,
+                searchManufacturerPartNumber: false,
                 searchSku: false,
                 languageId: _workContext.WorkingLanguage.Id,
                 visibleIndividuallyOnly: true,

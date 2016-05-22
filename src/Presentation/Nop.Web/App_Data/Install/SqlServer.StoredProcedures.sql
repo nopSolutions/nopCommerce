@@ -276,6 +276,7 @@ BEGIN
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
 		END
 
+		--manufacturer part number (exact match)
 		IF @SearchManufacturerPartNumber = 1
 		BEGIN
 			SET @sql = @sql + '

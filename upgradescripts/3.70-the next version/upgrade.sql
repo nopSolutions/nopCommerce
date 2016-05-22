@@ -1661,7 +1661,7 @@ IF EXISTS (
 		SELECT *
 		FROM sys.objects
 		WHERE object_id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(object_id,N'IsProcedure') = 1)
-DROP PROCEDURE [FullText_Enable]
+DROP PROCEDURE [ProductLoadAllPaged]
 GO
 
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
@@ -1877,6 +1877,7 @@ BEGIN
 				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
 		END
 
+		--manufacturer part number (exact match)
 		IF @SearchManufacturerPartNumber = 1
 		BEGIN
 			SET @sql = @sql + '
