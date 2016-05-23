@@ -16,29 +16,66 @@
                 <p>
                     <b>If you're using this gateway ensure that your primary store currency is supported by Paypal.</b><br />
                     <br />
-                    1. Log into your PayPal account.<br />
-                    2. Click on Profile from the Home Menu.<br />
-                    3. Under Account Information >> Choose API Access.<br />
-                    4. Click on Request API Credentials.<br />
-                    5. Choose API Signature as the credential type.<br />
-                    6. Enable the checkbox and agree to the license Terms-I agree to the API Certificate Terms of Use and terms incorporated therein and press the Submit button<br />
-                    <br />
-                    Before being able to receive IPN messages (optional), you'll need to activate this service; follow these steps:<br />
-                    <br />
-                    1. Log in to your Premier or Business account.<br />
-                    2. Click the Profile subtab.<br />
-                    3. Click Instant Payment Notification in the Selling Preferences column.<br />
-                    4. Click the 'Edit IPN Settings' button to update your settings.<br />
-                    5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalDirect/IPNHandler).<br />
-                    6. Click Save, and you should get a message that you have successfully activatedIPN.
+                    To configure plugin follow these steps:<br />
+                    1. Log into your Developer PayPal account.<br />
+                    2. Click on My Apps & Credentials from the Dashboard.<br />
+                    3. Create new REST API app.<br />
+                    4. Copy your Client ID and Secret key below.<br />
+                    5. To be able to use recurring payments you need to set the webhook ID.
+                       You can get it manually in your PayPal account (enter the URL http://www.yourStore.com/Plugins/PaymentPayPalDirect/Webhook below REST API application credentials),
+                       or automatically by pressing "@T("Plugins.Payments.PayPalDirect.WebhookCreate")" button.<br />
                 </p>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientId_OverrideForStore, model => model.ClientId, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ClientId)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ClientId)
+                        @Html.ValidationMessageFor(model => model.ClientId)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.OverrideStoreCheckboxFor(model => model.ClientSecret_OverrideForStore, model => model.ClientSecret, Model.ActiveStoreScopeConfiguration)
+                        @Html.NopLabelFor(model => model.ClientSecret)
+                    </div>
+                    <div class="col-md-9">
+                        @Html.NopEditorFor(model => model.ClientSecret)
+                        @Html.ValidationMessageFor(model => model.ClientSecret)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-3">
+                        @Html.NopLabelFor(model => model.WebhookId)
+                    </div>
+                    <div class="col-md-9">
+                        @if (Request.IsLocal)
+                        {
+                            @Html.NopEditorFor(model => model.WebhookId)
+                        }
+                        else
+                        {
+                            <div class="input-group">
+                                @Html.NopEditorFor(model => model.WebhookId)
+                                <div class="input-group-btn">
+                                    <button type="submit" name="createwebhook" class="btn btn-info">
+                                        @T("Plugins.Payments.PayPalDirect.WebhookCreate")
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        @Html.ValidationMessageFor(model => model.WebhookId)
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.TransactModeId_OverrideForStore, model => model.TransactModeId, Model.ActiveStoreScopeConfiguration)
                         @Html.NopLabelFor(model => model.TransactModeValues)
                     </div>
                     <div class="col-md-9">
-                        @Html.NopDropDownList("TransactModeId", Model.TransactModeValues)
+                        @Html.NopDropDownListFor(model => model.TransactModeId, Model.TransactModeValues)
                     </div>
                 </div>
                 <div class="form-group">
@@ -49,36 +86,6 @@
                     <div class="col-md-9">
                         @Html.NopEditorFor(model => model.UseSandbox)
                         @Html.ValidationMessageFor(model => model.UseSandbox)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.ApiAccountName_OverrideForStore, model => model.ApiAccountName, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.ApiAccountName)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ApiAccountName)
-                        @Html.ValidationMessageFor(model => model.ApiAccountName)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.ApiAccountPassword_OverrideForStore, model => model.ApiAccountPassword, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.ApiAccountPassword)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.ApiAccountPassword)
-                        @Html.ValidationMessageFor(model => model.ApiAccountPassword)
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-3">
-                        @Html.OverrideStoreCheckboxFor(model => model.Signature_OverrideForStore, model => model.Signature, Model.ActiveStoreScopeConfiguration)
-                        @Html.NopLabelFor(model => model.Signature)
-                    </div>
-                    <div class="col-md-9">
-                        @Html.NopEditorFor(model => model.Signature)
-                        @Html.ValidationMessageFor(model => model.Signature)
                     </div>
                 </div>
                 <div class="form-group">
@@ -102,11 +109,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-md-3">
-                        &nbsp;
-                    </div>
-                    <div class="col-md-9">
-                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")" />
                     </div>
                 </div>
             </div>

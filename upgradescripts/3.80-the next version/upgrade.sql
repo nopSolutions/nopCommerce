@@ -46,12 +46,54 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name=" Admin.Catalog.Categories.Fields.Parent.None">
     <Value>[None]</Value>
-  </LocaleResource>
+  </LocaleResource>  
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal">
     <Value>Hide shipping total if shipping not required</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.HideShippingTotal.Hint">
     <Value>Check if you want Hide ''Shipping total'' label if shipping not required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientId">
+    <Value>Client ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientId.Hint">
+    <Value>Specify client ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientSecret">
+    <Value>Client secret</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ClientSecret.Hint">
+    <Value>Specify secret key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.WebhookId">
+    <Value>Webhook ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.WebhookId.Hint">
+    <Value>Specify webhook ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.WebhookCreate">
+    <Value>Get webhook ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.WebhookError">
+    <Value>Webhook was not created (see details in the log)</Value>
   </LocaleResource>
 </Language>
 '
