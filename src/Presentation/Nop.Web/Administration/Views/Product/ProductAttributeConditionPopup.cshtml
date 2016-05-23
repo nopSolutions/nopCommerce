@@ -71,7 +71,7 @@
                                 </div>
                             </div>
 
-                            <div id="pnlAttributes">
+                            <div id="pnlAttributes" style="margin-bottom: 10px;">
                                 @if (Model.ProductAttributes.Count > 0)
                                 {
                                     var attributesList = new List<SelectListItem>();
@@ -129,28 +129,28 @@
                                                         case AttributeControlType.ColorSquares:
                                                         case AttributeControlType.ImageSquares:
                                                             {
-                                                                <ul class="option-list">
-                                                                    @foreach (var attributeValue in attribute.Values)
-                                                                    {
-                                                                        <li>
+                                                                foreach (var attributeValue in attribute.Values)
+                                                                {
+                                                                    <div class="radio">
+                                                                        <label>
                                                                             <input id="@(controlId)" type="radio" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" />
-                                                                            <label for="@(controlId)">@attributeValue.Name</label>
-                                                                        </li>
-                                                                    }
-                                                                </ul>
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
+                                                                }
                                                             }
                                                             break;
                                                         case AttributeControlType.Checkboxes:
                                                             {
-                                                                <ul class="option-list">
-                                                                    @foreach (var attributeValue in attribute.Values)
-                                                                    {
-                                                                        <li>
+                                                                foreach (var attributeValue in attribute.Values)
+                                                                {
+                                                                    <div class="radio">
+                                                                        <label>
                                                                             <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@attributeValue.Id" checked="@attributeValue.IsPreSelected" @(attribute.AttributeControlType == AttributeControlType.ReadonlyCheckboxes ? Html.Raw(" disabled=\"disabled\"") : null) />
-                                                                            <label for="@(controlId)">@attributeValue.Name</label>
-                                                                        </li>
-                                                                    }
-                                                                </ul>
+                                                                            @attributeValue.Name
+                                                                        </label>
+                                                                    </div>
+                                                                }
                                                             }
                                                             break;
                                                         case AttributeControlType.ReadonlyCheckboxes:
