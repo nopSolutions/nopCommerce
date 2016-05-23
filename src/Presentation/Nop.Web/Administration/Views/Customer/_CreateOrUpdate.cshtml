@@ -816,7 +816,7 @@
                                 title: "@T("Admin.CurrentCarts.Product")",
                                 width:500,
                                 template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #'
+                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
                             }, {
                                 field: "Quantity",
                                 title: "@T("Admin.CurrentCarts.Quantity")",
@@ -898,7 +898,7 @@
                                 title: "@T("Admin.CurrentCarts.Product")",
                                 width:500,
                                 template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">#:ProductName#</a>' +
-                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <br />#=AttributeInfo# #} #'
+                                    '# if(AttributeInfo && AttributeInfo.length > 0) {# <div>#=AttributeInfo#</div> #} #'
                             }, {
                                 field: "Quantity",
                                 title: "@T("Admin.CurrentCarts.Quantity")",
@@ -1008,12 +1008,11 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                @T("Admin.Customers.Customers.Impersonate.Description1")
-                <br />
-                @T("Admin.Customers.Customers.Impersonate.Description2")
-                <br />
-                <br />
-                <input type="submit" name="impersonate" class="btn btn-primary" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
+                <ul class="common-list">
+                    <li>@T("Admin.Customers.Customers.Impersonate.Description1")</li>
+                    <li>@T("Admin.Customers.Customers.Impersonate.Description2")</li>
+                </ul>
+                <input type="submit" name="impersonate" class="btn btn-primary" value="@T("Admin.Customers.Customers.Impersonate.Button")"/>
             </div>
         </div>
     </div>

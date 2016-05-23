@@ -38,11 +38,14 @@
                 <div class="form-horizontal">
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
-                        <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
-                        <br />
-                        <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
-                        <br />
-                        <br />
+                        <ul class="common-list">
+                            <li>
+                                <strong>@T("Admin.Configuration.Languages.XmlFile.Note1")</strong>
+                            </li>
+                            <li>
+                                <strong>@T("Admin.Configuration.Languages.XmlFile.Note2")</strong>
+                            </li>
+                        </ul>
                         <div class="form-group">
                             <div class="col-md-2">
                                 <label class="control-label">

@@ -255,11 +255,14 @@
     <div class="panel-group">
         <div class="panel panel-default">
             <div class="panel-body">
-                <p>
-                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
-                    <br />
-                    @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
-                </p>   
+                <ul class="common-list">
+                    <li>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription1")
+                    </li>
+                    <li>
+                        @T("Admin.Configuration.Settings.Order.ReturnRequestsDescription2")
+                    </li>
+                </ul>   
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.OverrideStoreCheckboxFor(model => model.ReturnRequestsEnabled_OverrideForStore, model => model.ReturnRequestsEnabled, Model.ActiveStoreScopeConfiguration)

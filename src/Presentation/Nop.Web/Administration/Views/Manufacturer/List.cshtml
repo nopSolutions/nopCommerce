@@ -177,11 +177,14 @@
                 <div class="form-horizontal">
                     <div class="modal-body">
                         @Html.AntiForgeryToken()
-                        <em>@T("Admin.Catalog.Manufacturer.List.ImportFromExcelTip")</em>
-                        <br />
-                        <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>
-                        <br />
-                        <br />
+                        <ul class="common-list">
+                            <li>
+                                <em>@T("Admin.Catalog.Manufacturer.List.ImportFromExcelTip")</em>
+                            </li>
+                            <li>
+                                <em>@T("Admin.Common.ImportFromExcel.ManyRecordsWarning")</em>
+                            </li>
+                        </ul>
                         <div class="form-group">
                             <div class="col-md-2">
                                 <label class="control-label">

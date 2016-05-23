@@ -172,14 +172,9 @@
                                             else
                                             {
                                                 //display warehouses
-                                                for (int i = 0; i < item.AvailableWarehouses.Count; i++)
+                                                foreach (var warehouse in item.AvailableWarehouses)
                                                 {
-                                                    var warehouse = item.AvailableWarehouses[i];
-                                                    @warehouse.WarehouseName
-                                                    if (i != item.AvailableWarehouses.Count - 1)
-                                                    {
-                                                        <br />
-                                                    }
+                                                    <div>@warehouse.WarehouseName</div>
                                                 }
                                             }
                                         </td>

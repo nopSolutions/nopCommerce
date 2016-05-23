@@ -22,9 +22,7 @@
             <div class="panel-group">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @T("Admin.Configuration.Payment.MethodRestrictions.Description")
-                        <br />
-                        <br />
+                        <p>@T("Admin.Configuration.Payment.MethodRestrictions.Description")</p>
                         @if (Model.AvailablePaymentMethods.Count == 0)
                         {
                             <text>No payment methods installed</text>

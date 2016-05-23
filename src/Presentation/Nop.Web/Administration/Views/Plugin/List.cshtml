@@ -53,7 +53,6 @@
                                     </ol>
                                     You can download more nopCommerce plugins on our <a href="http://www.nopcommerce.com/extensions-and-themes.aspx?utm_source=admin-panel&utm_medium=plugins&utm_campaign=admin-panel" target="_blank">extensions directory</a>
                                 </p>
-                                <br />
 
                                 <div class="form-group">
                                     <div class="col-md-4">
@@ -138,14 +137,16 @@
                                             field: "FriendlyName",
                                             title: "@T("Admin.Configuration.Plugins.Info")",
                                             template: '<b>#:FriendlyName#</b>' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Version") #:Version#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Author") #:Author#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#' +
-                                                '<br />@T("Admin.Configuration.Plugins.Fields.Installed") <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" />' +
-                                                '# if(CanChangeEnabled) {# <br />@T("Admin.Configuration.Plugins.Fields.IsEnabled") <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /> #} #' +
+                                                '<ul class="common-list">' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Version") #:Version#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Author") #:Author#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#</li>' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed") <img src="@Url.Content("~/Administration/Content/images/")active-#=Installed#.gif" /></li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") <img src="@Url.Content("~/Administration/Content/images/")active-#=IsEnabled#.gif" /></li> #} #' +
+                                                '</ul>' +
                                                 //allow configuration only when a plugin has a configuration URL specified
-                                                '<br /># if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
+                                                '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +
                                                 '<a class="btn bg-aqua" href="javascript:OpenWindow(\'@Url.Content("~/Admin/Plugin/EditPopup")?systemName=#=SystemName#&btnId=btnRefresh&formId=plugins-form\', 800, 500, true);">@T("Admin.Common.Edit")</a>'
                                         }, {
                                             field: "Installed",

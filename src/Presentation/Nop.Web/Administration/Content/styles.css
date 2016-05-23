@@ -515,6 +515,12 @@ input[type=file].form-control {
     overflow-x: auto;
 }
 
+ul.common-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 15px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;

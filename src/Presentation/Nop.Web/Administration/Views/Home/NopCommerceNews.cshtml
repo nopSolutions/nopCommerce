@@ -35,8 +35,7 @@
                         {
                             @item.Title.Text
                         }
-                        <br/>
-                        @item.PublishDate.ToString("d")
+                        <div>@item.PublishDate.ToString("d")</div>
                     </div>
                     <div class="panel-body">
                         @Html.Raw(item.Summary.Text)

@@ -120,11 +120,15 @@
                         <div class="col-md-9">
                             <a id="serverVariablesShowHide" href="javascript:toggleLoadedServerVariables();">@T("Admin.Common.Show")</a>
                             <div id="pnlServerVariables" style="display: none; word-break: break-all">
-                                @foreach (var serverVariable in Model.ServerVariables)
-                                {
-                                    @serverVariable.Name<text>:</text> @serverVariable.Value
-                                    <br />
-                                }
+                                <ul class="common-list">
+                                    @foreach (var serverVariable in Model.ServerVariables)
+                                    {
+                                        <li>
+                                            @serverVariable.Name<text>:</text>
+                                            @serverVariable.Value
+                                        </li>
+                                    }
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -134,17 +138,21 @@
                         </div>
                         <div class="col-md-9">
                             <a id="loadedAssembliesShowHide" href="javascript:toggleLoadedAssemblies();">@T("Admin.Common.Show")</a>
-                            <div id="pnlLoadedAssemblies" style="display:none">
-                                @foreach (var assembly in Model.LoadedAssemblies)
-                                {
-                                    @assembly.FullName
-                                    if (!String.IsNullOrEmpty(assembly.Location))
+                            <div id="pnlLoadedAssemblies" style="display: none">
+                                <ul class="common-list">
+                                    @foreach (var assembly in Model.LoadedAssemblies)
                                     {
-                                        <br />
-                                        <em>@assembly.Location</em>
+                                        <li>
+                                            <div>@assembly.FullName</div>
+                                            @if (!String.IsNullOrEmpty(assembly.Location))
+                                            {
+                                                <div>
+                                                    <em>@assembly.Location</em>
+                                                </div>
+                                            }
+                                        </li>
                                     }
-                                    <br />
-                                }
+                                </ul>
                             </div>
                         </div>
                     </div>  

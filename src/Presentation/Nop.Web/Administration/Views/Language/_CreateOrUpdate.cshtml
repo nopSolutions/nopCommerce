@@ -98,7 +98,6 @@
                     <div class="col-md-8">
                         @Html.NopEditorFor(model => model.FlagImageFileName)
                         @Html.ValidationMessageFor(model => model.FlagImageFileName)
-                        <br />
                         <a id="displayAllFlags" href="javascript:toggleFlags();">@T("Admin.Common.Show")</a>
                         <div id="pnlAllFlags" style="display: none">
                             @foreach (var fileName in Model.FlagFileNames)

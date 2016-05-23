@@ -29,11 +29,12 @@
         @if (Model.Warnings.Count > 0)
         {
             <div class="callout callout-danger">
-                @foreach (var warning in Model.Warnings)
+                <ul>
+                    @foreach (var warning in Model.Warnings)
                     {
-                    @warning
-                    <br />
-                }
+                        <li>@warning</li>
+                    }
+                </ul>
             </div>
         }
 

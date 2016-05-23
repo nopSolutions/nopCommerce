@@ -172,19 +172,19 @@
                                 field: "ShouldHaveValues",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values")",
                                 width: 150,
-                                template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a><br />@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues# #}  #'
+                                template: '# if(ShouldHaveValues) {# <a href="@Url.Content("~/Admin/Product/EditAttributeValues/")?productAttributeMappingId=#=Id#">@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.ViewLink")</a> <div>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.TotalValues") #=TotalValues#</div>#}  #'
                             },
                             {
                                 field: "ValidationRulesAllowed",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules")",
                                 width: 150,
-                                template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 320, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a><br />#=ValidationRulesString# #}  #"
+                                template: "# if(ValidationRulesAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeValidationRulesPopup/")#=Id#?btnId=btnRefreshProductAttributes&formId=product-form\", 800, 320, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.ValidationRules.ViewLink")</a> <div>#=ValidationRulesString#</div>#}  #"
                             },
                             {
                                 field: "ConditionAllowed",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition")",
                                 width: 150,
-                                template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a><br />#=ConditionString# #}  #"
+                                template: "# if(ConditionAllowed) {# <a href='javascript:OpenWindow(\"@Url.Content("~/Admin/Product/ProductAttributeConditionPopup/")?productAttributeMappingId=#=Id#&btnId=btnRefreshProductAttributes&formId=product-form\", 800, 400, true);'>@T("Admin.Catalog.Products.ProductAttributes.Attributes.Condition.ViewLink")</a> <div>#=ConditionString#</div>#}  #"
                             },
                             {
                                 command: [
@@ -369,7 +369,7 @@
                                 field: "AttributesXml",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Attributes")",
                                 width: 400,
-                                template: "#=AttributesXml#<br /> # if(Warnings !== null) {# <span style=\"color: red\">#=Warnings#</span> #}  #",
+                                template: "#=AttributesXml# # if(Warnings !== null) {# <div><span style=\"color: red\">#=Warnings#</span></div> #}  #",
                                 encoded: false
                             }, {
                                 field: "StockQuantity",
