@@ -1,6 +1,9 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Languages").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Languages");
 }
 
 @Html.AntiForgeryToken()

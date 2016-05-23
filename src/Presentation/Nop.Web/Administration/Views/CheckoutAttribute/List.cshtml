@@ -1,6 +1,9 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Checkout attributes");
 }
 
 @Html.AntiForgeryToken()

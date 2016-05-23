@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Customers.Customers.Addresses.EditAddress").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Customers list");
 }
 
 @using (Html.BeginForm())

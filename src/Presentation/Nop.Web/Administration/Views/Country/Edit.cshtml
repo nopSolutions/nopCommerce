@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries.EditCountryDetails").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Countries");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))

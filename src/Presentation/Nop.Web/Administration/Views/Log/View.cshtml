@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.System.Log.ViewLogDetails").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Log");
 }
 
 @using (Html.BeginForm())

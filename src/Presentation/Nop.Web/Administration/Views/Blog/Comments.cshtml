@@ -5,6 +5,9 @@
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Blog.Comments").Text;
 
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Blog comments");
+
     int? filterByBlogPostId = ViewBag.FilterByBlogPostId;
 }
 
