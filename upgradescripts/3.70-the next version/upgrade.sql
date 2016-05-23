@@ -456,10 +456,10 @@ set @resources='
     <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey">
-    <Value>Australia Post Api Key</Value>
+    <Value>Australia Post API Key</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint">
-    <Value>Specify Australia Post Api Key.</Value>
+    <Value>Specify Australia Post API Key.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl">
     <Value></Value>

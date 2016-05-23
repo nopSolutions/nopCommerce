@@ -348,8 +348,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             _settingService.SaveSetting(settings);
 
             //locales
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey", "Australia Post Api Key");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint", "Specify Australia Post Api Key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey", "Australia Post API Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint", "Specify Australia Post API Key.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
 
