@@ -8,6 +8,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.AllSettings").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("All settings");
 }
 
 @Html.AntiForgeryToken()

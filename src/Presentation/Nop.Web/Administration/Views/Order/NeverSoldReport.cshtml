@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.SalesReport.NeverSold").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Products never purchased");
 }
 
 @Html.AntiForgeryToken()

@@ -3,6 +3,8 @@
 @{    
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Topics.EditTopicDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Topics");
 }
 
 @using (Html.BeginForm())

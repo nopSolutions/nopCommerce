@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.News").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("News settings");
 }
 
 @using (Html.BeginForm())

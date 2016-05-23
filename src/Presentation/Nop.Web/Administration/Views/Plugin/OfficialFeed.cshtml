@@ -2,6 +2,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.OfficialFeed").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("All plugins and themes catalog");
 
     //currently we support only 15 page size for this page
     var defaultGridPageSize = 15;

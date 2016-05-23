@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Specification attributes");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "specificationattribute-form" }))

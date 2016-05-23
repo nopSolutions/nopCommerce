@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.SalesReport.Country").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Country report");
 }
 
 @Html.AntiForgeryToken()

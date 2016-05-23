@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Stores.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Stores");
 }
 
 @using (Html.BeginForm())

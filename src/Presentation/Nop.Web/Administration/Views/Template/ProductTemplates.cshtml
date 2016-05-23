@@ -1,6 +1,8 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.System.Templates.Product").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product templates");
 }
 
 @Html.AntiForgeryToken()

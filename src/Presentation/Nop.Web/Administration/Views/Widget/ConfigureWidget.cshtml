@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Widgets.Configure").Text + " - " + Model.FriendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Widgets");
 }
 
 <div class="content-header clearfix">

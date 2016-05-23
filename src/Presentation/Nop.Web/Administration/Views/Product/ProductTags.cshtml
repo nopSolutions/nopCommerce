@@ -4,6 +4,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product tags");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new {id = "product-tags-form"}))

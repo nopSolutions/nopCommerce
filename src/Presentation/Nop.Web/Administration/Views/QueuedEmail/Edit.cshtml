@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.System.QueuedEmails.EditQueuedEmailDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Queued emails");
 }
 
 @using (Html.BeginForm())

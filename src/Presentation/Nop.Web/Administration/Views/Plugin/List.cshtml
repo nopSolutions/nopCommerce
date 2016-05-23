@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Local").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))

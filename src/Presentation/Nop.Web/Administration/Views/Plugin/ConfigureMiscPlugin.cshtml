@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Plugins.Misc.Configure") + " - " + Model.FriendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Local plugins");
 }
 
 <div class="content-header clearfix">

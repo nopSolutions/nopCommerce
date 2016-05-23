@@ -5,6 +5,8 @@
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
 
     var itemsFromMultipleWarehouses = Model.Items
         .Where(x => x.AllowToChooseWarehouse && x.AvailableWarehouses.Count > 0)

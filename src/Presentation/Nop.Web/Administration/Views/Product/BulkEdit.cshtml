@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.BulkEdit").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Bulk edit products");
 }
 
 @using (Html.BeginForm())

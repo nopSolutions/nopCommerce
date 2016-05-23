@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Shipping.DeliveryDates.AddNew").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Delivery dates");
 }
 
 @using (Html.BeginForm())

@@ -6,6 +6,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.ProductReviews").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Product reviews");
 }
 
 @Html.AntiForgeryToken()

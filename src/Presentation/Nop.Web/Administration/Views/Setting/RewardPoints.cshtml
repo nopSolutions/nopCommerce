@@ -5,6 +5,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.RewardPoints").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Reward points");
 }
 
 @using (Html.BeginForm())

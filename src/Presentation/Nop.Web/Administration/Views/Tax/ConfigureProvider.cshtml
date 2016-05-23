@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Tax.Providers.Configure").Text + " - " + Model.FriendlyName;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Tax providers");
 }
 
 <div class="content-header clearfix">

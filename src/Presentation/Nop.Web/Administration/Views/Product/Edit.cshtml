@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Manage products");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))

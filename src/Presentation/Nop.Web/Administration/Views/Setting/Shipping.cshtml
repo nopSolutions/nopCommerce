@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Shipping").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Shipping settings");
 }
 
 @using (Html.BeginForm())

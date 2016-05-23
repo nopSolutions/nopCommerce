@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.ACL").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Access control list");
 }
 
 @using (Html.BeginForm())

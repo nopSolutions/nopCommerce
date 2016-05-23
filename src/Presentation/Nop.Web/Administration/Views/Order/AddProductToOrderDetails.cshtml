@@ -5,6 +5,8 @@
 @{
     //page title
     ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title2").Text, Model.Name, Model.OrderId);
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Orders");
 }
 
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requires it*@

@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.GeneralCommon").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("General and common settings");
 }
 
 @using (Html.BeginForm())

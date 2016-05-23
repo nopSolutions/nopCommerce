@@ -4,6 +4,8 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.LowStockReport").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Low stock report");
 }
 
 @Html.AntiForgeryToken()

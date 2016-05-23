@@ -3,6 +3,8 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Forums").Text;
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Forums settings");
 }
 
 @using (Html.BeginForm())
