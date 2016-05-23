@@ -2298,3 +2298,12 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--new setting
+ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.popupgridpagesize')
+ BEGIN
+ 	INSERT [Setting] ([Name], [Value], [StoreId])
+ 	VALUES (N'adminareasettings.popupgridpagesize', N'10', 0)
+ END
+ GO

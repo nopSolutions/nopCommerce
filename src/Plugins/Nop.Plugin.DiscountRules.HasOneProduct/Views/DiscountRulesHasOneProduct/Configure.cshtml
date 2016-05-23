@@ -66,7 +66,7 @@
         <input type="submit"
                id="btnAddNewDiscountRequirementProduct@(Model.RequirementId)"
                value="@T("Plugins.DiscountRules.HasOneProduct.Fields.Products.AddNew")"
-               onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 800, true); return false;"
+               onclick="javascript:OpenWindow('@(Url.RouteUrl("Plugin.DiscountRules.HasOneProduct.ProductAddPopup", new {btnId = "btnRefreshDiscountRequirementProducts" + Model.RequirementId, productIdsInput = Html.FieldIdFor(model => model.Products)}))', 800, 850, true); return false;"
                class="btn btn-primary"/>
         <input type="submit" id="btnRefreshDiscountRequirementProducts@(Model.RequirementId)" style="display: none"/>
     </div>
