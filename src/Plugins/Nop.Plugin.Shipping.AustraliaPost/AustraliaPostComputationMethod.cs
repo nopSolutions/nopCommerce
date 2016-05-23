@@ -356,6 +356,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             base.Install();
         }
 
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
         public override void Uninstall()
         {
             //settings

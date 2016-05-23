@@ -454,7 +454,25 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ImportProductImagesUsingHash.Hint">
     <Value>Check to use fast HASHBYTES (hash sum) database function to compare pictures when importing products. Please note that this functionality is not supported by some database.</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey">
+    <Value>Australia Post Api Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey.Hint">
+    <Value>Specify Australia Post Api Key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
