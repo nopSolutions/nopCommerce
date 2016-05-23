@@ -58,6 +58,10 @@ table.adminContent {
     margin-left: 5px;
 }
 
+.form-text-row {
+    padding-top: 6px;
+}
+
 .mce-panel {
     border-color: #d2d6de !important;
 }
@@ -404,7 +408,7 @@ input[type=file].form-control {
 
 .form-group > div > a {
     display: inline-block;
-    padding-top: 7px;
+    padding-top: 6px;
 }
 
 .form-group .k-autocomplete, .form-group .k-combobox, .form-group .k-datepicker, 

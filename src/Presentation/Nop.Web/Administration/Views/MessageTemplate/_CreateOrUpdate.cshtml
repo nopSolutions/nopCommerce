@@ -51,7 +51,7 @@
                     <div class="col-md-9">
                         <a id="allowedTokensShowHide" href="javascript:toggleLoadedAllowedTokens();">@T("Admin.Common.Show")</a>
                         <div id="pnlAllowedTokens" style="display: none">
-                            @Html.DisplayFor(model => model.AllowedTokens)
+                            @Html.NopDisplayFor(model => model.AllowedTokens)
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         @Html.NopLabelFor(model => model.Name)
                     </div>
                     <div class="col-md-9">
-                        @Model.Name
+                        @Html.NopDisplayFor(model => model.Name)
                         @Html.HiddenFor(model => model.Name)
                     </div>
                 </div>

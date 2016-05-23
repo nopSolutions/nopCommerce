@@ -402,7 +402,7 @@
                         @Html.NopLabelFor(model => model.Id)
                     </div>
                     <div class="col-md-9">
-                        @Model.Id.ToString()
+                        @Html.NopDisplayFor(model => model.Id)
                         @Html.ValidationMessageFor(model => model.Id)
                     </div>
                 </div>
@@ -425,14 +425,15 @@
                     @Html.ValidationMessageFor(model => model.VisibleIndividually)
                 </div>
             </div>
-            @if (Model.Id > 0 && Model.AssociatedToProductId > 0)
+            @if(Model.Id > 0 && Model.AssociatedToProductId > 0)
             {
                 <div class="form-group">
                     <div class="col-md-3">
                         @Html.NopLabelFor(model => model.AssociatedToProductId)
                     </div>
                     <div class="col-md-9">
-                        @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId }, new { })
+                        @Html.ActionLink(Model.AssociatedToProductName, "Edit", "Product", new { id = Model.AssociatedToProductId
+                            }, new { })
                     </div>
                 </div>
             }
@@ -1453,7 +1454,7 @@
                         @Html.NopLabelFor(model => model.CreatedOn)
                     </div>
                     <div class="col-md-9">
-                        @Model.CreatedOn.Value.ToString("F")
+                        @Html.NopDisplay(Model.CreatedOn.Value.ToString("F"))
                     </div>
                 </div>
             }
@@ -1464,7 +1465,7 @@
                         @Html.NopLabelFor(model => model.UpdatedOn)
                     </div>
                     <div class="col-md-9">
-                        @Model.UpdatedOn.Value.ToString("F")
+                        @Html.NopDisplay(Model.UpdatedOn.Value.ToString("F"))
                     </div>
                 </div>
             }

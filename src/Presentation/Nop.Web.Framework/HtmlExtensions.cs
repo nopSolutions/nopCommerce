@@ -416,6 +416,25 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(result.ToString());
         }
 
+
+        public static MvcHtmlString NopDisplayFor<TModel, TValue>(this HtmlHelper<TModel> helper, Expression<Func<TModel, TValue>> expression)
+        {
+            var result = new TagBuilder("div");
+            result.Attributes.Add("class", "form-text-row");
+            result.InnerHtml = helper.DisplayFor(expression).ToString();
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
+        public static MvcHtmlString NopDisplay<TModel>(this HtmlHelper<TModel> helper, string expression)
+        {
+            var result = new TagBuilder("div");
+            result.Attributes.Add("class", "form-text-row");
+            result.InnerHtml = expression;
+
+            return MvcHtmlString.Create(result.ToString());
+        }
+
         public static RouteValueDictionary AddFormControlClassToHtmlAttributes(IDictionary<string, object> htmlAttributes)
         {
             if (htmlAttributes["class"] == null || string.IsNullOrEmpty(htmlAttributes["class"].ToString()))

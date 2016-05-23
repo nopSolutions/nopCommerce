@@ -81,26 +81,30 @@
             {
                 <div class="form-group">
                     <div class="col-md-3">
-                        <strong>
-                            @Html.NopLabelFor(model => model.OrderStatus)
-                        </strong>
+                        @Html.NopLabelFor(model => model.OrderStatus)
                     </div>
                     <div class="col-md-9">
-                        <strong>
-                            @Model.OrderStatus
-                        </strong>&nbsp;
-                        @if (Model.CanCancelOrder)
-                        {
-                            <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
-                        }
-                        <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary" />
-                        <div id="pnlChangeOrderStatus">
-                            <div>
-                                <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
+                        <div class="input-group input-group-short">
+                            <div class="input-group-text">
+                                <strong>
+                                    @Html.NopDisplayFor(model => model.OrderStatus)
+                                </strong>
                             </div>
-                            @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
-                            <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-top: 3px" />
-                            <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-top: 3px" />
+                            <div class="input-group-btn">
+                                @if (Model.CanCancelOrder)
+                                {
+                                    <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="btn bg-red" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                }
+                                <input type="submit" name="btnChangeOrderStatus" value="@T("Admin.Orders.Fields.OrderStatus.Change")" onclick="toggleChangeOrderStatus(true);return false;" id="btnChangeOrderStatus" class="btn btn-primary" />
+                                <div id="pnlChangeOrderStatus" style="margin-top: 3px;">
+                                    <div>
+                                        <em>@T("Admin.Orders.Fields.OrderStatus.Change.ForAdvancedUsers")</em>
+                                    </div>
+                                    @Html.NopDropDownListFor(model => model.OrderStatusId, ((OrderStatus)Model.OrderStatusId).ToSelectList())
+                                    <input type="submit" name="btnSaveOrderStatus" value="@T("Admin.Common.Save")" id="btnSaveOrderStatus" class="btn btn-primary" onclick="return confirm('@T("Admin.Common.AreYouSure")');" style="margin-left: 3px" />
+                                    <input type="submit" name="btnCancelOrderStatus" value="@T("Admin.Common.Cancel")" onclick="toggleChangeOrderStatus(false);return false;" id="btnCancelOrderStatus" class="btn bg-teal" style="margin-left: 3px" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -110,7 +114,7 @@
                     @Html.NopLabelFor(model => model.Id)
                 </div>
                 <div class="col-md-9">
-                    @Model.Id
+                    @Html.NopDisplayFor(model => model.Id)
                 </div>
             </div>
             @if (!Model.IsLoggedInAsVendor)
@@ -120,7 +124,7 @@
                         @Html.NopLabelFor(model => model.OrderGuid)
                     </div>
                     <div class="col-md-9">
-                        @Model.OrderGuid
+                        @Html.NopDisplayFor(model => model.OrderGuid)
                     </div>
                 </div>
             }
@@ -129,7 +133,7 @@
                     @Html.NopLabelFor(model => model.StoreName)
                 </div>
                 <div class="col-md-9">
-                    @Model.StoreName
+                    @Html.NopDisplayFor(model => model.StoreName)
                 </div>
             </div>
         </div>
@@ -152,7 +156,7 @@
                         @Html.NopLabelFor(model => model.CustomerIp)
                     </div>
                     <div class="col-md-9">
-                        @Model.CustomerIp
+                        @Html.NopDisplayFor(model => model.CustomerIp)
                     </div>
                 </div>
                 if (Model.RecurringPaymentId > 0)
@@ -173,7 +177,7 @@
                             @Html.NopLabelFor(model => model.VatNumber)
                         </div>
                         <div class="col-md-9">
-                            @Model.VatNumber
+                            @Html.NopDisplayFor(model => model.VatNumber)
                         </div>
                     </div>
                 }
@@ -195,7 +199,7 @@
                             @Html.NopLabelFor(model => model.OrderSubtotalInclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderSubtotalInclTax
+                            @Html.NopDisplayFor(model => model.OrderSubtotalInclTax)
                         </div>
                     </div>
                 }
@@ -206,7 +210,7 @@
                             @Html.NopLabelFor(model => model.OrderSubtotalExclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderSubtotalExclTax
+                            @Html.NopDisplayFor(model => model.OrderSubtotalExclTax)
                         </div>
                     </div>
                 }
@@ -218,7 +222,7 @@
                             @Html.NopLabelFor(model => model.OrderSubTotalDiscountInclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderSubTotalDiscountInclTax
+                            @Html.NopDisplayFor(model => model.OrderSubTotalDiscountInclTax)
                         </div>
                     </div>
                 }
@@ -230,7 +234,7 @@
                             @Html.NopLabelFor(model => model.OrderSubTotalDiscountExclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderSubTotalDiscountExclTax
+                            @Html.NopDisplayFor(model => model.OrderSubTotalDiscountExclTax)
                         </div>
                     </div>
                 }
@@ -241,7 +245,7 @@
                             @Html.NopLabelFor(model => model.OrderShippingInclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderShippingInclTax
+                            @Html.NopDisplayFor(model => model.OrderShippingInclTax)
                         </div>
                     </div>
                 }
@@ -252,7 +256,7 @@
                             @Html.NopLabelFor(model => model.OrderShippingExclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderShippingExclTax
+                            @Html.NopDisplayFor(model => model.OrderShippingExclTax)
                         </div>
                     </div>
                 }
@@ -264,7 +268,7 @@
                             @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeInclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.PaymentMethodAdditionalFeeInclTax
+                            @Html.NopDisplayFor(model => model.PaymentMethodAdditionalFeeInclTax)
                         </div>
                     </div>
                 }
@@ -276,7 +280,7 @@
                             @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeExclTax)
                         </div>
                         <div class="col-md-9">
-                            @Model.PaymentMethodAdditionalFeeExclTax
+                            @Html.NopDisplayFor(model => model.PaymentMethodAdditionalFeeExclTax)
                         </div>
                     </div>
                 }
@@ -301,7 +305,7 @@
                             @Html.NopLabelFor(model => model.Tax)
                         </div>
                         <div class="col-md-9">
-                            @Model.Tax
+                            @Html.NopDisplayFor(model => model.Tax)
                         </div>
                     </div>
                 }
@@ -312,7 +316,7 @@
                             @Html.NopLabelFor(model => model.OrderTotalDiscount)
                         </div>
                         <div class="col-md-9">
-                            @Model.OrderTotalDiscount
+                            @Html.NopDisplayFor(model => model.OrderTotalDiscount)
                         </div>
                     </div>
                 }
@@ -324,7 +328,7 @@
                             <span style="padding-top: 7px;margin-right: 5px;float: right;">(@(gc.CouponCode))</span>
                         </div>
                         <div class="col-md-9">
-                            @gc.Amount
+                            @Html.NopDisplay(gc.Amount)
                         </div>
                     </div>
                 }
@@ -335,9 +339,7 @@
                             @Html.NopLabelFor(model => model.RedeemedRewardPoints)
                         </div>
                         <div class="col-md-9">
-                            @Model.RedeemedRewardPoints @T("Admin.Orders.Fields.RedeemedRewardPoints.Points")
-                            <text>/</text>
-                            @Model.RedeemedRewardPointsAmount
+                            @Html.NopDisplay(Model.RedeemedRewardPoints + @T("Admin.Orders.Fields.RedeemedRewardPoints.Points").Text + "/" + Model.RedeemedRewardPointsAmount)
                         </div>
                     </div>
                 }
@@ -346,7 +348,7 @@
                         @Html.NopLabelFor(model => model.OrderTotal)
                     </div>
                     <div class="col-md-9">
-                        @Model.OrderTotal
+                        @Html.NopDisplayFor(model => model.OrderTotal)
                     </div>
                 </div>
                 if (!String.IsNullOrEmpty(Model.RefundedAmount))
@@ -356,7 +358,7 @@
                             @Html.NopLabelFor(model => model.RefundedAmount)
                         </div>
                         <div class="col-md-9">
-                            @Model.RefundedAmount
+                            @Html.NopDisplayFor(model => model.RefundedAmount)
                         </div>
                     </div>
                 }
@@ -384,7 +386,7 @@
                         @Html.NopLabelFor(model => model.Profit)
                     </div>
                     <div class="col-md-9">
-                        @Model.Profit
+                        @Html.NopDisplayFor(model => model.Profit)
                     </div>
                 </div>
 
@@ -481,7 +483,9 @@
                             @Html.NopLabelFor(model => model.CardType)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardType">@Model.CardType</p>
+                            <div id="lblCardType">
+                                @Html.NopDisplayFor(model => model.CardType)
+                            </div>
                             @Html.NopEditorFor(model => model.CardType)
                         </div>
                     </div>
@@ -493,7 +497,9 @@
                             @Html.NopLabelFor(model => model.CardName)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardName">@Model.CardName</p>
+                            <div id="lblCardName">
+                                @Html.NopDisplayFor(model => model.CardName)
+                            </div>
                             @Html.NopEditorFor(model => model.CardName)
                         </div>
                     </div>
@@ -505,7 +511,9 @@
                             @Html.NopLabelFor(model => model.CardNumber)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardNumber">@Model.CardNumber</p>
+                            <div id="lblCardNumber">
+                                @Html.NopDisplayFor(model => model.CardNumber)
+                            </div>
                             @Html.NopEditorFor(model => model.CardNumber)
                         </div>
                     </div>
@@ -517,7 +525,9 @@
                             @Html.NopLabelFor(model => model.CardCvv2)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardCvv2">@Model.CardCvv2</p>
+                            <div id="lblCardCvv2">
+                                @Html.NopDisplayFor(model => model.CardCvv2)
+                            </div>
                             @Html.NopEditorFor(model => model.CardCvv2)
                         </div>
                     </div>
@@ -529,7 +539,9 @@
                             @Html.NopLabelFor(model => model.CardExpirationMonth)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardExpirationMonth">@Model.CardExpirationMonth</p>
+                            <div id="lblCardExpirationMonth">
+                                @Html.NopDisplayFor(model => model.CardExpirationMonth)
+                            </div>
                             @Html.NopEditorFor(model => model.CardExpirationMonth)
                         </div>
                     </div>
@@ -541,7 +553,9 @@
                             @Html.NopLabelFor(model => model.CardExpirationYear)
                         </div>
                         <div class="col-md-9">
-                            <p id="lblCardExpirationYear">@Model.CardExpirationYear</p>
+                            <div id="lblCardExpirationYear">
+                                @Html.NopDisplayFor(model => model.CardExpirationYear)
+                            </div>
                             @Html.NopEditorFor(model => model.CardExpirationYear)
                         </div>
                     </div>
@@ -563,7 +577,7 @@
                             @Html.NopLabelFor(model => model.AuthorizationTransactionId)
                         </div>
                         <div class="col-md-9">
-                            @Model.AuthorizationTransactionId
+                            @Html.NopDisplayFor(model => model.AuthorizationTransactionId)
                         </div>
                     </div>
                 }
@@ -574,7 +588,7 @@
                             @Html.NopLabelFor(model => model.CaptureTransactionId)
                         </div>
                         <div class="col-md-9">
-                            @Model.CaptureTransactionId
+                            @Html.NopDisplayFor(model => model.CaptureTransactionId)
                         </div>
                     </div>
                 }
@@ -585,7 +599,7 @@
                             @Html.NopLabelFor(model => model.SubscriptionTransactionId)
                         </div>
                         <div class="col-md-9">
-                            @Model.SubscriptionTransactionId
+                            @Html.NopDisplayFor(model => model.SubscriptionTransactionId)
                         </div>
                     </div>
                 }
@@ -594,7 +608,7 @@
                         @Html.NopLabelFor(model => model.PaymentMethod)
                     </div>
                     <div class="col-md-9">
-                        @Model.PaymentMethod
+                        @Html.NopDisplayFor(model => model.PaymentMethod)
                     </div>
                 </div>
             }
@@ -608,7 +622,7 @@
                     @Html.NopLabelFor(model => model.PaymentStatus)
                 </div>
                 <div class="col-md-9">
-                    @Model.PaymentStatus
+                    @Html.NopDisplayFor(model => model.PaymentStatus)
                 </div>
             </div>
             @if (Model.CanCapture || Model.CanMarkOrderAsPaid || Model.CanRefund || Model.CanRefundOffline ||
@@ -688,7 +702,7 @@
                     @Html.NopLabelFor(model => model.CreatedOn)
                 </div>
                 <div class="col-md-9">
-                    @Html.DisplayFor(model => model.CreatedOn)
+                    @Html.NopDisplayFor(model => model.CreatedOn)
                 </div>
             </div>
         </div>

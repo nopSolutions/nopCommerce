@@ -191,7 +191,9 @@
                                 }
                             </script>
                             <div class="input-group input-group-short">
-                                <p id="lblShippingMethod" class="input-group-text">@Model.ShippingMethod</p>
+                                <div id="lblShippingMethod" class="input-group-text">
+                                    @Html.NopDisplayFor(model => model.ShippingMethod)
+                                </div>
                                 <div id="divShippingMethod">@Html.NopEditorFor(model => model.ShippingMethod)</div>
                                 <span class="input-group-btn">
                                     <input type="submit" value="@T("Admin.Common.Edit")" onclick=" toggleEditShippingMethod(true);return false; " id="btnEditShippingMethod" class="btn btn-primary" />
@@ -202,7 +204,9 @@
                         }
                         else
                         {
-                            <p id="lblShippingMethod">@Model.ShippingMethod</p>
+                            <div id="lblShippingMethod">
+                                @Html.NopDisplayFor(model => model.ShippingMethod)
+                            </div>
                         }
                     </div>
                 </div>
@@ -214,7 +218,7 @@
                             @Html.NopLabelFor(model => model.ShippingStatus)
                         </div>
                         <div class="col-md-9">
-                             @Model.ShippingStatus
+                             @Html.NopDisplayFor(model => model.ShippingStatus)
                         </div>
                     </div>
                 }

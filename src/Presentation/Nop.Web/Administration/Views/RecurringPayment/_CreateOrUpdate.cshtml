@@ -92,7 +92,7 @@
                         @Html.NopLabelFor(model => model.CyclesRemaining)
                     </div>
                     <div class="col-md-9">
-                        @Model.CyclesRemaining
+                        @Html.NopDisplayFor(model => model.CyclesRemaining)
                     </div>
                 </div>
                 <div class="form-group">
@@ -100,7 +100,7 @@
                         @Html.NopLabelFor(model => model.PaymentType)
                     </div>
                     <div class="col-md-9">
-                        @Model.PaymentType
+                        @Html.NopDisplayFor(model => model.PaymentType)
                     </div>
                 </div>
                 <div class="form-group">
@@ -108,7 +108,7 @@
                         @Html.NopLabelFor(model => model.StartDate)
                     </div>
                     <div class="col-md-9">
-                        @Model.StartDate
+                        @Html.NopDisplayFor(model => model.StartDate)
                     </div>
                 </div>
                 <div class="form-group">

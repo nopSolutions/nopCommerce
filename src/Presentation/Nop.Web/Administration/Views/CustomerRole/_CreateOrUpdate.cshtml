@@ -72,7 +72,7 @@
                             @Html.NopLabelFor(model => model.IsSystemRole)
                         </div>
                         <div class="col-md-9">
-                            @Model.IsSystemRole.ToString()
+                            @Html.NopDisplay(Model.IsSystemRole.ToString())
                             @Html.HiddenFor(model => model.IsSystemRole)
                             @Html.ValidationMessageFor(model => model.IsSystemRole)
                         </div>

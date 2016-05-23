@@ -15,7 +15,7 @@
                             @Html.NopLabelFor(model => model.Id)
                         </div>
                         <div class="col-md-9">
-                            @Model.Id
+                            @Html.NopDisplayFor(model => model.Id)
                         </div>
                     </div>
                     <div class="form-group">
@@ -101,7 +101,7 @@
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.CreatedOn)
+                            @Html.NopDisplayFor(model => model.CreatedOn)
                         </div>
                     </div>
                 </div>

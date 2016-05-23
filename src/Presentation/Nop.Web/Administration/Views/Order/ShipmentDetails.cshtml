@@ -108,7 +108,7 @@
                                 @Html.NopLabelFor(model => model.TotalWeight)
                             </div>
                             <div class="col-md-9">
-                                @Model.TotalWeight
+                                @Html.NopDisplayFor(model => model.TotalWeight)
                             </div>
                         </div>
                         <div class="form-group">
@@ -117,7 +117,9 @@
                             </div>
                             <div class="col-md-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblShippedDate" class="input-group-text">@Model.ShippedDate</p>
+                                    <div id="lblShippedDate" class="input-group-text">
+                                        @Html.NopDisplayFor(model => model.ShippedDate)
+                                    </div>
                                     @if (Model.ShippedDateUtc.HasValue)
                                     {
                                         <div id="divShippedDate" style="display: inline-block;">
@@ -147,7 +149,9 @@
 
                             <div class="col-md-9">
                                 <div class="input-group input-group-short">
-                                    <p id="lblDeliveryDate" class="input-group-text">@Model.DeliveryDate</p>
+                                    <div id="lblDeliveryDate" class="input-group-text">
+                                        @Html.NopDisplayFor(model => model.DeliveryDate)
+                                    </div>
                                     @if (Model.DeliveryDateUtc.HasValue)
                                     {
                                         <div id="divDeliveryDate" style="display: inline-block;">

@@ -125,7 +125,7 @@
                                 @Html.NopLabelFor(model => model.Username)
                             </div>
                             <div class="col-md-9">
-                                @Model.Username
+                                @Html.NopDisplayFor(model => model.Username)
                                 @Html.HiddenFor(model => model.Username)
                             </div>
                         </div>
@@ -447,8 +447,8 @@
                             @Html.NopLabelFor(model => model.AffiliateId)
                         </div>
                         <div class="col-md-9">
-                            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId })">@Model.AffiliateName - @T("Admin.Common.View")</a>
-                            <input type="submit" name="remove-affiliate" class="btn bg-red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")" />
+                            <a href="@Url.Action("Edit", "Affiliate", new {id = Model.AffiliateId})">@Model.AffiliateName - @T("Admin.Common.View")</a>
+                            <input type="submit" name="remove-affiliate" class="btn bg-red" value="@T("Admin.Customers.Customers.Fields.Affiliate.Remove")"/>
                         </div>
                     </div>
                 }
@@ -506,7 +506,7 @@
                             @Html.NopLabelFor(model => model.LastIpAddress)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastIpAddress)
+                            @Html.NopDisplayFor(model => model.LastIpAddress)
                         </div>
                     </div>
                 }
@@ -517,7 +517,7 @@
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.CreatedOn)
+                            @Html.NopDisplayFor(model => model.CreatedOn)
                         </div>
                     </div>
                 }
@@ -528,7 +528,7 @@
                             @Html.NopLabelFor(model => model.LastActivityDate)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastActivityDate)
+                            @Html.NopDisplayFor(model => model.LastActivityDate)
                         </div>
                     </div>
                 }
@@ -539,7 +539,7 @@
                             @Html.NopLabelFor(model => model.LastVisitedPage)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.LastVisitedPage)
+                            @Html.NopDisplayFor(model => model.LastVisitedPage)
                         </div>
                     </div>
                 }

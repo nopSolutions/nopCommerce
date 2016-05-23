@@ -106,7 +106,7 @@
                             @Html.NopLabelFor(model => model.RemainingAmountStr)
                         </div>
                         <div class="col-md-9">
-                            @Model.RemainingAmountStr
+                            @Html.NopDisplayFor(model => model.RemainingAmountStr)
                         </div>
                     </div>
                 }
@@ -208,7 +208,9 @@
                         </div>
                         <div class="col-md-9">
                             <div class="input-group input-group-short">
-                                <p class="input-group-text">@Model.IsRecipientNotified.ToString()</p>
+                                <div class="input-group-text">
+                                    @Html.NopDisplay(Model.IsRecipientNotified.ToString())
+                                </div>
                                 <div class="input-group-btn">
                                     <input type="submit" name="notifyRecipient" class="btn btn-info" value="@T("Admin.GiftCards.Fields.IsRecipientNotified.Notify")" />
                                 </div>
@@ -223,7 +225,7 @@
                             @Html.NopLabelFor(model => model.CreatedOn)
                         </div>
                         <div class="col-md-9">
-                            @Html.DisplayFor(model => model.CreatedOn)
+                            @Html.NopDisplayFor(model => model.CreatedOn)
                         </div>
                     </div>
                 }
