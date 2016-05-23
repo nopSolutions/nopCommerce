@@ -1092,6 +1092,9 @@
     <Content Include="Content\tinymce\skins\lightgray\skin.min.css" />
     <Content Include="Content\tinymce\themes\modern\theme.min.js" />
     <Content Include="Content\tinymce\tinymce.min.js" />
+    <Content Include="Content\typeahead\typeahead.css" />
+    <Content Include="Scripts\admin.navigation.js" />
+    <Content Include="Scripts\admin.search.js" />
     <Content Include="Scripts\adminLTE\app.js" />
     <Content Include="Scripts\adminLTE\app.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap-3.3.4.js" />
@@ -1677,6 +1680,7 @@
     <Content Include="Scripts\tagEditor\jquery.caret.min.js" />
     <Content Include="Scripts\tagEditor\jquery.tag-editor.js" />
     <Content Include="Scripts\tagEditor\jquery.tag-editor.min.js" />
+    <Content Include="Scripts\typeahead\typeahead.bundle.min.js" />
     <Content Include="Themes\DefaultClean\Content\css\ie8.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.css" />
     <Content Include="Themes\DefaultClean\Content\css\styles.rtl.css" />
@@ -2057,6 +2061,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Roxy_Fileman\tmp\" />
+    <Folder Include="obj\" />
     <Folder Include="Plugins\bin\" />
   </ItemGroup>
   <ItemGroup>

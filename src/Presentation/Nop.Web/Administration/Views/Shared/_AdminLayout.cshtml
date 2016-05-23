@@ -22,6 +22,7 @@
 
 
     //CSS resources
+    Html.AppendCssFileParts("~/Content/typeahead/typeahead.css");
     //if (supportRtl)
     //{
     //    Html.AppendCssFileParts("~/Administration/Content/styles.rtl.css");
@@ -44,7 +45,10 @@
 
 
     Html.AppendScriptParts(string.Format("~/Scripts/kendo/{0}/kendo.web.min.js", kendoVersion));
+    Html.AppendScriptParts("~/Scripts/admin.search.js");
+    Html.AppendScriptParts("~/scripts/admin.navigation.js");
     Html.AppendScriptParts("~/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Scripts/typeahead/typeahead.bundle.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-migrate-1.2.1.min.js");
     Html.AppendScriptParts("~/Scripts/jquery-ui-1.10.3.custom.min.js");
     Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
@@ -192,14 +196,16 @@
             <div class="main-sidebar">
                 <div class="sidebar">
                     <!-- search form -->
-                    <form action="#" method="get" class="sidebar-form">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Search...">
-                            <span class="input-group-btn">
-                                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
-                            </span>
+                    <div class="sidebar-form">
+                        <div id="search-box">
+                            <input type="text" class="form-control admin-search-box typeahead" placeholder="Search...">
                         </div>
-                    </form>
+                    </div>
+                    <script>
+                        $(document).ready(function() {
+                            Admin.Search.init();
+                        });
+                    </script>
                     @Html.Partial("Menu")
                 </div>
             </div>

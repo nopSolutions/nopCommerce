@@ -525,7 +525,15 @@ ul.common-list {
     margin-bottom: 15px;
 }
 
+.sidebar-form {
+    border: none !important;
+    overflow: visible;
+    margin: 10px 10px 0 !important;
+}
 
+.skin-blue .sidebar-form input[type="text"] {
+    border-radius: 2px;
+}
 
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {

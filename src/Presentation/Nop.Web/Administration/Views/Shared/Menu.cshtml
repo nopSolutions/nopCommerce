@@ -22,14 +22,14 @@ var isActive = item.ContainsSystemName(Html.GetActiveMenuItemSystemName());
 if (!String.IsNullOrEmpty(url))
 {
         <li @(isActive ? Html.Raw("class='active'") : null)>
-            <a href="@url">
+            <a href="@url" class="menu-item-link">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {
                     <text>
                         <i class="fa @Url.Content(item.IconClass)"></i>
                     </text>
                 }
-                <span>@item.Title</span>
+                <span class="menu-item-title">@item.Title</span>
             </a>
         </li>
 }
