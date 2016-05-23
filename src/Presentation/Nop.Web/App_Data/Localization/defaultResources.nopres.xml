@@ -8742,9 +8742,6 @@
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Dashboard.StoreStatistics">
-    <Value>Store Statistics</Value>
-  </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>
   </LocaleResource>

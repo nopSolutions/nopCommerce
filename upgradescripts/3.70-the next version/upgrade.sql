@@ -551,6 +551,9 @@ set @resources='
   <LocaleResource Name="Admin.Common.Import">
     <Value>Import</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Dashboard.StoreStatistics">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
