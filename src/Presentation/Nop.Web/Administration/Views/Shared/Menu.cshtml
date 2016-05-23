@@ -17,9 +17,11 @@ else if (!string.IsNullOrEmpty(item.Url))
 {
     url = item.Url.StartsWith("~/", StringComparison.Ordinal) ? Url.Content(item.Url) : item.Url;
 }
+var isActive = item.ContainsSystemName(Html.GetActiveMenuItemSystemName());
+
 if (!String.IsNullOrEmpty(url))
 {
-        <li>
+        <li @(isActive ? Html.Raw("class='active'") : null)>
             <a href="@url">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {
@@ -33,7 +35,7 @@ if (!String.IsNullOrEmpty(url))
 }
 else
 {
-        <li class="treeview">
+        <li class="treeview @(isActive ? Html.Raw("active") : null)">
             <a href="#">
                 @if (!String.IsNullOrEmpty(item.IconClass))
                 {

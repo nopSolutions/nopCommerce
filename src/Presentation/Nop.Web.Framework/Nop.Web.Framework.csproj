@@ -149,6 +149,7 @@
     <Compile Include="Kendoui\Sort.cs" />
     <Compile Include="Kendoui\Filter.cs" />
     <Compile Include="Kendoui\QueryableExtensions.cs" />
+    <Compile Include="Menu\Extensions.cs" />
     <Compile Include="Menu\SiteMapNode.cs" />
     <Compile Include="Menu\XmlSiteMap.cs" />
     <Compile Include="Mvc\NoTrimAttribute.cs" />
