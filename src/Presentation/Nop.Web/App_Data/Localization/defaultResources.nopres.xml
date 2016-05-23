@@ -3525,6 +3525,9 @@
   <LocaleResource Name="Admin.Common.Hide">
     <Value>Hide</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Import">
+    <Value>Import</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.ImportFromCsv">
     <Value>Import from CSV</Value>
   </LocaleResource>

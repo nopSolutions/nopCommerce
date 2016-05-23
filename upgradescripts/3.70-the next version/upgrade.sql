@@ -530,7 +530,6 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
     <Value></Value>
   </LocaleResource>
-  </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ApiKey">
     <Value>Australia Post API Key</Value>
   </LocaleResource>
@@ -548,6 +547,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.HideDeliveryInformation.Hint">
     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Import">
+    <Value>Import</Value>
   </LocaleResource>
 </Language>
 '
