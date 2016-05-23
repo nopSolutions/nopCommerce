@@ -68,7 +68,7 @@
                             @Html.HiddenFor(model => model.AssociatedProductId)
                             <span id="associate-product-name">@Model.AssociatedProductName</span>
                             @Html.ValidationMessageFor(model => model.AssociatedProductId)
-                            <input type="submit" value=@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 800, true); return false;" class="btn btn-primary" />
+                            <input type="submit" value=@T("Admin.Catalog.Products.ProductAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew") onclick="javascript:OpenWindow('@(Url.Action("AssociateProductToAttributeValuePopup", "Product", new {productIdInput = Html.FieldIdFor(model => model.AssociatedProductId), productNameInput = "associate-product-name"}))', 800, 850, true); return false;" class="btn btn-primary" />
                         </div>
                     </div>
                     <div class="form-group" id="group-quantity">

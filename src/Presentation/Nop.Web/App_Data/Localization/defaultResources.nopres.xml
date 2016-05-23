@@ -3495,6 +3495,9 @@
   <LocaleResource Name="Admin.Common.ExcelFile">
     <Value>Excel file</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Export">
+    <Value>Export</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Common.ExportToCsv">
     <Value>Export to CSV</Value>
   </LocaleResource>
@@ -3521,6 +3524,9 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Common.Hide">
     <Value>Hide</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Import">
+    <Value>Import</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Common.ImportFromCsv">
     <Value>Import from CSV</Value>
@@ -8735,9 +8741,6 @@
   </LocaleResource>
   <LocaleResource Name="Admin.Dashboard">
     <Value>Dashboard</Value>
-  </LocaleResource>
-  <LocaleResource Name="Admin.Dashboard.StoreStatistics">
-    <Value>Store Statistics</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Download.DownloadUploadedFile">
     <Value>Download uploaded file</Value>
