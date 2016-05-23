@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers.AddNew").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Manufacturers");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))

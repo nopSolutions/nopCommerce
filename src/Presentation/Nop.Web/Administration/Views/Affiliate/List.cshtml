@@ -5,6 +5,9 @@
 
     //page title
     ViewBag.Title = T("Admin.Affiliates").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Affiliates");
 }
 
 @Html.AntiForgeryToken()

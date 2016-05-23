@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.EmailAccounts.EditEmailAccountDetails").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("EmailAccounts");
 }
 
 @using (Html.BeginForm())

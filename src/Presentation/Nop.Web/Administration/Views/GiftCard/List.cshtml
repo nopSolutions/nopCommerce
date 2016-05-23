@@ -6,6 +6,9 @@
 
     //page title
     ViewBag.Title = T("Admin.GiftCards").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Gift cards");
 }
 
 @Html.AntiForgeryToken()

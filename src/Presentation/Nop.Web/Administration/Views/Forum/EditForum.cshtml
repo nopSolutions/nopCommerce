@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.Forums.Forum.EditForum").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Manage forums");
 }
 
 @using (Html.BeginForm())

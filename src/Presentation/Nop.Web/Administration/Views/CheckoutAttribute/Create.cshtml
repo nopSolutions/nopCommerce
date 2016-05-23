@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Catalog.Attributes.CheckoutAttributes.AddNew").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Checkout attributes");
 }
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "checkoutattribute-form" }))

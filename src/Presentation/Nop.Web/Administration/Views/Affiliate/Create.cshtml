@@ -2,6 +2,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.Affiliates.AddNew").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Affiliates");
 }
 
 @using (Html.BeginForm())

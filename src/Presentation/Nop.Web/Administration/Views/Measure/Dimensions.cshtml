@@ -1,6 +1,9 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Measures.Dimensions").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Dimensions");
 }
 
 @Html.AntiForgeryToken()

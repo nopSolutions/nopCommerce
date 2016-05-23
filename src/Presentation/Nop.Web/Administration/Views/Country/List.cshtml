@@ -1,6 +1,9 @@
 ﻿@{
     //page title
     ViewBag.Title = T("Admin.Configuration.Countries").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Countries");
 }
 
 @Html.AntiForgeryToken()

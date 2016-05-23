@@ -6,6 +6,9 @@
 
     //page title
     ViewBag.Title = T("Admin.Catalog.Manufacturers").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Manufacturers");
 }
 
 @Html.AntiForgeryToken()

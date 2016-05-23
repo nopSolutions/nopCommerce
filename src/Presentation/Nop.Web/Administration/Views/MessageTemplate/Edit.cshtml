@@ -3,6 +3,9 @@
 @{
     //page title
     ViewBag.Title = T("Admin.ContentManagement.MessageTemplates.EditMessageTemplateDetails").Text;
+
+    //active menu item (system name)
+    Html.SetActiveMenuItemSystemName("Message templates");
 }
 
 @using (Html.BeginForm())
