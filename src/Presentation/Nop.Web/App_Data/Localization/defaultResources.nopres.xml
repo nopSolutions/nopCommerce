@@ -10812,7 +10812,7 @@
   <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.FileSize">
     <Value>File Size</Value>
   </LocaleResource>
-  <LocaleResource Name=" Admin.System.Maintenance.BackupDatabase.Progress">
+  <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Progress">
     <Value>Processing database backup...</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.BackupDatabase.Restore">

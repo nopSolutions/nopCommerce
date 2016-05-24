@@ -2,9 +2,20 @@
     var gridPageSize = 5;
 }
 
-<div id="bestsellers-byquantity-grid"></div>
+<div id="bestsellers-byquantity-grid" class="bestsellers-list"></div>
 
 <script>
+    //row index
+    var rowNumber_BriefByQuantity = 0;
+    function onBriefByQuantityDataBound(data) {
+        return rowNumber_BriefByQuantity = 0;
+    }
+    function onBriefByQuantityIncrease(max) {
+        if (rowNumber_BriefByQuantity === max)
+            rowNumber_BriefByQuantity = 0;
+        ++rowNumber_BriefByQuantity;
+    }
+
     $(document).ready(function () {
         $("#bestsellers-byquantity-grid").kendoGrid({
             dataSource: {
@@ -39,13 +50,20 @@
                 confirmation: false,
                 mode: "inline"
             },
+            dataBound: onBriefByQuantityDataBound,
             scrollable: false,
             columns: [{
                 field: "ProductName",
                 title: "@T("Admin.SalesReport.Bestsellers.Fields.Name")"
             }, {
                 field: "TotalQuantity",
-                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")"
+                title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalQuantity")",
+                template: '# onBriefByQuantityIncrease(4) # <span class="report-item ' +
+                    '# if(rowNumber_BriefByQuantity == 1) {# yellow #} #' +
+                    '# if(rowNumber_BriefByQuantity == 2) {# blue #} #' +
+                    '# if(rowNumber_BriefByQuantity == 3) {# red #} #' +
+                    '# if(rowNumber_BriefByQuantity == 4) {# green #} #' +
+                    '">#=TotalQuantity#</span>'
             }, {
                 field: "TotalAmount",
                 title: "@T("Admin.SalesReport.Bestsellers.Fields.TotalAmount")"
