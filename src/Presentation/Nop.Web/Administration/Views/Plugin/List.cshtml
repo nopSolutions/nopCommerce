@@ -144,8 +144,8 @@
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.Author") #:Author#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.SystemName") #:SystemName#</li>' +
                                                 '<li>@T("Admin.Configuration.Plugins.Fields.DisplayOrder") #:DisplayOrder#</li>' +
-                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed")  # if(Installed) {# <i class="fa fa-check" style="color:\\#007FCC;font-size:20px;"></i> #} else {# <i class="fa fa-close" style="color:\\#D22D2D;font-size:20px;"></i> #} #</li>' +
-                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") # if(IsEnabled) {# <i class="fa fa-check" style="color:\\#007FCC;font-size:20px;"></i> #} else {# <i class="fa fa-close" style="color:\\#D22D2D;font-size:20px;"></i> #} # </li> #} #' +
+                                                '<li>@T("Admin.Configuration.Plugins.Fields.Installed")  # if(Installed) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #</li>' +
+                                                '# if(CanChangeEnabled) {# <li>@T("Admin.Configuration.Plugins.Fields.IsEnabled") # if(IsEnabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} # </li> #} #' +
                                                 '</ul>' +
                                                 //allow configuration only when a plugin has a configuration URL specified
                                                 '# if(ConfigurationUrl && ConfigurationUrl.length > 0) {# <a class="btn btn-primary" href="#=ConfigurationUrl#">@T("Admin.Configuration.Plugins.Fields.Configure")</a>&nbsp;&nbsp;&nbsp; #} #' +

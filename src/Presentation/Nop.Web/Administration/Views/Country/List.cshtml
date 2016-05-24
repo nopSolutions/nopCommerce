@@ -80,14 +80,14 @@
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsBilling#.gif" />'
+                                        template: '# if(AllowsBilling) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "AllowsShipping",
                                         title: "@T("Admin.Configuration.Countries.Fields.AllowsShipping")",
                                         width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowsShipping#.gif" />'
+                                        template: '# if(AllowsShipping) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "TwoLetterIsoCode",
                                         title: "@T("Admin.Configuration.Countries.Fields.TwoLetterIsoCode")",
@@ -106,7 +106,7 @@
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=SubjectToVat#.gif" />'
+                                        template: '# if(SubjectToVat) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "NumberOfStates",
                                         title: "@T("Admin.Configuration.Countries.Fields.NumberOfStates")",
@@ -121,7 +121,7 @@
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                        template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "Id",
                                         title: "@T("Admin.Common.Edit")",

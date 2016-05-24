@@ -110,7 +110,7 @@
                                             width: 250,
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
-                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryExchangeRateCurrency#.gif" />'
+                                            template: '# if(IsPrimaryExchangeRateCurrency) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency")",
@@ -122,7 +122,7 @@
                                             width: 200,
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
-                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPrimaryStoreCurrency#.gif" />'
+                                            template: '# if(IsPrimaryStoreCurrency) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "Id",
                                             title: "@T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency")",
@@ -134,7 +134,7 @@
                                             width: 50,
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
-                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                            template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "DisplayOrder",
                                             title: "@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.DisplayOrder")",

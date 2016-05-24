@@ -153,7 +153,7 @@
                                 width: 150,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRequired#.gif" />'
+                                template: '# if(IsRequired) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                             },
                             {
                                 field: "AttributeControlTypeId",
@@ -383,7 +383,7 @@
                                 width: 150,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowOutOfStockOrders#.gif" />'
+                                template: '# if(AllowOutOfStockOrders) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                             }, {
                                 field: "Sku",
                                 title: "@T("Admin.Catalog.Products.ProductAttributes.AttributeCombinations.Fields.Sku")",

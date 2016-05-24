@@ -79,14 +79,14 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                    template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "ShowOnHomePage",
                                     title: "@T("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")",
                                     width: 150,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=ShowOnHomePage#.gif" />'
+                                    template: '# if(ShowOnHomePage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "StartDate",
                                     title: "@T("Admin.ContentManagement.Polls.Fields.StartDate")",

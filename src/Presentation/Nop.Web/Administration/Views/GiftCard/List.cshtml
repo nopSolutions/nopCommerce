@@ -121,7 +121,7 @@
                                     width: 200,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsGiftCardActivated#.gif" />'
+                                    template: '# if(IsGiftCardActivated) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "CreatedOn",
                                     title: "@T("Admin.GiftCards.Fields.CreatedOn")",

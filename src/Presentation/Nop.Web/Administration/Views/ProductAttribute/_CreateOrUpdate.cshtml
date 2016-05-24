@@ -159,7 +159,7 @@
                                 width: 100,
                                 headerAttributes: { style: "text-align:center" },
                                 attributes: { style: "text-align:center" },
-                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif" />'
+                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                             },
                             {
                                 field: "Id",
@@ -257,7 +257,7 @@
                                         width: 100,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPreSelected#.gif" />'
+                                        template: '# if(IsPreSelected) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "DisplayOrder",
                                         title: "@T("Admin.Catalog.Attributes.ProductAttributes.PredefinedValues.Fields.DisplayOrder")",

@@ -535,6 +535,16 @@ ul.common-list {
     border-radius: 2px;
 }
 
+.fa.true-icon {
+    color: #007FCC;
+    font-size: 20px;
+}
+
+.fa.false-icon {
+    color: #D22D2D;
+    font-size: 20px;
+}
+
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
          display: none;

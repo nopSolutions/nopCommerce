@@ -104,14 +104,14 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Enabled#.gif" />'
+                                    template: '# if(Enabled) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "StopOnError",
                                     title: "@T("Admin.System.ScheduleTasks.StopOnError")",
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=StopOnError#.gif" />'
+                                    template: '# if(StopOnError) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "LastStartUtc",
                                     title: "@T("Admin.System.ScheduleTasks.LastStart")",

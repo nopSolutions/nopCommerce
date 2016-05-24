@@ -99,14 +99,14 @@
                                         width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=AllowFiltering#.gif" />'
+                                        template: '# if(AllowFiltering) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     }, {
                                         field: "ShowOnProductPage",
                                         title: "@T("Admin.Catalog.Products.SpecificationAttributes.Fields.ShowOnProductPage")",
                                         width: 150,
                                         headerAttributes: { style: "text-align:center" },
                                         attributes: { style: "text-align:center" },
-                                        template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=ShowOnProductPage#.gif" />'
+                                        template: '# if(ShowOnProductPage) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                     },
                                     {
                                         field: "DisplayOrder",

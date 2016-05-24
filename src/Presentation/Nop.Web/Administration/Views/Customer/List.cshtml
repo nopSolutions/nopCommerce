@@ -288,7 +288,7 @@
                                             width: 100,
                                             headerAttributes: { style: "text-align:center" },
                                             attributes: { style: "text-align:center" },
-                                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                            template: '# if(Active) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                         }, {
                                             field: "CreatedOn",
                                             title: "@T("Admin.Customers.Customers.Fields.CreatedOn")",

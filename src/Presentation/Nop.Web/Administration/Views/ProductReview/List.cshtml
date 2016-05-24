@@ -188,7 +188,7 @@
                                     width: 100,
                                     headerAttributes: { style: "text-align:center" },
                                     attributes: { style: "text-align:center" },
-                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsApproved#.gif" />'
+                                    template: '# if(IsApproved) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-close false-icon"></i> #} #'
                                 }, {
                                     field: "CreatedOn",
                                     title: "@T("Admin.Catalog.ProductReviews.Fields.CreatedOn")",
