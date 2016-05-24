@@ -77,7 +77,7 @@ Admin.Search = (function () {
                 templates: {
                     empty: [
                             '<div class="empty-message">',
-                              'NOT FOUND',
+                              'NO RESULTS',
                             '</div>'
                     ].join('\n'),
                     suggestion: itemTemplate

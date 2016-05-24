@@ -554,6 +554,9 @@ set @resources='
   <LocaleResource Name="Admin.Dashboard.StoreStatistics">
     <Value></Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Menu.Search">
+    <Value>Search</Value>
+  </LocaleResource>
 </Language>
 '
 

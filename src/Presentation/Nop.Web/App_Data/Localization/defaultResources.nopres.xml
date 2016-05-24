@@ -14829,4 +14829,7 @@
   <LocaleResource Name="Admin.Catalog.Manufacturer.Imported">
     <Value>Manufacturers have been imported successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Menu.Search">
+    <Value>Search</Value>
+  </LocaleResource>
 </Language>

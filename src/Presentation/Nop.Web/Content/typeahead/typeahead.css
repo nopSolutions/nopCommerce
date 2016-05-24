@@ -17,6 +17,10 @@
     font-weight: 300;
 }
 
+.tt-menu .empty-message{
+    padding: 5px 10px;
+}
+
 .tt-menu .tt-suggestion {
     margin: 0;
     padding: 10px;
