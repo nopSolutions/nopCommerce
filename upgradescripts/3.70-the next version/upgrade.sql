@@ -578,6 +578,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods.BackToList">
     <Value>back to extenal authentication method list</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
+    <Value>All plugins and themes</Value>
+  </LocaleResource>
 </Language>
 '
 

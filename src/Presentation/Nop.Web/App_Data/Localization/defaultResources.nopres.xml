@@ -4504,7 +4504,7 @@
     <Value>Configure</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed">
-    <Value>All plugins and themes directory</Value>
+    <Value>All plugins and themes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Plugins.OfficialFeed.Category">
     <Value>Category</Value>
