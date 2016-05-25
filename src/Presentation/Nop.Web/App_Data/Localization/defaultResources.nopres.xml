@@ -8557,10 +8557,10 @@
     <Value>Reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
-    <Value>Add reward points</Value>
+    <Value>Add (reduce) reward points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
-    <Value>Add points</Value>
+    <Value>Add (reduce) points</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage">
     <Value>Message</Value>
@@ -8578,7 +8578,7 @@
     <Value>Value</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue.Hint">
-    <Value>Enter points to add.</Value>
+    <Value>Enter points to add. Negative values are also supported (reduce points).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.Date">
     <Value>Date</Value>
