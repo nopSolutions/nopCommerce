@@ -16,7 +16,10 @@
             <small>@Html.ActionLink("(" + T("Admin.Catalog.Categories.BackToList") + ")", "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-aqua" />
+            <button onclick="javascript:OpenWindow('@Url.RouteUrl("Category", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">
+                <i class="fa fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </button>
             <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
             <span id="category-delete" class="btn bg-red">
