@@ -18,8 +18,14 @@
         </a>
         <input type="button" id="publish-selected" class="btn bg-teal" value="@T("Admin.Configuration.Countries.PublishSelected")" />
         <input type="button" id="unpublish-selected" class="btn bg-navy" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
-        <a href="@Url.Action("ExportCsv")" class="btn bg-green">@T("Admin.Configuration.Countries.ExportToCsv")</a>
-        <input type="submit" name="importcsv" class="btn bg-olive" value="@T("Admin.Configuration.Countries.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window" />
+        <a href="@Url.Action("ExportCsv")" class="btn bg-green">
+            <i class="fa fa-exchange"></i>
+            @T("Admin.Configuration.Countries.ExportToCsv")
+        </a>
+        <button type="submit" name="importcsv" class="btn bg-olive" value="@T("Admin.Configuration.Countries.ImportFromCsv")" data-toggle="modal" data-target="#importcsv-window">
+            <i class="fa fa-exchange"></i>
+            @T("Admin.Configuration.Countries.ImportFromCsv")
+        </button>
     </div>
 </div>
 

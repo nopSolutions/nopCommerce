@@ -17,10 +17,22 @@
             <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Languages.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
-            <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
-            <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
-            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn bg-green">@T("Admin.Configuration.Languages.Export")</a>
-            <input type="button" class="btn bg-olive" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window" />
+            <button type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <a href="@Url.Action("ExportXml", new {id = Model.Id})" class="btn bg-green">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Configuration.Languages.Export")
+            </a>
+            <button type="button" class="btn bg-olive" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Configuration.Languages.Import")
+            </button>
             <span id="language-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
