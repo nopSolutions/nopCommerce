@@ -566,6 +566,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
     <Value>Add (reduce) reward points</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
+    <Value>General settings</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -5533,7 +5533,7 @@
     <Value>Set the page size for topics in forums e.g. '10' topics per page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon">
-    <Value>General and miscellaneous settings</Value>
+    <Value>General settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses">
     <Value>Admin area allowed IP</Value>
