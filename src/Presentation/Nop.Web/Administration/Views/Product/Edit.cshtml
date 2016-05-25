@@ -22,7 +22,10 @@
             </button>
             <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")"/>
             <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")"/>
-            <input type="button" name="copyproduct" class="btn bg-olive" value="@T("Admin.Catalog.Products.Copy")" data-toggle="modal" data-target="#copyproduct-window"/>
+            <button type="button" name="copyproduct" class="btn bg-olive" data-toggle="modal" data-target="#copyproduct-window">
+                <i class="fa fa-clone"></i>
+                @T("Admin.Catalog.Products.Copy")
+            </button>
             <span id="product-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")

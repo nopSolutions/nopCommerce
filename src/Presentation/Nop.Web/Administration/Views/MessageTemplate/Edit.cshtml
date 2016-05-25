@@ -19,7 +19,10 @@
         <div class="pull-right">
             <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
             <input type="submit" name="save-continue" class="btn bg-blue" value="@T("Admin.Common.SaveContinue")" />
-            <input type="submit" name="message-template-copy" class="btn bg-green" value="@T("Admin.ContentManagement.MessageTemplates.Copy")"  onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+            <button type="submit" name="message-template-copy" class="btn bg-green" value="@T("Admin.ContentManagement.MessageTemplates.Copy")" onclick="return confirm('@T("Admin.Common.AreYouSure")');">
+                <i class="fa fa-clone"></i>
+                @T("Admin.ContentManagement.MessageTemplates.Copy")
+            </button>
             <span id="message-template-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
