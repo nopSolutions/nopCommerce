@@ -12,7 +12,10 @@
         @T("Admin.Configuration.Countries")
     </h1>
     <div class="pull-right">
-        <a href="@Url.Action("Create")" class="btn bg-blue">@T("Admin.Common.AddNew")</a>
+        <a href="@Url.Action("Create")" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
         <input type="button" id="publish-selected" class="btn bg-teal" value="@T("Admin.Configuration.Countries.PublishSelected")" />
         <input type="button" id="unpublish-selected" class="btn bg-navy" value="@T("Admin.Configuration.Countries.UnpublishSelected")" />
         <a href="@Url.Action("ExportCsv")" class="btn bg-green">@T("Admin.Configuration.Countries.ExportToCsv")</a>
