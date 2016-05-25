@@ -20,7 +20,8 @@
             <input type="submit" name="save" class="btn btn-primary" value="@T("Admin.Common.Save")"/>
             <a href="@Url.Action("List", "Currency", new {liveRates = true})" class="btn bg-green">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
             <a href="@Url.Action("Create")" class="btn bg-blue">
-                <i class="fa fa-plus-square"></i>@T("Admin.Common.AddNew")
+                <i class="fa fa-plus-square"></i>
+                @T("Admin.Common.AddNew")
             </a>
         </div>
     </div>
