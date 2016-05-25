@@ -23,23 +23,23 @@
 <div id="@(clientId + "image")" class="uploaded-image">
     <img src="@(pictureService.GetPictureUrl(Model, pictureSize, true))" />
 </div>
-@if (picture != null)
-{
-    <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
-}
-else
-{
-    <span id="@(clientId + "remove")" class="btn bg-red" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
-}
+<div class="remove-image-button">
+    @if (picture != null)
+    {
+        <span id="@(clientId + "remove")" class="btn bg-red">@T("Admin.Picture.RemovePicture")</span>
+    }
+    else
+    {
+        <span id="@(clientId + "remove")" class="btn bg-red" style="display:none;">@T("Admin.Picture.RemovePicture")</span>
+    }
+</div>
 @*fine uploader container*@
-<div id="@clientId">
+<div id="@clientId" class="upload-image-button">
     <noscript>
-        <p>
-            Please enable JavaScript to use file uploader.</p>
-        <!-- or put a simple form for upload here -->
+        <p>Please enable JavaScript to use file uploader.</p>
     </noscript>
 </div>
-    @*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
+@*fine uploader template (keep it synchronized to \Content\fineuploader\templates\default.html)*@
 <script type="text/template" id="@(clientId)-qq-template">
     <div class="qq-uploader-selector qq-uploader">
         <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
@@ -70,10 +70,8 @@ else
         </ul>
     </div>
 </script>
-
 <script type="text/javascript">
     $(document).ready(function() {
-
         $("#@(clientId)").fineUploader({
             request: {
                 endpoint: '@(Url.Content("~/Admin/Picture/AsyncUpload"))'
@@ -87,7 +85,6 @@ else
                 $("#@(clientId + "remove")").show();
             }
         });
-
         $("#@(clientId + "remove")").click(function(e) {
             $("#@(clientId + "image")").html("<img src='@pictureService.GetDefaultPictureUrl(pictureSize)'/>");
             $("#@(clientId + "value") input").val(0);
