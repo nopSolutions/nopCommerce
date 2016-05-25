@@ -1222,7 +1222,7 @@
     <Value>Attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes">
-    <Value>Checkout Attributes</Value>
+    <Value>Checkout attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -1414,7 +1414,7 @@
     <Value>You need to save the checkout attribute before you can add values for this checkout attribute page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes">
-    <Value>Product Attributes</Value>
+    <Value>Product attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -1519,7 +1519,7 @@
     <Value>Published</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
-    <Value>Specification Attributes</Value>
+    <Value>Specification attributes</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Added">
     <Value>The new attribute has been added successfully.</Value>
@@ -3985,7 +3985,7 @@
     <Value>The currency has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts">
-    <Value>Email Accounts</Value>
+    <Value>Email accounts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Added">
     <Value>The new email account has been added successfully.</Value>
@@ -10243,7 +10243,7 @@
     <Value>The discount has been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions">
-    <Value>Newsletter Subscribers</Value>
+    <Value>Newsletter subscribers</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Active">
     <Value>Active</Value>
@@ -10891,7 +10891,7 @@
     <Value>{0} customers were deleted</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails">
-    <Value>Message Queue</Value>
+    <Value>Message queue</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.QueuedEmails.BackToList">
     <Value>back to message queue</Value>
