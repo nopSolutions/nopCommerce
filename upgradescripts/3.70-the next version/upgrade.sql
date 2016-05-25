@@ -557,6 +557,15 @@ set @resources='
     <LocaleResource Name="Admin.Menu.Search">
     <Value>Search</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddTitle">
+    <Value>Add (reduce) points</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsValue.Hint">
+    <Value>Enter points to add. Negative values are also supported (reduce points).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.RewardPoints.AddButton">
+    <Value>Add (reduce) reward points</Value>
+  </LocaleResource>
 </Language>
 '
 
