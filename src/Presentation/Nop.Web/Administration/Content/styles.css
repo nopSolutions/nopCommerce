@@ -123,7 +123,6 @@ table.adminContent {
     -webkit-box-shadow: none;
 }
 
-
 .k-picker-wrap.k-state-default, 
 .k-numeric-wrap.k-state-default {
     border-radius: 0;
@@ -131,9 +130,14 @@ table.adminContent {
     height: 34px;
 }
 
+.k-picker-wrap .k-select, 
+.k-numeric-wrap .k-select{
+    border-radius: 0;
+    border: none;
+}
+
 .k-picker-wrap.k-state-default>.k-select,
 .k-numeric-wrap.k-state-default>.k-select {
-    border-radius: 0;
     background-color: #3c8dbc;
     border: none;
     height: 34px;
@@ -143,8 +147,9 @@ table.adminContent {
 .k-numeric-wrap .k-input {
     height: 27px;
     border-radius: 0;
-    padding: 0.177em 8px;
     border: 1px solid #d2d6de;
+    text-indent: 0.7em;
+    color: #555;
 }
 
 .k-picker-wrap.k-state-focused.k-state-selected,
@@ -182,6 +187,19 @@ td.k-state-focused.k-state-selected{
 
 .k-numeric-wrap .k-link+.k-link {
     border-radius: 0;
+}
+
+.k-numeric-wrap.k-state-disabled, 
+.k-picker-wrap.k-state-disabled {
+    border-radius: 0;
+    border: none;
+    opacity: 1;
+    height: 34px;
+}
+
+.k-numeric-wrap.k-state-disabled .k-input, 
+.k-picker-wrap.k-state-disabled .k-input{    
+    background-color: #eee;
 }
 
 .k-numerictextbox .k-link.k-state-selected {
