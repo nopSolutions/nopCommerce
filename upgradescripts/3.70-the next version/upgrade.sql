@@ -602,6 +602,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes">
     <Value>Specification attributes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement">
+    <Value>Content management</Value>
+  </LocaleResource>
 </Language>
 '
 

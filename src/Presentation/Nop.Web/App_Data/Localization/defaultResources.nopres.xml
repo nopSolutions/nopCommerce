@@ -7045,7 +7045,7 @@
     <Value>The settings have been updated successfully.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement">
-    <Value>Content Management</Value>
+    <Value>Content management</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Blog">
     <Value>Blog</Value>
