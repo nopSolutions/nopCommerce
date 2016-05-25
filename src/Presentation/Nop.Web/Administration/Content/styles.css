@@ -621,6 +621,27 @@ ul.common-list {
     color: #FFF;
 }
 
+/*AJAX loading*/
+#ajaxBusy{
+    display: none;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100000;
+}
+#ajaxBusy span{
+    background: url(images/ajax-loading.gif) no-repeat;
+    width: 40px;
+    height: 40px;
+    float: right;
+    margin: 9px 9px 0px 0px;
+}
+.please-wait{
+    background: url('images/ajax_loader_small.gif') no-repeat;
+    padding-left: 20px;
+}
+
 
 @media (max-width: 1200px) {
     .form-horizontal img.ico-help {
