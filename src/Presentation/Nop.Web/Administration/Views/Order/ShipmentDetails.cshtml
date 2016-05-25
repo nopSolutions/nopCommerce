@@ -56,7 +56,10 @@
             <small>@Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
-            <a href="@Url.Action("PdfPackagingSlip", new {shipmentId = Model.Id})" class="btn bg-purple">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
+            <a href="@Url.Action("PdfPackagingSlip", new {shipmentId = Model.Id})" class="btn bg-purple">
+                <i class="fa fa-download"></i>
+                @T("Admin.Orders.Shipments.PrintPackagingSlip")
+            </a>
             <span id="shipment-delete" class="btn bg-red">@T("Admin.Common.Delete")</span>
         </div>
     </div>
