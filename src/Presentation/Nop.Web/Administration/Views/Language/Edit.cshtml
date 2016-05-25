@@ -25,8 +25,14 @@
                 <i class="fa fa-floppy-o"></i>
                 @T("Admin.Common.SaveContinue")
             </button>
-            <a href="@Url.Action("ExportXml", new { id = Model.Id })" class="btn bg-green">@T("Admin.Configuration.Languages.Export")</a>
-            <input type="button" class="btn bg-olive" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window" />
+            <a href="@Url.Action("ExportXml", new {id = Model.Id})" class="btn bg-green">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Configuration.Languages.Export")
+            </a>
+            <button type="button" class="btn bg-olive" value="@T("Admin.Configuration.Languages.Import")" data-toggle="modal" data-target="#importxml-window">
+                <i class="fa fa-exchange"></i>
+                @T("Admin.Configuration.Languages.Import")
+            </button>
             <span id="language-delete" class="btn bg-red">
                 <i class="fa fa-trash-o"></i>
                 @T("Admin.Common.Delete")
