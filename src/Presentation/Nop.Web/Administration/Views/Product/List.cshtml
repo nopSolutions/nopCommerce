@@ -21,7 +21,10 @@
         </h1>
         <div class="pull-right">
             <a href="@Url.Action("Create")" class="btn bg-blue">@T("Admin.Common.AddNew")</a>
-            <input type="submit" name="download-catalog-pdf" class="btn bg-purple" value="@T("Admin.Catalog.Products.List.DownloadPDF")"/>
+            <button type="submit" name="download-catalog-pdf" class="btn bg-purple" value="@T("Admin.Catalog.Products.List.DownloadPDF")">
+                <i class="fa fa-download"></i>
+                @T("Admin.Catalog.Products.List.DownloadPDF")
+            </button>
             <div class="btn-group">
                 <button type="button" class="btn btn-success">@T("Admin.Common.Export")</button>
                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
