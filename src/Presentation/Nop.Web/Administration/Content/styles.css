@@ -459,8 +459,14 @@ input[type=file].form-control {
 }
 
 .content-header>h1>small {
-    font-size: 16px;
     color: #0076BB;
+    font-weight: normal;
+    margin-left: 6px;
+}
+
+.content-header>h1>small .fa-arrow-circle-left {
+    font-size: 14px;
+    margin-right: 5px;
 }
 
 .content-header .btn {

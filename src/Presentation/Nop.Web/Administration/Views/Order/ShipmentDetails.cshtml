@@ -53,7 +53,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id
-            <small>@Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
             <a href="@Url.Action("PdfPackagingSlip", new {shipmentId = Model.Id})" class="btn bg-purple">

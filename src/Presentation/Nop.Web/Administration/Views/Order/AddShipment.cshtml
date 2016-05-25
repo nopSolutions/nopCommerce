@@ -19,7 +19,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId)
-            <small>@Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Orders.Shipments.BackToOrder").Text, "Edit", new { id = Model.OrderId })</small>
         </h1>
         <div class="pull-right">
             <input type="submit" id="shipment-save" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />

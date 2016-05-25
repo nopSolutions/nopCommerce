@@ -14,7 +14,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.ContentManagement.MessageTemplates.TestDetails")
-            <small>@Html.ActionLink("(" + T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate") + ")", "Edit", new { id = Model.Id })</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.ContentManagement.MessageTemplates.Test.BackToTemplate").Text, "Edit", new { id = Model.Id })</small>
         </h1>
         <div class="pull-right">
             <input type="submit" name="send-test" class="btn bg-blue" value="@T("Admin.ContentManagement.MessageTemplates.Test.Send")" />

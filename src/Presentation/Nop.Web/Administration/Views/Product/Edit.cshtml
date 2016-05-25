@@ -13,7 +13,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name
-            <small>@Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Products.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">

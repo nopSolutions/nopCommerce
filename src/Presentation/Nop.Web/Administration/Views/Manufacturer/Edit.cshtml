@@ -14,7 +14,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Catalog.Manufacturers.EditManufacturerDetails") - @Model.Name
-            <small>@Html.ActionLink("(" + T("Admin.Catalog.Manufacturers.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Catalog.Manufacturers.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
             <button type="button" onclick="javascript:OpenWindow('@Url.RouteUrl("Manufacturer", new {SeName = Model.SeName})', 800, 600, true); return false;" class="btn bg-purple">

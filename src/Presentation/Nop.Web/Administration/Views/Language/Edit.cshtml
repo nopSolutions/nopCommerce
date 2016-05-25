@@ -14,7 +14,7 @@
     <div class="content-header clearfix">
         <h1 class="pull-left">
             @T("Admin.Configuration.Languages.EditLanguageDetails") - @Model.Name
-            <small>@Html.ActionLink("(" + T("Admin.Configuration.Languages.BackToList") + ")", "List")</small>
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Admin.Configuration.Languages.BackToList").Text, "List")</small>
         </h1>
         <div class="pull-right">
             <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
